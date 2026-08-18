@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* index.css - Add these animations */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translateX(-0.5vw) translateY(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(-50%);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-tooltipIn {
+  animation: tooltipIn 0.2s ease-out forwards;
+}
+
+/* Custom scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+/* Tab Running Border Animation based on user request */
+.tab-running-border {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  z-index: 1;
+}
+
+.tab-running-border::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  aspect-ratio: 1/1;
+  width: 150%;
+  height: auto;
+  border-radius: 50%;
+  background: conic-gradient(#10b981 0%, #10b981 80%, #ffffff 90%, #10b981 100%);
+  animation: spin linear 2s infinite;
+  transform: translate(-50%, -50%);
+  z-index: -2;
+}
+
+.tab-running-border::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% - 0.25vw);
+  height: calc(100% - 0.25vw);
+  background: 
+    linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0.6) 55%, transparent 80%) no-repeat,
+    #059669; /* Emerald 600 for strong contrast with white text */
+  background-size: 200% 100%, 100% 100%;
+  transform: translate(-50%, -50%);
+  border-radius: calc(0.5vw - 0.1vw);
+  z-index: -1;
+  animation: shimmer 2.5s infinite linear;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0, 0 0; }
+  100% { background-position: 200% 0, 0 0; }
+}
