@@ -46,7 +46,13 @@ const ESCALATION_FLOWS_KEY = "escalation_flows_v2";
 const ITEMS_PER_PAGE = 10;
 
 // Status/Type Options
-const FINAL_STATUS_OPTIONS = ["Pending", "Completed", "Hold", "Not Repairable", "Under Testing"];
+const FINAL_STATUS_OPTIONS = [
+  "Pending",
+  "Completed",
+  "Hold",
+  "Not Repairable",
+  "Under Testing",
+];
 const TYPE_OPTIONS = ["W", "PW"];
 const TYPE_LABELS = { W: "Warranty", PW: "Post Warranty" };
 
@@ -144,7 +150,8 @@ const toDateObj = (str) => {
   if (!str) return null;
   const parts = str.split("-");
   if (parts.length === 3) {
-    if (parts[0].length === 4) return new Date(parts[0], parts[1] - 1, parts[2]);
+    if (parts[0].length === 4)
+      return new Date(parts[0], parts[1] - 1, parts[2]);
     return new Date(parts[2], parts[1] - 1, parts[0]);
   }
   return new Date(str);
@@ -677,18 +684,31 @@ const ProductReportModal = ({ product, onClose }) => {
           {/* Metadata Cards */}
           <div className="grid grid-cols-2 gap-[1vw]">
             <div className="bg-white border border-slate-200 p-[0.8vw] rounded-[0.6vw] shadow-sm flex flex-col gap-[0.2vw]">
-              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">Product Info</span>
-              <span className="text-[0.78vw] font-bold text-slate-800 leading-snug">{product.productDescription || "—"}</span>
-              <span className="text-[0.68vw] text-slate-500 font-semibold mt-[0.1vw]">SN: {product.serialNumber || "—"} | {product.boardType || "—"}</span>
+              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
+                Product Info
+              </span>
+              <span className="text-[0.78vw] font-bold text-slate-800 leading-snug">
+                {product.productDescription || "—"}
+              </span>
+              <span className="text-[0.68vw] text-slate-500 font-semibold mt-[0.1vw]">
+                SN: {product.serialNumber || "—"} | {product.boardType || "—"}
+              </span>
             </div>
 
             <div className="bg-white border border-slate-200 p-[0.8vw] rounded-[0.6vw] shadow-sm flex flex-col gap-[0.2vw]">
-              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">Service Execution</span>
+              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
+                Service Execution
+              </span>
               <span className="text-[0.78vw] font-bold text-slate-800 flex items-center gap-[0.3vw]">
                 <User className="w-[0.8vw] h-[0.8vw] text-blue-500" />
                 Tested By: {r.testedBy || "—"}
               </span>
-              <span className="text-[0.68vw] text-slate-500 font-semibold mt-[0.1vw]">Completed: {r.completedDate ? new Date(r.completedDate).toLocaleDateString() : "—"}</span>
+              <span className="text-[0.68vw] text-slate-500 font-semibold mt-[0.1vw]">
+                Completed:{" "}
+                {r.completedDate
+                  ? new Date(r.completedDate).toLocaleDateString()
+                  : "—"}
+              </span>
             </div>
           </div>
 
@@ -696,53 +716,90 @@ const ProductReportModal = ({ product, onClose }) => {
           <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.2vw] shadow-sm space-y-[1vw]">
             <div className="grid grid-cols-3 gap-[1vw] pb-[1vw] border-b border-slate-100">
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">4M Category</span>
-                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">{r.fourMCategory || "—"}</span>
+                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  4M Category
+                </span>
+                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">
+                  {r.fourMCategory || "—"}
+                </span>
               </div>
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">Error Code</span>
-                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">{r.errorCode || "—"}</span>
+                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  Error Code
+                </span>
+                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">
+                  {r.errorCode || "—"}
+                </span>
               </div>
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">Disposition</span>
-                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">{r.disposition || "—"}</span>
+                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  Disposition
+                </span>
+                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">
+                  {r.disposition || "—"}
+                </span>
               </div>
             </div>
 
             <div className="space-y-[0.8vw]">
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">Problem Description</span>
-                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">{r.problemDescription || "—"}</p>
+                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  Problem Description
+                </span>
+                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                  {r.problemDescription || "—"}
+                </p>
               </div>
 
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">Root Cause</span>
-                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">{r.rootCause || "—"}</p>
+                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  Root Cause
+                </span>
+                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                  {r.rootCause || "—"}
+                </p>
               </div>
 
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">Corrective Action</span>
-                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">{r.correctiveAction || "—"}</p>
+                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  Corrective Action
+                </span>
+                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                  {r.correctiveAction || "—"}
+                </p>
               </div>
 
               {r.designators && (
                 <div>
-                  <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">Designators</span>
-                  <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">{r.designators}</p>
+                  <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                    Designators
+                  </span>
+                  <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                    {r.designators}
+                  </p>
                 </div>
               )}
 
               {/* Parts Replacement List */}
               {r.partsReplacement && (
                 <div>
-                  <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.4vw]">Parts Replaced</span>
+                  <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.4vw]">
+                    Parts Replaced
+                  </span>
                   <div className="flex flex-wrap gap-[0.4vw]">
-                    {r.partsReplacement.split(",").map(s => s.trim()).filter(Boolean).map((part, i) => (
-                      <span key={i} className="text-[0.7vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.25vw] rounded-[0.4vw] flex items-center gap-[0.3vw]">
-                        <span className="w-[0.35vw] h-[0.35vw] rounded-full bg-blue-500" />
-                        {part}
-                      </span>
-                    ))}
+                    {r.partsReplacement
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean)
+                      .map((part, i) => (
+                        <span
+                          key={i}
+                          className="text-[0.7vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.25vw] rounded-[0.4vw] flex items-center gap-[0.3vw]"
+                        >
+                          <span className="w-[0.35vw] h-[0.35vw] rounded-full bg-blue-500" />
+                          {part}
+                        </span>
+                      ))}
                   </div>
                 </div>
               )}
@@ -752,13 +809,20 @@ const ProductReportModal = ({ product, onClose }) => {
           {/* Report Image */}
           {r.image && (
             <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.2vw] shadow-sm flex flex-col gap-[0.6vw]">
-              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">Report Attachment</span>
+              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
+                Report Attachment
+              </span>
               <div className="rounded-[0.6vw] overflow-hidden border border-slate-200 bg-slate-100 max-h-[25vh] flex justify-center items-center">
                 <img
                   src={`${API_URL.replace("/api", "")}${r.image}`}
                   alt="Report Attachment"
                   className="max-h-[25vh] w-auto object-contain cursor-pointer hover:scale-105 transition-all"
-                  onClick={() => window.open(`${API_URL.replace("/api", "")}${r.image}`, "_blank")}
+                  onClick={() =>
+                    window.open(
+                      `${API_URL.replace("/api", "")}${r.image}`,
+                      "_blank",
+                    )
+                  }
                 />
               </div>
             </div>
@@ -1221,28 +1285,33 @@ const InwardForm = ({
 
   const filteredCustomers = useMemo(() => {
     return uniqueCustomers.filter((c) => {
-      const matchesSearch = c.name?.toLowerCase().includes(custSearch.toLowerCase());
+      const matchesSearch = c.name
+        ?.toLowerCase()
+        .includes(custSearch.toLowerCase());
       if (!base.category) return matchesSearch;
-      return matchesSearch && (c.type || "").toLowerCase() === base.category.toLowerCase();
+      return (
+        matchesSearch &&
+        (c.type || "").toLowerCase() === base.category.toLowerCase()
+      );
     });
   }, [uniqueCustomers, custSearch, base.category]);
 
   const filteredUnits = useMemo(() => {
     if (!units) return [];
     return units.filter((u) =>
-      u.name.toLowerCase().includes((base.unit || "").toLowerCase())
+      u.name.toLowerCase().includes((base.unit || "").toLowerCase()),
     );
   }, [units, base.unit]);
 
   const filteredRefCust = useMemo(() => {
     return customerRefsList.filter((r) =>
-      r.toLowerCase().includes((base.refNoCustomer || "").toLowerCase())
+      r.toLowerCase().includes((base.refNoCustomer || "").toLowerCase()),
     );
   }, [customerRefsList, base.refNoCustomer]);
 
   const filteredRefInt = useMemo(() => {
     return internalRefsList.filter((r) =>
-      r.toLowerCase().includes((base.refNoInternal || "").toLowerCase())
+      r.toLowerCase().includes((base.refNoInternal || "").toLowerCase()),
     );
   }, [internalRefsList, base.refNoInternal]);
 
@@ -1250,7 +1319,9 @@ const InwardForm = ({
     if (!showCustDrop) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setCustActiveIndex((prev) => (prev < filteredCustomers.length - 1 ? prev + 1 : prev));
+      setCustActiveIndex((prev) =>
+        prev < filteredCustomers.length - 1 ? prev + 1 : prev,
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setCustActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
@@ -1269,7 +1340,9 @@ const InwardForm = ({
     if (!showUnitDrop) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setUnitActiveIndex((prev) => (prev < filteredUnits.length - 1 ? prev + 1 : prev));
+      setUnitActiveIndex((prev) =>
+        prev < filteredUnits.length - 1 ? prev + 1 : prev,
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setUnitActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
@@ -1290,13 +1363,18 @@ const InwardForm = ({
     if (!showRefCustDrop) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setRefCustActiveIndex((prev) => (prev < filteredRefCust.length - 1 ? prev + 1 : prev));
+      setRefCustActiveIndex((prev) =>
+        prev < filteredRefCust.length - 1 ? prev + 1 : prev,
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setRefCustActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (refCustActiveIndex >= 0 && refCustActiveIndex < filteredRefCust.length) {
+      if (
+        refCustActiveIndex >= 0 &&
+        refCustActiveIndex < filteredRefCust.length
+      ) {
         sb("refNoCustomer", filteredRefCust[refCustActiveIndex]);
         setShowRefCustDrop(false);
         setRefCustActiveIndex(-1);
@@ -1311,7 +1389,9 @@ const InwardForm = ({
     if (!showRefIntDrop) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setRefIntActiveIndex((prev) => (prev < filteredRefInt.length - 1 ? prev + 1 : prev));
+      setRefIntActiveIndex((prev) =>
+        prev < filteredRefInt.length - 1 ? prev + 1 : prev,
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setRefIntActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
@@ -1634,11 +1714,17 @@ const InwardForm = ({
                   value={base.refNoCustomer}
                   onChange={(e) => {
                     sb("refNoCustomer", e.target.value);
-                    if (!isReadOnly) { setShowRefCustDrop(true); setRefCustActiveIndex(-1); }
+                    if (!isReadOnly) {
+                      setShowRefCustDrop(true);
+                      setRefCustActiveIndex(-1);
+                    }
                   }}
                   onKeyDown={handleRefCustKeyDown}
                   onFocus={() => {
-                    if (!isReadOnly) { setShowRefCustDrop(true); setRefCustActiveIndex(-1); }
+                    if (!isReadOnly) {
+                      setShowRefCustDrop(true);
+                      setRefCustActiveIndex(-1);
+                    }
                   }}
                   disabled={isReadOnly}
                   placeholder="Enter customer ref no…"
@@ -1684,11 +1770,17 @@ const InwardForm = ({
                   value={base.refNoInternal}
                   onChange={(e) => {
                     sb("refNoInternal", e.target.value);
-                    if (!isReadOnly) { setShowRefIntDrop(true); setRefIntActiveIndex(-1); }
+                    if (!isReadOnly) {
+                      setShowRefIntDrop(true);
+                      setRefIntActiveIndex(-1);
+                    }
                   }}
                   onKeyDown={handleRefIntKeyDown}
                   onFocus={() => {
-                    if (!isReadOnly) { setShowRefIntDrop(true); setRefIntActiveIndex(-1); }
+                    if (!isReadOnly) {
+                      setShowRefIntDrop(true);
+                      setRefIntActiveIndex(-1);
+                    }
                   }}
                   disabled={isReadOnly}
                   placeholder="Enter internal ref no…"
@@ -1739,7 +1831,9 @@ const InwardForm = ({
               >
                 <option value="">Select Category (All)</option>
                 {partyTypes.map((t) => (
-                  <option key={t.id || t._id} value={t.name}>{t.name}</option>
+                  <option key={t.id || t._id} value={t.name}>
+                    {t.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -1767,7 +1861,10 @@ const InwardForm = ({
                   }}
                   onKeyDown={handleCustKeyDown}
                   onFocus={() => {
-                    if (!isReadOnly) { setShowCustDrop(true); setCustActiveIndex(-1); }
+                    if (!isReadOnly) {
+                      setShowCustDrop(true);
+                      setCustActiveIndex(-1);
+                    }
                   }}
                   disabled={isReadOnly}
                   placeholder="Search & select customer…"
@@ -1836,7 +1933,10 @@ const InwardForm = ({
                   }}
                   onKeyDown={handleUnitKeyDown}
                   onFocus={() => {
-                    if (!isReadOnly) { setShowUnitDrop(true); setUnitActiveIndex(-1); }
+                    if (!isReadOnly) {
+                      setShowUnitDrop(true);
+                      setUnitActiveIndex(-1);
+                    }
                   }}
                   disabled={isReadOnly}
                   placeholder="Select or enter unit…"
@@ -1898,7 +1998,8 @@ const InwardForm = ({
 
           {!base.customerCode && !isReadOnly && (
             <div className="text-[0.78vw] font-bold text-blue-800 bg-blue-50 border border-dashed border-blue-400 rounded-[0.4vw] p-[1.5vw] text-center mb-[0.8vw] shadow-sm animate-pulse">
-              Please search and select a Customer from the dropdown above to enable product entry.
+              Please search and select a Customer from the dropdown above to
+              enable product entry.
             </div>
           )}
 
@@ -1914,7 +2015,9 @@ const InwardForm = ({
                 isReadOnly={isReadOnly}
                 allowPartialEdit={
                   isReadOnly &&
-                  initialData.products?.some((p) => p.expectedDeliveryDate === "")
+                  initialData.products?.some(
+                    (p) => p.expectedDeliveryDate === "",
+                  )
                 }
                 onDuplicate={requestDuplicate}
                 onRemove={removeProduct}
@@ -2266,7 +2369,8 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
   useEffect(() => {
     const handler = (e) => {
       if (
-        ref.current && !ref.current.contains(e.target) &&
+        ref.current &&
+        !ref.current.contains(e.target) &&
         (!portalRef.current || !portalRef.current.contains(e.target))
       ) {
         setOpen(false);
@@ -2316,7 +2420,6 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
     setOpen(false);
   };
 
-
   const handleToggle = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     setButtonRect(r);
@@ -2327,9 +2430,9 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
     if (!buttonRect) return {};
     const top = buttonRect.bottom + window.scrollY + 4;
     // Align right edges: button right minus popup width
-    const left = buttonRect.right + window.scrollX - (window.innerWidth * 0.17);
+    const left = buttonRect.right + window.scrollX - window.innerWidth * 0.17;
     return {
-      position: 'absolute',
+      position: "absolute",
       top: `${top}px`,
       left: `${Math.max(10, left)}px`,
       zIndex: 99999,
@@ -2347,17 +2450,27 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
 
   return (
     <div className="relative" ref={ref}>
-        <button
-          type="button"
-          onClick={handleToggle}
-          className={`text-[0.7vw] px-[0.6vw] py-[0.3vw] rounded-[0.4vw] border font-bold flex items-center justify-between gap-[0.35vw] cursor-pointer ${cls}`}
-        >
-          {status === "Pending" ? "Review Required" : status === "Admin Returned" ? "Returned" : status}
-          <ChevronDown className="w-[0.7vw] h-[0.7vw] text-current" />
-        </button>
+      <button
+        type="button"
+        onClick={handleToggle}
+        className={`text-[0.7vw] px-[0.6vw] py-[0.3vw] rounded-[0.4vw] border font-bold flex items-center justify-between gap-[0.35vw] cursor-pointer ${cls}`}
+      >
+        {status === "Pending"
+          ? "Review Required"
+          : status === "Admin Returned"
+            ? "Returned"
+            : status}
+        <ChevronDown className="w-[0.7vw] h-[0.7vw] text-current" />
+      </button>
 
-        {open && buttonRect && ReactDOM.createPortal(
-          <div ref={portalRef} style={getPortalStyle()} className="final-status-portal-wrapper">
+      {open &&
+        buttonRect &&
+        ReactDOM.createPortal(
+          <div
+            ref={portalRef}
+            style={getPortalStyle()}
+            className="final-status-portal-wrapper"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: -4 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -2411,7 +2524,9 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                 <button
                   type="button"
                   onClick={handleSave}
-                  disabled={status !== "Completed" && status !== "Admin Returned"}
+                  disabled={
+                    status !== "Completed" && status !== "Admin Returned"
+                  }
                   className={`px-[0.8vw] py-[0.3vw] text-[0.68vw] rounded-[0.3vw] font-semibold flex items-center gap-[0.3vw] ${
                     status === "Completed" || status === "Admin Returned"
                       ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-sm"
@@ -2424,9 +2539,9 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
               </div>
             </motion.div>
           </div>,
-          document.body
+          document.body,
         )}
-      </div>
+    </div>
   );
 };
 
@@ -2440,8 +2555,10 @@ const HistoryCellButton = ({ prod }) => {
   useEffect(() => {
     const handler = (e) => {
       if (
-        historyRef.current && !historyRef.current.contains(e.target) &&
-        (!historyPortalRef.current || !historyPortalRef.current.contains(e.target))
+        historyRef.current &&
+        !historyRef.current.contains(e.target) &&
+        (!historyPortalRef.current ||
+          !historyPortalRef.current.contains(e.target))
       ) {
         setShowHistory(false);
       }
@@ -2464,7 +2581,9 @@ const HistoryCellButton = ({ prod }) => {
       >
         View
       </button>
-      {showHistory && historyButtonRect && ReactDOM.createPortal(
+      {showHistory &&
+        historyButtonRect &&
+        ReactDOM.createPortal(
           (() => {
             const POPUP_W = Math.min(window.innerWidth * 0.22, 360);
             const GAP = 6;
@@ -2479,16 +2598,19 @@ const HistoryCellButton = ({ prod }) => {
               : historyButtonRect.bottom + window.scrollY + GAP;
 
             let left = historyButtonRect.right + window.scrollX - POPUP_W;
-            left = Math.max(GAP, Math.min(left, vw + window.scrollX - POPUP_W - GAP));
+            left = Math.max(
+              GAP,
+              Math.min(left, vw + window.scrollX - POPUP_W - GAP),
+            );
 
             return (
               <div
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: `${top}px`,
                   left: `${left}px`,
                   zIndex: 99999,
-                  transform: showAbove ? 'translateY(-100%)' : 'none',
+                  transform: showAbove ? "translateY(-100%)" : "none",
                 }}
               >
                 <motion.div
@@ -2498,137 +2620,180 @@ const HistoryCellButton = ({ prod }) => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="bg-white border border-gray-400 shadow-2xl rounded-[0.5vw] w-[22vw] p-[1vw]"
                 >
-              <div className="flex items-center justify-between mb-[0.8vw] pb-[0.4vw] border-b border-gray-400">
-                <div className="text-[0.8vw] font-bold text-black flex items-center gap-[0.4vw]">
-                  <Clock className="w-[0.9vw] h-[0.9vw] text-blue-500" />
-                  Status History
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowHistory(false)}
-                  className="text-black/40 hover:text-black cursor-pointer"
-                >
-                  <X className="w-[0.8vw] h-[0.8vw]" />
-                </button>
-              </div>
-              <div className="max-h-[18vw] overflow-y-auto pr-[0.3vw]">
-                {(() => {
-                  const empHistory = prod.report?.history || [];
-                  const finalHistory = prod.finalStatusHistory || [];
-                  const timeline = [];
-
-                  if (prod.assignedTo) {
-                    timeline.push({
-                      type: 'assigned',
-                      label: 'Assigned',
-                      name: prod.assignedToName || prod.assignedTo,
-                      timestamp: empHistory.length > 0 ? empHistory[0].timestamp : null,
-                    });
-                  }
-
-                  // Employee report status changes
-                  empHistory.forEach((h) => timeline.push({ type: 'report', ...h }));
-
-                  // Admin review changes (final status entries)
-                  finalHistory.forEach((h) => {
-                    const isCompleted = h.status === "Completed";
-                    timeline.push({
-                      type: 'admin',
-                      status: isCompleted ? 'Approved' : 'Admin Returned',
-                      remark: h.remarks,
-                      timestamp: h.timestamp || h.date,
-                    });
-                  });
-
-                  // Sort chronologically (oldest to newest)
-                  timeline.sort((a, b) => {
-                    const tA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-                    const tB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-                    return tA - tB;
-                  });
-
-                  if (timeline.length === 0) {
-                    return (
-                      <div className="py-[2vw] text-center">
-                        <div className="text-[0.72vw] text-black/40">Not yet assigned to anyone.</div>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div className="relative pl-[1.2vw]">
-                      <div className="absolute left-[0.45vw] top-[0.5vw] bottom-[0.5vw] w-[0.1vw] bg-gray-200" />
-                      <div className="space-y-[0.7vw]">
-                        {timeline.map((entry, i) => {
-                          const isLast = i === timeline.length - 1;
-                          
-                          let dotColor = "bg-gray-400";
-                          if (entry.type === 'assigned') {
-                            dotColor = "bg-blue-500";
-                          } else if (entry.type === 'admin') {
-                            dotColor = entry.status === 'Approved' ? 'bg-emerald-500' : 'bg-amber-500';
-                          } else if (isLast) {
-                            dotColor = "bg-emerald-500";
-                          }
-
-                          const tsLabel = entry.timestamp
-                            ? new Date(entry.timestamp).toLocaleString('en-IN', {
-                                day: '2-digit', month: 'short', year: '2-digit',
-                                hour: '2-digit', minute: '2-digit', hour12: true,
-                              })
-                            : null;
-                          return (
-                            <div key={i} className="relative flex items-start gap-[0.5vw]">
-                              <div className={`absolute left-[-1.05vw] top-[0.25vw] w-[0.55vw] h-[0.55vw] rounded-full border-2 border-white ${dotColor} shadow-sm z-10`} />
-                              <div className="flex-1 bg-gray-50 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] border border-gray-200">
-                                <div className="flex items-center justify-between gap-[0.4vw] flex-wrap">
-                                  {entry.type === 'assigned' ? (
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-blue-50 text-blue-700 border-blue-300">
-                                      Assigned → {entry.name}
-                                    </span>
-                                  ) : entry.type === 'admin' ? (
-                                    <span className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
-                                      entry.status === 'Approved'
-                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                                        : 'bg-amber-50 text-amber-700 border-amber-300'
-                                    }`}>
-                                      {entry.adminName ? `${entry.status} → ${entry.adminName}` : entry.status}
-                                    </span>
-                                  ) : (
-                                    <span className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
-                                      entry.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                                      : entry.status === 'Hold' ? 'bg-rose-50 text-rose-700 border-rose-300'
-                                      : entry.status === 'Not Repairable' ? 'bg-slate-100 text-slate-700 border-slate-400'
-                                      : entry.status === 'Under Testing' ? 'bg-purple-50 text-purple-700 border-purple-300'
-                                      : 'bg-amber-50 text-amber-700 border-amber-300'
-                                    }`}>
-                                      {entry.status}
-                                    </span>
-                                  )}
-                                  {tsLabel && (
-                                    <span className="text-[0.65vw] text-gray-400 font-medium whitespace-nowrap">{tsLabel}</span>
-                                  )}
-                                </div>
-                                {entry.remark && (
-                                  <div className="mt-[0.3vw] text-[0.7vw] text-gray-700">
-                                    <span className="font-semibold text-gray-500">Remarks: </span>
-                                    {entry.remark}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                  <div className="flex items-center justify-between mb-[0.8vw] pb-[0.4vw] border-b border-gray-400">
+                    <div className="text-[0.8vw] font-bold text-black flex items-center gap-[0.4vw]">
+                      <Clock className="w-[0.9vw] h-[0.9vw] text-blue-500" />
+                      Status History
                     </div>
-                  );
-                })()}
-              </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowHistory(false)}
+                      className="text-black/40 hover:text-black cursor-pointer"
+                    >
+                      <X className="w-[0.8vw] h-[0.8vw]" />
+                    </button>
+                  </div>
+                  <div className="max-h-[18vw] overflow-y-auto pr-[0.3vw]">
+                    {(() => {
+                      const empHistory = prod.report?.history || [];
+                      const finalHistory = prod.finalStatusHistory || [];
+                      const timeline = [];
+
+                      if (prod.assignedTo) {
+                        timeline.push({
+                          type: "assigned",
+                          label: "Assigned",
+                          name: prod.assignedToName || prod.assignedTo,
+                          timestamp:
+                            empHistory.length > 0
+                              ? empHistory[0].timestamp
+                              : null,
+                        });
+                      }
+
+                      // Employee report status changes
+                      empHistory.forEach((h) =>
+                        timeline.push({ type: "report", ...h }),
+                      );
+
+                      // Admin review changes (final status entries)
+                      finalHistory.forEach((h) => {
+                        const isCompleted = h.status === "Completed";
+                        timeline.push({
+                          type: "admin",
+                          status: isCompleted ? "Approved" : "Admin Returned",
+                          remark: h.remarks,
+                          timestamp: h.timestamp || h.date,
+                        });
+                      });
+
+                      // Sort chronologically (oldest to newest)
+                      timeline.sort((a, b) => {
+                        const tA = a.timestamp
+                          ? new Date(a.timestamp).getTime()
+                          : 0;
+                        const tB = b.timestamp
+                          ? new Date(b.timestamp).getTime()
+                          : 0;
+                        return tA - tB;
+                      });
+
+                      if (timeline.length === 0) {
+                        return (
+                          <div className="py-[2vw] text-center">
+                            <div className="text-[0.72vw] text-black/40">
+                              Not yet assigned to anyone.
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className="relative pl-[1.2vw]">
+                          <div className="absolute left-[0.45vw] top-[0.5vw] bottom-[0.5vw] w-[0.1vw] bg-gray-200" />
+                          <div className="space-y-[0.7vw]">
+                            {timeline.map((entry, i) => {
+                              const isLast = i === timeline.length - 1;
+
+                              let dotColor = "bg-gray-400";
+                              if (entry.type === "assigned") {
+                                dotColor = "bg-blue-500";
+                              } else if (entry.type === "admin") {
+                                dotColor =
+                                  entry.status === "Approved"
+                                    ? "bg-emerald-500"
+                                    : "bg-amber-500";
+                              } else if (isLast) {
+                                dotColor = "bg-emerald-500";
+                              }
+
+                              const tsLabel = entry.timestamp
+                                ? new Date(entry.timestamp).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                      year: "2-digit",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: true,
+                                    },
+                                  )
+                                : null;
+                              return (
+                                <div
+                                  key={i}
+                                  className="relative flex items-start gap-[0.5vw]"
+                                >
+                                  <div
+                                    className={`absolute left-[-1.05vw] top-[0.25vw] w-[0.55vw] h-[0.55vw] rounded-full border-2 border-white ${dotColor} shadow-sm z-10`}
+                                  />
+                                  <div className="flex-1 bg-gray-50 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] border border-gray-200">
+                                    <div className="flex items-center justify-between gap-[0.4vw] flex-wrap">
+                                      {entry.type === "assigned" ? (
+                                        <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-blue-50 text-blue-700 border-blue-300">
+                                          Assigned → {entry.name}
+                                        </span>
+                                      ) : entry.type === "admin" ? (
+                                        <span
+                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                            entry.status === "Approved"
+                                              ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                              : "bg-amber-50 text-amber-700 border-amber-300"
+                                          }`}
+                                        >
+                                          {entry.adminName
+                                            ? `${entry.status} → ${entry.adminName}`
+                                            : entry.status}
+                                        </span>
+                                      ) : (
+                                        <span
+                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                            entry.status === "Completed"
+                                              ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                              : entry.status === "Hold"
+                                                ? "bg-rose-50 text-rose-700 border-rose-300"
+                                                : entry.status ===
+                                                    "Not Repairable"
+                                                  ? "bg-slate-100 text-slate-700 border-slate-400"
+                                                  : entry.status ===
+                                                      "Under Testing"
+                                                    ? "bg-purple-50 text-purple-700 border-purple-300"
+                                                    : "bg-amber-50 text-amber-700 border-amber-300"
+                                          }`}
+                                        >
+                                          {entry.status}
+                                        </span>
+                                      )}
+                                      {tsLabel && (
+                                        <span className="text-[0.65vw] text-gray-400 font-medium whitespace-nowrap">
+                                          {tsLabel}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {entry.remark && (
+                                      <div className="mt-[0.3vw] text-[0.7vw] text-gray-700">
+                                        <span className="font-semibold text-gray-500">
+                                          Remarks:{" "}
+                                        </span>
+                                        {entry.remark}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
                 </motion.div>
               </div>
             );
-          })()
-        , document.body)}
+          })(),
+          document.body,
+        )}
     </div>
   );
 };
@@ -2645,13 +2810,16 @@ const getProductDelay = (row, prod, activeFilter) => {
 
   // Find the last completed status entry in the report history
   const historyEntries = prod.report?.history || [];
-  const lastCompletedEntry = [...historyEntries].reverse().find(h => h.status === "Completed");
-  
-  const completionDateStr = lastCompletedEntry?.timestamp 
-    || prod.report?.completedDate 
-    || prod.report?.lastUpdated 
-    || prod.finalStatusDate 
-    || "";
+  const lastCompletedEntry = [...historyEntries]
+    .reverse()
+    .find((h) => h.status === "Completed");
+
+  const completionDateStr =
+    lastCompletedEntry?.timestamp ||
+    prod.report?.completedDate ||
+    prod.report?.lastUpdated ||
+    prod.finalStatusDate ||
+    "";
 
   if (!completionDateStr) return "—";
 
@@ -2667,7 +2835,9 @@ const getProductDelay = (row, prod, activeFilter) => {
   const diffDays = Math.round((completed - expected) / 86400000);
 
   if (diffDays === 0)
-    return <span className="text-green-600 font-semibold">completed on time</span>;
+    return (
+      <span className="text-green-600 font-semibold">completed on time</span>
+    );
   if (diffDays < 0) {
     const absDays = Math.abs(diffDays);
     return (
@@ -2781,7 +2951,7 @@ const AdminTableView = ({
       rows: [...rows].sort((a, b) => {
         const parseDateStr = (dateStr) => {
           if (!dateStr) return 0;
-          const parts = dateStr.split('-');
+          const parts = dateStr.split("-");
           if (parts.length === 3) {
             const day = parseInt(parts[0], 10);
             const month = parseInt(parts[1], 10) - 1;
@@ -2791,8 +2961,12 @@ const AdminTableView = ({
           const parsed = new Date(dateStr).getTime();
           return isNaN(parsed) ? 0 : parsed;
         };
-        const dA = a.createdAt ? new Date(a.createdAt).getTime() : parseDateStr(a.date);
-        const dB = b.createdAt ? new Date(b.createdAt).getTime() : parseDateStr(b.date);
+        const dA = a.createdAt
+          ? new Date(a.createdAt).getTime()
+          : parseDateStr(a.date);
+        const dB = b.createdAt
+          ? new Date(b.createdAt).getTime()
+          : parseDateStr(b.date);
         return dB - dA;
       }),
     }));
@@ -2843,7 +3017,7 @@ const AdminTableView = ({
     "Emp Report",
     ...(activeFilter === "Review Required" ? ["Final Status"] : []),
     "History",
-    ...(activeFilter === "Completed" ? ["Delay"] : [])
+    ...(activeFilter === "Completed" ? ["Delay"] : []),
   ];
   const totalCols =
     (isSupervisor ? 0 : 1) + 1 + productCols.length + actionCols.length;
@@ -2915,8 +3089,8 @@ const AdminTableView = ({
                       h === "Final Status" || h === "Emp Status"
                         ? "148px"
                         : h === "History"
-                        ? "80px"
-                        : "100px",
+                          ? "80px"
+                          : "100px",
                     background: "#1a73e8",
                   }}
                   className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b-2 border-r border-blue-400/30 last:border-r-0 whitespace-nowrap text-[0.8vw] align-middle sticky top-0 z-20"
@@ -3021,7 +3195,7 @@ const AdminTableView = ({
                             Int Ref: {rows[0].refNoInternal}
                           </span>
                         )}
- 
+
                         {/* Category (Cus Type) */}
                         {rows[0]?.category && (
                           <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-gray-600 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
@@ -3063,7 +3237,8 @@ const AdminTableView = ({
                                   boardType: row.boardType,
                                   type: row.type,
                                   qty: row.qty,
-                                  expectedDeliveryDate: row.expectedDeliveryDate,
+                                  expectedDeliveryDate:
+                                    row.expectedDeliveryDate,
                                   assignedTo: row.assignedTo || "",
                                   assignedToName: row.assignedToName || "",
                                   status: row.status || "Open",
@@ -3073,10 +3248,16 @@ const AdminTableView = ({
                           if (activeFilter === "All") return true;
                           const status = p.status || "Open";
                           if (activeFilter === "Review Required") {
-                            return status === "Completed" && p.finalStatus !== "Completed";
+                            return (
+                              status === "Completed" &&
+                              p.finalStatus !== "Completed"
+                            );
                           }
                           if (activeFilter === "Completed") {
-                            return status === "Completed" && p.finalStatus === "Completed";
+                            return (
+                              status === "Completed" &&
+                              p.finalStatus === "Completed"
+                            );
                           }
                           return status === activeFilter;
                         });
@@ -3151,72 +3332,71 @@ const AdminTableView = ({
                                 >
                                   <ChevronDown className="w-[0.82vw] h-[0.82vw]" />
                                 </span>
- 
-                        {/* Date */}
-                        <div className="flex items-center gap-[0.4vw] ml-[1vw]">
-                          <Calendar className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0" />
-                          <span className="text-[0.78vw] font-bold text-slate-700 whitespace-nowrap">
-                            {fmtDate(row.date || row.timestamp)}
-                          </span>
-                        </div>
 
-                        {/* Product count badge */}
-                        <span className="text-[0.72vw] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-[0.55vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap">
-                          {prods.length} {prods.length === 1 ? "Product" : "Products"}
-                        </span>
+                                {/* Date */}
+                                <div className="flex items-center gap-[0.4vw] ml-[1vw]">
+                                  <Calendar className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0" />
+                                  <span className="text-[0.78vw] font-bold text-slate-700 whitespace-nowrap">
+                                    {fmtDate(row.date || row.timestamp)}
+                                  </span>
+                                </div>
 
-                        {/* Actions — right side */}
-                        <div
-                          className="ml-auto flex items-center gap-[0.5vw]"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {isSupervisor ? (
-                            <button
-                              type="button"
-                              onClick={() => onView(row)}
-                              title="View"
-                              className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
-                            >
-                              <Eye className="w-[0.9vw] h-[0.9vw]" />
-                            </button>
-                          ) : row.products?.some(
-                              (p) => !!p.assignedTo,
-                            ) ? (
-                            <button
-                              type="button"
-                              onClick={() => onView(row)}
-                              title="View (assigned)"
-                              className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
-                            >
-                              <Eye className="w-[0.9vw] h-[0.9vw]" />
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => onEdit(row)}
-                              title="Edit"
-                              className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
-                            >
-                              <Edit3 className="w-[0.9vw] h-[0.9vw]" />
-                            </button>
-                          )}
+                                {/* Product count badge */}
+                                <span className="text-[0.72vw] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-[0.55vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap">
+                                  {prods.length}{" "}
+                                  {prods.length === 1 ? "Product" : "Products"}
+                                </span>
 
-                          {!isSupervisor && (
-                            <button
-                              type="button"
-                              onClick={() => onDelete(row.id)}
-                              title="Delete"
-                              className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-gray-600 hover:border-rose-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
-                            >
-                              <Trash2 className="w-[0.9vw] h-[0.9vw]" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                  </AnimatedTr>,
+                                {/* Actions — right side */}
+                                <div
+                                  className="ml-auto flex items-center gap-[0.5vw]"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {isSupervisor ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => onView(row)}
+                                      title="View"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                    >
+                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                    </button>
+                                  ) : row.products?.some(
+                                      (p) => !!p.assignedTo,
+                                    ) ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => onView(row)}
+                                      title="View (assigned)"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                    >
+                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      onClick={() => onEdit(row)}
+                                      title="Edit"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                    >
+                                      <Edit3 className="w-[0.9vw] h-[0.9vw]" />
+                                    </button>
+                                  )}
 
-
+                                  {!isSupervisor && (
+                                    <button
+                                      type="button"
+                                      onClick={() => onDelete(row.id)}
+                                      title="Delete"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-gray-600 hover:border-rose-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                    >
+                                      <Trash2 className="w-[0.9vw] h-[0.9vw]" />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+                          </AnimatedTr>,
 
                           // ── PRODUCT ROWS ─────────────────────────────────
                           ...(isEntryCollapsed
@@ -3254,11 +3434,11 @@ const AdminTableView = ({
                                     )}
 
                                     {/* S.No sub-number */}
-                                     <td className="border-r border-gray-600 text-center align-middle px-[0.3vw] py-[0.45vw]">
-                                       <span className="text-[0.72vw] font-semibold text-slate-400">
-                                         {globalSn}.{pi + 1}
-                                       </span>
-                                     </td>
+                                    <td className="border-r border-gray-600 text-center align-middle px-[0.3vw] py-[0.45vw]">
+                                      <span className="text-[0.72vw] font-semibold text-slate-400">
+                                        {globalSn}.{pi + 1}
+                                      </span>
+                                    </td>
 
                                     {/* Product Description */}
                                     <td className="px-[0.7vw] py-[0.55vw] border-r border-gray-600 align-middle">
@@ -3339,7 +3519,9 @@ const AdminTableView = ({
                                           View Report
                                         </button>
                                       ) : (
-                                        <span className="text-slate-400">—</span>
+                                        <span className="text-slate-400">
+                                          —
+                                        </span>
                                       )}
                                     </td>
 
@@ -3354,44 +3536,53 @@ const AdminTableView = ({
                                             ? "Completed by emp"
                                             : employeeStatus}
                                         </span>
-                                        {(prod.assignedToName || prod.assignedDepartment) && (
+                                        {(prod.assignedToName ||
+                                          prod.assignedDepartment) && (
                                           <div className="text-[0.68vw] text-slate-500 font-medium leading-tight">
-                                            {prod.assignedToName && <div>{prod.assignedToName}</div>}
-                                            {prod.assignedDepartment && <div className="text-[0.6vw] text-slate-400">({prod.assignedDepartment})</div>}
+                                            {prod.assignedToName && (
+                                              <div>{prod.assignedToName}</div>
+                                            )}
+                                            {prod.assignedDepartment && (
+                                              <div className="text-[0.6vw] text-slate-400">
+                                                ({prod.assignedDepartment})
+                                              </div>
+                                            )}
                                           </div>
                                         )}
                                       </div>
                                     </td>
 
-                                     {/* Final Status */}
-                                     {activeFilter === "Review Required" && (
-                                       <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
-                                         <FinalStatusCell
-                                           row={row}
-                                           prod={prod}
-                                           onUpdateProduct={onUpdateProduct}
-                                         />
-                                       </td>
-                                     )}
+                                    {/* Final Status */}
+                                    {activeFilter === "Review Required" && (
+                                      <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
+                                        <FinalStatusCell
+                                          row={row}
+                                          prod={prod}
+                                          onUpdateProduct={onUpdateProduct}
+                                        />
+                                      </td>
+                                    )}
 
                                     {/* History */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
                                       <HistoryCellButton prod={prod} />
                                     </td>
 
-                                     {/* Delay */}
-                                     {activeFilter === "Completed" && (
-                                       <td className="px-[0.65vw] py-[0.55vw] text-[0.8vw] font-bold align-middle text-center text-slate-700">
-                                         {getProductDelay(row, prod, activeFilter)}
-                                       </td>
-                                     )}
+                                    {/* Delay */}
+                                    {activeFilter === "Completed" && (
+                                      <td className="px-[0.65vw] py-[0.55vw] text-[0.8vw] font-bold align-middle text-center text-slate-700">
+                                        {getProductDelay(
+                                          row,
+                                          prod,
+                                          activeFilter,
+                                        )}
+                                      </td>
+                                    )}
                                   </AnimatedTr>
                                 );
-                              })
-                          ),
+                              })),
                         ];
-                      })
-                  ),
+                      })),
                 ];
               })
             ) : (
@@ -3571,7 +3762,10 @@ export default function App() {
 
     return () => {
       socket.disconnect();
-      document.removeEventListener("refresh-service-material", handleRefreshEvent);
+      document.removeEventListener(
+        "refresh-service-material",
+        handleRefreshEvent,
+      );
     };
   }, []);
 
@@ -3763,7 +3957,7 @@ export default function App() {
     // Sort data so latest is at the top
     const parseDateStr = (dateStr) => {
       if (!dateStr) return 0;
-      const parts = dateStr.split('-');
+      const parts = dateStr.split("-");
       if (parts.length === 3) {
         const day = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1;
@@ -3775,8 +3969,12 @@ export default function App() {
     };
 
     data.sort((a, b) => {
-      const dA = a.createdAt ? new Date(a.createdAt).getTime() : parseDateStr(a.date);
-      const dB = b.createdAt ? new Date(b.createdAt).getTime() : parseDateStr(b.date);
+      const dA = a.createdAt
+        ? new Date(a.createdAt).getTime()
+        : parseDateStr(a.date);
+      const dB = b.createdAt
+        ? new Date(b.createdAt).getTime()
+        : parseDateStr(b.date);
       return dB - dA;
     });
 
@@ -3819,14 +4017,17 @@ export default function App() {
     if (confirmed) {
       try {
         const deletePromises = Array.from(selectedItems).map((id) =>
-          axios.delete(`${API_URL}/service-material/${id}`)
+          axios.delete(`${API_URL}/service-material/${id}`),
         );
         await Promise.all(deletePromises);
         save(entries.filter((e) => !selectedItems.has(e.id)));
         setSelectedItems(new Set());
         toast(`${selectedItems.size} entries deleted successfully`, "success");
       } catch (err) {
-        toast("Failed to delete some or all entries from the database", "error");
+        toast(
+          "Failed to delete some or all entries from the database",
+          "error",
+        );
       }
     }
   };
@@ -3853,7 +4054,17 @@ export default function App() {
   const counts = useMemo(() => {
     const allProducts = entries.flatMap((e) => e.products || []);
     const c = { All: allProducts.length };
-    ["Open", "Assigned", "Repair in Progress", "Pending", "Under Testing", "Hold", "Not Repairable", "Review Required", "Completed"].forEach((s) => {
+    [
+      "Open",
+      "Assigned",
+      "Repair in Progress",
+      "Pending",
+      "Under Testing",
+      "Hold",
+      "Not Repairable",
+      "Review Required",
+      "Completed",
+    ].forEach((s) => {
       c[s] = allProducts.filter((p) => {
         const status = p.status || "Open";
         if (s === "Review Required") {
@@ -3867,7 +4078,6 @@ export default function App() {
     });
     return c;
   }, [entries]);
-
 
   return (
     <div className="w-full h-full font-sans text-[0.85vw]">
@@ -3940,7 +4150,9 @@ export default function App() {
 
               {/* Date From */}
               <div className="flex items-center gap-[0.4vw]">
-                <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">From</span>
+                <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">
+                  From
+                </span>
                 <div className="relative">
                   <Calendar className="absolute left-[0.4vw] top-1/2 -translate-y-1/2 w-[0.7vw] h-[0.7vw] text-gray-400 pointer-events-none" />
                   <input
@@ -3954,7 +4166,9 @@ export default function App() {
 
               {/* Date To */}
               <div className="flex items-center gap-[0.4vw]">
-                <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">To</span>
+                <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">
+                  To
+                </span>
                 <div className="relative">
                   <Calendar className="absolute left-[0.4vw] top-1/2 -translate-y-1/2 w-[0.7vw] h-[0.7vw] text-gray-400 pointer-events-none" />
                   <input
@@ -3971,7 +4185,10 @@ export default function App() {
               {(dateFrom || dateTo) && (
                 <button
                   type="button"
-                  onClick={() => { setDateFrom(""); setDateTo(""); }}
+                  onClick={() => {
+                    setDateFrom("");
+                    setDateTo("");
+                  }}
                   className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.4vw] rounded-[0.4vw] border border-red-200 text-red-500 bg-red-50 hover:bg-red-100 text-[0.68vw] font-semibold transition-all cursor-pointer h-[2.05vw] self-center"
                 >
                   <X className="w-[0.65vw] h-[0.65vw]" /> Clear
@@ -3982,22 +4199,29 @@ export default function App() {
                 {/* Last Sync + Refresh */}
                 <div className="flex items-center gap-[0.5vw] bg-slate-50 border border-slate-200 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] h-[2.4vw]">
                   <div className="flex flex-col items-end leading-tight">
-                    <span className="text-[0.6vw] text-slate-400 font-medium tracking-wide">Last Sync</span>
+                    <span className="text-[0.6vw] text-slate-400 font-medium tracking-wide">
+                      Last Sync
+                    </span>
                     <span className="text-[0.7vw] font-semibold text-slate-700 tabular-nums">
-                      {lastSyncTime.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      }).toLowerCase().replace(/\s+/g, "")}
+                      {lastSyncTime
+                        .toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })
+                        .toLowerCase()
+                        .replace(/\s+/g, "")}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => {
-                      // We can access fetchData indirectly or define it outside or pass it. 
+                      // We can access fetchData indirectly or define it outside or pass it.
                       // Wait, let's find the correct fetch function to call.
                       // In the main App, we have a trigger or function. Let's make sure we handle it.
-                      document.dispatchEvent(new CustomEvent("refresh-service-material"));
+                      document.dispatchEvent(
+                        new CustomEvent("refresh-service-material"),
+                      );
                     }}
                     className="w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer"
                     title="Refresh Data"
@@ -4060,9 +4284,13 @@ export default function App() {
                     }`}
                   >
                     <span>{label}</span>
-                    <span className={`px-[0.35vw] py-[0.03vw] rounded-full text-[0.66vw] font-extrabold ${
-                      isActive ? "bg-blue-100 text-[#1a73e8]" : "bg-slate-200 text-slate-600"
-                    }`}>
+                    <span
+                      className={`px-[0.35vw] py-[0.03vw] rounded-full text-[0.66vw] font-extrabold ${
+                        isActive
+                          ? "bg-blue-100 text-[#1a73e8]"
+                          : "bg-slate-200 text-slate-600"
+                      }`}
+                    >
                       {counts[label] ?? 0}
                     </span>
                   </button>

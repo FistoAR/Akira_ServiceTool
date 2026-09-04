@@ -31,6 +31,7 @@ import {
   Search,
   Download,
   Loader2,
+  Plus,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -3740,7 +3741,7 @@ const ReportsTab = ({ currentUser, queue, employees }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-[0.8vw] shadow-sm border border-slate-300 overflow-hidden col-span-2">
+    <div className="w-full h-full bg-white rounded-[0.8vw] shadow-sm border border-slate-300 overflow-hidden col-span-2 flex flex-col flex-1 min-h-0">
       {/* Sub Tabs */}
       <div className="flex flex-col border-b border-slate-200 bg-slate-50">
         <div className="flex items-center justify-between p-[1vw]">
@@ -3834,10 +3835,10 @@ const ReportsTab = ({ currentUser, queue, employees }) => {
       </div>
 
       {/* Table */}
-      <div className="min-h-[73vh] flex flex-col justify-between">
-        <div className="overflow-x-auto">
+      <div className="flex-1 min-h-0 flex flex-col justify-between overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-auto">
           <table className="w-full text-left border-collapse">
-            <thead>
+            <thead className="sticky top-0 z-20 shadow-sm bg-slate-100">
               <tr className="bg-slate-100 text-slate-700 text-[0.85vw] font-semibold border-b border-slate-300">
                 <th className="px-[0.6vw] py-[1vw] w-[3%] border-r border-slate-300 whitespace-nowrap">
                   S.No
@@ -4178,7 +4179,7 @@ const ReportsTab = ({ currentUser, queue, employees }) => {
           </table>
         </div>
         {/* Pagination Controls */}
-        <div className="flex items-center justify-between p-[1vw] border-t border-slate-200 bg-slate-50 mt-auto">
+        <div className="flex items-center justify-between p-[0.8vw] border-t border-slate-200 bg-slate-50 flex-shrink-0">
           <div className="text-[0.75vw] font-bold text-slate-500">
             Showing{" "}
             {groupedData.length === 0
@@ -4843,9 +4844,9 @@ const ServiceCallResponse = () => {
   // Removed blocking full-screen loading spinner
 
   return (
-    <div className="flex flex-col h-full text-[0.85vw] bg-slate-100/70 ">
+    <div className="flex flex-col h-[calc(100vh-5.5rem)] text-[0.85vw] bg-slate-100/70 overflow-hidden pb-[0.6vw]">
       {/* Premium Glass-Effect Tab Container */}
-      <div className="flex gap-[0.5vw] mb-[1.2vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] sticky top-0 z-10 shadow-sm">
+      <div className="flex gap-[0.5vw] mb-[0.8vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] sticky top-0 z-10 shadow-sm flex-shrink-0">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -4893,7 +4894,7 @@ const ServiceCallResponse = () => {
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-[0.3vw] pb-[5vw]">
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-100/70 p-[1.2vw] rounded-[1vw] border border-slate-400 shadow-inner">
             <RefreshCw className="w-[3vw] h-[3vw] text-indigo-650 animate-spin mb-[1vw]" />
@@ -4909,7 +4910,11 @@ const ServiceCallResponse = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
-              className="grid grid-cols-2 gap-[0.8vw] items-start"
+              className={
+                activeTab === "reports"
+                  ? "flex-1 min-h-0 flex flex-col"
+                  : "grid grid-cols-2 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
+              }
             >
               {activeTab === "escalation" &&
                 (myEscalations.length === 0 ? (

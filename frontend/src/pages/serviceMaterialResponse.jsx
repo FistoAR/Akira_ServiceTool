@@ -32,6 +32,7 @@ import {
   RefreshCw,
   Search,
   Upload,
+  Save,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -780,6 +781,12 @@ export default function ServiceMaterialInwardResponse({
 
   const getDraft = (productId, product) => {
     if (drafts[productId]) return drafts[productId];
+    const initialStatus =
+      product.report?.status &&
+      product.report.status !== "Open" &&
+      product.report.status !== "Assigned"
+        ? product.report.status
+        : "";
     return {
       testedBy: product.report?.testedBy || "",
       disposition: product.report?.disposition || "",
@@ -790,7 +797,7 @@ export default function ServiceMaterialInwardResponse({
       partsReplacement: product.report?.partsReplacement || "",
       correctiveAction: product.report?.correctiveAction || "",
       completedDate: product.report?.completedDate || "",
-      status: product.report?.status || "Under Testing",
+      status: initialStatus,
       currentRemark: "",
       designators: product.report?.designators || "",
       image: product.report?.image || "",
@@ -858,6 +865,10 @@ export default function ServiceMaterialInwardResponse({
         `Corrective Action is mandatory for ${product.productDescription}`,
         "error",
       );
+      return false;
+    }
+    if (!draft.status?.trim()) {
+      toast(`Status is mandatory for ${product.productDescription}`, "error");
       return false;
     }
     if (draft.status === "Completed" && !draft.completedDate) {
@@ -957,6 +968,10 @@ export default function ServiceMaterialInwardResponse({
       isSavingRef.current = false;
     }
   };
+
+  const hasAnyDraftChanges = useMemo(() => {
+    return Object.values(drafts).some((d) => d && d.hasChanges);
+  }, [drafts]);
 
   // Reset pagination when filter changes
   useEffect(() => {
@@ -1419,20 +1434,16 @@ export default function ServiceMaterialInwardResponse({
           },
         ]
       : []),
-    ...(filterStatus === "All" || filterStatus === "Admin Returned"
-      ? [
-          {
-            key: "action",
-            label: "Action",
-            align: "text-center",
-            minW: "min-w-[8vw]",
-          },
-        ]
-      : []),
+    {
+      key: "action",
+      label: "Action",
+      align: "text-center",
+      minW: "min-w-[8vw]",
+    },
   ];
 
   return (
-    <div className="w-full font-sans">
+    <div className="w-full h-[calc(100vh-5.5rem)] flex flex-col font-sans overflow-hidden pb-[0.6vw]">
       <datalist id="errorCodeList">
         {errorCodeHistory?.map((opt, i) => (
           <option key={i} value={opt} />
@@ -1443,104 +1454,102 @@ export default function ServiceMaterialInwardResponse({
           <option key={i} value={opt} />
         ))}
       </datalist>
-      <datalist id="designatorsList">
-        {employees?.map((e, i) => (
-          <option key={e.userId || e._id || i} value={e.name} />
-        ))}
-      </datalist>
       {/* ── Search & Date Filters Toolbar ────────────────────────────────────── */}
-      <div className="bg-white rounded-[0.7vw] border border-slate-200 shadow-sm mb-[0.9vw] px-[1vw] py-[0.6vw]">
-        <div className="flex items-center gap-[0.6vw] flex-wrap">
-          {/* Search Input */}
-          <div className="relative w-[25vw]">
-            <Search className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search product, customer, ref no…"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.38vw] border border-gray-300 rounded-[0.4vw] text-[0.7vw] font-medium text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all"
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm("")}
-                className="absolute right-[0.4vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 cursor-pointer"
-              >
-                <X className="w-[0.65vw] h-[0.65vw]" />
-              </button>
+      <div className="bg-white rounded-[0.7vw] border border-slate-200 shadow-sm mb-[0.6vw] px-[0.8vw] py-[0.45vw] flex-shrink-0">
+        <div className="flex items-center justify-between gap-[0.5vw] flex-nowrap w-full text-[0.7vw]">
+          {/* Left Controls: Search & Filter Toggles */}
+          <div className="flex items-center gap-[0.5vw] flex-shrink-0">
+            {/* Search Input */}
+            <div className="relative w-[16vw] flex-shrink-0">
+              <Search className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search product, customer, ref no…"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.35vw] border border-gray-300 rounded-[0.4vw] text-[0.7vw] font-medium text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-[0.4vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 cursor-pointer"
+                >
+                  <X className="w-[0.65vw] h-[0.65vw]" />
+                </button>
+              )}
+            </div>
+
+            {/* Unsaved & Unclaimed Toggle Buttons */}
+            {filterStatus === "All" && (
+              <div className="flex items-center gap-[0.4vw] flex-shrink-0">
+                <button
+                  onClick={() => {
+                    setShowOnlyUnsaved((prev) => !prev);
+                    if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
+                  }}
+                  className={`flex items-center gap-[0.3vw] px-[0.5vw] py-[0.35vw] rounded-[0.4vw] border text-[0.68vw] font-semibold cursor-pointer transition-all shadow-sm whitespace-nowrap ${
+                    showOnlyUnsaved
+                      ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <div
+                    className={`w-[0.38vw] h-[0.38vw] rounded-full ${showOnlyUnsaved ? "bg-white animate-pulse" : "bg-gray-400"}`}
+                  />
+                  <span>Unsaved Records Only</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowOnlyUnclaimed((prev) => !prev);
+                    if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
+                  }}
+                  className={`flex items-center gap-[0.3vw] px-[0.5vw] py-[0.35vw] rounded-[0.4vw] border text-[0.68vw] font-semibold cursor-pointer transition-all shadow-sm whitespace-nowrap ${
+                    showOnlyUnclaimed
+                      ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <div
+                    className={`w-[0.38vw] h-[0.38vw] rounded-full ${showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-gray-400"}`}
+                  />
+                  <span>Unclaimed Records Only</span>
+                </button>
+              </div>
             )}
           </div>
 
-          {/* Unsaved & Unclaimed Toggle Buttons */}
-          {filterStatus === "All" && (
-            <div className="flex items-center gap-[0.5vw]">
-              <button
-                onClick={() => {
-                  setShowOnlyUnsaved((prev) => !prev);
-                  if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
-                }}
-                className={`flex items-center gap-[0.3vw] px-[0.6vw] py-[0.38vw] rounded-[0.4vw] border text-[0.7vw] font-semibold cursor-pointer transition-all shadow-sm ${
-                  showOnlyUnsaved
-                    ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <div
-                  className={`w-[0.4vw] h-[0.4vw] rounded-full ${showOnlyUnsaved ? "bg-white animate-pulse" : "bg-gray-400"}`}
-                />
-                <span>Unsaved Records Only</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowOnlyUnclaimed((prev) => !prev);
-                  if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
-                }}
-                className={`flex items-center gap-[0.3vw] px-[0.6vw] py-[0.38vw] rounded-[0.4vw] border text-[0.7vw] font-semibold cursor-pointer transition-all shadow-sm ${
-                  showOnlyUnclaimed
-                    ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
-                    : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <div
-                  className={`w-[0.4vw] h-[0.4vw] rounded-full ${showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-gray-400"}`}
-                />
-                <span>Unclaimed Records Only</span>
-              </button>
-            </div>
-          )}
-
-          {/* Date Pickers on the right */}
-          <div className="ml-auto flex items-center gap-[0.8vw]">
+          {/* Right Controls: Date Pickers, Sync & Export */}
+          <div className="flex items-center gap-[0.5vw] flex-shrink-0 ml-auto">
             {/* Date From */}
-            <div className="flex items-center gap-[0.4vw]">
-              <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">
+            <div className="flex items-center gap-[0.3vw] flex-shrink-0">
+              <span className="text-[0.68vw] font-semibold text-gray-500 whitespace-nowrap">
                 From
               </span>
               <div className="relative">
-                <Calendar className="absolute left-[0.38vw] top-1/2 -translate-y-1/2 w-[0.7vw] h-[0.7vw] text-gray-400 pointer-events-none" />
+                <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-gray-400 pointer-events-none" />
                 <input
                   type="date"
                   value={dateFrom}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="pl-[1.5vw] pr-[0.4vw] py-[0.35vw] border border-gray-300 rounded-[0.38vw] text-[0.68vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all"
+                  className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-gray-300 rounded-[0.38vw] text-[0.65vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all w-[7.2vw]"
                 />
               </div>
             </div>
 
             {/* Date To */}
-            <div className="flex items-center gap-[0.4vw]">
-              <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">
+            <div className="flex items-center gap-[0.3vw] flex-shrink-0">
+              <span className="text-[0.68vw] font-semibold text-gray-500 whitespace-nowrap">
                 To
               </span>
               <div className="relative">
-                <Calendar className="absolute left-[0.38vw] top-1/2 -translate-y-1/2 w-[0.7vw] h-[0.7vw] text-gray-400 pointer-events-none" />
+                <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-gray-400 pointer-events-none" />
                 <input
                   type="date"
                   value={dateTo}
                   min={dateFrom}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="pl-[1.5vw] pr-[0.4vw] py-[0.35vw] border border-gray-300 rounded-[0.38vw] text-[0.68vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all"
+                  className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-gray-300 rounded-[0.38vw] text-[0.65vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all w-[7.2vw]"
                 />
               </div>
             </div>
@@ -1552,57 +1561,56 @@ export default function ServiceMaterialInwardResponse({
                   setDateFrom("");
                   setDateTo("");
                 }}
-                className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.35vw] rounded-[0.38vw] border border-red-200 text-red-500 bg-red-50 hover:bg-red-100 text-[0.68vw] font-semibold transition-all cursor-pointer"
+                className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.3vw] rounded-[0.38vw] border border-red-200 text-red-500 bg-red-50 hover:bg-red-100 text-[0.65vw] font-semibold transition-all cursor-pointer whitespace-nowrap flex-shrink-0"
               >
-                <X className="w-[0.65vw] h-[0.65vw]" /> Clear
+                <X className="w-[0.6vw] h-[0.6vw]" /> Clear
               </button>
             )}
-            <div className="flex items-center gap-[0.8vw] flex-shrink-0">
-              {/* Last Sync + Refresh */}
-              <div className="flex items-center gap-[0.5vw] bg-slate-50 border border-slate-200 px-[0.7vw] py-[0.35vw] rounded-[0.5vw]">
-                <div className="flex flex-col items-end leading-tight">
-                  <span className="text-[0.6vw] text-slate-400 font-medium tracking-wide">
-                    Last Sync
-                  </span>
-                  <span className="text-[0.7vw] font-semibold text-slate-700 tabular-nums">
-                    {lastSyncTime
-                      .toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })
-                      .toLowerCase()
-                      .replace(/\s+/g, "")}
-                  </span>
-                </div>
-                <button
-                  onClick={() => {
-                    fetchData();
-                    toast("Data refreshed manually");
-                  }}
-                  className="w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer"
-                  title="Refresh Data"
-                >
-                  <RefreshCw className="w-[0.9vw] h-[0.9vw]" />
-                </button>
-              </div>
 
-              {/* Export Button */}
+            {/* Last Sync + Refresh */}
+            <div className="flex items-center gap-[0.4vw] bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.28vw] rounded-[0.4vw] flex-shrink-0">
+              <div className="flex flex-col items-end leading-tight">
+                <span className="text-[0.58vw] text-slate-400 font-medium tracking-wide">
+                  Last Sync
+                </span>
+                <span className="text-[0.68vw] font-semibold text-slate-700 tabular-nums">
+                  {lastSyncTime
+                    .toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                    .toLowerCase()
+                    .replace(/\s+/g, "")}
+                </span>
+              </div>
               <button
-                type="button"
-                onClick={() => setShowExportModal(true)}
-                className="flex items-center gap-[0.4vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.8vw] py-[0.45vw] rounded-[0.4vw] text-[0.72vw] font-bold shadow-sm transition-all cursor-pointer h-[2.05vw] border-0"
+                onClick={() => {
+                  fetchData();
+                  toast("Data refreshed manually");
+                }}
+                className="w-[1.5vw] h-[1.5vw] flex items-center justify-center rounded-[0.35vw] text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer"
+                title="Refresh Data"
               >
-                <Download className="w-[0.9vw] h-[0.9vw]" />
-                Export Report
+                <RefreshCw className="w-[0.8vw] h-[0.8vw]" />
               </button>
             </div>
+
+            {/* Export Button */}
+            <button
+              type="button"
+              onClick={() => setShowExportModal(true)}
+              className="flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.7vw] py-[0.38vw] rounded-[0.4vw] text-[0.7vw] font-bold shadow-sm transition-all cursor-pointer h-[1.9vw] border-0 whitespace-nowrap flex-shrink-0"
+            >
+              <Download className="w-[0.8vw] h-[0.8vw]" />
+              Export Report
+            </button>
           </div>
         </div>
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-[1vw] gap-[1vw]">
+      <div className="flex items-center justify-between mb-[0.6vw] gap-[1vw] flex-shrink-0">
         {/* Left — Status Filter Chips */}
         <div className="flex-1 min-w-0">
           {myItems.length >= 0 && (
@@ -1622,8 +1630,8 @@ export default function ServiceMaterialInwardResponse({
 
       {/* Content */}
       {initialLoading ? (
-        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col h-fit max-h-[72vh]">
-          <div className="overflow-auto flex-1">
+        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
+          <div className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-separate border-spacing-0">
               <thead className="sticky top-0 z-20 shadow-sm">
                 <tr className="bg-blue-50/95 backdrop-blur-md">
@@ -1655,9 +1663,9 @@ export default function ServiceMaterialInwardResponse({
       ) : myItems.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col h-fit max-h-[85vh] min-h-[75vh]">
+        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
           {/* Table Container with Internal Scroll */}
-          <div className="overflow-auto flex-1 min-h-[68vh]">
+          <div className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-separate border-spacing-0">
               {/* Table Header */}
               <thead className="sticky top-0 z-20 shadow-sm">
@@ -1701,10 +1709,18 @@ export default function ServiceMaterialInwardResponse({
                       pStatus === "Completed" &&
                       (product.finalStatusHistory?.length ?? 0) > 0 &&
                       product.finalStatus !== "Completed";
+                    const rawStatus =
+                      product.status || product.report?.status || "Open";
+                    const isUnsavedRecord =
+                      rawStatus === "Open" ||
+                      rawStatus === "Assigned" ||
+                      !product.report?.status ||
+                      product.report?.status === "Open" ||
+                      product.report?.status === "Assigned";
+
                     const isClaimedByMe =
                       product.assignedTo ===
                         (currentUser?.userId || currentUser?.id) &&
-                      pStatus !== "Completed" &&
                       !isAdminReturnedProduct;
                     // Employee can re-submit from Admin Returned tab
                     const isResubmitting =
@@ -1713,11 +1729,7 @@ export default function ServiceMaterialInwardResponse({
                       product.assignedTo ===
                         (currentUser?.userId || currentUser?.id);
                     const draft =
-                      (isClaimedByMe &&
-                        (filterStatus !== "All" ||
-                          pStatus === "Open" ||
-                          pStatus === "Assigned")) ||
-                      isResubmitting
+                      (isClaimedByMe && isUnsavedRecord) || isResubmitting
                         ? getDraft(product._pid, product)
                         : null;
                     const hc = (field, val) =>
@@ -1989,7 +2001,6 @@ export default function ServiceMaterialInwardResponse({
                             {draft ? (
                               <input
                                 type="text"
-                                list="designatorsList"
                                 value={draft.designators}
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
@@ -2113,6 +2124,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) => hc("status", e.target.value)}
                                 className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 font-semibold min-w-[9vw]"
                               >
+                                <option value="">Select</option>
                                 {STATUS_OPTIONS.map((opt) => (
                                   <option key={opt} value={opt}>
                                     {opt}
@@ -2261,125 +2273,102 @@ export default function ServiceMaterialInwardResponse({
                             )}
                           </td>
 
-                          {/* Action — All tab only OR Admin Returned tab save button */}
-                          {filterStatus === "All" && (
-                            <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
-                              {product.assignedTo ? (
-                                isClaimedByMe ? (
-                                  pStatus === "Open" ||
-                                  pStatus === "Assigned" ? (
-                                    <button
-                                      onClick={() =>
-                                        saveRow(entry, product, draft)
-                                      }
-                                      disabled={
-                                        !draft?.hasChanges ||
-                                        savingStates[product._pid]
-                                      }
-                                      className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.85vw] font-semibold transition-all ${savingStates[product._pid] ? "bg-blue-400 text-white cursor-not-allowed" : draft?.hasChanges ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md" : "bg-gray-200 text-gray-500 cursor-not-allowed"}`}
-                                    >
-                                      {savingStates[product._pid] ? (
-                                        <>
-                                          <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
-                                          Saving...
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Send className="w-[0.75vw] h-[0.75vw]" />
-                                          Save
-                                        </>
-                                      )}
-                                    </button>
-                                  ) : (
-                                    <div className="flex flex-col items-center justify-center">
-                                      <span
-                                        className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
-                                      >
-                                        <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
-                                        {pStatus}
-                                      </span>
-                                    </div>
-                                  )
-                                ) : (
-                                  <div className="flex flex-col items-center justify-center">
-                                    <span
-                                      className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
-                                    >
-                                      <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
-                                      {pStatus}
-                                    </span>
-                                  </div>
-                                )
-                              ) : (
-                                <ClaimButton
-                                  onClaim={() =>
-                                    claimProduct(entry.id, product._pid)
-                                  }
-                                />
-                              )}
-                            </td>
-                          )}
-                          {/* Admin Returned tab — Re-submit Save button */}
-                          {filterStatus === "Admin Returned" && (
-                            <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
-                              {isResubmitting ? (
-                                <button
-                                  onClick={async () => {
-                                    const saved = await saveRow(
-                                      entry,
-                                      product,
-                                      draft,
-                                    );
-                                    if (saved) {
-                                      // Reset finalStatus so admin can review again
-                                      try {
-                                        await axios.patch(
-                                          `${API_URL}/service-material/${entry.id}/product/${product._pid}/final-status`,
-                                          {
-                                            finalStatus: "Pending",
-                                            finalStatusRemarks: "",
-                                            finalStatusDate: "",
-                                          },
-                                        );
-                                      } catch (e) {
-                                        console.error(
-                                          "Failed to reset final status",
-                                          e,
-                                        );
-                                      }
+                          {/* Action — Save button per record */}
+                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                            {isResubmitting ? (
+                              <button
+                                onClick={async () => {
+                                  const saved = await saveRow(
+                                    entry,
+                                    product,
+                                    draft,
+                                  );
+                                  if (saved) {
+                                    try {
+                                      await axios.patch(
+                                        `${API_URL}/service-material/${entry.id}/product/${product._pid}/final-status`,
+                                        {
+                                          finalStatus: "Pending",
+                                          finalStatusRemarks: "",
+                                          finalStatusDate: "",
+                                        },
+                                      );
+                                    } catch (e) {
+                                      console.error(
+                                        "Failed to reset final status",
+                                        e,
+                                      );
                                     }
-                                  }}
-                                  disabled={
-                                    !draft?.hasChanges ||
-                                    savingStates[product._pid]
                                   }
-                                  className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
-                                    savingStates[product._pid]
-                                      ? "bg-amber-400 text-white cursor-not-allowed"
-                                      : draft?.hasChanges
-                                        ? "bg-amber-600 text-white hover:bg-amber-700 cursor-pointer shadow-md"
-                                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                  }`}
+                                }}
+                                disabled={
+                                  !draft?.hasChanges ||
+                                  savingStates[product._pid]
+                                }
+                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                  savingStates[product._pid]
+                                    ? "bg-amber-400 text-white cursor-not-allowed"
+                                    : draft?.hasChanges
+                                      ? "bg-amber-600 text-white hover:bg-amber-700 cursor-pointer shadow-md"
+                                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                }`}
+                              >
+                                {savingStates[product._pid] ? (
+                                  <>
+                                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                    Saving...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Save className="w-[0.75vw] h-[0.75vw]" />
+                                    Re-Submit
+                                  </>
+                                )}
+                              </button>
+                            ) : isClaimedByMe && draft ? (
+                              <button
+                                onClick={() => saveRow(entry, product, draft)}
+                                disabled={
+                                  !draft?.hasChanges ||
+                                  savingStates[product._pid]
+                                }
+                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                  savingStates[product._pid]
+                                    ? "bg-blue-400 text-white cursor-not-allowed"
+                                    : draft?.hasChanges
+                                      ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
+                                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                }`}
+                              >
+                                {savingStates[product._pid] ? (
+                                  <>
+                                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                    Saving...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Save className="w-[0.75vw] h-[0.75vw]" />
+                                    Save
+                                  </>
+                                )}
+                              </button>
+                            ) : !product.assignedTo ? (
+                              <ClaimButton
+                                onClaim={() =>
+                                  claimProduct(entry.id, product._pid)
+                                }
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center justify-center">
+                                <span
+                                  className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
                                 >
-                                  {savingStates[product._pid] ? (
-                                    <>
-                                      <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
-                                      Saving...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Send className="w-[0.75vw] h-[0.75vw]" />
-                                      Re-Submit
-                                    </>
-                                  )}
-                                </button>
-                              ) : (
-                                <span className="text-[0.75vw] text-gray-400">
-                                  —
+                                  <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
+                                  {pStatus}
                                 </span>
-                              )}
-                            </td>
-                          )}
+                              </div>
+                            )}
+                          </td>
                         </motion.tr>
                       </React.Fragment>
                     );
@@ -2390,7 +2379,7 @@ export default function ServiceMaterialInwardResponse({
           </div>
 
           {/* Table Footer */}
-          <div className="bg-gray-50 border-t border-slate-400 px-[1.2vw] py-[0.6vw] flex items-center justify-between">
+          <div className="bg-gray-50 border-t border-slate-400 px-[1.2vw] py-[0.6vw] flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-[1.5vw]">
               <span className="text-[0.72vw] text-gray-500 font-medium">
                 Showing{" "}
@@ -2440,8 +2429,14 @@ export default function ServiceMaterialInwardResponse({
             {filterStatus !== "Completed" && (
               <button
                 onClick={handleBulkSave}
-                disabled={isBulkSaving}
-                className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.4vw] text-white rounded-[0.4vw] text-[0.75vw] font-semibold shadow-md shadow-emerald-900/20 transition-all ml-[1vw] ${isBulkSaving ? "bg-emerald-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700 cursor-pointer"}`}
+                disabled={isBulkSaving || !hasAnyDraftChanges}
+                className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.4vw] rounded-[0.4vw] text-[0.75vw] font-semibold transition-all ml-[1vw] ${
+                  isBulkSaving
+                    ? "bg-emerald-400 text-white cursor-not-allowed"
+                    : hasAnyDraftChanges
+                      ? "bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-md shadow-emerald-900/20"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                }`}
               >
                 {isBulkSaving ? (
                   <>
@@ -2452,6 +2447,14 @@ export default function ServiceMaterialInwardResponse({
                   <>
                     <Send className="w-[0.9vw] h-[0.9vw]" />
                     Bulk Save
+                    {hasAnyDraftChanges && (
+                      <span className="ml-[0.2vw] px-[0.35vw] py-[0.05vw] bg-white/20 text-white rounded-full text-[0.65vw] font-bold">
+                        {
+                          Object.values(drafts).filter((d) => d && d.hasChanges)
+                            .length
+                        }
+                      </span>
+                    )}
                   </>
                 )}
               </button>

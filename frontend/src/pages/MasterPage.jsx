@@ -2508,9 +2508,9 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
                     </div>
                   </div>
                 {isExpanded && (
-                  <div className="flex border-t border-slate-400 min-h-[25vw]">
+                  <div className="flex border-t border-slate-400 min-h-[25vw] max-h-[35vw]">
                     {/* Left Side: Segment Selector Sidebar */}
-                    <div className="w-[12vw] bg-slate-50/50 border-r border-slate-400 p-[0.6vw] flex flex-col gap-[0.4vw]">
+                    <div className="w-[12vw] bg-slate-50/50 border-r border-slate-400 p-[0.6vw] flex flex-col gap-[0.4vw] overflow-y-auto">
                       <p className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-widest px-[0.4vw] mb-[0.2vw]">Product Segments</p>
                       
                       <button 
@@ -2541,7 +2541,7 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
                     </div>
 
                     {/* Right Side: Flow Editor Content */}
-                    <div className="flex-1 p-[1.2vw] bg-white">
+                    <div className="flex-1 p-[1.2vw] bg-white overflow-y-auto">
                       <div className="flex items-center justify-between mb-[1vw]">
                          <div>
                             <h4 className="text-[0.9vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
@@ -2837,8 +2837,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
   }, [searchTerm]);
 
   return (
-    <div className="p-[1.2vw] flex flex-col gap-[1vw]">
-      <div className="flex items-center justify-between gap-[1vw]">
+    <div className="p-[0.8vw] flex flex-col gap-[0.7vw] flex-1 min-h-0 overflow-hidden">
+      <div className="flex items-center justify-between gap-[1vw] flex-shrink-0">
         <div className="relative flex-1 max-w-[25vw]">
           <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-slate-400" />
           <input 
@@ -2865,9 +2865,10 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         </div>
       </div>
 
-      <div className="bg-white border border-slate-400 rounded-[0.8vw] overflow-hidden shadow-sm">
-        <table className="w-full text-left border-collapse">
-          <thead>
+      <div className="bg-white border border-slate-400 rounded-[0.8vw] overflow-hidden shadow-sm flex-1 min-h-0 flex flex-col">
+        <div className="flex-1 min-h-0 overflow-auto">
+          <table className="w-full text-left border-collapse">
+            <thead className="sticky top-0 z-20 bg-slate-50 shadow-sm">
             <tr className="bg-slate-50 border-b border-slate-400">
               <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">S. No.</th>
               <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">Employee</th>
@@ -2929,6 +2930,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             ))}
           </tbody>
         </table>
+        </div>
         {paginatedData.length === 0 && (
           <div className="p-[4vw] text-center flex flex-col items-center gap-[1vw]">
             <Users className="w-[3vw] h-[3vw] text-slate-200" />
@@ -2937,7 +2939,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         )}
 
         {/* Pagination UI */}
-        <div className="border-t border-slate-400 p-[0.8vw] bg-slate-50 flex justify-between items-center">
+        <div className="border-t border-slate-400 p-[0.8vw] bg-slate-50 flex justify-between items-center flex-shrink-0">
           <div className="text-[0.75vw] text-slate-500 font-medium">
             Showing <span className="text-slate-900 font-bold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-slate-900 font-bold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-slate-900 font-bold">{filtered.length}</span> employees
           </div>
@@ -3912,7 +3914,7 @@ const SystemSettingsPage = () => {
   };
 
   return (
-    <div className="w-full h-[92vh] flex flex-col font-sans text-[0.85vw] pr-[0.4vw]">
+    <div className="w-full h-[calc(100vh-4.4rem)] flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
       {isLoading ? (
         <div className="w-full h-[60vh] flex flex-col items-center justify-center gap-[1vw] bg-white border border-slate-400 rounded-[0.6vw] shadow-sm">
           <Loader2 className="w-[3.5vw] h-[3.5vw] animate-spin text-blue-600" />
@@ -3979,7 +3981,7 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Product Segments ── */}
           {activeTab === "segments" && (
-            <div>
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-teal-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-teal-600 to-teal-700 flex items-center justify-center flex-shrink-0">
                   <Package className="w-[0.9vw] h-[0.9vw] text-white" />
@@ -3998,7 +4000,7 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: 4M Categories ── */}
           {activeTab === "four-m" && (
-            <div>
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-cyan-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-cyan-600 to-cyan-700 flex items-center justify-center flex-shrink-0">
                   <Columns className="w-[0.9vw] h-[0.9vw] text-white" />
@@ -4017,7 +4019,7 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Units ── */}
           {activeTab === "units" && (
-            <div>
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-emerald-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center flex-shrink-0">
                   <Activity className="w-[0.9vw] h-[0.9vw] text-white" />
@@ -4036,8 +4038,7 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Escalation ── */}
           {activeTab === "escalation" && (
-            <div>
-
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <EscalationSection
                 partyTypes={partyTypes}
                 segments={segments}
@@ -4051,16 +4052,15 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Service Material Escalation ── */}
           {activeTab === "service-escalation" && (
-            <div>
-
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <ServiceMaterialEscalationSection departments={departments} />
             </div>
           )}
 
           {/* ── Tab: Employees ── */}
           {activeTab === "employees" && (
-            <div>
-              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-purple-50 to-white">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-purple-50 to-white flex-shrink-0">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center flex-shrink-0">
                   <Users className="w-[0.9vw] h-[0.9vw] text-white" />
                 </div>
@@ -4080,7 +4080,7 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Role Access ── */}
           {activeTab === "role-access" && (
-            <div>
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
                   <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-white" />
@@ -4099,7 +4099,7 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Columns ── */}
           {activeTab === "columns" && (
-            <div>
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-indigo-50/60 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center flex-shrink-0">
                   <Columns className="w-[0.9vw] h-[0.9vw] text-white" />

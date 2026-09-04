@@ -1073,7 +1073,7 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `p-[0.9vw] border-r-[1.5px] border-gray-400 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `p-[0.9vw] border-r-[1.5px] border-b-[1.5px] border-gray-400 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
@@ -1276,10 +1276,10 @@ const CustomerDatabase = () => {
                   return (
                     <tr
                       key={i}
-                      className={`transition-colors ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}
+                      className={`transition-colors border-b-[1.5px] border-gray-400 ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}
                     >
                       {!isSupervisor && (
-                        <td className="p-[1vw] border-r-[1.5px] border-gray-400 text-center">
+                        <td className="p-[1vw] border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center">
                           <button
                             onClick={() => handleSelectItem(row)}
                             className="flex items-center justify-center w-full cursor-pointer"
@@ -1292,7 +1292,7 @@ const CustomerDatabase = () => {
                           </button>
                         </td>
                       )}
-                      <td className="p-[0.9vw] text-gray-600 font-medium border-r-[1.5px] border-gray-400 text-center">
+                      <td className="p-[0.9vw] text-gray-600 font-medium border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
@@ -1302,7 +1302,7 @@ const CustomerDatabase = () => {
                       {!isSameParty && !isSupervisor ? (
                         <td
                           rowSpan={rowSpan}
-                          className="border-r-[1.5px] border-gray-400 text-center align-middle bg-white"
+                          className="border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center align-middle bg-white"
                         >
                           <div className="flex items-center gap-[0.15vw] px-[.5vw]">
                             <button
