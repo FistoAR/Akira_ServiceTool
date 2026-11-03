@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User, Mail, Calendar, Briefcase, Lock, ShieldCheck, ArrowLeft, Phone, Image, IndianRupee, Activity, Tag, Users, Eye, EyeOff } from "lucide-react";
-import logo from "../../public/Akira_logo.webp";
+import logo from "../../../public/Akira_logo.webp";
 
 const RegisterPage = () => {
   const navigate = useNavigate();

@@ -26,7 +26,7 @@ import {
   Download,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNotification } from "../components/NotificationContext";
+import { useNotification } from "../../components/NotificationContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const STORAGE_KEY = "customer_db_grouped_v5";

@@ -5,7 +5,7 @@ import {
   X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useEscalationWorker from "../service/useEscalationWorker";
+import useEscalationWorker from "../../service/useEscalationWorker";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

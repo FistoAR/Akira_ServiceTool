@@ -32,8 +32,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { useNotification } from "../components/NotificationContext";
-import EditableProductTable from "../components/EditableProductTable";
+import { useNotification } from "../../components/NotificationContext";
+import EditableProductTable from "./components/EditableProductTable";
 import { io } from "socket.io-client";
 
 const API_URL = import.meta.env.VITE_API_URL;

@@ -36,8 +36,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { io } from "socket.io-client";
-import { useNotification } from "../components/NotificationContext";
-import { useSocket } from "../contexts/SocketContext";
+import { useNotification } from "../../components/NotificationContext";
+import { useSocket } from "../../contexts/SocketContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

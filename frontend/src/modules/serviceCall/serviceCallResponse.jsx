@@ -35,12 +35,12 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { useNotification } from "../components/NotificationContext";
-import useEscalationWorker from "../service/useEscalationWorker";
-import { useSocket } from "../contexts/SocketContext";
+import { useNotification } from "../../components/NotificationContext";
+import useEscalationWorker from "../../service/useEscalationWorker";
+import { useSocket } from "../../contexts/SocketContext";
 import ProductHistoryModal, {
   ProductHistoryTimeline,
-} from "../components/ProductHistoryModal";
+} from "./components/ProductHistoryModal";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 

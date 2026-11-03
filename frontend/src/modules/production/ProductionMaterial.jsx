@@ -6,8 +6,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { useNotification } from "../components/NotificationContext";
-import ProductionEditableProductTable from "../components/ProductionEditableProductTable";
+import { useNotification } from "../../components/NotificationContext";
+import ProductionEditableProductTable from "./components/ProductionEditableProductTable";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

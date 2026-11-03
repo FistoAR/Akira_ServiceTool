@@ -5,29 +5,29 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./modules/auth/Login";
+import Register from "./modules/auth/Register";
 import Sidebar, { SidebarProvider, useSidebar } from "./components/SidePannel";
 import NavBar from "./components/NavBar";
-import Dashboard from "./pages/dashboard";
-import Customers from "./pages/customers";
-import ServiceCall from "./pages/ServiceCall.jsx";
-import ServiceMaterial from "./pages/ServiceMaterial.jsx";
-import ProductionMaterial from "./pages/ProductionMaterial.jsx";
-import ProductionMaterialResponse from "./pages/productionMaterialResponse.jsx";
-import ServiceMaterialResponse from "./pages/serviceMaterialResponse.jsx";
-import Troubleshoot from "./pages/troubleshoot";
-import ServiceCallResponse from "./pages/serviceCallResponse";
+import Dashboard from "./modules/dashboard/dashboard";
+import Customers from "./modules/master/customers";
+import ServiceCall from "./modules/serviceCall/ServiceCall.jsx";
+import ServiceMaterial from "./modules/serviceMaterial/ServiceMaterial.jsx";
+import ProductionMaterial from "./modules/production/ProductionMaterial.jsx";
+import ProductionMaterialResponse from "./modules/production/productionMaterialResponse.jsx";
+import ServiceMaterialResponse from "./modules/serviceMaterial/serviceMaterialResponse.jsx";
+import Troubleshoot from "./modules/troubleshoot/troubleshoot";
+import ServiceCallResponse from "./modules/serviceCall/serviceCallResponse";
 import { usePageTitle } from "./components/PageTitleNav";
-import MasterPage from "./pages/MasterPage";
-import CallAssignment from "./pages/Call Assignments/serviceCallAssignment"
-import EscalationPage from "./pages/esculation";
-import ServiceCallEscalations from "./pages/ServiceCallEscalations";
+import MasterPage from "./modules/master/MasterPage";
+import CallAssignment from "./modules/serviceCall/serviceCallAssignment"
+import EscalationPage from "./modules/master/esculation";
+import ServiceCallEscalations from "./modules/serviceCall/ServiceCallEscalations";
 import { NotificationProvider } from "./components/NotificationContext";
 import { SocketProvider } from "./contexts/SocketContext";
-import ServiceMaterialReports from "./pages/ServiceMaterialReports.jsx";
-import ProductionMaterialReports from "./pages/ProductionMaterialReports.jsx";
-import ServiceCallReports from "./pages/ServiceCallReports.jsx";
+import ServiceMaterialReports from "./modules/serviceMaterial/ServiceMaterialReports.jsx";
+import ProductionMaterialReports from "./modules/production/ProductionMaterialReports.jsx";
+import ServiceCallReports from "./modules/serviceCall/ServiceCallReports.jsx";
 
 
 function NavBarWithTitle() {

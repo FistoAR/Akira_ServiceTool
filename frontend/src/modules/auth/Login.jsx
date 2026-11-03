@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // Added Loader2 for the spinner
 import { Shield, Eye, EyeOff, User, Loader2 } from "lucide-react";
-import logo from "../../public/Akira_logo.webp";
+import logo from "../../../public/Akira_logo.webp";
 
 // ... (defaultEmployees array remains the same)
 

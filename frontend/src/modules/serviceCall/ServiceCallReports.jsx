@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
 import axios from "axios";
-import { useNotification } from "../components/NotificationContext";
+import { useNotification } from "../../components/NotificationContext";
 import ProductHistoryModal, {
   ProductHistoryTimeline,
-} from "../components/ProductHistoryModal";
+} from "./components/ProductHistoryModal";
 import {
   FileText,
   Download,
@@ -30,7 +30,7 @@ import {
   History,
   Info,
 } from "lucide-react";
-import akiraLogo from "../assets/Akira_logo.webp";
+import akiraLogo from "../../assets/Akira_logo.webp";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";

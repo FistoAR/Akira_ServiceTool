@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import useEscalationWorker from "../service/useEscalationWorker";
+import useEscalationWorker from "../../service/useEscalationWorker";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 

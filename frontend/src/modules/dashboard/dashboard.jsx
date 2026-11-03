@@ -21,7 +21,7 @@ import {
   Boxes,
   Timer,
 } from "lucide-react";
-import useEscalationWorker from "../service/useEscalationWorker";
+import useEscalationWorker from "../../service/useEscalationWorker";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
