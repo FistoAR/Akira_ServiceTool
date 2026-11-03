@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Notification = require('./modules/notification/models/notification.model');
+const Notification = require('./modules/notification/notification.model');
 require('dotenv').config();
 
 const check = async () => {

@@ -1,5 +1,5 @@
-const Solution = require('../models/solution.model');
-const Unanswered = require('../models/unanswered.model');
+const Solution = require('./solution.model');
+const Unanswered = require('./unanswered.model');
 
 // Solutions
 const getSolutions = async (req, res) => {

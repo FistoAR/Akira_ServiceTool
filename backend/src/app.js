@@ -2,13 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const logger = require('./utils/logger');
 
-const authRoutes = require('./modules/auth/routes/auth.routes');
-const masterRoutes = require('./modules/master/routes/master.routes');
-const serviceCallRoutes = require('./modules/serviceCall/routes/serviceCall.routes');
-const notificationRoutes = require('./modules/notification/routes/notification.routes');
-const troubleshootRoutes = require('./modules/troubleshoot/routes/troubleshoot.routes');
-const serviceMaterialRoutes = require('./modules/serviceMaterial/routes/serviceMaterial.routes');
-const productionMaterialRoutes = require('./modules/production/routes/productionMaterial.routes');
+const authRoutes = require('./modules/auth/auth.routes');
+const masterRoutes = require('./modules/master/master.routes');
+const serviceCallRoutes = require('./modules/serviceCall/serviceCall.routes');
+const notificationRoutes = require('./modules/notification/notification.routes');
+const troubleshootRoutes = require('./modules/troubleshoot/troubleshoot.routes');
+const serviceMaterialRoutes = require('./modules/serviceMaterial/serviceMaterial.routes');
+const productionMaterialRoutes = require('./modules/production/productionMaterial.routes');
 const path = require('path');
 
 const app = express();

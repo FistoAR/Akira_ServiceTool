@@ -1,6 +1,6 @@
 const express = require('express');
 const router  = express.Router();
-const serviceCallController = require('../controllers/serviceCall.controller');
+const serviceCallController = require('./serviceCall.controller');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');

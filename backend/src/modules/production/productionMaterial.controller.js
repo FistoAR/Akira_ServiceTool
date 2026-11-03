@@ -1,4 +1,4 @@
-const ProductionMaterial = require('../models/productionMaterial.model');
+const ProductionMaterial = require('./productionMaterial.model');
 
 // --- GET /api/production-material ---
 exports.getAllInwards = async (req, res) => {

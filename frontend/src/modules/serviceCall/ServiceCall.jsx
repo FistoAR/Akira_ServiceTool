@@ -44,7 +44,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
-import ProductHistoryModal from "./components/ProductHistoryModal";
+import ProductHistoryModal from "./ProductHistoryModal";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const CUSTOMER_DB_KEY = "customer_db_grouped_v5";

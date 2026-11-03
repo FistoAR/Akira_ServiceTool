@@ -7,10 +7,10 @@
  * SLA flow (same level → next engineer → next level → Critical).
  */
 
-const ServiceCall    = require('../models/serviceCall.model');
-const EscalationFlow = require('../../master/models/escalationFlow.model');
-const User           = require('../../auth/models/user.model');
-const socketConfig   = require('../../../config/socket');
+const ServiceCall    = require('./serviceCall.model');
+const EscalationFlow = require('../master/escalationFlow.model');
+const User           = require('../auth/user.model');
+const socketConfig   = require('../../config/socket');
 
 const WORKER_INTERVAL_MS = 10 * 1000; // 30 s
 
@@ -204,7 +204,7 @@ async function runEscalationCheck() {
             prod._escalationHistory = [...(prod._escalationHistory || []), exhaustEntry];
             call.escalationHistory = [...(call.escalationHistory || []), exhaustEntry];
             
-            const { sendNotification } = require('../../notification/controllers/notification.controller');
+            const { sendNotification } = require('../notification/notification.controller');
             sendNotification({
               recipient: firstAssignment.engineerId,
               type: 'Critical',
@@ -252,7 +252,7 @@ async function runEscalationCheck() {
           modified = true;
 
           // Notification integration
-          const { sendNotification } = require('../../notification/controllers/notification.controller');
+          const { sendNotification } = require('../notification/notification.controller');
           
           // Notify the engineer it was escalated FROM
           if (prod._assignedEngineerId) {
@@ -331,8 +331,8 @@ async function _emitCritical(io, call, pIdx, prod) {
   if (!io) return;
   
   // Create notification for admins
-  const { sendNotification } = require('../../notification/controllers/notification.controller');
-  const User = require('../../auth/models/user.model');
+  const { sendNotification } = require('../notification/notification.controller');
+  const User = require('../auth/user.model');
   
   try {
     const admins = await User.find({ role: { $in: ['Admin', 'admin'] } });
@@ -388,7 +388,7 @@ async function check50PercentAlerts(io) {
 
         if (now.getTime() >= fiftyPercentTime) {
           // Send 50% alert notification
-          const { sendNotification } = require('../../notification/controllers/notification.controller');
+          const { sendNotification } = require('../notification/notification.controller');
           await sendNotification({
             recipient: prod._assignedEngineerId,
             sender: 'System',

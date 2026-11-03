@@ -1,8 +1,8 @@
-const ServiceCall    = require('../models/serviceCall.model');
-const EscalationFlow = require('../../master/models/escalationFlow.model');
-const User           = require('../../auth/models/user.model');
-const Notification   = require('../../notification/models/notification.model');
-const { getIO }      = require('../../../config/socket');
+const ServiceCall    = require('./serviceCall.model');
+const EscalationFlow = require('../master/escalationFlow.model');
+const User           = require('../auth/user.model');
+const Notification   = require('../notification/notification.model');
+const { getIO }      = require('../../config/socket');
 
 // ── Helper: resolve SLA steps for customerType + segment ─────────────────────
 async function resolveFlow(customerType, segment) {
@@ -61,7 +61,7 @@ async function notifyForProductHistory(call, pIdx, historyItem) {
     }
 
     if (recipient && recipient !== 'System') {
-      const { sendNotification } = require('../../notification/controllers/notification.controller');
+      const { sendNotification } = require('../notification/notification.controller');
       await sendNotification({
         recipient,
         sender: updatedBy || 'System',
@@ -183,7 +183,7 @@ exports.createCall = async (req, res) => {
     
     // Trigger Critical notification if priority is Critical
     if (call.priority === 'Critical') {
-      const { sendNotification } = require('../../notification/controllers/notification.controller');
+      const { sendNotification } = require('../notification/notification.controller');
       await sendNotification({
         recipient: 'admin', // Or fetch admin IDs
         type: 'Critical',
@@ -270,7 +270,7 @@ exports.assignServiceCall = async (req, res) => {
     try { getIO().emit('service_call_updated', call); } catch (e) {}
 
     // Trigger Notification for the assigned engineer
-    const { sendNotification } = require('../../notification/controllers/notification.controller');
+    const { sendNotification } = require('../notification/notification.controller');
     await sendNotification({
       recipient: engineerId,
       type: 'Assignment',
@@ -351,7 +351,7 @@ exports.closeProduct = async (req, res) => {
 
     if (allAssignedDone) {
       // Send notification to all admins in real-time
-      const { sendNotification } = require('../../notification/controllers/notification.controller');
+      const { sendNotification } = require('../notification/notification.controller');
       const admins = await User.find({ role: { $in: ['Admin', 'admin'] } }).lean();
       for (const admin of admins) {
         await sendNotification({
@@ -399,7 +399,7 @@ exports.attendProduct = async (req, res) => {
     await notifyForProductHistory(call, pIdx, historyItem);
 
     // Send notification to admins that call is attended in real-time
-    const { sendNotification } = require('../../notification/controllers/notification.controller');
+    const { sendNotification } = require('../notification/notification.controller');
     const admins = await User.find({ role: { $in: ['Admin', 'admin'] } }).lean();
     for (const admin of admins) {
       await sendNotification({
@@ -804,7 +804,7 @@ exports.updateCall = async (req, res) => {
 
     // Trigger Critical notification if priority changed to Critical or is updated as Critical
     if (call.priority === 'Critical') {
-      const { sendNotification } = require('../../notification/controllers/notification.controller');
+      const { sendNotification } = require('../notification/notification.controller');
       await sendNotification({
         recipient: 'admin',
         type: 'Critical',

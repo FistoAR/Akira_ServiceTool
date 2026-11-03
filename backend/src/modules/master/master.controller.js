@@ -1,14 +1,14 @@
-const Unit = require('../models/unit.model');
-const PartyType = require('../models/partyType.model');
-const WarrantyRule = require('../models/warrantyRule.model');
-const ProductSegment = require('../models/productSegment.model');
-const EscalationFlow = require('../models/escalationFlow.model');
-const Customer = require('../models/customer.model');
-const MasterSettings = require('../models/masterSettings.model');
-const BoardType = require('../models/boardType.model');
-const FourMCategory = require('../models/fourMCategory.model');
-const ServiceCall = require('../../serviceCall/models/serviceCall.model');
-const ServiceMaterial = require('../../serviceMaterial/models/serviceMaterial.model');
+const Unit = require('./unit.model');
+const PartyType = require('./partyType.model');
+const WarrantyRule = require('./warrantyRule.model');
+const ProductSegment = require('./productSegment.model');
+const EscalationFlow = require('./escalationFlow.model');
+const Customer = require('./customer.model');
+const MasterSettings = require('./masterSettings.model');
+const BoardType = require('./boardType.model');
+const FourMCategory = require('./fourMCategory.model');
+const ServiceCall = require('../serviceCall/serviceCall.model');
+const ServiceMaterial = require('../serviceMaterial/serviceMaterial.model');
 
 // --- Units ---
 exports.getUnits = async (req, res) => {

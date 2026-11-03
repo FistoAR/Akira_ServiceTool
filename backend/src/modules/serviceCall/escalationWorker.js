@@ -1,7 +1,7 @@
-const ServiceCall = require('../models/serviceCall.model');
-const User = require('../../auth/models/user.model');
-const { getIO } = require('../../../config/socket');
-const { resolveFlow } = require('../controllers/serviceCall.controller'); 
+const ServiceCall = require('./serviceCall.model');
+const User = require('../auth/user.model');
+const { getIO } = require('../../config/socket');
+const { resolveFlow } = require('./serviceCall.controller'); 
 
 const ESCALATION_INTERVAL_MS = 10000; // Run every 10 seconds
 

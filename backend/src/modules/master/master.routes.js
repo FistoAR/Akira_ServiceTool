@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const masterController = require('../controllers/master.controller');
+const masterController = require('./master.controller');
 
 // Party Types
 router.get('/party-types', masterController.getPartyTypes);

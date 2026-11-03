@@ -1,5 +1,5 @@
-const Notification = require('../models/notification.model');
-const socketConfig = require('../../../config/socket');
+const Notification = require('./notification.model');
+const socketConfig = require('../../config/socket');
 
 exports.getNotifications = async (req, res) => {
   try {
@@ -74,7 +74,7 @@ exports.markAsUnread = async (req, res) => {
   }
 };
 
-const User = require('../../auth/models/user.model');
+const User = require('../auth/user.model');
 
 exports.getSettings = async (req, res) => {
   try {

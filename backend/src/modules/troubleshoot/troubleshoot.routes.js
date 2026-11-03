@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const troubleshootController = require('../controllers/troubleshoot.controller');
+const troubleshootController = require('./troubleshoot.controller');
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({

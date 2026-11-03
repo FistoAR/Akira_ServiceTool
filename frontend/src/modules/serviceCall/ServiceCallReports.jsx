@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import ProductHistoryModal, {
   ProductHistoryTimeline,
-} from "./components/ProductHistoryModal";
+} from "./ProductHistoryModal";
 import {
   FileText,
   Download,
