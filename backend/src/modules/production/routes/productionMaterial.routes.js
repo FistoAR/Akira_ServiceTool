@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const productionMaterialController = require('../controllers/productionMaterial.controller');
-const upload = require('../middlewares/upload.middleware');
+const upload = require('../../../middlewares/upload.middleware');
 
 router.get('/', productionMaterialController.getAllInwards);
 router.get('/:id', productionMaterialController.getInwardById);

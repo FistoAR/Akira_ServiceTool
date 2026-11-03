@@ -40,7 +40,7 @@ connectDB().then(async () => {
     // Ignore if index doesn't exist
   }
 
-  const { startEscalationWorker } = require('./services/escalationWorker.service');
+  const { startEscalationWorker } = require('./modules/serviceCall/services/escalationWorker.service');
   startEscalationWorker();
 });
 

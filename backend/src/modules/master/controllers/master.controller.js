@@ -7,8 +7,8 @@ const Customer = require('../models/customer.model');
 const MasterSettings = require('../models/masterSettings.model');
 const BoardType = require('../models/boardType.model');
 const FourMCategory = require('../models/fourMCategory.model');
-const ServiceCall = require('../models/serviceCall.model');
-const ServiceMaterial = require('../models/serviceMaterial.model');
+const ServiceCall = require('../../serviceCall/models/serviceCall.model');
+const ServiceMaterial = require('../../serviceMaterial/models/serviceMaterial.model');
 
 // --- Units ---
 exports.getUnits = async (req, res) => {

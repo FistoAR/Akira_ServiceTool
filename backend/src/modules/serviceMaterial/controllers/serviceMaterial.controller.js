@@ -1,5 +1,5 @@
 const ServiceMaterial = require('../models/serviceMaterial.model');
-const socketConfig = require('../config/socket');
+const socketConfig = require('../../../config/socket');
 
 // ── GET /api/service-material ────────────────────────────────────────────────
 exports.getAllInwards = async (req, res) => {
@@ -145,8 +145,8 @@ exports.updateProductReport = async (req, res) => {
     // Send notification to Admin when a user completes/resolves a product
     if (product.status === 'Completed') {
       try {
-        const User = require('../models/user.model');
-        const { sendNotification } = require('./notification.controller');
+        const User = require('../../auth/models/user.model');
+        const { sendNotification } = require('../../notification/controllers/notification.controller');
         const admins = await User.find({ role: { $in: ['Admin', 'admin'] } }).lean();
         const productName = product.productDescription || product.productCode || 'Product';
         const line1 = `Company: ${inward.customerName || 'N/A'} | Product: ${productName}`;
@@ -211,7 +211,7 @@ exports.updateFinalStatus = async (req, res) => {
     // Send notification to the assigned user when Admin approves or denies the completion
     if (product.assignedTo && (finalStatus === 'Completed' || finalStatus === 'Admin Returned')) {
       try {
-        const { sendNotification } = require('./notification.controller');
+        const { sendNotification } = require('../../notification/controllers/notification.controller');
         const productName = product.productDescription || product.productCode || 'Product';
         const line1 = `Company: ${inward.customerName || 'N/A'} | Product: ${productName}`;
         const line2 = `Code: ${product.productCode || 'N/A'} | Serial: ${product.serialNumber || 'N/A'}`;
