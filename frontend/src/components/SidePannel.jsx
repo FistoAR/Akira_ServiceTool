@@ -78,7 +78,7 @@ export default function Sidebar() {
       label: "Master Access",
       icon: AccessIcon,
       show: isAdmin || [
-        "partyTypes", "warrantyRules", "segments", "fourM", "units", "employees", "roleAccess", "escalation"
+        "partyTypes", "warrantyRules", "segments", "fourM", "units", "sites", "employees", "roleAccess", "escalation"
       ].some(hasAccess),
       subItems: [
         { path: "/masterPage?tab=categories", label: "Party Type Categories", show: hasAccess("partyTypes") },
@@ -86,6 +86,7 @@ export default function Sidebar() {
         { path: "/masterPage?tab=segments", label: "Product Segments", show: hasAccess("segments") },
         { path: "/masterPage?tab=four-m", label: "4M Categories", show: hasAccess("fourM") },
         { path: "/masterPage?tab=units", label: "Units", show: hasAccess("units") },
+        { path: "/masterPage?tab=sites", label: "Site Master", show: hasAccess("sites") },
         { path: "/masterPage?tab=employees", label: "User Management", show: hasAccess("employees") },
         { path: "/masterPage?tab=role-access", label: "Role Access", show: hasAccess("roleAccess") },
         { path: "/masterPage?tab=escalation", label: "Service Call SLA", show: hasAccess("escalation") },

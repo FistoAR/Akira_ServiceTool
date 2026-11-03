@@ -15,6 +15,13 @@ router.put('/warranty-rules/:id', masterController.updateWarrantyRule);
 router.delete('/warranty-rules/:id', masterController.deleteWarrantyRule);
 
 
+
+// Sites
+router.get('/sites', masterController.getSites);
+router.post('/sites', masterController.addSite);
+router.put('/sites/:id', masterController.updateSite);
+router.delete('/sites/:id', masterController.deleteSite);
+
 // Units
 router.get('/units', masterController.getUnits);
 router.post('/units', masterController.addUnit);

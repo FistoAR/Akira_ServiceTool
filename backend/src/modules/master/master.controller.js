@@ -1,4 +1,5 @@
 const Unit = require('./models/unit.model');
+const Site = require('./models/site.model');
 const PartyType = require('./models/partyType.model');
 const WarrantyRule = require('./models/warrantyRule.model');
 const ProductSegment = require('./models/productSegment.model');
@@ -9,6 +10,21 @@ const BoardType = require('./models/boardType.model');
 const FourMCategory = require('./models/fourMCategory.model');
 const ServiceCall = require('../serviceCall/serviceCall.model');
 const ServiceMaterial = require('../serviceMaterial/serviceMaterial.model');
+
+
+// --- Sites ---
+exports.getSites = async (req, res) => {
+  try { res.json(await Site.find().lean()); } catch (err) { res.status(500).json({ message: err.message }); }
+};
+exports.addSite = async (req, res) => {
+  try { res.json(await Site.create(req.body)); } catch (err) { res.status(500).json({ message: err.message }); }
+};
+exports.updateSite = async (req, res) => {
+  try { res.json(await Site.findByIdAndUpdate(req.params.id, req.body, { new: true })); } catch (err) { res.status(500).json({ message: err.message }); }
+};
+exports.deleteSite = async (req, res) => {
+  try { await Site.findByIdAndDelete(req.params.id); res.json({ message: 'Deleted' }); } catch (err) { res.status(500).json({ message: err.message }); }
+};
 
 // --- Units ---
 exports.getUnits = async (req, res) => {

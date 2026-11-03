@@ -46,7 +46,9 @@ import {
   IndianRupee,
   Activity,
   UserPlus,
-  Loader2
+  Loader2,
+  MapPin,
+  RefreshCw
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -3401,6 +3403,222 @@ const UnitsSection = ({ units, setUnits }) => {
   );
 };
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SitesSection
+// ─────────────────────────────────────────────────────────────────────────────
+const SitesSection = ({ sites, setSites }) => {
+  const { toast, confirm } = useNotification();
+  const [newSiteName, setNewSiteName] = useState("");
+  const [editingSite, setEditingSite] = useState(null);
+
+  const handleAdd = async () => {
+    const t = newSiteName.trim();
+    if (!t) return;
+    if (sites.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
+      toast("Site already exists!", "error");
+      return;
+    }
+    try {
+      const res = await axios.post(`${API_URL}/master/sites`, { name: t });
+      const newItem = { ...res.data, id: res.data._id };
+      const updated = [...sites, newItem];
+      setSites(updated);
+      sessionStorage.setItem("master_sites", JSON.stringify(updated));
+      setNewSiteName("");
+      toast("Site added successfully");
+    } catch (err) {
+      toast("Failed to add site", "error");
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!editingSite?.name?.trim()) return;
+    const t = editingSite.name.trim();
+    if (
+      sites.some(
+        (x) =>
+          x.id !== editingSite.id && x.name.toLowerCase() === t.toLowerCase(),
+      )
+    ) {
+      toast("Site already exists!", "error");
+      return;
+    }
+    try {
+      const res = await axios.put(`${API_URL}/master/sites/${editingSite._id || editingSite.id}`, { name: t });
+      const updatedItem = { ...res.data, id: res.data._id };
+      const updated = sites.map((x) => (x.id === editingSite.id || x._id === editingSite._id ? updatedItem : x));
+      setSites(updated);
+      sessionStorage.setItem("master_sites", JSON.stringify(updated));
+      setEditingSite(null);
+      toast("Site updated");
+    } catch (err) {
+      toast("Failed to update site", "error");
+    }
+  };
+
+  const handleDelete = async (id, mongoId) => {
+    const site = sites.find((t) => t.id === id || t._id === mongoId);
+    const confirmed = await confirm({
+      title: "Delete Site",
+      message: (
+        <div className="flex flex-col gap-[0.5vw]">
+          <p>Are you sure you want to delete <span className="font-bold text-slate-900">"{site.name}"</span>?</p>
+        </div>
+      ),
+      type: "danger",
+      confirmText: "Yes, Delete",
+      cancelText: "Keep it"
+    });
+
+    if (confirmed) {
+      try {
+        await axios.delete(`${API_URL}/master/sites/${mongoId || id}`);
+        const remaining = sites.filter((t) => t.id !== id && t._id !== mongoId);
+        setSites(remaining);
+        sessionStorage.setItem("master_sites", JSON.stringify(remaining));
+        toast("Site deleted successfully");
+      } catch (err) {
+        toast("Failed to delete site", "error");
+      }
+    }
+  };
+
+  return (
+    <div>
+      <div className="p-[1.2vw] grid grid-cols-2 gap-[1.5vw]">
+        <div>
+          <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
+            Existing Sites
+          </p>
+          <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
+            {sites.length === 0 ? (
+              <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
+                No sites yet
+              </div>
+            ) : (
+              sites.map((site, idx) => {
+                const badgeClass =
+                  TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
+                return (
+                  <div
+                    key={site.id || site._id}
+                    className="flex items-center gap-[0.8vw] px-[0.9vw] py-[0.65vw] hover:bg-slate-50 border-b border-slate-400 last:border-0 group transition-colors"
+                  >
+                    {editingSite && (editingSite._id === site._id || editingSite.id === site.id) ? (
+                      <div className="flex flex-1 items-center gap-[0.5vw]">
+                        <input
+                          autoFocus
+                          type="text"
+                          value={editingSite.name}
+                          onChange={(e) =>
+                            setEditingSite({
+                              ...editingSite,
+                              name: e.target.value,
+                            })
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleUpdate();
+                            if (e.key === "Escape") setEditingSite(null);
+                          }}
+                          className="flex-1 border border-blue-300 rounded-[0.3vw] px-[0.5vw] py-[0.35vw] text-[0.82vw] outline-none ring-2 ring-blue-100"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleUpdate}
+                          className="p-[0.4vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-[0.3vw] cursor-pointer"
+                        >
+                          <Check className="w-[0.85vw] h-[0.85vw]" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingSite(null)}
+                          className="p-[0.4vw] bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-[0.3vw] cursor-pointer"
+                        >
+                          <X className="w-[0.85vw] h-[0.85vw]" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <span
+                          className={`text-[0.75vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border ${badgeClass}`}
+                        >
+                          {site.name}
+                        </span>
+                        
+                        <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditingSite({ id: site.id, _id: site._id, name: site.name })
+                            }
+                            className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                          >
+                            <Edit2 className="w-[0.85vw] h-[0.85vw]" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(site.id, site._id)}
+                            className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                          >
+                            <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col gap-[0.8vw]">
+          <div>
+            <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
+              Add New Site
+            </p>
+            <div className="flex gap-[0.5vw]">
+              <input
+                type="text"
+                value={newSiteName}
+                onChange={(e) => setNewSiteName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+                placeholder="e.g. Unit 1, Unit 2, Unit 3…"
+                className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+              />
+              <button
+                type="button"
+                onClick={handleAdd}
+                disabled={!newSiteName.trim()}
+                className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
+              >
+                <Plus className="w-[0.85vw] h-[0.85vw]" /> Add
+              </button>
+            </div>
+          </div>
+          {sites.length > 0 && (
+            <div className="bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">
+              <p className="text-[0.68vw] font-semibold text-gray-800 mb-[0.5vw]">
+                Preview
+              </p>
+              <div className="flex flex-wrap gap-[0.4vw]">
+                {sites.map((site, idx) => (
+                  <span
+                    key={site.id || site._id}
+                    className={`text-[0.72vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border ${TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length]}`}
+                  >
+                    {site.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const RoleAccessSection = ({ employees, setEmployees }) => {
   const { toast } = useNotification();
   const [selectedDepartment, setSelectedDepartment] = useState("All");
@@ -3832,6 +4050,8 @@ const SystemSettingsPage = () => {
   const [partyTypes, setPartyTypes] = useState([]);
   const [warrantyRules, setWarrantyRules] = useState([]);
   const [units, setUnits] = useState([]);
+  const [sites, setSites] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [segments, setSegments] = useState([]);
   const [boardTypes, setBoardTypes] = useState([]);
   const [fourMCategories, setFourMCategories] = useState([]);
@@ -3842,68 +4062,128 @@ const SystemSettingsPage = () => {
   const [colVis, setColVis] = useState({ ...DEFAULT_COL_VIS });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchMasterData = async () => {
-      setIsLoading(true);
-      try {
-        const [ptRes, segRes, flowRes, empRes, colRes, dbRes, boardRes, fourMRes, unitsRes, warrantyRes] = await Promise.all([
-          axios.get(`${API_URL}/master/party-types`),
-          axios.get(`${API_URL}/master/product-segments`),
-          axios.get(`${API_URL}/master/escalation-flows`),
-          axios.get(`${API_URL}/auth/employees`), // Fetch employees from backend
-          axios.get(`${API_URL}/master/settings/${COLUMN_VIS_KEY}`),
-          axios.get(`${API_URL}/master/customers`),
-          axios.get(`${API_URL}/master/board-types`),
-          axios.get(`${API_URL}/master/four-m-categories`),
-          axios.get(`${API_URL}/master/units`),
-          axios.get(`${API_URL}/master/warranty-rules`)
-        ]);
+    const fetchTabOrAllData = async (forceRefresh = false) => {
+    if (forceRefresh) setIsRefreshing(true);
+    else setIsLoading(true);
 
-        // Party Types
-        const normalizedPT = ptRes.data.map(t => ({ ...t, id: t.id || t._id }));
-        setPartyTypes(normalizedPT.length ? normalizedPT : [
-          { id: 1, name: "OEM" },
-          { id: 2, name: "End Customer" },
-        ]);
+    try {
+      // 1. Check SessionStorage Cache
+      const cachedPT = sessionStorage.getItem("master_party_types");
+      const cachedWR = sessionStorage.getItem("master_warranty_rules");
+      const cachedUnits = sessionStorage.getItem("master_units");
+      const cachedSites = sessionStorage.getItem("master_sites");
+      const cachedSegs = sessionStorage.getItem("master_segments");
+      const cachedBoards = sessionStorage.getItem("master_boards");
+      const cachedFourM = sessionStorage.getItem("master_four_m");
+      const cachedFlows = sessionStorage.getItem("master_flows");
+      const cachedDepts = sessionStorage.getItem("master_departments");
+      const cachedEmps = sessionStorage.getItem("all_employees");
+      const cachedColVis = sessionStorage.getItem("master_col_vis");
 
-        // Warranty Rules
-        setWarrantyRules(warrantyRes.data.map(r => ({ ...r, id: r.id || r._id })));
-
-        // Product Segments
-        setSegments(segRes.data.map(s => ({ ...s, id: s.id || s._id })));
-        setBoardTypes(boardRes.data.map(s => ({ ...s, id: s.id || s._id })));
-        setFourMCategories(fourMRes.data.map(s => ({ ...s, id: s.id || s._id })));
-        setUnits(unitsRes.data.map(u => ({ ...u, id: u.id || u._id })));
-
-        const s = {};
-        flowRes.data.forEach(f => {
-          if (f.type !== "Service Material") s[f.type] = f.steps;
-        });
-        setFlows(s);
-        setOrigFlows(JSON.parse(JSON.stringify(s)));
-
-        const deptRes = await axios.get(`${API_URL}/master/settings/departments`);
-        setDepartments(deptRes.data || DEFAULT_DEPTS);
-
-        const emps = empRes.data;
-        setEmployees(emps);
-        sessionStorage.setItem("all_employees", JSON.stringify(emps));
-
-        if (colRes.data) {
-          setColVis(colRes.data);
-        } else {
-          setColVis({ ...DEFAULT_COL_VIS });
+      if (!forceRefresh && cachedPT && cachedWR && cachedUnits && cachedSites && cachedSegs) {
+        setPartyTypes(JSON.parse(cachedPT));
+        setWarrantyRules(JSON.parse(cachedWR));
+        setUnits(JSON.parse(cachedUnits));
+        setSites(JSON.parse(cachedSites));
+        setSegments(JSON.parse(cachedSegs));
+        if (cachedBoards) setBoardTypes(JSON.parse(cachedBoards));
+        if (cachedFourM) setFourMCategories(JSON.parse(cachedFourM));
+        if (cachedFlows) {
+          const fl = JSON.parse(cachedFlows);
+          setFlows(fl);
+          setOrigFlows(JSON.parse(JSON.stringify(fl)));
         }
-
-        sessionStorage.setItem("customer_db", JSON.stringify(dbRes.data));
-
-      } catch (err) {
-        console.error("Failed to fetch master data", err);
-      } finally {
+        if (cachedDepts) setDepartments(JSON.parse(cachedDepts));
+        if (cachedEmps) setEmployees(JSON.parse(cachedEmps));
+        if (cachedColVis) setColVis(JSON.parse(cachedColVis));
         setIsLoading(false);
+        return;
       }
-    };
-    fetchMasterData();
+
+      // 2. Fetch fresh from server (independent calls, no blocking waterfall)
+      const [
+        ptRes,
+        segRes,
+        flowRes,
+        empRes,
+        colRes,
+        boardRes,
+        fourMRes,
+        unitsRes,
+        warrantyRes,
+        sitesRes,
+        deptRes
+      ] = await Promise.all([
+        axios.get(`${API_URL}/master/party-types`),
+        axios.get(`${API_URL}/master/product-segments`),
+        axios.get(`${API_URL}/master/escalation-flows`),
+        axios.get(`${API_URL}/auth/employees`),
+        axios.get(`${API_URL}/master/settings/${COLUMN_VIS_KEY}`),
+        axios.get(`${API_URL}/master/board-types`),
+        axios.get(`${API_URL}/master/four-m-categories`),
+        axios.get(`${API_URL}/master/units`),
+        axios.get(`${API_URL}/master/warranty-rules`),
+        axios.get(`${API_URL}/master/sites`),
+        axios.get(`${API_URL}/master/settings/departments`)
+      ]);
+
+      // Normalize & Cache
+      const normPT = ptRes.data.map(t => ({ ...t, id: t.id || t._id }));
+      setPartyTypes(normPT);
+      sessionStorage.setItem("master_party_types", JSON.stringify(normPT));
+
+      const normWR = warrantyRes.data.map(r => ({ ...r, id: r.id || r._id }));
+      setWarrantyRules(normWR);
+      sessionStorage.setItem("master_warranty_rules", JSON.stringify(normWR));
+
+      const normUnits = unitsRes.data.map(u => ({ ...u, id: u.id || u._id }));
+      setUnits(normUnits);
+      sessionStorage.setItem("master_units", JSON.stringify(normUnits));
+
+      const normSites = sitesRes.data.map(s => ({ ...s, id: s.id || s._id }));
+      setSites(normSites);
+      sessionStorage.setItem("master_sites", JSON.stringify(normSites));
+
+      const normSegs = segRes.data.map(s => ({ ...s, id: s.id || s._id }));
+      setSegments(normSegs);
+      sessionStorage.setItem("master_segments", JSON.stringify(normSegs));
+
+      const normBoards = boardRes.data.map(s => ({ ...s, id: s.id || s._id }));
+      setBoardTypes(normBoards);
+      sessionStorage.setItem("master_boards", JSON.stringify(normBoards));
+
+      const normFourM = fourMRes.data.map(s => ({ ...s, id: s.id || s._id }));
+      setFourMCategories(normFourM);
+      sessionStorage.setItem("master_four_m", JSON.stringify(normFourM));
+
+      const s = {};
+      flowRes.data.forEach(f => {
+        if (f.type !== "Service Material") s[f.type] = f.steps;
+      });
+      setFlows(s);
+      setOrigFlows(JSON.parse(JSON.stringify(s)));
+      sessionStorage.setItem("master_flows", JSON.stringify(s));
+
+      setDepartments(deptRes.data || DEFAULT_DEPTS);
+      sessionStorage.setItem("master_departments", JSON.stringify(deptRes.data || DEFAULT_DEPTS));
+
+      setEmployees(empRes.data);
+      sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
+
+      const finalColVis = colRes.data || { ...DEFAULT_COL_VIS };
+      setColVis(finalColVis);
+      sessionStorage.setItem("master_col_vis", JSON.stringify(finalColVis));
+
+    } catch (err) {
+      console.error("Failed to fetch master data", err);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTabOrAllData(false);
   }, []);
 
   const TAB_ICONS = {
