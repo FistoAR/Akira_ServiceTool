@@ -8,7 +8,7 @@
  */
 
 const ServiceCall    = require('./serviceCall.model');
-const EscalationFlow = require('../master/escalationFlow.model');
+const EscalationFlow = require('../master/models/escalationFlow.model');
 const User           = require('../auth/user.model');
 const socketConfig   = require('../../config/socket');
 
