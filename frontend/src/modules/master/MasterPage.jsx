@@ -4316,6 +4316,36 @@ const SystemSettingsPage = () => {
             </div>
           )}
 
+          {/* ── Tab: Sites ── */}
+          {activeTab === "sites" && (
+            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50 to-white">
+                <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-[0.9vw] h-[0.9vw] text-white" />
+                </div>
+                <div>
+                  <h2 className="text-[0.9vw] font-bold text-slate-900">Site Master</h2>
+                  <p className="text-[0.7vw] text-gray-800">Manage plant and warehouse site locations</p>
+                </div>
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <button
+                    onClick={() => fetchTabOrAllData(true)}
+                    disabled={isRefreshing}
+                    className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.3vw] transition-all cursor-pointer shadow-sm"
+                    title="Refresh latest data from server"
+                  >
+                    <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
+                    {isRefreshing ? "Refreshing..." : "Refresh"}
+                  </button>
+                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                    {sites.length} sites
+                  </span>
+                </div>
+              </div>
+              <SitesSection sites={sites} setSites={setSites} />
+            </div>
+          )}
+
           {/* ── Tab: Escalation ── */}
           {activeTab === "escalation" && (
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
