@@ -1,18 +1,23 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
 import {
-  Shield, Users, User, Search, Save, CheckCircle, AlertTriangle,
-  Lock, ShieldCheck, Check, RotateCcw, Loader2
+  Users, User, Search, Save, Lock, Loader2, ChevronDown, Check, X,
+  AlertCircle
 } from "lucide-react";
 import { API_URL } from "./masterConstants";
 
-const RoleAccessSection = ({ employees, setEmployees }) => {
+const RoleAccessSection = ({ employees = [], setEmployees }) => {
   const { toast } = useNotification();
   const [selectedRoleFilter, setSelectedRoleFilter] = useState("All");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
-  const [selectedUser, setSelectedUser] = useState("All");
-  const [searchEmployeeQuery, setSearchEmployeeQuery] = useState("");
+
+  // Multi-select state for employees (Array of userIds)
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
+  const [employeeSearchInput, setEmployeeSearchInput] = useState("");
+  const dropdownRef = useRef(null);
+
   const [activeGroup, setActiveGroup] = useState("all");
   const [matrix, setMatrix] = useState({});
   const [saving, setSaving] = useState(false);
@@ -21,7 +26,7 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
   const [modules, setModules] = useState([]);
   const [loadingConfig, setLoadingConfig] = useState(true);
 
-  // Identify current logged-in user to check if they are a Super Admin
+  // Identify logged in user
   const currentLoggedInUser = useMemo(() => {
     try {
       return JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
@@ -32,7 +37,18 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
 
   const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
 
-  // Fetch groups and modules config dynamically from backend
+  // Close multi-select dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsEmployeeDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Fetch groups and modules config
   useEffect(() => {
     axios
       .get(`${API_URL}/master/modules`)
@@ -49,46 +65,82 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
       });
   }, []);
 
-  // Get list of unique departments
+  // Unique departments
   const uniqueDepartments = useMemo(() => {
     const set = new Set();
     (employees || []).forEach((emp) => {
-      if (emp.department) set.add(emp.department);
+      if (emp?.department) set.add(emp.department);
     });
     return Array.from(set).sort();
   }, [employees]);
 
-  // Filter employees matching selected department, role filter, and search
+  // Filtered employees list based on department, role and search input in dropdown
   const filteredEmployees = useMemo(() => {
     return (employees || []).filter((emp) => {
       if (!emp) return false;
       const matchDept = selectedDepartment === "All" || emp.department === selectedDepartment;
       const matchRole = selectedRoleFilter === "All" || emp.role === selectedRoleFilter;
-      const matchSearch =
-        !searchEmployeeQuery ||
-        emp.name?.toLowerCase().includes(searchEmployeeQuery.toLowerCase()) ||
-        emp.userId?.toLowerCase().includes(searchEmployeeQuery.toLowerCase());
-      return matchDept && matchRole && matchSearch;
+      return matchDept && matchRole;
     });
-  }, [employees, selectedDepartment, selectedRoleFilter, searchEmployeeQuery]);
+  }, [employees, selectedDepartment, selectedRoleFilter]);
 
-  // Find target employee for editing permissions
-  const targetEmployee = useMemo(() => {
-    if (selectedUser === "All") return null;
-    return (employees || []).find((emp) => emp.userId === selectedUser);
-  }, [employees, selectedUser]);
+  // Dropdown list further filtered by employee search text
+  const dropdownEmployees = useMemo(() => {
+    if (!employeeSearchInput.trim()) return filteredEmployees;
+    const query = employeeSearchInput.toLowerCase().trim();
+    return filteredEmployees.filter((emp) =>
+      emp.name?.toLowerCase().includes(query) || emp.userId?.toLowerCase().includes(query)
+    );
+  }, [filteredEmployees, employeeSearchInput]);
 
-  // Check if target employee is an Admin (protected from non-admin editing)
-  const isTargetAdmin = targetEmployee ? (targetEmployee.role === "Admin" || targetEmployee.department === "Admin") : false;
-  const isTargetLocked = isTargetAdmin && !isCurrentRequesterAdmin;
+  // Selected employee objects
+  const selectedEmployeesList = useMemo(() => {
+    if (selectedUserIds.length === 0) return [];
+    return (employees || []).filter((emp) => selectedUserIds.includes(emp.userId));
+  }, [employees, selectedUserIds]);
 
-  // Load/initialize matrix permissions object when selection changes
+  // Check if any selected employee is an Admin while requester is not
+  const containsProtectedAdmin = useMemo(() => {
+    if (isCurrentRequesterAdmin) return false;
+    return selectedEmployeesList.some((emp) => emp.role === "Admin" || emp.department === "Admin");
+  }, [selectedEmployeesList, isCurrentRequesterAdmin]);
+
+  // Discrepancy analysis when multiple employees are selected
+  // Maps modId -> { enabled: 'mixed'|boolean, read: 'mixed'|boolean, write: 'mixed'|boolean, update: 'mixed'|boolean, delete: 'mixed'|boolean }
+  const discrepancies = useMemo(() => {
+    if (selectedEmployeesList.length <= 1) return {};
+
+    const diffMap = {};
+    modules.forEach((mod) => {
+      const keys = ["enabled", "read", "write", "update", "delete"];
+      const modDiff = {};
+
+      keys.forEach((key) => {
+        const firstVal = !!selectedEmployeesList[0]?.permissions?.[mod.id]?.[key];
+        const isMixed = selectedEmployeesList.some(
+          (emp) => !!emp?.permissions?.[mod.id]?.[key] !== firstVal
+        );
+        if (isMixed) {
+          modDiff[key] = true;
+        }
+      });
+
+      if (Object.keys(modDiff).length > 0) {
+        diffMap[mod.id] = modDiff;
+      }
+    });
+
+    return diffMap;
+  }, [selectedEmployeesList, modules]);
+
+  const hasAnyDiscrepancy = Object.keys(discrepancies).length > 0;
+
+  // Initialize permission matrix whenever selected employees change
   useEffect(() => {
     if (modules.length === 0) return;
 
     const initialMatrix = {};
 
-    // Default initial permissions for all modules (enabled, read, write, update, delete)
     modules.forEach((mod) => {
       initialMatrix[mod.id] = {
         enabled: false,
@@ -99,13 +151,15 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
       };
     });
 
-    const populateFromUserPerms = (userPerms = {}) => {
+    if (selectedEmployeesList.length === 1) {
+      // Single employee selected: load their exact permissions
+      const userPerms = selectedEmployeesList[0].permissions || {};
       modules.forEach((mod) => {
         if (userPerms[mod.id]) {
           const p = userPerms[mod.id];
-          const hasAnyAccess = p.read || p.write || p.update || p.delete;
+          const hasAny = p.read || p.write || p.update || p.delete;
           initialMatrix[mod.id] = {
-            enabled: p.enabled ?? hasAnyAccess,
+            enabled: p.enabled ?? hasAny,
             read: p.read ?? true,
             write: p.write ?? false,
             update: p.update ?? p.write ?? false,
@@ -113,20 +167,30 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
           };
         }
       });
-    };
-
-    if (targetEmployee) {
-      populateFromUserPerms(targetEmployee.permissions || {});
-    } else if (filteredEmployees.length > 0) {
-      populateFromUserPerms(filteredEmployees[0].permissions || {});
+    } else if (selectedEmployeesList.length > 1) {
+      // Multiple employees selected: union / first employee baseline
+      const basePerms = selectedEmployeesList[0].permissions || {};
+      modules.forEach((mod) => {
+        if (basePerms[mod.id]) {
+          const p = basePerms[mod.id];
+          const hasAny = p.read || p.write || p.update || p.delete;
+          initialMatrix[mod.id] = {
+            enabled: p.enabled ?? hasAny,
+            read: p.read ?? true,
+            write: p.write ?? false,
+            update: p.update ?? p.write ?? false,
+            delete: p.delete ?? false,
+          };
+        }
+      });
     }
 
     setMatrix(initialMatrix);
-  }, [selectedUser, selectedDepartment, targetEmployee, filteredEmployees, modules]);
+  }, [selectedEmployeesList, modules]);
 
-  // Handle local permission toggle
+  // Toggle permission
   const togglePermission = (modId, type) => {
-    if (isTargetLocked) return;
+    if (containsProtectedAdmin) return;
 
     setMatrix((prev) => {
       const current = prev[modId] || {
@@ -140,7 +204,6 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
       const nextVal = !current[type];
       const updated = { ...current, [type]: nextVal };
 
-      // If user enables write, update, or delete, ensure read & enabled are true
       if (nextVal && (type === "write" || type === "update" || type === "delete")) {
         updated.enabled = true;
         updated.read = true;
@@ -153,9 +216,9 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
     });
   };
 
-  // Toggle entire module enabled/disabled state
+  // Toggle whole module
   const toggleModuleEnabled = (modId) => {
-    if (isTargetLocked) return;
+    if (containsProtectedAdmin) return;
 
     setMatrix((prev) => {
       const current = prev[modId] || {
@@ -170,7 +233,7 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
         ...prev,
         [modId]: {
           enabled: nextEnabled,
-          read: nextEnabled, // Enable read access by default when module is enabled
+          read: nextEnabled,
           write: false,
           update: false,
           delete: false,
@@ -179,9 +242,9 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
     });
   };
 
-  // Bulk enable/disable all modules in a specific group
+  // Bulk enable/disable group
   const handleBulkToggleGroup = (groupId, action) => {
-    if (isTargetLocked) return;
+    if (containsProtectedAdmin) return;
     setMatrix((prev) => {
       const updated = { ...prev };
       modules.forEach((mod) => {
@@ -200,35 +263,33 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
     });
   };
 
-  // Save changes to backend
+  // Save changes
   const handleSaveMatrix = async () => {
-    if (isTargetLocked) {
-      toast("Access Denied: You cannot modify an Admin account's permissions.", "error");
+    if (containsProtectedAdmin) {
+      toast("Access Denied: One or more selected accounts are Admins and cannot be modified.", "error");
+      return;
+    }
+
+    const targets = selectedEmployeesList.length > 0 ? selectedEmployeesList : filteredEmployees;
+
+    // Filter out admins if non-admin user
+    const allowedTargets = targets.filter((emp) => {
+      if (!isCurrentRequesterAdmin && (emp.role === "Admin" || emp.department === "Admin")) {
+        return false;
+      }
+      return true;
+    });
+
+    if (allowedTargets.length === 0) {
+      toast("No eligible employees selected to apply permissions.", "warning");
       return;
     }
 
     setSaving(true);
     try {
-      const targets = targetEmployee ? [targetEmployee] : filteredEmployees;
-      
-      // Filter out admin targets if requester is non-admin
-      const allowedTargets = targets.filter((emp) => {
-        if (!isCurrentRequesterAdmin && (emp.role === "Admin" || emp.department === "Admin")) {
-          return false;
-        }
-        return true;
-      });
-
-      if (allowedTargets.length === 0) {
-        toast("No eligible employees to update. (Admin accounts are protected)", "warning");
-        setSaving(false);
-        return;
-      }
-
       const token = sessionStorage.getItem("token") || localStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      // Save matrix for each target employee
       await Promise.all(
         allowedTargets.map((emp) =>
           axios.put(
@@ -239,55 +300,70 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
         )
       );
 
-      // Refresh employee list from database to keep frontend in sync
+      // Refresh employee list
       const empRes = await axios.get(`${API_URL}/auth/employees`);
       setEmployees(empRes.data);
 
-      toast("Permissions Matrix saved successfully!");
+      toast(`Permissions saved successfully for ${allowedTargets.length} employee(s)!`);
     } catch (err) {
       console.error(err);
-      toast(err.response?.data?.message || "Failed to save matrix config", "error");
+      toast(err.response?.data?.message || "Failed to save permissions", "error");
     } finally {
       setSaving(false);
     }
   };
 
-  // Count active modules
-  const activeCount = useMemo(() => {
-    let count = 0;
-    modules.forEach((mod) => {
-      const mState = matrix[mod.id] || {};
-      if (mState.read || mState.write || mState.update || mState.delete) {
-        count++;
-      }
-    });
-    return count;
-  }, [matrix, modules]);
+  // Multi-select helper functions
+  const toggleSelectUser = (userId) => {
+    setSelectedUserIds((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+    );
+  };
+
+  const handleSelectAllFiltered = () => {
+    const allFilteredIds = filteredEmployees.map((e) => e.userId);
+    const areAllSelected = allFilteredIds.length > 0 && allFilteredIds.every((id) => selectedUserIds.includes(id));
+    if (areAllSelected) {
+      // Deselect all filtered
+      setSelectedUserIds((prev) => prev.filter((id) => !allFilteredIds.includes(id)));
+    } else {
+      // Select all filtered
+      setSelectedUserIds((prev) => Array.from(new Set([...prev, ...allFilteredIds])));
+    }
+  };
+
+  const handleClearSelection = () => {
+    setSelectedUserIds([]);
+  };
 
   if (loadingConfig) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-[1vw] bg-slate-50" style={{ height: "calc(92vh - 160px)" }}>
-        <Loader2 className="w-[2.5vw] h-[2.5vw] animate-spin text-blue-600" />
-        <span className="text-[0.95vw] text-slate-500 font-bold">Loading Matrix Config...</span>
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-white" style={{ height: "calc(92vh - 160px)" }}>
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <span className="text-sm text-gray-500 font-medium">Loading Permissions...</span>
       </div>
     );
   }
 
+  const allFilteredAreSelected =
+    filteredEmployees.length > 0 &&
+    filteredEmployees.every((e) => selectedUserIds.includes(e.userId));
+
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-slate-50">
+    <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white">
       {/* Top Filter Selection Panel */}
-      <div className="flex items-center justify-between bg-white border-b border-slate-300 p-[1vw] shadow-sm flex-wrap gap-[0.8vw]">
-        <div className="flex items-center gap-[1vw] flex-wrap">
+      <div className="border-b border-gray-200 px-6 py-3.5 flex items-center justify-between flex-wrap gap-4 bg-white">
+        <div className="flex items-center gap-4 flex-wrap">
           {/* Role Filter */}
-          <div className="flex items-center gap-[0.4vw]">
-            <span className="text-[0.78vw] font-bold text-slate-700">Role:</span>
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-gray-600">Role:</label>
             <select
               value={selectedRoleFilter}
               onChange={(e) => {
                 setSelectedRoleFilter(e.target.value);
-                setSelectedUser("All");
+                setSelectedUserIds([]);
               }}
-              className="border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.35vw] text-[0.78vw] font-semibold bg-white text-slate-800 outline-none focus:border-blue-500"
+              className="border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
               <option value="All">All Roles</option>
               <option value="Admin">Admin</option>
@@ -297,15 +373,15 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
           </div>
 
           {/* Department Filter */}
-          <div className="flex items-center gap-[0.4vw]">
-            <span className="text-[0.78vw] font-bold text-slate-700">Dept:</span>
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-gray-600">Dept:</label>
             <select
               value={selectedDepartment}
               onChange={(e) => {
                 setSelectedDepartment(e.target.value);
-                setSelectedUser("All");
+                setSelectedUserIds([]);
               }}
-              className="border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.35vw] text-[0.78vw] font-semibold bg-white text-slate-800 outline-none focus:border-blue-500"
+              className="border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
               <option value="All">All Departments</option>
               {uniqueDepartments.map((d, i) => (
@@ -314,68 +390,143 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
             </select>
           </div>
 
-          {/* Specific Employee Selector */}
-          <div className="flex items-center gap-[0.4vw]">
-            <span className="text-[0.78vw] font-bold text-slate-700">Apply To:</span>
-            <select
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              className={`border rounded-[0.4vw] px-[0.7vw] py-[0.35vw] text-[0.78vw] font-semibold bg-white outline-none ${
-                isTargetAdmin ? "border-purple-400 text-purple-900 font-bold" : "border-slate-300 text-slate-800 focus:border-blue-500"
-              }`}
-            >
-              <option value="All">All ({filteredEmployees.length} Matching Employees)</option>
-              {filteredEmployees.map((emp) => (
-                <option key={emp._id || emp.id} value={emp.userId}>
-                  {emp.name} ({emp.userId}) — {emp.role || "User"}
-                </option>
-              ))}
-            </select>
+          {/* Select Employees Dropdown (Searchable Multi-select) */}
+          <div className="relative" ref={dropdownRef}>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-medium text-gray-600">Employees:</label>
+              <button
+                type="button"
+                onClick={() => setIsEmployeeDropdownOpen(!isEmployeeDropdownOpen)}
+                className="border border-gray-300 rounded px-3 py-1.5 text-xs bg-white text-gray-700 outline-none hover:border-gray-400 flex items-center justify-between gap-3 min-w-[210px] text-left cursor-pointer"
+              >
+                <span className="truncate">
+                  {selectedUserIds.length === 0
+                    ? `All (${filteredEmployees.length} matching)`
+                    : `${selectedUserIds.length} employee${selectedUserIds.length > 1 ? "s" : ""} selected`}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+              </button>
+            </div>
+
+            {/* Dropdown Menu */}
+            {isEmployeeDropdownOpen && (
+              <div className="absolute left-[70px] top-full mt-1 w-72 bg-white border border-gray-200 rounded shadow-lg z-50 p-2 space-y-2">
+                {/* Search Box */}
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search by name or ID..."
+                    value={employeeSearchInput}
+                    onChange={(e) => setEmployeeSearchInput(e.target.value)}
+                    className="w-full pl-8 pr-2 py-1 text-xs border border-gray-200 rounded outline-none focus:border-blue-500"
+                    autoFocus
+                  />
+                </div>
+
+                {/* Quick Selection Actions */}
+                <div className="flex items-center justify-between pt-1 border-b border-gray-100 pb-1 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={handleSelectAllFiltered}
+                    className="text-blue-600 hover:underline font-medium cursor-pointer"
+                  >
+                    {allFilteredAreSelected ? "Deselect All" : "Select All Filtered"}
+                  </button>
+                  {selectedUserIds.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearSelection}
+                      className="text-gray-500 hover:text-red-600 cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {/* Employee List */}
+                <div className="max-h-52 overflow-y-auto space-y-1">
+                  {dropdownEmployees.map((emp) => {
+                    const isSelected = selectedUserIds.includes(emp.userId);
+                    const isAdmin = emp.role === "Admin" || emp.department === "Admin";
+
+                    return (
+                      <div
+                        key={emp._id || emp.id}
+                        onClick={() => toggleSelectUser(emp.userId)}
+                        className={`flex items-center justify-between px-2 py-1.5 rounded text-xs cursor-pointer hover:bg-gray-50 ${
+                          isSelected ? "bg-blue-50/60 text-blue-700" : "text-gray-700"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => {}}
+                            className="rounded border-gray-300 text-blue-600 cursor-pointer pointer-events-none"
+                          />
+                          <span className="truncate">
+                            {emp.name} <span className="text-gray-400">({emp.userId})</span>
+                          </span>
+                        </div>
+                        {isAdmin && (
+                          <span className="text-[10px] text-purple-600 bg-purple-50 px-1 py-0.2 rounded font-medium">
+                            Admin
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {dropdownEmployees.length === 0 && (
+                    <p className="text-center text-xs text-gray-400 py-2">No matching employees</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="bg-blue-50/50 border border-blue-200 rounded-[0.4vw] px-[0.7vw] py-[0.3vw] text-[0.76vw] font-bold text-blue-800">
-            Active: <span className="text-blue-600 font-extrabold">{activeCount} of {modules.length}</span>
-          </div>
-        </div>
-
-        {/* Save / Status Button */}
-        <div className="flex items-center gap-[0.8vw]">
-          {isTargetLocked && (
-            <div className="flex items-center gap-[0.3vw] bg-amber-50 border border-amber-300 px-[0.8vw] py-[0.35vw] rounded-[0.4vw] text-amber-800 text-[0.75vw] font-bold">
-              <Lock className="w-[0.9vw] h-[0.9vw] text-amber-600" />
-              <span>Admin Profile (Protected)</span>
+          {/* Discrepancy Indicator (if multiple selected have differing permissions) */}
+          {hasAnyDiscrepancy && (
+            <div className="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded">
+              <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+              <span>Selected users have differing permissions. Saving will standardize them.</span>
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={handleSaveMatrix}
-            disabled={saving || isTargetLocked}
-            className={`font-bold px-[1.4vw] py-[0.45vw] rounded-[0.4vw] text-[0.82vw] cursor-pointer flex items-center gap-[0.4vw] transition-all shadow-sm ${
-              isTargetLocked
-                ? "bg-slate-300 text-slate-500 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/10"
-            }`}
-          >
-            {saving ? (
-              <>
-                <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" /> Saving...
-              </>
-            ) : (
-              <>
-                <Save className="w-[0.9vw] h-[0.9vw]" /> Save Matrix
-              </>
-            )}
-          </button>
+          {/* Protected Admin Warning */}
+          {containsProtectedAdmin && (
+            <div className="flex items-center gap-1.5 text-xs text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded">
+              <Lock className="w-3.5 h-3.5 text-red-600" />
+              <span>Admin account selected (Locked from non-admin editing)</span>
+            </div>
+          )}
         </div>
+
+        {/* Save Button */}
+        <button
+          type="button"
+          onClick={handleSaveMatrix}
+          disabled={saving || containsProtectedAdmin}
+          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium text-xs px-4 py-2 rounded shadow-sm flex items-center gap-2 transition-colors cursor-pointer"
+        >
+          {saving ? (
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Saving...
+            </>
+          ) : (
+            <>
+              <Save className="w-3.5 h-3.5" /> Save Changes
+            </>
+          )}
+        </button>
       </div>
 
       {/* Main Content Pane Split */}
       <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(92vh - 160px)" }}>
         {/* Left Side: Modules Navigation */}
-        <div className="w-[14vw] bg-white border-r border-slate-300 flex flex-col p-[0.7vw] gap-[0.25vw] overflow-y-auto h-full">
-          <p className="text-[0.68vw] font-bold uppercase tracking-wider text-slate-400 px-[0.4vw] mb-[0.3vw]">
-            Module Domains
+        <div className="w-48 border-r border-gray-200 flex flex-col p-3 gap-0.5 overflow-y-auto h-full bg-white">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-2 mb-1.5">
+            Categories
           </p>
           {groups.map((g) => {
             const isActive = activeGroup === g.id;
@@ -386,55 +537,49 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
                 key={g.id}
                 type="button"
                 onClick={() => setActiveGroup(g.id)}
-                className={`flex items-center justify-between px-[0.7vw] py-[0.55vw] rounded-[0.4vw] text-[0.78vw] font-bold transition-all text-left cursor-pointer ${
+                className={`flex items-center justify-between px-2.5 py-2 rounded text-xs font-medium transition-colors text-left cursor-pointer ${
                   isActive
-                    ? "bg-blue-50 text-blue-600 border-l-[3px] border-blue-600"
-                    : "text-slate-800 hover:bg-slate-50"
+                    ? "bg-gray-100 text-blue-600 font-semibold"
+                    : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <span>{g.label}</span>
-                <span className={`text-[0.65vw] px-[0.35vw] py-[0.1vw] rounded font-semibold ${
-                  isActive ? "bg-blue-100 text-blue-800" : "bg-slate-100 text-slate-700"
-                }`}>
-                  {count}
-                </span>
+                <span className="text-[11px] text-gray-400">{count}</span>
               </button>
             );
           })}
         </div>
 
         {/* Right Side: Permission Cards Grid */}
-        <div className="flex-1 p-[1vw] overflow-y-auto min-h-0 space-y-[1.2vw] h-[73vh]">
-          {groups.filter(g => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
+        <div className="flex-1 p-5 overflow-y-auto min-h-0 space-y-6 h-[73vh] bg-gray-50/50">
+          {groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
             const groupMods = modules.filter((mod) => mod.group === g.id);
             if (groupMods.length === 0) return null;
 
             return (
-              <div key={g.id} className="bg-white border border-slate-300 rounded-[0.6vw] p-[0.9vw] space-y-[0.8vw] shadow-sm">
+              <div key={g.id} className="bg-white border border-gray-200 rounded p-4 space-y-4">
                 {/* Header for group */}
-                <div className="flex items-center justify-between border-b border-slate-200 pb-[0.4vw]">
-                  <div className="flex items-center gap-[0.5vw]">
-                    <span className="w-[0.3vw] h-[1.1vw] bg-blue-600 rounded-full" />
-                    <h3 className="text-[0.88vw] font-bold text-slate-900">{g.label}</h3>
-                    <span className="text-[0.68vw] font-semibold text-slate-600 bg-slate-100 px-[0.4vw] py-[0.1vw] rounded">
-                      {groupMods.length} modules
-                    </span>
+                <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-gray-800">{g.label}</h3>
+                    <span className="text-[11px] text-gray-400">({groupMods.length})</span>
                   </div>
 
-                  <div className="flex items-center gap-[0.4vw]">
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      disabled={isTargetLocked}
+                      disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                      className="text-[0.7vw] font-bold text-blue-600 hover:bg-blue-50 px-[0.5vw] py-[0.2vw] rounded cursor-pointer border border-blue-200 transition-all disabled:opacity-40"
+                      className="text-xs text-blue-600 hover:text-blue-700 hover:underline cursor-pointer disabled:opacity-40"
                     >
                       Enable All
                     </button>
+                    <span className="text-gray-300">|</span>
                     <button
                       type="button"
-                      disabled={isTargetLocked}
+                      disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                      className="text-[0.7vw] font-bold text-slate-700 hover:bg-slate-50 px-[0.5vw] py-[0.2vw] rounded cursor-pointer border border-slate-300 transition-all disabled:opacity-40"
+                      className="text-xs text-gray-500 hover:text-gray-700 hover:underline cursor-pointer disabled:opacity-40"
                     >
                       Disable All
                     </button>
@@ -442,7 +587,7 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
                 </div>
 
                 {/* Modules Grid */}
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-[0.9vw]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {groupMods.map((mod) => {
                     const mState = matrix[mod.id] || {
                       enabled: false,
@@ -452,115 +597,97 @@ const RoleAccessSection = ({ employees, setEmployees }) => {
                       delete: false,
                     };
 
+                    const modDiscrepancy = discrepancies[mod.id];
+
                     return (
                       <div
                         key={mod.id}
-                        className={`border rounded-[0.5vw] p-[0.75vw] hover:shadow-md transition-all flex flex-col justify-between bg-white ${
-                          mState.enabled ? "border-slate-300" : "border-slate-200 bg-slate-50/50"
+                        className={`border rounded p-3 bg-white flex flex-col justify-between transition-colors ${
+                          mState.enabled ? "border-gray-200" : "border-gray-100 bg-gray-50/30"
                         }`}
                       >
-                        {/* Module Title & Master Switch */}
-                        <div className="flex items-center justify-between pb-[0.4vw] border-b border-slate-100">
-                          <div className="flex flex-col max-w-[75%]">
-                            <h4 className="text-[0.82vw] font-bold text-slate-900 truncate" title={mod.label}>
+                        {/* Title and Module Enable Switch */}
+                        <div className="flex items-start justify-between gap-2 pb-2 border-b border-gray-100">
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-xs font-semibold text-gray-800 truncate" title={mod.label}>
                               {mod.label}
-                            </h4>
-                            <span className="text-[0.65vw] text-slate-400 truncate" title={mod.desc}>
+                            </span>
+                            <span className="text-[11px] text-gray-400 truncate" title={mod.desc}>
                               {mod.desc || mod.label}
                             </span>
                           </div>
 
-                          <button
-                            type="button"
-                            disabled={isTargetLocked}
-                            onClick={() => toggleModuleEnabled(mod.id)}
-                            className={`relative inline-flex h-[1vw] w-[1.8vw] items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
-                              mState.enabled ? "bg-blue-600" : "bg-slate-300"
-                            } ${isTargetLocked ? "opacity-50 cursor-not-allowed" : ""}`}
-                          >
-                            <span
-                              className={`inline-block h-[0.6vw] w-[0.6vw] transform rounded-full bg-white transition-transform ${
-                                mState.enabled ? "translate-x-[1vw]" : "translate-x-[0.2vw]"
-                              }`}
+                          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                            <input
+                              type="checkbox"
+                              checked={mState.enabled}
+                              disabled={containsProtectedAdmin}
+                              onChange={() => toggleModuleEnabled(mod.id)}
+                              className="sr-only peer"
                             />
-                          </button>
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
                         </div>
 
-                        {/* Four Clean CRUD Toggle Controls: Read, Write, Update, Delete */}
-                        <div className={`grid grid-cols-4 gap-[0.25vw] bg-slate-50 p-[0.4vw] rounded-[0.4vw] border border-slate-200 mt-[0.6vw] transition-all duration-200 ${
-                          mState.enabled && !isTargetLocked ? "opacity-100" : "opacity-40 pointer-events-none"
-                        }`}>
-                          {/* Read Toggle */}
-                          <div className="flex flex-col items-center gap-[0.1vw]">
-                            <span className="text-[0.65vw] font-bold text-slate-700">Read</span>
-                            <button
-                              type="button"
-                              onClick={() => togglePermission(mod.id, "read")}
-                              className={`relative inline-flex h-[1vw] w-[1.8vw] items-center rounded-full transition-colors cursor-pointer ${
-                                mState.read ? "bg-emerald-500" : "bg-slate-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-[0.6vw] w-[0.6vw] transform rounded-full bg-white transition-transform ${
-                                  mState.read ? "translate-x-[1vw]" : "translate-x-[0.2vw]"
-                                }`}
-                              />
-                            </button>
-                          </div>
+                        {/* Four Simple Action Toggles: Read, Write, Update, Delete */}
+                        <div
+                          className={`grid grid-cols-4 gap-1 pt-2.5 text-center transition-opacity ${
+                            mState.enabled && !containsProtectedAdmin
+                              ? "opacity-100"
+                              : "opacity-30 pointer-events-none"
+                          }`}
+                        >
+                          {/* Read */}
+                          <button
+                            type="button"
+                            onClick={() => togglePermission(mod.id, "read")}
+                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                              mState.read
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                            } ${modDiscrepancy?.read ? "ring-1 ring-amber-400" : ""}`}
+                          >
+                            Read
+                          </button>
 
-                          {/* Write (Create) Toggle */}
-                          <div className="flex flex-col items-center gap-[0.1vw]">
-                            <span className="text-[0.65vw] font-bold text-slate-700">Write</span>
-                            <button
-                              type="button"
-                              onClick={() => togglePermission(mod.id, "write")}
-                              className={`relative inline-flex h-[1vw] w-[1.8vw] items-center rounded-full transition-colors cursor-pointer ${
-                                mState.write ? "bg-emerald-500" : "bg-slate-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-[0.6vw] w-[0.6vw] transform rounded-full bg-white transition-transform ${
-                                  mState.write ? "translate-x-[1vw]" : "translate-x-[0.2vw]"
-                                }`}
-                              />
-                            </button>
-                          </div>
+                          {/* Write */}
+                          <button
+                            type="button"
+                            onClick={() => togglePermission(mod.id, "write")}
+                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                              mState.write
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                            } ${modDiscrepancy?.write ? "ring-1 ring-amber-400" : ""}`}
+                          >
+                            Write
+                          </button>
 
-                          {/* Update (Edit) Toggle */}
-                          <div className="flex flex-col items-center gap-[0.1vw]">
-                            <span className="text-[0.65vw] font-bold text-slate-700">Update</span>
-                            <button
-                              type="button"
-                              onClick={() => togglePermission(mod.id, "update")}
-                              className={`relative inline-flex h-[1vw] w-[1.8vw] items-center rounded-full transition-colors cursor-pointer ${
-                                mState.update ? "bg-emerald-500" : "bg-slate-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-[0.6vw] w-[0.6vw] transform rounded-full bg-white transition-transform ${
-                                  mState.update ? "translate-x-[1vw]" : "translate-x-[0.2vw]"
-                                }`}
-                              />
-                            </button>
-                          </div>
+                          {/* Update */}
+                          <button
+                            type="button"
+                            onClick={() => togglePermission(mod.id, "update")}
+                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                              mState.update
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                            } ${modDiscrepancy?.update ? "ring-1 ring-amber-400" : ""}`}
+                          >
+                            Update
+                          </button>
 
-                          {/* Delete Toggle */}
-                          <div className="flex flex-col items-center gap-[0.1vw]">
-                            <span className="text-[0.65vw] font-bold text-slate-700">Delete</span>
-                            <button
-                              type="button"
-                              onClick={() => togglePermission(mod.id, "delete")}
-                              className={`relative inline-flex h-[1vw] w-[1.8vw] items-center rounded-full transition-colors cursor-pointer ${
-                                mState.delete ? "bg-emerald-500" : "bg-slate-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-[0.6vw] w-[0.6vw] transform rounded-full bg-white transition-transform ${
-                                  mState.delete ? "translate-x-[1vw]" : "translate-x-[0.2vw]"
-                                }`}
-                              />
-                            </button>
-                          </div>
+                          {/* Delete */}
+                          <button
+                            type="button"
+                            onClick={() => togglePermission(mod.id, "delete")}
+                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                              mState.delete
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                            } ${modDiscrepancy?.delete ? "ring-1 ring-amber-400" : ""}`}
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     );
