@@ -210,21 +210,24 @@ const SystemSettingsPage = () => {
             sessionStorage.setItem("master_departments", JSON.stringify(depts));
           }
 
-          // Progressive image hydration in background
+          // Progressive image hydration: apply one-by-one with smooth visual pop-in
           axios
             .get(`${API_URL}/auth/employee-pictures`)
-            .then((picRes) => {
+            .then(async (picRes) => {
               if (Array.isArray(picRes.data) && picRes.data.length > 0) {
-                const picMap = {};
-                picRes.data.forEach((p) => {
-                  if (p.profilePicture) picMap[p._id || p.userId] = p.profilePicture;
-                });
-                setEmployees((prev) =>
-                  prev.map((e) => {
-                    const pic = picMap[e._id] || picMap[e.userId];
-                    return pic ? { ...e, profilePicture: pic } : e;
-                  })
-                );
+                for (const p of picRes.data) {
+                  if (p.profilePicture) {
+                    setEmployees((prev) =>
+                      prev.map((e) =>
+                        (e._id === p._id || e.userId === p.userId)
+                          ? { ...e, profilePicture: p.profilePicture }
+                          : e
+                      )
+                    );
+                    // Gentle micro-stagger (40ms) so each avatar smoothly appears one by one
+                    await new Promise((resolve) => setTimeout(resolve, 40));
+                  }
+                }
               }
             })
             .catch(() => {});

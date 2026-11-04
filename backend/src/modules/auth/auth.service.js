@@ -1,10 +1,30 @@
 const User = require('./user.model');
 const jwt = require('jsonwebtoken');
+const sharp = require('sharp');
+const mongoose = require('mongoose');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
+};
+
+// Auto-compress profile picture to lightweight avatar (max 180x180 WebP, ~2-5KB)
+const compressProfilePicture = async (dataUrl) => {
+  if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return dataUrl;
+  try {
+    const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) return dataUrl;
+    const buffer = Buffer.from(matches[2], 'base64');
+    const compressedBuffer = await sharp(buffer)
+      .resize(180, 180, { fit: 'cover', position: 'center' })
+      .webp({ quality: 80 })
+      .toBuffer();
+    return `data:image/webp;base64,${compressedBuffer.toString('base64')}`;
+  } catch (err) {
+    console.warn('Image compression fallback:', err.message);
+    return dataUrl;
+  }
 };
 
 const registerUser = async (userData) => {
@@ -14,7 +34,12 @@ const registerUser = async (userData) => {
     throw new Error('User already exists');
   }
 
-  const user = await User.create(userData);
+  const payload = { ...userData };
+  if (payload.profilePicture) {
+    payload.profilePicture = await compressProfilePicture(payload.profilePicture);
+  }
+
+  const user = await User.create(payload);
 
   if (user) {
     return {
@@ -88,6 +113,11 @@ const getEmployeePictures = async () => {
     .lean();
 };
 
+const getEmployeePictureById = async (id) => {
+  const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { userId: id };
+  return await User.findOne(query).select('_id userId profilePicture').lean();
+};
+
 const updateUser = async (id, userData) => {
   const user = await User.findById(id);
 
@@ -104,7 +134,7 @@ const updateUser = async (id, userData) => {
     user.dateOfJoining = userData.dateOfJoining || user.dateOfJoining;
     user.workingStatus = userData.workingStatus || user.workingStatus;
     if (userData.profilePicture !== undefined) {
-      user.profilePicture = userData.profilePicture;
+      user.profilePicture = await compressProfilePicture(userData.profilePicture);
     }
     if (userData.permissions) {
       user.permissions = userData.permissions;
@@ -145,5 +175,7 @@ module.exports = {
   loginUser,
   getUsers,
   getEmployeePictures,
+  getEmployeePictureById,
   updateUser,
+  compressProfilePicture,
 };

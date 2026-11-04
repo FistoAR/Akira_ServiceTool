@@ -3,17 +3,17 @@ const authService = require('./auth.service');
 const register = async (req, res) => {
   try {
     const user = await authService.registerUser(req.body);
-    res.status(201).json(user);
+    res.status(201).json({ user });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
   try {
-    const user = await authService.loginUser(email, password);
-    res.json(user);
+    const { emailOrUserId, password } = req.body;
+    const user = await authService.loginUser(emailOrUserId, password);
+    res.json({ user });
   } catch (error) {
     res.status(401).json({ message: error.message });
   }
@@ -38,6 +38,16 @@ const getEmployeePictures = async (req, res) => {
   }
 };
 
+const getEmployeePictureById = async (req, res) => {
+  try {
+    const picture = await authService.getEmployeePictureById(req.params.id);
+    if (!picture) return res.status(404).json({ message: 'Not found' });
+    res.json(picture);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const updateEmployee = async (req, res) => {
   try {
     const user = await authService.updateUser(req.params.id, req.body);
@@ -52,5 +62,6 @@ module.exports = {
   login,
   getEmployees,
   getEmployeePictures,
+  getEmployeePictureById,
   updateEmployee,
 };

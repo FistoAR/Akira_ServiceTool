@@ -490,7 +490,33 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           const file = e.target.files[0];
                           if (file) {
                             const reader = new FileReader();
-                            reader.onloadend = () => setRegData({...regData, profilePicture: reader.result});
+                            reader.onload = (event) => {
+                              const img = new Image();
+                              img.onload = () => {
+                                const canvas = document.createElement("canvas");
+                                const MAX_SIZE = 180;
+                                let width = img.width;
+                                let height = img.height;
+                                if (width > height) {
+                                  if (width > MAX_SIZE) {
+                                    height = Math.round((height * MAX_SIZE) / width);
+                                    width = MAX_SIZE;
+                                  }
+                                } else {
+                                  if (height > MAX_SIZE) {
+                                    width = Math.round((width * MAX_SIZE) / height);
+                                    height = MAX_SIZE;
+                                  }
+                                }
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext("2d");
+                                ctx.drawImage(img, 0, 0, width, height);
+                                const compressed = canvas.toDataURL("image/webp", 0.8) || canvas.toDataURL("image/jpeg", 0.8);
+                                setRegData((prev) => ({ ...prev, profilePicture: compressed }));
+                              };
+                              img.src = event.target.result;
+                            };
                             reader.readAsDataURL(file);
                           }
                         }}

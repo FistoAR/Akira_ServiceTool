@@ -6,6 +6,7 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/employees', authController.getEmployees);
 router.get('/employee-pictures', authController.getEmployeePictures);
+router.get('/employee-picture/:id', authController.getEmployeePictureById);
 router.put('/employees/:id', authController.updateEmployee);
 
 module.exports = router;
