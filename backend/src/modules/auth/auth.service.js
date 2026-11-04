@@ -8,8 +8,6 @@ const generateToken = (id) => {
 };
 
 const registerUser = async (userData) => {
-  const { name, email, password } = userData;
-
   const userExists = await User.findOne({ $or: [{ email: userData.email }, { userId: userData.userId }] });
 
   if (userExists) {
@@ -74,12 +72,20 @@ const loginUser = async (emailOrUserId, password) => {
   }
 };
 
+// Returns employees fast without heavy base64 profilePicture
 const getUsers = async (includePic = false) => {
   const query = User.find({}).select('-password');
   if (!includePic) {
     query.select('-profilePicture');
   }
   return await query.lean();
+};
+
+// Returns profile pictures only for progressive loading
+const getEmployeePictures = async () => {
+  return await User.find({ profilePicture: { $exists: true, $ne: null } })
+    .select('_id userId profilePicture')
+    .lean();
 };
 
 const updateUser = async (id, userData) => {
@@ -138,5 +144,6 @@ module.exports = {
   registerUser,
   loginUser,
   getUsers,
+  getEmployeePictures,
   updateUser,
 };

@@ -29,6 +29,15 @@ const getEmployees = async (req, res) => {
   }
 };
 
+const getEmployeePictures = async (req, res) => {
+  try {
+    const pictures = await authService.getEmployeePictures();
+    res.json(pictures);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const updateEmployee = async (req, res) => {
   try {
     const user = await authService.updateUser(req.params.id, req.body);
@@ -42,5 +51,6 @@ module.exports = {
   register,
   login,
   getEmployees,
+  getEmployeePictures,
   updateEmployee,
 };
