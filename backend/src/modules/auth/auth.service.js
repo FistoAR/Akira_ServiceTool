@@ -66,14 +66,18 @@ const registerUser = async (userData) => {
 };
 
 const loginUser = async (emailOrUserId, password) => {
+  const trimmedInput = (emailOrUserId || '').trim();
+  const trimmedPassword = (password || '').trim();
+
+  const escapedInput = trimmedInput.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const user = await User.findOne({ 
     $or: [
-      { email: emailOrUserId }, 
-      { userId: emailOrUserId }
+      { email: { $regex: new RegExp(`^${escapedInput}$`, 'i') } }, 
+      { userId: { $regex: new RegExp(`^${escapedInput}$`, 'i') } }
     ] 
   });
 
-  if (user && (await user.matchPassword(password))) {
+  if (user && ((await user.matchPassword(password)) || (await user.matchPassword(trimmedPassword)))) {
     return {
       _id: user._id,
       name: user.name,
