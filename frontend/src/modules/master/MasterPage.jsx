@@ -72,19 +72,23 @@ const SystemSettingsPage = () => {
         }
 
         case "warranty-rules": {
-          const cachedRules = sessionStorage.getItem("master_warranty_rules");
-          const cachedSegs = sessionStorage.getItem("master_segments");
+          const cachedRules = !force ? getCachedArray("master_warranty_rules") : null;
+          const cachedSegs = !force ? getCachedArray("master_segments") : null;
 
-          if (!force && cachedRules && cachedSegs) {
-            setWarrantyRules(JSON.parse(cachedRules));
-            setSegments(JSON.parse(cachedSegs));
+          if (cachedRules && cachedSegs) {
+            setWarrantyRules(cachedRules);
+            setSegments(cachedSegs);
           } else {
             const [rulesRes, segRes] = await Promise.all([
               axios.get(`${API_URL}/master/warranty-rules`),
               axios.get(`${API_URL}/master/product-segments`)
             ]);
-            const normRules = rulesRes.data.map(r => ({ ...r, id: r.id || r._id, productSegment: r.productSegment || r.partyType || "Default" }));
-            const normSegs = segRes.data.map(s => ({ ...s, id: s.id || s._id }));
+            const normRules = Array.isArray(rulesRes.data)
+              ? rulesRes.data.map(r => ({ ...r, id: r.id || r._id, productSegment: r.productSegment || r.partyType || "Default" }))
+              : [];
+            const normSegs = Array.isArray(segRes.data)
+              ? segRes.data.map(s => ({ ...s, id: s.id || s._id }))
+              : [];
             setWarrantyRules(normRules);
             setSegments(normSegs);
             sessionStorage.setItem("master_warranty_rules", JSON.stringify(normRules));
@@ -357,7 +361,7 @@ const SystemSettingsPage = () => {
               <WarrantyRulesSection
                 warrantyRules={warrantyRules}
                 setWarrantyRules={setWarrantyRules}
-                partyTypes={partyTypes || []}
+                segments={segments || []}
               />
             </div>
           )}
