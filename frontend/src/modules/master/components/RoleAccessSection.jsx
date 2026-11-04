@@ -74,7 +74,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     return Array.from(set).sort();
   }, [employees]);
 
-  // Filtered employees list based on department, role and search input in dropdown
+  // Filtered employees list based on department and role
   const filteredEmployees = useMemo(() => {
     return (employees || []).filter((emp) => {
       if (!emp) return false;
@@ -106,7 +106,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   }, [selectedEmployeesList, isCurrentRequesterAdmin]);
 
   // Discrepancy analysis when multiple employees are selected
-  // Maps modId -> { enabled: 'mixed'|boolean, read: 'mixed'|boolean, write: 'mixed'|boolean, update: 'mixed'|boolean, delete: 'mixed'|boolean }
   const discrepancies = useMemo(() => {
     if (selectedEmployeesList.length <= 1) return {};
 
@@ -272,7 +271,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
     const targets = selectedEmployeesList.length > 0 ? selectedEmployeesList : filteredEmployees;
 
-    // Filter out admins if non-admin user
     const allowedTargets = targets.filter((emp) => {
       if (!isCurrentRequesterAdmin && (emp.role === "Admin" || emp.department === "Admin")) {
         return false;
@@ -300,7 +298,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         )
       );
 
-      // Refresh employee list
       const empRes = await axios.get(`${API_URL}/auth/employees`);
       setEmployees(empRes.data);
 
@@ -324,10 +321,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     const allFilteredIds = filteredEmployees.map((e) => e.userId);
     const areAllSelected = allFilteredIds.length > 0 && allFilteredIds.every((id) => selectedUserIds.includes(id));
     if (areAllSelected) {
-      // Deselect all filtered
       setSelectedUserIds((prev) => prev.filter((id) => !allFilteredIds.includes(id)));
     } else {
-      // Select all filtered
       setSelectedUserIds((prev) => Array.from(new Set([...prev, ...allFilteredIds])));
     }
   };
@@ -339,8 +334,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   if (loadingConfig) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-white" style={{ height: "calc(92vh - 160px)" }}>
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-        <span className="text-sm text-gray-500 font-medium">Loading Permissions...</span>
+        <Loader2 className="w-9 h-9 animate-spin text-blue-600" />
+        <span className="text-base text-gray-600 font-medium">Loading Permissions...</span>
       </div>
     );
   }
@@ -350,20 +345,20 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     filteredEmployees.every((e) => selectedUserIds.includes(e.userId));
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white">
+    <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white text-gray-800">
       {/* Top Filter Selection Panel */}
-      <div className="border-b border-gray-200 px-6 py-3.5 flex items-center justify-between flex-wrap gap-4 bg-white">
-        <div className="flex items-center gap-4 flex-wrap">
+      <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between flex-wrap gap-4 bg-white">
+        <div className="flex items-center gap-5 flex-wrap">
           {/* Role Filter */}
           <div className="flex items-center gap-2">
-            <label className="text-xs font-medium text-gray-600">Role:</label>
+            <label className="text-sm font-semibold text-gray-700">Role:</label>
             <select
               value={selectedRoleFilter}
               onChange={(e) => {
                 setSelectedRoleFilter(e.target.value);
                 setSelectedUserIds([]);
               }}
-              className="border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
             >
               <option value="All">All Roles</option>
               <option value="Admin">Admin</option>
@@ -374,14 +369,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
           {/* Department Filter */}
           <div className="flex items-center gap-2">
-            <label className="text-xs font-medium text-gray-600">Dept:</label>
+            <label className="text-sm font-semibold text-gray-700">Dept:</label>
             <select
               value={selectedDepartment}
               onChange={(e) => {
                 setSelectedDepartment(e.target.value);
                 setSelectedUserIds([]);
               }}
-              className="border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
             >
               <option value="All">All Departments</option>
               {uniqueDepartments.map((d, i) => (
@@ -393,43 +388,43 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           {/* Select Employees Dropdown (Searchable Multi-select) */}
           <div className="relative" ref={dropdownRef}>
             <div className="flex items-center gap-2">
-              <label className="text-xs font-medium text-gray-600">Employees:</label>
+              <label className="text-sm font-semibold text-gray-700">Employees:</label>
               <button
                 type="button"
                 onClick={() => setIsEmployeeDropdownOpen(!isEmployeeDropdownOpen)}
-                className="border border-gray-300 rounded px-3 py-1.5 text-xs bg-white text-gray-700 outline-none hover:border-gray-400 flex items-center justify-between gap-3 min-w-[210px] text-left cursor-pointer"
+                className="border border-gray-300 rounded-md px-3.5 py-1.5 text-sm bg-white text-gray-800 outline-none hover:border-gray-400 flex items-center justify-between gap-3 min-w-[240px] text-left cursor-pointer"
               >
-                <span className="truncate">
+                <span className="truncate font-medium">
                   {selectedUserIds.length === 0
                     ? `All (${filteredEmployees.length} matching)`
                     : `${selectedUserIds.length} employee${selectedUserIds.length > 1 ? "s" : ""} selected`}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                <ChevronDown className="w-4 h-4 text-gray-500 flex-shrink-0" />
               </button>
             </div>
 
             {/* Dropdown Menu */}
             {isEmployeeDropdownOpen && (
-              <div className="absolute left-[70px] top-full mt-1 w-72 bg-white border border-gray-200 rounded shadow-lg z-50 p-2 space-y-2">
+              <div className="absolute left-[85px] top-full mt-1.5 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50 p-2.5 space-y-2">
                 {/* Search Box */}
                 <div className="relative">
-                  <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Search by name or ID..."
                     value={employeeSearchInput}
                     onChange={(e) => setEmployeeSearchInput(e.target.value)}
-                    className="w-full pl-8 pr-2 py-1 text-xs border border-gray-200 rounded outline-none focus:border-blue-500"
+                    className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-300 rounded-md outline-none focus:border-blue-500"
                     autoFocus
                   />
                 </div>
 
                 {/* Quick Selection Actions */}
-                <div className="flex items-center justify-between pt-1 border-b border-gray-100 pb-1 text-[11px]">
+                <div className="flex items-center justify-between pt-1 border-b border-gray-100 pb-1.5 text-xs">
                   <button
                     type="button"
                     onClick={handleSelectAllFiltered}
-                    className="text-blue-600 hover:underline font-medium cursor-pointer"
+                    className="text-blue-600 hover:underline font-semibold cursor-pointer"
                   >
                     {allFilteredAreSelected ? "Deselect All" : "Select All Filtered"}
                   </button>
@@ -437,15 +432,15 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     <button
                       type="button"
                       onClick={handleClearSelection}
-                      className="text-gray-500 hover:text-red-600 cursor-pointer"
+                      className="text-gray-500 hover:text-red-600 font-medium cursor-pointer"
                     >
-                      Clear
+                      Clear Selection
                     </button>
                   )}
                 </div>
 
                 {/* Employee List */}
-                <div className="max-h-52 overflow-y-auto space-y-1">
+                <div className="max-h-60 overflow-y-auto space-y-1">
                   {dropdownEmployees.map((emp) => {
                     const isSelected = selectedUserIds.includes(emp.userId);
                     const isAdmin = emp.role === "Admin" || emp.department === "Admin";
@@ -454,23 +449,23 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       <div
                         key={emp._id || emp.id}
                         onClick={() => toggleSelectUser(emp.userId)}
-                        className={`flex items-center justify-between px-2 py-1.5 rounded text-xs cursor-pointer hover:bg-gray-50 ${
-                          isSelected ? "bg-blue-50/60 text-blue-700" : "text-gray-700"
+                        className={`flex items-center justify-between px-2.5 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-50 transition-colors ${
+                          isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-700"
                         }`}
                       >
-                        <div className="flex items-center gap-2 truncate">
+                        <div className="flex items-center gap-2.5 truncate">
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => {}}
-                            className="rounded border-gray-300 text-blue-600 cursor-pointer pointer-events-none"
+                            className="w-4 h-4 rounded border-gray-300 text-blue-600 cursor-pointer pointer-events-none"
                           />
                           <span className="truncate">
-                            {emp.name} <span className="text-gray-400">({emp.userId})</span>
+                            {emp.name} <span className="text-gray-400 text-xs">({emp.userId})</span>
                           </span>
                         </div>
                         {isAdmin && (
-                          <span className="text-[10px] text-purple-600 bg-purple-50 px-1 py-0.2 rounded font-medium">
+                          <span className="text-xs text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded font-medium">
                             Admin
                           </span>
                         )}
@@ -478,25 +473,25 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     );
                   })}
                   {dropdownEmployees.length === 0 && (
-                    <p className="text-center text-xs text-gray-400 py-2">No matching employees</p>
+                    <p className="text-center text-sm text-gray-400 py-3">No matching employees</p>
                   )}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Discrepancy Indicator (if multiple selected have differing permissions) */}
+          {/* Discrepancy Indicator */}
           {hasAnyDiscrepancy && (
-            <div className="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded">
-              <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+            <div className="flex items-center gap-2 text-xs font-medium text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-md">
+              <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0" />
               <span>Selected users have differing permissions. Saving will standardize them.</span>
             </div>
           )}
 
           {/* Protected Admin Warning */}
           {containsProtectedAdmin && (
-            <div className="flex items-center gap-1.5 text-xs text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded">
-              <Lock className="w-3.5 h-3.5 text-red-600" />
+            <div className="flex items-center gap-2 text-xs font-semibold text-red-800 bg-red-50 border border-red-200 px-3 py-1.5 rounded-md">
+              <Lock className="w-4 h-4 text-red-600 flex-shrink-0" />
               <span>Admin account selected (Locked from non-admin editing)</span>
             </div>
           )}
@@ -507,15 +502,15 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           type="button"
           onClick={handleSaveMatrix}
           disabled={saving || containsProtectedAdmin}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium text-xs px-4 py-2 rounded shadow-sm flex items-center gap-2 transition-colors cursor-pointer"
+          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold text-sm px-5 py-2 rounded-md shadow-sm flex items-center gap-2 transition-colors cursor-pointer"
         >
           {saving ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Saving...
+              <Loader2 className="w-4 h-4 animate-spin" /> Saving...
             </>
           ) : (
             <>
-              <Save className="w-3.5 h-3.5" /> Save Changes
+              <Save className="w-4 h-4" /> Save Changes
             </>
           )}
         </button>
@@ -524,8 +519,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       {/* Main Content Pane Split */}
       <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(92vh - 160px)" }}>
         {/* Left Side: Modules Navigation */}
-        <div className="w-48 border-r border-gray-200 flex flex-col p-3 gap-0.5 overflow-y-auto h-full bg-white">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-2 mb-1.5">
+        <div className="w-56 border-r border-gray-200 flex flex-col p-3.5 gap-1 overflow-y-auto h-full bg-white flex-shrink-0">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-400 px-2.5 mb-2">
             Categories
           </p>
           {groups.map((g) => {
@@ -537,40 +532,42 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 key={g.id}
                 type="button"
                 onClick={() => setActiveGroup(g.id)}
-                className={`flex items-center justify-between px-2.5 py-2 rounded text-xs font-medium transition-colors text-left cursor-pointer ${
+                className={`flex items-center justify-between px-3 py-2.5 rounded-md text-sm transition-colors text-left cursor-pointer ${
                   isActive
-                    ? "bg-gray-100 text-blue-600 font-semibold"
-                    : "text-gray-700 hover:bg-gray-50"
+                    ? "bg-blue-50 text-blue-700 font-bold"
+                    : "text-gray-700 hover:bg-gray-50 font-medium"
                 }`}
               >
                 <span>{g.label}</span>
-                <span className="text-[11px] text-gray-400">{count}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-400 bg-gray-100"}`}>
+                  {count}
+                </span>
               </button>
             );
           })}
         </div>
 
         {/* Right Side: Permission Cards Grid */}
-        <div className="flex-1 p-5 overflow-y-auto min-h-0 space-y-6 h-[73vh] bg-gray-50/50">
+        <div className="flex-1 p-6 overflow-y-auto min-h-0 space-y-7 h-[73vh] bg-gray-50/40">
           {groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
             const groupMods = modules.filter((mod) => mod.group === g.id);
             if (groupMods.length === 0) return null;
 
             return (
-              <div key={g.id} className="bg-white border border-gray-200 rounded p-4 space-y-4">
+              <div key={g.id} className="bg-white border border-gray-200 rounded-lg p-5 space-y-4 shadow-sm">
                 {/* Header for group */}
-                <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-gray-800">{g.label}</h3>
-                    <span className="text-[11px] text-gray-400">({groupMods.length})</span>
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-base font-bold text-gray-900">{g.label}</h3>
+                    <span className="text-xs text-gray-500 font-medium">({groupMods.length} modules)</span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
                       disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                      className="text-xs text-blue-600 hover:text-blue-700 hover:underline cursor-pointer disabled:opacity-40"
+                      className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer disabled:opacity-40"
                     >
                       Enable All
                     </button>
@@ -579,7 +576,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       type="button"
                       disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                      className="text-xs text-gray-500 hover:text-gray-700 hover:underline cursor-pointer disabled:opacity-40"
+                      className="text-sm font-semibold text-gray-500 hover:text-gray-700 hover:underline cursor-pointer disabled:opacity-40"
                     >
                       Disable All
                     </button>
@@ -587,7 +584,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 </div>
 
                 {/* Modules Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {groupMods.map((mod) => {
                     const mState = matrix[mod.id] || {
                       enabled: false,
@@ -602,17 +599,17 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     return (
                       <div
                         key={mod.id}
-                        className={`border rounded p-3 bg-white flex flex-col justify-between transition-colors ${
-                          mState.enabled ? "border-gray-200" : "border-gray-100 bg-gray-50/30"
+                        className={`border rounded-lg p-4 bg-white flex flex-col justify-between transition-all ${
+                          mState.enabled ? "border-gray-300 shadow-sm" : "border-gray-200 bg-gray-50/40"
                         }`}
                       >
                         {/* Title and Module Enable Switch */}
-                        <div className="flex items-start justify-between gap-2 pb-2 border-b border-gray-100">
+                        <div className="flex items-start justify-between gap-3 pb-3 border-b border-gray-100">
                           <div className="flex flex-col min-w-0">
-                            <span className="text-xs font-semibold text-gray-800 truncate" title={mod.label}>
+                            <span className="text-sm font-bold text-gray-900 truncate" title={mod.label}>
                               {mod.label}
                             </span>
-                            <span className="text-[11px] text-gray-400 truncate" title={mod.desc}>
+                            <span className="text-xs text-gray-500 truncate mt-0.5" title={mod.desc}>
                               {mod.desc || mod.label}
                             </span>
                           </div>
@@ -625,13 +622,13 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                               onChange={() => toggleModuleEnabled(mod.id)}
                               className="sr-only peer"
                             />
-                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                            <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
                           </label>
                         </div>
 
-                        {/* Four Simple Action Toggles: Read, Write, Update, Delete */}
+                        {/* Four Action Toggles: Read, Write, Update, Delete with comfortable readable text */}
                         <div
-                          className={`grid grid-cols-4 gap-1 pt-2.5 text-center transition-opacity ${
+                          className={`grid grid-cols-4 gap-1.5 pt-3 text-center transition-opacity ${
                             mState.enabled && !containsProtectedAdmin
                               ? "opacity-100"
                               : "opacity-30 pointer-events-none"
@@ -641,11 +638,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                           <button
                             type="button"
                             onClick={() => togglePermission(mod.id, "read")}
-                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                            className={`py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer border ${
                               mState.read
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                                 : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.read ? "ring-1 ring-amber-400" : ""}`}
+                            } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
                           >
                             Read
                           </button>
@@ -654,11 +651,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                           <button
                             type="button"
                             onClick={() => togglePermission(mod.id, "write")}
-                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                            className={`py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer border ${
                               mState.write
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                                 : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.write ? "ring-1 ring-amber-400" : ""}`}
+                            } ${modDiscrepancy?.write ? "ring-2 ring-amber-400" : ""}`}
                           >
                             Write
                           </button>
@@ -667,11 +664,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                           <button
                             type="button"
                             onClick={() => togglePermission(mod.id, "update")}
-                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                            className={`py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer border ${
                               mState.update
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                                 : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.update ? "ring-1 ring-amber-400" : ""}`}
+                            } ${modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
                           >
                             Update
                           </button>
@@ -680,11 +677,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                           <button
                             type="button"
                             onClick={() => togglePermission(mod.id, "delete")}
-                            className={`py-1 text-[11px] font-medium rounded transition-colors cursor-pointer border ${
+                            className={`py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer border ${
                               mState.delete
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                                 : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.delete ? "ring-1 ring-amber-400" : ""}`}
+                            } ${modDiscrepancy?.delete ? "ring-2 ring-amber-400" : ""}`}
                           >
                             Delete
                           </button>
