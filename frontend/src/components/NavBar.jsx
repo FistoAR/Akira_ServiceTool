@@ -9,7 +9,7 @@ const NavBar = ({ type }) => {
 
   // Load logged-in user from localStorage
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser"));
     if (user) {
       setLoggedInUser(user);
     }

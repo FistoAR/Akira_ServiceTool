@@ -37,7 +37,7 @@ export default function Sidebar() {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser"));
     if (user) {
       setLoggedInUser(user);
       // Fetch latest profile from backend to sync permissions live
