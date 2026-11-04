@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// Added Loader2 for the spinner
 import { Shield, Eye, EyeOff, User, Loader2 } from "lucide-react";
 import logo from "../../../public/Akira_logo.webp";
+
+// ... (defaultEmployees array remains the same)
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // New loading state
   const [formData, setFormData] = useState({
     emailOrUsername: "",
     password: "",
     rememberMe: false,
   });
 
-  // 1. Immediate check: if user is logged in (sessionStorage OR localStorage), navigate directly to /dashboard
+  // Check on mount: if user already has an active session (sessionStorage or localStorage), redirect to /dashboard
   useEffect(() => {
     const rawUser = sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser");
     if (rawUser) {
       try {
         const user = JSON.parse(rawUser);
         if (user && (user.userId || user._id || user.email)) {
-          // If recovered from localStorage (remember me), sync into sessionStorage as well
           if (!sessionStorage.getItem("loggedInUser")) {
             sessionStorage.setItem("loggedInUser", rawUser);
           }
@@ -36,7 +38,6 @@ const LoginPage = () => {
       }
     }
 
-    // 2. Prefill username/email if saved previously
     const remembered = localStorage.getItem("rememberedUser");
     if (remembered) {
       setFormData((prev) => ({
@@ -80,7 +81,7 @@ const LoginPage = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(true); // Start loading
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
@@ -90,12 +91,13 @@ const LoginPage = () => {
 
       const matchedUser = response.data;
       const userJson = JSON.stringify(matchedUser);
-
-      // Always save to current browser session
+      
+      // Always persist to current session
       sessionStorage.setItem("loggedInUser", userJson);
+      window.dispatchEvent(new Event('auth-change'));
 
       if (formData.rememberMe) {
-        // Persist across browser closes in localStorage
+        // Persist across browser restarts in localStorage
         localStorage.setItem("loggedInUser", userJson);
         localStorage.setItem("rememberedUser", matchedUser.userId || matchedUser.email || emailOrUsername);
       } else {
@@ -103,18 +105,18 @@ const LoginPage = () => {
         localStorage.removeItem("loggedInUser");
         localStorage.removeItem("rememberedUser");
       }
-
-      window.dispatchEvent(new Event('auth-change'));
+      
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Invalid User ID or Password. Please try again.");
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Stop loading regardless of success or failure
     }
   };
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative overflow-hidden text-gray-700">
+      {/* Background elements code... (Unchanged) */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
         <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 opacity-80"></div>
         <div className="absolute inset-0">
@@ -135,143 +137,114 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <div
-        className={`relative z-10 w-full max-w-[28vw] mx-4 transition-all duration-1000 ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-      >
-        <div className="bg-white/95 backdrop-blur-xl rounded-[1.2vw] shadow-2xl p-[2vw] border border-white/20">
-          <div className="text-center mb-[1.5vw]">
-            <div className="w-[10vw] h-[4vw] mx-auto rounded-[0.8vw] flex items-center justify-center mb-[0.8vw] transform hover:scale-105 transition-transform duration-300">
-              <img src={logo} alt="Company Logo" className="w-[9vw] h-[3.2vw]" />
+      <div className="relative z-10 w-full max-w-[28%]">
+        <div className={`transition-all duration-1000 ${mounted ? "transform translate-y-0 opacity-100" : "transform translate-y-8 opacity-0"}`}>
+          <div className="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl shadow-2xl p-[1.5vw] border border-white border-opacity-20">
+            <div className="flex flex-col items-center text-center mb-[1vw]">
+              <img src={logo} alt="App Logo" className="mb-[0.8vw] w-[8vw]" />
+              <p className="text-gray-600 text-[1vw]">Welcome back! Please sign in to your account.</p>
             </div>
-            <p className="text-[0.8vw] text-gray-600">
-              Welcome back! Please sign in to your account.
-            </p>
-          </div>
 
-          {error && (
-            <div className="mb-[1vw] p-[0.7vw] bg-red-50 border border-red-200 rounded-[0.5vw] text-red-600 text-[0.7vw] flex items-center justify-center animate-shake">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-[0.8vw]">
-            <div>
-              <label className="block text-[0.8vw] font-medium text-gray-700 mb-[0.3vw]">
-                Emp ID or Email *
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-[0.8vw] flex items-center pointer-events-none">
-                  <User className="h-[1vw] w-[1vw] text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  name="emailOrUsername"
-                  value={formData.emailOrUsername}
-                  onChange={handleInputChange}
-                  className="w-full pl-[2.4vw] pr-[0.8vw] py-[0.5vw] text-[0.8vw] border border-gray-300 rounded-[0.5vw] focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
-                  placeholder="ak12"
-                  autoComplete="username"
-                  required
-                />
+            {error && (
+              <div className="mb-[0.8vw] px-[1vw] py-[0.5vw] bg-red-50 border border-red-300 rounded-lg flex items-center gap-[0.5vw]">
+                <div className="w-[0.5vw] h-[0.5vw] bg-red-500 rounded-full flex-shrink-0"></div>
+                <p className="text-red-600 text-[0.85vw]">{error}</p>
               </div>
-            </div>
+            )}
 
-            <div>
-              <label className="block text-[0.8vw] font-medium text-gray-700 mb-[0.3vw]">
-                Password *
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-[0.8vw] flex items-center pointer-events-none">
-                  <Shield className="h-[1vw] w-[1vw] text-gray-400" />
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative group">
+                <label className="block text-[0.9vw] font-medium text-gray-700 mb-[0.6vw]">Emp ID or Email *</label>
+                <div className="relative">
+                  <User className="absolute z-1 top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={"1vw"} />
+                  <input
+                    type="text"
+                    name="emailOrUsername"
+                    disabled={isLoading}
+                    value={formData.emailOrUsername}
+                    onChange={handleInputChange}
+                    className="w-full pl-[2.2vw] text-[0.9vw] pr-[1vw] py-[0.6vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white bg-opacity-50 backdrop-blur-sm hover:bg-opacity-70 focus:bg-opacity-90 placeholder:text-[0.85vw]"
+                    placeholder="Enter your Emp ID (e.g., Fisto1)"
+                  />
                 </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full pl-[2.4vw] pr-[2.4vw] py-[0.5vw] text-[0.8vw] border border-gray-300 rounded-[0.5vw] focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
-                  placeholder="••••••"
-                  autoComplete="current-password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-[0.8vw] flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-[1vw] w-[1vw]" />
-                  ) : (
-                    <Eye className="h-[1vw] w-[1vw]" />
-                  )}
+              </div>
+
+              <div className="relative group">
+                <label className="block text-[0.9vw] font-medium text-gray-700 mb-[0.6vw]">Password *</label>
+                <div className="relative">
+                  <Shield className="absolute z-1 top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={"1vw"} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    disabled={isLoading}
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full pl-[2.2vw] text-[0.9vw] pr-[1vw] py-[0.6vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white bg-opacity-50 backdrop-blur-sm hover:bg-opacity-70 focus:bg-opacity-90 placeholder:text-[0.85vw]"
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <Eye size={"1vw"} /> : <EyeOff size={"1vw"} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="rememberMe"
+                    disabled={isLoading}
+                    checked={formData.rememberMe}
+                    onChange={handleInputChange}
+                    className="w-[1.2vw] h-[1.2vw] text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="ml-[0.5vw] text-[0.9vw] text-gray-700">Remember me</span>
+                </label>
+                <button type="button" className="text-[0.9vw] text-blue-600 hover:text-blue-800 transition-colors">
+                  Forgot password?
                 </button>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between text-[0.75vw]">
-              <label className="flex items-center text-gray-600 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleInputChange}
-                  className="h-[0.8vw] w-[0.8vw] text-purple-600 focus:ring-purple-500 border-gray-300 rounded cursor-pointer"
-                />
-                <span className="ml-[0.5vw]">Remember me</span>
-              </label>
-              <a
-                href="#"
-                className="text-purple-600 hover:text-purple-500 font-medium"
-              >
-                Forgot password?
-              </a>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-[0.5vw] px-[1vw] text-[0.8vw] bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-[0.5vw] hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-[1.02] shadow-md cursor-pointer flex items-center justify-center"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-[1vw] h-[1vw] mr-[0.5vw] animate-spin" />
-                  <span>Signing In...</span>
-                </>
-              ) : (
-                "Sign In"
-              )}
-            </button>
-          </form>
-
-          <div className="mt-[1vw] text-center">
-            <p className="text-[0.75vw] text-gray-600">
-              Don't have an account?{" "}
+              {/* Updated Login Button with Spinner */}
               <button
-                type="button"
-                onClick={() => navigate("/register")}
-                className="text-purple-600 hover:text-purple-500 font-medium cursor-pointer"
+                type="submit"
+                disabled={isLoading}
+                className="text-[1vw] w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-[0.6vw] px-[0.2vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
               >
-                Register Here
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-[1.2vw] w-[1.2vw] animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </button>
-            </p>
-          </div>
+            </form>
 
-          <div className="mt-[1vw] p-[0.8vw] bg-blue-50 border border-blue-200 rounded-[0.6vw] text-[0.65vw] text-gray-600">
-            <p className="font-semibold text-blue-900 mb-[0.2vw]">
-              Demo Credentials:
-            </p>
-            <p>
-              Admin User ID:{" "}
-              <span className="font-bold text-gray-800">ak12</span> | Password:{" "}
-              <span className="font-bold text-gray-800">123456</span>
-            </p>
-            <p>
-              User IDs:{" "}
-              <span className="font-bold text-gray-800">AK1234</span> |
-              Password: <span className="font-bold text-gray-800">123456</span>
-            </p>
+            <div className="mt-[1vw] text-center">
+              <p className="text-[0.9vw] text-gray-600">
+                Don't have an account?{" "}
+                <button
+                  onClick={() => navigate("/register")}
+                  disabled={isLoading}
+                  className="text-blue-600 font-semibold hover:underline"
+                >
+                  Register Here
+                </button>
+              </p>
+            </div>
+
+            {/* Demo Credentials Hint */}
+            <div className="mt-[1vw] p-[0.8vw] bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-[0.75vw] text-blue-700 font-semibold mb-[0.3vw]">Demo Credentials:</p>
+              <p className="text-[0.7vw] text-blue-600">Admin User ID: <span className="text-black font-bold"> ak12</span> &nbsp;|&nbsp; Password: <span className="text-black font-bold">123456</span></p>
+              <p className="text-[0.7vw] text-blue-600">User IDs: <span className="text-black font-bold"> AK1234</span> &nbsp;|&nbsp; Password: <span className="text-black font-bold">123456</span></p>
+            </div>
           </div>
         </div>
       </div>
