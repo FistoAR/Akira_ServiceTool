@@ -602,15 +602,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         }`}
                       >
                         {/* Title and Module Enable Switch */}
-                        <div className="flex items-start justify-between gap-[0.8vw] pb-[0.7vw] border-b border-gray-100">
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-[0.95vw] font-semibold text-gray-900 truncate" title={mod.label}>
-                              {mod.label}
-                            </span>
-                            <span className="text-[0.76vw] text-gray-500 font-normal truncate mt-[0.1vw]" title={mod.desc}>
-                              {mod.desc || mod.label}
-                            </span>
-                          </div>
+                        <div className="flex items-center justify-between gap-[0.8vw] pb-[0.6vw] border-b border-gray-100">
+                          <span className="text-[0.95vw] font-semibold text-gray-900 truncate" title={mod.label}>
+                            {mod.label}
+                          </span>
 
                           <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                             <input
