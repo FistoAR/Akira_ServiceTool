@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import {
   API_URL, DEFAULT_DEPTS, TYPE_BADGE_COLORS, TYPE_COLORS, LEVEL_COLORS,
-  LEVEL_BG_LIGHT, HelpTooltip, DEFAULT_COL_VIS, initials
+  LEVEL_BG_LIGHT, HelpTooltip, DEFAULT_COL_VIS, initials, loadEmployees, loadCustomerDb
 } from "./masterConstants";
 
 // EngineerPicker
@@ -648,7 +648,7 @@ const ChainPreview = ({ steps, employees = [] }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // EscalationSection
 // ─────────────────────────────────────────────────────────────────────────────
-const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments, employees }) => {
+const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments, employees, onRefresh, isRefreshing }) => {
   const { toast, confirm } = useNotification();
   const [expandedType, setExpandedType] = useState(null);
   const [selectedSegment, setSelectedSegment] = useState({}); // { partyTypeId: segmentName }
@@ -827,6 +827,15 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
           </div>
         </div>
         <div className="flex items-center gap-[0.6vw]">
+          <button
+            onClick={() => onRefresh && onRefresh("escalation", true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            title="Refresh latest data from server"
+          >
+            <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
+            {isRefreshing ? "Refreshing..." : "Refresh"}
+          </button>
           <button
             onClick={handleResetAll}
             className="flex items-center gap-[0.4vw] border border-slate-400 bg-white text-slate-600 hover:bg-slate-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"

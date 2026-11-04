@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { useNotification } from "../../components/NotificationContext";
 import {
   Tags, Settings, Package, Columns, Activity, MapPin, Users,
   ShieldCheck, PhoneCall, Wrench, RefreshCw, Loader2
@@ -25,11 +24,8 @@ import RoleAccessSection from "./components/RoleAccessSection";
 import ColumnVisibilitySection from "./components/ColumnVisibilitySection";
 
 const SystemSettingsPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "categories";
-  const setActiveTab = (tabId) => {
-    setSearchParams({ tab: tabId });
-  };
 
   const [partyTypes, setPartyTypes] = useState([]);
   const [warrantyRules, setWarrantyRules] = useState([]);
@@ -37,10 +33,8 @@ const SystemSettingsPage = () => {
   const [sites, setSites] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [segments, setSegments] = useState([]);
-  const [boardTypes, setBoardTypes] = useState([]);
   const [fourMCategories, setFourMCategories] = useState([]);
   const [flows, setFlows] = useState({});
-  const [origFlows, setOrigFlows] = useState({});
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [colVis, setColVis] = useState({ ...DEFAULT_COL_VIS });
@@ -149,7 +143,6 @@ const SystemSettingsPage = () => {
 
           if (!force && cachedFlows && cachedPT && cachedSegs && cachedEmps && cachedDepts) {
             setFlows(JSON.parse(cachedFlows));
-            setOrigFlows(JSON.parse(cachedFlows));
             setPartyTypes(JSON.parse(cachedPT));
             setSegments(JSON.parse(cachedSegs));
             setEmployees(JSON.parse(cachedEmps));
@@ -172,7 +165,6 @@ const SystemSettingsPage = () => {
             setPartyTypes(normPT);
             setSegments(normSegs);
             setFlows(s);
-            setOrigFlows(JSON.parse(JSON.stringify(s)));
             setEmployees(empRes.data);
             setDepartments(depts);
 
@@ -180,6 +172,19 @@ const SystemSettingsPage = () => {
             sessionStorage.setItem("master_segments", JSON.stringify(normSegs));
             sessionStorage.setItem("master_flows", JSON.stringify(s));
             sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
+            sessionStorage.setItem("master_departments", JSON.stringify(depts));
+          }
+          break;
+        }
+
+        case "service-escalation": {
+          const cachedDepts = sessionStorage.getItem("master_departments");
+          if (!force && cachedDepts) {
+            setDepartments(JSON.parse(cachedDepts));
+          } else {
+            const deptRes = await axios.get(`${API_URL}/master/settings/departments`);
+            const depts = deptRes.data || DEFAULT_DEPTS;
+            setDepartments(depts);
             sessionStorage.setItem("master_departments", JSON.stringify(depts));
           }
           break;
@@ -259,6 +264,18 @@ const SystemSettingsPage = () => {
     fetchActiveTabData(activeTab, false);
   }, [activeTab]);
 
+  const RefreshButton = () => (
+    <button
+      onClick={() => fetchActiveTabData(activeTab, true)}
+      disabled={isRefreshing}
+      className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.3vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+      title="Refresh latest data from server"
+    >
+      <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
+      {isRefreshing ? "Refreshing..." : "Refresh"}
+    </button>
+  );
+
   return (
     <div className="w-full h-[calc(100vh-4.4rem)] flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
       {isLoading ? (
@@ -287,8 +304,11 @@ const SystemSettingsPage = () => {
                     Manage customer categories used across the system
                   </p>
                 </div>
-                <div className="ml-auto text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
-                  {partyTypes.length} categories
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
+                    {partyTypes.length} categories
+                  </span>
                 </div>
               </div>
               <PartyTypesSection
@@ -313,8 +333,11 @@ const SystemSettingsPage = () => {
                     Manage serial decoders and SLA days per customer category
                   </p>
                 </div>
-                <div className="ml-auto text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
-                  {warrantyRules.length} rules
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
+                    {warrantyRules.length} rules
+                  </span>
                 </div>
               </div>
               <WarrantyRulesSection
@@ -336,8 +359,11 @@ const SystemSettingsPage = () => {
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Product Segments</h2>
                   <p className="text-[0.7vw] text-gray-800">Define product lines for auto-completion</p>
                 </div>
-                <div className="ml-auto text-[0.72vw] text-gray-700 bg-teal-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
-                  {segments.length} segments
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-teal-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                    {segments.length} segments
+                  </span>
                 </div>
               </div>
               <ProductSegmentsSection segments={segments} setSegments={setSegments} />
@@ -355,8 +381,11 @@ const SystemSettingsPage = () => {
                   <h2 className="text-[0.9vw] font-bold text-slate-900">4M Categories</h2>
                   <p className="text-[0.7vw] text-gray-800">Manage Man, Machine, Material, Method categories for Service Materials</p>
                 </div>
-                <div className="ml-auto text-[0.72vw] text-gray-700 bg-cyan-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
-                  {fourMCategories.length} categories
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-cyan-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                    {fourMCategories.length} categories
+                  </span>
                 </div>
               </div>
               <FourMCategoriesSection items={fourMCategories} setItems={setFourMCategories} />
@@ -374,8 +403,11 @@ const SystemSettingsPage = () => {
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Units</h2>
                   <p className="text-[0.7vw] text-gray-800">Manage Unit values for Service Materials</p>
                 </div>
-                <div className="ml-auto text-[0.72vw] text-gray-700 bg-emerald-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
-                  {units.length} units
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-emerald-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                    {units.length} units
+                  </span>
                 </div>
               </div>
               <UnitsSection units={units} setUnits={setUnits} />
@@ -394,15 +426,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Manage plant and warehouse site locations</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <button
-                    onClick={() => fetchActiveTabData(activeTab, true)}
-                    disabled={isRefreshing}
-                    className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.3vw] transition-all cursor-pointer shadow-sm"
-                    title="Refresh latest data from server"
-                  >
-                    <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
-                    {isRefreshing ? "Refreshing..." : "Refresh"}
-                  </button>
+                  <RefreshButton />
                   <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {sites.length} sites
                   </span>
@@ -422,6 +446,8 @@ const SystemSettingsPage = () => {
                 setFlows={setFlows}
                 departments={departments}
                 employees={employees}
+                onRefresh={fetchActiveTabData}
+                isRefreshing={isRefreshing}
               />
             </div>
           )}
@@ -429,7 +455,11 @@ const SystemSettingsPage = () => {
           {/* ── Tab: Service Material Escalation ── */}
           {activeTab === "service-escalation" && (
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <ServiceMaterialEscalationSection departments={departments} />
+              <ServiceMaterialEscalationSection 
+                departments={departments} 
+                onRefresh={fetchActiveTabData}
+                isRefreshing={isRefreshing}
+              />
             </div>
           )}
 
@@ -443,6 +473,12 @@ const SystemSettingsPage = () => {
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Employee Management</h2>
                   <p className="text-[0.7vw] text-gray-800">Register and manage employee profiles and departments</p>
+                </div>
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-purple-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                    {employees.length} employees
+                  </span>
                 </div>
               </div>
               <EmployeeManagementSection 
@@ -464,6 +500,12 @@ const SystemSettingsPage = () => {
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Role Access Management</h2>
                   <p className="text-[0.7vw] text-gray-800">Manage employee permissions for read, write, and delete operations</p>
+                </div>
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
+                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                    {employees.length} users
+                  </span>
                 </div>
               </div>
               <RoleAccessSection
@@ -487,6 +529,9 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">
                     Show or hide columns in the Customer Database table
                   </p>
+                </div>
+                <div className="ml-auto flex items-center gap-[0.6vw]">
+                  <RefreshButton />
                 </div>
               </div>
               <ColumnVisibilitySection colVis={colVis} setColVis={setColVis} />

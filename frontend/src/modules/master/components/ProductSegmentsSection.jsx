@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import {
   API_URL, DEFAULT_DEPTS, TYPE_BADGE_COLORS, TYPE_COLORS, LEVEL_COLORS,
-  LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
+  LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS,
+  loadCustomerDb
 } from "./masterConstants";
 
 const ProductSegmentsSection = ({ segments, setSegments }) => {

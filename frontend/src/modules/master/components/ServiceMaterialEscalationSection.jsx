@@ -15,7 +15,7 @@ import {
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
-const ServiceMaterialEscalationSection = ({ departments }) => {
+const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing }) => {
   const { toast, confirm } = useNotification();
   const [flow, setFlow] = useState([]);
   const [saved, setSaved] = useState(false);
@@ -145,6 +145,16 @@ const ServiceMaterialEscalationSection = ({ departments }) => {
           </div>
         </div>
         <div className="flex items-center gap-[0.8vw]">
+          <button
+            type="button"
+            onClick={() => onRefresh && onRefresh("service-escalation", true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            title="Refresh latest data from server"
+          >
+            <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
+            {isRefreshing ? "Refreshing..." : "Refresh"}
+          </button>
           <button
             type="button"
             onClick={handleReset}
