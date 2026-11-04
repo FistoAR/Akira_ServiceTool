@@ -330,7 +330,7 @@ const SystemSettingsPage = () => {
                 </div>
               </div>
               <PartyTypesSection
-                segments={segments}
+                partyTypes={partyTypes || []}
                 setPartyTypes={setPartyTypes}
               />
             </div>
