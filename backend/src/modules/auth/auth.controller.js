@@ -10,8 +10,8 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
     const user = await authService.loginUser(email, password);
     res.json(user);
   } catch (error) {
@@ -21,7 +21,8 @@ const login = async (req, res) => {
 
 const getEmployees = async (req, res) => {
   try {
-    const users = await authService.getUsers();
+    const includePic = req.query.includePic === 'true';
+    const users = await authService.getUsers(includePic);
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });

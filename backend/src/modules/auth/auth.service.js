@@ -74,8 +74,12 @@ const loginUser = async (emailOrUserId, password) => {
   }
 };
 
-const getUsers = async () => {
-  return await User.find({}).select('-password');
+const getUsers = async (includePic = false) => {
+  const query = User.find({}).select('-password');
+  if (!includePic) {
+    query.select('-profilePicture');
+  }
+  return await query.lean();
 };
 
 const updateUser = async (id, userData) => {
@@ -93,7 +97,9 @@ const updateUser = async (id, userData) => {
     user.ctc = userData.ctc || user.ctc;
     user.dateOfJoining = userData.dateOfJoining || user.dateOfJoining;
     user.workingStatus = userData.workingStatus || user.workingStatus;
-    user.profilePicture = userData.profilePicture || user.profilePicture;
+    if (userData.profilePicture !== undefined) {
+      user.profilePicture = userData.profilePicture;
+    }
     if (userData.permissions) {
       user.permissions = userData.permissions;
       user.markModified('permissions');

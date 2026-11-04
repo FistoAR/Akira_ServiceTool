@@ -2270,6 +2270,7 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
   const [origFlows, setOrigFlows] = useState({});
 
   useEffect(() => {
+    if (flows && Object.keys(flows).length > 0) { setOrigFlows(JSON.parse(JSON.stringify(flows))); return; }
     const fetchFlows = async () => {
       try {
         const res = await axios.get(`${API_URL}/master/escalation-flows`);
@@ -4157,40 +4158,82 @@ const SystemSettingsPage = () => {
         }
 
         case "escalation": {
-          const [ptRes, segRes, flowRes, empRes, deptRes] = await Promise.all([
-            axios.get(`${API_URL}/master/party-types`),
-            axios.get(`${API_URL}/master/product-segments`),
-            axios.get(`${API_URL}/master/escalation-flows`),
-            axios.get(`${API_URL}/auth/employees`),
-            axios.get(`${API_URL}/master/settings/departments`)
-          ]);
-          setPartyTypes(ptRes.data.map(t => ({ ...t, id: t.id || t._id })));
-          setSegments(segRes.data.map(s => ({ ...s, id: s.id || s._id })));
-          const s = {};
-          flowRes.data.forEach(f => {
-            if (f.type !== "Service Material") s[f.type] = f.steps;
-          });
-          setFlows(s);
-          setOrigFlows(JSON.parse(JSON.stringify(s)));
-          setEmployees(empRes.data);
-          setDepartments(deptRes.data || DEFAULT_DEPTS);
+          const cachedFlows = sessionStorage.getItem("master_flows");
+          const cachedPT = sessionStorage.getItem("master_party_types");
+          const cachedSegs = sessionStorage.getItem("master_segments");
+          const cachedEmps = sessionStorage.getItem("all_employees");
+          const cachedDepts = sessionStorage.getItem("master_departments");
+
+          if (!force && cachedFlows && cachedPT && cachedSegs && cachedEmps && cachedDepts) {
+            setFlows(JSON.parse(cachedFlows));
+            setOrigFlows(JSON.parse(cachedFlows));
+            setPartyTypes(JSON.parse(cachedPT));
+            setSegments(JSON.parse(cachedSegs));
+            setEmployees(JSON.parse(cachedEmps));
+            setDepartments(JSON.parse(cachedDepts));
+          } else {
+            const [ptRes, segRes, flowRes, empRes, deptRes] = await Promise.all([
+              axios.get(`${API_URL}/master/party-types`),
+              axios.get(`${API_URL}/master/product-segments`),
+              axios.get(`${API_URL}/master/escalation-flows`),
+              axios.get(`${API_URL}/auth/employees`),
+              axios.get(`${API_URL}/master/settings/departments`)
+            ]);
+            const normPT = ptRes.data.map(t => ({ ...t, id: t.id || t._id }));
+            const normSegs = segRes.data.map(s => ({ ...s, id: s.id || s._id }));
+            const s = {};
+            flowRes.data.forEach(f => {
+              if (f.type !== "Service Material") s[f.type] = f.steps;
+            });
+            const depts = deptRes.data || DEFAULT_DEPTS;
+            setPartyTypes(normPT);
+            setSegments(normSegs);
+            setFlows(s);
+            setOrigFlows(JSON.parse(JSON.stringify(s)));
+            setEmployees(empRes.data);
+            setDepartments(depts);
+
+            sessionStorage.setItem("master_party_types", JSON.stringify(normPT));
+            sessionStorage.setItem("master_segments", JSON.stringify(normSegs));
+            sessionStorage.setItem("master_flows", JSON.stringify(s));
+            sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
+            sessionStorage.setItem("master_departments", JSON.stringify(depts));
+          }
           break;
         }
 
         case "employees": {
-          const [empRes, deptRes] = await Promise.all([
-            axios.get(`${API_URL}/auth/employees`),
-            axios.get(`${API_URL}/master/settings/departments`)
-          ]);
-          setEmployees(empRes.data);
-          sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
-          setDepartments(deptRes.data || DEFAULT_DEPTS);
+          const cachedEmps = sessionStorage.getItem("all_employees_with_pic");
+          const cachedDepts = sessionStorage.getItem("master_departments");
+
+          if (!force && cachedEmps && cachedDepts) {
+            setEmployees(JSON.parse(cachedEmps));
+            setDepartments(JSON.parse(cachedDepts));
+          } else {
+            const [empRes, deptRes] = await Promise.all([
+              axios.get(`${API_URL}/auth/employees?includePic=true`),
+              axios.get(`${API_URL}/master/settings/departments`)
+            ]);
+            const depts = deptRes.data || DEFAULT_DEPTS;
+            setEmployees(empRes.data);
+            setDepartments(depts);
+            sessionStorage.setItem("all_employees_with_pic", JSON.stringify(empRes.data));
+            sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
+            sessionStorage.setItem("master_departments", JSON.stringify(depts));
+          }
           break;
         }
 
         case "role-access": {
-          const res = await axios.get(`${API_URL}/auth/employees`);
-          setEmployees(res.data);
+          const cachedEmps = sessionStorage.getItem("all_employees");
+          if (!force && cachedEmps) {
+            setEmployees(JSON.parse(cachedEmps));
+          } else {
+            // Lightweight fetch without heavy profilePicture (~99% bandwidth reduction)
+            const res = await axios.get(`${API_URL}/auth/employees`);
+            setEmployees(res.data);
+            sessionStorage.setItem("all_employees", JSON.stringify(res.data));
+          }
           break;
         }
 
