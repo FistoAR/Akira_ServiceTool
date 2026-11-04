@@ -20,14 +20,6 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
   const [localDepts, setLocalDepts] = useState([]);
   const [newDept, setNewDept] = useState("");
   const { toast, confirm } = useNotification();
-  const currentLoggedInUser = useMemo(() => {
-    try {
-      return JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
-    } catch {
-      return null;
-    }
-  }, []);
-  const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
 
   useEffect(() => {
     if (isOpen) setLocalDepts([...departments]);
@@ -113,6 +105,15 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
   const [editingEmp, setEditingEmp] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useNotification();
+
+  const currentLoggedInUser = useMemo(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
+    } catch {
+      return null;
+    }
+  }, []);
+  const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
 
   const [regData, setRegData] = useState({
     name: "", userId: "", email: "", phoneNumber: "", dob: "", gender: "",
