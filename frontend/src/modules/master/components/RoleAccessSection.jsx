@@ -338,26 +338,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     );
   }
 
-  // Distinct category theme colors for section headers
-  const getGroupHeaderColor = (groupId) => {
-    switch (groupId) {
-      case "master":
-        return "text-indigo-700";
-      case "customers":
-        return "text-sky-700";
-      case "service-call":
-        return "text-blue-700";
-      case "service-material":
-        return "text-teal-700";
-      case "production-material":
-        return "text-violet-700";
-      case "troubleshoot":
-        return "text-cyan-700";
-      default:
-        return "text-blue-700";
-    }
-  };
-
   const allFilteredAreSelected =
     filteredEmployees.length > 0 &&
     filteredEmployees.every((e) => selectedUserIds.includes(e.userId));
@@ -576,7 +556,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 {/* Header for group */}
                 <div className="flex items-center justify-between border-b border-gray-100 pb-[0.6vw]">
                   <div className="flex items-center gap-[0.6vw]">
-                    <h3 className={`text-[1.05vw] font-semibold ${getGroupHeaderColor(g.id)}`}>{g.label}</h3>
+                    <h3 className="text-[1.05vw] font-semibold text-blue-600">{g.label}</h3>
                     <span className="text-[0.75vw] text-gray-500 font-normal">({groupMods.length} modules)</span>
                   </div>
 
