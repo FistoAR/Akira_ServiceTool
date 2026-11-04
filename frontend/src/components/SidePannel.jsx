@@ -57,12 +57,23 @@ export default function Sidebar() {
 
   const isAdmin = loggedInUser?.role === "Admin" || loggedInUser?.department === "Admin";
   const isSupervisor = loggedInUser?.role === "Supervisor";
-  const canViewAdminModules = isAdmin || isSupervisor;
 
   const hasAccess = (modId) => {
     if (isAdmin) return true;
     return !!loggedInUser?.permissions?.[modId]?.enabled;
   };
+
+  // Check if user is an Incharge / Admin for a specific module or has write/update/delete access
+  const hasModuleInchargeOrAdmin = (modId) => {
+    if (isAdmin || isSupervisor) return true;
+    const p = loggedInUser?.permissions?.[modId];
+    return !!(p?.incharge || p?.isAdmin || p?.write || p?.update || p?.delete);
+  };
+
+  const canManageServiceCall = isAdmin || isSupervisor || ["callReg", "callAssign", "callEscalation", "callReports"].some(hasModuleInchargeOrAdmin);
+  const canManageServiceMaterial = isAdmin || isSupervisor || ["matInward", "matReports"].some(hasModuleInchargeOrAdmin);
+  const canManageProductionMaterial = isAdmin || isSupervisor || ["prodNC", "prodReports"].some(hasModuleInchargeOrAdmin);
+  const canManageCustomers = isAdmin || isSupervisor || hasAccess("customers");
 
   console.log("loggedInUser in SidePannel:", loggedInUser);
 
@@ -96,13 +107,13 @@ export default function Sidebar() {
       path: "/customers",
       label: "Customers",
       icon: ActivityIcon,
-      show: canViewAdminModules && hasAccess("customers"),
+      show: canManageCustomers,
     },
     {
       path: "/serviceCall",
       label: "Service Call",
       icon: CallIcon,
-      show: canViewAdminModules && ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess),
+      show: canManageServiceCall && ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess),
       subItems: [
         { path: "/serviceCall", label: "Call Registration", show: hasAccess("callReg") },
         { path: "/serviceCall/assignment", label: "Call Assignment", show: hasAccess("callAssign") },
@@ -114,7 +125,7 @@ export default function Sidebar() {
       path: "/serviceMaterial",
       label: "Service Material",
       icon: ServiceIcon,
-      show: canViewAdminModules && ["matInward", "matReports"].some(hasAccess),
+      show: canManageServiceMaterial && ["matInward", "matReports"].some(hasAccess),
       subItems: [
         { path: "/serviceMaterial", label: "Material Inward Register", show: hasAccess("matInward") },
         { path: "/serviceMaterial/reports", label: "Reports", show: hasAccess("matReports") },
@@ -124,7 +135,7 @@ export default function Sidebar() {
       path: "/productionMaterial",
       label: "Production Material",
       icon: ProductionIcon,
-      show: canViewAdminModules && ["prodNC", "prodReports"].some(hasAccess),
+      show: canManageProductionMaterial && ["prodNC", "prodReports"].some(hasAccess),
       subItems: [
         { path: "/productionMaterial", label: "Production NC", show: hasAccess("prodNC") },
         { path: "/productionMaterial/reports", label: "Reports", show: hasAccess("prodReports") },
@@ -134,19 +145,19 @@ export default function Sidebar() {
       path: "/serviceCallResponse",
       label: "Service Call",
       icon: CallIcon,
-      show: !canViewAdminModules && ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess),
+      show: !canManageServiceCall && ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess),
     },
     {
       path: "/serviceMaterialResponse",
       label: "Service Material",
       icon: ServiceIcon,
-      show: !canViewAdminModules && ["matInward", "matReports"].some(hasAccess),
+      show: !canManageServiceMaterial && ["matInward", "matReports"].some(hasAccess),
     },
     {
       path: "/productionMaterialResponse",
       label: "Production Material",
       icon: ProductionIcon,
-      show: !canViewAdminModules && ["prodNC", "prodReports"].some(hasAccess),
+      show: !canManageProductionMaterial && ["prodNC", "prodReports"].some(hasAccess),
     },
     {
       path: "/troubleshoot",

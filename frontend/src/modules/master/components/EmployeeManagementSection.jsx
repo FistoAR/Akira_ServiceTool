@@ -20,6 +20,14 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
   const [localDepts, setLocalDepts] = useState([]);
   const [newDept, setNewDept] = useState("");
   const { toast, confirm } = useNotification();
+  const currentLoggedInUser = useMemo(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
+    } catch {
+      return null;
+    }
+  }, []);
+  const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
 
   useEffect(() => {
     if (isOpen) setLocalDepts([...departments]);
@@ -301,12 +309,19 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   </span>
                 </td>
                 <td className="px-[1vw] py-[0.8vw] text-right">
-                  <button 
-                    onClick={() => openRegModal(emp)}
-                    className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-blue-600"
-                  >
-                    <Edit2 className="w-[0.9vw] h-[0.9vw]" />
-                  </button>
+                  {((emp.role === "Admin" || emp.department === "Admin") && !isCurrentRequesterAdmin) ? (
+                    <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
+                      <Lock className="w-[0.7vw] h-[0.7vw]" /> Protected
+                    </span>
+                  ) : (
+                    <button 
+                      onClick={() => openRegModal(emp)}
+                      className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-blue-600 cursor-pointer"
+                      title="Edit Employee Details"
+                    >
+                      <Edit2 className="w-[0.9vw] h-[0.9vw]" />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -443,7 +458,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   <select required value={regData.role} onChange={e => setRegData({...regData, role: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw] bg-white">
                     <option value="User">User</option>
                     <option value="Supervisor">Supervisor</option>
-                    <option value="Admin">Admin</option>
+                    {isCurrentRequesterAdmin && <option value="Admin">Admin</option>}
                   </select>
                 </div>
                 <div className="space-y-[0.4vw]">

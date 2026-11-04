@@ -51,10 +51,10 @@ const getEmployeePictureById = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
   try {
-    const user = await authService.updateUser(req.params.id, req.body);
+    const user = await authService.updateUser(req.params.id, req.body, req.user);
     res.json({ user });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(error.statusCode || 400).json({ message: error.message });
   }
 };
 

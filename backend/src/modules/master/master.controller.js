@@ -292,6 +292,7 @@ exports.getModules = async (req, res) => {
     { id: "segments", label: "Product Segments", group: "master", desc: "Manage product segment names" },
     { id: "fourM", label: "4M Categories", group: "master", desc: "Manage 4M checklist categories" },
     { id: "units", label: "Units", group: "master", desc: "Manage measurement units" },
+    { id: "sites", label: "Site Master", group: "master", desc: "Manage operating sites and plant locations" },
     { id: "employees", label: "User Management", group: "master", desc: "Manage employee profiles and credentials" },
     { id: "roleAccess", label: "Role Access", group: "master", desc: "Manage user permissions" },
     { id: "escalation", label: "Service Call SLA", group: "master", desc: "Configure SLA workflows" },

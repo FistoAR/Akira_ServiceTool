@@ -122,10 +122,26 @@ const getEmployeePictureById = async (id) => {
   return await User.findOne(query).select('_id userId profilePicture').lean();
 };
 
-const updateUser = async (id, userData) => {
+const updateUser = async (id, userData, requestingUser = null) => {
   const user = await User.findById(id);
 
   if (user) {
+    // Security check: Protect Admin accounts and Admin role elevation
+    const isTargetAdmin = user.role === 'Admin' || user.department === 'Admin';
+    const isRequesterAdmin = requestingUser ? (requestingUser.role === 'Admin' || requestingUser.department === 'Admin') : true;
+
+    if (isTargetAdmin && !isRequesterAdmin) {
+      const err = new Error('Access Denied: Only an Administrator can modify an Admin account.');
+      err.statusCode = 403;
+      throw err;
+    }
+
+    if (userData.role === 'Admin' && !isRequesterAdmin) {
+      const err = new Error('Access Denied: Only an Administrator can grant the Admin role.');
+      err.statusCode = 403;
+      throw err;
+    }
+
     user.name = userData.name || user.name;
     user.email = userData.email || user.email;
     user.phoneNumber = userData.phoneNumber || user.phoneNumber;
