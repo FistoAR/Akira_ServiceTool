@@ -86,10 +86,11 @@ const LoginPage = () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
         email: emailOrUsername,
+        emailOrUserId: emailOrUsername,
         password: password
       });
 
-      const matchedUser = response.data;
+      const matchedUser = response.data.user || response.data;
       const userJson = JSON.stringify(matchedUser);
       
       // Always persist to current session
