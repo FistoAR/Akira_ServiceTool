@@ -28,6 +28,7 @@ import { SocketProvider } from "./contexts/SocketContext";
 import ServiceMaterialReports from "./modules/serviceMaterial/ServiceMaterialReports.jsx";
 import ProductionMaterialReports from "./modules/production/ProductionMaterialReports.jsx";
 import ServiceCallReports from "./modules/serviceCall/ServiceCallReports.jsx";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function NavBarWithTitle() {
@@ -50,28 +51,163 @@ function MainLayout() {
       >
         <NavBarWithTitle />
         <Routes>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="masterPage" element={<MasterPage />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="serviceCall" element={<ServiceCall />} />
-          <Route path="serviceCall/assignment" element={<CallAssignment />} />
-          <Route path="serviceCall/reports" element={<ServiceCallReports />} />
-          <Route path="serviceCall/escalations" element={<ServiceCallEscalations />} />
-          <Route path="serviceMaterial" element={<ServiceMaterial />} />
-          <Route path="serviceMaterial/reports" element={<ServiceMaterialReports />} />
-          <Route path="productionMaterial" element={<ProductionMaterial />} />
-          <Route path="serviceCallResponse" element={<ServiceCallResponse />} />
+          <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route
+            path="masterPage"
+            element={
+              <ProtectedRoute
+                requiredModules={[
+                  "partyTypes", "warrantyRules", "segments", "fourM", "units", "sites", "employees", "roleAccess", "escalation"
+                ]}
+              >
+                <MasterPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="customers"
+            element={
+              <ProtectedRoute requiredModules={["customers"]}>
+                <Customers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceCall"
+            element={
+              <ProtectedRoute
+                requiredModules={["callReg", "callAssign", "callEscalation", "callReports"]}
+                requireManagement={true}
+                fallbackToResponse="/serviceCallResponse"
+              >
+                <ServiceCall />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceCall/assignment"
+            element={
+              <ProtectedRoute
+                requiredModules={["callAssign"]}
+                requireManagement={true}
+                fallbackToResponse="/serviceCallResponse"
+              >
+                <CallAssignment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceCall/reports"
+            element={
+              <ProtectedRoute
+                requiredModules={["callReports"]}
+                requireManagement={true}
+                fallbackToResponse="/serviceCallResponse"
+              >
+                <ServiceCallReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceCall/escalations"
+            element={
+              <ProtectedRoute
+                requiredModules={["callEscalation"]}
+                requireManagement={true}
+                fallbackToResponse="/serviceCallResponse"
+              >
+                <ServiceCallEscalations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceCallResponse"
+            element={
+              <ProtectedRoute requiredModules={["callReg", "callAssign", "callEscalation", "callReports"]}>
+                <ServiceCallResponse />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceMaterial"
+            element={
+              <ProtectedRoute
+                requiredModules={["matInward", "matReports"]}
+                requireManagement={true}
+                fallbackToResponse="/serviceMaterialResponse"
+              >
+                <ServiceMaterial />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="serviceMaterial/reports"
+            element={
+              <ProtectedRoute
+                requiredModules={["matReports"]}
+                requireManagement={true}
+                fallbackToResponse="/serviceMaterialResponse"
+              >
+                <ServiceMaterialReports />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="serviceMaterialResponse"
-            element={<ServiceMaterialResponse />}
+            element={
+              <ProtectedRoute requiredModules={["matInward", "matReports"]}>
+                <ServiceMaterialResponse />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="productionMaterial"
+            element={
+              <ProtectedRoute
+                requiredModules={["prodNC", "prodReports"]}
+                requireManagement={true}
+                fallbackToResponse="/productionMaterialResponse"
+              >
+                <ProductionMaterial />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="productionMaterial/reports"
+            element={
+              <ProtectedRoute
+                requiredModules={["prodReports"]}
+                requireManagement={true}
+                fallbackToResponse="/productionMaterialResponse"
+              >
+                <ProductionMaterialReports />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="productionMaterialResponse"
-            element={<ProductionMaterialResponse />}
+            element={
+              <ProtectedRoute requiredModules={["prodNC", "prodReports"]}>
+                <ProductionMaterialResponse />
+              </ProtectedRoute>
+            }
           />
-          <Route path="productionMaterial/reports" element={<ProductionMaterialReports />} />
-          <Route path="troubleshoot" element={<Troubleshoot />} />
-          <Route path="escalation" element={<EscalationPage />} />
+          <Route
+            path="troubleshoot"
+            element={
+              <ProtectedRoute requiredModules={["troubleshoot"]}>
+                <Troubleshoot />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="escalation"
+            element={
+              <ProtectedRoute requiredModules={["escalation"]}>
+                <EscalationPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
