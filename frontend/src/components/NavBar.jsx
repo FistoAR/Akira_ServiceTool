@@ -63,7 +63,10 @@ const NavBar = ({ type }) => {
   };
 
   const handleLogout = () => {
+    sessionStorage.clear();
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    window.dispatchEvent(new Event('auth-change'));
     window.location.href = "/";
   };
 
