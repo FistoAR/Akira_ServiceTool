@@ -15,7 +15,8 @@ import {
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
-const FourMCategoriesSection = ({ items, setItems }) => {
+const FourMCategoriesSection = ({ items = [], setItems }) => {
+  const safeItems = Array.isArray(items) ? items : [];
   const { toast, confirm } = useNotification();
   const [newName, setNewName] = useState("");
   const [editingItem, setEditingItem] = useState(null);
@@ -23,14 +24,14 @@ const FourMCategoriesSection = ({ items, setItems }) => {
   const handleAdd = async () => {
     const t = newName.trim();
     if (!t) return;
-    if (items.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
+    if (safeItems.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
       toast("4M Category already exists!", "error");
       return;
     }
     try {
       const res = await axios.post(`${API_URL}/master/four-m-categories`, { name: t });
       const newItem = { ...res.data, id: res.data._id };
-      setItems([...items, newItem]);
+      setItems([...safeItems, newItem]);
       setNewName("");
       toast("4M Category added");
     } catch (err) {
@@ -42,7 +43,7 @@ const FourMCategoriesSection = ({ items, setItems }) => {
     if (!editingItem?.name?.trim()) return;
     const t = editingItem.name.trim();
     if (
-      items.some(
+      safeItems.some(
         (x) =>
           x.id !== editingItem.id && x._id !== editingItem._id && x.name.toLowerCase() === t.toLowerCase(),
       )
@@ -54,7 +55,7 @@ const FourMCategoriesSection = ({ items, setItems }) => {
       const res = await axios.put(`${API_URL}/master/four-m-categories/${editingItem._id || editingItem.id}`, { name: t });
       const updatedItem = { ...res.data, id: res.data._id };
       setItems(
-        items.map((x) => (x.id === editingItem.id || x._id === editingItem._id ? updatedItem : x)),
+        safeItems.map((x) => (x.id === editingItem.id || x._id === editingItem._id ? updatedItem : x)),
       );
       setEditingItem(null);
       toast("4M Category updated");
@@ -64,7 +65,7 @@ const FourMCategoriesSection = ({ items, setItems }) => {
   };
 
   const handleDelete = async (id, mongoId) => {
-    const item = items.find((s) => s.id === id || s._id === mongoId);
+    const item = safeItems.find((s) => s.id === id || s._id === mongoId);
     const confirmed = await confirm({
       title: "Delete 4M Category",
       message: (
@@ -80,7 +81,7 @@ const FourMCategoriesSection = ({ items, setItems }) => {
     if (confirmed) {
       try {
         await axios.delete(`${API_URL}/master/four-m-categories/${mongoId || id}`);
-        const remaining = items.filter((t) => t.id !== id && t._id !== mongoId);
+        const remaining = safeItems.filter((t) => t.id !== id && t._id !== mongoId);
         setItems(remaining);
         toast("4M Category deleted successfully");
       } catch (err) {
@@ -95,10 +96,10 @@ const FourMCategoriesSection = ({ items, setItems }) => {
         <div>
           <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">Existing 4M Categories</p>
           <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
-            {items.length === 0 ? (
+            {safeItems.length === 0 ? (
               <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">No 4M Categories yet</div>
             ) : (
-              items.map((seg) => (
+              safeItems.map((seg) => (
                 <div key={seg.id} className="flex items-center gap-[0.8vw] px-[0.9vw] py-[0.65vw] hover:bg-slate-50 border-b border-slate-400 last:border-0 group transition-colors">
                   {editingItem && (editingItem._id === seg._id || editingItem.id === seg.id) ? (
                     <div className="flex flex-1 items-center gap-[0.5vw]">

@@ -16,7 +16,8 @@ import {
   loadCustomerDb
 } from "./masterConstants";
 
-const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
+const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
+  const safePartyTypes = Array.isArray(partyTypes) ? partyTypes : [];
   const { toast, confirm } = useNotification();
   const [newType, setNewType] = useState({
     name: ""
@@ -26,14 +27,14 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
   const handleAdd = async () => {
     const t = newType.name.trim();
     if (!t) return;
-    if (partyTypes.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
+    if (safePartyTypes.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
       toast("Category already exists!", "error");
       return;
     }
     try {
       const res = await axios.post(`${API_URL}/master/party-types`, newType);
       const newItem = { ...res.data, id: res.data._id };
-      setPartyTypes([...partyTypes, newItem]);
+      setPartyTypes([...safePartyTypes, newItem]);
       setNewType({
         name: ""
       });
@@ -47,7 +48,7 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
     if (!editingType?.name?.trim()) return;
     const t = editingType.name.trim();
     if (
-      partyTypes.some(
+      safePartyTypes.some(
         (x) =>
           x.id !== editingType.id && x._id !== editingType._id && x.name.toLowerCase() === t.toLowerCase(),
       )
@@ -59,7 +60,7 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
       const res = await axios.put(`${API_URL}/master/party-types/${editingType._id || editingType.id}`, editingType);
       const updatedItem = { ...res.data, id: res.data._id };
       setPartyTypes(
-        partyTypes.map((x) => (x.id === editingType.id || x._id === editingType._id ? updatedItem : x)),
+        safePartyTypes.map((x) => (x.id === editingType.id || x._id === editingType._id ? updatedItem : x)),
       );
       setEditingType(null);
       toast("Category updated");
@@ -69,11 +70,11 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
   };
 
   const handleDelete = async (id, mongoId) => {
-    if (partyTypes.length === 1) {
+    if (safePartyTypes.length === 1) {
       toast("Cannot delete the last category!", "warning");
       return;
     }
-    const type = partyTypes.find((t) => t.id === id || t._id === mongoId);
+    const type = safePartyTypes.find((t) => t.id === id || t._id === mongoId);
     const usageCount = loadCustomerDb().filter((r) => r.partyType === type.name).length;
 
     const confirmed = await confirm({
@@ -99,7 +100,7 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
     if (confirmed) {
       try {
         await axios.delete(`${API_URL}/master/party-types/${mongoId || id}`);
-        const remaining = partyTypes.filter((t) => t.id !== id && t._id !== mongoId);
+        const remaining = safePartyTypes.filter((t) => t.id !== id && t._id !== mongoId);
         setPartyTypes(remaining);
         toast("Category deleted successfully");
       } catch (err) {
@@ -116,12 +117,12 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
             Existing Categories
           </p>
           <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
-            {partyTypes.length === 0 ? (
+            {safePartyTypes.length === 0 ? (
               <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
                 No categories yet
               </div>
             ) : (
-              partyTypes.map((type, idx) => {
+              safePartyTypes.map((type, idx) => {
                 const badgeClass = TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
                 return (
                   <div
@@ -150,7 +151,7 @@ const PartyTypesSection = ({ partyTypes, setPartyTypes }) => {
                         type="button"
                         onClick={() => handleDelete(type.id, type._id)}
                         className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
-                        disabled={partyTypes.length === 1}
+                        disabled={safePartyTypes.length === 1}
                       >
                         <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                       </button>

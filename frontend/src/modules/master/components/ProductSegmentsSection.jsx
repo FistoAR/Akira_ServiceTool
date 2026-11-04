@@ -16,7 +16,8 @@ import {
   loadCustomerDb
 } from "./masterConstants";
 
-const ProductSegmentsSection = ({ segments, setSegments }) => {
+const ProductSegmentsSection = ({ segments = [], setSegments }) => {
+  const safeSegments = Array.isArray(segments) ? segments : [];
   const { toast, confirm } = useNotification();
   const [newSegmentName, setNewSegmentName] = useState("");
   const [editingSegment, setEditingSegment] = useState(null);
@@ -29,14 +30,14 @@ const ProductSegmentsSection = ({ segments, setSegments }) => {
   const handleAdd = async () => {
     const t = newSegmentName.trim();
     if (!t) return;
-    if (segments.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
+    if (safeSegments.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
       toast("Segment already exists!", "error");
       return;
     }
     try {
       const res = await axios.post(`${API_URL}/master/product-segments`, { name: t });
       const newItem = { ...res.data, id: res.data._id };
-      setSegments([...segments, newItem]);
+      setSegments([...safeSegments, newItem]);
       setNewSegmentName("");
       toast("Segment added");
     } catch (err) {
@@ -48,7 +49,7 @@ const ProductSegmentsSection = ({ segments, setSegments }) => {
     if (!editingSegment?.name?.trim()) return;
     const t = editingSegment.name.trim();
     if (
-      segments.some(
+      safeSegments.some(
         (x) =>
           x.id !== editingSegment.id && x._id !== editingSegment._id && x.name.toLowerCase() === t.toLowerCase(),
       )
@@ -60,7 +61,7 @@ const ProductSegmentsSection = ({ segments, setSegments }) => {
       const res = await axios.put(`${API_URL}/master/product-segments/${editingSegment._id || editingSegment.id}`, { name: t });
       const updatedItem = { ...res.data, id: res.data._id };
       setSegments(
-        segments.map((x) => (x.id === editingSegment.id || x._id === editingSegment._id ? updatedItem : x)),
+        safeSegments.map((x) => (x.id === editingSegment.id || x._id === editingSegment._id ? updatedItem : x)),
       );
       setEditingSegment(null);
       toast("Segment updated");
@@ -70,7 +71,7 @@ const ProductSegmentsSection = ({ segments, setSegments }) => {
   };
 
   const handleDelete = async (id, mongoId) => {
-    const segment = segments.find((s) => s.id === id || s._id === mongoId);
+    const segment = safeSegments.find((s) => s.id === id || s._id === mongoId);
     const db = loadCustomerDb();
     const usageCount = db.filter((r) => r.productSegment === segment.name).length;
 
@@ -97,7 +98,7 @@ const ProductSegmentsSection = ({ segments, setSegments }) => {
     if (confirmed) {
       try {
         await axios.delete(`${API_URL}/master/product-segments/${mongoId || id}`);
-        setSegments(segments.filter((s) => s.id !== id && s._id !== mongoId));
+        setSegments(safeSegments.filter((s) => s.id !== id && s._id !== mongoId));
         toast("Product segment removed");
       } catch (err) {
         toast("Failed to delete segment", "error");
@@ -113,12 +114,12 @@ const ProductSegmentsSection = ({ segments, setSegments }) => {
             Active Segments
           </p>
           <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
-            {segments.length === 0 ? (
+            {safeSegments.length === 0 ? (
               <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
                 No segments defined
               </div>
             ) : (
-              segments.map((seg, idx) => {
+              safeSegments.map((seg, idx) => {
                 const usageCount = db.filter(
                   (r) => r.productSegment === seg.name,
                 ).length;

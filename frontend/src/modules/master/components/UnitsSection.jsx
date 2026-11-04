@@ -15,7 +15,8 @@ import {
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
-const UnitsSection = ({ units, setUnits }) => {
+const UnitsSection = ({ units = [], setUnits }) => {
+  const safeUnits = Array.isArray(units) ? units : [];
   const { toast, confirm } = useNotification();
   const [newTypeName, setNewTypeName] = useState("");
   const [editingType, setEditingType] = useState(null);
@@ -23,14 +24,14 @@ const UnitsSection = ({ units, setUnits }) => {
   const handleAdd = async () => {
     const t = newTypeName.trim();
     if (!t) return;
-    if (units.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
+    if (safeUnits.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
       toast("Unit already exists!", "error");
       return;
     }
     try {
       const res = await axios.post(`${API_URL}/master/units`, { name: t });
       const newItem = { ...res.data, id: res.data._id };
-      setUnits([...units, newItem]);
+      setUnits([...safeUnits, newItem]);
       setNewTypeName("");
       toast("Unit added successfully");
     } catch (err) {
@@ -42,7 +43,7 @@ const UnitsSection = ({ units, setUnits }) => {
     if (!editingType?.name?.trim()) return;
     const t = editingType.name.trim();
     if (
-      units.some(
+      safeUnits.some(
         (x) =>
           x.id !== editingType.id && x.name.toLowerCase() === t.toLowerCase(),
       )
@@ -54,7 +55,7 @@ const UnitsSection = ({ units, setUnits }) => {
       const res = await axios.put(`${API_URL}/master/units/${editingType._id || editingType.id}`, { name: t });
       const updatedItem = { ...res.data, id: res.data._id };
       setUnits(
-        units.map((x) => (x.id === editingType.id || x._id === editingType._id ? updatedItem : x)),
+        safeUnits.map((x) => (x.id === editingType.id || x._id === editingType._id ? updatedItem : x)),
       );
       setEditingType(null);
       toast("Unit updated");
@@ -64,7 +65,7 @@ const UnitsSection = ({ units, setUnits }) => {
   };
 
   const handleDelete = async (id, mongoId) => {
-    const type = units.find((t) => t.id === id || t._id === mongoId);
+    const type = safeUnits.find((t) => t.id === id || t._id === mongoId);
     const confirmed = await confirm({
       title: "Delete Unit",
       message: (
@@ -80,7 +81,7 @@ const UnitsSection = ({ units, setUnits }) => {
     if (confirmed) {
       try {
         await axios.delete(`${API_URL}/master/units/${mongoId || id}`);
-        const remaining = units.filter((t) => t.id !== id && t._id !== mongoId);
+        const remaining = safeUnits.filter((t) => t.id !== id && t._id !== mongoId);
         setUnits(remaining);
         toast("Unit deleted successfully");
       } catch (err) {
@@ -97,12 +98,12 @@ const UnitsSection = ({ units, setUnits }) => {
             Existing Units
           </p>
           <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
-            {units.length === 0 ? (
+            {safeUnits.length === 0 ? (
               <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
                 No units yet
               </div>
             ) : (
-              units.map((type, idx) => {
+              safeUnits.map((type, idx) => {
                 const badgeClass =
                   TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
                 return (
@@ -201,13 +202,13 @@ const UnitsSection = ({ units, setUnits }) => {
               </button>
             </div>
           </div>
-          {units.length > 0 && (
+          {safeUnits.length > 0 && (
             <div className="bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">
               <p className="text-[0.68vw] font-semibold text-gray-800 mb-[0.5vw]">
                 Preview
               </p>
               <div className="flex flex-wrap gap-[0.4vw]">
-                {units.map((type, idx) => (
+                {safeUnits.map((type, idx) => (
                   <span
                     key={type.id}
                     className={`text-[0.72vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border ${TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length]}`}

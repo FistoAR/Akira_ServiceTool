@@ -24,6 +24,16 @@ import RoleAccessSection from "./components/RoleAccessSection";
 import ColumnVisibilitySection from "./components/ColumnVisibilitySection";
 
 const SystemSettingsPage = () => {
+  const getCachedArray = (key) => {
+    try {
+      const item = sessionStorage.getItem(key);
+      if (!item || item === "undefined" || item === "null") return null;
+      const parsed = JSON.parse(item);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch {
+      return null;
+    }
+  };
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "categories";
 
@@ -48,14 +58,15 @@ const SystemSettingsPage = () => {
     try {
       switch (targetTab) {
         case "categories": {
-          const cached = sessionStorage.getItem("master_party_types");
-          if (!force && cached) {
-            setPartyTypes(JSON.parse(cached));
+          const cached = !force ? getCachedArray("master_party_types") : null;
+          if (cached) {
+            setPartyTypes(cached);
           } else {
             const res = await axios.get(`${API_URL}/master/party-types`);
-            const norm = res.data.map(t => ({ ...t, id: t.id || t._id }));
-            setPartyTypes(norm.length ? norm : [{ id: 1, name: "OEM" }, { id: 2, name: "End Customer" }]);
-            sessionStorage.setItem("master_party_types", JSON.stringify(norm));
+            const norm = Array.isArray(res.data) ? res.data.map(t => ({ ...t, id: t.id || t._id })) : [];
+            const finalPT = norm.length ? norm : [{ id: 1, name: "OEM" }, { id: 2, name: "End Customer" }];
+            setPartyTypes(finalPT);
+            sessionStorage.setItem("master_party_types", JSON.stringify(finalPT));
           }
           break;
         }
@@ -346,7 +357,7 @@ const SystemSettingsPage = () => {
               <WarrantyRulesSection
                 warrantyRules={warrantyRules}
                 setWarrantyRules={setWarrantyRules}
-                partyTypes={partyTypes}
+                partyTypes={partyTypes || []}
               />
             </div>
           )}

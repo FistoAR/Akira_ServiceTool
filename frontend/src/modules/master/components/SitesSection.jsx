@@ -15,7 +15,8 @@ import {
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
-const SitesSection = ({ sites, setSites }) => {
+const SitesSection = ({ sites = [], setSites }) => {
+  const safeSites = Array.isArray(sites) ? sites : [];
   const { toast, confirm } = useNotification();
   const [newSiteName, setNewSiteName] = useState("");
   const [editingSite, setEditingSite] = useState(null);
@@ -23,14 +24,14 @@ const SitesSection = ({ sites, setSites }) => {
   const handleAdd = async () => {
     const t = newSiteName.trim();
     if (!t) return;
-    if (sites.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
+    if (safeSites.some((x) => x.name.toLowerCase() === t.toLowerCase())) {
       toast("Site already exists!", "error");
       return;
     }
     try {
       const res = await axios.post(`${API_URL}/master/sites`, { name: t });
       const newItem = { ...res.data, id: res.data._id };
-      const updated = [...sites, newItem];
+      const updated = [...safeSites, newItem];
       setSites(updated);
       sessionStorage.setItem("master_sites", JSON.stringify(updated));
       setNewSiteName("");
@@ -44,7 +45,7 @@ const SitesSection = ({ sites, setSites }) => {
     if (!editingSite?.name?.trim()) return;
     const t = editingSite.name.trim();
     if (
-      sites.some(
+      safeSites.some(
         (x) =>
           x.id !== editingSite.id && x.name.toLowerCase() === t.toLowerCase(),
       )
@@ -55,7 +56,7 @@ const SitesSection = ({ sites, setSites }) => {
     try {
       const res = await axios.put(`${API_URL}/master/sites/${editingSite._id || editingSite.id}`, { name: t });
       const updatedItem = { ...res.data, id: res.data._id };
-      const updated = sites.map((x) => (x.id === editingSite.id || x._id === editingSite._id ? updatedItem : x));
+      const updated = safeSites.map((x) => (x.id === editingSite.id || x._id === editingSite._id ? updatedItem : x));
       setSites(updated);
       sessionStorage.setItem("master_sites", JSON.stringify(updated));
       setEditingSite(null);
@@ -66,7 +67,7 @@ const SitesSection = ({ sites, setSites }) => {
   };
 
   const handleDelete = async (id, mongoId) => {
-    const site = sites.find((t) => t.id === id || t._id === mongoId);
+    const site = safeSites.find((t) => t.id === id || t._id === mongoId);
     const confirmed = await confirm({
       title: "Delete Site",
       message: (
@@ -82,7 +83,7 @@ const SitesSection = ({ sites, setSites }) => {
     if (confirmed) {
       try {
         await axios.delete(`${API_URL}/master/sites/${mongoId || id}`);
-        const remaining = sites.filter((t) => t.id !== id && t._id !== mongoId);
+        const remaining = safeSites.filter((t) => t.id !== id && t._id !== mongoId);
         setSites(remaining);
         sessionStorage.setItem("master_sites", JSON.stringify(remaining));
         toast("Site deleted successfully");
@@ -100,12 +101,12 @@ const SitesSection = ({ sites, setSites }) => {
             Existing Sites
           </p>
           <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
-            {sites.length === 0 ? (
+            {safeSites.length === 0 ? (
               <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
                 No sites yet
               </div>
             ) : (
-              sites.map((site, idx) => {
+              safeSites.map((site, idx) => {
                 const badgeClass =
                   TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
                 return (
@@ -204,13 +205,13 @@ const SitesSection = ({ sites, setSites }) => {
               </button>
             </div>
           </div>
-          {sites.length > 0 && (
+          {safeSites.length > 0 && (
             <div className="bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">
               <p className="text-[0.68vw] font-semibold text-gray-800 mb-[0.5vw]">
                 Preview
               </p>
               <div className="flex flex-wrap gap-[0.4vw]">
-                {sites.map((site, idx) => (
+                {safeSites.map((site, idx) => (
                   <span
                     key={site.id || site._id}
                     className={`text-[0.72vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border ${TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length]}`}
