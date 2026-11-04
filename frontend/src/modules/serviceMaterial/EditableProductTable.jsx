@@ -178,10 +178,17 @@ const EditableProductTable = ({
               if (Array.isArray(activeCustomer)) {
                 activeCustomer = activeCustomer[0];
               }
-              const customerCategoryName = customerCategory || activeCustomer?.partyType || activeCustomer?.type || "";
-              let catConfig = categories.find(c => (c.partyType || c.name || "").toLowerCase() === customerCategoryName.toLowerCase());
+              const prodSeg = p.productSegment || p.segment || "";
+              let catConfig = categories.find(c => (c.productSegment || "").toLowerCase() === prodSeg.toLowerCase());
+              if (!catConfig && prodSeg) {
+                catConfig = categories.find(c => (c.partyType || c.name || "").toLowerCase() === prodSeg.toLowerCase());
+              }
               if (!catConfig) {
-                catConfig = categories.find(c => (c.partyType || c.name || "").toLowerCase() === "default");
+                const customerCategoryName = customerCategory || activeCustomer?.partyType || activeCustomer?.type || "";
+                catConfig = categories.find(c => (c.partyType || c.productSegment || c.name || "").toLowerCase() === customerCategoryName.toLowerCase());
+              }
+              if (!catConfig) {
+                catConfig = categories.find(c => (c.productSegment || c.partyType || c.name || "").toLowerCase() === "default");
               }
 
              const weekStart = catConfig?.weekStartIdx ?? 3;

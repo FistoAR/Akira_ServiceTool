@@ -1,24 +1,17 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
 import {
-  Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
-  ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
-  GripVertical, Info, CheckCircle, PhoneCall, UserCheck, Search, Tag,
-  Edit2, Trash2, Check, Tags, HelpCircle, Columns, Eye, EyeOff, Clock,
-  Wrench, Package, Mail, Calendar, Briefcase, Lock, ShieldCheck, ArrowLeft,
-  Phone, Image as ImageIcon, IndianRupee, Activity, UserPlus, Loader2,
-  MapPin, RefreshCw
+  Settings, Plus, X, Edit2, Trash2, Clock
 } from "lucide-react";
 import {
-  API_URL, DEFAULT_DEPTS, TYPE_BADGE_COLORS, TYPE_COLORS, LEVEL_COLORS,
-  LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
+  API_URL, TYPE_BADGE_COLORS
 } from "./masterConstants";
 
-const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) => {
+const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments = [] }) => {
   const { toast, confirm } = useNotification();
   const [newRule, setNewRule] = useState({
-    partyType: "Default",
+    productSegment: "Default",
     weekStartIdx: 3,
     weekLength: 2,
     yearStartIdx: 5,
@@ -31,21 +24,21 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
   const [testSerial, setTestSerial] = useState("SZ-3522-ABCD");
 
   const handleAdd = async () => {
-    const pt = newRule.partyType || "Default";
-    if (!pt) {
-      toast("Please select a Party Type category", "warning");
+    const seg = newRule.productSegment || "Default";
+    if (!seg) {
+      toast("Please select a Product Segment", "warning");
       return;
     }
-    if (warrantyRules.some((x) => x.partyType.toLowerCase() === pt.toLowerCase())) {
-      toast("Warranty rule for this category already exists!", "error");
+    if (warrantyRules.some((x) => (x.productSegment || x.partyType || "").toLowerCase() === seg.toLowerCase())) {
+      toast("Warranty rule for this product segment already exists!", "error");
       return;
     }
     try {
-      const res = await axios.post(`${API_URL}/master/warranty-rules`, { ...newRule, partyType: pt });
-      const newItem = { ...res.data, id: res.data._id };
+      const res = await axios.post(`${API_URL}/master/warranty-rules`, { ...newRule, productSegment: seg });
+      const newItem = { ...res.data, id: res.data._id, productSegment: res.data.productSegment || seg };
       setWarrantyRules([...warrantyRules, newItem]);
       setNewRule({
-        partyType: "Default",
+        productSegment: "Default",
         weekStartIdx: 3,
         weekLength: 2,
         yearStartIdx: 5,
@@ -61,20 +54,25 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
   };
 
   const handleUpdate = async () => {
-    if (!editingRule?.partyType) return;
-    const pt = editingRule.partyType;
+    if (!editingRule?.productSegment && !editingRule?.partyType) return;
+    const seg = editingRule.productSegment || editingRule.partyType;
     if (
       warrantyRules.some(
         (x) =>
-          x.id !== editingRule.id && x._id !== editingRule._id && x.partyType.toLowerCase() === pt.toLowerCase(),
+          x.id !== editingRule.id &&
+          x._id !== editingRule._id &&
+          (x.productSegment || x.partyType || "").toLowerCase() === seg.toLowerCase(),
       )
     ) {
-      toast("Warranty rule for this category already exists!", "error");
+      toast("Warranty rule for this product segment already exists!", "error");
       return;
     }
     try {
-      const res = await axios.put(`${API_URL}/master/warranty-rules/${editingRule._id || editingRule.id}`, editingRule);
-      const updatedItem = { ...res.data, id: res.data._id };
+      const res = await axios.put(`${API_URL}/master/warranty-rules/${editingRule._id || editingRule.id}`, {
+        ...editingRule,
+        productSegment: seg
+      });
+      const updatedItem = { ...res.data, id: res.data._id, productSegment: res.data.productSegment || seg };
       setWarrantyRules(
         warrantyRules.map((x) => (x.id === editingRule.id || x._id === editingRule._id ? updatedItem : x)),
       );
@@ -87,9 +85,10 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
 
   const handleDelete = async (id, mongoId) => {
     const rule = warrantyRules.find((t) => t.id === id || t._id === mongoId);
+    const segName = rule?.productSegment || rule?.partyType || "this segment";
     const confirmed = await confirm({
       title: "Delete Warranty Rule",
-      message: `Are you sure you want to delete the warranty rule for "${rule.partyType}"?`,
+      message: `Are you sure you want to delete the warranty rule for "${segName}"?`,
       type: "danger",
       confirmText: "Yes, Delete",
       cancelText: "Keep it"
@@ -113,8 +112,8 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
   const yrStart = activeRule.yearStartIdx ?? 5;
   const yrLen = activeRule.yearLength ?? 2;
 
-  const testWeek = testSerial.substring(wkStart, wkStart + wkLen);
-  const testYear = testSerial.substring(yrStart, yrStart + yrLen);
+  const testWeek = (testSerial || "").substring(wkStart, wkStart + wkLen);
+  const testYear = (testSerial || "").substring(yrStart, yrStart + yrLen);
 
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -132,7 +131,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
               <table className="w-full border-collapse text-[0.78vw] text-left text-slate-900 border border-slate-300">
                 <thead>
                   <tr className="bg-slate-50 text-gray-700 font-bold tracking-wider text-[0.8vw]">
-                    <th className="px-[0.6vw] py-[0.5vw] font-bold border border-slate-300">Category</th>
+                    <th className="px-[0.6vw] py-[0.5vw] font-bold border border-slate-300">Product Segment</th>
                     <th className="px-[0.6vw] py-[0.5vw] font-bold border border-slate-300">Decoder (Start, Len)</th>
                     <th className="px-[0.6vw] py-[0.5vw] font-bold border border-slate-300">Warranty</th>
                     <th className="px-[0.6vw] py-[0.5vw] font-bold border border-slate-300">W SLA</th>
@@ -143,6 +142,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
                 <tbody>
                   {warrantyRules.map((rule, idx) => {
                     const badgeClass = TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
+                    const label = rule.productSegment || rule.partyType || "Default";
                     return (
                       <tr 
                         key={rule.id || rule._id}
@@ -154,7 +154,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
                       >
                         <td className="px-[0.6vw] py-[0.6vw] font-bold border border-slate-300">
                           <span className={`px-[0.5vw] py-[0.15vw] rounded-[0.3vw] border text-[0.72vw] ${badgeClass}`}>
-                            {rule.partyType}
+                            {label}
                           </span>
                         </td>
                         <td className="px-[0.6vw] py-[0.6vw] font-mono text-[0.72vw] text-slate-700 border border-slate-300">
@@ -173,8 +173,9 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
                           <div className="flex justify-center gap-[0.3vw]">
                             <button
                               type="button"
-                              onClick={() => setEditingRule({ ...rule })}
+                              onClick={() => setEditingRule({ ...rule, productSegment: label })}
                               className="p-[0.25vw] text-blue-600 hover:bg-blue-50 rounded-[0.2vw] cursor-pointer"
+                              title="Edit rule"
                             >
                               <Edit2 className="w-[0.85vw] h-[0.85vw]" />
                             </button>
@@ -182,6 +183,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
                               type="button"
                               onClick={() => handleDelete(rule.id, rule._id)}
                               className="p-[0.25vw] text-red-500 hover:bg-red-50 rounded-[0.2vw] cursor-pointer"
+                              title="Delete rule"
                             >
                               <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                             </button>
@@ -201,7 +203,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
           <p className="text-[0.85vw] font-bold text-gray-700 border-b border-slate-200 pb-[0.3vw] flex items-center gap-[0.4vw]">
             {editingRule ? (
               <>
-                Edit Rule for Category: {editingRule.partyType}
+                Edit Rule for Segment: {editingRule.productSegment || editingRule.partyType}
               </>
             ) : (
               <>
@@ -211,21 +213,21 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
           </p>
 
           <div className="flex-1 overflow-y-auto pr-[0.3vw] space-y-[1vw] mt-[0.5vw]">
-            {/* 1. Category Target */}
+            {/* 1. Product Segment Target */}
             <div className="space-y-[0.3vw] bg-slate-50 p-[0.6vw] rounded-[0.4vw] border border-slate-200">
-              <label className="text-[0.8vw] font-bold text-slate-900">Party Type Category *</label>
+              <label className="text-[0.8vw] font-bold text-slate-900">Product Segment *</label>
               <select
-                value={editingRule ? editingRule.partyType : newRule.partyType}
+                value={editingRule ? (editingRule.productSegment || editingRule.partyType) : newRule.productSegment}
                 onChange={(e) =>
                   editingRule
-                    ? setEditingRule({ ...editingRule, partyType: e.target.value })
-                    : setNewRule({ ...newRule, partyType: e.target.value })
+                    ? setEditingRule({ ...editingRule, productSegment: e.target.value })
+                    : setNewRule({ ...newRule, productSegment: e.target.value })
                 }
                 className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.85vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white text-slate-900 font-medium"
               >
                 <option value="Default">Default (Fallback Rule)</option>
-                {partyTypes.map((t) => (
-                  <option key={t.id || t._id} value={t.name}>{t.name}</option>
+                {(segments || []).map((s) => (
+                  <option key={s.id || s._id} value={s.name}>{s.name}</option>
                 ))}
               </select>
             </div>
@@ -234,7 +236,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
             <div className="bg-green-50/20 border border-green-200 rounded-[0.5vw] p-[0.8vw] space-y-[0.6vw]">
               <div className="flex items-center gap-[0.4vw] border-b border-green-100 pb-[0.2vw]">
                 <Settings className="w-[0.9vw] h-[0.9vw] text-green-600" />
-                <h4 className="text-[0.8vw] font-bold text-green-800">Serial Decoder </h4>
+                <h4 className="text-[0.8vw] font-bold text-green-800">Serial Decoder</h4>
               </div>
               
               <div className="grid grid-cols-2 gap-[0.8vw]">
@@ -363,7 +365,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
             <div className="bg-slate-50 border border-slate-400 rounded-[0.5vw] p-[0.8vw] space-y-[0.5vw]">
               <div className="flex items-center justify-between border-b border-slate-200 pb-[0.2vw]">
                 <h4 className="text-[0.8vw] font-bold text-slate-900">Real-time Decoder Test Lab</h4>
-                <span className="text-[0.68vw] bg-emerald-100 text-emerald-850 px-[0.5vw] py-[0.05vw] rounded-full font-bold">LIVE PREVIEW</span>
+                <span className="text-[0.68vw] bg-emerald-100 text-emerald-800 px-[0.5vw] py-[0.05vw] rounded-full font-bold">LIVE PREVIEW</span>
               </div>
               
               <div className="space-y-[0.4vw]">
@@ -380,7 +382,7 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
               <div className="space-y-[0.3vw]">
                 <p className="text-[0.78vw] font-bold text-gray-700">Character Indexes:</p>
                 <div className="flex flex-wrap gap-[0.2vw] font-mono mt-[0.2vw]">
-                  {testSerial.split("").map((char, index) => {
+                  {(testSerial || "").split("").map((char, index) => {
                     let bg = "bg-slate-100 text-slate-900 border-slate-200";
                     
                     const isWeek = index >= wkStart && index < wkStart + wkLen;
@@ -450,9 +452,5 @@ const WarrantyRulesSection = ({ warrantyRules, setWarrantyRules, partyTypes }) =
     </div>
   );
 };
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ProductSegmentsSection
-// ─────────────────────────────────────────────────────────────────────────────
 
 export default WarrantyRulesSection;

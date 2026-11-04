@@ -56,13 +56,41 @@ exports.deletePartyType = async (req, res) => {
 
 // --- Warranty Rules ---
 exports.getWarrantyRules = async (req, res) => {
-  try { res.json(await WarrantyRule.find().lean()); } catch (err) { res.status(500).json({ message: err.message }); }
+  try {
+    const rules = await WarrantyRule.find().lean();
+    const normalized = rules.map(r => ({
+      ...r,
+      productSegment: r.productSegment || r.partyType || "Default",
+      partyType: r.partyType || r.productSegment || "Default"
+    }));
+    res.json(normalized);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 exports.addWarrantyRule = async (req, res) => {
-  try { res.json(await WarrantyRule.create(req.body)); } catch (err) { res.status(500).json({ message: err.message }); }
+  try {
+    const data = { ...req.body };
+    const seg = data.productSegment || data.partyType || "Default";
+    data.productSegment = seg;
+    data.partyType = seg;
+    res.json(await WarrantyRule.create(data));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 exports.updateWarrantyRule = async (req, res) => {
-  try { res.json(await WarrantyRule.findByIdAndUpdate(req.params.id, req.body, { new: true })); } catch (err) { res.status(500).json({ message: err.message }); }
+  try {
+    const data = { ...req.body };
+    if (data.productSegment || data.partyType) {
+      const seg = data.productSegment || data.partyType;
+      data.productSegment = seg;
+      data.partyType = seg;
+    }
+    res.json(await WarrantyRule.findByIdAndUpdate(req.params.id, data, { new: true }));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 exports.deleteWarrantyRule = async (req, res) => {
   try { await WarrantyRule.findByIdAndDelete(req.params.id); res.json({ message: 'Deleted' }); } catch (err) { res.status(500).json({ message: err.message }); }

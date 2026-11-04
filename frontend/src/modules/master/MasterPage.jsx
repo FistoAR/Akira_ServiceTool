@@ -62,22 +62,22 @@ const SystemSettingsPage = () => {
 
         case "warranty-rules": {
           const cachedRules = sessionStorage.getItem("master_warranty_rules");
-          const cachedPT = sessionStorage.getItem("master_party_types");
+          const cachedSegs = sessionStorage.getItem("master_segments");
 
-          if (!force && cachedRules && cachedPT) {
+          if (!force && cachedRules && cachedSegs) {
             setWarrantyRules(JSON.parse(cachedRules));
-            setPartyTypes(JSON.parse(cachedPT));
+            setSegments(JSON.parse(cachedSegs));
           } else {
-            const [rulesRes, ptRes] = await Promise.all([
+            const [rulesRes, segRes] = await Promise.all([
               axios.get(`${API_URL}/master/warranty-rules`),
-              axios.get(`${API_URL}/master/party-types`)
+              axios.get(`${API_URL}/master/product-segments`)
             ]);
-            const normRules = rulesRes.data.map(r => ({ ...r, id: r.id || r._id }));
-            const normPT = ptRes.data.map(t => ({ ...t, id: t.id || t._id }));
+            const normRules = rulesRes.data.map(r => ({ ...r, id: r.id || r._id, productSegment: r.productSegment || r.partyType || "Default" }));
+            const normSegs = segRes.data.map(s => ({ ...s, id: s.id || s._id }));
             setWarrantyRules(normRules);
-            setPartyTypes(normPT);
+            setSegments(normSegs);
             sessionStorage.setItem("master_warranty_rules", JSON.stringify(normRules));
-            sessionStorage.setItem("master_party_types", JSON.stringify(normPT));
+            sessionStorage.setItem("master_segments", JSON.stringify(normSegs));
           }
           break;
         }
@@ -312,7 +312,7 @@ const SystemSettingsPage = () => {
                 </div>
               </div>
               <PartyTypesSection
-                partyTypes={partyTypes}
+                segments={segments}
                 setPartyTypes={setPartyTypes}
               />
             </div>
@@ -330,7 +330,7 @@ const SystemSettingsPage = () => {
                     Warranty Rule Master
                   </h2>
                   <p className="text-[0.7vw] text-gray-800">
-                    Manage serial decoders and SLA days per customer category
+                    Manage serial decoders and SLA days per product segment
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
