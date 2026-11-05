@@ -775,21 +775,20 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     <span className="text-[0.7vw] text-gray-400 font-normal">({groupMods.length} modules)</span>
                   </div>
 
-                  <div className="flex items-center gap-[0.6vw]">
+                  <div className="flex items-center gap-[0.35vw] bg-gray-100/80 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
                     <button
                       type="button"
                       disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                      className="text-[0.74vw] font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer disabled:opacity-40"
+                      className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-emerald-700 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-2xs hover:border-emerald-300"
                     >
                       Enable All
                     </button>
-                    <span className="text-gray-300">|</span>
                     <button
                       type="button"
                       disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                      className="text-[0.74vw] font-medium text-gray-500 hover:text-gray-700 hover:underline cursor-pointer disabled:opacity-40"
+                      className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-gray-600 bg-white hover:bg-rose-50 hover:text-rose-700 border border-gray-200 hover:border-rose-200 shadow-2xs"
                     >
                       Disable All
                     </button>
