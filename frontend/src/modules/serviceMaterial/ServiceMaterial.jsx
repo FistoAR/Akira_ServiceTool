@@ -35,6 +35,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import EditableProductTable from "./EditableProductTable";
 import { io } from "socket.io-client";
+import useModulePermissions from "../../components/useModulePermissions";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -1133,6 +1134,8 @@ const InwardForm = ({
   partyTypes = [],
   onSave,
   onBack,
+  canWrite = true,
+  canUpdate = true,
 }) => {
   const { toast } = useNotification();
   const isReadOnly = !!initialData._readonly;
@@ -2045,21 +2048,22 @@ const InwardForm = ({
               ? "Close"
               : "Cancel"}
           </button>
-          {(!isReadOnly ||
-            products.some(
-              (p) =>
-                p.expectedDeliveryDate !==
-                (initialData.products?.find((ip) => ip._pid === p._pid)
-                  ?.expectedDeliveryDate || ""),
-            )) && (
-            <button
-              type="submit"
-              className="px-[1.5vw] py-[0.7vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.4vw] flex items-center gap-[0.5vw] cursor-pointer font-semibold shadow-md"
-            >
-              <Save className="w-[1vw] h-[1vw]" />
-              {isEdit || isReadOnly ? "Update Entry" : "Register Inward"}
-            </button>
-          )}
+          {(isEdit ? canUpdate : canWrite) &&
+            (!isReadOnly ||
+              products.some(
+                (p) =>
+                  p.expectedDeliveryDate !==
+                  (initialData.products?.find((ip) => ip._pid === p._pid)
+                    ?.expectedDeliveryDate || ""),
+              )) && (
+              <button
+                type="submit"
+                className="px-[1.5vw] py-[0.7vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.4vw] flex items-center gap-[0.5vw] cursor-pointer font-semibold shadow-md"
+              >
+                <Save className="w-[1vw] h-[1vw]" />
+                {isEdit || isReadOnly ? "Update Entry" : "Register Inward"}
+              </button>
+            )}
         </div>
       </form>
     </motion.div>
@@ -2926,6 +2930,9 @@ const AdminTableView = ({
   totalPages,
   isPageSelected,
   isSupervisor,
+  canWrite = true,
+  canUpdate = true,
+  canDelete = true,
   loading,
   activeFilter,
   onViewReport,
@@ -3020,7 +3027,7 @@ const AdminTableView = ({
     ...(activeFilter === "Completed" ? ["Delay"] : []),
   ];
   const totalCols =
-    (isSupervisor ? 0 : 1) + 1 + productCols.length + actionCols.length;
+    (canDelete && !isSupervisor ? 1 : 0) + 1 + productCols.length + actionCols.length;
 
   // Running delay counter for stagger across all rows
   let animDelay = 0;
@@ -3035,7 +3042,7 @@ const AdminTableView = ({
             style={{ background: "#1a73e8" }}
           >
             <tr>
-              {!isSupervisor && (
+              {canDelete && !isSupervisor && (
                 <th
                   rowSpan={2}
                   className="p-[0.6vw] border-b-2 border-r border-blue-400/30 text-center align-middle w-[2.5%] sticky top-0 z-20"
@@ -3276,7 +3283,7 @@ const AdminTableView = ({
                                 : "bg-white hover:bg-slate-50"
                             }`}
                           >
-                            {!isSupervisor && (
+                            {canDelete && !isSupervisor && (
                               <td
                                 className="p-[0.5vw] border-r border-gray-600 text-center align-middle"
                                 onClick={(e) => {
@@ -3352,7 +3359,7 @@ const AdminTableView = ({
                                   className="ml-auto flex items-center gap-[0.5vw]"
                                   onClick={(e) => e.stopPropagation()}
                                 >
-                                  {isSupervisor ? (
+                                  {!canUpdate || isSupervisor ? (
                                     <button
                                       type="button"
                                       onClick={() => onView(row)}
@@ -3383,7 +3390,7 @@ const AdminTableView = ({
                                     </button>
                                   )}
 
-                                  {!isSupervisor && (
+                                  {canDelete && !isSupervisor && (
                                     <button
                                       type="button"
                                       onClick={() => onDelete(row.id)}
@@ -3426,7 +3433,7 @@ const AdminTableView = ({
                                     } border-b border-gray-600`}
                                   >
                                     {/* Checkbox placeholder */}
-                                    {!isSupervisor && (
+                                    {canDelete && !isSupervisor && (
                                       <td
                                         className="border-r border-gray-600"
                                         style={{ background: "transparent" }}
@@ -3693,6 +3700,7 @@ export default function App() {
   const [isBoardTypeMasterOpen, setIsBoardTypeMasterOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSupervisor, setIsSupervisor] = useState(false);
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("matInward");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
@@ -4118,6 +4126,8 @@ export default function App() {
             partyTypes={partyTypes}
             onSave={handleSave}
             onBack={goToTable}
+            canWrite={canWrite && !isSupervisor}
+            canUpdate={canUpdate && !isSupervisor}
           />
         ) : (
           <motion.div
@@ -4231,7 +4241,7 @@ export default function App() {
                 </div>
 
                 <AnimatePresence>
-                  {selectedItems.size > 0 && !isSupervisor && (
+                  {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
                       type="button"
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -4245,7 +4255,7 @@ export default function App() {
                     </motion.button>
                   )}
                 </AnimatePresence>
-                {!isSupervisor && (
+                {canWrite && !isSupervisor && (
                   <>
                     <button
                       type="button"
@@ -4315,6 +4325,9 @@ export default function App() {
               totalPages={totalPages}
               isPageSelected={isPageSelected}
               isSupervisor={isSupervisor}
+              canWrite={canWrite && !isSupervisor}
+              canUpdate={canUpdate && !isSupervisor}
+              canDelete={canDelete && !isSupervisor}
               loading={loading}
               activeFilter={activeFilter}
               onViewReport={setSelectedReportProduct}

@@ -204,9 +204,17 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       const nextVal = !current[type];
       const updated = { ...current, [type]: nextVal };
 
+      // If write, update, or delete is enabled -> automatically enable read and enabled
       if (nextVal && (type === "write" || type === "update" || type === "delete")) {
         updated.enabled = true;
         updated.read = true;
+      }
+
+      // If read is disabled while write/update/delete are active -> disable write, update, and delete too
+      if (!nextVal && type === "read") {
+        updated.write = false;
+        updated.update = false;
+        updated.delete = false;
       }
 
       return {

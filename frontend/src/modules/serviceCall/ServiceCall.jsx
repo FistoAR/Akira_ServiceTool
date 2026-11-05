@@ -45,6 +45,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import ProductHistoryModal from "./ProductHistoryModal";
+import useModulePermissions from "../../components/useModulePermissions";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const CUSTOMER_DB_KEY = "customer_db_grouped_v5";
@@ -1069,6 +1070,8 @@ const ServiceCallForm = ({
   onSave,
   onBack,
   onSaveModes,
+  canWrite = true,
+  canUpdate = true,
 }) => {
   const [formData, setFormData] = useState(initialData || {});
   const [previewImage, setPreviewImage] = useState(null);
@@ -2301,13 +2304,15 @@ const ServiceCallForm = ({
             <X className="w-[1vw] h-[1vw]" />
             Cancel
           </button>
-          <button
-            type="submit"
-            className="px-[1.5vw] py-[0.7vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.4vw] flex items-center gap-[0.5vw] cursor-pointer font-semibold shadow-md"
-          >
-            <Save className="w-[1vw] h-[1vw]" />
-            {isEdit ? "Update Record" : "Save Service Call"}
-          </button>
+          {(isEdit ? canUpdate : canWrite) && (
+            <button
+              type="submit"
+              className="px-[1.5vw] py-[0.7vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.4vw] flex items-center gap-[0.5vw] cursor-pointer font-semibold shadow-md"
+            >
+              <Save className="w-[1vw] h-[1vw]" />
+              {isEdit ? "Update Record" : "Save Service Call"}
+            </button>
+          )}
         </div>
       </form>
 
@@ -2698,6 +2703,7 @@ export default function ServiceCall() {
   const [allFlows, setAllFlows] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSupervisor, setIsSupervisor] = useState(false);
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("callReg");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
@@ -3116,6 +3122,8 @@ export default function ServiceCall() {
             onSave={handleSave}
             onBack={goToTable}
             onSaveModes={handleSaveModes}
+            canWrite={canWrite && !isSupervisor}
+            canUpdate={canUpdate && !isSupervisor}
           />
         ) : (
           <motion.div
@@ -3164,7 +3172,7 @@ export default function ServiceCall() {
               </div>
               <div className="flex gap-[0.8vw] items-center">
                 <AnimatePresence>
-                  {selectedItems.size > 0 && !isSupervisor && (
+                  {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -3187,7 +3195,7 @@ export default function ServiceCall() {
                     <option key={p}>{p}</option>
                   ))}
                 </select>
-                {!isSupervisor && (
+                {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
                     className="cursor-pointer flex items-center gap-[0.5vw] bg-white border border-gray-400 hover:bg-gray-50 text-gray-700 px-[1vw] h-[2.4vw] rounded-[0.4vw]"
@@ -3268,7 +3276,7 @@ export default function ServiceCall() {
                 <table className="min-w-[120vw] w-full text-left border-collapse">
                   <thead className="bg-blue-50 sticky top-0 z-30 shadow-sm">
                     <tr>
-                      {!isSupervisor && (
+                      {canDelete && !isSupervisor && (
                         <th className="p-[0.6vw] border-b border-r border-slate-400 w-[3%] text-center">
                           <button
                             onClick={toggleSelectPage}
@@ -3386,7 +3394,7 @@ export default function ServiceCall() {
                               {/* 0. Select + S.No (rowSpan) */}
                               {pIdx === 0 && (
                                 <>
-                                  {!isSupervisor && (
+                                  {canDelete && !isSupervisor && (
                                     <td
                                       rowSpan={rowCount}
                                       className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}
@@ -3709,7 +3717,7 @@ export default function ServiceCall() {
                                 >
                                   <div className="flex items-center justify-center gap-[0.8vw]">
                                     {/* Edit Button */}
-                                    {!isSupervisor && (
+                                    {canUpdate && !isSupervisor && (
                                       <button
                                         onClick={() => goToEdit(row)}
                                         title="Edit Call Details"

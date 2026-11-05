@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import ProductionEditableProductTable from "./ProductionEditableProductTable";
+import useModulePermissions from "../../components/useModulePermissions";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -616,7 +617,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
 };
 
 // --- Inward Form Page ---
-const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, dispositionOptions, problemTypeOptions, productTypeOptions }) => {
+const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, dispositionOptions, problemTypeOptions, productTypeOptions, canWrite = true, canUpdate = true }) => {
   const { toast } = useNotification();
   const [base, setBase] = useState(() => ({
     date: initialData.date?.split("T")[0] || todayDateStr(),
@@ -858,7 +859,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
           <button type="button" onClick={onBack} className="px-[1.8vw] py-[0.75vw] border border-gray-400 bg-white hover:bg-gray-50 text-gray-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.5vw] font-bold shadow-sm transition-all">
             <X className="w-[1vw] h-[1vw]" /> Cancel
           </button>
-          {!isReadOnly && (
+          {((initialData._id ? canUpdate : canWrite) && !isReadOnly) && (
             <button type="submit" className="px-[2.2vw] py-[0.75vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.5vw] cursor-pointer font-bold shadow-lg transition-all active:scale-95">
               <Save className="w-[1.1vw] h-[1.1vw]" /> {initialData._id ? "Update Registration" : "Register Inward"}
             </button>
@@ -890,6 +891,7 @@ export default function ProductionMaterial() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSupervisor, setIsSupervisor] = useState(false);
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("prodNC");
   const ITEMS_PER_PAGE = 10;
 
   const fetchData = async () => {
@@ -1053,6 +1055,8 @@ export default function ProductionMaterial() {
       dispositionOptions={dispositionOptions}
       problemTypeOptions={problemTypeOptions}
       productTypeOptions={productTypeOptions}
+      canWrite={canWrite && !isSupervisor}
+      canUpdate={canUpdate && !isSupervisor}
     />
   );
 
@@ -1100,11 +1104,11 @@ export default function ProductionMaterial() {
           <div className="flex items-center justify-between bg-white p-[0.7vw] rounded-[0.6vw] shadow-sm border border-gray-400 mb-[0.9vw]">
             <div className="relative w-[30vw]"><Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-black/50 w-[1vw] h-[1vw]" /><input type="text" placeholder="Search by ref, JO, customer, product…" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-[2.5vw] pr-[1vw] h-[2.5vw] border border-gray-400 rounded-[0.8vw] focus:outline-none focus:border-blue-500 font-bold" /></div>
             <div className="flex gap-[0.8vw] items-center">
-              {!isSupervisor && (
+              {canWrite && !isSupervisor && (
                 <button onClick={() => setShowMasterData(true)} className="flex items-center gap-[0.4vw] text-[0.85vw] font-bold border border-blue-200 bg-blue-50 text-blue-700 px-[1vw] h-[2.4vw] rounded-[0.4vw] hover:bg-blue-100 transition-all cursor-pointer">Master Data</button>
               )}
-              {selectedItems.size > 0 && !isSupervisor && (<button onClick={handleBulkDelete} className="flex items-center gap-[0.5vw] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-[1vw] h-[2.4vw] rounded-[0.4vw] font-bold cursor-pointer transition-all"><Trash2 className="w-[1vw] h-[1vw]" />Delete ({selectedItems.size})</button>)}
-              {!isSupervisor && (
+              {selectedItems.size > 0 && canDelete && !isSupervisor && (<button onClick={handleBulkDelete} className="flex items-center gap-[0.5vw] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-[1vw] h-[2.4vw] rounded-[0.4vw] font-bold cursor-pointer transition-all"><Trash2 className="w-[1vw] h-[1vw]" />Delete ({selectedItems.size})</button>)}
+              {canWrite && !isSupervisor && (
                 <button onClick={() => setView("form")} className="cursor-pointer flex items-center gap-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.2vw] h-[2.4vw] rounded-[0.4vw] font-bold shadow-md transition-all active:scale-95"><Plus className="w-[1.1vw] h-[1.1vw]" />New Registration</button>
               )}
             </div>
@@ -1126,7 +1130,7 @@ export default function ProductionMaterial() {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-blue-50 sticky top-0 z-40">
                   <tr>
-                    {!isSupervisor && (
+                    {canDelete && !isSupervisor && (
                       <th rowSpan={2} className="p-[0.6vw] border-b-2 border-r border-gray-400 text-center align-middle w-[3%] bg-blue-50 sticky top-0 left-0 z-50">
                         <button onClick={toggleSelectPage} className="flex items-center justify-center w-full cursor-pointer">
                           {isPageSelected ? <CheckCircle className="w-[1.2vw] h-[1.2vw] text-blue-600" /> : <div className="w-[1.1vw] h-[1.1vw] border-2 border-gray-400 rounded"></div>}
@@ -1169,7 +1173,7 @@ export default function ProductionMaterial() {
                           >
                           {pi === 0 && (
                             <>
-                              {!isSupervisor && (
+                              {canDelete && !isSupervisor && (
                                 <td rowSpan={span} className="p-[0.7vw] border-r border-slate-400 text-center align-middle">
                                   <button onClick={() => toggleSelect(row.id)} className="flex items-center justify-center w-full cursor-pointer">
                                     {isSelected ? <CheckCircle className="w-[1.1vw] h-[1.1vw] text-blue-600" /> : <div className="w-[1.1vw] h-[1.1vw] border border-gray-400 rounded hover:border-blue-400"></div>}
@@ -1218,7 +1222,7 @@ export default function ProductionMaterial() {
                                 <CheckCircle className="w-[1vw] h-[1vw]" />
                               </button>
 
-                              {!isSupervisor && (
+                              {canUpdate && !isSupervisor && (
                                 <>
                                   {pi === 0 && (
                                     <button onClick={() => { setSelectedRow(row); setView("form"); }} className="w-[2vw] h-[2vw] flex items-center justify-center bg-white border border-gray-400 text-gray-400 hover:text-blue-600 hover:border-blue-300 rounded-full transition-all cursor-pointer shadow-sm" title="Edit Registration"><Edit3 className="w-[1vw] h-[1vw]" /></button>
