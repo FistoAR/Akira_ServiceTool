@@ -878,25 +878,23 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => setAccessMode("preset")}
-              className={`px-[0.6vw] py-[0.25vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer flex items-center gap-[0.3vw] ${
+              className={`px-[0.7vw] py-[0.28vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer ${
                 accessMode === "preset"
                   ? "bg-white text-blue-600 shadow-2xs"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              <Icon icon="solar:widget-bold-duotone" className="w-[0.85vw] h-[0.85vw]" />
               Role Presets
             </button>
             <button
               type="button"
               onClick={() => setAccessMode("custom")}
-              className={`px-[0.6vw] py-[0.25vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer flex items-center gap-[0.3vw] ${
+              className={`px-[0.7vw] py-[0.28vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer ${
                 accessMode === "custom"
                   ? "bg-white text-blue-600 shadow-2xs"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              <Icon icon="solar:tuning-square-2-bold-duotone" className="w-[0.85vw] h-[0.85vw]" />
               Custom Permissions
             </button>
           </div>
