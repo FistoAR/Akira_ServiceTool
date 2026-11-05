@@ -864,109 +864,115 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           </div>
         ) : accessMode === "preset" ? (
           /* ── Role Preset Mode View (Clean, Minimal, Space-Filling Grid) ── */
-          <div className="flex-1 p-[1.2vw] overflow-y-auto min-h-0 bg-slate-50/40 flex flex-col justify-center items-center">
-            <div className="w-full max-w-[64vw] space-y-[1vw]">
-              <div className="text-center space-y-[0.2vw]">
-                <h3 className="text-[1.1vw] font-bold text-gray-900">Select Role Preset</h3>
-                <p className="text-[0.75vw] text-gray-500">
+          <div className="flex-1 p-[1.5vw] overflow-y-auto min-h-0 bg-slate-50/40 flex flex-col justify-center items-center">
+            <div className="w-full max-w-[76vw] space-y-[1.4vw]">
+              <div className="text-center space-y-[0.35vw]">
+                <h3 className="text-[1.25vw] font-bold text-gray-900">Select Role Preset</h3>
+                <p className="text-[0.82vw] text-gray-500">
                   Click a role to immediately apply standard operational permissions to the selected employee(s).
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-[1vw]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-[1.3vw]">
                 {/* 1. Admin Preset */}
-                <div className="border border-purple-200 rounded-[0.55vw] p-[1vw] bg-white flex flex-col justify-between hover:border-purple-400 hover:shadow-md transition-all space-y-[0.8vw]">
-                  <div className="space-y-[0.6vw]">
-                    <div className="flex items-center gap-[0.5vw]">
-                      <div className="w-[1.9vw] h-[1.9vw] rounded-[0.4vw] bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600 flex-shrink-0">
-                        <Icon icon="solar:shield-user-bold-duotone" className="w-[1.1vw] h-[1.1vw]" />
+                <div className="border border-purple-200 rounded-[0.7vw] p-[1.35vw] bg-white flex flex-col justify-between hover:border-purple-400 hover:shadow-lg transition-all min-h-[22vw]">
+                  <div className="space-y-[1vw]">
+                    <div className="flex items-center gap-[0.7vw]">
+                      <div className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600 flex-shrink-0 shadow-2xs">
+                        <Icon icon="solar:shield-user-bold-duotone" className="w-[1.4vw] h-[1.4vw]" />
                       </div>
                       <div>
-                        <h4 className="text-[0.92vw] font-bold text-gray-900">Administrator</h4>
-                        <span className="text-[0.68vw] text-purple-600 font-semibold">Full System Access</span>
+                        <h4 className="text-[1.08vw] font-bold text-gray-900">Administrator</h4>
+                        <span className="text-[0.76vw] text-purple-600 font-semibold tracking-wide">Full System Access</span>
                       </div>
                     </div>
                     
-                    <ul className="text-[0.72vw] text-gray-600 space-y-[0.3vw] list-disc list-inside">
-                      <li><span className="font-semibold text-gray-800">Dashboard Admin</span></li>
-                      <li><span className="font-semibold text-gray-800">Master Page</span> (All Master data & Customer)</li>
-                      <li><span className="font-semibold text-gray-800">Service Call</span> Registry & Report pages</li>
-                      <li><span className="font-semibold text-gray-800">Service Material</span> Inward & Report pages</li>
-                      <li><span className="font-semibold text-gray-800">Production NC</span> Registry & Report pages</li>
+                    <ul className="text-[0.82vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
+                      <li><span className="font-semibold text-gray-900">Dashboard Admin</span></li>
+                      <li><span className="font-semibold text-gray-900">Master Page</span> (All Master data & Customer)</li>
+                      <li><span className="font-semibold text-gray-900">Service Call</span> Registry & Report pages</li>
+                      <li><span className="font-semibold text-gray-900">Service Material</span> Inward & Report pages</li>
+                      <li><span className="font-semibold text-gray-900">Production NC</span> Registry & Report pages</li>
                     </ul>
                   </div>
 
-                  <button
-                    type="button"
-                    disabled={saving || containsProtectedAdmin}
-                    onClick={() => handleApplyPreset("Admin")}
-                    className="w-full py-[0.42vw] text-[0.76vw] font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.35vw] transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Set as Admin
-                  </button>
+                  <div className="pt-[1.2vw]">
+                    <button
+                      type="button"
+                      disabled={saving || containsProtectedAdmin}
+                      onClick={() => handleApplyPreset("Admin")}
+                      className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                    >
+                      Set as Admin
+                    </button>
+                  </div>
                 </div>
 
                 {/* 2. Supervisor Preset */}
-                <div className="border border-indigo-200 rounded-[0.55vw] p-[1vw] bg-white flex flex-col justify-between hover:border-indigo-400 hover:shadow-md transition-all space-y-[0.8vw]">
-                  <div className="space-y-[0.6vw]">
-                    <div className="flex items-center gap-[0.5vw]">
-                      <div className="w-[1.9vw] h-[1.9vw] rounded-[0.4vw] bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                        <Icon icon="solar:user-check-bold-duotone" className="w-[1.1vw] h-[1.1vw]" />
+                <div className="border border-indigo-200 rounded-[0.7vw] p-[1.35vw] bg-white flex flex-col justify-between hover:border-indigo-400 hover:shadow-lg transition-all min-h-[22vw]">
+                  <div className="space-y-[1vw]">
+                    <div className="flex items-center gap-[0.7vw]">
+                      <div className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 flex-shrink-0 shadow-2xs">
+                        <Icon icon="solar:user-check-bold-duotone" className="w-[1.4vw] h-[1.4vw]" />
                       </div>
                       <div>
-                        <h4 className="text-[0.92vw] font-bold text-gray-900">Supervisor</h4>
-                        <span className="text-[0.68vw] text-indigo-600 font-semibold">Operations Management</span>
+                        <h4 className="text-[1.08vw] font-bold text-gray-900">Supervisor</h4>
+                        <span className="text-[0.76vw] text-indigo-600 font-semibold tracking-wide">Operations Management</span>
                       </div>
                     </div>
                     
-                    <ul className="text-[0.72vw] text-gray-600 space-y-[0.3vw] list-disc list-inside">
-                      <li><span className="font-semibold text-gray-800">Normal User Privileges</span> (Response & Reports)</li>
-                      <li><span className="font-semibold text-gray-800">Production NC</span> Supervisor / Management page</li>
-                      <li><span className="font-semibold text-gray-800">Service Call & Material</span> Workspaces</li>
-                      <li><span className="font-semibold text-gray-800">Troubleshooting</span> Diagnostics Chat</li>
+                    <ul className="text-[0.82vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
+                      <li><span className="font-semibold text-gray-900">Normal User Privileges</span> (Response & Reports)</li>
+                      <li><span className="font-semibold text-gray-900">Production NC</span> Supervisor / Management page</li>
+                      <li><span className="font-semibold text-gray-900">Service Call & Material</span> Workspaces</li>
+                      <li><span className="font-semibold text-gray-900">Troubleshooting</span> Diagnostics Chat</li>
                     </ul>
                   </div>
 
-                  <button
-                    type="button"
-                    disabled={saving || containsProtectedAdmin}
-                    onClick={() => handleApplyPreset("Supervisor")}
-                    className="w-full py-[0.42vw] text-[0.76vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.35vw] transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Set as Supervisor
-                  </button>
+                  <div className="pt-[1.2vw]">
+                    <button
+                      type="button"
+                      disabled={saving || containsProtectedAdmin}
+                      onClick={() => handleApplyPreset("Supervisor")}
+                      className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                    >
+                      Set as Supervisor
+                    </button>
+                  </div>
                 </div>
 
                 {/* 3. User Preset */}
-                <div className="border border-blue-200 rounded-[0.55vw] p-[1vw] bg-white flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all space-y-[0.8vw]">
-                  <div className="space-y-[0.6vw]">
-                    <div className="flex items-center gap-[0.5vw]">
-                      <div className="w-[1.9vw] h-[1.9vw] rounded-[0.4vw] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 flex-shrink-0">
-                        <Icon icon="solar:user-speak-rounded-bold-duotone" className="w-[1.1vw] h-[1.1vw]" />
+                <div className="border border-blue-200 rounded-[0.7vw] p-[1.35vw] bg-white flex flex-col justify-between hover:border-blue-400 hover:shadow-lg transition-all min-h-[22vw]">
+                  <div className="space-y-[1vw]">
+                    <div className="flex items-center gap-[0.7vw]">
+                      <div className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 flex-shrink-0 shadow-2xs">
+                        <Icon icon="solar:user-speak-rounded-bold-duotone" className="w-[1.4vw] h-[1.4vw]" />
                       </div>
                       <div>
-                        <h4 className="text-[0.92vw] font-bold text-gray-900">Field / Workshop User</h4>
-                        <span className="text-[0.68vw] text-blue-600 font-semibold">Technician & Workspaces</span>
+                        <h4 className="text-[1.08vw] font-bold text-gray-900">Field / Workshop User</h4>
+                        <span className="text-[0.76vw] text-blue-600 font-semibold tracking-wide">Technician & Workspaces</span>
                       </div>
                     </div>
                     
-                    <ul className="text-[0.72vw] text-gray-600 space-y-[0.3vw] list-disc list-inside">
-                      <li><span className="font-semibold text-gray-800">Dashboard Employee</span></li>
-                      <li><span className="font-semibold text-gray-800">Service Call</span> Response & Report pages</li>
-                      <li><span className="font-semibold text-gray-800">Service Material</span> Response & Report pages</li>
-                      <li><span className="font-semibold text-gray-800">Production NC</span> Response & Report pages</li>
-                      <li><span className="font-semibold text-gray-800">Troubleshooting</span> Chat assistant</li>
+                    <ul className="text-[0.82vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
+                      <li><span className="font-semibold text-gray-900">Dashboard Employee</span></li>
+                      <li><span className="font-semibold text-gray-900">Service Call</span> Response & Report pages</li>
+                      <li><span className="font-semibold text-gray-900">Service Material</span> Response & Report pages</li>
+                      <li><span className="font-semibold text-gray-900">Production NC</span> Response & Report pages</li>
+                      <li><span className="font-semibold text-gray-900">Troubleshooting</span> Chat assistant</li>
                     </ul>
                   </div>
 
-                  <button
-                    type="button"
-                    disabled={saving || containsProtectedAdmin}
-                    onClick={() => handleApplyPreset("User")}
-                    className="w-full py-[0.42vw] text-[0.76vw] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.35vw] transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Set as User
-                  </button>
+                  <div className="pt-[1.2vw]">
+                    <button
+                      type="button"
+                      disabled={saving || containsProtectedAdmin}
+                      onClick={() => handleApplyPreset("User")}
+                      className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                    >
+                      Set as User
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
