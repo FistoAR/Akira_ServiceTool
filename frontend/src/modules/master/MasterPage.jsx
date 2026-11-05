@@ -260,12 +260,15 @@ const SystemSettingsPage = () => {
 
         case "role-access": {
           const cachedEmps = sessionStorage.getItem("all_employees");
-          if (!force && cachedEmps) {
+          const targetUserId = searchParams.get("userId");
+          // If navigated with a target userId from notification/registration, force fresh fetch
+          if (!force && cachedEmps && !targetUserId) {
             setEmployees(JSON.parse(cachedEmps));
           } else {
             const res = await axios.get(`${API_URL}/auth/employees`);
             setEmployees(res.data);
             sessionStorage.setItem("all_employees", JSON.stringify(res.data));
+            localStorage.setItem("all_employees", JSON.stringify(res.data));
           }
           break;
         }

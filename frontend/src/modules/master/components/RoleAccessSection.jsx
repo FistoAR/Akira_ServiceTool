@@ -65,8 +65,19 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     if (targetUserId) {
       setSelectedUserIds([targetUserId]);
       setAccessMode("custom");
+
+      // Check if employee is in current list; if not, fetch directly to avoid stale cache
+      if (setEmployees && (!employees || !employees.some(e => e.userId === targetUserId))) {
+        axios.get(`${API_URL}/auth/employees`).then((res) => {
+          if (Array.isArray(res.data)) {
+            setEmployees(res.data);
+            sessionStorage.setItem("all_employees", JSON.stringify(res.data));
+            localStorage.setItem("all_employees", JSON.stringify(res.data));
+          }
+        }).catch(() => {});
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, employees, setEmployees]);
   useEffect(() => {
     axios
       .get(`${API_URL}/master/modules`)

@@ -202,10 +202,20 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         toast("Employee updated successfully");
       } else {
         // Register new
-        await axios.post(`${API_URL}/auth/register`, finalData);
+        const regRes = await axios.post(`${API_URL}/auth/register`, finalData);
         
         const createdRole = finalData.role || "User";
         const newUserId = finalData.userId;
+
+        // Fetch freshly registered employee list and update sessionStorage immediately
+        try {
+          const empRes = await axios.get(`${API_URL}/auth/employees`);
+          setEmployees(empRes.data);
+          sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
+          localStorage.setItem("all_employees", JSON.stringify(empRes.data));
+        } catch (refreshErr) {
+          console.error("Refresh failed:", refreshErr);
+        }
 
         if (canEditRoleAccess && newUserId) {
           toast(
