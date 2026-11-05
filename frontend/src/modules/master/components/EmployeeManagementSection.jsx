@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
@@ -100,6 +101,8 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 };
 
 const EmployeeManagementSection = ({ employees, setEmployees, departments, setDepartments }) => {
+  const navigate = useNavigate();
+  const [, setSearchParams] = useSearchParams();
   const ITEMS_PER_PAGE = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [showRegModal, setShowRegModal] = useState(false);
@@ -116,6 +119,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
     }
   }, []);
   const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
+
+  // Check if current user has roleAccess edit permissions
+  const canEditRoleAccess = useMemo(() => {
+    if (isCurrentRequesterAdmin) return true;
+    const roleAccessPerm = currentLoggedInUser?.permissions?.roleAccess;
+    return !!(roleAccessPerm?.enabled && (roleAccessPerm?.write || roleAccessPerm?.update));
+  }, [currentLoggedInUser, isCurrentRequesterAdmin]);
 
   const [regData, setRegData] = useState({
     name: "", userId: "", email: "", phoneNumber: "", dob: "", gender: "",
@@ -191,7 +201,33 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       } else {
         // Register new
         await axios.post(`${API_URL}/auth/register`, finalData);
-        toast("Employee registered successfully");
+        
+        const createdRole = finalData.role || "User";
+        const newUserId = finalData.userId;
+
+        if (canEditRoleAccess && newUserId) {
+          toast(
+            <div className="space-y-[0.35vw]">
+              <p>
+                Employee registered successfully. Default <span className="font-bold text-gray-900">{createdRole}</span> permissions enabled.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchParams({ tab: "role-access", userId: newUserId });
+                }}
+                className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+              >
+                <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
+                To update role access click here &rarr;
+              </button>
+            </div>,
+            "success",
+            8000
+          );
+        } else {
+          toast(`Employee registered successfully. Default ${createdRole} permissions enabled.`, "success");
+        }
       }
       
       // Full refresh from backend to ensure state consistency

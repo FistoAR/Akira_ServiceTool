@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
 import CustomDropdown from "../../../components/CustomDropdown";
@@ -10,12 +11,16 @@ import { Icon } from "@iconify/react";
 import { API_URL } from "./masterConstants";
 
 const RoleAccessSection = ({ employees = [], setEmployees }) => {
+  const [searchParams] = useSearchParams();
   const { toast } = useNotification();
   const [selectedRoleFilter, setSelectedRoleFilter] = useState("All");
   const [selectedDepartment, setSelectedDepartment] = useState("All");
 
   // Multi-select state for employees (Array of userIds)
-  const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [selectedUserIds, setSelectedUserIds] = useState(() => {
+    const targetUserId = searchParams.get("userId");
+    return targetUserId ? [targetUserId] : [];
+  });
 
   const [activeGroup, setActiveGroup] = useState("all");
   const [accessMode, setAccessMode] = useState("custom"); // "preset" | "custom"
@@ -47,7 +52,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
 
-  // Fetch groups and modules config & profile pictures for avatars
+  // Sync selected employee from URL parameter if navigated from Employee Management
+  useEffect(() => {
+    const targetUserId = searchParams.get("userId");
+    if (targetUserId) {
+      setSelectedUserIds([targetUserId]);
+      setAccessMode("custom");
+    }
+  }, [searchParams]);
   useEffect(() => {
     axios
       .get(`${API_URL}/master/modules`)
@@ -630,6 +642,57 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
         {/* Action Toggles: Read, Write, Update, Delete (hidden for toggle-only modules like Dashboard) */}
         {mod.group !== "dashboard" ? (
+          mod.id === "roleAccess" ? (
+            /* Role Access module: only Read and Edit (write/update). No delete or separate update */
+            <div
+              className={`grid grid-cols-2 gap-[0.4vw] pt-[0.45vw] text-center transition-opacity ${
+                mState.enabled && !containsProtectedAdmin
+                  ? "opacity-100"
+                  : "opacity-35 pointer-events-none"
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => togglePermission(mod.id, "read")}
+                className={`py-[0.25vw] text-[0.74vw] font-medium rounded-[0.25vw] transition-colors cursor-pointer border ${
+                  mState.read
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-semibold"
+                    : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
+              >
+                Read
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (containsProtectedAdmin) return;
+                  setMatrix((prev) => {
+                    const current = prev[mod.id] || { enabled: false, read: false, write: false, update: false, delete: false };
+                    const nextEdit = !(current.write || current.update);
+                    return {
+                      ...prev,
+                      [mod.id]: {
+                        ...current,
+                        enabled: nextEdit ? true : current.enabled,
+                        read: nextEdit ? true : current.read,
+                        write: nextEdit,
+                        update: nextEdit,
+                        delete: false,
+                      },
+                    };
+                  });
+                }}
+                className={`py-[0.25vw] text-[0.74vw] font-medium rounded-[0.25vw] transition-colors cursor-pointer border ${
+                  mState.write || mState.update
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-semibold"
+                    : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                } ${modDiscrepancy?.write || modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
+              >
+                Edit
+              </button>
+            </div>
+          ) : (
           <div
             className={`grid grid-cols-4 gap-[0.3vw] pt-[0.45vw] text-center transition-opacity ${
               mState.enabled && !containsProtectedAdmin
@@ -685,6 +748,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               Delete
             </button>
           </div>
+          )
         ) : (
           <div className="pt-[0.4vw] flex items-center justify-between text-[0.68vw] text-gray-500">
             <span className="italic">

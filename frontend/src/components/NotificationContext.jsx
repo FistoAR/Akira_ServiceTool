@@ -106,7 +106,11 @@ const ToastItem = ({ toast, onRemove }) => {
 
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-black text-[0.9vw]">{styles.title}</p>
-        <p className="text-[0.8vw] opacity-90 text-gray-650 whitespace-pre-line leading-relaxed font-semibold">{toast.message}</p>
+        {React.isValidElement(toast.message) ? (
+          <div className="text-[0.8vw] opacity-90 text-gray-650 leading-relaxed font-semibold">{toast.message}</div>
+        ) : (
+          <p className="text-[0.8vw] opacity-90 text-gray-650 whitespace-pre-line leading-relaxed font-semibold">{toast.message}</p>
+        )}
       </div>
 
       <button 
