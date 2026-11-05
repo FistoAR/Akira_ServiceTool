@@ -145,7 +145,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                         onClick={() => setEditingType({ ...type })}
                         className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
                       >
-                        <Edit2 className="w-[0.85vw] h-[0.85vw]" />
+                        <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
                       </button>
                       <button
                         type="button"
@@ -153,7 +153,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                         className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
                         disabled={safePartyTypes.length === 1}
                       >
-                        <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                        <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
                       </button>
                     </div>
                   </div>
@@ -172,7 +172,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
               </>
             ) : (
               <>
-                <Plus className="w-[1vw] h-[1vw] text-emerald-600" />
+                <Icon icon="solar:add-circle-bold-duotone" className="w-[1vw] h-[1vw] text-emerald-600" />
                 Add New Category
               </>
             )}
@@ -221,7 +221,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                 disabled={!newType.name.trim()}
                 className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
               >
-                <Plus className="w-[0.85vw] h-[0.85vw]" /> Add Category
+                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Category
               </button>
             )}
           </div>

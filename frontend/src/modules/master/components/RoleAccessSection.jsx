@@ -5,6 +5,7 @@ import {
   Users, User, Search, Save, Lock, Loader2, ChevronDown, Check, X,
   AlertCircle
 } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { API_URL } from "./masterConstants";
 
 const RoleAccessSection = ({ employees = [], setEmployees }) => {
@@ -389,7 +390,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     ? `All (${filteredEmployees.length} matching)`
                     : `${selectedUserIds.length} employee${selectedUserIds.length > 1 ? "s" : ""} selected`}
                 </span>
-                <ChevronDown className="w-[1vw] h-[1vw] text-gray-500 flex-shrink-0" />
+                <Icon icon="solar:alt-arrow-down-linear" className="w-[1vw] h-[1vw] text-gray-500 flex-shrink-0" />
               </button>
             </div>
 
@@ -398,7 +399,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               <div className="absolute left-[5.5vw] top-full mt-[0.3vw] w-[20vw] bg-white border border-gray-200 rounded-[0.5vw] shadow-2xl z-50 p-[0.7vw] space-y-[0.5vw]">
                 {/* Search Box */}
                 <div className="relative">
-                  <Search className="w-[1vw] h-[1vw] text-gray-400 absolute left-[0.7vw] top-1/2 -translate-y-1/2" />
+                  <Icon icon="solar:magnifer-linear" className="w-[1vw] h-[1vw] text-gray-400 absolute left-[0.7vw] top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Search by name or ID..."
@@ -473,7 +474,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           {/* Discrepancy Indicator */}
           {hasAnyDiscrepancy && (
             <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-normal text-amber-800 bg-amber-50 border border-amber-200 px-[0.8vw] py-[0.4vw] rounded-[0.4vw]">
-              <AlertCircle className="w-[1vw] h-[1vw] text-amber-600 flex-shrink-0" />
+              <Icon icon="solar:danger-triangle-bold-duotone" className="w-[1vw] h-[1vw] text-amber-600 flex-shrink-0" />
               <span>Differing permissions across selected users. Saving standardizes them.</span>
             </div>
           )}
@@ -481,7 +482,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           {/* Protected Admin Warning */}
           {containsProtectedAdmin && (
             <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-red-800 bg-red-50 border border-red-200 px-[0.8vw] py-[0.4vw] rounded-[0.4vw]">
-              <Lock className="w-[1vw] h-[1vw] text-red-600 flex-shrink-0" />
+              <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1vw] h-[1vw] text-red-600 flex-shrink-0" />
               <span>Admin account selected (Locked from non-admin editing)</span>
             </div>
           )}
@@ -500,7 +501,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             </>
           ) : (
             <>
-              <Save className="w-[1.1vw] h-[1.1vw]" /> Save Changes
+              <Icon icon="solar:diskette-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> Save Changes
             </>
           )}
         </button>

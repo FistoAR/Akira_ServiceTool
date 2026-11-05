@@ -175,13 +175,13 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                             }
                             className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
                           >
-                            <Edit2 className="w-[0.85vw] h-[0.85vw]" />
+                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
                           </button>
                           <button
                             onClick={() => handleDelete(seg.id, seg._id)}
                             className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
                           >
-                            <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
                           </button>
                         </div>
                       </>

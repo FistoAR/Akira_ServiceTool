@@ -160,14 +160,14 @@ const UnitsSection = ({ units = [], setUnits }) => {
                             }
                             className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
                           >
-                            <Edit2 className="w-[0.85vw] h-[0.85vw]" />
+                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDelete(type.id, type._id)}
                             className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
                           >
-                            <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
                           </button>
                         </div>
                       </>
@@ -198,7 +198,7 @@ const UnitsSection = ({ units = [], setUnits }) => {
                 disabled={!newTypeName.trim()}
                 className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
               >
-                <Plus className="w-[0.85vw] h-[0.85vw]" /> Add
+                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add
               </button>
             </div>
           </div>

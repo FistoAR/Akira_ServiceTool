@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Icon } from "@iconify/react";
 import axios from "axios";
 import {
   Tags, Settings, Package, Columns, Activity, MapPin, Users,
@@ -297,21 +298,21 @@ const SystemSettingsPage = () => {
       className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.3vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
       title="Refresh latest data from server"
     >
-      <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
+      <Icon icon="solar:restart-bold-duotone" className={`w-[0.85vw] h-[0.85vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
       {isRefreshing ? "Refreshing..." : "Refresh"}
     </button>
   );
 
   return (
     <div className="w-full h-[calc(100vh-4.4rem)] flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
-        /* Settings container */
+       
         <div className="flex-1 bg-white border border-slate-400 rounded-[0.6vw] shadow-sm mb-[1vw] overflow-hidden flex flex-col">
           {/* ── Tab: Categories ── */}
           {activeTab === "categories" && (
             <div className="flex-1 flex flex-col overflow-hidden">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-slate-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center flex-shrink-0">
-                  <Tags className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:tag-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">
@@ -342,7 +343,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-hidden">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-slate-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
-                  <Settings className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:shield-keyhole-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">
@@ -374,7 +375,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-teal-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-teal-600 to-teal-700 flex items-center justify-center flex-shrink-0">
-                  <Package className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:box-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Product Segments</h2>
@@ -398,7 +399,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-cyan-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-cyan-600 to-cyan-700 flex items-center justify-center flex-shrink-0">
-                  <Columns className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:widget-2-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">4M Categories</h2>
@@ -422,7 +423,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-emerald-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center flex-shrink-0">
-                  <Activity className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:tuning-2-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Units</h2>
@@ -446,7 +447,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:map-point-wave-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Site Master</h2>
@@ -501,7 +502,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-hidden min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-purple-50 to-white flex-shrink-0">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center flex-shrink-0">
-                  <Users className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:users-group-rounded-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Employee Management</h2>
@@ -530,7 +531,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
-                  <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:shield-user-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">Role Access Management</h2>
@@ -557,7 +558,7 @@ const SystemSettingsPage = () => {
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
               <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-indigo-50/60 to-white">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center flex-shrink-0">
-                  <Columns className="w-[0.9vw] h-[0.9vw] text-white" />
+                  <Icon icon="solar:table-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
                   <h2 className="text-[0.9vw] font-bold text-slate-900">

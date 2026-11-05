@@ -177,7 +177,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                               className="p-[0.25vw] text-blue-600 hover:bg-blue-50 rounded-[0.2vw] cursor-pointer"
                               title="Edit rule"
                             >
-                              <Edit2 className="w-[0.85vw] h-[0.85vw]" />
+                              <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
                             </button>
                             <button
                               type="button"
@@ -185,7 +185,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                               className="p-[0.25vw] text-red-500 hover:bg-red-50 rounded-[0.2vw] cursor-pointer"
                               title="Delete rule"
                             >
-                              <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                              <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
                             </button>
                           </div>
                         </td>
@@ -443,7 +443,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                 onClick={handleAdd}
                 className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
               >
-                <Plus className="w-[0.85vw] h-[0.85vw]" /> Add Warranty Rule
+                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Warranty Rule
               </button>
             )}
           </div>

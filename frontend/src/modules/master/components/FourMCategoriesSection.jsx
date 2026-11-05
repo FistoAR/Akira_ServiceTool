@@ -113,8 +113,8 @@ const FourMCategoriesSection = ({ items = [], setItems }) => {
                         <span className="text-[0.78vw] font-bold text-slate-800">{seg.name}</span>
                       </div>
                       <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => setEditingItem({ id: seg.id, _id: seg._id, name: seg.name })} className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"><Edit2 className="w-[0.85vw] h-[0.85vw]" /></button>
-                        <button onClick={() => handleDelete(seg.id, seg._id)} className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"><Trash2 className="w-[0.85vw] h-[0.85vw]" /></button>
+                        <button onClick={() => setEditingItem({ id: seg.id, _id: seg._id, name: seg.name })} className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"><Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" /></button>
+                        <button onClick={() => handleDelete(seg.id, seg._id)} className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"><Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" /></button>
                       </div>
                     </>
                   )}
