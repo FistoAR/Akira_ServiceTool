@@ -1191,7 +1191,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             <div className="space-y-[0.35vw]">
                               <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
                                 <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
-                                  Management Pages ({adminMods.length})
+                                  Admin Pages ({adminMods.length})
                                 </span>
                               </div>
                               <div className="flex flex-col gap-[0.35vw]">
@@ -1205,7 +1205,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             <div className="space-y-[0.35vw]">
                               <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
                                 <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
-                                  Staff / Workspaces ({userMods.length})
+                                  User Pages ({userMods.length})
                                 </span>
                               </div>
                               <div className="flex flex-col gap-[0.35vw]">
