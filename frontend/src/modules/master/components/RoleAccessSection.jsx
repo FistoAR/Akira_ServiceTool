@@ -874,14 +874,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         {/* Right Action Controls: Preset vs Custom Toggle & Save */}
         <div className="flex items-center gap-[0.7vw]">
           {/* Mode Switcher: Custom vs Presets */}
-          <div className="flex items-center bg-gray-100 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
+          <div className="flex items-center bg-slate-100 p-[0.2vw] rounded-full border border-slate-200">
             <button
               type="button"
               onClick={() => setAccessMode("preset")}
-              className={`px-[0.7vw] py-[0.28vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer ${
+              className={`px-[0.9vw] py-[0.32vw] text-[0.74vw] font-bold rounded-full transition-all cursor-pointer ${
                 accessMode === "preset"
-                  ? "bg-white text-blue-600 shadow-2xs"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               Role Presets
@@ -889,10 +889,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => setAccessMode("custom")}
-              className={`px-[0.7vw] py-[0.28vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer ${
+              className={`px-[0.9vw] py-[0.32vw] text-[0.74vw] font-bold rounded-full transition-all cursor-pointer ${
                 accessMode === "custom"
-                  ? "bg-white text-blue-600 shadow-2xs"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               Custom Permissions
