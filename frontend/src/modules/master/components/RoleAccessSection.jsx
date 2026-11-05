@@ -312,7 +312,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
     modules.forEach((mod) => {
       if (presetType === "Admin") {
-        // Full Admin preset: Everything enabled with full CRUD, Admin Dashboard enabled
+        // Full Admin preset:
+        // Dashboard Admin, Master Page & all master modules, Customers,
+        // Service Call registry, assignment, escalations & reports,
+        // Service Material inward & reports,
+        // Production NC registry & reports
         if (mod.id === "dashboardAdmin") {
           newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
         } else if (mod.id === "dashboardUser") {
@@ -321,29 +325,51 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: true };
         }
       } else if (presetType === "Supervisor") {
-        // Supervisor preset: Operations Admin pages enabled with read/write/update, Admin dashboard enabled, no delete on master
-        if (mod.id === "dashboardAdmin") {
-          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
-        } else if (mod.id === "dashboardUser") {
-          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
-        } else if (mod.group === "service-call" || mod.group === "service-material" || mod.group === "production-material" || mod.group === "customers") {
-          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
-        } else if (mod.group === "master") {
-          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
-        } else {
-          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
-        }
-      } else if (presetType === "User") {
-        // Standard User / Field Engineer preset:
-        // User Dashboard enabled, Workspace / Response pages enabled with read/write/update, Admin management pages disabled
+        // Supervisor preset:
+        // Normal user privileges (User Dashboard, Response/workspace modules for call, material, production, troubleshoot)
+        // PLUS Production NC supervisor / management pages (prodNC, prodReports)
         if (mod.id === "dashboardUser") {
           newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
         } else if (mod.id === "dashboardAdmin") {
           newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
-        } else if (mod.subGroup === "user") {
+        } else if (mod.subGroup === "user" || mod.group === "troubleshoot") {
+          // Normal user workspace modules (read, write, update)
           newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
-        } else if (mod.group === "troubleshoot") {
+        } else if (mod.id === "prodNC" || mod.id === "prodReports") {
+          // Plus Production NC supervisor pages
           newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
+        } else {
+          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        }
+      } else if (presetType === "User") {
+        // Employee / Normal User preset:
+        // Dashboard employee (User Dashboard),
+        // Service Call response & report pages (serviceCallResponse, callReports),
+        // Service Material response & report pages (serviceMaterialResponse, matReports),
+        // Production NC response & report pages (productionMaterialResponse, prodReports),
+        // Troubleshoot chat
+        if (mod.id === "dashboardUser") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
+        } else if (mod.id === "dashboardAdmin") {
+          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        } else if (
+          mod.id === "serviceCallResponse" ||
+          mod.id === "callReports" ||
+          mod.id === "serviceMaterialResponse" ||
+          mod.id === "matReports" ||
+          mod.id === "productionMaterialResponse" ||
+          mod.id === "prodReports" ||
+          mod.id === "troubleshoot"
+        ) {
+          // User pages: work & response execution
+          const isReport = mod.id.toLowerCase().includes("report");
+          newMatrix[mod.id] = {
+            enabled: true,
+            read: true,
+            write: !isReport,
+            update: !isReport,
+            delete: false,
+          };
         } else {
           newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
         }
@@ -860,9 +886,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <span className="text-[0.68vw] text-purple-600 font-semibold">Full System Access</span>
                       </div>
                     </div>
-                    <p className="text-[0.72vw] text-gray-500 leading-relaxed">
-                      Complete administrative authority. Access all Master tables, customer profiles, operational registers, and KPI dashboards.
-                    </p>
+                    
+                    <ul className="text-[0.72vw] text-gray-600 space-y-[0.3vw] list-disc list-inside">
+                      <li><span className="font-semibold text-gray-800">Dashboard Admin</span></li>
+                      <li><span className="font-semibold text-gray-800">Master Page</span> (All Master data & Customer)</li>
+                      <li><span className="font-semibold text-gray-800">Service Call</span> Registry & Report pages</li>
+                      <li><span className="font-semibold text-gray-800">Service Material</span> Inward & Report pages</li>
+                      <li><span className="font-semibold text-gray-800">Production NC</span> Registry & Report pages</li>
+                    </ul>
                   </div>
 
                   <button
@@ -887,9 +918,13 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <span className="text-[0.68vw] text-indigo-600 font-semibold">Operations Management</span>
                       </div>
                     </div>
-                    <p className="text-[0.72vw] text-gray-500 leading-relaxed">
-                      Call coordination, engineer assignment, inwards review, and production approvals with admin analytics.
-                    </p>
+                    
+                    <ul className="text-[0.72vw] text-gray-600 space-y-[0.3vw] list-disc list-inside">
+                      <li><span className="font-semibold text-gray-800">Normal User Privileges</span> (Response & Reports)</li>
+                      <li><span className="font-semibold text-gray-800">Production NC</span> Supervisor / Management page</li>
+                      <li><span className="font-semibold text-gray-800">Service Call & Material</span> Workspaces</li>
+                      <li><span className="font-semibold text-gray-800">Troubleshooting</span> Diagnostics Chat</li>
+                    </ul>
                   </div>
 
                   <button
@@ -914,9 +949,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <span className="text-[0.68vw] text-blue-600 font-semibold">Technician & Workspaces</span>
                       </div>
                     </div>
-                    <p className="text-[0.72vw] text-gray-500 leading-relaxed">
-                      Personal service call execution, component testing, material rework workspaces, and troubleshooting assistant.
-                    </p>
+                    
+                    <ul className="text-[0.72vw] text-gray-600 space-y-[0.3vw] list-disc list-inside">
+                      <li><span className="font-semibold text-gray-800">Dashboard Employee</span></li>
+                      <li><span className="font-semibold text-gray-800">Service Call</span> Response & Report pages</li>
+                      <li><span className="font-semibold text-gray-800">Service Material</span> Response & Report pages</li>
+                      <li><span className="font-semibold text-gray-800">Production NC</span> Response & Report pages</li>
+                      <li><span className="font-semibold text-gray-800">Troubleshooting</span> Chat assistant</li>
+                    </ul>
                   </div>
 
                   <button
