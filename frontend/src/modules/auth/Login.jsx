@@ -236,19 +236,6 @@ const LoginPage = () => {
               </button>
             </form>
 
-            <div className="mt-[1vw] text-center">
-              <p className="text-[0.9vw] text-gray-600">
-                Don't have an account?{" "}
-                <button
-                  onClick={() => navigate("/register")}
-                  disabled={isLoading}
-                  className="text-blue-600 font-semibold hover:underline"
-                >
-                  Register Here
-                </button>
-              </p>
-            </div>
-
             {/* Demo Credentials Hint with 1-Click Quick Use Buttons */}
             <div className="mt-[1vw] p-[0.8vw] bg-blue-50/70 rounded-lg border border-blue-200 space-y-[0.5vw]">
               <div className="flex items-center justify-between">
