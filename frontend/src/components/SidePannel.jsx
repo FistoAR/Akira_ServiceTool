@@ -38,22 +38,27 @@ export default function Sidebar() {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser"));
-    if (user) {
-      setLoggedInUser(user);
-      // Fetch latest profile from backend to sync permissions live
-      axios
-        .get(`${API_URL}/auth/employees`)
-        .then((res) => {
-          const freshUser = res.data.find((e) => e.userId === user.userId || e._id === user._id);
-          if (freshUser) {
-            const updated = { ...user, ...freshUser };
-            setLoggedInUser(updated);
-            sessionStorage.setItem("loggedInUser", JSON.stringify(updated));
-          }
-        })
-        .catch((err) => console.error("Sync profile error:", err));
-    }
+    const syncUser = () => {
+      const user = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser"));
+      if (user) {
+        setLoggedInUser(user);
+        axios
+          .get(`${API_URL}/auth/employees`)
+          .then((res) => {
+            const freshUser = res.data.find((e) => e.userId === user.userId || e._id === user._id);
+            if (freshUser) {
+              const updated = { ...user, ...freshUser };
+              setLoggedInUser(updated);
+              sessionStorage.setItem("loggedInUser", JSON.stringify(updated));
+            }
+          })
+          .catch((err) => console.error("Sync profile error:", err));
+      }
+    };
+
+    syncUser();
+    window.addEventListener("auth-change", syncUser);
+    return () => window.removeEventListener("auth-change", syncUser);
   }, []);
 
   const isAdmin = loggedInUser?.role === "Admin" || loggedInUser?.department === "Admin";

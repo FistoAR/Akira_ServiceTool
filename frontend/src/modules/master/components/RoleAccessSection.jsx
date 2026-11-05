@@ -419,6 +419,15 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       });
 
       toast(`Applied and saved "${presetType}" preset for ${allowedTargets.length} employee(s)!`);
+
+      // Update current loggedInUser in session if the active user was updated
+      const activeUser = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
+      if (activeUser && allowedTargets.some(t => t.userId === activeUser.userId || t._id === activeUser._id)) {
+        const updatedActive = { ...activeUser, permissions: presetMatrix };
+        sessionStorage.setItem("loggedInUser", JSON.stringify(updatedActive));
+        localStorage.setItem("loggedInUser", JSON.stringify(updatedActive));
+        window.dispatchEvent(new Event("auth-change"));
+      }
     } catch (err) {
       console.error(err);
       toast(err.response?.data?.message || "Failed to apply preset", "error");
@@ -479,6 +488,15 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       });
 
       toast(`Permissions saved successfully for ${allowedTargets.length} employee(s)!`);
+
+      // Update current loggedInUser in session if the active user was updated
+      const activeUser = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
+      if (activeUser && allowedTargets.some(t => t.userId === activeUser.userId || t._id === activeUser._id)) {
+        const updatedActive = { ...activeUser, permissions: matrix };
+        sessionStorage.setItem("loggedInUser", JSON.stringify(updatedActive));
+        localStorage.setItem("loggedInUser", JSON.stringify(updatedActive));
+        window.dispatchEvent(new Event("auth-change"));
+      }
     } catch (err) {
       console.error(err);
       toast(err.response?.data?.message || "Failed to save permissions", "error");
