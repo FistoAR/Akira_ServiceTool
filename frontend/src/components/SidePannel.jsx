@@ -82,7 +82,7 @@ export default function Sidebar() {
       path: "/dashboard",
       label: "Dashboard",
       icon: DashboardIcon,
-      show: true,
+      show: isAdmin || hasAccess("dashboardAdmin") || hasAccess("dashboardUser") || !loggedInUser?.permissions || (loggedInUser.permissions.dashboardAdmin === undefined && loggedInUser.permissions.dashboardUser === undefined),
     },
     {
       path: "/masterPage",
@@ -145,19 +145,19 @@ export default function Sidebar() {
       path: "/serviceCallResponse",
       label: "Service Call",
       icon: CallIcon,
-      show: !canManageServiceCall && ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess),
+      show: !canManageServiceCall && hasAccess("serviceCallResponse"),
     },
     {
       path: "/serviceMaterialResponse",
       label: "Service Material",
       icon: ServiceIcon,
-      show: !canManageServiceMaterial && ["matInward", "matReports"].some(hasAccess),
+      show: !canManageServiceMaterial && hasAccess("serviceMaterialResponse"),
     },
     {
       path: "/productionMaterialResponse",
       label: "Production Material",
       icon: ProductionIcon,
-      show: !canManageProductionMaterial && ["prodNC", "prodReports"].some(hasAccess),
+      show: !canManageProductionMaterial && hasAccess("productionMaterialResponse"),
     },
     {
       path: "/troubleshoot",

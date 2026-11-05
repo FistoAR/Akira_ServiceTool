@@ -51,7 +51,14 @@ function MainLayout() {
       >
         <NavBarWithTitle />
         <Routes>
-          <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route
+            path="dashboard"
+            element={
+              <ProtectedRoute requiredModules={["dashboardAdmin", "dashboardUser"]}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="masterPage"
             element={
@@ -76,7 +83,7 @@ function MainLayout() {
             path="serviceCall"
             element={
               <ProtectedRoute
-                requiredModules={["callReg", "callAssign", "callEscalation", "callReports"]}
+                requiredModules={["serviceCallResponse", "callReg", "callAssign", "callEscalation", "callReports"]}
                 requireManagement={true}
                 fallbackToResponse="/serviceCallResponse"
               >
@@ -155,7 +162,7 @@ function MainLayout() {
           <Route
             path="serviceMaterialResponse"
             element={
-              <ProtectedRoute requiredModules={["matInward", "matReports"]}>
+              <ProtectedRoute requiredModules={["serviceMaterialResponse", "matInward", "matReports"]}>
                 <ServiceMaterialResponse />
               </ProtectedRoute>
             }
@@ -187,7 +194,7 @@ function MainLayout() {
           <Route
             path="productionMaterialResponse"
             element={
-              <ProtectedRoute requiredModules={["prodNC", "prodReports"]}>
+              <ProtectedRoute requiredModules={["productionMaterialResponse", "prodNC", "prodReports"]}>
                 <ProductionMaterialResponse />
               </ProtectedRoute>
             }

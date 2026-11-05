@@ -278,6 +278,7 @@ exports.deleteFourMCategory = async (req, res) => {
 exports.getModules = async (req, res) => {
   const groups = [
     { id: "all", label: "All" },
+    { id: "dashboard", label: "Dashboard" },
     { id: "master", label: "Master Access" },
     { id: "customers", label: "Customers" },
     { id: "service-call", label: "Service Call" },
@@ -287,6 +288,11 @@ exports.getModules = async (req, res) => {
   ];
 
   const modules = [
+    // ── Dashboard ──
+    { id: "dashboardAdmin", label: "Admin Dashboard", group: "dashboard", subGroup: "admin", desc: "Overall KPI metrics, full system-wide breakdown, all pending calls & reviews" },
+    { id: "dashboardUser", label: "User Dashboard", group: "dashboard", subGroup: "user", desc: "Personal operational overview, assigned service calls & claimed products" },
+
+    // ── Master Access ──
     { id: "partyTypes", label: "Party Type Categories", group: "master", desc: "Manage party type target categories" },
     { id: "warrantyRules", label: "Warranty Rule Master", group: "master", desc: "Configure category-specific serial number index decoders and SLAs" },
     { id: "segments", label: "Product Segments", group: "master", desc: "Manage product segment names" },
@@ -297,19 +303,33 @@ exports.getModules = async (req, res) => {
     { id: "roleAccess", label: "Role Access", group: "master", desc: "Manage user permissions" },
     { id: "escalation", label: "Service Call SLA", group: "master", desc: "Configure SLA workflows" },
 
+    // ── Customers ──
     { id: "customers", label: "Customers Database", group: "customers", desc: "View and edit client profiles" },
 
-    { id: "callReg", label: "Call Registration", group: "service-call", desc: "Register incoming service calls" },
-    { id: "callAssign", label: "Call Assignment", group: "service-call", desc: "Assign engineers to service calls" },
-    { id: "callEscalation", label: "Escalating Calls", group: "service-call", desc: "Monitor SLA escalations" },
-    { id: "callReports", label: "Call Reports", group: "service-call", desc: "General reports and analytics" },
+    // ── Service Call ──
+    // Admin Pages
+    { id: "callReg", label: "Call Registration", group: "service-call", subGroup: "admin", desc: "Register incoming service calls" },
+    { id: "callAssign", label: "Call Assignment", group: "service-call", subGroup: "admin", desc: "Assign engineers to service calls" },
+    { id: "callEscalation", label: "Escalating Calls", group: "service-call", subGroup: "admin", desc: "Monitor SLA escalations" },
+    { id: "callReports", label: "Call Reports", group: "service-call", subGroup: "admin", desc: "General reports and analytics" },
+    // User Pages
+    { id: "serviceCallResponse", label: "Call Response Workspace", group: "service-call", subGroup: "user", desc: "Engineer service call execution & updates" },
 
-    { id: "matInward", label: "Material Inward Register", group: "service-material", desc: "Log inward-bound product serial numbers" },
-    { id: "matReports", label: "Inward Reports", group: "service-material", desc: "Track status of materials" },
+    // ── Service Material ──
+    // Admin Pages
+    { id: "matInward", label: "Material Inward Register", group: "service-material", subGroup: "admin", desc: "Log inward-bound product serial numbers" },
+    { id: "matReports", label: "Inward Reports", group: "service-material", subGroup: "admin", desc: "Track status of materials" },
+    // User Pages
+    { id: "serviceMaterialResponse", label: "Material Response Workspace", group: "service-material", subGroup: "user", desc: "Technician component repair and material inspection" },
 
-    { id: "prodNC", label: "Production NC", group: "production-material", desc: "File production non-conformance reports" },
-    { id: "prodReports", label: "NC Reports", group: "production-material", desc: "NC analytics and logs" },
+    // ── Production Material ──
+    // Admin Pages
+    { id: "prodNC", label: "Production NC", group: "production-material", subGroup: "admin", desc: "File production non-conformance reports" },
+    { id: "prodReports", label: "NC Reports", group: "production-material", subGroup: "admin", desc: "NC analytics and logs" },
+    // User Pages
+    { id: "productionMaterialResponse", label: "Production Response Workspace", group: "production-material", subGroup: "user", desc: "Production floor rework and unit verification" },
 
+    // ── Troubleshoot ──
     { id: "troubleshoot", label: "Troubleshooting Chat", group: "troubleshoot", desc: "Interactive diagnostics and guides" },
   ];
 

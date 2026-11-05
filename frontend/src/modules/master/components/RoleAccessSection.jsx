@@ -331,6 +331,109 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     setSelectedUserIds([]);
   };
 
+  
+  const renderModuleCard = (mod) => {
+    const mState = matrix[mod.id] || {
+      enabled: false,
+      read: false,
+      write: false,
+      update: false,
+      delete: false,
+    };
+    const modDiscrepancy = discrepancies[mod.id];
+
+    return (
+      <div
+        key={mod.id}
+        className={`border rounded-[0.5vw] p-[1vw] bg-white flex flex-col justify-between transition-all min-h-[6.8vw] ${
+          mState.enabled ? "border-gray-300 shadow-sm" : "border-gray-200 bg-gray-50/40"
+        }`}
+      >
+        {/* Title and Module Enable Switch */}
+        <div className="flex items-center justify-between gap-[0.8vw] pb-[0.6vw] border-b border-gray-100">
+          <div className="flex flex-col min-w-0 pr-[0.4vw]">
+            <span className="text-[0.88vw] font-semibold text-gray-900 truncate" title={mod.label}>
+              {mod.label}
+            </span>
+            {mod.desc && (
+              <span className="text-[0.68vw] text-gray-500 font-normal truncate" title={mod.desc}>
+                {mod.desc}
+              </span>
+            )}
+          </div>
+
+          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+            <input
+              type="checkbox"
+              checked={mState.enabled}
+              disabled={containsProtectedAdmin}
+              onChange={() => toggleModuleEnabled(mod.id)}
+              className="sr-only peer"
+            />
+            <div className="w-[2.4vw] h-[1.3vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.15vw] after:left-[0.2vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[1vw] after:w-[1vw] after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+
+        {/* Four Action Toggles: Read, Write, Update, Delete */}
+        <div
+          className={`grid grid-cols-4 gap-[0.4vw] pt-[0.8vw] text-center transition-opacity ${
+            mState.enabled && !containsProtectedAdmin
+              ? "opacity-100"
+              : "opacity-35 pointer-events-none"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={() => togglePermission(mod.id, "read")}
+            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              mState.read
+                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+            } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
+          >
+            Read
+          </button>
+
+          <button
+            type="button"
+            onClick={() => togglePermission(mod.id, "write")}
+            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              mState.write
+                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+            } ${modDiscrepancy?.write ? "ring-2 ring-amber-400" : ""}`}
+          >
+            Write
+          </button>
+
+          <button
+            type="button"
+            onClick={() => togglePermission(mod.id, "update")}
+            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              mState.update
+                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+            } ${modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
+          >
+            Update
+          </button>
+
+          <button
+            type="button"
+            onClick={() => togglePermission(mod.id, "delete")}
+            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              mState.delete
+                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+            } ${modDiscrepancy?.delete ? "ring-2 ring-amber-400" : ""}`}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const allFilteredAreSelected =
     filteredEmployees.length > 0 &&
     filteredEmployees.every((e) => selectedUserIds.includes(e.userId));
@@ -580,108 +683,59 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                   </div>
                 </div>
 
-                {/* Modules Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
-                  {groupMods.map((mod) => {
-                    const mState = matrix[mod.id] || {
-                      enabled: false,
-                      read: false,
-                      write: false,
-                      update: false,
-                      delete: false,
-                    };
+                {/* Check if group has subGroups (Admin vs User separation) */}
+                {(() => {
+                  const hasSubGroups = groupMods.some((m) => m.subGroup);
 
-                    const modDiscrepancy = discrepancies[mod.id];
-
+                  if (!hasSubGroups) {
                     return (
-                      <div
-                        key={mod.id}
-                        className={`border rounded-[0.5vw] p-[1vw] bg-white flex flex-col justify-between transition-all min-h-[6.8vw] ${
-                          mState.enabled ? "border-gray-300 shadow-sm" : "border-gray-200 bg-gray-50/40"
-                        }`}
-                      >
-                        {/* Title and Module Enable Switch */}
-                        <div className="flex items-center justify-between gap-[0.8vw] pb-[0.6vw] border-b border-gray-100">
-                          <span className="text-[0.88vw] font-semibold text-gray-900 truncate" title={mod.label}>
-                            {mod.label}
-                          </span>
-
-                          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                            <input
-                              type="checkbox"
-                              checked={mState.enabled}
-                              disabled={containsProtectedAdmin}
-                              onChange={() => toggleModuleEnabled(mod.id)}
-                              className="sr-only peer"
-                            />
-                            <div className="w-[2.4vw] h-[1.3vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.15vw] after:left-[0.2vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[1vw] after:w-[1vw] after:transition-all peer-checked:bg-blue-600"></div>
-                          </label>
-                        </div>
-
-                        {/* Four Action Toggles: Read, Write, Update, Delete */}
-                        <div
-                          className={`grid grid-cols-4 gap-[0.4vw] pt-[0.8vw] text-center transition-opacity ${
-                            mState.enabled && !containsProtectedAdmin
-                              ? "opacity-100"
-                              : "opacity-35 pointer-events-none"
-                          }`}
-                        >
-                          {/* Read */}
-                          <button
-                            type="button"
-                            onClick={() => togglePermission(mod.id, "read")}
-                            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-                              mState.read
-                                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
-                          >
-                            Read
-                          </button>
-
-                          {/* Write */}
-                          <button
-                            type="button"
-                            onClick={() => togglePermission(mod.id, "write")}
-                            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-                              mState.write
-                                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.write ? "ring-2 ring-amber-400" : ""}`}
-                          >
-                            Write
-                          </button>
-
-                          {/* Update */}
-                          <button
-                            type="button"
-                            onClick={() => togglePermission(mod.id, "update")}
-                            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-                              mState.update
-                                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
-                          >
-                            Update
-                          </button>
-
-                          {/* Delete */}
-                          <button
-                            type="button"
-                            onClick={() => togglePermission(mod.id, "delete")}
-                            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-                              mState.delete
-                                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                            } ${modDiscrepancy?.delete ? "ring-2 ring-amber-400" : ""}`}
-                          >
-                            Delete
-                          </button>
-                        </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
+                        {groupMods.map(renderModuleCard)}
                       </div>
                     );
-                  })}
-                </div>
+                  }
+
+                  const adminMods = groupMods.filter((m) => m.subGroup === "admin");
+                  const userMods = groupMods.filter((m) => m.subGroup === "user");
+
+                  return (
+                    <div className="space-y-[1.2vw]">
+                      {/* Admin Section */}
+                      {adminMods.length > 0 && (
+                        <div className="bg-slate-50/70 border border-slate-200 rounded-[0.5vw] p-[0.9vw] space-y-[0.8vw]">
+                          <div className="flex items-center gap-[0.5vw] pb-[0.3vw] border-b border-slate-200">
+                            <span className="text-[0.72vw] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.5vw] py-[0.15vw] rounded">
+                              Admin Pages (Management)
+                            </span>
+                            <span className="text-[0.7vw] text-slate-500 font-medium">
+                              ({adminMods.length} management modules)
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
+                            {adminMods.map(renderModuleCard)}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* User Section */}
+                      {userMods.length > 0 && (
+                        <div className="bg-blue-50/30 border border-blue-100 rounded-[0.5vw] p-[0.9vw] space-y-[0.8vw]">
+                          <div className="flex items-center gap-[0.5vw] pb-[0.3vw] border-b border-blue-200/60">
+                            <span className="text-[0.72vw] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-[0.5vw] py-[0.15vw] rounded">
+                              User Pages (Staff / Response)
+                            </span>
+                            <span className="text-[0.7vw] text-slate-500 font-medium">
+                              ({userMods.length} workspace modules)
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
+                            {userMods.map(renderModuleCard)}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             );
           })
