@@ -787,50 +787,48 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   return (
     <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white text-gray-900">
-      {/* Top Filter Selection Panel */}
-      <div className="border-b border-gray-200 px-[1vw] py-[0.55vw] flex items-center justify-between flex-wrap gap-[0.8vw] bg-white">
-        <div className="flex items-center gap-[0.9vw] flex-wrap">
+      {/* Top Filter & Employee Selection Toolbar (Unified Single-Row) */}
+      <div className="border-b border-gray-200 px-[1.2vw] py-[0.6vw] flex items-center justify-between gap-[1vw] bg-white flex-shrink-0">
+        {/* Left Side: Filter and Employee Selector Controls */}
+        <div className="flex items-center gap-[0.7vw] flex-1 min-w-0 flex-wrap lg:flex-nowrap">
+          {/* Department Filter */}
+          <div className="w-[8.5vw] flex-shrink-0">
+            <CustomDropdown
+              options={[
+                { value: "All", label: "All Depts" },
+                ...uniqueDepartments.map((d) => ({ value: d, label: d })),
+              ]}
+              value={selectedDepartment}
+              onChange={(val) => setSelectedDepartment(val)}
+              size="sm"
+              className="w-full"
+            />
+          </div>
+
           {/* Role Filter */}
-          <div className="flex items-center gap-[0.4vw]">
-            <label className="text-[0.78vw] font-medium text-gray-600">Role:</label>
+          <div className="w-[7.5vw] flex-shrink-0">
             <CustomDropdown
               options={[
                 { value: "All", label: "All Roles" },
                 { value: "Admin", label: "Admin" },
                 { value: "Supervisor", label: "Supervisor" },
-                { value: "User", label: "User / Employee" },
+                { value: "User", label: "User" },
               ]}
               value={selectedRoleFilter}
               onChange={(val) => setSelectedRoleFilter(val)}
-              className="w-[8.5vw]"
               size="sm"
+              className="w-full"
             />
           </div>
 
-          {/* Department Filter */}
-          <div className="flex items-center gap-[0.4vw]">
-            <label className="text-[0.78vw] font-medium text-gray-600">Dept:</label>
-            <CustomDropdown
-              options={[
-                { value: "All", label: "All Departments" },
-                ...uniqueDepartments.map((d) => ({ value: d, label: d })),
-              ]}
-              value={selectedDepartment}
-              onChange={(val) => setSelectedDepartment(val)}
-              className="w-[10vw]"
-              size="sm"
-            />
-          </div>
-
-          {/* Select Employees Dropdown (Custom Searchable Multi-select) */}
-          <div className="flex items-center gap-[0.4vw]">
-            <label className="text-[0.78vw] font-medium text-gray-600">Employees:</label>
+          {/* Searchable Multi-select Employees Dropdown */}
+          <div className="w-[17vw] flex-shrink-0">
             <CustomDropdown
               multiple
               searchable
               clearable
-              searchPlaceholder="Search by name or ID..."
-              placeholder={`Select Employee... (${filteredEmployees.length} available)`}
+              searchPlaceholder="Search name or ID..."
+              placeholder={hasSelectedEmployee ? `${selectedUserIds.length} employee(s) selected` : `Select Employees (${filteredEmployees.length})`}
               options={filteredEmployees.map((emp) => {
                 const isAdmin = emp.role === "Admin" || emp.department === "Admin";
                 return {
@@ -844,8 +842,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               })}
               value={selectedUserIds}
               onChange={(ids) => setSelectedUserIds(ids)}
-              className="min-w-[15.5vw]"
               size="sm"
+              className="w-full"
               triggerClassName={
                 !hasSelectedEmployee
                   ? "border-amber-400 bg-amber-50/20 text-gray-700 ring-2 ring-amber-300/40 hover:border-amber-500 font-medium"
@@ -854,25 +852,75 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             />
           </div>
 
-          {/* Discrepancy Indicator */}
-          {hasAnyDiscrepancy && (
-            <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-normal text-amber-800 bg-amber-50 border border-amber-200 px-[0.8vw] py-[0.4vw] rounded-[0.4vw]">
-              <Icon icon="solar:danger-triangle-bold-duotone" className="w-[1vw] h-[1vw] text-amber-600 flex-shrink-0" />
-              <span>Differing permissions across selected users. Saving standardizes them.</span>
+          {/* Compact Inline Selected Pills (When employees are selected) */}
+          {selectedEmployeesList.length > 0 && (
+            <div className="flex items-center gap-[0.35vw] overflow-x-auto py-[0.1vw] max-w-[22vw]">
+              {selectedEmployeesList.slice(0, 3).map((emp) => (
+                <span
+                  key={emp.userId}
+                  className="inline-flex items-center gap-[0.25vw] bg-blue-50/70 border border-blue-200 text-blue-900 rounded-full pl-[0.2vw] pr-[0.45vw] py-[0.1vw] text-[0.7vw] font-semibold flex-shrink-0"
+                >
+                  <span className="w-[1.1vw] h-[1.1vw] rounded-full overflow-hidden bg-blue-200 text-blue-700 flex items-center justify-center text-[0.55vw] font-bold">
+                    {emp.profilePicture ? (
+                      <img src={emp.profilePicture} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      (emp.name || "U").charAt(0).toUpperCase()
+                    )}
+                  </span>
+                  <span className="truncate max-w-[5.5vw]">{emp.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => toggleSelectUser(emp.userId)}
+                    className="text-blue-400 hover:text-rose-600 rounded-full cursor-pointer ml-[0.1vw]"
+                    title="Remove"
+                  >
+                    <Icon icon="solar:close-circle-bold" className="w-[0.75vw] h-[0.75vw]" />
+                  </button>
+                </span>
+              ))}
+
+              {selectedEmployeesList.length > 3 && (
+                <span className="text-[0.68vw] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-[0.4vw] py-[0.1vw] rounded-full flex-shrink-0">
+                  +{selectedEmployeesList.length - 3} more
+                </span>
+              )}
+
+              <button
+                type="button"
+                onClick={handleClearSelection}
+                className="text-[0.66vw] text-gray-400 hover:text-rose-600 underline cursor-pointer ml-[0.2vw] flex-shrink-0"
+                title="Clear all selected"
+              >
+                Clear
+              </button>
             </div>
           )}
 
-          {/* Protected Admin Warning */}
+          {/* Compact Discrepancy Indicator */}
+          {hasAnyDiscrepancy && (
+            <div 
+              className="flex items-center gap-[0.3vw] text-[0.7vw] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-[0.55vw] py-[0.25vw] rounded-full flex-shrink-0"
+              title="Selected users currently have differing permissions. Saving will standardize them."
+            >
+              <Icon icon="solar:danger-triangle-bold" className="w-[0.8vw] h-[0.8vw] text-amber-600" />
+              <span>Differing Permissions</span>
+            </div>
+          )}
+
+          {/* Protected Admin Alert */}
           {containsProtectedAdmin && (
-            <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-red-800 bg-red-50 border border-red-200 px-[0.8vw] py-[0.4vw] rounded-[0.4vw]">
-              <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1vw] h-[1vw] text-red-600 flex-shrink-0" />
-              <span>Admin account selected (Locked from non-admin editing)</span>
+            <div 
+              className="flex items-center gap-[0.3vw] text-[0.7vw] font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.25vw] rounded-full flex-shrink-0"
+              title="Admin account selected (Locked from non-admin editing)"
+            >
+              <Icon icon="solar:lock-keyhole-bold" className="w-[0.8vw] h-[0.8vw] text-rose-600" />
+              <span>Admin Locked</span>
             </div>
           )}
         </div>
 
-        {/* Right Action Controls: Preset vs Custom Toggle & Save */}
-        <div className="flex items-center gap-[0.7vw]">
+        {/* Right Side: Mode Switcher & Save Button */}
+        <div className="flex items-center gap-[0.7vw] flex-shrink-0">
           {/* Mode Switcher: Custom vs Presets */}
           <div className="flex items-center bg-slate-100 p-[0.2vw] rounded-full border border-slate-200">
             <button
@@ -905,63 +953,21 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               type="button"
               onClick={handleSaveMatrix}
               disabled={!hasSelectedEmployee || saving || containsProtectedAdmin}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-medium text-[0.78vw] px-[1vw] py-[0.38vw] rounded-[0.35vw] shadow-none flex items-center gap-[0.4vw] transition-colors cursor-pointer"
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-semibold text-[0.76vw] px-[1.1vw] py-[0.4vw] rounded-[0.4vw] flex items-center gap-[0.4vw] transition-colors cursor-pointer shadow-xs"
             >
               {saving ? (
                 <>
-                  <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" /> Saving...
+                  <Loader2 className="w-[0.85vw] h-[0.85vw] animate-spin" /> Saving...
                 </>
               ) : (
                 <>
-                  <Icon icon="solar:diskette-bold-duotone" className="w-[0.95vw] h-[0.95vw]" /> Save Changes
+                  <Icon icon="solar:diskette-bold-duotone" className="w-[0.9vw] h-[0.9vw]" /> Save Changes
                 </>
               )}
             </button>
           )}
         </div>
       </div>
-
-      {/* Selected Employee Badges (Visible outside dropdown) */}
-      {selectedEmployeesList.length > 0 && (
-        <div className="bg-slate-50/80 border-b border-gray-200 px-[1vw] py-[0.35vw] flex items-center gap-[0.4vw] flex-wrap">
-          <span className="text-[0.7vw] font-bold text-gray-500 uppercase tracking-wider mr-[0.2vw]">
-            Selected ({selectedEmployeesList.length}):
-          </span>
-          <div className="flex items-center gap-[0.35vw] flex-wrap max-h-[5.5vw] overflow-y-auto">
-            {selectedEmployeesList.map((emp) => (
-              <div
-                key={emp.userId}
-                className="inline-flex items-center gap-[0.3vw] bg-white border border-blue-200 text-blue-900 rounded-full pl-[0.18vw] pr-[0.45vw] py-[0.12vw] shadow-2xs hover:border-blue-400 transition-colors"
-              >
-                <div className="w-[1.2vw] h-[1.2vw] rounded-full overflow-hidden bg-blue-100 flex-shrink-0 flex items-center justify-center text-[0.6vw] font-bold text-blue-700">
-                  {emp.profilePicture ? (
-                    <img src={emp.profilePicture} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    (emp.name || "U").charAt(0).toUpperCase()
-                  )}
-                </div>
-                <span className="text-[0.72vw] font-semibold">{emp.name}</span>
-                <span className="text-[0.65vw] text-gray-400">({emp.userId})</span>
-                <button
-                  type="button"
-                  onClick={() => toggleSelectUser(emp.userId)}
-                  className="text-gray-400 hover:text-red-600 rounded-full p-[0.05vw] transition-colors cursor-pointer ml-[0.1vw]"
-                  title="Remove"
-                >
-                  <Icon icon="solar:close-circle-bold" className="w-[0.8vw] h-[0.8vw]" />
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={handleClearSelection}
-              className="text-[0.68vw] text-gray-500 hover:text-red-600 underline font-medium px-[0.3vw] cursor-pointer"
-            >
-              Clear all
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Main Content Pane Split */}
       <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(94vh - 140px)" }}>
