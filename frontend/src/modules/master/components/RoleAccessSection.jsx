@@ -1044,9 +1044,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                   <div className="pt-[1.2vw]">
                     <button
                       type="button"
-                      disabled={saving || containsProtectedAdmin}
+                      disabled={saving || containsProtectedAdmin || !canEditRoleAccess}
                       onClick={() => requestApplyPreset("Admin")}
                       className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                      title={!canEditRoleAccess ? "Read-only access: Cannot apply role presets" : undefined}
                     >
                       Set as Admin
                     </button>
@@ -1077,9 +1078,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                   <div className="pt-[1.2vw]">
                     <button
                       type="button"
-                      disabled={saving || containsProtectedAdmin}
+                      disabled={saving || containsProtectedAdmin || !canEditRoleAccess}
                       onClick={() => requestApplyPreset("Supervisor")}
                       className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                      title={!canEditRoleAccess ? "Read-only access: Cannot apply role presets" : undefined}
                     >
                       Set as Supervisor
                     </button>
@@ -1111,9 +1113,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                   <div className="pt-[1.2vw]">
                     <button
                       type="button"
-                      disabled={saving || containsProtectedAdmin}
+                      disabled={saving || containsProtectedAdmin || !canEditRoleAccess}
                       onClick={() => requestApplyPreset("User")}
                       className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                      title={!canEditRoleAccess ? "Read-only access: Cannot apply role presets" : undefined}
                     >
                       Set as User
                     </button>
