@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Calendar, RefreshCw } from "lucide-react";
-import useEscalationWorker from "../service/useEscalationWorker";
+import useEscalationWorker from "../../service/useEscalationWorker";
 import AdminDashboard from "./AdminDashboard";
 import UserDashboard from "./UserDashboard";
 
@@ -22,6 +22,23 @@ export default function Dashboard() {
           "null"
       );
       setLoggedInUser(user);
+
+      // Fetch live employee profile to get freshly updated role access permissions immediately
+      if (user) {
+        axios
+          .get(`${API_URL}/auth/employees`)
+          .then((res) => {
+            const freshUser = res.data.find(
+              (e) => e.userId === user.userId || e._id === user._id
+            );
+            if (freshUser) {
+              const updated = { ...user, ...freshUser };
+              setLoggedInUser(updated);
+              sessionStorage.setItem("loggedInUser", JSON.stringify(updated));
+            }
+          })
+          .catch((err) => console.error("Sync profile in dashboard error:", err));
+      }
     } catch {
       setLoggedInUser(null);
     }
@@ -165,18 +182,23 @@ export default function Dashboard() {
   };
 
   // Determine whether to display Admin or User Dashboard:
-  // 1. If user has explicit dashboardAdmin permission -> Admin Dashboard
-  // 2. If user has explicit dashboardUser permission -> User Dashboard
-  // 3. Fallback: Role or department is Admin/Supervisor -> Admin Dashboard; else User Dashboard
+  // 1. If explicit permissions are configured for either dashboard view:
+  //    - If dashboardUser is enabled -> show User Dashboard
+  //    - Else if dashboardAdmin is enabled -> show Admin Dashboard
+  // 2. Fallback: Role or department is Admin/Supervisor -> Admin Dashboard; else User Dashboard
   const isAdminOrSupervisor =
     loggedInUser?.role === "Admin" ||
     loggedInUser?.department === "Admin" ||
     loggedInUser?.role === "Supervisor";
 
-  const hasAdminDashboard =
-    loggedInUser?.permissions?.dashboardAdmin?.enabled ?? isAdminOrSupervisor;
+  const perms = loggedInUser?.permissions || {};
+  let showAdminView = isAdminOrSupervisor;
 
-  const showAdminView = hasAdminDashboard;
+  if (perms.dashboardUser?.enabled) {
+    showAdminView = false;
+  } else if (perms.dashboardAdmin?.enabled) {
+    showAdminView = true;
+  }
 
   if (loading) {
     return (
@@ -247,3 +269,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

@@ -122,6 +122,12 @@ export default function Sidebar() {
       ].filter(sub => sub.show),
     },
     {
+      path: "/serviceCallResponse",
+      label: "Service Call (Workspace)",
+      icon: CallIcon,
+      show: isAdmin || hasAccess("serviceCallResponse"),
+    },
+    {
       path: "/serviceMaterial",
       label: "Service Material",
       icon: ServiceIcon,
@@ -132,6 +138,12 @@ export default function Sidebar() {
       ].filter(sub => sub.show),
     },
     {
+      path: "/serviceMaterialResponse",
+      label: "Service Material (Workspace)",
+      icon: ServiceIcon,
+      show: isAdmin || hasAccess("serviceMaterialResponse"),
+    },
+    {
       path: "/productionMaterial",
       label: "Production Material",
       icon: ProductionIcon,
@@ -140,18 +152,6 @@ export default function Sidebar() {
         { path: "/productionMaterial", label: "Production NC", show: hasAccess("prodNC") },
         { path: "/productionMaterial/reports", label: "Reports", show: hasAccess("prodReports") },
       ].filter(sub => sub.show),
-    },
-    {
-      path: "/serviceCallResponse",
-      label: "Service Call (Workspace)",
-      icon: CallIcon,
-      show: isAdmin || hasAccess("serviceCallResponse"),
-    },
-    {
-      path: "/serviceMaterialResponse",
-      label: "Service Material (Workspace)",
-      icon: ServiceIcon,
-      show: isAdmin || hasAccess("serviceMaterialResponse"),
     },
     {
       path: "/productionMaterialResponse",

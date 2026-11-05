@@ -131,3 +131,4 @@ export default function UserDashboard({ stats, navigate }) {
     </div>
   );
 }
+
