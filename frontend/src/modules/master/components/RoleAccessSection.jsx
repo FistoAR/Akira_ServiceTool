@@ -380,18 +380,18 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     return (
       <div
         key={mod.id}
-        className={`border rounded-[0.5vw] p-[1vw] bg-white flex flex-col justify-between transition-all min-h-[6.8vw] ${
-          mState.enabled ? "border-gray-300 shadow-sm" : "border-gray-200 bg-gray-50/40"
+        className={`border rounded-[0.4vw] px-[0.75vw] py-[0.55vw] bg-white flex flex-col justify-between transition-all ${
+          mState.enabled ? "border-gray-300 shadow-sm" : "border-gray-200 bg-gray-50/30"
         }`}
       >
         {/* Title and Module Enable Switch */}
-        <div className="flex items-center justify-between gap-[0.8vw] pb-[0.6vw] border-b border-gray-100">
-          <div className="flex flex-col min-w-0 pr-[0.4vw]">
-            <span className="text-[0.88vw] font-semibold text-gray-900 truncate" title={mod.label}>
+        <div className="flex items-center justify-between gap-[0.6vw] pb-[0.35vw] border-b border-gray-100">
+          <div className="flex flex-col min-w-0 pr-[0.3vw]">
+            <span className="text-[0.82vw] font-semibold text-gray-900 truncate" title={mod.label}>
               {mod.label}
             </span>
             {mod.desc && (
-              <span className="text-[0.68vw] text-gray-500 font-normal truncate" title={mod.desc}>
+              <span className="text-[0.65vw] text-gray-500 font-normal truncate" title={mod.desc}>
                 {mod.desc}
               </span>
             )}
@@ -405,14 +405,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               onChange={() => toggleModuleEnabled(mod.id)}
               className="sr-only peer"
             />
-            <div className="w-[2.4vw] h-[1.3vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.15vw] after:left-[0.2vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[1vw] after:w-[1vw] after:transition-all peer-checked:bg-blue-600"></div>
+            <div className="w-[2vw] h-[1.1vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.12vw] after:left-[0.15vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[0.85vw] after:w-[0.85vw] after:transition-all peer-checked:bg-blue-600"></div>
           </label>
         </div>
 
         {/* Action Toggles: Read, Write, Update, Delete (hidden for toggle-only modules like Dashboard) */}
         {mod.group !== "dashboard" ? (
           <div
-            className={`grid grid-cols-4 gap-[0.4vw] pt-[0.8vw] text-center transition-opacity ${
+            className={`grid grid-cols-4 gap-[0.3vw] pt-[0.45vw] text-center transition-opacity ${
               mState.enabled && !containsProtectedAdmin
                 ? "opacity-100"
                 : "opacity-35 pointer-events-none"
@@ -421,9 +421,9 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => togglePermission(mod.id, "read")}
-              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              className={`py-[0.2vw] text-[0.72vw] font-medium rounded-[0.25vw] transition-colors cursor-pointer border ${
                 mState.read
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-semibold"
                   : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
               } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
             >
@@ -433,9 +433,9 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => togglePermission(mod.id, "write")}
-              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              className={`py-[0.2vw] text-[0.72vw] font-medium rounded-[0.25vw] transition-colors cursor-pointer border ${
                 mState.write
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-semibold"
                   : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
               } ${modDiscrepancy?.write ? "ring-2 ring-amber-400" : ""}`}
             >
@@ -445,9 +445,9 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => togglePermission(mod.id, "update")}
-              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              className={`py-[0.2vw] text-[0.72vw] font-medium rounded-[0.25vw] transition-colors cursor-pointer border ${
                 mState.update
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-semibold"
                   : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
               } ${modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
             >
@@ -457,9 +457,9 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => togglePermission(mod.id, "delete")}
-              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+              className={`py-[0.2vw] text-[0.72vw] font-medium rounded-[0.25vw] transition-colors cursor-pointer border ${
                 mState.delete
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400 font-semibold"
                   : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
               } ${modDiscrepancy?.delete ? "ring-2 ring-amber-400" : ""}`}
             >
@@ -467,12 +467,12 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             </button>
           </div>
         ) : (
-          <div className="pt-[0.6vw] flex items-center justify-between text-[0.72vw] text-gray-500">
+          <div className="pt-[0.4vw] flex items-center justify-between text-[0.68vw] text-gray-500">
             <span className="italic">
               {mState.enabled ? "Active view for this user" : "Inactive view"}
             </span>
             <span
-              className={`font-semibold px-[0.45vw] py-[0.15vw] rounded text-[0.68vw] ${
+              className={`font-semibold px-[0.4vw] py-[0.1vw] rounded text-[0.65vw] ${
                 mState.enabled
                   ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                   : "bg-gray-100 text-gray-400"
@@ -493,18 +493,18 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   return (
     <div className="flex flex-col flex-1 h-full min-h-0 overflow-hidden bg-white text-gray-900">
       {/* Top Filter Selection Panel */}
-      <div className="border-b border-gray-200 px-[1.2vw] py-[0.8vw] flex items-center justify-between flex-wrap gap-[1vw] bg-white">
-        <div className="flex items-center gap-[1.2vw] flex-wrap">
+      <div className="border-b border-gray-200 px-[1vw] py-[0.55vw] flex items-center justify-between flex-wrap gap-[0.8vw] bg-white">
+        <div className="flex items-center gap-[0.9vw] flex-wrap">
           {/* Role Filter */}
-          <div className="flex items-center gap-[0.5vw]">
-            <label className="text-[0.84vw] font-medium text-gray-700">Role:</label>
+          <div className="flex items-center gap-[0.4vw]">
+            <label className="text-[0.78vw] font-medium text-gray-600">Role:</label>
             <select
               value={selectedRoleFilter}
               onChange={(e) => {
                 setSelectedRoleFilter(e.target.value);
                 setSelectedUserIds([]);
               }}
-              className="border border-gray-300 rounded-[0.4vw] px-[0.8vw] py-[0.45vw] text-[0.8vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer"
+              className="border border-gray-300 rounded-[0.35vw] px-[0.65vw] py-[0.32vw] text-[0.76vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer shadow-none"
             >
               <option value="All">All Roles</option>
               <option value="Admin">Admin</option>
@@ -514,15 +514,15 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           </div>
 
           {/* Department Filter */}
-          <div className="flex items-center gap-[0.5vw]">
-            <label className="text-[0.84vw] font-medium text-gray-700">Dept:</label>
+          <div className="flex items-center gap-[0.4vw]">
+            <label className="text-[0.78vw] font-medium text-gray-600">Dept:</label>
             <select
               value={selectedDepartment}
               onChange={(e) => {
                 setSelectedDepartment(e.target.value);
                 setSelectedUserIds([]);
               }}
-              className="border border-gray-300 rounded-[0.4vw] px-[0.8vw] py-[0.45vw] text-[0.8vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer"
+              className="border border-gray-300 rounded-[0.35vw] px-[0.65vw] py-[0.32vw] text-[0.76vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer shadow-none"
             >
               <option value="All">All Departments</option>
               {uniqueDepartments.map((d, i) => (
@@ -533,19 +533,19 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
           {/* Select Employees Dropdown (Searchable Multi-select) */}
           <div className="relative" ref={dropdownRef}>
-            <div className="flex items-center gap-[0.5vw]">
-              <label className="text-[0.84vw] font-medium text-gray-700">Employees:</label>
+            <div className="flex items-center gap-[0.4vw]">
+              <label className="text-[0.78vw] font-medium text-gray-600">Employees:</label>
               <button
                 type="button"
                 onClick={() => setIsEmployeeDropdownOpen(!isEmployeeDropdownOpen)}
-                className="border border-gray-300 rounded-[0.4vw] px-[0.9vw] py-[0.45vw] text-[0.8vw] bg-white text-gray-800 outline-none hover:border-gray-400 flex items-center justify-between gap-[0.8vw] min-w-[16vw] text-left cursor-pointer"
+                className="border border-gray-300 rounded-[0.35vw] px-[0.75vw] py-[0.32vw] text-[0.76vw] bg-white text-gray-800 outline-none hover:border-gray-400 flex items-center justify-between gap-[0.6vw] min-w-[14vw] text-left cursor-pointer"
               >
                 <span className="truncate font-medium text-gray-800">
                   {selectedUserIds.length === 0
                     ? `All (${filteredEmployees.length} matching)`
                     : `${selectedUserIds.length} employee${selectedUserIds.length > 1 ? "s" : ""} selected`}
                 </span>
-                <Icon icon="solar:alt-arrow-down-linear" className="w-[1vw] h-[1vw] text-gray-500 flex-shrink-0" />
+                <Icon icon="solar:alt-arrow-down-linear" className="w-[0.9vw] h-[0.9vw] text-gray-500 flex-shrink-0" />
               </button>
             </div>
 
@@ -648,25 +648,25 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           type="button"
           onClick={handleSaveMatrix}
           disabled={saving || containsProtectedAdmin}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium text-[0.84vw] px-[1.3vw] py-[0.5vw] rounded-[0.4vw] shadow-sm flex items-center gap-[0.5vw] transition-colors cursor-pointer"
+          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium text-[0.78vw] px-[1vw] py-[0.38vw] rounded-[0.35vw] shadow-none flex items-center gap-[0.4vw] transition-colors cursor-pointer"
         >
           {saving ? (
             <>
-              <Loader2 className="w-[1vw] h-[1vw] animate-spin" /> Saving...
+              <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" /> Saving...
             </>
           ) : (
             <>
-              <Icon icon="solar:diskette-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> Save Changes
+              <Icon icon="solar:diskette-bold-duotone" className="w-[0.95vw] h-[0.95vw]" /> Save Changes
             </>
           )}
         </button>
       </div>
 
       {/* Main Content Pane Split */}
-      <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(92vh - 160px)" }}>
+      <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(94vh - 140px)" }}>
         {/* Left Side: Modules Navigation */}
-        <div className="w-[15vw] border-r border-gray-200 flex flex-col p-[0.8vw] gap-[0.3vw] overflow-y-auto h-full bg-white flex-shrink-0">
-          <p className="text-[0.72vw] font-semibold uppercase tracking-wider text-gray-400 px-[0.6vw] mb-[0.4vw]">
+        <div className="w-[13vw] border-r border-gray-200 flex flex-col p-[0.6vw] gap-[0.2vw] overflow-y-auto h-full bg-white flex-shrink-0">
+          <p className="text-[0.68vw] font-semibold uppercase tracking-wider text-gray-400 px-[0.5vw] mb-[0.3vw]">
             Categories
           </p>
           {groups.map((g) => {
@@ -678,14 +678,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 key={g.id}
                 type="button"
                 onClick={() => setActiveGroup(g.id)}
-                className={`flex items-center justify-between px-[0.8vw] py-[0.65vw] rounded-[0.4vw] text-[0.82vw] transition-colors text-left cursor-pointer ${
+                className={`flex items-center justify-between px-[0.65vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] transition-colors text-left cursor-pointer ${
                   isActive
                     ? "bg-blue-50 text-blue-700 font-semibold"
                     : "text-gray-700 hover:bg-gray-50 font-normal"
                 }`}
               >
                 <span>{g.label}</span>
-                <span className={`text-[0.7vw] px-[0.45vw] py-[0.1vw] rounded-full font-medium ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-500 bg-gray-100"}`}>
+                <span className={`text-[0.66vw] px-[0.4vw] py-[0.08vw] rounded-full font-medium ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-500 bg-gray-100"}`}>
                   {count}
                 </span>
               </button>
@@ -694,11 +694,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         </div>
 
         {/* Right Side: Permission Cards Grid */}
-        <div className="flex-1 p-[1.2vw] overflow-y-auto min-h-0 space-y-[1.4vw] h-[73vh] bg-gray-50/40">
+        <div className="flex-1 p-[0.9vw] overflow-y-auto min-h-0 space-y-[0.9vw] bg-gray-50/30">
           {loadingConfig ? (
-            <div className="w-full h-full min-h-[40vh] flex flex-col items-center justify-center gap-3 bg-white/70 rounded-[0.6vw]">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-              <span className="text-[0.85vw] text-gray-600 font-medium">Loading Permissions...</span>
+            <div className="w-full h-full min-h-[40vh] flex flex-col items-center justify-center gap-2 bg-white/70 rounded-[0.5vw]">
+              <Loader2 className="w-7 h-7 animate-spin text-blue-600" />
+              <span className="text-[0.8vw] text-gray-600 font-medium">Loading Permissions...</span>
             </div>
           ) : (
             groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
@@ -706,20 +706,20 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             if (groupMods.length === 0) return null;
 
             return (
-              <div key={g.id} className="bg-white border border-gray-200 rounded-[0.6vw] p-[1.2vw] space-y-[1vw] shadow-sm">
+              <div key={g.id} className="bg-white border border-gray-200 rounded-[0.5vw] p-[0.85vw] space-y-[0.7vw] shadow-none">
                 {/* Header for group */}
-                <div className="flex items-center justify-between border-b border-gray-100 pb-[0.6vw]">
-                  <div className="flex items-center gap-[0.6vw]">
-                    <h3 className="text-[1.05vw] font-semibold text-blue-600">{g.label}</h3>
-                    <span className="text-[0.75vw] text-gray-500 font-normal">({groupMods.length} modules)</span>
+                <div className="flex items-center justify-between border-b border-gray-100 pb-[0.45vw]">
+                  <div className="flex items-center gap-[0.5vw]">
+                    <h3 className="text-[0.9vw] font-bold text-blue-600">{g.label}</h3>
+                    <span className="text-[0.7vw] text-gray-400 font-normal">({groupMods.length} modules)</span>
                   </div>
 
-                  <div className="flex items-center gap-[0.8vw]">
+                  <div className="flex items-center gap-[0.6vw]">
                     <button
                       type="button"
                       disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                      className="text-[0.78vw] font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer disabled:opacity-40"
+                      className="text-[0.74vw] font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer disabled:opacity-40"
                     >
                       Enable All
                     </button>
@@ -728,7 +728,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       type="button"
                       disabled={containsProtectedAdmin}
                       onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                      className="text-[0.78vw] font-medium text-gray-500 hover:text-gray-700 hover:underline cursor-pointer disabled:opacity-40"
+                      className="text-[0.74vw] font-medium text-gray-500 hover:text-gray-700 hover:underline cursor-pointer disabled:opacity-40"
                     >
                       Disable All
                     </button>
@@ -741,7 +741,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
                   if (!hasSubGroups) {
                     return (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
                         {groupMods.map(renderModuleCard)}
                       </div>
                     );
@@ -751,19 +751,19 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                   const userMods = groupMods.filter((m) => m.subGroup === "user");
 
                   return (
-                    <div className="space-y-[1.2vw]">
+                    <div className="space-y-[0.8vw]">
                       {/* Admin Section */}
                       {adminMods.length > 0 && (
-                        <div className="bg-slate-50/70 border border-slate-200 rounded-[0.5vw] p-[0.9vw] space-y-[0.8vw]">
-                          <div className="flex items-center gap-[0.5vw] pb-[0.3vw] border-b border-slate-200">
-                            <span className="text-[0.72vw] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.5vw] py-[0.15vw] rounded">
+                        <div className="bg-slate-50/60 border border-slate-200/80 rounded-[0.45vw] p-[0.7vw] space-y-[0.6vw]">
+                          <div className="flex items-center gap-[0.4vw] pb-[0.25vw] border-b border-slate-200/60">
+                            <span className="text-[0.68vw] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.1vw] rounded">
                               Admin Pages (Management)
                             </span>
-                            <span className="text-[0.7vw] text-slate-500 font-medium">
+                            <span className="text-[0.66vw] text-slate-500 font-medium">
                               ({adminMods.length} management modules)
                             </span>
                           </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
                             {adminMods.map(renderModuleCard)}
                           </div>
                         </div>
@@ -771,16 +771,16 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
                       {/* User Section */}
                       {userMods.length > 0 && (
-                        <div className="bg-blue-50/30 border border-blue-100 rounded-[0.5vw] p-[0.9vw] space-y-[0.8vw]">
-                          <div className="flex items-center gap-[0.5vw] pb-[0.3vw] border-b border-blue-200/60">
-                            <span className="text-[0.72vw] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-[0.5vw] py-[0.15vw] rounded">
+                        <div className="bg-blue-50/20 border border-blue-100 rounded-[0.45vw] p-[0.7vw] space-y-[0.6vw]">
+                          <div className="flex items-center gap-[0.4vw] pb-[0.25vw] border-b border-blue-200/40">
+                            <span className="text-[0.68vw] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded">
                               User Pages (Staff / Response)
                             </span>
-                            <span className="text-[0.7vw] text-slate-500 font-medium">
+                            <span className="text-[0.66vw] text-slate-500 font-medium">
                               ({userMods.length} workspace modules)
                             </span>
                           </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1vw]">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
                             {userMods.map(renderModuleCard)}
                           </div>
                         </div>
