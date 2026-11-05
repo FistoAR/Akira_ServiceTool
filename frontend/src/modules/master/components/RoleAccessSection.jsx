@@ -659,13 +659,13 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     return (
       <div
         key={mod.id}
-        className={`flex items-center justify-between px-[1vw] py-[0.65vw] rounded-[0.4vw] transition-colors border ${
+        className={`flex items-center justify-between px-[1vw] py-[0.55vw] rounded-[0.4vw] transition-colors border ${
           mState.enabled
             ? "bg-white border-gray-200/90 hover:border-blue-200"
             : "bg-gray-50/50 border-gray-100 hover:border-gray-200"
         }`}
       >
-        {/* Left: Master Toggle + Module Identity */}
+        {/* Left: Master Toggle + Clean Module Title */}
         <div className="flex items-center gap-[0.8vw] flex-1 min-w-0 pr-[1vw]">
           <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
             <input
@@ -678,27 +678,9 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <div className="w-[1.9vw] h-[1.05vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.11vw] after:left-[0.14vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[0.82vw] after:w-[0.82vw] after:transition-all peer-checked:bg-blue-600"></div>
           </label>
 
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-[0.4vw]">
-              <span className={`text-[0.82vw] font-semibold truncate ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
-                {mod.label}
-              </span>
-              {mod.subGroup && (
-                <span className={`text-[0.6vw] font-bold px-[0.35vw] py-[0.05vw] rounded uppercase tracking-wider ${
-                  mod.subGroup === "admin"
-                    ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                    : "bg-blue-50 text-blue-700 border border-blue-200"
-                }`}>
-                  {mod.subGroup}
-                </span>
-              )}
-            </div>
-            {mod.desc && (
-              <span className="text-[0.68vw] text-gray-400 truncate max-w-[26vw]">
-                {mod.desc}
-              </span>
-            )}
-          </div>
+          <span className={`text-[0.82vw] font-semibold truncate ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
+            {mod.label}
+          </span>
         </div>
 
         {/* Right: Granular Actions (Pill Chips) */}
@@ -1205,16 +1187,13 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       const userMods = groupMods.filter((m) => m.subGroup === "user");
 
                       return (
-                        <div className="space-y-[0.9vw]">
+                        <div className="space-y-[0.8vw]">
                           {/* Admin Section */}
                           {adminMods.length > 0 && (
                             <div className="space-y-[0.35vw]">
                               <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
-                                <span className="text-[0.66vw] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.4vw] py-[0.08vw] rounded">
-                                  Management Pages
-                                </span>
-                                <span className="text-[0.66vw] text-gray-400 font-medium">
-                                  ({adminMods.length} modules)
+                                <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
+                                  Management Pages ({adminMods.length})
                                 </span>
                               </div>
                               <div className="flex flex-col gap-[0.35vw]">
@@ -1227,11 +1206,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                           {userMods.length > 0 && (
                             <div className="space-y-[0.35vw]">
                               <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
-                                <span className="text-[0.66vw] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-[0.4vw] py-[0.08vw] rounded">
-                                  Staff / Workspaces
-                                </span>
-                                <span className="text-[0.66vw] text-gray-400 font-medium">
-                                  ({userMods.length} modules)
+                                <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
+                                  Staff / Workspaces ({userMods.length})
                                 </span>
                               </div>
                               <div className="flex flex-col gap-[0.35vw]">
