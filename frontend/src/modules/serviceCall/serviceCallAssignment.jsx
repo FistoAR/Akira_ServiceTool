@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
+import useModulePermissions from "../../components/useModulePermissions";
 
 // ── Constants & Helpers ────────────────────────────────────────────────────────
 const SERVICE_CALLS_KEY = "service_calls_v2";
@@ -101,6 +102,8 @@ export default function ServiceCallAssignment() {
   const [slaLoading, setSlaLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useNotification();
+  const { canWrite, canUpdate } = useModulePermissions("callAssign");
+  const canAssign = canWrite || canUpdate;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -467,12 +470,18 @@ export default function ServiceCallAssignment() {
                             </span>
                           </td>
                           <td rowSpan={rowCount} className={`p-[0.8vw] text-center align-middle ${criticalCellClass}`}>
-                            <button
-                              onClick={() => setSelectedGroup(g)}
-                              className="cursor-pointer inline-flex items-center gap-[0.4vw] bg-blue-600 text-white px-[1vw] py-[0.45vw] rounded-md font-semibold text-[0.75vw] hover:bg-blue-700 active:scale-95 transition-all border border-blue-500"
-                            >
-                              Assign <ArrowRight className="w-[1vw] h-[1vw]" />
-                            </button>
+                            {canAssign ? (
+                              <button
+                                onClick={() => setSelectedGroup(g)}
+                                className="cursor-pointer inline-flex items-center gap-[0.4vw] bg-blue-600 text-white px-[1vw] py-[0.45vw] rounded-md font-semibold text-[0.75vw] hover:bg-blue-700 active:scale-95 transition-all border border-blue-500"
+                              >
+                                Assign <ArrowRight className="w-[1vw] h-[1vw]" />
+                              </button>
+                            ) : (
+                              <span className="text-[0.68vw] text-gray-400 italic font-medium px-[0.6vw] py-[0.2vw] bg-gray-50 border border-gray-200 rounded">
+                                View Only
+                              </span>
+                            )}
                           </td>
                         </>
                       )}
