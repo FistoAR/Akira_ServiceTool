@@ -290,22 +290,47 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         },
       };
 
-      // Dashboard exclusivity: Only one of Admin Dashboard OR User Dashboard can be enabled
-      if (modId === "dashboardAdmin" && nextEnabled) {
-        updated["dashboardUser"] = {
-          enabled: false,
-          read: false,
-          write: false,
-          update: false,
-          delete: false,
+      // Dashboard exclusivity & minimum active rule:
+      // Exactly ONE dashboard must always be active.
+      // - If clicking an inactive dashboard, activate it and deactivate the other.
+      // - If clicking the already active dashboard, flip to the other one (never leave both disabled).
+      if (modId === "dashboardAdmin") {
+        const nextAdmin = !current.enabled;
+        return {
+          ...prev,
+          dashboardAdmin: {
+            enabled: nextAdmin,
+            read: nextAdmin,
+            write: false,
+            update: false,
+            delete: false,
+          },
+          dashboardUser: {
+            enabled: !nextAdmin,
+            read: !nextAdmin,
+            write: false,
+            update: false,
+            delete: false,
+          },
         };
-      } else if (modId === "dashboardUser" && nextEnabled) {
-        updated["dashboardAdmin"] = {
-          enabled: false,
-          read: false,
-          write: false,
-          update: false,
-          delete: false,
+      } else if (modId === "dashboardUser") {
+        const nextUser = !current.enabled;
+        return {
+          ...prev,
+          dashboardUser: {
+            enabled: nextUser,
+            read: nextUser,
+            write: false,
+            update: false,
+            delete: false,
+          },
+          dashboardAdmin: {
+            enabled: !nextUser,
+            read: !nextUser,
+            write: false,
+            update: false,
+            delete: false,
+          },
         };
       }
 
