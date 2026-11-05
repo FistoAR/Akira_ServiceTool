@@ -1181,10 +1181,29 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       )}
                     </div>
 
-                    {/* Check if group is dashboard -> side by side view */}
+                    {/* Check if group is dashboard -> side by side view without inner cards */}
                     {g.id === "dashboard" ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-[0.8vw]">
-                        {groupMods.map(renderModuleRow)}
+                      <div className="flex items-center gap-[2.5vw] py-[0.3vw] px-[0.2vw]">
+                        {groupMods.map((mod) => {
+                          const mState = matrix[mod.id] || { enabled: false };
+                          return (
+                            <div key={mod.id} className="flex items-center gap-[0.6vw]">
+                              <span className={`text-[0.82vw] font-semibold ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
+                                {mod.label}
+                              </span>
+                              <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                <input
+                                  type="checkbox"
+                                  checked={mState.enabled}
+                                  disabled={containsProtectedAdmin || !canEditRoleAccess}
+                                  onChange={() => toggleModuleEnabled(mod.id)}
+                                  className="sr-only peer"
+                                />
+                                <div className="w-[1.9vw] h-[1.05vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.11vw] after:left-[0.14vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[0.82vw] after:w-[0.82vw] after:transition-all peer-checked:bg-blue-600"></div>
+                              </label>
+                            </div>
+                          );
+                        })}
                       </div>
                     ) : (
                       (() => {
