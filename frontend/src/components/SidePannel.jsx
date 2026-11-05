@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
+import { Icon } from "@iconify/react";
 import DashboardIcon from "../assets/SidePannelLogos/Dashboard.svg";
 import AccessIcon from "../assets/SidePannelLogos/access.png";
 import ActivityIcon from "../assets/SidePannelLogos/Activity.svg";
@@ -124,7 +125,7 @@ export default function Sidebar() {
     {
       path: "/serviceCallResponse",
       label: "Service Call (Workspace)",
-      icon: CallIcon,
+      iconify: "solar:user-speak-rounded-bold-duotone",
       show: isAdmin || hasAccess("serviceCallResponse"),
     },
     {
@@ -140,7 +141,7 @@ export default function Sidebar() {
     {
       path: "/serviceMaterialResponse",
       label: "Service Material (Workspace)",
-      icon: ServiceIcon,
+      iconify: "solar:wrench-bold-duotone",
       show: isAdmin || hasAccess("serviceMaterialResponse"),
     },
     {
@@ -156,7 +157,7 @@ export default function Sidebar() {
     {
       path: "/productionMaterialResponse",
       label: "Production Material (Workspace)",
-      icon: ProductionIcon,
+      iconify: "solar:hammer-and-wrench-bold-duotone",
       show: isAdmin || hasAccess("productionMaterialResponse"),
     },
     {
@@ -311,18 +312,31 @@ export default function Sidebar() {
                           : "w-[1.4vw] h-[1.4vw]"
                       }`}
                     >
-                      <img
-                        src={item.icon}
-                        alt={item.label}
-                        className="w-full h-full object-contain transition-all duration-300"
-                        style={{
-                          filter: active
-                            ? "brightness(0) invert(1)"
-                            : hoveredItem === item.path
-                              ? activeFilter
-                              : "none",
-                        }}
-                      />
+                      {item.iconify ? (
+                        <Icon
+                          icon={item.iconify}
+                          className={`w-full h-full transition-all duration-300 ${
+                            active
+                              ? "text-white"
+                              : hoveredItem === item.path
+                                ? "text-blue-600"
+                                : "text-gray-500"
+                          }`}
+                        />
+                      ) : (
+                        <img
+                          src={item.icon}
+                          alt={item.label}
+                          className="w-full h-full object-contain transition-all duration-300"
+                          style={{
+                            filter: active
+                              ? "brightness(0) invert(1)"
+                              : hoveredItem === item.path
+                                ? activeFilter
+                                : "none",
+                          }}
+                        />
+                      )}
                     </div>
 
                     <span
