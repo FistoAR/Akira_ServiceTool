@@ -143,21 +143,21 @@ export default function Sidebar() {
     },
     {
       path: "/serviceCallResponse",
-      label: "Service Call",
+      label: "Service Call (Workspace)",
       icon: CallIcon,
-      show: !canManageServiceCall && hasAccess("serviceCallResponse"),
+      show: isAdmin || hasAccess("serviceCallResponse"),
     },
     {
       path: "/serviceMaterialResponse",
-      label: "Service Material",
+      label: "Service Material (Workspace)",
       icon: ServiceIcon,
-      show: !canManageServiceMaterial && hasAccess("serviceMaterialResponse"),
+      show: isAdmin || hasAccess("serviceMaterialResponse"),
     },
     {
       path: "/productionMaterialResponse",
-      label: "Production Material",
+      label: "Production Material (Workspace)",
       icon: ProductionIcon,
-      show: !canManageProductionMaterial && hasAccess("productionMaterialResponse"),
+      show: isAdmin || hasAccess("productionMaterialResponse"),
     },
     {
       path: "/troubleshoot",

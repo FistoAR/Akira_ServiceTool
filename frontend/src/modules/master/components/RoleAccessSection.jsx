@@ -227,7 +227,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         delete: false,
       };
       const nextEnabled = !current.enabled;
-      return {
+
+      const updated = {
         ...prev,
         [modId]: {
           enabled: nextEnabled,
@@ -237,6 +238,27 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           delete: false,
         },
       };
+
+      // Dashboard exclusivity: Only one of Admin Dashboard OR User Dashboard can be enabled
+      if (modId === "dashboardAdmin" && nextEnabled) {
+        updated["dashboardUser"] = {
+          enabled: false,
+          read: false,
+          write: false,
+          update: false,
+          delete: false,
+        };
+      } else if (modId === "dashboardUser" && nextEnabled) {
+        updated["dashboardAdmin"] = {
+          enabled: false,
+          read: false,
+          write: false,
+          update: false,
+          delete: false,
+        };
+      }
+
+      return updated;
     });
   };
 
@@ -248,13 +270,26 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       modules.forEach((mod) => {
         if (mod.group === groupId) {
           const isEn = action === "enable";
-          updated[mod.id] = {
-            enabled: isEn,
-            read: isEn,
-            write: isEn,
-            update: isEn,
-            delete: isEn,
-          };
+          // If dashboard group, enable only Admin Dashboard when enabling all to preserve exclusivity
+          if (groupId === "dashboard") {
+            if (action === "enable") {
+              if (mod.id === "dashboardAdmin") {
+                updated[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
+              } else {
+                updated[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+              }
+            } else {
+              updated[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+            }
+          } else {
+            updated[mod.id] = {
+              enabled: isEn,
+              read: isEn,
+              write: isEn,
+              update: isEn,
+              delete: isEn,
+            };
+          }
         }
       });
       return updated;
@@ -374,62 +409,79 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           </label>
         </div>
 
-        {/* Four Action Toggles: Read, Write, Update, Delete */}
-        <div
-          className={`grid grid-cols-4 gap-[0.4vw] pt-[0.8vw] text-center transition-opacity ${
-            mState.enabled && !containsProtectedAdmin
-              ? "opacity-100"
-              : "opacity-35 pointer-events-none"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => togglePermission(mod.id, "read")}
-            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-              mState.read
-                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-            } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
+        {/* Action Toggles: Read, Write, Update, Delete (hidden for toggle-only modules like Dashboard) */}
+        {mod.group !== "dashboard" ? (
+          <div
+            className={`grid grid-cols-4 gap-[0.4vw] pt-[0.8vw] text-center transition-opacity ${
+              mState.enabled && !containsProtectedAdmin
+                ? "opacity-100"
+                : "opacity-35 pointer-events-none"
+            }`}
           >
-            Read
-          </button>
+            <button
+              type="button"
+              onClick={() => togglePermission(mod.id, "read")}
+              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+                mState.read
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+              } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
+            >
+              Read
+            </button>
 
-          <button
-            type="button"
-            onClick={() => togglePermission(mod.id, "write")}
-            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-              mState.write
-                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-            } ${modDiscrepancy?.write ? "ring-2 ring-amber-400" : ""}`}
-          >
-            Write
-          </button>
+            <button
+              type="button"
+              onClick={() => togglePermission(mod.id, "write")}
+              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+                mState.write
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+              } ${modDiscrepancy?.write ? "ring-2 ring-amber-400" : ""}`}
+            >
+              Write
+            </button>
 
-          <button
-            type="button"
-            onClick={() => togglePermission(mod.id, "update")}
-            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-              mState.update
-                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-            } ${modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
-          >
-            Update
-          </button>
+            <button
+              type="button"
+              onClick={() => togglePermission(mod.id, "update")}
+              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+                mState.update
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+              } ${modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
+            >
+              Update
+            </button>
 
-          <button
-            type="button"
-            onClick={() => togglePermission(mod.id, "delete")}
-            className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
-              mState.delete
-                ? "bg-emerald-50 text-emerald-800 border-emerald-400"
-                : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-            } ${modDiscrepancy?.delete ? "ring-2 ring-amber-400" : ""}`}
-          >
-            Delete
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() => togglePermission(mod.id, "delete")}
+              className={`py-[0.35vw] text-[0.76vw] font-medium rounded-[0.35vw] transition-colors cursor-pointer border ${
+                mState.delete
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-400"
+                  : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+              } ${modDiscrepancy?.delete ? "ring-2 ring-amber-400" : ""}`}
+            >
+              Delete
+            </button>
+          </div>
+        ) : (
+          <div className="pt-[0.6vw] flex items-center justify-between text-[0.72vw] text-gray-500">
+            <span className="italic">
+              {mState.enabled ? "Active view for this user" : "Inactive view"}
+            </span>
+            <span
+              className={`font-semibold px-[0.45vw] py-[0.15vw] rounded text-[0.68vw] ${
+                mState.enabled
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                  : "bg-gray-100 text-gray-400"
+              }`}
+            >
+              {mState.enabled ? "ENABLED" : "DISABLED"}
+            </span>
+          </div>
+        )}
       </div>
     );
   };
