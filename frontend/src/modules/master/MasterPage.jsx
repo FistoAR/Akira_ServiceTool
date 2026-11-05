@@ -23,6 +23,14 @@ import EmployeeManagementSection from "./components/EmployeeManagementSection";
 import RoleAccessSection from "./components/RoleAccessSection";
 import ColumnVisibilitySection from "./components/ColumnVisibilitySection";
 
+
+const TabContentLoader = () => (
+  <div className="flex-1 w-full flex flex-col items-center justify-center gap-3 p-[3vw] bg-white min-h-[40vh]">
+    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+    <span className="text-[0.82vw] text-slate-500 font-medium">Loading details...</span>
+  </div>
+);
+
 const SystemSettingsPage = () => {
   const getCachedArray = (key) => {
     try {
@@ -296,15 +304,6 @@ const SystemSettingsPage = () => {
 
   return (
     <div className="w-full h-[calc(100vh-4.4rem)] flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
-      {isLoading ? (
-        <div className="w-full h-[60vh] flex flex-col items-center justify-center gap-[1vw] bg-white border border-slate-400 rounded-[0.6vw] shadow-sm">
-          <Loader2 className="w-[3.5vw] h-[3.5vw] animate-spin text-blue-600" />
-          <div className="flex flex-col items-center">
-            <span className="text-[1.1vw] font-bold text-slate-800 uppercase tracking-widest">Loading Master Settings</span>
-            <span className="text-[0.75vw] text-slate-400 font-medium">Please wait while we sync with the server...</span>
-          </div>
-        </div>
-      ) : (
         /* Settings container */
         <div className="flex-1 bg-white border border-slate-400 rounded-[0.6vw] shadow-sm mb-[1vw] overflow-hidden flex flex-col">
           {/* ── Tab: Categories ── */}
@@ -329,10 +328,12 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <PartyTypesSection
-                partyTypes={partyTypes || []}
-                setPartyTypes={setPartyTypes}
-              />
+              {isLoading ? <TabContentLoader /> : (
+                <PartyTypesSection
+                  partyTypes={partyTypes || []}
+                  setPartyTypes={setPartyTypes}
+                />
+              )}
             </div>
           )}
 
@@ -358,11 +359,13 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <WarrantyRulesSection
-                warrantyRules={warrantyRules}
-                setWarrantyRules={setWarrantyRules}
-                segments={segments || []}
-              />
+              {isLoading ? <TabContentLoader /> : (
+                <WarrantyRulesSection
+                  warrantyRules={warrantyRules}
+                  setWarrantyRules={setWarrantyRules}
+                  segments={segments || []}
+                />
+              )}
             </div>
           )}
 
@@ -384,7 +387,9 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <ProductSegmentsSection segments={segments} setSegments={setSegments} />
+              {isLoading ? <TabContentLoader /> : (
+                <ProductSegmentsSection segments={segments} setSegments={setSegments} />
+              )}
             </div>
           )}
 
@@ -406,7 +411,9 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <FourMCategoriesSection items={fourMCategories} setItems={setFourMCategories} />
+              {isLoading ? <TabContentLoader /> : (
+                <FourMCategoriesSection items={fourMCategories} setItems={setFourMCategories} />
+              )}
             </div>
           )}
 
@@ -428,7 +435,9 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <UnitsSection units={units} setUnits={setUnits} />
+              {isLoading ? <TabContentLoader /> : (
+                <UnitsSection units={units} setUnits={setUnits} />
+              )}
             </div>
           )}
 
@@ -450,34 +459,40 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <SitesSection sites={sites} setSites={setSites} />
+              {isLoading ? <TabContentLoader /> : (
+                <SitesSection sites={sites} setSites={setSites} />
+              )}
             </div>
           )}
 
           {/* ── Tab: Escalation ── */}
           {activeTab === "escalation" && (
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <EscalationSection
-                partyTypes={partyTypes}
-                segments={segments}
-                flows={flows}
-                setFlows={setFlows}
-                departments={departments}
-                employees={employees}
-                onRefresh={fetchActiveTabData}
-                isRefreshing={isRefreshing}
-              />
+              {isLoading ? <TabContentLoader /> : (
+                <EscalationSection
+                  partyTypes={partyTypes}
+                  segments={segments}
+                  flows={flows}
+                  setFlows={setFlows}
+                  departments={departments}
+                  employees={employees}
+                  onRefresh={fetchActiveTabData}
+                  isRefreshing={isRefreshing}
+                />
+              )}
             </div>
           )}
 
           {/* ── Tab: Service Material Escalation ── */}
           {activeTab === "service-escalation" && (
             <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <ServiceMaterialEscalationSection 
-                departments={departments} 
-                onRefresh={fetchActiveTabData}
-                isRefreshing={isRefreshing}
-              />
+              {isLoading ? <TabContentLoader /> : (
+                <ServiceMaterialEscalationSection 
+                  departments={departments} 
+                  onRefresh={fetchActiveTabData}
+                  isRefreshing={isRefreshing}
+                />
+              )}
             </div>
           )}
 
@@ -499,12 +514,14 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <EmployeeManagementSection 
-                employees={employees} 
-                setEmployees={setEmployees}
-                departments={departments}
-                setDepartments={setDepartments}
-              />
+              {isLoading ? <TabContentLoader /> : (
+                <EmployeeManagementSection 
+                  employees={employees} 
+                  setEmployees={setEmployees}
+                  departments={departments}
+                  setDepartments={setDepartments}
+                />
+              )}
             </div>
           )}
 
@@ -526,10 +543,12 @@ const SystemSettingsPage = () => {
                   </span>
                 </div>
               </div>
-              <RoleAccessSection
-                employees={employees}
-                setEmployees={setEmployees}
-              />
+              {isLoading ? <TabContentLoader /> : (
+                <RoleAccessSection
+                  employees={employees}
+                  setEmployees={setEmployees}
+                />
+              )}
             </div>
           )}
 
@@ -552,11 +571,12 @@ const SystemSettingsPage = () => {
                   <RefreshButton />
                 </div>
               </div>
-              <ColumnVisibilitySection colVis={colVis} setColVis={setColVis} />
+              {isLoading ? <TabContentLoader /> : (
+                <ColumnVisibilitySection colVis={colVis} setColVis={setColVis} />
+              )}
             </div>
           )}
         </div>
-      )}
     </div>
   );
 };

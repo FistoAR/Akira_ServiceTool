@@ -330,15 +330,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     setSelectedUserIds([]);
   };
 
-  if (loadingConfig) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-white" style={{ height: "calc(92vh - 160px)" }}>
-        <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
-        <span className="text-base text-gray-600 font-medium">Loading Permissions...</span>
-      </div>
-    );
-  }
-
   const allFilteredAreSelected =
     filteredEmployees.length > 0 &&
     filteredEmployees.every((e) => selectedUserIds.includes(e.userId));
@@ -548,7 +539,13 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
         {/* Right Side: Permission Cards Grid */}
         <div className="flex-1 p-[1.2vw] overflow-y-auto min-h-0 space-y-[1.4vw] h-[73vh] bg-gray-50/40">
-          {groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
+          {loadingConfig ? (
+            <div className="w-full h-full min-h-[40vh] flex flex-col items-center justify-center gap-3 bg-white/70 rounded-[0.6vw]">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+              <span className="text-[0.85vw] text-gray-600 font-medium">Loading Permissions...</span>
+            </div>
+          ) : (
+            groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
             const groupMods = modules.filter((mod) => mod.group === g.id);
             if (groupMods.length === 0) return null;
 
@@ -686,7 +683,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
       </div>
     </div>
