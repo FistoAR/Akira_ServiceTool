@@ -460,6 +460,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
     </div>
   );
   
+
 };
 
 export default WarrantyRulesSection;
