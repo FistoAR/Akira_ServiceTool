@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
 import CustomDropdown from "../../../components/CustomDropdown";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -101,6 +102,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 };
 
 const EmployeeManagementSection = ({ employees, setEmployees, departments, setDepartments }) => {
+  const { canWrite, canUpdate } = useModulePermissions("employees");
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
   const ITEMS_PER_PAGE = 10;
@@ -279,18 +281,22 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           />
         </div>
         <div className="flex gap-[0.6vw]">
-          <button 
-            onClick={() => setShowDeptModal(true)}
-            className="flex items-center gap-[0.5vw] border border-slate-400 text-slate-600 hover:bg-slate-50 px-[1vw] py-[0.6vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all"
-          >
-            <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw]" /> Dept Master
-          </button>
-          <button 
-            onClick={() => openRegModal()}
-            className="flex items-center gap-[0.5vw] bg-blue-600 text-white px-[1.2vw] py-[0.6vw] rounded-[0.5vw] font-bold text-[0.85vw] cursor-pointer hover:bg-blue-700 transition-all shadow-md shadow-blue-100"
-          >
-            <Icon icon="solar:user-plus-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> Register Employee
-          </button>
+          {canWrite && (
+            <button 
+              onClick={() => setShowDeptModal(true)}
+              className="flex items-center gap-[0.5vw] border border-slate-400 text-slate-600 hover:bg-slate-50 px-[1vw] py-[0.6vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all"
+            >
+              <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw]" /> Dept Master
+            </button>
+          )}
+          {canWrite && (
+            <button 
+              onClick={() => openRegModal()}
+              className="flex items-center gap-[0.5vw] bg-blue-600 text-white px-[1.2vw] py-[0.6vw] rounded-[0.5vw] font-bold text-[0.85vw] cursor-pointer hover:bg-blue-700 transition-all shadow-md shadow-blue-100"
+            >
+              <Icon icon="solar:user-plus-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> Register Employee
+            </button>
+          )}
         </div>
       </div>
 
@@ -352,7 +358,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
                       <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
                     </span>
-                  ) : (
+                  ) : canUpdate ? (
                     <button 
                       onClick={() => openRegModal(emp)}
                       className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-blue-600 cursor-pointer"
@@ -360,6 +366,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     >
                       <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
                     </button>
+                  ) : (
+                    <span className="text-[0.68vw] text-slate-400 italic">View only</span>
                   )}
                 </td>
               </tr>

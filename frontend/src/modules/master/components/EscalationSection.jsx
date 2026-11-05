@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
 import CustomDropdown from "../../../components/CustomDropdown";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -650,6 +651,7 @@ const ChainPreview = ({ steps, employees = [] }) => {
 // EscalationSection
 // ─────────────────────────────────────────────────────────────────────────────
 const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments, employees, onRefresh, isRefreshing }) => {
+  const { canWrite, canUpdate } = useModulePermissions("escalation");
   const { toast, confirm } = useNotification();
   const [expandedType, setExpandedType] = useState(null);
   const [selectedSegment, setSelectedSegment] = useState({}); // { partyTypeId: segmentName }
@@ -837,23 +839,27 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
             <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
             {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
-          <button
-            onClick={handleResetAll}
-            className="flex items-center gap-[0.4vw] border border-slate-400 bg-white text-slate-600 hover:bg-slate-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"
-          >
-            <RotateCcw className="w-[0.85vw] h-[0.85vw]" /> Reset All
-          </button>
-          <button
-            onClick={handleSave}
-            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
-          >
-            {saved ? (
-              <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
-            ) : (
-              <Save className="w-[0.9vw] h-[0.9vw]" />
-            )}
-            {saved ? "Saved!" : "Save Flows"}
-          </button>
+          {(canWrite || canUpdate) && (
+            <>
+              <button
+                onClick={handleResetAll}
+                className="flex items-center gap-[0.4vw] border border-slate-400 bg-white text-slate-600 hover:bg-slate-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"
+              >
+                <RotateCcw className="w-[0.85vw] h-[0.85vw]" /> Reset All
+              </button>
+              <button
+                onClick={handleSave}
+                className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+              >
+                {saved ? (
+                  <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
+                ) : (
+                  <Save className="w-[0.9vw] h-[0.9vw]" />
+                )}
+                {saved ? "Saved!" : "Save Flows"}
+              </button>
+            </>
+          )}
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
 import CustomDropdown from "../../../components/CustomDropdown";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, Edit2, Trash2, Clock
 } from "lucide-react";
@@ -11,6 +12,7 @@ import {
 } from "./masterConstants";
 
 const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments = [] }) => {
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("warrantyRules");
   const { toast, confirm } = useNotification();
   const [newRule, setNewRule] = useState({
     productSegment: "Default",
@@ -172,24 +174,32 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                           {rule.postWarrantySLADays ?? 10} Days
                         </td>
                         <td className="px-[0.6vw] py-[0.6vw] border border-slate-300">
-                          <div className="flex justify-center gap-[0.3vw]">
-                            <button
-                              type="button"
-                              onClick={() => setEditingRule({ ...rule, productSegment: label })}
-                              className="p-[0.25vw] text-blue-600 hover:bg-blue-50 rounded-[0.2vw] cursor-pointer"
-                              title="Edit rule"
-                            >
-                              <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(rule.id, rule._id)}
-                              className="p-[0.25vw] text-red-500 hover:bg-red-50 rounded-[0.2vw] cursor-pointer"
-                              title="Delete rule"
-                            >
-                              <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
-                            </button>
-                          </div>
+                          {(canUpdate || canDelete) ? (
+                            <div className="flex justify-center gap-[0.3vw]">
+                              {canUpdate && (
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingRule({ ...rule, productSegment: label })}
+                                  className="p-[0.25vw] text-blue-600 hover:bg-blue-50 rounded-[0.2vw] cursor-pointer"
+                                  title="Edit rule"
+                                >
+                                  <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                </button>
+                              )}
+                              {canDelete && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDelete(rule.id, rule._id)}
+                                  className="p-[0.25vw] text-red-500 hover:bg-red-50 rounded-[0.2vw] cursor-pointer"
+                                  title="Delete rule"
+                                >
+                                  <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-[0.68vw] text-slate-400 italic block text-center">View only</span>
+                          )}
                         </td>
                       </tr>
                     );
@@ -424,23 +434,29 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
 
           <div className="flex gap-[0.5vw] mt-[1vw] shrink-0">
             {editingRule ? (
-              <>
-                <button
-                  type="button"
-                  onClick={handleUpdate}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
-                >
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditingRule(null)}
-                  className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
+              canUpdate ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleUpdate}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingRule(null)}
+                    className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <div className="w-full text-center text-slate-400 text-[0.76vw] py-[0.3vw]">
+                  Read-only view. Editing is disabled.
+                </div>
+              )
+            ) : canWrite ? (
               <button
                 type="button"
                 onClick={handleAdd}
@@ -448,6 +464,11 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
               >
                 <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Warranty Rule
               </button>
+            ) : (
+              <div className="w-full text-center text-slate-400 text-[0.76vw] py-[0.3vw] flex items-center justify-center gap-[0.3vw]">
+                <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.9vw] h-[0.9vw] text-slate-400" />
+                <span>Read-only access. New rule creation disabled.</span>
+              </div>
             )}
           </div>
         </div>

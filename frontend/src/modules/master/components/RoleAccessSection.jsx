@@ -52,6 +52,13 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
 
+  // Check if current user can edit role access
+  const canEditRoleAccess = useMemo(() => {
+    if (isCurrentRequesterAdmin) return true;
+    const roleAccessPerm = currentLoggedInUser?.permissions?.roleAccess;
+    return !!(roleAccessPerm?.enabled && (roleAccessPerm?.write || roleAccessPerm?.update));
+  }, [currentLoggedInUser, isCurrentRequesterAdmin]);
+
   // Sync selected employee from URL parameter if navigated from Employee Management
   useEffect(() => {
     const targetUserId = searchParams.get("userId");
@@ -212,7 +219,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   // Toggle permission
   const togglePermission = (modId, type) => {
-    if (containsProtectedAdmin) return;
+    if (containsProtectedAdmin || !canEditRoleAccess) return;
 
     setMatrix((prev) => {
       const current = prev[modId] || {
@@ -248,7 +255,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   // Toggle whole module
   const toggleModuleEnabled = (modId) => {
-    if (containsProtectedAdmin) return;
+    if (containsProtectedAdmin || !canEditRoleAccess) return;
 
     setMatrix((prev) => {
       const current = prev[modId] || {
@@ -296,7 +303,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   // Bulk enable/disable group
   const handleBulkToggleGroup = (groupId, action) => {
-    if (containsProtectedAdmin) return;
+    if (containsProtectedAdmin || !canEditRoleAccess) return;
     setMatrix((prev) => {
       const updated = { ...prev };
       modules.forEach((mod) => {
@@ -632,7 +639,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <input
               type="checkbox"
               checked={mState.enabled}
-              disabled={containsProtectedAdmin}
+              disabled={containsProtectedAdmin || !canEditRoleAccess}
               onChange={() => toggleModuleEnabled(mod.id)}
               className="sr-only peer"
             />
@@ -890,7 +897,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           </div>
 
           {/* Save Button (for custom edits) */}
-          {accessMode === "custom" && (
+          {accessMode === "custom" && canEditRoleAccess && (
             <button
               type="button"
               onClick={handleSaveMatrix}

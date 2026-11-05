@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -18,6 +19,7 @@ import {
 } from "./masterConstants";
 
 const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("partyTypes");
   const safePartyTypes = Array.isArray(partyTypes) ? partyTypes : [];
   const { toast, confirm } = useNotification();
   const [newType, setNewType] = useState({
@@ -140,23 +142,31 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                       </span>
                     </div>
                     
-                    <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        type="button"
-                        onClick={() => setEditingType({ ...type })}
-                        className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
-                      >
-                        <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(type.id, type._id)}
-                        className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
-                        disabled={safePartyTypes.length === 1}
-                      >
-                        <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
-                      </button>
-                    </div>
+                    {(canUpdate || canDelete) && (
+                      <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
+                        {canUpdate && (
+                          <button
+                            type="button"
+                            onClick={() => setEditingType({ ...type })}
+                            className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                            title="Edit Category"
+                          >
+                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(type.id, type._id)}
+                            className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                            disabled={safePartyTypes.length === 1}
+                            title="Delete Category"
+                          >
+                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })
@@ -165,67 +175,87 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
         </div>
 
         <div className="flex flex-col gap-[0.8vw] bg-white border border-slate-400 rounded-[0.6vw] p-[1vw]">
-          <p className="text-[0.85vw] font-bold text-slate-800 border-b border-slate-200 pb-[0.3vw] flex items-center gap-[0.4vw]">
-            {editingType ? (
+          {editingType ? (
+            canUpdate ? (
               <>
-                <Edit2 className="w-[1vw] h-[1vw] text-blue-600" />
-                Edit Category: {editingType.name}
+                <p className="text-[0.85vw] font-bold text-slate-800 border-b border-slate-200 pb-[0.3vw] flex items-center gap-[0.4vw]">
+                  <Edit2 className="w-[1vw] h-[1vw] text-blue-600" />
+                  Edit Category: {editingType.name}
+                </p>
+
+                <div className="space-y-[0.8vw]">
+                  <div className="space-y-[0.3vw]">
+                    <label className="text-[0.72vw] font-semibold text-slate-600">Category Name *</label>
+                    <input
+                      type="text"
+                      value={editingType.name}
+                      onChange={(e) => setEditingType({ ...editingType, name: e.target.value })}
+                      placeholder="e.g. Domestic, Export..."
+                      className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-[0.5vw] mt-[0.5vw]">
+                  <button
+                    type="button"
+                    onClick={handleUpdate}
+                    disabled={!editingType.name.trim()}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingType(null)}
+                    className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </>
             ) : (
-              <>
+              <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
+                You do not have permission to edit categories.
+              </div>
+            )
+          ) : canWrite ? (
+            <>
+              <p className="text-[0.85vw] font-bold text-slate-800 border-b border-slate-200 pb-[0.3vw] flex items-center gap-[0.4vw]">
                 <Icon icon="solar:add-circle-bold-duotone" className="w-[1vw] h-[1vw] text-emerald-600" />
                 Add New Category
-              </>
-            )}
-          </p>
+              </p>
 
-          <div className="space-y-[0.8vw]">
-            <div className="space-y-[0.3vw]">
-              <label className="text-[0.72vw] font-semibold text-slate-600">Category Name *</label>
-              <input
-                type="text"
-                value={editingType ? editingType.name : newType.name}
-                onChange={(e) =>
-                  editingType
-                    ? setEditingType({ ...editingType, name: e.target.value })
-                    : setNewType({ ...newType, name: e.target.value })
-                }
-                placeholder="e.g. Domestic, Export..."
-                className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              />
+              <div className="space-y-[0.8vw]">
+                <div className="space-y-[0.3vw]">
+                  <label className="text-[0.72vw] font-semibold text-slate-600">Category Name *</label>
+                  <input
+                    type="text"
+                    value={newType.name}
+                    onChange={(e) => setNewType({ ...newType, name: e.target.value })}
+                    placeholder="e.g. Domestic, Export..."
+                    className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-[0.5vw] mt-[0.5vw]">
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  disabled={!newType.name.trim()}
+                  className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                >
+                  <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Category
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="p-[2vw] text-center text-slate-400 text-[0.78vw] flex flex-col items-center justify-center h-full gap-[0.4vw]">
+              <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.8vw] h-[1.8vw] text-slate-300" />
+              <span>Read-only access. You can view existing categories on the left.</span>
             </div>
-          </div>
-
-          <div className="flex gap-[0.5vw] mt-[0.5vw]">
-            {editingType ? (
-              <>
-                <button
-                  type="button"
-                  onClick={handleUpdate}
-                  disabled={!editingType.name.trim()}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
-                >
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditingType(null)}
-                  className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                onClick={handleAdd}
-                disabled={!newType.name.trim()}
-                className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
-              >
-                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Category
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

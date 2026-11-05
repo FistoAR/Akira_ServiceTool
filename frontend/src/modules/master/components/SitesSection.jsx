@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -17,6 +18,7 @@ import {
 } from "./masterConstants";
 
 const SitesSection = ({ sites = [], setSites }) => {
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("sites");
   const safeSites = Array.isArray(sites) ? sites : [];
   const { toast, confirm } = useNotification();
   const [newSiteName, setNewSiteName] = useState("");
@@ -156,24 +158,32 @@ const SitesSection = ({ sites = [], setSites }) => {
                           {site.name}
                         </span>
                         
-                        <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditingSite({ id: site.id, _id: site._id, name: site.name })
-                            }
-                            className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
-                          >
-                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(site.id, site._id)}
-                            className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
-                          >
-                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                        </div>
+                        {(canUpdate || canDelete) && (
+                          <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity ml-auto">
+                            {canUpdate && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEditingSite({ id: site.id, _id: site._id, name: site.name })
+                                }
+                                className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                                title="Edit Site"
+                              >
+                                <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(site.id, site._id)}
+                                className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                                title="Delete Site"
+                              >
+                                <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -187,24 +197,31 @@ const SitesSection = ({ sites = [], setSites }) => {
             <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
               Add New Site
             </p>
-            <div className="flex gap-[0.5vw]">
-              <input
-                type="text"
-                value={newSiteName}
-                onChange={(e) => setNewSiteName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-                placeholder="e.g. Unit 1, Unit 2, Unit 3…"
-                className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-              />
-              <button
-                type="button"
-                onClick={handleAdd}
-                disabled={!newSiteName.trim()}
-                className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
-              >
-                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add
-              </button>
-            </div>
+            {canWrite ? (
+              <div className="flex gap-[0.5vw]">
+                <input
+                  type="text"
+                  value={newSiteName}
+                  onChange={(e) => setNewSiteName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+                  placeholder="e.g. Unit 1, Unit 2, Unit 3…"
+                  className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  disabled={!newSiteName.trim()}
+                  className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
+                >
+                  <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add
+                </button>
+              </div>
+            ) : (
+              <div className="p-[1.5vw] text-center text-slate-400 text-[0.78vw] border border-dashed border-slate-300 rounded-[0.4vw] flex flex-col items-center justify-center gap-[0.3vw]">
+                <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.4vw] h-[1.4vw] text-slate-300" />
+                <span>Read-only access. You can view existing sites on the left.</span>
+              </div>
+            )}
           </div>
           {safeSites.length > 0 && (
             <div className="bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">

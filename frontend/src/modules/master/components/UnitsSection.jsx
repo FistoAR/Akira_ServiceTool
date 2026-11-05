@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -17,6 +18,7 @@ import {
 } from "./masterConstants";
 
 const UnitsSection = ({ units = [], setUnits }) => {
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("units");
   const safeUnits = Array.isArray(units) ? units : [];
   const { toast, confirm } = useNotification();
   const [newTypeName, setNewTypeName] = useState("");
@@ -153,24 +155,32 @@ const UnitsSection = ({ units = [], setUnits }) => {
                           {type.name}
                         </span>
                         
-                        <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditingType({ id: type.id, _id: type._id, name: type.name })
-                            }
-                            className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
-                          >
-                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(type.id, type._id)}
-                            className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
-                          >
-                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                        </div>
+                        {(canUpdate || canDelete) && (
+                          <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
+                            {canUpdate && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEditingType({ id: type.id, _id: type._id, name: type.name })
+                                }
+                                className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                                title="Edit Unit"
+                              >
+                                <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(type.id, type._id)}
+                                className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                                title="Delete Unit"
+                              >
+                                <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -184,24 +194,31 @@ const UnitsSection = ({ units = [], setUnits }) => {
             <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
               Add New Unit
             </p>
-            <div className="flex gap-[0.5vw]">
-              <input
-                type="text"
-                value={newTypeName}
-                onChange={(e) => setNewTypeName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-                placeholder="e.g. Nos, Kgs, Ltrs…"
-                className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-              />
-              <button
-                type="button"
-                onClick={handleAdd}
-                disabled={!newTypeName.trim()}
-                className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
-              >
-                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add
-              </button>
-            </div>
+            {canWrite ? (
+              <div className="flex gap-[0.5vw]">
+                <input
+                  type="text"
+                  value={newTypeName}
+                  onChange={(e) => setNewTypeName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+                  placeholder="e.g. Nos, Kgs, Ltrs…"
+                  className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  disabled={!newTypeName.trim()}
+                  className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
+                >
+                  <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add
+                </button>
+              </div>
+            ) : (
+              <div className="p-[1.5vw] text-center text-slate-400 text-[0.78vw] border border-dashed border-slate-300 rounded-[0.4vw] flex flex-col items-center justify-center gap-[0.3vw]">
+                <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.4vw] h-[1.4vw] text-slate-300" />
+                <span>Read-only access. You can view existing units on the left.</span>
+              </div>
+            )}
           </div>
           {safeUnits.length > 0 && (
             <div className="bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">

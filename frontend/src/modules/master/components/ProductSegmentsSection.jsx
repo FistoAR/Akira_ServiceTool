@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import useModulePermissions from "../../../components/useModulePermissions";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -18,6 +19,7 @@ import {
 } from "./masterConstants";
 
 const ProductSegmentsSection = ({ segments = [], setSegments }) => {
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("segments");
   const safeSegments = Array.isArray(segments) ? segments : [];
   const { toast, confirm } = useNotification();
   const [newSegmentName, setNewSegmentName] = useState("");
@@ -169,22 +171,30 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                           )}
                         </div>
                        
-                        <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() =>
-                              setEditingSegment({ id: seg.id, _id: seg._id, name: seg.name })
-                            }
-                            className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
-                          >
-                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(seg.id, seg._id)}
-                            className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
-                          >
-                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                        </div>
+                        {(canUpdate || canDelete) && (
+                          <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
+                            {canUpdate && (
+                              <button
+                                onClick={() =>
+                                  setEditingSegment({ id: seg.id, _id: seg._id, name: seg.name })
+                                }
+                                className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                                title="Edit Segment"
+                              >
+                                <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            )}
+                            {canDelete && (
+                              <button
+                                onClick={() => handleDelete(seg.id, seg._id)}
+                                className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                                title="Delete Segment"
+                              >
+                                <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -195,18 +205,25 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
         </div>
         <div>
           <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">Add New Segment</p>
-          <div className="flex gap-[0.5vw]">
-            <input
-              type="text"
-              value={newSegmentName}
-              onChange={(e) => setNewSegmentName(e.target.value)}
-              placeholder="e.g. Inverters, Stabilizers…"
-              className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 transition-all font-semibold"
-            />
-            <button onClick={handleAdd} disabled={!newSegmentName.trim()} className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white px-[1vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-bold">
-              <Plus className="w-[0.9vw] h-[0.9vw]" /> Add
-            </button>
-          </div>
+          {canWrite ? (
+            <div className="flex gap-[0.5vw]">
+              <input
+                type="text"
+                value={newSegmentName}
+                onChange={(e) => setNewSegmentName(e.target.value)}
+                placeholder="e.g. Inverters, Stabilizers…"
+                className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 transition-all font-semibold"
+              />
+              <button onClick={handleAdd} disabled={!newSegmentName.trim()} className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white px-[1vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-bold">
+                <Plus className="w-[0.9vw] h-[0.9vw]" /> Add
+              </button>
+            </div>
+          ) : (
+            <div className="p-[1.5vw] text-center text-slate-400 text-[0.78vw] border border-dashed border-slate-300 rounded-[0.4vw] flex flex-col items-center justify-center gap-[0.3vw]">
+              <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.4vw] h-[1.4vw] text-slate-300" />
+              <span>Read-only access. You can view existing segments on the left.</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
