@@ -354,8 +354,19 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       );
 
       const empRes = await axios.get(`${API_URL}/auth/employees`);
-      setEmployees(empRes.data);
-      sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
+      // Preserve existing profilePictures when updating employee list
+      setEmployees((prev) => {
+        const picMap = {};
+        (prev || []).forEach((e) => {
+          if (e.profilePicture) picMap[e.userId || e._id] = e.profilePicture;
+        });
+        const merged = empRes.data.map((e) => ({
+          ...e,
+          profilePicture: picMap[e.userId || e._id] || e.profilePicture || null,
+        }));
+        sessionStorage.setItem("all_employees", JSON.stringify(merged));
+        return merged;
+      });
 
       toast(`Permissions saved successfully for ${allowedTargets.length} employee(s)!`);
     } catch (err) {
