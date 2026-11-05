@@ -214,9 +214,7 @@ const LoginPage = () => {
                   />
                   <span className="ml-[0.5vw] text-[0.9vw] text-gray-700">Remember me</span>
                 </label>
-                <button type="button" className="text-[0.9vw] text-blue-600 hover:text-blue-800 transition-colors">
-                  Forgot password?
-                </button>
+                
               </div>
 
               {/* Updated Login Button with Spinner */}
