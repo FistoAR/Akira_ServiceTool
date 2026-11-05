@@ -70,10 +70,50 @@ const LoginPage = () => {
     }));
   };
 
+  const performLogin = async (username, pwd) => {
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        email: username,
+        emailOrUserId: username,
+        password: pwd
+      });
+
+      const matchedUser = response.data.user || response.data;
+      const userJson = JSON.stringify(matchedUser);
+
+      sessionStorage.setItem("loggedInUser", userJson);
+      window.dispatchEvent(new Event('auth-change'));
+
+      if (formData.rememberMe) {
+        localStorage.setItem("loggedInUser", userJson);
+        localStorage.setItem("rememberedUser", matchedUser.userId || matchedUser.email || username);
+      } else {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("rememberedUser");
+      }
+
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid User ID or Password. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleQuickLogin = (username, pwd) => {
+    setFormData((prev) => ({
+      ...prev,
+      emailOrUsername: username,
+      password: pwd,
+    }));
+    performLogin(username, pwd);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    
     const { emailOrUsername, password } = formData;
 
     if (!emailOrUsername.trim() || !password.trim()) {
@@ -81,38 +121,7 @@ const LoginPage = () => {
       return;
     }
 
-    setIsLoading(true); // Start loading
-
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        email: emailOrUsername,
-        emailOrUserId: emailOrUsername,
-        password: password
-      });
-
-      const matchedUser = response.data.user || response.data;
-      const userJson = JSON.stringify(matchedUser);
-      
-      // Always persist to current session
-      sessionStorage.setItem("loggedInUser", userJson);
-      window.dispatchEvent(new Event('auth-change'));
-
-      if (formData.rememberMe) {
-        // Persist across browser restarts in localStorage
-        localStorage.setItem("loggedInUser", userJson);
-        localStorage.setItem("rememberedUser", matchedUser.userId || matchedUser.email || emailOrUsername);
-      } else {
-        // Session only - clear any old persistent credentials
-        localStorage.removeItem("loggedInUser");
-        localStorage.removeItem("rememberedUser");
-      }
-      
-      navigate("/dashboard", { replace: true });
-    } catch (err) {
-      setError(err.response?.data?.message || "Invalid User ID or Password. Please try again.");
-    } finally {
-      setIsLoading(false); // Stop loading regardless of success or failure
-    }
+    performLogin(emailOrUsername, password);
   };
 
   return (
@@ -240,11 +249,50 @@ const LoginPage = () => {
               </p>
             </div>
 
-            {/* Demo Credentials Hint */}
-            <div className="mt-[1vw] p-[0.8vw] bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-[0.75vw] text-blue-700 font-semibold mb-[0.3vw]">Demo Credentials:</p>
-              <p className="text-[0.7vw] text-blue-600">Admin User ID: <span className="text-black font-bold"> ak12</span> &nbsp;|&nbsp; Password: <span className="text-black font-bold">123456</span></p>
-              <p className="text-[0.7vw] text-blue-600">User IDs: <span className="text-black font-bold"> AK1234</span> &nbsp;|&nbsp; Password: <span className="text-black font-bold">123456</span></p>
+            {/* Demo Credentials Hint with 1-Click Quick Use Buttons */}
+            <div className="mt-[1vw] p-[0.8vw] bg-blue-50/70 rounded-lg border border-blue-200 space-y-[0.5vw]">
+              <div className="flex items-center justify-between">
+                <p className="text-[0.75vw] text-blue-700 font-semibold">Demo Credentials:</p>
+                <span className="text-[0.65vw] text-blue-500 font-medium bg-blue-100/70 px-[0.4vw] py-[0.1vw] rounded">
+                  Quick Login
+                </span>
+              </div>
+
+              {/* Admin Quick Login Row */}
+              <div className="flex items-center justify-between bg-white px-[0.6vw] py-[0.4vw] rounded border border-blue-100 shadow-2xs">
+                <div className="text-[0.7vw] text-gray-700">
+                  <span className="font-semibold text-purple-700 bg-purple-50 px-[0.35vw] py-[0.05vw] rounded border border-purple-200 mr-[0.3vw]">
+                    Admin
+                  </span>
+                  ID: <span className="font-bold text-gray-900">ak12</span> &nbsp;|&nbsp; Pwd: <span className="font-bold text-gray-900">123456</span>
+                </div>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickLogin("ak12", "123456")}
+                  className="px-[0.65vw] py-[0.2vw] text-[0.7vw] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                >
+                  Use & Login
+                </button>
+              </div>
+
+              {/* User Quick Login Row */}
+              <div className="flex items-center justify-between bg-white px-[0.6vw] py-[0.4vw] rounded border border-blue-100 shadow-2xs">
+                <div className="text-[0.7vw] text-gray-700">
+                  <span className="font-semibold text-blue-700 bg-blue-50 px-[0.35vw] py-[0.05vw] rounded border border-blue-200 mr-[0.3vw]">
+                    User
+                  </span>
+                  ID: <span className="font-bold text-gray-900">AK1234</span> &nbsp;|&nbsp; Pwd: <span className="font-bold text-gray-900">123456</span>
+                </div>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleQuickLogin("AK1234", "123456")}
+                  className="px-[0.65vw] py-[0.2vw] text-[0.7vw] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                >
+                  Use & Login
+                </button>
+              </div>
             </div>
           </div>
         </div>
