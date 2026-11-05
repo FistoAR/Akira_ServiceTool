@@ -38,8 +38,20 @@ const CustomDropdown = ({
   maxHeight = "16vw",
   renderOption,
   renderValue,
+  isOpen: controlledIsOpen,
+  onOpenChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+  const setIsOpen = (nextState) => {
+    const resolved = typeof nextState === "function" ? nextState(isOpen) : nextState;
+    if (!isControlled) {
+      setInternalIsOpen(resolved);
+    }
+    onOpenChange?.(resolved);
+  };
+
   const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);

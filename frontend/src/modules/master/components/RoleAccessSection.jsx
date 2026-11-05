@@ -26,6 +26,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   const [accessMode, setAccessMode] = useState("custom"); // "preset" | "custom"
   const [matrix, setMatrix] = useState({});
   const [saving, setSaving] = useState(false);
+  const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
 
   // Confirmation Modal state
   const [confirmModal, setConfirmModal] = useState({
@@ -827,6 +828,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               multiple
               searchable
               clearable
+              isOpen={isEmployeeDropdownOpen}
+              onOpenChange={setIsEmployeeDropdownOpen}
               searchPlaceholder="Search name or ID..."
               placeholder={hasSelectedEmployee ? `${selectedUserIds.length} employee(s) selected` : `Select Employees (${filteredEmployees.length})`}
               options={filteredEmployees.map((emp) => {
@@ -880,12 +883,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               ))}
 
               {selectedEmployeesList.length > 2 && (
-                <span 
-                  className="text-[0.68vw] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-[0.4vw] py-[0.1vw] rounded-full flex-shrink-0"
-                  title={selectedEmployeesList.slice(2).map(e => e.name).join(", ")}
+                <button
+                  type="button"
+                  onClick={() => setIsEmployeeDropdownOpen(true)}
+                  className="text-[0.68vw] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded-full flex-shrink-0 cursor-pointer transition-colors"
+                  title="Click to view and edit all selected employees in dropdown"
                 >
                   +{selectedEmployeesList.length - 2} more
-                </span>
+                </button>
               )}
 
               <button
