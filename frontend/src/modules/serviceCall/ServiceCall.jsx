@@ -278,6 +278,7 @@ const emptyForm = () => ({
   contactNumber: "",
   emailId: "",
   location: "",
+  site: "",
   locationType: "IPR",
   products: [emptyProduct()],
   assignedEngineer: "",
@@ -623,6 +624,7 @@ const CallSummaryModal = ({ row, employees, onClose }) => {
     text += `${pad("Customer Phone")} ${row.contactNumber || "N/A"}\n`;
     text += `${pad("Customer Email")} ${row.emailId || "N/A"}\n`;
     text += `${pad("Customer Address")} ${row.location || "N/A"}\n`;
+    if (row.site) text += `${pad("Site")} ${row.site}\n`;
     text += `${pad("Status")} ${row.status || "N/A"}\n`;
     text += `${pad("Priority")} ${row.priority || "N/A"}\n`;
     text += `${pad("Call Mode")} ${row.mode || "N/A"}\n`;
@@ -1060,6 +1062,7 @@ const ServiceCallForm = ({
   customerDb,
   serviceCalls,
   partyTypes,
+  sites = [],
   segments,
   employees,
   modes,
@@ -1692,6 +1695,21 @@ const ServiceCallForm = ({
                 onChange={(e) => set("location", e.target.value)}
                 className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] outline-none"
               />
+            </div>
+            <div className="flex flex-col gap-[0.3vw]">
+              <label className="font-semibold text-gray-600">Site</label>
+              <select
+                value={formData.site || ""}
+                onChange={(e) => set("site", e.target.value)}
+                className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] bg-white outline-none"
+              >
+                <option value="">Select Site</option>
+                {sites.map((s) => (
+                  <option key={s.id || s._id || s.name} value={s.name}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
             </div>
             {formData.partyCode && (
               <div className="col-span-4 flex flex-col gap-[0.3vw]">
@@ -2672,6 +2690,7 @@ export default function ServiceCall() {
   const [serviceCalls, setServiceCalls] = useState([]);
   const [customerDb, setCustomerDb] = useState([]);
   const [partyTypes, setPartyTypes] = useState([]);
+  const [sites, setSites] = useState([]);
   const [segments, setSegments] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [modes, setModes] = useState([]);
@@ -2700,6 +2719,7 @@ export default function ServiceCall() {
           callsRes,
           custRes,
           ptRes,
+          sitesRes,
           empRes,
           modesRes,
           qRes,
@@ -2709,6 +2729,7 @@ export default function ServiceCall() {
           axios.get(`${API_URL}/service-calls`),
           axios.get(`${API_URL}/master/customers`),
           axios.get(`${API_URL}/master/party-types`),
+          axios.get(`${API_URL}/master/sites`),
           axios.get(`${API_URL}/auth/employees`),
           axios.get(`${API_URL}/master/settings/${MODES_KEY}`),
           axios.get(`${API_URL}/service-calls/pending`),
@@ -2718,6 +2739,7 @@ export default function ServiceCall() {
 
         setServiceCalls(callsRes.data);
         setCustomerDb(custRes.data);
+        setSites(sitesRes.data || []);
         setPartyTypes(
           ptRes.data.length
             ? ptRes.data.map((t) => ({ ...t, id: t._id || t.id }))
@@ -2875,6 +2897,7 @@ export default function ServiceCall() {
             locationType:
               formRow.locationType || existing.locationType || "IPR",
             location: formRow.location || existing.location || "",
+            site: formRow.site || existing.site || "",
             priority: formRow.priority || existing.priority,
           };
           lsSave(ESCALATION_KEY, existingQueue);
@@ -3086,6 +3109,7 @@ export default function ServiceCall() {
             customerDb={customerDb}
             serviceCalls={serviceCalls}
             partyTypes={partyTypes}
+            sites={sites}
             segments={segments}
             employees={employees}
             modes={modes}
@@ -3460,6 +3484,11 @@ export default function ServiceCall() {
                                         className={`text-[0.55vw] px-[0.3vw] py-[0.05vw] rounded font-bold border ${row.locationType === "Site" ? "bg-orange-50 text-orange-600 border-orange-200" : "bg-purple-50 text-purple-600 border-purple-200"}`}
                                       >
                                         {row.locationType || "IPR"}
+                                      </span>
+                                    )}
+                                    {row.site && (
+                                      <span className="text-[0.55vw] px-[0.3vw] py-[0.05vw] rounded font-bold border bg-blue-50 text-blue-600 border-blue-200">
+                                        {row.site}
                                       </span>
                                     )}
                                   </div>

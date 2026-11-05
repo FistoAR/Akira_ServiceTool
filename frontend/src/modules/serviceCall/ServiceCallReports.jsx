@@ -815,6 +815,11 @@ const ActionLogsView = ({
                                 <span className="px-[0.3vw] bg-purple-100 text-purple-700 text-[0.75vw] font-semibold rounded inline-block whitespace-nowrap">
                                   {group.call.locationType || "IPR"}
                                 </span>
+                                {group.call.site && (
+                                  <span className="px-[0.3vw] bg-blue-100 text-blue-700 text-[0.75vw] font-semibold rounded inline-block whitespace-nowrap">
+                                    {group.call.site}
+                                  </span>
+                                )}
                               </div>
                             </td>
                           </>

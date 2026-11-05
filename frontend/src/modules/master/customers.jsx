@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotification } from "../../components/NotificationContext";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const STORAGE_KEY = "customer_db_grouped_v5";
@@ -1189,16 +1190,16 @@ const CustomerDatabase = () => {
                 </div>
               )}
             </AnimatePresence>
-            <select
+            <CustomDropdown
+              options={[
+                { value: "All", label: "All Types" },
+                ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
+              ]}
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="bg-transparent font-medium text-gray-700 border border-gray-400 p-[0.4vw] rounded-[0.3vw] outline-none cursor-pointer h-[2.4vw]"
-            >
-              <option value="All">All Types</option>
-              {partyTypes.map((t) => (
-                <option key={t.id} value={t.name}>{t.name}</option>
-              ))}
-            </select>
+              onChange={(val) => setFilterType(val)}
+              className="w-[10vw]"
+              size="md"
+            />
             {!isSupervisor && (
               <>
                 <button
@@ -1419,15 +1420,13 @@ const CustomerDatabase = () => {
                     </div>
                     <div className="flex flex-col gap-[0.4vw]">
                       <label className="text-gray-600 font-medium">Party Type</label>
-                      <select
+                      <CustomDropdown
+                        options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={newEntry.partyType}
-                        onChange={(e) => setNewEntry({ ...newEntry, partyType: e.target.value })}
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white outline-none"
-                      >
-                        {partyTypes.map((t) => (
-                          <option key={t.id} value={t.name}>{t.name}</option>
-                        ))}
-                      </select>
+                        onChange={(val) => setNewEntry({ ...newEntry, partyType: val })}
+                        size="md"
+                        className="w-full"
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col gap-[0.4vw] mb-[0.8vw]">
@@ -1614,15 +1613,13 @@ const CustomerDatabase = () => {
                     </div>
                     <div className="flex flex-col gap-[0.4vw]">
                       <label className="text-gray-600 font-medium">Party Type</label>
-                      <select
+                      <CustomDropdown
+                        options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={editEntry.partyType}
-                        onChange={(e) => setEditEntry({ ...editEntry, partyType: e.target.value })}
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white outline-none"
-                      >
-                        {partyTypes.map((t) => (
-                          <option key={t.id} value={t.name}>{t.name}</option>
-                        ))}
-                      </select>
+                        onChange={(val) => setEditEntry({ ...editEntry, partyType: val })}
+                        size="md"
+                        className="w-full"
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col gap-[0.4vw] mb-[0.8vw]">

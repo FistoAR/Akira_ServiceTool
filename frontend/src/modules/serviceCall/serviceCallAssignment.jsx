@@ -63,6 +63,7 @@ const buildSegmentGroups = (calls) => {
         contactPerson: c.contactPerson || "",
         contactNumber: c.contactNumber || "",
         location: c.location || "",
+        site: c.site || "",
         priority: c.priority,
         dateTime: c.dateTime,
         timestamp: c.timestamp,
@@ -426,6 +427,11 @@ export default function ServiceCallAssignment() {
                             <div className="flex items-center gap-[0.4vw] mt-[0.1vw]">
                               <span className="text-[0.6vw] text-blue-700 font-semibold bg-blue-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-400">{g.partyCode}</span>
                               <span className="text-[0.65vw] text-black font-normal uppercase">{g.location}</span>
+                              {g.site && (
+                                <span className="text-[0.6vw] text-blue-700 font-semibold bg-blue-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-400">
+                                  {g.site}
+                                </span>
+                              )}
                             </div>
                           </td>
                           <td rowSpan={rowCount} className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}>
@@ -549,7 +555,7 @@ export default function ServiceCallAssignment() {
               <div className="p-[1.5vw] bg-slate-50 border-b border-blue-50 grid grid-cols-5 gap-[1.5vw]">
                 <div className="flex flex-col gap-[0.2vw]">
                   <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><MapPin className="w-[0.7vw] h-[0.7vw]" /> Location</span>
-                  <span className="text-[0.85vw] text-black font-semibold leading-tight">{selectedGroup.location}</span>
+                  <span className="text-[0.85vw] text-black font-semibold leading-tight">{selectedGroup.location}{selectedGroup.site ? ` (${selectedGroup.site})` : ""}</span>
                 </div>
                 <div className="flex flex-col gap-[0.2vw]">
                   <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><User className="w-[0.7vw] h-[0.7vw]" /> Contact Person</span>

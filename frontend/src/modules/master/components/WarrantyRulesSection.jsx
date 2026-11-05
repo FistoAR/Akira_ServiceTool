@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import CustomDropdown from "../../../components/CustomDropdown";
 import {
   Settings, Plus, X, Edit2, Trash2, Clock
 } from "lucide-react";
@@ -217,20 +218,21 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
             {/* 1. Product Segment Target */}
             <div className="space-y-[0.3vw] bg-slate-50 p-[0.6vw] rounded-[0.4vw] border border-slate-200">
               <label className="text-[0.8vw] font-bold text-slate-900">Product Segment *</label>
-              <select
+              <CustomDropdown
+                options={[
+                  { value: "Default", label: "Default (Fallback Rule)" },
+                  ...(segments || []).map((s) => ({ value: s.name, label: s.name })),
+                ]}
                 value={editingRule ? (editingRule.productSegment || editingRule.partyType) : newRule.productSegment}
-                onChange={(e) =>
+                onChange={(val) =>
                   editingRule
-                    ? setEditingRule({ ...editingRule, productSegment: e.target.value })
-                    : setNewRule({ ...newRule, productSegment: e.target.value })
+                    ? setEditingRule({ ...editingRule, productSegment: val })
+                    : setNewRule({ ...newRule, productSegment: val })
                 }
-                className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.85vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white text-slate-900 font-medium"
-              >
-                <option value="Default">Default (Fallback Rule)</option>
-                {(segments || []).map((s) => (
-                  <option key={s.id || s._id} value={s.name}>{s.name}</option>
-                ))}
-              </select>
+                searchable
+                size="md"
+                className="w-full"
+              />
             </div>
 
             {/* 2. Serial decoder configuration */}

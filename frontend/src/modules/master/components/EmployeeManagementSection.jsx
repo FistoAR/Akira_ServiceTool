@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import CustomDropdown from "../../../components/CustomDropdown";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -427,12 +428,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
                 <div className="space-y-[0.4vw]">
                   <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Users className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Gender *</label>
-                  <select required value={regData.gender} onChange={e => setRegData({...regData, gender: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw] bg-white">
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
+                  <CustomDropdown
+                    options={["Male", "Female", "Other"]}
+                    value={regData.gender}
+                    onChange={(val) => setRegData({ ...regData, gender: val })}
+                    placeholder="Select Gender"
+                    size="md"
+                    className="w-full"
+                  />
                 </div>
 
                 {/* Professional Details */}
@@ -443,12 +446,18 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                 <div className="space-y-[0.4vw]">
                   <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Briefcase className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Department *</label>
-                  <div className="flex gap-[0.4vw]">
-                    <select required value={regData.department} onChange={e => setRegData({...regData, department: e.target.value})} className="flex-1 border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw] bg-white">
-                      <option value="">Select Department</option>
-                      {departments.map(d => <option key={d} value={d}>{d}</option>)}
-                    </select>
-                    <button type="button" onClick={() => setShowDeptModal(true)} className="p-[0.6vw] bg-slate-100 hover:bg-slate-200 rounded-[0.4vw] transition-colors"><Settings className="w-[1vw] h-[1vw] text-slate-600" /></button>
+                  <div className="flex items-center gap-[0.4vw]">
+                    <div className="flex-1">
+                      <CustomDropdown
+                        searchable
+                        options={departments}
+                        value={regData.department}
+                        onChange={(val) => setRegData({ ...regData, department: val })}
+                        placeholder="Select Department"
+                        size="md"
+                      />
+                    </div>
+                    <button type="button" onClick={() => setShowDeptModal(true)} className="p-[0.55vw] bg-slate-100 hover:bg-slate-200 rounded-[0.4vw] transition-colors"><Settings className="w-[1vw] h-[1vw] text-slate-600" /></button>
                   </div>
                 </div>
                 <div className="space-y-[0.4vw]">
@@ -457,11 +466,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
                 <div className="space-y-[0.4vw]">
                   <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><ShieldCheck className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Role *</label>
-                  <select required value={regData.role} onChange={e => setRegData({...regData, role: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw] bg-white">
-                    <option value="User">User</option>
-                    <option value="Supervisor">Supervisor</option>
-                    {isCurrentRequesterAdmin && <option value="Admin">Admin</option>}
-                  </select>
+                  <CustomDropdown
+                    options={isCurrentRequesterAdmin ? ["User", "Supervisor", "Admin"] : ["User", "Supervisor"]}
+                    value={regData.role}
+                    onChange={(val) => setRegData({ ...regData, role: val })}
+                    placeholder="Select Role"
+                    size="md"
+                    className="w-full"
+                  />
                 </div>
                 <div className="space-y-[0.4vw]">
                   <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><IndianRupee className="w-[0.9vw] h-[0.9vw] text-slate-400" /> CTC (Monthly)</label>
@@ -478,11 +490,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
                 <div className="space-y-[0.4vw]">
                   <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Activity className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Working Status *</label>
-                  <select required value={regData.workingStatus} onChange={e => setRegData({...regData, workingStatus: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw] bg-white">
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                    <option value="On Leave">On Leave</option>
-                  </select>
+                  <CustomDropdown
+                    options={["Active", "Inactive", "On Leave"]}
+                    value={regData.workingStatus}
+                    onChange={(val) => setRegData({ ...regData, workingStatus: val })}
+                    placeholder="Select Working Status"
+                    size="md"
+                    className="w-full"
+                  />
                 </div>
 
                 {/* Profile Picture */}

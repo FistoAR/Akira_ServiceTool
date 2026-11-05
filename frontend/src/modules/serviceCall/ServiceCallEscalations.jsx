@@ -431,7 +431,7 @@ const ServiceCallEscalations = () => {
                       <div className="flex items-center gap-[1.5vw] text-[0.85vw] font-semibold text-slate-700 bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100">
                         <div className="flex items-center gap-[0.4vw]"><User className="w-[1vw] h-[1vw] text-slate-500" /> {call.customerName}</div>
                         <div className="flex items-center gap-[0.4vw]"><Phone className="w-[1vw] h-[1vw] text-slate-500" /> {call.contactNumber}</div>
-                        <div className="flex items-center gap-[0.4vw]"><MapPin className="w-[1vw] h-[1vw] text-slate-500" /> {call.location || call.locationType}</div>
+                        <div className="flex items-center gap-[0.4vw]"><MapPin className="w-[1vw] h-[1vw] text-slate-500" /> {call.location || call.locationType}{call.site ? ` (${call.site})` : ""}</div>
                       </div>
                       
                       <div className="mt-[0.5vw] text-[0.75vw] text-slate-700 w-full">

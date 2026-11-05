@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import CustomDropdown from "../../../components/CustomDropdown";
 import {
   Settings, Plus, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight,
   ArrowRight, AlertTriangle, Save, RotateCcw, Shield, Users, User,
@@ -346,23 +347,23 @@ const StepCard = ({
             L{index + 1}
           </span>
         </div>
-        <select
-          value={step.dept}
-          onChange={(e) => {
-            const newDept = e.target.value;
-            const newIds = employees
-              .filter(emp => (emp.department || "").trim().toLowerCase() === (newDept || "").trim().toLowerCase())
-              .map(emp => emp.userId);
-            onUpdate({ ...step, dept: newDept, engineerIds: newIds });
-          }}
-          className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.55vw] text-[0.85vw] font-bold text-slate-700 bg-white outline-none focus:border-blue-400 cursor-pointer shadow-sm hover:border-blue-300 transition-all"
-        >
-          {availableToSwitch.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
+        <div className="flex-1">
+          <CustomDropdown
+            options={availableToSwitch.map((d) => ({ value: d, label: d }))}
+            value={step.dept}
+            onChange={(newDept) => {
+              const newIds = employees
+                .filter(
+                  (emp) =>
+                    (emp.department || "").trim().toLowerCase() === (newDept || "").trim().toLowerCase()
+                )
+                .map((emp) => emp.userId);
+              onUpdate({ ...step, dept: newDept, engineerIds: newIds });
+            }}
+            size="md"
+            className="w-full font-bold text-slate-700"
+          />
+        </div>
         {hasWarning && (
           <span className="text-[0.62vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.4vw] py-[0.1vw] rounded-full flex items-center gap-[0.2vw] whitespace-nowrap">
             <AlertTriangle className="w-[0.65vw] h-[0.65vw]" /> 0 engineers

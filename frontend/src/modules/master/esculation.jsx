@@ -9,6 +9,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import useEscalationWorker from "../../service/useEscalationWorker";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -220,13 +221,23 @@ const AssignVisitModal = ({ type, entry, product, currentUser, onSave, onClose, 
       )}
       <div className="flex flex-col gap-[0.3vw]">
         <label className="text-[0.8vw] font-semibold text-gray-600">Assign To *</label>
-        <select value={form.assignedTo} onChange={e => {
-          const emp = techEngs.find(en => en.userId === e.target.value);
-          sf("assignedTo", e.target.value); sf("assignedToName", emp?.name || "");
-        }} className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.82vw] bg-white outline-none">
-          <option value="">-- Select person --</option>
-          {techEngs.map(e => <option key={e.userId} value={e.userId}>{e.name} ({e.department})</option>)}
-        </select>
+        <CustomDropdown
+          searchable
+          placeholder="-- Select person --"
+          options={techEngs.map((e) => ({
+            value: e.userId,
+            label: e.name,
+            description: `${e.userId} • ${e.department || ""}`,
+            image: e.profilePicture,
+          }))}
+          value={form.assignedTo}
+          onChange={(val, opt) => {
+            sf("assignedTo", val);
+            sf("assignedToName", opt?.label || "");
+          }}
+          size="md"
+          className="w-full"
+        />
       </div>
       <div className="grid grid-cols-2 gap-[0.8vw]">
         <div className="flex flex-col gap-[0.3vw]">
