@@ -1,4 +1,7 @@
 const User = require('./user.model');
+const ServiceCall = require('../serviceCall/serviceCall.model');
+const ServiceMaterial = require('../serviceMaterial/serviceMaterial.model');
+const ProductionMaterial = require('../production/productionMaterial.model');
 const jwt = require('jsonwebtoken');
 const sharp = require('sharp');
 const mongoose = require('mongoose');
@@ -190,6 +193,87 @@ const updateUser = async (id, userData, requestingUser = null) => {
   }
 };
 
+const deleteUser = async (id, requestingUser = null) => {
+  const user = await User.findById(id);
+  if (!user) {
+    const err = new Error('Employee not found');
+    err.statusCode = 404;
+    throw err;
+  }
+
+  // Security check: Protect Admin accounts
+  const isTargetAdmin = user.role === 'Admin' || user.department === 'Admin';
+  const isRequesterAdmin = requestingUser ? (requestingUser.role === 'Admin' || requestingUser.department === 'Admin') : true;
+
+  if (isTargetAdmin && !isRequesterAdmin) {
+    const err = new Error('Access Denied: Only an Administrator can delete an Admin account.');
+    err.statusCode = 403;
+    throw err;
+  }
+
+  const userId = user.userId;
+  const userName = user.name;
+
+  // Check occurrences across all modules:
+  // 1. Service Call
+  const serviceCallCount = await ServiceCall.countDocuments({
+    $or: [
+      { currentEngineerId: userId },
+      { 'products._assignedEngineerId': userId },
+      { 'products._supportPersonId': userId },
+      { 'products._history.updatedBy': userId },
+      { 'products._fieldVisit.assignedTo': userId },
+      { 'products._fieldVisit.assignedBy': userId },
+    ],
+  });
+
+  // 2. Service Material
+  const serviceMaterialCount = await ServiceMaterial.countDocuments({
+    $or: [
+      { assignedTo: userId },
+      { 'products.assignedTo': userId },
+      { 'products.report.testedBy': userId },
+      { 'products.report.testedBy': userName },
+    ],
+  });
+
+  // 3. Production Material
+  const productionCount = await ProductionMaterial.countDocuments({
+    $or: [
+      { creatorUserId: userId },
+      { 'products.assignedTo': userId },
+      { 'products.inspectedBy': userId },
+      { 'products.report.assembledBy': userId },
+      { 'products.report.testedBy': userId },
+      { 'products.report.fiBy': userId },
+      { 'products.report.verifiedBy': userId },
+    ],
+  });
+
+  const totalRecordCount = serviceCallCount + serviceMaterialCount + productionCount;
+
+  if (totalRecordCount > 0) {
+    return {
+      canDelete: false,
+      recordsExist: true,
+      serviceCallCount,
+      serviceMaterialCount,
+      productionCount,
+      totalRecordCount,
+      message: `Records exist for this employee (${totalRecordCount} total across Service Call, Material, or Production). You can only set this employee as Inactive.`,
+    };
+  }
+
+  // No operational records exist -> Safe to permanently delete
+  await User.findByIdAndDelete(id);
+
+  return {
+    canDelete: true,
+    deleted: true,
+    message: 'Employee deleted successfully.',
+  };
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -197,5 +281,6 @@ module.exports = {
   getEmployeePictures,
   getEmployeePictureById,
   updateUser,
+  deleteUser,
   compressProfilePicture,
 };

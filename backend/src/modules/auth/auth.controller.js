@@ -59,6 +59,15 @@ const updateEmployee = async (req, res) => {
   }
 };
 
+const deleteEmployee = async (req, res) => {
+  try {
+    const result = await authService.deleteUser(req.params.id, req.user);
+    res.json(result);
+  } catch (error) {
+    res.status(error.statusCode || 400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -66,4 +75,5 @@ module.exports = {
   getEmployeePictures,
   getEmployeePictureById,
   updateEmployee,
+  deleteEmployee,
 };

@@ -17,5 +17,6 @@ router.get('/employees', authController.getEmployees);
 router.get('/employee-pictures', authController.getEmployeePictures);
 router.get('/employee-picture/:id', authController.getEmployeePictureById);
 router.put('/employees/:id', optionalProtect, authController.updateEmployee);
+router.delete('/employees/:id', optionalProtect, authController.deleteEmployee);
 
 module.exports = router;

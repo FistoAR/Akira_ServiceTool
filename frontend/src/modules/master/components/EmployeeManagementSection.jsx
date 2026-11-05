@@ -102,7 +102,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 };
 
 const EmployeeManagementSection = ({ employees, setEmployees, departments, setDepartments }) => {
-  const { canWrite, canUpdate } = useModulePermissions("employees");
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("employees");
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
   const ITEMS_PER_PAGE = 10;
@@ -111,7 +111,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
   const [showDeptModal, setShowDeptModal] = useState(false);
   const [editingEmp, setEditingEmp] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const { toast } = useNotification();
+  const { toast, confirm } = useNotification();
 
   const currentLoggedInUser = useMemo(() => {
     try {
@@ -249,6 +249,75 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
     }
   };
 
+  // Handle Employee Deletion
+  const handleDeleteEmployee = async (emp) => {
+    const isTargetAdmin = emp.role === "Admin" || emp.department === "Admin";
+    if (isTargetAdmin && !isCurrentRequesterAdmin) {
+      toast("Access Denied: Only an Administrator can delete an Admin account.", "error");
+      return;
+    }
+
+    const confirmed = await confirm({
+      title: "Delete Employee",
+      message: `Are you sure you want to delete employee "${emp.name} (${emp.userId})"?`,
+      type: "danger",
+      confirmText: "Yes, Delete",
+      cancelText: "Cancel",
+    });
+
+    if (!confirmed) return;
+
+    try {
+      const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      const res = await axios.delete(`${API_URL}/auth/employees/${emp._id || emp.id}`, { headers });
+
+      if (res.data?.recordsExist) {
+        // Records exist -> User cannot be deleted, offer Inactive option in confirmation dialog
+        const setInactiveOk = await confirm({
+          title: "Records Exist for Employee",
+          message: (
+            <div className="space-y-[0.5vw]">
+              <p className="text-[0.82vw] text-slate-800">
+                Records exist for <span className="font-bold">{emp.name}</span> in the system ({res.data.totalRecordCount} total across Service Call, Material, or Production).
+              </p>
+              <div className="p-[0.6vw] bg-amber-50 border border-amber-200 rounded-[0.4vw] text-[0.76vw] text-amber-900">
+                <span className="font-semibold block mb-[0.2vw]">Cannot permanently delete operational history.</span>
+                Would you like to set their status to <span className="font-bold underline text-amber-950">Inactive</span> instead to disable access while preserving records?
+              </div>
+            </div>
+          ),
+          type: "warning",
+          confirmText: "Set Inactive",
+          cancelText: "Cancel",
+        });
+
+        if (setInactiveOk) {
+          await axios.put(
+            `${API_URL}/auth/employees/${emp._id || emp.id}`,
+            { workingStatus: "Inactive" },
+            { headers }
+          );
+
+          // Refresh employee list
+          const empRes = await axios.get(`${API_URL}/auth/employees`);
+          setEmployees(empRes.data);
+          toast(`Employee "${emp.name}" status updated to Inactive.`);
+        }
+        return;
+      }
+
+      // Safe deletion confirmed
+      const empRes = await axios.get(`${API_URL}/auth/employees`);
+      setEmployees(empRes.data);
+      toast("Employee deleted successfully.");
+    } catch (err) {
+      console.error(err);
+      toast(err.response?.data?.message || "Failed to delete employee", "error");
+    }
+  };
+
   const filtered = (employees || []).filter(e => 
     e && (
       e.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -358,16 +427,30 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
                       <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
                     </span>
-                  ) : canUpdate ? (
-                    <button 
-                      onClick={() => openRegModal(emp)}
-                      className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-blue-600 cursor-pointer"
-                      title="Edit Employee Details"
-                    >
-                      <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
-                    </button>
                   ) : (
-                    <span className="text-[0.68vw] text-slate-400 italic">View only</span>
+                    <div className="flex items-center justify-end gap-[0.3vw]">
+                      {canUpdate && (
+                        <button 
+                          onClick={() => openRegModal(emp)}
+                          className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-blue-600 cursor-pointer"
+                          title="Edit Employee Details"
+                        >
+                          <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button 
+                          onClick={() => handleDeleteEmployee(emp)}
+                          className="p-[0.4vw] hover:bg-red-50 rounded-full transition-colors text-slate-400 hover:text-red-600 cursor-pointer"
+                          title="Delete Employee"
+                        >
+                          <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
+                        </button>
+                      )}
+                      {!canUpdate && !canDelete && (
+                        <span className="text-[0.68vw] text-slate-400 italic">View only</span>
+                      )}
+                    </div>
                   )}
                 </td>
               </tr>
