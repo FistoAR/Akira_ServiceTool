@@ -298,6 +298,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
       const empRes = await axios.get(`${API_URL}/auth/employees`);
       setEmployees(empRes.data);
+      sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
 
       toast(`Permissions saved successfully for ${allowedTargets.length} employee(s)!`);
     } catch (err) {
