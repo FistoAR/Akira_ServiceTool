@@ -49,7 +49,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch groups and modules config
+  // Fetch groups and modules config & profile pictures for avatars
   useEffect(() => {
     axios
       .get(`${API_URL}/master/modules`)
@@ -64,6 +64,27 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       .finally(() => {
         setLoadingConfig(false);
       });
+
+    // Hydrate pictures if not present on employees
+    if (setEmployees) {
+      axios
+        .get(`${API_URL}/auth/employee-pictures`)
+        .then((picRes) => {
+          if (Array.isArray(picRes.data) && picRes.data.length > 0) {
+            setEmployees((prev) =>
+              prev.map((e) => {
+                const found = picRes.data.find(
+                  (p) => (p._id && p._id === e._id) || (p.userId && p.userId === e.userId)
+                );
+                return found && found.profilePicture
+                  ? { ...e, profilePicture: found.profilePicture }
+                  : e;
+              })
+            );
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   // Unique departments
@@ -495,7 +516,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               value={selectedRoleFilter}
               onChange={(e) => {
                 setSelectedRoleFilter(e.target.value);
-                setSelectedUserIds([]);
               }}
               className="border border-gray-300 rounded-[0.35vw] px-[0.65vw] py-[0.32vw] text-[0.76vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer shadow-none"
             >
@@ -513,7 +533,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               value={selectedDepartment}
               onChange={(e) => {
                 setSelectedDepartment(e.target.value);
-                setSelectedUserIds([]);
               }}
               className="border border-gray-300 rounded-[0.35vw] px-[0.65vw] py-[0.32vw] text-[0.76vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer shadow-none"
             >
@@ -588,23 +607,30 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       <div
                         key={emp._id || emp.id}
                         onClick={() => toggleSelectUser(emp.userId)}
-                        className={`flex items-center justify-between px-[0.7vw] py-[0.5vw] rounded-[0.4vw] text-[0.85vw] cursor-pointer hover:bg-gray-50 transition-colors ${
+                        className={`flex items-center justify-between px-[0.6vw] py-[0.4vw] rounded-[0.35vw] text-[0.8vw] cursor-pointer hover:bg-gray-50 transition-colors ${
                           isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-700 font-normal"
                         }`}
                       >
-                        <div className="flex items-center gap-[0.6vw] truncate">
+                        <div className="flex items-center gap-[0.5vw] truncate">
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => {}}
-                            className="w-[1vw] h-[1vw] rounded border-gray-300 text-blue-600 cursor-pointer pointer-events-none"
+                            className="w-[0.9vw] h-[0.9vw] rounded border-gray-300 text-blue-600 cursor-pointer pointer-events-none"
                           />
+                          <div className="w-[1.4vw] h-[1.4vw] rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0 flex items-center justify-center text-[0.65vw] font-bold text-slate-600">
+                            {emp.profilePicture ? (
+                              <img src={emp.profilePicture} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                              (emp.name || "U").charAt(0).toUpperCase()
+                            )}
+                          </div>
                           <span className="truncate">
-                            {emp.name} <span className="text-gray-400 text-[0.75vw]">({emp.userId})</span>
+                            {emp.name} <span className="text-gray-400 text-[0.72vw]">({emp.userId})</span>
                           </span>
                         </div>
                         {isAdmin && (
-                          <span className="text-[0.7vw] text-purple-700 bg-purple-50 border border-purple-200 px-[0.4vw] py-[0.1vw] rounded font-medium">
+                          <span className="text-[0.65vw] text-purple-700 bg-purple-50 border border-purple-200 px-[0.35vw] py-[0.08vw] rounded font-medium">
                             Admin
                           </span>
                         )}
@@ -654,6 +680,48 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           )}
         </button>
       </div>
+
+      {/* Selected Employee Badges (Visible outside dropdown) */}
+      {selectedEmployeesList.length > 0 && (
+        <div className="bg-slate-50/80 border-b border-gray-200 px-[1vw] py-[0.35vw] flex items-center gap-[0.4vw] flex-wrap">
+          <span className="text-[0.7vw] font-bold text-gray-500 uppercase tracking-wider mr-[0.2vw]">
+            Selected ({selectedEmployeesList.length}):
+          </span>
+          <div className="flex items-center gap-[0.35vw] flex-wrap max-h-[5.5vw] overflow-y-auto">
+            {selectedEmployeesList.map((emp) => (
+              <div
+                key={emp.userId}
+                className="inline-flex items-center gap-[0.3vw] bg-white border border-blue-200 text-blue-900 rounded-full pl-[0.18vw] pr-[0.45vw] py-[0.12vw] shadow-2xs hover:border-blue-400 transition-colors"
+              >
+                <div className="w-[1.2vw] h-[1.2vw] rounded-full overflow-hidden bg-blue-100 flex-shrink-0 flex items-center justify-center text-[0.6vw] font-bold text-blue-700">
+                  {emp.profilePicture ? (
+                    <img src={emp.profilePicture} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    (emp.name || "U").charAt(0).toUpperCase()
+                  )}
+                </div>
+                <span className="text-[0.72vw] font-semibold">{emp.name}</span>
+                <span className="text-[0.65vw] text-gray-400">({emp.userId})</span>
+                <button
+                  type="button"
+                  onClick={() => toggleSelectUser(emp.userId)}
+                  className="text-gray-400 hover:text-red-600 rounded-full p-[0.05vw] transition-colors cursor-pointer ml-[0.1vw]"
+                  title="Remove"
+                >
+                  <Icon icon="solar:close-circle-bold" className="w-[0.8vw] h-[0.8vw]" />
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={handleClearSelection}
+              className="text-[0.68vw] text-gray-500 hover:text-red-600 underline font-medium px-[0.3vw] cursor-pointer"
+            >
+              Clear all
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Pane Split */}
       <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(94vh - 140px)" }}>
