@@ -126,7 +126,7 @@ export default function Sidebar() {
       path: "/serviceCallResponse",
       label: "Service Call (Workspace)",
       iconify: "solar:user-speak-rounded-bold-duotone",
-      show: isAdmin || hasAccess("serviceCallResponse"),
+      show: !!loggedInUser?.permissions?.serviceCallResponse?.enabled,
     },
     {
       path: "/serviceMaterial",
@@ -142,7 +142,7 @@ export default function Sidebar() {
       path: "/serviceMaterialResponse",
       label: "Service Material (Workspace)",
       iconify: "solar:settings-minimalistic-bold-duotone",
-      show: isAdmin || hasAccess("serviceMaterialResponse"),
+      show: !!loggedInUser?.permissions?.serviceMaterialResponse?.enabled,
     },
     {
       path: "/productionMaterial",
@@ -158,7 +158,7 @@ export default function Sidebar() {
       path: "/productionMaterialResponse",
       label: "Production Material (Workspace)",
       iconify: "solar:box-minimalistic-bold-duotone",
-      show: isAdmin || hasAccess("productionMaterialResponse"),
+      show: !!loggedInUser?.permissions?.productionMaterialResponse?.enabled,
     },
     {
       path: "/troubleshoot",

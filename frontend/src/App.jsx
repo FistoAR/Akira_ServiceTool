@@ -130,7 +130,7 @@ function MainLayout() {
           <Route
             path="serviceCallResponse"
             element={
-              <ProtectedRoute requiredModules={["callReg", "callAssign", "callEscalation", "callReports"]}>
+              <ProtectedRoute requiredModules={["serviceCallResponse"]}>
                 <ServiceCallResponse />
               </ProtectedRoute>
             }
@@ -162,7 +162,7 @@ function MainLayout() {
           <Route
             path="serviceMaterialResponse"
             element={
-              <ProtectedRoute requiredModules={["serviceMaterialResponse", "matInward", "matReports"]}>
+              <ProtectedRoute requiredModules={["serviceMaterialResponse"]}>
                 <ServiceMaterialResponse />
               </ProtectedRoute>
             }
@@ -194,7 +194,7 @@ function MainLayout() {
           <Route
             path="productionMaterialResponse"
             element={
-              <ProtectedRoute requiredModules={["productionMaterialResponse", "prodNC", "prodReports"]}>
+              <ProtectedRoute requiredModules={["productionMaterialResponse"]}>
                 <ProductionMaterialResponse />
               </ProtectedRoute>
             }
