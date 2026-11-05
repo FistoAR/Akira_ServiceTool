@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { useNotification } from "../../../components/NotificationContext";
+import CustomDropdown from "../../../components/CustomDropdown";
 import {
   Users, User, Search, Save, Lock, Loader2, ChevronDown, Check, X,
   AlertCircle
@@ -15,9 +16,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   // Multi-select state for employees (Array of userIds)
   const [selectedUserIds, setSelectedUserIds] = useState([]);
-  const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
-  const [employeeSearchInput, setEmployeeSearchInput] = useState("");
-  const dropdownRef = useRef(null);
 
   const [activeGroup, setActiveGroup] = useState("all");
   const [accessMode, setAccessMode] = useState("custom"); // "preset" | "custom"
@@ -38,17 +36,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   }, []);
 
   const isCurrentRequesterAdmin = currentLoggedInUser?.role === "Admin" || currentLoggedInUser?.department === "Admin";
-
-  // Close multi-select dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsEmployeeDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Fetch groups and modules config & profile pictures for avatars
   useEffect(() => {
@@ -106,15 +93,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       return matchDept && matchRole;
     });
   }, [employees, selectedDepartment, selectedRoleFilter]);
-
-  // Dropdown list further filtered by employee search text
-  const dropdownEmployees = useMemo(() => {
-    if (!employeeSearchInput.trim()) return filteredEmployees;
-    const query = employeeSearchInput.toLowerCase().trim();
-    return filteredEmployees.filter((emp) =>
-      emp.name?.toLowerCase().includes(query) || emp.userId?.toLowerCase().includes(query)
-    );
-  }, [filteredEmployees, employeeSearchInput]);
 
   // Selected employee objects
   const selectedEmployeesList = useMemo(() => {
@@ -663,141 +641,65 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           {/* Role Filter */}
           <div className="flex items-center gap-[0.4vw]">
             <label className="text-[0.78vw] font-medium text-gray-600">Role:</label>
-            <select
+            <CustomDropdown
+              options={[
+                { value: "All", label: "All Roles" },
+                { value: "Admin", label: "Admin" },
+                { value: "Supervisor", label: "Supervisor" },
+                { value: "User", label: "User / Employee" },
+              ]}
               value={selectedRoleFilter}
-              onChange={(e) => {
-                setSelectedRoleFilter(e.target.value);
-              }}
-              className="border border-gray-300 rounded-[0.35vw] px-[0.65vw] py-[0.32vw] text-[0.76vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer shadow-none"
-            >
-              <option value="All">All Roles</option>
-              <option value="Admin">Admin</option>
-              <option value="Supervisor">Supervisor</option>
-              <option value="User">User / Employee</option>
-            </select>
+              onChange={(val) => setSelectedRoleFilter(val)}
+              className="w-[8.5vw]"
+              size="sm"
+            />
           </div>
 
           {/* Department Filter */}
           <div className="flex items-center gap-[0.4vw]">
             <label className="text-[0.78vw] font-medium text-gray-600">Dept:</label>
-            <select
+            <CustomDropdown
+              options={[
+                { value: "All", label: "All Departments" },
+                ...uniqueDepartments.map((d) => ({ value: d, label: d })),
+              ]}
               value={selectedDepartment}
-              onChange={(e) => {
-                setSelectedDepartment(e.target.value);
-              }}
-              className="border border-gray-300 rounded-[0.35vw] px-[0.65vw] py-[0.32vw] text-[0.76vw] font-normal bg-white text-gray-800 outline-none focus:border-blue-500 cursor-pointer shadow-none"
-            >
-              <option value="All">All Departments</option>
-              {uniqueDepartments.map((d, i) => (
-                <option key={i} value={d}>{d}</option>
-              ))}
-            </select>
+              onChange={(val) => setSelectedDepartment(val)}
+              className="w-[10vw]"
+              size="sm"
+            />
           </div>
 
-          {/* Select Employees Dropdown (Searchable Multi-select) */}
-          <div className="relative" ref={dropdownRef}>
-            <div className="flex items-center gap-[0.4vw]">
-              <label className="text-[0.78vw] font-medium text-gray-600">Employees:</label>
-              <button
-                type="button"
-                onClick={() => setIsEmployeeDropdownOpen(!isEmployeeDropdownOpen)}
-                className={`border rounded-[0.35vw] px-[0.75vw] py-[0.32vw] text-[0.76vw] bg-white outline-none flex items-center justify-between gap-[0.6vw] min-w-[14vw] text-left cursor-pointer transition-all ${
-                  !hasSelectedEmployee
-                    ? "border-amber-400 bg-amber-50/20 text-gray-700 ring-2 ring-amber-300/40 hover:border-amber-500"
-                    : "border-gray-300 text-gray-800 hover:border-gray-400"
-                }`}
-              >
-                <span className="truncate font-medium">
-                  {selectedUserIds.length === 0
-                    ? `Select Employee... (${filteredEmployees.length} available)`
-                    : `${selectedUserIds.length} employee${selectedUserIds.length > 1 ? "s" : ""} selected`}
-                </span>
-                <Icon icon="solar:alt-arrow-down-linear" className="w-[0.9vw] h-[0.9vw] text-gray-500 flex-shrink-0" />
-              </button>
-            </div>
-
-            {/* Dropdown Menu */}
-            {isEmployeeDropdownOpen && (
-              <div className="absolute left-[5.5vw] top-full mt-[0.3vw] w-[20vw] bg-white border border-gray-200 rounded-[0.5vw] shadow-2xl z-50 p-[0.7vw] space-y-[0.5vw]">
-                {/* Search Box */}
-                <div className="relative">
-                  <Icon icon="solar:magnifer-linear" className="w-[1vw] h-[1vw] text-gray-400 absolute left-[0.7vw] top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    placeholder="Search by name or ID..."
-                    value={employeeSearchInput}
-                    onChange={(e) => setEmployeeSearchInput(e.target.value)}
-                    className="w-full pl-[2.2vw] pr-[0.8vw] py-[0.4vw] text-[0.85vw] font-normal border border-gray-300 rounded-[0.4vw] outline-none focus:border-blue-500"
-                    autoFocus
-                  />
-                </div>
-
-                {/* Quick Selection Actions */}
-                <div className="flex items-center justify-between pt-[0.2vw] border-b border-gray-100 pb-[0.4vw] text-[0.78vw]">
-                  <button
-                    type="button"
-                    onClick={handleSelectAllFiltered}
-                    className="text-blue-600 hover:underline font-medium cursor-pointer"
-                  >
-                    {allFilteredAreSelected ? "Deselect All" : "Select All Filtered"}
-                  </button>
-                  {selectedUserIds.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleClearSelection}
-                      className="text-gray-500 hover:text-red-600 font-normal cursor-pointer"
-                    >
-                      Clear Selection
-                    </button>
-                  )}
-                </div>
-
-                {/* Employee List */}
-                <div className="max-h-[16vw] overflow-y-auto space-y-[0.3vw]">
-                  {dropdownEmployees.map((emp) => {
-                    const isSelected = selectedUserIds.includes(emp.userId);
-                    const isAdmin = emp.role === "Admin" || emp.department === "Admin";
-
-                    return (
-                      <div
-                        key={emp._id || emp.id}
-                        onClick={() => toggleSelectUser(emp.userId)}
-                        className={`flex items-center justify-between px-[0.6vw] py-[0.4vw] rounded-[0.35vw] text-[0.8vw] cursor-pointer hover:bg-gray-50 transition-colors ${
-                          isSelected ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-700 font-normal"
-                        }`}
-                      >
-                        <div className="flex items-center gap-[0.5vw] truncate">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => {}}
-                            className="w-[0.9vw] h-[0.9vw] rounded border-gray-300 text-blue-600 cursor-pointer pointer-events-none"
-                          />
-                          <div className="w-[1.4vw] h-[1.4vw] rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex-shrink-0 flex items-center justify-center text-[0.65vw] font-bold text-slate-600">
-                            {emp.profilePicture ? (
-                              <img src={emp.profilePicture} alt="" className="w-full h-full object-cover" />
-                            ) : (
-                              (emp.name || "U").charAt(0).toUpperCase()
-                            )}
-                          </div>
-                          <span className="truncate">
-                            {emp.name} <span className="text-gray-400 text-[0.72vw]">({emp.userId})</span>
-                          </span>
-                        </div>
-                        {isAdmin && (
-                          <span className="text-[0.65vw] text-purple-700 bg-purple-50 border border-purple-200 px-[0.35vw] py-[0.08vw] rounded font-medium">
-                            Admin
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                  {dropdownEmployees.length === 0 && (
-                    <p className="text-center text-[0.85vw] text-gray-400 py-[0.8vw] font-normal">No matching employees</p>
-                  )}
-                </div>
-              </div>
-            )}
+          {/* Select Employees Dropdown (Custom Searchable Multi-select) */}
+          <div className="flex items-center gap-[0.4vw]">
+            <label className="text-[0.78vw] font-medium text-gray-600">Employees:</label>
+            <CustomDropdown
+              multiple
+              searchable
+              clearable
+              searchPlaceholder="Search by name or ID..."
+              placeholder={`Select Employee... (${filteredEmployees.length} available)`}
+              options={filteredEmployees.map((emp) => {
+                const isAdmin = emp.role === "Admin" || emp.department === "Admin";
+                return {
+                  value: emp.userId,
+                  label: emp.name,
+                  description: emp.userId,
+                  image: emp.profilePicture,
+                  badge: isAdmin ? "Admin" : null,
+                  badgeColor: "bg-purple-50 text-purple-700 border border-purple-200",
+                };
+              })}
+              value={selectedUserIds}
+              onChange={(ids) => setSelectedUserIds(ids)}
+              className="min-w-[15.5vw]"
+              size="sm"
+              triggerClassName={
+                !hasSelectedEmployee
+                  ? "border-amber-400 bg-amber-50/20 text-gray-700 ring-2 ring-amber-300/40 hover:border-amber-500 font-medium"
+                  : "border-gray-300 text-gray-800 hover:border-gray-400 font-medium"
+              }
+            />
           </div>
 
           {/* Discrepancy Indicator */}
@@ -925,14 +827,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <p className="text-[0.78vw] text-gray-500 max-w-[28vw] mt-[0.35vw] leading-relaxed">
               Please choose at least one employee from the <span className="font-semibold text-gray-700">"Employees"</span> dropdown above to {accessMode === "preset" ? "apply role presets" : "view, configure, and customize module permissions"}.
             </p>
-            <button
-              type="button"
-              onClick={() => setIsEmployeeDropdownOpen(true)}
-              className="mt-[1vw] inline-flex items-center gap-[0.4vw] px-[1vw] py-[0.42vw] text-[0.76vw] font-semibold text-blue-600 bg-white border border-blue-300 rounded-[0.4vw] hover:bg-blue-50 shadow-2xs transition-all cursor-pointer"
-            >
-              <Icon icon="solar:users-group-rounded-bold-duotone" className="w-[1vw] h-[1vw]" />
-              Open Employee List
-            </button>
           </div>
         ) : accessMode === "preset" ? (
           /* ── Role Preset Mode View (Clean, Minimal, Space-Filling Grid) ── */

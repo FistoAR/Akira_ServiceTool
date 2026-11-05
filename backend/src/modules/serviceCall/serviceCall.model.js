@@ -63,6 +63,7 @@ const serviceCallSchema = new mongoose.Schema({
   contactPerson: String,
   contactNumber: String,
   location: String,
+  site: String,
   priority: { type: String, enum: ['Low', 'Medium', 'High', 'Critical'], default: 'Medium' },
   status: { type: String, default: 'Registered', enum: ['Registered', 'Assigned', 'Open', 'Pending', 'Resolved', 'Critical', 'Escalated'] },
   dateTime: { type: Date, default: Date.now },
