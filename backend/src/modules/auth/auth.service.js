@@ -30,6 +30,75 @@ const compressProfilePicture = async (dataUrl) => {
   }
 };
 
+// Helper to generate default role preset permissions matrix upon user creation
+const getDefaultPermissionsForRole = (role) => {
+  const allModuleIds = [
+    'dashboardAdmin', 'dashboardUser',
+    'partyTypes', 'warrantyRules', 'segments', 'fourM', 'units', 'sites', 'employees', 'roleAccess', 'escalation',
+    'customers',
+    'callReg', 'callAssign', 'callEscalation', 'callReports', 'serviceCallResponse',
+    'matInward', 'matReports', 'serviceMaterialResponse',
+    'prodNC', 'prodReports', 'productionMaterialResponse',
+    'troubleshoot'
+  ];
+
+  const defaultMatrix = {};
+  const normalizedRole = (role || 'User').trim();
+
+  allModuleIds.forEach((modId) => {
+    if (normalizedRole === 'Admin') {
+      if (modId === 'dashboardAdmin') {
+        defaultMatrix[modId] = { enabled: true, read: true, write: false, update: false, delete: false };
+      } else if (modId === 'dashboardUser') {
+        defaultMatrix[modId] = { enabled: false, read: false, write: false, update: false, delete: false };
+      } else {
+        defaultMatrix[modId] = { enabled: true, read: true, write: true, update: true, delete: true };
+      }
+    } else if (normalizedRole === 'Supervisor') {
+      if (modId === 'dashboardUser') {
+        defaultMatrix[modId] = { enabled: true, read: true, write: false, update: false, delete: false };
+      } else if (modId === 'dashboardAdmin') {
+        defaultMatrix[modId] = { enabled: false, read: false, write: false, update: false, delete: false };
+      } else if (
+        modId === 'serviceCallResponse' ||
+        modId === 'serviceMaterialResponse' ||
+        modId === 'productionMaterialResponse' ||
+        modId === 'troubleshoot' ||
+        modId === 'prodNC' ||
+        modId === 'prodReports'
+      ) {
+        defaultMatrix[modId] = { enabled: true, read: true, write: true, update: true, delete: false };
+      } else {
+        defaultMatrix[modId] = { enabled: false, read: false, write: false, update: false, delete: false };
+      }
+    } else {
+      // Role: User / Field / Workshop
+      if (modId === 'dashboardUser') {
+        defaultMatrix[modId] = { enabled: true, read: true, write: false, update: false, delete: false };
+      } else if (modId === 'dashboardAdmin') {
+        defaultMatrix[modId] = { enabled: false, read: false, write: false, update: false, delete: false };
+      } else if (
+        modId === 'serviceCallResponse' ||
+        modId === 'serviceMaterialResponse' ||
+        modId === 'productionMaterialResponse' ||
+        modId === 'troubleshoot'
+      ) {
+        defaultMatrix[modId] = { enabled: true, read: true, write: true, update: true, delete: false };
+      } else if (
+        modId === 'callReports' ||
+        modId === 'matReports' ||
+        modId === 'prodReports'
+      ) {
+        defaultMatrix[modId] = { enabled: true, read: true, write: false, update: false, delete: false };
+      } else {
+        defaultMatrix[modId] = { enabled: false, read: false, write: false, update: false, delete: false };
+      }
+    }
+  });
+
+  return defaultMatrix;
+};
+
 const registerUser = async (userData) => {
   const userExists = await User.findOne({ $or: [{ email: userData.email }, { userId: userData.userId }] });
 
@@ -40,6 +109,11 @@ const registerUser = async (userData) => {
   const payload = { ...userData };
   if (payload.profilePicture) {
     payload.profilePicture = await compressProfilePicture(payload.profilePicture);
+  }
+
+  // Prepopulate permissions if not explicitly provided
+  if (!payload.permissions || Object.keys(payload.permissions).length === 0) {
+    payload.permissions = getDefaultPermissionsForRole(payload.role || 'User');
   }
 
   const user = await User.create(payload);
