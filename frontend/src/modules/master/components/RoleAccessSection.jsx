@@ -22,6 +22,16 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   const [matrix, setMatrix] = useState({});
   const [saving, setSaving] = useState(false);
 
+  // Confirmation Modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    type: null, // "preset" | "custom"
+    presetType: null, // "Admin" | "Supervisor" | "User"
+    title: "",
+    subtitle: "",
+    targets: [],
+  });
+
   const [groups, setGroups] = useState([]);
   const [modules, setModules] = useState([]);
   const [loadingConfig, setLoadingConfig] = useState(true);
@@ -379,8 +389,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     return newMatrix;
   };
 
-  // Direct 1-Click apply and save preset
-  const handleApplyPreset = async (presetType) => {
+  // Trigger Preset Confirmation Modal
+  const requestApplyPreset = (presetType) => {
     if (!hasSelectedEmployee) {
       toast("Please select at least 1 employee first.", "warning");
       return;
@@ -392,7 +402,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     }
 
     const targets = selectedEmployeesList;
-
     const allowedTargets = targets.filter((emp) => {
       if (!isCurrentRequesterAdmin && (emp.role === "Admin" || emp.department === "Admin")) {
         return false;
@@ -405,6 +414,19 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       return;
     }
 
+    const roleName = presetType === "Admin" ? "Administrator" : presetType === "Supervisor" ? "Supervisor" : "Field / Workshop User";
+    setConfirmModal({
+      isOpen: true,
+      type: "preset",
+      presetType,
+      title: `Apply ${roleName} Preset`,
+      subtitle: `Are you sure you want to apply standard ${roleName} permissions to ${allowedTargets.length} selected employee(s)? This will reconfigure their module permissions.`,
+      targets: allowedTargets,
+    });
+  };
+
+  // Perform confirmed Preset apply
+  const executeApplyPreset = async (presetType, allowedTargets) => {
     const presetMatrix = generatePresetMatrix(presetType);
     setMatrix(presetMatrix);
 
@@ -452,10 +474,11 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       toast(err.response?.data?.message || "Failed to apply preset", "error");
     } finally {
       setSaving(false);
+      setConfirmModal({ isOpen: false, type: null, presetType: null, title: "", subtitle: "", targets: [] });
     }
   };
 
-  // Save changes
+  // Trigger Save Matrix (Direct for 1 employee; Confirmation Modal for multiple employees)
   const handleSaveMatrix = async () => {
     if (!hasSelectedEmployee) {
       toast("Please select at least 1 employee first.", "warning");
@@ -468,7 +491,6 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
     }
 
     const targets = selectedEmployeesList;
-
     const allowedTargets = targets.filter((emp) => {
       if (!isCurrentRequesterAdmin && (emp.role === "Admin" || emp.department === "Admin")) {
         return false;
@@ -481,6 +503,25 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       return;
     }
 
+    // If multiple employees are selected, show confirmation modal to prevent accidental mass-overwrite!
+    if (allowedTargets.length > 1) {
+      setConfirmModal({
+        isOpen: true,
+        type: "custom",
+        presetType: null,
+        title: `Save Custom Permissions for ${allowedTargets.length} Employees`,
+        subtitle: `You are about to apply this customized permission matrix to ${allowedTargets.length} employees simultaneously. This will overwrite their individual module settings.`,
+        targets: allowedTargets,
+      });
+      return;
+    }
+
+    // Single employee: Save immediately with no popup!
+    await executeSaveMatrix(allowedTargets);
+  };
+
+  // Perform confirmed Custom Matrix Save
+  const executeSaveMatrix = async (allowedTargets) => {
     setSaving(true);
     try {
       const token = sessionStorage.getItem("token") || localStorage.getItem("token");
@@ -526,6 +567,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       toast(err.response?.data?.message || "Failed to save permissions", "error");
     } finally {
       setSaving(false);
+      setConfirmModal({ isOpen: false, type: null, presetType: null, title: "", subtitle: "", targets: [] });
     }
   };
 
@@ -900,7 +942,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     <button
                       type="button"
                       disabled={saving || containsProtectedAdmin}
-                      onClick={() => handleApplyPreset("Admin")}
+                      onClick={() => requestApplyPreset("Admin")}
                       className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
                     >
                       Set as Admin
@@ -933,7 +975,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     <button
                       type="button"
                       disabled={saving || containsProtectedAdmin}
-                      onClick={() => handleApplyPreset("Supervisor")}
+                      onClick={() => requestApplyPreset("Supervisor")}
                       className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
                     >
                       Set as Supervisor
@@ -967,7 +1009,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     <button
                       type="button"
                       disabled={saving || containsProtectedAdmin}
-                      onClick={() => handleApplyPreset("User")}
+                      onClick={() => requestApplyPreset("User")}
                       className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
                     >
                       Set as User
@@ -1111,6 +1153,104 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           </>
         )}
       </div>
+
+      {/* ── Custom Confirmation Modal ── */}
+      {confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-[1vw]">
+          <div className="bg-white rounded-[0.6vw] shadow-xl border border-gray-200 w-full max-w-[28vw] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="p-[1.1vw] border-b border-gray-100 flex items-start gap-[0.75vw]">
+              <div
+                className={`w-[2.4vw] h-[2.4vw] rounded-full flex items-center justify-center flex-shrink-0 ${
+                  confirmModal.type === "preset" && confirmModal.presetType === "Admin"
+                    ? "bg-purple-100 text-purple-700"
+                    : confirmModal.type === "preset" && confirmModal.presetType === "Supervisor"
+                    ? "bg-indigo-100 text-indigo-700"
+                    : "bg-blue-100 text-blue-700"
+                }`}
+              >
+                <Icon
+                  icon={
+                    confirmModal.type === "preset"
+                      ? "solar:shield-warning-bold-duotone"
+                      : "solar:users-group-two-rounded-bold-duotone"
+                  }
+                  className="w-[1.4vw] h-[1.4vw]"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[1vw] font-bold text-gray-900 leading-snug">
+                  {confirmModal.title}
+                </h3>
+                <p className="text-[0.74vw] text-gray-500 mt-[0.2vw] leading-relaxed">
+                  {confirmModal.subtitle}
+                </p>
+              </div>
+            </div>
+
+            {/* Target Employees Preview List */}
+            <div className="p-[1.1vw] bg-gray-50/60 max-h-[14vw] overflow-y-auto space-y-[0.45vw] border-b border-gray-100">
+              <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider block mb-[0.2vw]">
+                Affected Employees ({confirmModal.targets.length})
+              </span>
+              <div className="flex flex-wrap gap-[0.35vw]">
+                {confirmModal.targets.map((emp) => (
+                  <span
+                    key={emp.userId || emp._id}
+                    className="inline-flex items-center gap-[0.3vw] bg-white border border-gray-200 px-[0.55vw] py-[0.25vw] rounded-[0.3vw] text-[0.72vw] text-gray-800 shadow-2xs font-medium"
+                  >
+                    <Icon icon="solar:user-bold" className="w-[0.75vw] h-[0.75vw] text-gray-400" />
+                    {emp.name || emp.username}
+                    <span className="text-gray-400 text-[0.65vw]">({emp.role || emp.department})</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="p-[0.9vw] bg-white flex items-center justify-end gap-[0.6vw]">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => setConfirmModal({ isOpen: false, type: null, presetType: null, title: "", subtitle: "", targets: [] })}
+                className="px-[0.9vw] py-[0.45vw] text-[0.76vw] font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-[0.35vw] transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => {
+                  if (confirmModal.type === "preset") {
+                    executeApplyPreset(confirmModal.presetType, confirmModal.targets);
+                  } else {
+                    executeSaveMatrix(confirmModal.targets);
+                  }
+                }}
+                className={`px-[1.1vw] py-[0.45vw] text-[0.76vw] font-bold text-white rounded-[0.35vw] transition-colors cursor-pointer flex items-center gap-[0.4vw] shadow-xs ${
+                  confirmModal.type === "preset" && confirmModal.presetType === "Admin"
+                    ? "bg-purple-600 hover:bg-purple-700"
+                    : confirmModal.type === "preset" && confirmModal.presetType === "Supervisor"
+                    ? "bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {saving ? (
+                  <>
+                    <Icon icon="solar:refresh-circle-bold" className="w-[0.9vw] h-[0.9vw] animate-spin" />
+                    Applying...
+                  </>
+                ) : (
+                  <>
+                    <Icon icon="solar:check-read-bold" className="w-[0.9vw] h-[0.9vw]" />
+                    Confirm & Apply
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
