@@ -852,10 +852,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             />
           </div>
 
-          {/* Compact Inline Selected Pills (When employees are selected) */}
+          {/* Compact Inline Selected Pills (When employees are selected - No scrollbar) */}
           {selectedEmployeesList.length > 0 && (
-            <div className="flex items-center gap-[0.35vw] overflow-x-auto py-[0.1vw] max-w-[22vw]">
-              {selectedEmployeesList.slice(0, 3).map((emp) => (
+            <div className="flex items-center gap-[0.35vw] flex-wrap py-[0.1vw]">
+              {selectedEmployeesList.slice(0, 2).map((emp) => (
                 <span
                   key={emp.userId}
                   className="inline-flex items-center gap-[0.25vw] bg-blue-50/70 border border-blue-200 text-blue-900 rounded-full pl-[0.2vw] pr-[0.45vw] py-[0.1vw] text-[0.7vw] font-semibold flex-shrink-0"
@@ -879,9 +879,12 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 </span>
               ))}
 
-              {selectedEmployeesList.length > 3 && (
-                <span className="text-[0.68vw] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-[0.4vw] py-[0.1vw] rounded-full flex-shrink-0">
-                  +{selectedEmployeesList.length - 3} more
+              {selectedEmployeesList.length > 2 && (
+                <span 
+                  className="text-[0.68vw] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-[0.4vw] py-[0.1vw] rounded-full flex-shrink-0"
+                  title={selectedEmployeesList.slice(2).map(e => e.name).join(", ")}
+                >
+                  +{selectedEmployeesList.length - 2} more
                 </span>
               )}
 
@@ -1155,73 +1158,82 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <span className="text-[0.7vw] text-gray-400 font-normal">({groupMods.length} modules)</span>
                       </div>
 
-                      <div className="flex items-center gap-[0.35vw] bg-gray-100/80 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
-                        <button
-                          type="button"
-                          disabled={containsProtectedAdmin}
-                          onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                          className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-emerald-700 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-2xs hover:border-emerald-300"
-                        >
-                          Enable All
-                        </button>
-                        <button
-                          type="button"
-                          disabled={containsProtectedAdmin}
-                          onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                          className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-gray-600 bg-white hover:bg-rose-50 hover:text-rose-700 border border-gray-200 hover:border-rose-200 shadow-2xs"
-                        >
-                          Disable All
-                        </button>
-                      </div>
+                      {/* Bulk toggles (hidden for Dashboard since it's mutually exclusive) */}
+                      {g.id !== "dashboard" && (
+                        <div className="flex items-center gap-[0.35vw] bg-gray-100/80 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
+                          <button
+                            type="button"
+                            disabled={containsProtectedAdmin}
+                            onClick={() => handleBulkToggleGroup(g.id, "enable")}
+                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-emerald-700 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-2xs hover:border-emerald-300"
+                          >
+                            Enable All
+                          </button>
+                          <button
+                            type="button"
+                            disabled={containsProtectedAdmin}
+                            onClick={() => handleBulkToggleGroup(g.id, "disable")}
+                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-gray-600 bg-white hover:bg-rose-50 hover:text-rose-700 border border-gray-200 hover:border-rose-200 shadow-2xs"
+                          >
+                            Disable All
+                          </button>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Check if group has subGroups (Admin vs User separation) */}
-                    {(() => {
-                      const hasSubGroups = groupMods.some((m) => m.subGroup);
+                    {/* Check if group is dashboard -> side by side view */}
+                    {g.id === "dashboard" ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-[0.8vw]">
+                        {groupMods.map(renderModuleRow)}
+                      </div>
+                    ) : (
+                      (() => {
+                        const hasSubGroups = groupMods.some((m) => m.subGroup);
 
-                      if (!hasSubGroups) {
+                        if (!hasSubGroups) {
+                          return (
+                            <div className="flex flex-col gap-[0.4vw]">
+                              {groupMods.map(renderModuleRow)}
+                            </div>
+                          );
+                        }
+
+                        const adminMods = groupMods.filter((m) => m.subGroup === "admin");
+                        const userMods = groupMods.filter((m) => m.subGroup === "user");
+
                         return (
-                          <div className="flex flex-col gap-[0.4vw]">
-                            {groupMods.map(renderModuleRow)}
+                          <div className="space-y-[0.8vw]">
+                            {/* Admin Section */}
+                            {adminMods.length > 0 && (
+                              <div className="space-y-[0.35vw]">
+                                <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
+                                  <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
+                                    Admin Pages ({adminMods.length})
+                                  </span>
+                                </div>
+                                <div className="flex flex-col gap-[0.35vw]">
+                                  {adminMods.map(renderModuleRow)}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* User Section */}
+                            {userMods.length > 0 && (
+                              <div className="space-y-[0.35vw]">
+                                <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
+                                  <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
+                                    User Pages ({userMods.length})
+                                  </span>
+                                </div>
+                                <div className="flex flex-col gap-[0.35vw]">
+                                  {userMods.map(renderModuleRow)}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
-                      }
-
-                      const adminMods = groupMods.filter((m) => m.subGroup === "admin");
-                      const userMods = groupMods.filter((m) => m.subGroup === "user");
-
-                      return (
-                        <div className="space-y-[0.8vw]">
-                          {/* Admin Section */}
-                          {adminMods.length > 0 && (
-                            <div className="space-y-[0.35vw]">
-                              <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
-                                <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
-                                  Admin Pages ({adminMods.length})
-                                </span>
-                              </div>
-                              <div className="flex flex-col gap-[0.35vw]">
-                                {adminMods.map(renderModuleRow)}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* User Section */}
-                          {userMods.length > 0 && (
-                            <div className="space-y-[0.35vw]">
-                              <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
-                                <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
-                                  User Pages ({userMods.length})
-                                </span>
-                              </div>
-                              <div className="flex flex-col gap-[0.35vw]">
-                                {userMods.map(renderModuleRow)}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
+                      })()
+                    )}
                     </div>
                   );
                 })
