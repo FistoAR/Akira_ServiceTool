@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
