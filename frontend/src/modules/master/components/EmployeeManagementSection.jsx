@@ -13,7 +13,7 @@ import {
   Edit2, Trash2, Check, Tags, HelpCircle, Columns, Eye, EyeOff, Clock,
   Wrench, Package, Mail, Calendar, Briefcase, Lock, ShieldCheck, ArrowLeft,
   Phone, Image as ImageIcon, IndianRupee, Activity, UserPlus, Loader2,
-  MapPin, RefreshCw
+  MapPin, RefreshCw, UploadCloud
 } from "lucide-react";
 import {
   API_URL, DEFAULT_DEPTS, TYPE_BADGE_COLORS, TYPE_COLORS, LEVEL_COLORS,
@@ -137,6 +137,50 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const processImageFile = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast("Please upload a valid image file (PNG, JPG, WebP)", "warning");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast("File size exceeds 2MB limit", "warning");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_SIZE = 180;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL("image/webp", 0.8) || canvas.toDataURL("image/jpeg", 0.8);
+        setRegData((prev) => ({ ...prev, profilePicture: compressed }));
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const openRegModal = (emp = null) => {
     setShowPassword(false);
@@ -638,61 +682,105 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
 
                 {/* Profile Picture */}
-                <div className="col-span-2 space-y-[0.6vw] p-[1vw] bg-slate-50 rounded-[0.8vw] border border-slate-400">
+                <div 
+                  className={`col-span-2 space-y-[0.6vw] p-[1vw] rounded-[0.8vw] border-2 transition-all ${
+                    isDraggingFile
+                      ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/30"
+                      : "border-slate-400 bg-slate-50 hover:border-slate-500"
+                  }`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!isDraggingFile) setIsDraggingFile(true);
+                  }}
+                  onDragEnter={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDraggingFile(true);
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Check if cursor left the container
+                    if (e.currentTarget.contains(e.relatedTarget)) return;
+                    setIsDraggingFile(false);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDraggingFile(false);
+                    const file = e.dataTransfer?.files?.[0];
+                    if (file) {
+                      processImageFile(file);
+                    }
+                  }}
+                >
                   <div className="flex items-center justify-between">
-                    <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><ImageIcon className="w-[1vw] h-[1vw] text-blue-600" /> Profile Picture</label>
+                    <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]">
+                      <ImageIcon className="w-[1vw] h-[1vw] text-blue-600" /> Profile Picture
+                    </label>
                     <span className="text-[0.7vw] text-slate-400">Optional: Max 2MB</span>
                   </div>
+                  
                   <div className="flex items-center gap-[1.2vw]">
-                    <div className="w-[4vw] h-[4vw] rounded-full bg-white border-2 border-slate-400 flex items-center justify-center overflow-hidden shadow-inner">
+                    <div 
+                      className="w-[4vw] h-[4vw] rounded-full bg-white border-2 border-slate-400 flex items-center justify-center overflow-hidden shadow-inner cursor-pointer flex-shrink-0"
+                      onClick={() => fileInputRef.current?.click()}
+                      title="Click to select image"
+                    >
                       {regData.profilePicture ? (
-                        <img src={regData.profilePicture} className="w-full h-full object-cover" />
+                        <img src={regData.profilePicture} alt="Profile preview" className="w-full h-full object-cover" />
                       ) : (
                         <Users className="w-[1.8vw] h-[1.8vw] text-slate-200" />
                       )}
                     </div>
+                    
                     <div className="flex-1">
+                      <div 
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`flex items-center justify-between p-[0.6vw] border border-dashed rounded-[0.5vw] cursor-pointer transition-all ${
+                          isDraggingFile 
+                            ? "border-blue-500 bg-blue-100/50" 
+                            : "border-slate-300 hover:border-blue-400 hover:bg-white"
+                        }`}
+                      >
+                        <div className="flex items-center gap-[0.6vw]">
+                          <span className="py-[0.35vw] px-[0.8vw] rounded-[0.4vw] text-[0.75vw] font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow-sm inline-flex items-center gap-[0.3vw]">
+                            <UploadCloud className="w-[0.85vw] h-[0.85vw]" />
+                            Choose File
+                          </span>
+                          <span className="text-[0.75vw] text-slate-500">
+                            {isDraggingFile ? (
+                              <span className="font-semibold text-blue-600">Drop image here...</span>
+                            ) : (
+                              <span>or drag & drop image here</span>
+                            )}
+                          </span>
+                        </div>
+                        <span className="text-[0.7vw] text-slate-400 font-medium">PNG, JPG, WebP</span>
+                      </div>
+
                       <input 
+                        ref={fileInputRef}
                         type="file" 
                         accept="image/*"
                         onChange={(e) => {
-                          const file = e.target.files[0];
+                          const file = e.target.files?.[0];
                           if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                              const img = new Image();
-                              img.onload = () => {
-                                const canvas = document.createElement("canvas");
-                                const MAX_SIZE = 180;
-                                let width = img.width;
-                                let height = img.height;
-                                if (width > height) {
-                                  if (width > MAX_SIZE) {
-                                    height = Math.round((height * MAX_SIZE) / width);
-                                    width = MAX_SIZE;
-                                  }
-                                } else {
-                                  if (height > MAX_SIZE) {
-                                    width = Math.round((width * MAX_SIZE) / height);
-                                    height = MAX_SIZE;
-                                  }
-                                }
-                                canvas.width = width;
-                                canvas.height = height;
-                                const ctx = canvas.getContext("2d");
-                                ctx.drawImage(img, 0, 0, width, height);
-                                const compressed = canvas.toDataURL("image/webp", 0.8) || canvas.toDataURL("image/jpeg", 0.8);
-                                setRegData((prev) => ({ ...prev, profilePicture: compressed }));
-                              };
-                              img.src = event.target.result;
-                            };
-                            reader.readAsDataURL(file);
+                            processImageFile(file);
                           }
+                          // Reset input value so same file can be re-selected if removed
+                          e.target.value = "";
                         }}
-                        className="text-[0.75vw] file:mr-[1vw] file:py-[0.4vw] file:px-[1vw] file:rounded-full file:border-0 file:text-[0.75vw] file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer"
+                        className="hidden"
                       />
+
                       {regData.profilePicture && (
-                        <button type="button" onClick={() => setRegData({...regData, profilePicture: null})} className="text-[0.7vw] text-red-500 hover:text-red-700 font-bold mt-[0.4vw] flex items-center gap-[0.2vw]">
+                        <button 
+                          type="button" 
+                          onClick={() => setRegData((prev) => ({ ...prev, profilePicture: null }))} 
+                          className="text-[0.7vw] text-red-500 hover:text-red-700 font-bold mt-[0.4vw] flex items-center gap-[0.2vw] transition-colors"
+                        >
                           <X className="w-[0.8vw] h-[0.8vw]" /> Remove Photo
                         </button>
                       )}
