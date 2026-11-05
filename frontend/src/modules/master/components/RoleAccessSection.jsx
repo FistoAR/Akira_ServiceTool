@@ -711,96 +711,84 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
         {/* Right: Granular Actions (Pill Chips) */}
         <div className="flex-shrink-0">
-          {!isDashboard ? (
-            isRoleAccessMod ? (
-              /* Role Access only: Read and Edit */
-              <div
-                className={`flex items-center gap-[0.35vw] transition-opacity ${
-                  mState.enabled && !containsProtectedAdmin
-                    ? "opacity-100"
-                    : "opacity-30 pointer-events-none"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => togglePermission(mod.id, "read")}
-                  className={`px-[0.65vw] py-[0.2vw] text-[0.72vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
-                    mState.read
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
-                      : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                  } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
-                >
-                  Read
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (containsProtectedAdmin) return;
-                    setMatrix((prev) => {
-                      const current = prev[mod.id] || { enabled: false, read: false, write: false, update: false, delete: false };
-                      const nextEdit = !(current.write || current.update);
-                      return {
-                        ...prev,
-                        [mod.id]: {
-                          ...current,
-                          enabled: nextEdit ? true : current.enabled,
-                          read: nextEdit ? true : current.read,
-                          write: nextEdit,
-                          update: nextEdit,
-                          delete: false,
-                        },
-                      };
-                    });
-                  }}
-                  className={`px-[0.65vw] py-[0.2vw] text-[0.72vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
-                    mState.write || mState.update
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
-                      : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
-                  } ${modDiscrepancy?.write || modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
-                >
-                  Edit
-                </button>
-              </div>
-            ) : (
-              /* Standard Modules: Read, Write, Update, Delete */
-              <div
-                className={`flex items-center gap-[0.3vw] transition-opacity ${
-                  mState.enabled && !containsProtectedAdmin
-                    ? "opacity-100"
-                    : "opacity-30 pointer-events-none"
-                }`}
-              >
-                {["read", "write", "update", "delete"].map((act) => {
-                  const isActive = mState[act];
-                  const hasDisc = modDiscrepancy?.[act];
-                  return (
-                    <button
-                      key={act}
-                      type="button"
-                      onClick={() => togglePermission(mod.id, act)}
-                      className={`px-[0.6vw] py-[0.2vw] text-[0.72vw] font-semibold capitalize rounded-[0.3vw] transition-all cursor-pointer border ${
-                        isActive
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
-                          : "bg-white text-gray-400 border-gray-200 hover:border-gray-300 hover:text-gray-600"
-                      } ${hasDisc ? "ring-2 ring-amber-400" : ""}`}
-                    >
-                      {act}
-                    </button>
-                  );
-                })}
-              </div>
-            )
-          ) : (
-            <span
-              className={`text-[0.68vw] font-semibold px-[0.55vw] py-[0.15vw] rounded ${
-                mState.enabled
-                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                  : "bg-gray-100 text-gray-400"
+          {isRoleAccessMod ? (
+            /* Role Access only: Read and Edit */
+            <div
+              className={`flex items-center gap-[0.35vw] transition-opacity ${
+                mState.enabled && !containsProtectedAdmin
+                  ? "opacity-100"
+                  : "opacity-30 pointer-events-none"
               }`}
             >
-              {mState.enabled ? "ACTIVE DASHBOARD" : "DISABLED"}
-            </span>
+              <button
+                type="button"
+                onClick={() => togglePermission(mod.id, "read")}
+                className={`px-[0.65vw] py-[0.2vw] text-[0.72vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
+                  mState.read
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
+                    : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                } ${modDiscrepancy?.read ? "ring-2 ring-amber-400" : ""}`}
+              >
+                Read
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (containsProtectedAdmin) return;
+                  setMatrix((prev) => {
+                    const current = prev[mod.id] || { enabled: false, read: false, write: false, update: false, delete: false };
+                    const nextEdit = !(current.write || current.update);
+                    return {
+                      ...prev,
+                      [mod.id]: {
+                        ...current,
+                        enabled: nextEdit ? true : current.enabled,
+                        read: nextEdit ? true : current.read,
+                        write: nextEdit,
+                        update: nextEdit,
+                        delete: false,
+                      },
+                    };
+                  });
+                }}
+                className={`px-[0.65vw] py-[0.2vw] text-[0.72vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
+                  mState.write || mState.update
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
+                    : "bg-white text-gray-400 border-gray-200 hover:border-gray-300"
+                } ${modDiscrepancy?.write || modDiscrepancy?.update ? "ring-2 ring-amber-400" : ""}`}
+              >
+                Edit
+              </button>
+            </div>
+          ) : (
+            /* Standard Modules: Read, Write, Update, Delete */
+            <div
+              className={`flex items-center gap-[0.3vw] transition-opacity ${
+                mState.enabled && !containsProtectedAdmin
+                  ? "opacity-100"
+                  : "opacity-30 pointer-events-none"
+              }`}
+            >
+              {["read", "write", "update", "delete"].map((act) => {
+                const isActive = mState[act];
+                const hasDisc = modDiscrepancy?.[act];
+                return (
+                  <button
+                    key={act}
+                    type="button"
+                    onClick={() => togglePermission(mod.id, act)}
+                    className={`px-[0.6vw] py-[0.2vw] text-[0.72vw] font-semibold capitalize rounded-[0.3vw] transition-all cursor-pointer border ${
+                      isActive
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
+                        : "bg-white text-gray-400 border-gray-200 hover:border-gray-300 hover:text-gray-600"
+                    } ${hasDisc ? "ring-2 ring-amber-400" : ""}`}
+                  >
+                    {act}
+                  </button>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>
