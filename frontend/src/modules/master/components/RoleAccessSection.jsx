@@ -20,6 +20,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
   const dropdownRef = useRef(null);
 
   const [activeGroup, setActiveGroup] = useState("all");
+  const [accessMode, setAccessMode] = useState("custom"); // "preset" | "custom"
   const [matrix, setMatrix] = useState({});
   const [saving, setSaving] = useState(false);
 
@@ -315,6 +316,115 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       });
       return updated;
     });
+  };
+
+  // Generate Preset Matrix
+  const generatePresetMatrix = (presetType) => {
+    const newMatrix = {};
+
+    modules.forEach((mod) => {
+      if (presetType === "Admin") {
+        // Full Admin preset: Everything enabled with full CRUD, Admin Dashboard enabled
+        if (mod.id === "dashboardAdmin") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
+        } else if (mod.id === "dashboardUser") {
+          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        } else {
+          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: true };
+        }
+      } else if (presetType === "Supervisor") {
+        // Supervisor preset: Operations Admin pages enabled with read/write/update, Admin dashboard enabled, no delete on master
+        if (mod.id === "dashboardAdmin") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
+        } else if (mod.id === "dashboardUser") {
+          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        } else if (mod.group === "service-call" || mod.group === "service-material" || mod.group === "production-material" || mod.group === "customers") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
+        } else if (mod.group === "master") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
+        } else {
+          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
+        }
+      } else if (presetType === "User") {
+        // Standard User / Field Engineer preset:
+        // User Dashboard enabled, Workspace / Response pages enabled with read/write/update, Admin management pages disabled
+        if (mod.id === "dashboardUser") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
+        } else if (mod.id === "dashboardAdmin") {
+          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        } else if (mod.subGroup === "user") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
+        } else if (mod.group === "troubleshoot") {
+          newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };
+        } else {
+          newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        }
+      }
+    });
+
+    return newMatrix;
+  };
+
+  // Direct 1-Click apply and save preset
+  const handleApplyPreset = async (presetType) => {
+    if (containsProtectedAdmin) {
+      toast("Access Denied: One or more selected accounts are Admins and cannot be modified.", "error");
+      return;
+    }
+
+    const targets = selectedEmployeesList.length > 0 ? selectedEmployeesList : filteredEmployees;
+
+    const allowedTargets = targets.filter((emp) => {
+      if (!isCurrentRequesterAdmin && (emp.role === "Admin" || emp.department === "Admin")) {
+        return false;
+      }
+      return true;
+    });
+
+    if (allowedTargets.length === 0) {
+      toast("No eligible employees selected to apply preset.", "warning");
+      return;
+    }
+
+    const presetMatrix = generatePresetMatrix(presetType);
+    setMatrix(presetMatrix);
+
+    setSaving(true);
+    try {
+      const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      await Promise.all(
+        allowedTargets.map((emp) =>
+          axios.put(
+            `${API_URL}/auth/employees/${emp._id || emp.id}`,
+            { permissions: presetMatrix },
+            { headers }
+          )
+        )
+      );
+
+      const empRes = await axios.get(`${API_URL}/auth/employees`);
+      setEmployees((prev) => {
+        const picMap = {};
+        (prev || []).forEach((e) => {
+          if (e.profilePicture) picMap[e.userId || e._id] = e.profilePicture;
+        });
+        const merged = empRes.data.map((e) => ({
+          ...e,
+          profilePicture: picMap[e.userId || e._id] || e.profilePicture || null,
+        }));
+        sessionStorage.setItem("all_employees", JSON.stringify(merged));
+        return merged;
+      });
+
+      toast(`Applied and saved "${presetType}" preset for ${allowedTargets.length} employee(s)!`);
+    } catch (err) {
+      console.error(err);
+      toast(err.response?.data?.message || "Failed to apply preset", "error");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Save changes
@@ -673,23 +783,56 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           )}
         </div>
 
-        {/* Save Button */}
-        <button
-          type="button"
-          onClick={handleSaveMatrix}
-          disabled={saving || containsProtectedAdmin}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium text-[0.78vw] px-[1vw] py-[0.38vw] rounded-[0.35vw] shadow-none flex items-center gap-[0.4vw] transition-colors cursor-pointer"
-        >
-          {saving ? (
-            <>
-              <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" /> Saving...
-            </>
-          ) : (
-            <>
-              <Icon icon="solar:diskette-bold-duotone" className="w-[0.95vw] h-[0.95vw]" /> Save Changes
-            </>
+        {/* Right Action Controls: Preset vs Custom Toggle & Save */}
+        <div className="flex items-center gap-[0.7vw]">
+          {/* Mode Switcher: Custom vs Presets */}
+          <div className="flex items-center bg-gray-100 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
+            <button
+              type="button"
+              onClick={() => setAccessMode("preset")}
+              className={`px-[0.6vw] py-[0.25vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer flex items-center gap-[0.3vw] ${
+                accessMode === "preset"
+                  ? "bg-white text-blue-600 shadow-2xs"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              <Icon icon="solar:widget-bold-duotone" className="w-[0.85vw] h-[0.85vw]" />
+              Role Presets
+            </button>
+            <button
+              type="button"
+              onClick={() => setAccessMode("custom")}
+              className={`px-[0.6vw] py-[0.25vw] text-[0.74vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer flex items-center gap-[0.3vw] ${
+                accessMode === "custom"
+                  ? "bg-white text-blue-600 shadow-2xs"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              <Icon icon="solar:tuning-square-2-bold-duotone" className="w-[0.85vw] h-[0.85vw]" />
+              Custom Permissions
+            </button>
+          </div>
+
+          {/* Save Button (for custom edits) */}
+          {accessMode === "custom" && (
+            <button
+              type="button"
+              onClick={handleSaveMatrix}
+              disabled={saving || containsProtectedAdmin}
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium text-[0.78vw] px-[1vw] py-[0.38vw] rounded-[0.35vw] shadow-none flex items-center gap-[0.4vw] transition-colors cursor-pointer"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" /> Saving...
+                </>
+              ) : (
+                <>
+                  <Icon icon="solar:diskette-bold-duotone" className="w-[0.95vw] h-[0.95vw]" /> Save Changes
+                </>
+              )}
+            </button>
           )}
-        </button>
+        </div>
       </div>
 
       {/* Selected Employee Badges (Visible outside dropdown) */}
@@ -736,134 +879,242 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
       {/* Main Content Pane Split */}
       <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(94vh - 140px)" }}>
-        {/* Left Side: Modules Navigation */}
-        <div className="w-[13vw] border-r border-gray-200 flex flex-col p-[0.6vw] gap-[0.2vw] overflow-y-auto h-full bg-white flex-shrink-0">
-          <p className="text-[0.68vw] font-semibold uppercase tracking-wider text-gray-400 px-[0.5vw] mb-[0.3vw]">
-            Categories
-          </p>
-          {groups.map((g) => {
-            const isActive = activeGroup === g.id;
-            const count = modules.filter((m) => g.id === "all" || m.group === g.id).length;
+        {accessMode === "preset" ? (
+          /* ── Role Preset Mode View ── */
+          <div className="flex-1 p-[1.5vw] overflow-y-auto min-h-0 bg-slate-50/50 flex flex-col items-center justify-center">
+            <div className="w-full max-w-[52vw] bg-white border border-gray-200 rounded-[0.8vw] p-[1.5vw] shadow-sm space-y-[1.2vw]">
+              <div>
+                <h3 className="text-[1.1vw] font-bold text-gray-900">Standard Role Presets</h3>
+                <p className="text-[0.78vw] text-gray-500">
+                  Select a predefined template below. Clicking an option will automatically calibrate and save all operational, workspace, and dashboard permissions for the selected employee(s).
+                </p>
+              </div>
 
-            return (
-              <button
-                key={g.id}
-                type="button"
-                onClick={() => setActiveGroup(g.id)}
-                className={`flex items-center justify-between px-[0.65vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] transition-colors text-left cursor-pointer ${
-                  isActive
-                    ? "bg-blue-50 text-blue-700 font-semibold"
-                    : "text-gray-700 hover:bg-gray-50 font-normal"
-                }`}
-              >
-                <span>{g.label}</span>
-                <span className={`text-[0.66vw] px-[0.4vw] py-[0.08vw] rounded-full font-medium ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-500 bg-gray-100"}`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Right Side: Permission Cards Grid */}
-        <div className="flex-1 p-[0.9vw] overflow-y-auto min-h-0 space-y-[0.9vw] bg-gray-50/30">
-          {loadingConfig ? (
-            <div className="w-full h-full min-h-[40vh] flex flex-col items-center justify-center gap-2 bg-white/70 rounded-[0.5vw]">
-              <Loader2 className="w-7 h-7 animate-spin text-blue-600" />
-              <span className="text-[0.8vw] text-gray-600 font-medium">Loading Permissions...</span>
-            </div>
-          ) : (
-            groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
-            const groupMods = modules.filter((mod) => mod.group === g.id);
-            if (groupMods.length === 0) return null;
-
-            return (
-              <div key={g.id} className="bg-white border border-gray-200 rounded-[0.5vw] p-[0.85vw] space-y-[0.7vw] shadow-none">
-                {/* Header for group */}
-                <div className="flex items-center justify-between border-b border-gray-100 pb-[0.45vw]">
-                  <div className="flex items-center gap-[0.5vw]">
-                    <h3 className="text-[0.9vw] font-bold text-blue-600">{g.label}</h3>
-                    <span className="text-[0.7vw] text-gray-400 font-normal">({groupMods.length} modules)</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-[1vw]">
+                {/* 1. Admin Preset */}
+                <div className="border border-purple-200 rounded-[0.6vw] p-[1vw] bg-purple-50/30 flex flex-col justify-between space-y-[1vw] hover:border-purple-400 transition-all">
+                  <div className="space-y-[0.4vw]">
+                    <div className="flex items-center gap-[0.5vw]">
+                      <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-purple-600 flex items-center justify-center text-white">
+                        <Icon icon="solar:shield-user-bold-duotone" className="w-[1vw] h-[1vw]" />
+                      </div>
+                      <span className="text-[0.9vw] font-bold text-purple-900">Administrator</span>
+                    </div>
+                    <p className="text-[0.7vw] text-purple-700/80">
+                      Unrestricted system-wide authority. Full CRUD across all Master data and Operational Management modules, with Admin KPI Dashboard.
+                    </p>
+                    <ul className="text-[0.68vw] text-purple-800 space-y-[0.15vw] list-disc list-inside pt-[0.2vw]">
+                      <li>Admin Dashboard enabled</li>
+                      <li>All Admin Pages (Full CRUD)</li>
+                      <li>Master & Customer Databases</li>
+                    </ul>
                   </div>
-
-                  <div className="flex items-center gap-[0.35vw] bg-gray-100/80 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
-                    <button
-                      type="button"
-                      disabled={containsProtectedAdmin}
-                      onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                      className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-emerald-700 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-2xs hover:border-emerald-300"
-                    >
-                      Enable All
-                    </button>
-                    <button
-                      type="button"
-                      disabled={containsProtectedAdmin}
-                      onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                      className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-gray-600 bg-white hover:bg-rose-50 hover:text-rose-700 border border-gray-200 hover:border-rose-200 shadow-2xs"
-                    >
-                      Disable All
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    disabled={saving || containsProtectedAdmin}
+                    onClick={() => handleApplyPreset("Admin")}
+                    className="w-full py-[0.45vw] text-[0.76vw] font-bold text-white bg-purple-600 hover:bg-purple-700 rounded-[0.35vw] transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    Apply Admin Preset
+                  </button>
                 </div>
 
-                {/* Check if group has subGroups (Admin vs User separation) */}
-                {(() => {
-                  const hasSubGroups = groupMods.some((m) => m.subGroup);
-
-                  if (!hasSubGroups) {
-                    return (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
-                        {groupMods.map(renderModuleCard)}
+                {/* 2. Supervisor Preset */}
+                <div className="border border-indigo-200 rounded-[0.6vw] p-[1vw] bg-indigo-50/30 flex flex-col justify-between space-y-[1vw] hover:border-indigo-400 transition-all">
+                  <div className="space-y-[0.4vw]">
+                    <div className="flex items-center gap-[0.5vw]">
+                      <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-indigo-600 flex items-center justify-center text-white">
+                        <Icon icon="solar:user-check-bold-duotone" className="w-[1vw] h-[1vw]" />
                       </div>
-                    );
-                  }
-
-                  const adminMods = groupMods.filter((m) => m.subGroup === "admin");
-                  const userMods = groupMods.filter((m) => m.subGroup === "user");
-
-                  return (
-                    <div className="space-y-[0.8vw]">
-                      {/* Admin Section */}
-                      {adminMods.length > 0 && (
-                        <div className="bg-slate-50/60 border border-slate-200/80 rounded-[0.45vw] p-[0.7vw] space-y-[0.6vw]">
-                          <div className="flex items-center gap-[0.4vw] pb-[0.25vw] border-b border-slate-200/60">
-                            <span className="text-[0.68vw] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.1vw] rounded">
-                              Admin Pages (Management)
-                            </span>
-                            <span className="text-[0.66vw] text-slate-500 font-medium">
-                              ({adminMods.length} management modules)
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
-                            {adminMods.map(renderModuleCard)}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* User Section */}
-                      {userMods.length > 0 && (
-                        <div className="bg-blue-50/20 border border-blue-100 rounded-[0.45vw] p-[0.7vw] space-y-[0.6vw]">
-                          <div className="flex items-center gap-[0.4vw] pb-[0.25vw] border-b border-blue-200/40">
-                            <span className="text-[0.68vw] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded">
-                              User Pages (Staff / Response)
-                            </span>
-                            <span className="text-[0.66vw] text-slate-500 font-medium">
-                              ({userMods.length} workspace modules)
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
-                            {userMods.map(renderModuleCard)}
-                          </div>
-                        </div>
-                      )}
+                      <span className="text-[0.9vw] font-bold text-indigo-900">Supervisor</span>
                     </div>
-                  );
-                })()}
+                    <p className="text-[0.7vw] text-indigo-700/80">
+                      Operational management authority. Manage calls, inwards, NC reports, approvals, and reviews with Admin KPI Dashboard.
+                    </p>
+                    <ul className="text-[0.68vw] text-indigo-800 space-y-[0.15vw] list-disc list-inside pt-[0.2vw]">
+                      <li>Admin Dashboard enabled</li>
+                      <li>Call & Material Management</li>
+                      <li>Read-only Master lookups</li>
+                    </ul>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={saving || containsProtectedAdmin}
+                    onClick={() => handleApplyPreset("Supervisor")}
+                    className="w-full py-[0.45vw] text-[0.76vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-[0.35vw] transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    Apply Supervisor Preset
+                  </button>
+                </div>
+
+                {/* 3. User Preset */}
+                <div className="border border-blue-200 rounded-[0.6vw] p-[1vw] bg-blue-50/30 flex flex-col justify-between space-y-[1vw] hover:border-blue-400 transition-all">
+                  <div className="space-y-[0.4vw]">
+                    <div className="flex items-center gap-[0.5vw]">
+                      <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-blue-600 flex items-center justify-center text-white">
+                        <Icon icon="solar:wrench-bold-duotone" className="w-[1vw] h-[1vw]" />
+                      </div>
+                      <span className="text-[0.9vw] font-bold text-blue-900">Field / Workshop User</span>
+                    </div>
+                    <p className="text-[0.7vw] text-blue-700/80">
+                      Individual technician and engineer view. Focused on assigned calls, bench repairs, and troubleshooting with User Operational Dashboard.
+                    </p>
+                    <ul className="text-[0.68vw] text-blue-800 space-y-[0.15vw] list-disc list-inside pt-[0.2vw]">
+                      <li>User Dashboard enabled</li>
+                      <li>Workspaces (Call & Material)</li>
+                      <li>Troubleshooting Chat</li>
+                    </ul>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={saving || containsProtectedAdmin}
+                    onClick={() => handleApplyPreset("User")}
+                    className="w-full py-[0.45vw] text-[0.76vw] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-[0.35vw] transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    Apply User Preset
+                  </button>
+                </div>
               </div>
-            );
-          })
-          )}
-        </div>
+
+              <div className="pt-[0.5vw] flex items-center justify-between text-[0.72vw] text-gray-500 border-t border-gray-100">
+                <span>Want granular fine-tuning? Switch to <strong>Custom Permissions</strong> tab in top right.</span>
+                <span className="italic text-gray-400">Applies immediately to selected employee(s)</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* ── Custom Permission Matrix Mode ── */
+          <>
+            {/* Left Side: Modules Navigation */}
+            <div className="w-[13vw] border-r border-gray-200 flex flex-col p-[0.6vw] gap-[0.2vw] overflow-y-auto h-full bg-white flex-shrink-0">
+              <p className="text-[0.68vw] font-semibold uppercase tracking-wider text-gray-400 px-[0.5vw] mb-[0.3vw]">
+                Categories
+              </p>
+              {groups.map((g) => {
+                const isActive = activeGroup === g.id;
+                const count = modules.filter((m) => g.id === "all" || m.group === g.id).length;
+
+                return (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setActiveGroup(g.id)}
+                    className={`flex items-center justify-between px-[0.65vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] transition-colors text-left cursor-pointer ${
+                      isActive
+                        ? "bg-blue-50 text-blue-700 font-semibold"
+                        : "text-gray-700 hover:bg-gray-50 font-normal"
+                    }`}
+                  >
+                    <span>{g.label}</span>
+                    <span className={`text-[0.66vw] px-[0.4vw] py-[0.08vw] rounded-full font-medium ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-500 bg-gray-100"}`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right Side: Permission Cards Grid */}
+            <div className="flex-1 p-[0.9vw] overflow-y-auto min-h-0 space-y-[0.9vw] bg-gray-50/30">
+              {loadingConfig ? (
+                <div className="w-full h-full min-h-[40vh] flex flex-col items-center justify-center gap-2 bg-white/70 rounded-[0.5vw]">
+                  <Loader2 className="w-7 h-7 animate-spin text-blue-600" />
+                  <span className="text-[0.8vw] text-gray-600 font-medium">Loading Permissions...</span>
+                </div>
+              ) : (
+                groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
+                const groupMods = modules.filter((mod) => mod.group === g.id);
+                if (groupMods.length === 0) return null;
+
+                return (
+                  <div key={g.id} className="bg-white border border-gray-200 rounded-[0.5vw] p-[0.85vw] space-y-[0.7vw] shadow-none">
+                    {/* Header for group */}
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-[0.45vw]">
+                      <div className="flex items-center gap-[0.5vw]">
+                        <h3 className="text-[0.9vw] font-bold text-blue-600">{g.label}</h3>
+                        <span className="text-[0.7vw] text-gray-400 font-normal">({groupMods.length} modules)</span>
+                      </div>
+
+                      <div className="flex items-center gap-[0.35vw] bg-gray-100/80 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
+                        <button
+                          type="button"
+                          disabled={containsProtectedAdmin}
+                          onClick={() => handleBulkToggleGroup(g.id, "enable")}
+                          className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-emerald-700 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-2xs hover:border-emerald-300"
+                        >
+                          Enable All
+                        </button>
+                        <button
+                          type="button"
+                          disabled={containsProtectedAdmin}
+                          onClick={() => handleBulkToggleGroup(g.id, "disable")}
+                          className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-gray-600 bg-white hover:bg-rose-50 hover:text-rose-700 border border-gray-200 hover:border-rose-200 shadow-2xs"
+                        >
+                          Disable All
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Check if group has subGroups (Admin vs User separation) */}
+                    {(() => {
+                      const hasSubGroups = groupMods.some((m) => m.subGroup);
+
+                      if (!hasSubGroups) {
+                        return (
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
+                            {groupMods.map(renderModuleCard)}
+                          </div>
+                        );
+                      }
+
+                      const adminMods = groupMods.filter((m) => m.subGroup === "admin");
+                      const userMods = groupMods.filter((m) => m.subGroup === "user");
+
+                      return (
+                        <div className="space-y-[0.8vw]">
+                          {/* Admin Section */}
+                          {adminMods.length > 0 && (
+                            <div className="bg-slate-50/60 border border-slate-200/80 rounded-[0.45vw] p-[0.7vw] space-y-[0.6vw]">
+                              <div className="flex items-center gap-[0.4vw] pb-[0.25vw] border-b border-slate-200/60">
+                                <span className="text-[0.68vw] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.1vw] rounded">
+                                  Admin Pages (Management)
+                                </span>
+                                <span className="text-[0.66vw] text-slate-500 font-medium">
+                                  ({adminMods.length} management modules)
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
+                                {adminMods.map(renderModuleCard)}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* User Section */}
+                          {userMods.length > 0 && (
+                            <div className="bg-blue-50/20 border border-blue-100 rounded-[0.45vw] p-[0.7vw] space-y-[0.6vw]">
+                              <div className="flex items-center gap-[0.4vw] pb-[0.25vw] border-b border-blue-200/40">
+                                <span className="text-[0.68vw] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded">
+                                  User Pages (Staff / Response)
+                                </span>
+                                <span className="text-[0.66vw] text-slate-500 font-medium">
+                                  ({userMods.length} workspace modules)
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.6vw]">
+                                {userMods.map(renderModuleCard)}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                );
+              })
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
