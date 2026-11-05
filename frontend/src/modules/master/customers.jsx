@@ -28,6 +28,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotification } from "../../components/NotificationContext";
 import CustomDropdown from "../../components/CustomDropdown";
+import useModulePermissions from "../../components/useModulePermissions";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const STORAGE_KEY = "customer_db_grouped_v5";
@@ -179,6 +180,7 @@ function AutocompleteInput({ value, onChange, suggestions, placeholder, classNam
 }
 
 const CustomerDatabase = () => {
+  const { canWrite, canUpdate, canDelete } = useModulePermissions("customers");
   const { toast, confirm } = useNotification();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -1162,7 +1164,7 @@ const CustomerDatabase = () => {
           </div>
           <div className="flex gap-[1vw] items-center">
             <AnimatePresence>
-              {selectedItems.size > 0 && !isSupervisor && (
+              {selectedItems.size > 0 && !isSupervisor && canDelete && (
                 <div className="flex items-center gap-[0.5vw]">
                   <motion.button
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -1202,18 +1204,22 @@ const CustomerDatabase = () => {
             />
             {!isSupervisor && (
               <>
-                <button
-                  onClick={openAddModal}
-                  className="cursor-pointer flex items-center gap-[0.5vw] bg-white border border-gray-400 hover:bg-gray-50 text-gray-700 px-[1vw] h-[2.4vw] rounded-[0.4vw]"
-                >
-                  <UserPlus className="w-[1.2vw] h-[1.2vw]" /> Add
-                </button>
-                <button
-                  onClick={() => setShowUploadModal(true)}
-                  className="cursor-pointer flex items-center gap-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.4vw] rounded-[0.4vw]"
-                >
-                  <UploadCloud className="w-[1.2vw] h-[1.2vw]" /> Upload
-                </button>
+                {canWrite && (
+                  <button
+                    onClick={openAddModal}
+                    className="cursor-pointer flex items-center gap-[0.5vw] bg-white border border-gray-400 hover:bg-gray-50 text-gray-700 px-[1vw] h-[2.4vw] rounded-[0.4vw]"
+                  >
+                    <UserPlus className="w-[1.2vw] h-[1.2vw]" /> Add
+                  </button>
+                )}
+                {canWrite && (
+                  <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="cursor-pointer flex items-center gap-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.4vw] rounded-[0.4vw]"
+                  >
+                    <UploadCloud className="w-[1.2vw] h-[1.2vw]" /> Upload
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -1305,22 +1311,30 @@ const CustomerDatabase = () => {
                           rowSpan={rowSpan}
                           className="border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center align-middle bg-white"
                         >
-                          <div className="flex items-center gap-[0.15vw] px-[.5vw]">
-                            <button
-                              onClick={() => openEditModal(row.partyCode)}
-                              className="inline-flex items-center justify-center p-[0.4vw] rounded-[0.3vw] hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
-                              title="Edit Party"
-                            >
-                              <Edit2 className="w-[1vw] h-[1vw]" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteParty(row.partyCode)}
-                              className="inline-flex items-center justify-center p-[0.4vw] rounded-[0.3vw] hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
-                              title="Delete Party"
-                            >
-                              <Trash2 className="w-[1vw] h-[1vw]" />
-                            </button>
-                          </div>
+                          {(canUpdate || canDelete) ? (
+                            <div className="flex items-center gap-[0.15vw] px-[.5vw]">
+                              {canUpdate && (
+                                <button
+                                  onClick={() => openEditModal(row.partyCode)}
+                                  className="inline-flex items-center justify-center p-[0.4vw] rounded-[0.3vw] hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+                                  title="Edit Party"
+                                >
+                                  <Edit2 className="w-[1vw] h-[1vw]" />
+                                </button>
+                              )}
+                              {canDelete && (
+                                <button
+                                  onClick={() => handleDeleteParty(row.partyCode)}
+                                  className="inline-flex items-center justify-center p-[0.4vw] rounded-[0.3vw] hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+                                  title="Delete Party"
+                                >
+                                  <Trash2 className="w-[1vw] h-[1vw]" />
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-[0.68vw] text-slate-400 italic">View only</span>
+                          )}
                         </td>
                       ) : null}
                     </tr>
