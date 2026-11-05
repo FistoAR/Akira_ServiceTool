@@ -182,22 +182,23 @@ export default function Dashboard() {
   };
 
   // Determine whether to display Admin or User Dashboard:
-  // 1. If explicit permissions are configured for either dashboard view:
-  //    - If dashboardUser is enabled -> show User Dashboard
-  //    - Else if dashboardAdmin is enabled -> show Admin Dashboard
-  // 2. Fallback: Role or department is Admin/Supervisor -> Admin Dashboard; else User Dashboard
-  const isAdminOrSupervisor =
+  // Rule: At least one dashboard should be enabled. If neither is explicitly enabled,
+  // default to User Dashboard (dashboardUser) as fallback (or Admin Dashboard if user is Admin).
+  const isAdmin =
     loggedInUser?.role === "Admin" ||
-    loggedInUser?.department === "Admin" ||
-    loggedInUser?.role === "Supervisor";
+    loggedInUser?.department === "Admin";
 
   const perms = loggedInUser?.permissions || {};
-  let showAdminView = isAdminOrSupervisor;
+  let showAdminView = false;
 
-  if (perms.dashboardUser?.enabled) {
-    showAdminView = false;
-  } else if (perms.dashboardAdmin?.enabled) {
+  if (perms.dashboardAdmin?.enabled) {
     showAdminView = true;
+  } else if (perms.dashboardUser?.enabled) {
+    showAdminView = false;
+  } else {
+    // If no dashboard is explicitly enabled, fallback:
+    // Admin role gets Admin Dashboard; all other users get User Dashboard as default
+    showAdminView = isAdmin;
   }
 
   if (loading) {

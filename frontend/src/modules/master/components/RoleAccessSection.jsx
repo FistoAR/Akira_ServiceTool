@@ -552,6 +552,27 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
   // Perform confirmed Custom Matrix Save
   const executeSaveMatrix = async (allowedTargets) => {
+    // Rule: For a user - at least one dashboard should be enabled.
+    // If no dashboard is enabled, default to User Dashboard (dashboardUser) as a fallback!
+    let finalMatrix = { ...matrix };
+    const hasAdminDash = !!finalMatrix.dashboardAdmin?.enabled;
+    const hasUserDash = !!finalMatrix.dashboardUser?.enabled;
+
+    if (!hasAdminDash && !hasUserDash) {
+      finalMatrix = {
+        ...finalMatrix,
+        dashboardUser: {
+          enabled: true,
+          read: true,
+          write: false,
+          update: false,
+          delete: false,
+        },
+      };
+      setMatrix(finalMatrix);
+      toast("Defaulted to User Dashboard as at least one dashboard must remain active.", "info");
+    }
+
     setSaving(true);
     try {
       const token = sessionStorage.getItem("token") || localStorage.getItem("token");
@@ -561,7 +582,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         allowedTargets.map((emp) =>
           axios.put(
             `${API_URL}/auth/employees/${emp._id || emp.id}`,
-            { permissions: matrix },
+            { permissions: finalMatrix },
             { headers }
           )
         )
@@ -587,7 +608,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       // Update current loggedInUser in session if the active user was updated
       const activeUser = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "null");
       if (activeUser && allowedTargets.some(t => t.userId === activeUser.userId || t._id === activeUser._id)) {
-        const updatedActive = { ...activeUser, permissions: matrix };
+        const updatedActive = { ...activeUser, permissions: finalMatrix };
         sessionStorage.setItem("loggedInUser", JSON.stringify(updatedActive));
         localStorage.setItem("loggedInUser", JSON.stringify(updatedActive));
         window.dispatchEvent(new Event("auth-change"));
