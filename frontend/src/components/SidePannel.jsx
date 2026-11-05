@@ -212,19 +212,26 @@ export default function Sidebar() {
 
   const handleMenuClick = (item, e) => {
     if (item.subItems && item.subItems.length > 0) {
-      // Prevents the default Link behavior
       e.preventDefault();
-      
-      // Open the menu
-      setOpenMenu(item.path);
-      
-      // Expand sidebar if it's collapsed
+
+      // If sidebar is collapsed, expand it
       if (isCollapsed) {
         setIsCollapsed(false);
       }
 
-      // NEW LOGIC: Automatically navigate to the first sub-item
-      navigate(item.subItems[0].path);
+      // If already open, clicking it toggles it closed (while retaining current active page)
+      if (openMenu === item.path) {
+        setOpenMenu(null);
+      } else {
+        setOpenMenu(item.path);
+        // If current route is not already inside this menu's children, navigate to the first sub-item
+        const isChildActive = item.subItems.some(
+          (sub) => location.pathname === sub.path || (location.pathname + location.search) === sub.path
+        );
+        if (!isChildActive) {
+          navigate(item.subItems[0].path);
+        }
+      }
     } else {
       setOpenMenu(null);
     }
