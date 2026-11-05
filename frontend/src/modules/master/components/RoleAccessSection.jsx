@@ -898,105 +898,97 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       {/* Main Content Pane Split */}
       <div className="flex flex-1 min-h-0 overflow-hidden" style={{ height: "calc(94vh - 140px)" }}>
         {accessMode === "preset" ? (
-          /* ── Role Preset Mode View ── */
-          <div className="flex-1 p-[1.5vw] overflow-y-auto min-h-0 bg-slate-50/50 flex flex-col items-center justify-center">
-            <div className="w-full max-w-[52vw] bg-white border border-gray-200 rounded-[0.8vw] p-[1.5vw] shadow-sm space-y-[1.2vw]">
-              <div>
-                <h3 className="text-[1.1vw] font-bold text-gray-900">Standard Role Presets</h3>
-                <p className="text-[0.78vw] text-gray-500">
-                  Select a predefined template below. Clicking an option will automatically calibrate and save all operational, workspace, and dashboard permissions for the selected employee(s).
+          /* ── Role Preset Mode View (Clean, Minimal, Space-Filling Grid) ── */
+          <div className="flex-1 p-[1.2vw] overflow-y-auto min-h-0 bg-slate-50/40 flex flex-col justify-center items-center">
+            <div className="w-full max-w-[64vw] space-y-[1vw]">
+              <div className="text-center space-y-[0.2vw]">
+                <h3 className="text-[1.1vw] font-bold text-gray-900">Select Role Preset</h3>
+                <p className="text-[0.75vw] text-gray-500">
+                  Click a role to immediately apply standard operational permissions to the selected employee(s).
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-[1vw]">
                 {/* 1. Admin Preset */}
-                <div className="border border-purple-200 rounded-[0.6vw] p-[1vw] bg-purple-50/30 flex flex-col justify-between space-y-[1vw] hover:border-purple-400 transition-all">
-                  <div className="space-y-[0.4vw]">
+                <div className="border border-purple-200 rounded-[0.55vw] p-[1vw] bg-white flex flex-col justify-between hover:border-purple-400 hover:shadow-md transition-all space-y-[0.8vw]">
+                  <div className="space-y-[0.6vw]">
                     <div className="flex items-center gap-[0.5vw]">
-                      <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-purple-600 flex items-center justify-center text-white">
-                        <Icon icon="solar:shield-user-bold-duotone" className="w-[1vw] h-[1vw]" />
+                      <div className="w-[1.9vw] h-[1.9vw] rounded-[0.4vw] bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600 flex-shrink-0">
+                        <Icon icon="solar:shield-user-bold-duotone" className="w-[1.1vw] h-[1.1vw]" />
                       </div>
-                      <span className="text-[0.9vw] font-bold text-purple-900">Administrator</span>
+                      <div>
+                        <h4 className="text-[0.92vw] font-bold text-gray-900">Administrator</h4>
+                        <span className="text-[0.68vw] text-purple-600 font-semibold">Full System Access</span>
+                      </div>
                     </div>
-                    <p className="text-[0.7vw] text-purple-700/80">
-                      Unrestricted system-wide authority. Full CRUD across all Master data and Operational Management modules, with Admin KPI Dashboard.
+                    <p className="text-[0.72vw] text-gray-500 leading-relaxed">
+                      Complete administrative authority. Access all Master tables, customer profiles, operational registers, and KPI dashboards.
                     </p>
-                    <ul className="text-[0.68vw] text-purple-800 space-y-[0.15vw] list-disc list-inside pt-[0.2vw]">
-                      <li>Admin Dashboard enabled</li>
-                      <li>All Admin Pages (Full CRUD)</li>
-                      <li>Master & Customer Databases</li>
-                    </ul>
                   </div>
+
                   <button
                     type="button"
                     disabled={saving || containsProtectedAdmin}
                     onClick={() => handleApplyPreset("Admin")}
-                    className="w-full py-[0.45vw] text-[0.76vw] font-bold text-white bg-purple-600 hover:bg-purple-700 rounded-[0.35vw] transition-colors cursor-pointer disabled:opacity-50"
+                    className="w-full py-[0.42vw] text-[0.76vw] font-bold text-white bg-purple-600 hover:bg-purple-700 rounded-[0.35vw] transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
                   >
-                    Apply Admin Preset
+                    Set as Admin
                   </button>
                 </div>
 
                 {/* 2. Supervisor Preset */}
-                <div className="border border-indigo-200 rounded-[0.6vw] p-[1vw] bg-indigo-50/30 flex flex-col justify-between space-y-[1vw] hover:border-indigo-400 transition-all">
-                  <div className="space-y-[0.4vw]">
+                <div className="border border-indigo-200 rounded-[0.55vw] p-[1vw] bg-white flex flex-col justify-between hover:border-indigo-400 hover:shadow-md transition-all space-y-[0.8vw]">
+                  <div className="space-y-[0.6vw]">
                     <div className="flex items-center gap-[0.5vw]">
-                      <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-indigo-600 flex items-center justify-center text-white">
-                        <Icon icon="solar:user-check-bold-duotone" className="w-[1vw] h-[1vw]" />
+                      <div className="w-[1.9vw] h-[1.9vw] rounded-[0.4vw] bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 flex-shrink-0">
+                        <Icon icon="solar:user-check-bold-duotone" className="w-[1.1vw] h-[1.1vw]" />
                       </div>
-                      <span className="text-[0.9vw] font-bold text-indigo-900">Supervisor</span>
+                      <div>
+                        <h4 className="text-[0.92vw] font-bold text-gray-900">Supervisor</h4>
+                        <span className="text-[0.68vw] text-indigo-600 font-semibold">Operations Management</span>
+                      </div>
                     </div>
-                    <p className="text-[0.7vw] text-indigo-700/80">
-                      Operational management authority. Manage calls, inwards, NC reports, approvals, and reviews with Admin KPI Dashboard.
+                    <p className="text-[0.72vw] text-gray-500 leading-relaxed">
+                      Call coordination, engineer assignment, inwards review, and production approvals with admin analytics.
                     </p>
-                    <ul className="text-[0.68vw] text-indigo-800 space-y-[0.15vw] list-disc list-inside pt-[0.2vw]">
-                      <li>Admin Dashboard enabled</li>
-                      <li>Call & Material Management</li>
-                      <li>Read-only Master lookups</li>
-                    </ul>
                   </div>
+
                   <button
                     type="button"
                     disabled={saving || containsProtectedAdmin}
                     onClick={() => handleApplyPreset("Supervisor")}
-                    className="w-full py-[0.45vw] text-[0.76vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-[0.35vw] transition-colors cursor-pointer disabled:opacity-50"
+                    className="w-full py-[0.42vw] text-[0.76vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-[0.35vw] transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
                   >
-                    Apply Supervisor Preset
+                    Set as Supervisor
                   </button>
                 </div>
 
                 {/* 3. User Preset */}
-                <div className="border border-blue-200 rounded-[0.6vw] p-[1vw] bg-blue-50/30 flex flex-col justify-between space-y-[1vw] hover:border-blue-400 transition-all">
-                  <div className="space-y-[0.4vw]">
+                <div className="border border-blue-200 rounded-[0.55vw] p-[1vw] bg-white flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all space-y-[0.8vw]">
+                  <div className="space-y-[0.6vw]">
                     <div className="flex items-center gap-[0.5vw]">
-                      <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-blue-600 flex items-center justify-center text-white">
-                        <Icon icon="solar:wrench-bold-duotone" className="w-[1vw] h-[1vw]" />
+                      <div className="w-[1.9vw] h-[1.9vw] rounded-[0.4vw] bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 flex-shrink-0">
+                        <Icon icon="solar:user-speak-rounded-bold-duotone" className="w-[1.1vw] h-[1.1vw]" />
                       </div>
-                      <span className="text-[0.9vw] font-bold text-blue-900">Field / Workshop User</span>
+                      <div>
+                        <h4 className="text-[0.92vw] font-bold text-gray-900">Field / Workshop User</h4>
+                        <span className="text-[0.68vw] text-blue-600 font-semibold">Technician & Workspaces</span>
+                      </div>
                     </div>
-                    <p className="text-[0.7vw] text-blue-700/80">
-                      Individual technician and engineer view. Focused on assigned calls, bench repairs, and troubleshooting with User Operational Dashboard.
+                    <p className="text-[0.72vw] text-gray-500 leading-relaxed">
+                      Personal service call execution, component testing, material rework workspaces, and troubleshooting assistant.
                     </p>
-                    <ul className="text-[0.68vw] text-blue-800 space-y-[0.15vw] list-disc list-inside pt-[0.2vw]">
-                      <li>User Dashboard enabled</li>
-                      <li>Workspaces (Call & Material)</li>
-                      <li>Troubleshooting Chat</li>
-                    </ul>
                   </div>
+
                   <button
                     type="button"
                     disabled={saving || containsProtectedAdmin}
                     onClick={() => handleApplyPreset("User")}
-                    className="w-full py-[0.45vw] text-[0.76vw] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-[0.35vw] transition-colors cursor-pointer disabled:opacity-50"
+                    className="w-full py-[0.42vw] text-[0.76vw] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-[0.35vw] transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
                   >
-                    Apply User Preset
+                    Set as User
                   </button>
                 </div>
-              </div>
-
-              <div className="pt-[0.5vw] flex items-center justify-between text-[0.72vw] text-gray-500 border-t border-gray-100">
-                <span>Want granular fine-tuning? Switch to <strong>Custom Permissions</strong> tab in top right.</span>
-                <span className="italic text-gray-400">Applies immediately to selected employee(s)</span>
               </div>
             </div>
           </div>
