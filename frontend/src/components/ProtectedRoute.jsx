@@ -63,7 +63,7 @@ export default function ProtectedRoute({
         isSupervisor ||
         requiredModules.some((modId) => {
           const p = loggedInUser.permissions?.[modId];
-          return p && (p.incharge || p.isAdmin || p.write || p.update || p.delete);
+          return p && (p.enabled || p.read || p.write || p.update || p.delete || p.incharge || p.isAdmin);
         });
 
       if (!hasManagement) {

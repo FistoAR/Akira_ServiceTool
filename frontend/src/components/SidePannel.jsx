@@ -76,10 +76,10 @@ export default function Sidebar() {
     return !!(p?.incharge || p?.isAdmin || p?.write || p?.update || p?.delete);
   };
 
-  const canManageServiceCall = isAdmin || isSupervisor || ["callReg", "callAssign", "callEscalation", "callReports"].some(hasModuleInchargeOrAdmin);
-  const canManageServiceMaterial = isAdmin || isSupervisor || ["matInward", "matReports"].some(hasModuleInchargeOrAdmin);
-  const canManageProductionMaterial = isAdmin || isSupervisor || ["prodNC", "prodReports"].some(hasModuleInchargeOrAdmin);
-  const canManageCustomers = isAdmin || isSupervisor || hasAccess("customers");
+  const canManageServiceCall = ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess);
+  const canManageServiceMaterial = ["matInward", "matReports"].some(hasAccess);
+  const canManageProductionMaterial = ["prodNC", "prodReports"].some(hasAccess);
+  const canManageCustomers = hasAccess("customers");
 
   console.log("loggedInUser in SidePannel:", loggedInUser);
 
