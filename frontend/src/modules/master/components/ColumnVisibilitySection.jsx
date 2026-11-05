@@ -48,41 +48,45 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
   const totalCount = CUSTOMER_DB_COLUMNS.length;
 
   return (
-    <div className="p-[1.2vw]">
-      <div className="flex items-center justify-between mb-[1vw]">
+    <div className="flex-1 flex flex-col min-h-0 bg-white p-[1.4vw]">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-[0.8vw] mb-[1.2vw] border-b border-gray-100">
         <div>
-          <p className="text-[0.78vw] text-gray-800">
-            Toggle which columns appear in the Customer Database table. Required
-            columns cannot be hidden.
-          </p>
-          <p className="text-[0.72vw] text-blue-600 mt-[0.2vw] font-medium">
-            {visibleCount} of {totalCount} columns visible
+          <h3 className="text-[0.9vw] font-bold text-gray-900">Database Column Visibility</h3>
+          <p className="text-[0.74vw] text-gray-500">
+            Control table column presence in Customer Database. Core identifying columns remain pinned.
           </p>
         </div>
-        <div className="flex items-center gap-[0.6vw]">
+        <div className="flex items-center gap-[0.7vw]">
+          <span className="text-[0.72vw] font-semibold text-blue-700 bg-blue-50 px-[0.7vw] py-[0.25vw] rounded-full border border-blue-200">
+            {visibleCount} of {totalCount} columns visible
+          </span>
           <button
             type="button"
             onClick={enableAll}
-            className="flex items-center gap-[0.35vw] border border-slate-400 text-slate-600 hover:bg-slate-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] transition-all"
+            className="flex items-center gap-[0.35vw] border border-gray-300 text-gray-700 hover:bg-gray-50 px-[0.85vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"
           >
             <Eye className="w-[0.85vw] h-[0.85vw]" /> Show All
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${
+              saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           >
             {saved ? (
               <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
             ) : (
               <Save className="w-[0.9vw] h-[0.9vw]" />
             )}
-            {saved ? "Saved!" : "Save"}
+            {saved ? "Saved!" : "Save Configuration"}
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-[0.7vw]">
+      {/* Modern Compact Grid with clean list item style */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.8vw]">
         {CUSTOMER_DB_COLUMNS.map((col) => {
           const isOn = colVis[col.key] ?? true;
           const isRequired = col.required;
@@ -90,68 +94,69 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
             <div
               key={col.key}
               onClick={() => toggle(col.key)}
-              className={`flex items-center justify-between px-[0.9vw] py-[0.7vw] rounded-[0.5vw] border transition-all cursor-pointer select-none
-                ${
-                  isRequired
-                    ? "opacity-60 cursor-not-allowed bg-slate-50 border-slate-400"
-                    : isOn
-                      ? "bg-blue-50 border-blue-200 hover:border-blue-300"
-                      : "bg-white border-slate-400 hover:border-slate-400"
-                }`}
+              className={`flex items-center justify-between px-[1vw] py-[0.75vw] rounded-[0.5vw] border transition-all select-none ${
+                isRequired
+                  ? "opacity-60 cursor-not-allowed bg-gray-50 border-gray-200"
+                  : isOn
+                    ? "bg-white border-blue-200 hover:border-blue-400 cursor-pointer shadow-2xs"
+                    : "bg-gray-50/50 border-gray-200 hover:border-gray-300 cursor-pointer"
+              }`}
             >
-              <div className="flex flex-col gap-[0.1vw] flex-1 min-w-0">
-                <div className="flex items-center gap-[0.35vw]">
-                  <span
-                    className={`text-[0.8vw] font-semibold truncate ${isOn ? "text-slate-800" : "text-slate-400"}`}
-                  >
+              <div className="flex flex-col gap-[0.15vw] min-w-0 pr-[0.8vw]">
+                <div className="flex items-center gap-[0.4vw]">
+                  <span className={`text-[0.8vw] font-semibold truncate ${isOn ? "text-gray-900" : "text-gray-400"}`}>
                     {col.label}
                   </span>
                   {isRequired && (
-                    <span className="text-[0.58vw] bg-slate-200 text-gray-800 px-[0.35vw] py-[0.05vw] rounded font-semibold flex-shrink-0">
-                      required
+                    <span className="text-[0.6vw] bg-gray-200 text-gray-700 px-[0.35vw] py-[0.05vw] rounded font-semibold flex-shrink-0">
+                      Required
                     </span>
                   )}
                 </div>
-                <span className="text-[0.65vw] text-slate-400 truncate">
+                <span className="text-[0.68vw] text-gray-400 truncate">
                   {col.description}
                 </span>
               </div>
-              <div className="flex-shrink-0 ml-[0.6vw]">
-                {isRequired ? (
-                  <div className="w-[2.2vw] h-[1.2vw] rounded-full bg-slate-300 flex items-center justify-end px-[0.15vw]">
-                    <div className="w-[0.9vw] h-[0.9vw] rounded-full bg-white shadow-sm" />
-                  </div>
-                ) : isOn ? (
-                  <div className="w-[2.2vw] h-[1.2vw] rounded-full bg-blue-500 flex items-center justify-end px-[0.15vw] transition-all">
-                    <div className="w-[0.9vw] h-[0.9vw] rounded-full bg-white shadow-sm" />
-                  </div>
-                ) : (
-                  <div className="w-[2.2vw] h-[1.2vw] rounded-full bg-slate-200 flex items-center justify-start px-[0.15vw] transition-all">
-                    <div className="w-[0.9vw] h-[0.9vw] rounded-full bg-white shadow-sm" />
-                  </div>
-                )}
-              </div>
+
+              {/* Native Switch */}
+              <label className="relative inline-flex items-center cursor-pointer pointer-events-none flex-shrink-0">
+                <input
+                  type="checkbox"
+                  checked={isOn}
+                  disabled={isRequired}
+                  readOnly
+                  className="sr-only peer"
+                />
+                <div className={`w-[2.1vw] h-[1.15vw] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.12vw] after:left-[0.15vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[0.9vw] after:w-[0.9vw] after:transition-all ${
+                  isRequired ? "bg-gray-300" : "bg-gray-200 peer-checked:bg-blue-600"
+                }`}></div>
+              </label>
             </div>
           );
         })}
       </div>
 
-      {/* Live preview strip */}
-      <div className="mt-[1vw] bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">
-        <p className="text-[0.68vw] font-semibold text-gray-800 mb-[0.4vw]">
-          Table Header Preview
-        </p>
+      {/* Live Table Header Preview */}
+      <div className="mt-[1.6vw] bg-gray-50/80 border border-gray-200 rounded-[0.5vw] p-[0.9vw]">
+        <div className="flex items-center justify-between mb-[0.5vw]">
+          <span className="text-[0.72vw] font-bold text-gray-700 uppercase tracking-wider">
+            Live Header Strip Preview
+          </span>
+          <span className="text-[0.68vw] text-gray-400">
+            Preview of customer database columns
+          </span>
+        </div>
         <div className="flex items-center gap-[0.4vw] flex-wrap">
-          <span className="text-[0.65vw] bg-slate-200 text-slate-600 px-[0.5vw] py-[0.2vw] rounded font-mono">
+          <span className="text-[0.68vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
             ☑
           </span>
-          <span className="text-[0.65vw] bg-slate-200 text-slate-600 px-[0.5vw] py-[0.2vw] rounded font-mono">
+          <span className="text-[0.68vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
             S.No
           </span>
           {CUSTOMER_DB_COLUMNS.filter((c) => colVis[c.key] ?? true).map((c) => (
             <span
               key={c.key}
-              className="text-[0.65vw] bg-blue-100 text-blue-700 border border-blue-200 px-[0.5vw] py-[0.2vw] rounded font-semibold"
+              className="text-[0.68vw] bg-white text-blue-700 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded font-semibold shadow-2xs"
             >
               {c.label}
             </span>
@@ -160,6 +165,7 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
       </div>
     </div>
   );
+  
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

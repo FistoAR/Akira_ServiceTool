@@ -113,56 +113,66 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
   };
 
   return (
-    <div>
-      <div className="p-[1.2vw] grid grid-cols-2 gap-[1.5vw]">
-        <div>
-          <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
-            Existing Categories
-          </p>
-          <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
+    <div className="flex-1 flex flex-col min-h-0 bg-white">
+      <div className="p-[1.4vw] grid grid-cols-1 lg:grid-cols-12 gap-[1.8vw] items-start">
+        {/* Left Column: Categories List */}
+        <div className="lg:col-span-7 flex flex-col">
+          <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100">
+            <div>
+              <h3 className="text-[0.88vw] font-bold text-gray-900">Configured Categories</h3>
+              <p className="text-[0.72vw] text-gray-500">Manage client classification groups</p>
+            </div>
+            <span className="text-[0.7vw] font-semibold text-gray-500 bg-gray-100 px-[0.6vw] py-[0.2vw] rounded-full">
+              {safePartyTypes.length} total
+            </span>
+          </div>
+
+          <div className="divide-y divide-gray-100 border border-gray-200 rounded-[0.6vw] bg-white overflow-hidden max-h-[60vh] overflow-y-auto">
             {safePartyTypes.length === 0 ? (
-              <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
-                No categories yet
+              <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
+                No categories configured yet.
               </div>
             ) : (
               safePartyTypes.map((type, idx) => {
                 const badgeClass = TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
+                const isEditingThis = editingType && (editingType._id === type._id || editingType.id === type.id);
                 return (
                   <div
                     key={type.id || type._id}
-                    className={`flex items-center justify-between px-[0.9vw] py-[0.65vw] hover:bg-slate-50 border-b border-slate-400 last:border-0 group transition-colors ${
-                      editingType && (editingType._id === type._id || editingType.id === type.id)
-                        ? "bg-blue-50/50 border-l-4 border-l-blue-600"
-                        : ""
+                    className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
+                      isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"
                     }`}
                   >
-                    <div className="flex flex-col gap-[0.2vw]">
-                      <span className={`text-[0.75vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border w-fit ${badgeClass}`}>
+                    <div className="flex items-center gap-[0.7vw]">
+                      <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-[0.72vw] font-bold">
+                        {idx + 1}
+                      </span>
+                      <span className={`text-[0.76vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
                         {type.name}
                       </span>
                     </div>
-                    
+
                     {(canUpdate || canDelete) && (
-                      <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-[0.4vw] opacity-0 group-hover:opacity-100 transition-opacity">
                         {canUpdate && (
                           <button
                             type="button"
                             onClick={() => setEditingType({ ...type })}
-                            className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                            className="p-[0.35vw] text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-[0.3vw] transition-colors cursor-pointer"
                             title="Edit Category"
                           >
-                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                            <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
                           </button>
                         )}
                         {canDelete && (
                           <button
                             type="button"
                             onClick={() => handleDelete(type.id, type._id)}
-                            className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                            className="p-[0.35vw] text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-[0.3vw] transition-colors cursor-pointer"
                             disabled={safePartyTypes.length === 1}
                             title="Delete Category"
                           >
-                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
                           </button>
                         )}
                       </div>
@@ -174,85 +184,92 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-[0.8vw] bg-white border border-slate-400 rounded-[0.6vw] p-[1vw]">
+        {/* Right Column: Clean Form Workspace */}
+        <div className="lg:col-span-5 bg-gray-50/60 border border-gray-200 rounded-[0.6vw] p-[1.2vw]">
           {editingType ? (
             canUpdate ? (
-              <>
-                <p className="text-[0.85vw] font-bold text-slate-800 border-b border-slate-200 pb-[0.3vw] flex items-center gap-[0.4vw]">
-                  <Edit2 className="w-[1vw] h-[1vw] text-blue-600" />
-                  Edit Category: {editingType.name}
-                </p>
-
-                <div className="space-y-[0.8vw]">
-                  <div className="space-y-[0.3vw]">
-                    <label className="text-[0.72vw] font-semibold text-slate-600">Category Name *</label>
-                    <input
-                      type="text"
-                      value={editingType.name}
-                      onChange={(e) => setEditingType({ ...editingType, name: e.target.value })}
-                      placeholder="e.g. Domestic, Export..."
-                      className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    />
+              <div className="space-y-[1vw]">
+                <div className="flex items-center justify-between pb-[0.5vw] border-b border-gray-200">
+                  <div className="flex items-center gap-[0.4vw]">
+                    <Edit2 className="w-[1vw] h-[1vw] text-blue-600" />
+                    <h4 className="text-[0.88vw] font-bold text-gray-900">Edit Category</h4>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditingType(null)}
+                    className="text-gray-400 hover:text-gray-600 text-[0.72vw]"
+                  >
+                    Cancel
+                  </button>
                 </div>
 
-                <div className="flex gap-[0.5vw] mt-[0.5vw]">
+                <div className="space-y-[0.35vw]">
+                  <label className="text-[0.74vw] font-semibold text-gray-700">Category Name *</label>
+                  <input
+                    type="text"
+                    value={editingType.name}
+                    onChange={(e) => setEditingType({ ...editingType, name: e.target.value })}
+                    placeholder="e.g. Domestic, Export..."
+                    className="w-full bg-white border border-gray-300 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
+                  />
+                </div>
+
+                <div className="flex gap-[0.5vw] pt-[0.2vw]">
                   <button
                     type="button"
                     onClick={handleUpdate}
                     disabled={!editingType.name.trim()}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
                   >
                     Save Changes
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditingType(null)}
-                    className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
+                    className="px-[1vw] bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                 </div>
-              </>
+              </div>
             ) : (
-              <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
+              <div className="p-[2vw] text-center text-gray-400 text-[0.78vw]">
                 You do not have permission to edit categories.
               </div>
             )
           ) : canWrite ? (
-            <>
-              <p className="text-[0.85vw] font-bold text-slate-800 border-b border-slate-200 pb-[0.3vw] flex items-center gap-[0.4vw]">
-                <Icon icon="solar:add-circle-bold-duotone" className="w-[1vw] h-[1vw] text-emerald-600" />
-                Add New Category
-              </p>
-
-              <div className="space-y-[0.8vw]">
-                <div className="space-y-[0.3vw]">
-                  <label className="text-[0.72vw] font-semibold text-slate-600">Category Name *</label>
-                  <input
-                    type="text"
-                    value={newType.name}
-                    onChange={(e) => setNewType({ ...newType, name: e.target.value })}
-                    placeholder="e.g. Domestic, Export..."
-                    className="w-full border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
+            <div className="space-y-[1vw]">
+              <div className="pb-[0.5vw] border-b border-gray-200">
+                <h4 className="text-[0.88vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
+                  <Icon icon="solar:add-circle-bold-duotone" className="w-[1.05vw] h-[1.05vw] text-emerald-600" />
+                  Add New Category
+                </h4>
+                <p className="text-[0.7vw] text-gray-500">Create a new customer classification tag</p>
               </div>
 
-              <div className="flex gap-[0.5vw] mt-[0.5vw]">
-                <button
-                  type="button"
-                  onClick={handleAdd}
-                  disabled={!newType.name.trim()}
-                  className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed text-white py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all cursor-pointer"
-                >
-                  <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Category
-                </button>
+              <div className="space-y-[0.35vw]">
+                <label className="text-[0.74vw] font-semibold text-gray-700">Category Name *</label>
+                <input
+                  type="text"
+                  value={newType.name}
+                  onChange={(e) => setNewType({ ...newType, name: e.target.value })}
+                  placeholder="e.g. OEM, Tier 1, Direct Customer..."
+                  className="w-full bg-white border border-gray-300 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
+                />
               </div>
-            </>
+
+              <button
+                type="button"
+                onClick={handleAdd}
+                disabled={!newType.name.trim()}
+                className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer shadow-sm"
+              >
+                <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Category
+              </button>
+            </div>
           ) : (
-            <div className="p-[2vw] text-center text-slate-400 text-[0.78vw] flex flex-col items-center justify-center h-full gap-[0.4vw]">
-              <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.8vw] h-[1.8vw] text-slate-300" />
+            <div className="p-[2vw] text-center text-gray-400 text-[0.78vw] flex flex-col items-center justify-center gap-[0.4vw]">
+              <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.8vw] h-[1.8vw] text-gray-300" />
               <span>Read-only access. You can view existing categories on the left.</span>
             </div>
           )}
@@ -260,6 +277,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
       </div>
     </div>
   );
+  
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

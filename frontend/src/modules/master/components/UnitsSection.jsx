@@ -94,28 +94,38 @@ const UnitsSection = ({ units = [], setUnits }) => {
   };
 
   return (
-    <div>
-      <div className="p-[1.2vw] grid grid-cols-2 gap-[1.5vw]">
-        <div>
-          <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
-            Existing Units
-          </p>
-          <div className="border border-slate-400 rounded-[0.5vw] max-h-[64vh] min-h-[64vh] overflow-auto">
+    <div className="flex-1 flex flex-col min-h-0 bg-white">
+      <div className="p-[1.4vw] grid grid-cols-1 lg:grid-cols-12 gap-[1.8vw] items-start">
+        {/* Left Column: Units List */}
+        <div className="lg:col-span-7 flex flex-col">
+          <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100">
+            <div>
+              <h3 className="text-[0.88vw] font-bold text-gray-900">Configured Units of Measurement</h3>
+              <p className="text-[0.72vw] text-gray-500">Inventory and material measurement units</p>
+            </div>
+            <span className="text-[0.7vw] font-semibold text-gray-500 bg-gray-100 px-[0.6vw] py-[0.2vw] rounded-full">
+              {safeUnits.length} total
+            </span>
+          </div>
+
+          <div className="divide-y divide-gray-100 border border-gray-200 rounded-[0.6vw] bg-white overflow-hidden max-h-[60vh] overflow-y-auto">
             {safeUnits.length === 0 ? (
-              <div className="p-[2vw] text-center text-slate-400 text-[0.78vw]">
-                No units yet
+              <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
+                No units configured yet.
               </div>
             ) : (
               safeUnits.map((type, idx) => {
-                const badgeClass =
-                  TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
+                const badgeClass = TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
+                const isEditingThis = editingType && (editingType._id === type._id || editingType.id === type.id);
                 return (
                   <div
-                    key={type.id}
-                    className="flex items-center gap-[0.8vw] px-[0.9vw] py-[0.65vw] hover:bg-slate-50 border-b border-slate-400 last:border-0 group transition-colors"
+                    key={type.id || type._id || idx}
+                    className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
+                      isEditingThis ? "bg-emerald-50/70" : "hover:bg-gray-50/70"
+                    }`}
                   >
-                    {editingType && (editingType._id === type._id || editingType.id === type.id) ? (
-                      <div className="flex flex-1 items-center gap-[0.5vw]">
+                    {isEditingThis ? (
+                      <div className="flex-1 flex items-center gap-[0.5vw]">
                         <input
                           autoFocus
                           type="text"
@@ -130,7 +140,7 @@ const UnitsSection = ({ units = [], setUnits }) => {
                             if (e.key === "Enter") handleUpdate();
                             if (e.key === "Escape") setEditingType(null);
                           }}
-                          className="flex-1 border border-blue-300 rounded-[0.3vw] px-[0.5vw] py-[0.35vw] text-[0.82vw] outline-none ring-2 ring-blue-100"
+                          className="flex-1 bg-white border border-emerald-400 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.82vw] outline-none ring-2 ring-emerald-100 font-medium"
                         />
                         <button
                           type="button"
@@ -142,41 +152,44 @@ const UnitsSection = ({ units = [], setUnits }) => {
                         <button
                           type="button"
                           onClick={() => setEditingType(null)}
-                          className="p-[0.4vw] bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-[0.3vw] cursor-pointer"
+                          className="p-[0.4vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.3vw] cursor-pointer"
                         >
                           <X className="w-[0.85vw] h-[0.85vw]" />
                         </button>
                       </div>
                     ) : (
                       <>
-                        <span
-                          className={`text-[0.75vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border ${badgeClass}`}
-                        >
-                          {type.name}
-                        </span>
-                        
+                        <div className="flex items-center gap-[0.65vw]">
+                          <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center text-[0.72vw] font-bold">
+                            {idx + 1}
+                          </span>
+                          <span className={`text-[0.76vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
+                            {type.name}
+                          </span>
+                        </div>
+
                         {(canUpdate || canDelete) && (
-                          <div className="flex gap-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center gap-[0.35vw] opacity-0 group-hover:opacity-100 transition-opacity">
                             {canUpdate && (
                               <button
                                 type="button"
                                 onClick={() =>
                                   setEditingType({ id: type.id, _id: type._id, name: type.name })
                                 }
-                                className="p-[0.35vw] text-blue-500 hover:bg-blue-50 rounded-[0.25vw] cursor-pointer"
+                                className="p-[0.35vw] text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-[0.3vw] transition-colors cursor-pointer"
                                 title="Edit Unit"
                               >
-                                <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
                               </button>
                             )}
                             {canDelete && (
                               <button
                                 type="button"
                                 onClick={() => handleDelete(type.id, type._id)}
-                                className="p-[0.35vw] text-red-400 hover:bg-red-50 rounded-[0.25vw] cursor-pointer"
+                                className="p-[0.35vw] text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-[0.3vw] transition-colors cursor-pointer"
                                 title="Delete Unit"
                               >
-                                <Icon icon="solar:trash-bin-trash-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
                               </button>
                             )}
                           </div>
@@ -189,58 +202,55 @@ const UnitsSection = ({ units = [], setUnits }) => {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-[0.8vw]">
-          <div>
-            <p className="text-[0.75vw] font-semibold text-gray-800 uppercase tracking-wide mb-[0.6vw]">
-              Add New Unit
-            </p>
+
+        {/* Right Column: Quick Add Workspace */}
+        <div className="lg:col-span-5 bg-gray-50/60 border border-gray-200 rounded-[0.6vw] p-[1.2vw]">
+          <div className="space-y-[1vw]">
+            <div className="pb-[0.5vw] border-b border-gray-200">
+              <h4 className="text-[0.88vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
+                <Icon icon="solar:tuning-2-bold-duotone" className="w-[1.05vw] h-[1.05vw] text-emerald-600" />
+                Add Measurement Unit
+              </h4>
+              <p className="text-[0.7vw] text-gray-500">Define measurement units for service parts</p>
+            </div>
+
             {canWrite ? (
-              <div className="flex gap-[0.5vw]">
-                <input
-                  type="text"
-                  value={newTypeName}
-                  onChange={(e) => setNewTypeName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-                  placeholder="e.g. Nos, Kgs, Ltrs…"
-                  className="flex-1 border border-slate-400 rounded-[0.4vw] px-[0.7vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
+              <div className="space-y-[0.8vw]">
+                <div className="space-y-[0.35vw]">
+                  <label className="text-[0.74vw] font-semibold text-gray-700">Unit Name *</label>
+                  <input
+                    type="text"
+                    value={newTypeName}
+                    onChange={(e) => setNewTypeName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleAdd();
+                    }}
+                    placeholder="e.g. Nos, Kgs, Ltrs, Sets…"
+                    className="w-full bg-white border border-gray-300 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all font-medium"
+                  />
+                </div>
+
                 <button
                   type="button"
                   onClick={handleAdd}
                   disabled={!newTypeName.trim()}
-                  className="flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-[0.9vw] py-[0.5vw] rounded-[0.4vw] cursor-pointer text-[0.8vw] font-semibold transition-all"
+                  className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer shadow-sm"
                 >
-                  <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add
+                  <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Unit
                 </button>
               </div>
             ) : (
-              <div className="p-[1.5vw] text-center text-slate-400 text-[0.78vw] border border-dashed border-slate-300 rounded-[0.4vw] flex flex-col items-center justify-center gap-[0.3vw]">
-                <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.4vw] h-[1.4vw] text-slate-300" />
+              <div className="p-[2vw] text-center text-gray-400 text-[0.78vw] flex flex-col items-center justify-center gap-[0.4vw]">
+                <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.8vw] h-[1.8vw] text-gray-300" />
                 <span>Read-only access. You can view existing units on the left.</span>
               </div>
             )}
           </div>
-          {safeUnits.length > 0 && (
-            <div className="bg-slate-50 border border-slate-400 rounded-[0.4vw] p-[0.7vw]">
-              <p className="text-[0.68vw] font-semibold text-gray-800 mb-[0.5vw]">
-                Preview
-              </p>
-              <div className="flex flex-wrap gap-[0.4vw]">
-                {safeUnits.map((type, idx) => (
-                  <span
-                    key={type.id}
-                    className={`text-[0.72vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.3vw] border ${TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length]}`}
-                  >
-                    {type.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
   );
+  
 };
 
 
