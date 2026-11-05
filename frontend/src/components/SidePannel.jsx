@@ -141,7 +141,7 @@ export default function Sidebar() {
     {
       path: "/serviceMaterialResponse",
       label: "Service Material (Workspace)",
-      iconify: "solar:wrench-bold-duotone",
+      iconify: "solar:settings-minimalistic-bold-duotone",
       show: isAdmin || hasAccess("serviceMaterialResponse"),
     },
     {
@@ -157,7 +157,7 @@ export default function Sidebar() {
     {
       path: "/productionMaterialResponse",
       label: "Production Material (Workspace)",
-      iconify: "solar:hammer-and-wrench-bold-duotone",
+      iconify: "solar:box-minimalistic-bold-duotone",
       show: isAdmin || hasAccess("productionMaterialResponse"),
     },
     {
