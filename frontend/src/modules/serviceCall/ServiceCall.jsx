@@ -1339,9 +1339,43 @@ const ServiceCallForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.partyCode) {
-      alert("Please select a customer.");
+    if (!formData.mode) {
+      alert("Please select Mode of Call.");
       return;
+    }
+    if (!formData.priority) {
+      alert("Please select Priority.");
+      return;
+    }
+    if (!formData.partyCode || !formData.customerName) {
+      alert("Please select a Customer Name from the search list or create a new customer.");
+      return;
+    }
+    if (!formData.contactNumber || !formData.contactNumber.trim()) {
+      alert("Please enter Contact Number.");
+      return;
+    }
+    if (formData.locationType === "Site" && (!formData.location || !formData.location.trim())) {
+      alert("Please enter Site Address for location type 'Site'.");
+      return;
+    }
+
+    // Validate products
+    if (!formData.products || formData.products.length === 0) {
+      alert("Please add at least one product.");
+      return;
+    }
+
+    for (let i = 0; i < formData.products.length; i++) {
+      const p = formData.products[i];
+      if (!p.productModel || !p.productModel.trim()) {
+        alert(`Please select or enter Product Model for Product #${i + 1}.`);
+        return;
+      }
+      if (!p.callDescription || !p.callDescription.trim()) {
+        alert(`Please enter Call Description / Fault for Product #${i + 1}.`);
+        return;
+      }
     }
 
     // In edit mode, preserve original values if they exist, otherwise use defaults
@@ -1712,12 +1746,16 @@ const ServiceCallForm = ({
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">
-                {formData.locationType === "Site" ? "Site Address" : "Location"}
+                {formData.locationType === "Site" ? (
+                  <>Site Address <span className="text-rose-500">*</span></>
+                ) : (
+                  "Location"
+                )}
               </label>
               <input
                 value={formData.location}
                 onChange={(e) => set("location", e.target.value)}
-                placeholder="City, State"
+                placeholder={formData.locationType === "Site" ? "Enter site address" : "City, State"}
                 className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
               />
             </div>
@@ -2072,7 +2110,7 @@ const ServiceCallForm = ({
 
                   <div className="col-span-2 flex flex-col gap-[0.35vw]">
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
-                      Call Description / Fault
+                      Call Description / Fault <span className="text-rose-500">*</span>
                     </label>
                     <textarea
                       rows="4"
