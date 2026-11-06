@@ -1028,7 +1028,6 @@ const CustomerDatabase = () => {
     }
   };
 
-  const [statusTab, setStatusTab] = useState("All");
   const [sortOption, setSortOption] = useState("latest");
   const [viewMode, setViewMode] = useState("list"); // "list" | "grid"
   const [activeActionsPartyCode, setActiveActionsPartyCode] = useState(null);
@@ -1044,48 +1043,30 @@ const CustomerDatabase = () => {
     return () => window.removeEventListener("click", handleOutside);
   }, []);
 
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, filterType, statusTab, sortOption]);
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, filterType, sortOption]);
 
   // Aggregate unique parties for top KPI stats
   const partyStats = useMemo(() => {
     const uniqueParties = new Map();
+    const uniqueItems = new Set();
+    const uniqueSegments = new Set();
+    const uniqueStates = new Set();
+
     data.forEach((item) => {
       if (!uniqueParties.has(item.partyCode)) {
         uniqueParties.set(item.partyCode, item);
       }
+      if (item.itemCode) uniqueItems.add(item.itemCode);
+      if (item.productSegment) uniqueSegments.add(item.productSegment);
+      if (item.state) uniqueStates.add(item.state);
     });
 
-    const total = uniqueParties.size;
-    // Derive active vs inactive based on party presence or fallback proportion
-    let active = 0;
-    let inactive = 0;
-    let newThisMonth = 0;
-    const now = new Date();
-
-    uniqueParties.forEach((p) => {
-      const isInactive = p.status === "Inactive" || p.isActive === false;
-      if (isInactive) {
-        inactive++;
-      } else {
-        active++;
-      }
-      if (p.createdAt) {
-        const cDate = new Date(p.createdAt);
-        if (cDate.getMonth() === now.getMonth() && cDate.getFullYear() === now.getFullYear()) {
-          newThisMonth++;
-        }
-      }
-    });
-
-    if (newThisMonth === 0 && total > 0) {
-      newThisMonth = Math.min(12, Math.max(1, Math.round(total * 0.08)));
-    }
-    if (inactive === 0 && total > 5) {
-      inactive = Math.round(total * 0.12);
-      active = total - inactive;
-    }
-
-    return { total, active, inactive, newThisMonth };
+    return {
+      total: uniqueParties.size,
+      itemsCount: uniqueItems.size,
+      segmentsCount: uniqueSegments.size,
+      statesCount: uniqueStates.size,
+    };
   }, [data]);
 
   const filteredData = useMemo(() => {
@@ -1102,12 +1083,7 @@ const CustomerDatabase = () => {
         filterType === "All" ||
         String(item.partyType).toLowerCase() === filterType.toLowerCase();
 
-      // Status tab filter
-      let matchStatus = true;
-      if (statusTab === "Active") matchStatus = item.status !== "Inactive";
-      if (statusTab === "Inactive") matchStatus = item.status === "Inactive";
-
-      return ms && mt && matchStatus;
+      return ms && mt;
     });
 
     if (sortOption === "latest") {
@@ -1121,7 +1097,7 @@ const CustomerDatabase = () => {
     }
 
     return result;
-  }, [data, searchTerm, filterType, statusTab, sortOption]);
+  }, [data, searchTerm, filterType, sortOption]);
 
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
   const paginatedData = filteredData.slice(
@@ -1319,7 +1295,7 @@ const CustomerDatabase = () => {
           </svg>
         </div>
 
-        {/* 2. Active Customers */}
+        {/* 2. Total Catalog Items */}
         <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md transition-all flex items-center justify-between">
           <div className="flex items-center gap-[0.8vw]">
             <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
@@ -1327,10 +1303,10 @@ const CustomerDatabase = () => {
             </div>
             <div>
               <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                {partyStats.active}
+                {partyStats.itemsCount}
               </div>
               <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                Active Customers
+                Catalog Items
               </div>
             </div>
           </div>
@@ -1346,23 +1322,23 @@ const CustomerDatabase = () => {
           </svg>
         </div>
 
-        {/* 3. Inactive Customers */}
+        {/* 3. Product Segments */}
         <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md transition-all flex items-center justify-between">
           <div className="flex items-center gap-[0.8vw]">
-            <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-amber-50 flex items-center justify-center text-amber-500">
-              <AlertCircle className="w-[1.2vw] h-[1.2vw]" />
+            <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+              <Package className="w-[1.2vw] h-[1.2vw]" />
             </div>
             <div>
               <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                {partyStats.inactive}
+                {partyStats.segmentsCount}
               </div>
               <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                Inactive Customers
+                Product Segments
               </div>
             </div>
           </div>
-          {/* Amber Sparkline SVG */}
-          <svg className="w-[4.2vw] h-[1.7vw] text-amber-500" viewBox="0 0 100 30" fill="none">
+          {/* Purple Sparkline SVG */}
+          <svg className="w-[4.2vw] h-[1.7vw] text-purple-500" viewBox="0 0 100 30" fill="none">
             <path
               d="M5 22 Q 30 25, 55 16 T 80 18 T 95 10"
               stroke="currentColor"
@@ -1373,23 +1349,23 @@ const CustomerDatabase = () => {
           </svg>
         </div>
 
-        {/* 4. New This Month */}
+        {/* 4. Active Regions / States */}
         <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md transition-all flex items-center justify-between">
           <div className="flex items-center gap-[0.8vw]">
-            <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
-              <Package className="w-[1.2vw] h-[1.2vw]" />
+            <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+              <Users className="w-[1.2vw] h-[1.2vw]" />
             </div>
             <div>
               <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                {partyStats.newThisMonth}
+                {partyStats.statesCount}
               </div>
               <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                New This Month
+                Covered States
               </div>
             </div>
           </div>
-          {/* Purple Sparkline SVG */}
-          <svg className="w-[4.2vw] h-[1.7vw] text-purple-500" viewBox="0 0 100 30" fill="none">
+          {/* Indigo Sparkline SVG */}
+          <svg className="w-[4.2vw] h-[1.7vw] text-indigo-500" viewBox="0 0 100 30" fill="none">
             <path
               d="M5 26 Q 25 24, 45 22 T 70 14 T 95 8"
               stroke="currentColor"
@@ -1403,36 +1379,14 @@ const CustomerDatabase = () => {
 
       {/* ── Status Tab Pills Bar & View Controls ── */}
       <div className="flex items-center justify-between">
-        {/* Left Side: Status Pills */}
+        {/* Left Side: Total count badge */}
         <div className="flex items-center gap-[0.5vw]">
-          {[
-            { label: "All", count: partyStats.total },
-            { label: "Active", count: partyStats.active },
-            { label: "Inactive", count: partyStats.inactive },
-            { label: "New", count: partyStats.newThisMonth },
-          ].map((tab) => {
-            const isActive = statusTab === tab.label;
-            return (
-              <button
-                key={tab.label}
-                onClick={() => setStatusTab(tab.label)}
-                className={`flex items-center gap-[0.4vw] px-[0.85vw] py-[0.35vw] rounded-full text-[0.74vw] font-semibold cursor-pointer transition-all ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]"
-                    : "bg-white text-gray-700 border border-gray-200/90 hover:bg-gray-50"
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span
-                  className={`text-[0.68vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
-                    isActive ? "bg-white/20 text-white" : "text-gray-500"
-                  }`}
-                >
-                  {tab.count}
-                </span>
-              </button>
-            );
-          })}
+          <div className="flex items-center gap-[0.4vw] px-[0.85vw] py-[0.35vw] rounded-full text-[0.74vw] font-semibold bg-blue-600 text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]">
+            <span>All Customers</span>
+            <span className="text-[0.68vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold bg-white/20 text-white">
+              {partyStats.total}
+            </span>
+          </div>
         </div>
 
         {/* Right Side: Bulk Delete, Sort Dropdown & Layout Mode Icons */}
