@@ -313,10 +313,27 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         }
       }
       
-      // Full refresh from backend to ensure state consistency
+      // Full refresh from backend to ensure state consistency while preserving loaded profile pictures
       try {
         const empRes = await axios.get(`${API_URL}/auth/employees`);
-        setEmployees(empRes.data);
+        setEmployees((prev) => {
+          const picMap = {};
+          (prev || []).forEach((e) => {
+            if (e.profilePicture) picMap[e.userId || e._id] = e.profilePicture;
+          });
+          // If editing or submitting an updated picture, ensure it takes precedence
+          if (finalData.profilePicture !== undefined) {
+            const currentTargetId = editingEmp?.userId || editingEmp?._id || finalData.userId;
+            if (currentTargetId) picMap[currentTargetId] = finalData.profilePicture;
+          }
+          const merged = (empRes.data || []).map((e) => ({
+            ...e,
+            profilePicture: picMap[e.userId || e._id] || e.profilePicture || null,
+          }));
+          sessionStorage.setItem("all_employees", JSON.stringify(merged));
+          localStorage.setItem("all_employees", JSON.stringify(merged));
+          return merged;
+        });
       } catch (refreshErr) {
         console.error("Refresh failed:", refreshErr);
       }
@@ -381,9 +398,18 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             { headers }
           );
 
-          // Refresh employee list
+          // Refresh employee list while preserving profile pictures
           const empRes = await axios.get(`${API_URL}/auth/employees`);
-          setEmployees(empRes.data);
+          setEmployees((prev) => {
+            const picMap = {};
+            (prev || []).forEach((e) => {
+              if (e.profilePicture) picMap[e.userId || e._id] = e.profilePicture;
+            });
+            return (empRes.data || []).map((e) => ({
+              ...e,
+              profilePicture: picMap[e.userId || e._id] || e.profilePicture || null,
+            }));
+          });
           toast(`Employee "${emp.name}" status updated to Inactive.`);
         }
         return;
@@ -391,7 +417,16 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
       // Safe deletion confirmed
       const empRes = await axios.get(`${API_URL}/auth/employees`);
-      setEmployees(empRes.data);
+      setEmployees((prev) => {
+        const picMap = {};
+        (prev || []).forEach((e) => {
+          if (e.profilePicture) picMap[e.userId || e._id] = e.profilePicture;
+        });
+        return (empRes.data || []).map((e) => ({
+          ...e,
+          profilePicture: picMap[e.userId || e._id] || e.profilePicture || null,
+        }));
+      });
       toast("Employee deleted successfully.");
     } catch (err) {
       console.error(err);
