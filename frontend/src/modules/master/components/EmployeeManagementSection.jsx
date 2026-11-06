@@ -552,7 +552,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         {/* Pagination UI */}
         <div className="border-t border-gray-200 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center flex-shrink-0">
           <div className="text-[0.74vw] text-gray-500 font-medium">
-            Showing <span className="text-gray-900 font-bold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-bold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-bold">{filtered.length}</span> employees
+            Showing <span className="text-gray-900 font-semibold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-semibold">{filtered.length}</span> employees
           </div>
           <div className="flex items-center gap-[0.6vw]">
             <button 
