@@ -483,31 +483,27 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   </div>
                 </td>
                 <td className="px-[1vw] py-[0.7vw] text-[0.8vw] font-semibold text-gray-700">{emp.userId}</td>
-                <td className="px-[1vw] py-[0.7vw]">
-                  <span className="px-[0.6vw] py-[0.18vw] bg-gray-100 text-gray-700 border border-gray-200 rounded-full text-[0.7vw] font-semibold">
-                    {emp.department}
-                  </span>
+                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700">
+                  {emp.department || "—"}
                 </td>
-                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation}</td>
-                <td className="px-[1vw] py-[0.7vw]">
-                  <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold inline-flex items-center border ${
+                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
+                <td className="px-[1vw] py-[0.7vw] text-[0.8vw]">
+                  <span className={`font-semibold ${
                     emp.role === "Admin"
-                      ? "bg-purple-50 text-purple-700 border-purple-200"
+                      ? "text-purple-700"
                       : emp.role === "Supervisor"
-                      ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                      : "bg-blue-50 text-blue-700 border-blue-200"
+                      ? "text-indigo-700"
+                      : "text-gray-800"
                   }`}>
                     {emp.role || "User"}
                   </span>
                 </td>
-                <td className="px-[1vw] py-[0.7vw]">
-                  <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold inline-flex items-center gap-[0.25vw] border ${
-                    emp.workingStatus === "Active" 
-                      ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                      : "bg-amber-50 text-amber-700 border-amber-200"
-                  }`}>
-                    <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
-                    {emp.workingStatus}
+                <td className="px-[1vw] py-[0.7vw] text-[0.78vw]">
+                  <span className="inline-flex items-center gap-[0.35vw] font-medium">
+                    <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+                    <span className={emp.workingStatus === "Active" ? "text-emerald-700" : "text-amber-700"}>
+                      {emp.workingStatus}
+                    </span>
                   </span>
                 </td>
                 <td className="px-[1vw] py-[0.7vw] text-right">
