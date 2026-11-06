@@ -3173,71 +3173,71 @@ export default function ServiceCall() {
               )}
             </div>
 
-            {/* Top 4 KPI Stat Cards: Clean & Minimalist */}
+            {/* Top 4 KPI Stat Cards: Polished & Modern Pro-Max */}
             <div className="grid grid-cols-4 gap-[0.8vw]">
               {/* 1. Total Calls */}
-              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all flex items-center justify-between group">
                 <div>
-                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
                     Total Calls
                   </div>
-                  <div className="text-[1.3vw] font-bold text-gray-900 mt-[0.15vw] leading-none">
+                  <div className="text-[1.4vw] font-extrabold text-gray-900 mt-[0.2vw] leading-none tracking-tight">
                     {counts.All}
                   </div>
                 </div>
-                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                  <Phone className="w-[1.05vw] h-[1.05vw]" />
+                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-blue-50/80 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center justify-center text-blue-600">
+                  <Phone className="w-[1.1vw] h-[1.1vw]" />
                 </div>
               </div>
 
               {/* 2. Resolved */}
-              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-emerald-100 transition-all flex items-center justify-between group">
                 <div>
-                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
                     Resolved
                   </div>
-                  <div className="text-[1.3vw] font-bold text-emerald-600 mt-[0.15vw] leading-none">
+                  <div className="text-[1.4vw] font-extrabold text-emerald-600 mt-[0.2vw] leading-none tracking-tight">
                     {counts.Resolved}
                   </div>
                 </div>
-                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                  <CheckCircle className="w-[1.05vw] h-[1.05vw]" />
+                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-emerald-50/80 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center justify-center text-emerald-600">
+                  <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
                 </div>
               </div>
 
               {/* 3. Pending */}
-              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-amber-100 transition-all flex items-center justify-between group">
                 <div>
-                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
                     Pending
                   </div>
-                  <div className="text-[1.3vw] font-bold text-amber-600 mt-[0.15vw] leading-none">
+                  <div className="text-[1.4vw] font-extrabold text-amber-500 mt-[0.2vw] leading-none tracking-tight">
                     {counts.Pending}
                   </div>
                 </div>
-                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
-                  <Clock className="w-[1.05vw] h-[1.05vw]" />
+                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition-all flex items-center justify-center text-amber-500">
+                  <Clock className="w-[1.1vw] h-[1.1vw]" />
                 </div>
               </div>
 
               {/* 4. Critical */}
-              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-rose-100 transition-all flex items-center justify-between group">
                 <div>
-                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
                     Critical
                   </div>
-                  <div className="text-[1.3vw] font-bold text-rose-600 mt-[0.15vw] leading-none">
+                  <div className="text-[1.4vw] font-extrabold text-rose-600 mt-[0.2vw] leading-none tracking-tight">
                     {counts.Critical}
                   </div>
                 </div>
-                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
-                  <AlertCircle className="w-[1.05vw] h-[1.05vw]" />
+                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-rose-50/80 group-hover:bg-rose-600 group-hover:text-white transition-all flex items-center justify-center text-rose-600">
+                  <AlertCircle className="w-[1.1vw] h-[1.1vw]" />
                 </div>
               </div>
             </div>
 
             {/* Filter Toolbar: Search, Date Range, Priority Dropdown */}
-            <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.6vw] shadow-2xs border border-gray-200 gap-[0.8vw]">
+            <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.8vw]">
               {/* Left side: Search and Date Range */}
               <div className="flex items-center gap-[0.8vw] flex-1">
                 {/* Search Box */}
@@ -3248,12 +3248,12 @@ export default function ServiceCall() {
                     placeholder="Search by customer, call no, engineer..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200 rounded-[0.45vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-gray-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+                    className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/80 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
                   />
                 </div>
 
                 {/* Inline Date Filter */}
-                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.45vw] h-[2.1vw] px-[0.6vw] bg-gray-50/50 text-[0.74vw]">
+                <div className="flex items-center gap-[0.35vw] border border-gray-200/80 rounded-[0.5vw] h-[2.1vw] px-[0.6vw] bg-gray-50/40 text-[0.74vw] hover:bg-white transition-all">
                   <span className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">
                     From
                   </span>
@@ -3263,7 +3263,7 @@ export default function ServiceCall() {
                     onChange={(e) => setFilterFromDate(e.target.value)}
                     className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
-                  <span className="text-gray-400 mx-[0.1vw]">-</span>
+                  <span className="text-gray-300 mx-[0.1vw]">-</span>
                   <span className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">
                     To
                   </span>
@@ -3298,7 +3298,7 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.45vw] font-semibold text-[0.74vw] transition-all cursor-pointer shadow-none"
+                      className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.74vw] transition-all cursor-pointer shadow-none"
                     >
                       <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                       Delete ({selectedItems.size})
@@ -3311,7 +3311,7 @@ export default function ServiceCall() {
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value)}
-                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.75vw] pr-[1.8vw] rounded-[0.45vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/80 hover:border-gray-300 pl-[0.75vw] pr-[1.8vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                   >
                     <option value="All">All Priorities</option>
                     {PRIORITIES.map((p) => (
@@ -3323,61 +3323,61 @@ export default function ServiceCall() {
               </div>
             </div>
 
-            {/* Status Summary Pill Bar */}
+            {/* Status Summary Pill Bar: Sleek, high-polish rounded pills */}
             <div className="flex gap-[0.45vw] flex-wrap items-center">
               {[
                 {
                   label: "All",
-                  color: "bg-white text-gray-700 border-gray-200 hover:border-gray-300",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:border-gray-300 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-gray-400",
                 },
                 {
                   label: "Registered",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-blue-500",
                 },
                 {
                   label: "Assigned",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-indigo-500",
                 },
                 {
                   label: "Pending",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-amber-500",
                 },
                 {
                   label: "Supporting",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-cyan-500",
                 },
                 {
                   label: "Field Visit",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-teal-500",
                 },
                 {
                   label: "Escalating",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-orange-500",
                 },
                 {
                   label: "Critical",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-red-500",
                 },
                 {
                   label: "Resolved",
-                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
                   dot: "bg-emerald-500",
                 },
               ].map(({ label, color, activeCls, dot }) => {
@@ -3389,18 +3389,18 @@ export default function ServiceCall() {
                       setFilterStatus(label === "All" ? "All" : label)
                     }
                     className={`flex items-center gap-[0.45vw] px-[0.75vw] py-[0.32vw] rounded-full border font-semibold text-[0.72vw] cursor-pointer transition-all ${
-                      isActive ? activeCls : `${color} opacity-90 hover:opacity-100`
+                      isActive ? activeCls : `${color}`
                     }`}
                   >
                     <span
-                      className={`w-[0.4vw] h-[0.4vw] rounded-full ${
-                        isActive ? "bg-white" : dot
+                      className={`w-[0.4vw] h-[0.4vw] rounded-full transition-transform ${
+                        isActive ? "bg-white scale-110" : dot
                       }`}
                     />
                     <span>{label}</span>
                     <span
-                      className={`text-[0.66vw] px-[0.32vw] py-[0.02vw] rounded-full font-bold ${
-                        isActive ? "bg-white/20 text-white" : "text-gray-500"
+                      className={`text-[0.66vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
+                        isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
                       }`}
                     >
                       {counts[label] ?? 0}
@@ -3410,11 +3410,11 @@ export default function ServiceCall() {
               })}
             </div>
 
-            {/* Table */}
-            <div className="bg-white rounded-[0.8vw] shadow-2xs border border-gray-200 flex flex-col w-full overflow-hidden">
+            {/* Table Card */}
+            <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col w-full overflow-hidden">
               <div className="overflow-x-auto overflow-y-auto max-h-[60vh] min-h-[55vh] w-full">
                 <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-50/80 sticky top-0 z-20 border-b border-gray-200">
+                  <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
                     <tr>
                       {canDelete && !isSupervisor && (
                         <th className="p-[0.7vw] w-[3%] text-center">
@@ -3430,31 +3430,31 @@ export default function ServiceCall() {
                           </button>
                         </th>
                       )}
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
                         Call No
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
                         Date & Time
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
                         Customer
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
                         Product / Issue
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw] text-center">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center">
                         Error Code
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
                         Caller Details
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw] text-center">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center">
                         Priority
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
                         Status
                       </th>
-                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw] text-center sticky top-0 right-0 bg-slate-50/95 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
+                      <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center sticky top-0 right-0 bg-slate-50 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
                         Actions
                       </th>
                     </tr>
