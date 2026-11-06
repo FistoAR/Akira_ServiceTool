@@ -59,13 +59,13 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[2vw]">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[1vw] shadow-2xl border border-slate-400 w-full max-w-[28vw] overflow-hidden flex flex-col max-h-[80vh]">
-        <div className="p-[1.2vw] border-b border-slate-400 flex items-center justify-between bg-slate-50">
-          <h3 className="text-[1vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
-            <Briefcase className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-200 w-full max-w-[28vw] overflow-hidden flex flex-col max-h-[80vh]">
+        <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-200 flex items-center justify-between bg-slate-50/70">
+          <h3 className="text-[0.92vw] font-bold text-gray-900 flex items-center gap-[0.5vw]">
+            <Briefcase className="w-[1vw] h-[1vw] text-blue-600" />
             Manage Departments
           </h3>
-          <button onClick={onClose} className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors"><X className="w-[1vw] h-[1vw]" /></button>
+          <button onClick={onClose} className="p-[0.35vw] hover:bg-gray-100 rounded-full transition-colors text-gray-500 hover:text-gray-700 cursor-pointer"><X className="w-[1vw] h-[1vw]" /></button>
         </div>
 
         <div className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
@@ -75,26 +75,26 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
               value={newDept}
               onChange={(e) => setNewDept(e.target.value)}
               placeholder="Enter department name..."
-              className="flex-1 border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]"
+              className="flex-1 border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw]"
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             />
-            <button onClick={handleAdd} className="bg-blue-600 text-white px-[1vw] rounded-[0.4vw] hover:bg-blue-700 transition-colors"><Plus className="w-[1vw] h-[1vw]" /></button>
+            <button onClick={handleAdd} className="bg-blue-600 text-white px-[0.9vw] rounded-[0.4vw] hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center"><Plus className="w-[1vw] h-[1vw]" /></button>
           </div>
 
           <div className="flex flex-col gap-[0.4vw]">
             {localDepts.map((dept, idx) => (
-              <div key={idx} className="flex items-center justify-between p-[0.6vw] bg-slate-50 border border-slate-400 rounded-[0.4vw] hover:bg-slate-100 transition-colors group">
-                <span className="text-[0.82vw] font-medium text-slate-700">{dept}</span>
-                <button onClick={() => handleRemove(dept)} className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all"><Trash2 className="w-[0.9vw] h-[0.9vw]" /></button>
+              <div key={idx} className="flex items-center justify-between px-[0.7vw] py-[0.5vw] bg-gray-50 border border-gray-200 rounded-[0.4vw] hover:bg-blue-50/40 hover:border-blue-200 transition-colors group">
+                <span className="text-[0.8vw] font-medium text-gray-700">{dept}</span>
+                <button onClick={() => handleRemove(dept)} className="text-gray-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"><Trash2 className="w-[0.85vw] h-[0.85vw]" /></button>
               </div>
             ))}
-            {localDepts.length === 0 && <p className="text-center text-slate-400 py-[2vw] text-[0.8vw]">No departments defined</p>}
+            {localDepts.length === 0 && <p className="text-center text-gray-400 py-[2vw] text-[0.78vw]">No departments defined</p>}
           </div>
         </div>
 
-        <div className="p-[1vw] border-t border-slate-400 bg-slate-50 flex justify-end gap-[0.6vw]">
-          <button onClick={onClose} className="px-[1vw] py-[0.5vw] text-slate-600 hover:bg-slate-200 rounded-[0.4vw] text-[0.82vw] font-semibold">Cancel</button>
-          <button onClick={handleSave} className="bg-blue-600 text-white px-[1.2vw] py-[0.5vw] rounded-[0.4vw] text-[0.82vw] font-bold shadow-lg hover:bg-blue-700 transition-all">Save Changes</button>
+        <div className="px-[1.2vw] py-[0.8vw] border-t border-gray-200 bg-slate-50/70 flex justify-end gap-[0.6vw]">
+          <button onClick={onClose} className="px-[1vw] py-[0.45vw] text-gray-600 hover:bg-gray-200/60 rounded-[0.4vw] text-[0.8vw] font-semibold transition-colors cursor-pointer">Cancel</button>
+          <button onClick={handleSave} className="bg-blue-600 text-white px-[1.1vw] py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer">Save Changes</button>
         </div>
       </motion.div>
     </div>
@@ -243,7 +243,34 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       if (editingEmp) {
         // Update existing
         await axios.put(`${API_URL}/auth/employees/${editingEmp._id || editingEmp.id}`, finalData);
-        toast("Employee updated successfully");
+        
+        const oldRole = editingEmp.role || "User";
+        const newRole = finalData.role || "User";
+        const roleChanged = oldRole !== newRole;
+
+        if (roleChanged && canEditRoleAccess) {
+          toast(
+            <div className="space-y-[0.35vw]">
+              <p>
+                Employee updated. Role changed from <span className="font-semibold text-gray-700">{oldRole}</span> to <span className="font-bold text-gray-900">{newRole}</span>.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchParams({ tab: "role-access", userId: editingEmp.userId });
+                }}
+                className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+              >
+                <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
+                Update Role Access permissions for {editingEmp.name} &rarr;
+              </button>
+            </div>,
+            "success",
+            8000
+          );
+        } else {
+          toast("Employee updated successfully", "success");
+        }
       } else {
         // Register new
         const regRes = await axios.post(`${API_URL}/auth/register`, finalData);
@@ -394,11 +421,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
     <div className="p-[0.8vw] flex flex-col gap-[0.7vw] flex-1 min-h-0 overflow-hidden">
       <div className="flex items-center justify-between gap-[1vw] flex-shrink-0">
         <div className="relative flex-1 max-w-[25vw]">
-          <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-slate-400" />
+          <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-gray-400" />
           <input 
             type="text" 
             placeholder="Search employees by name, ID or department..."
-            className="w-full pl-[2.4vw] pr-[1vw] py-[0.6vw] border border-slate-400 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]"
+            className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-gray-300 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -407,76 +434,83 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           {canWrite && (
             <button 
               onClick={() => setShowDeptModal(true)}
-              className="flex items-center gap-[0.5vw] border border-slate-400 text-slate-600 hover:bg-slate-50 px-[1vw] py-[0.6vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all"
+              className="flex items-center gap-[0.45vw] border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.8vw] cursor-pointer transition-all shadow-none"
             >
-              <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw]" /> Dept Master
+              <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw] text-gray-500" /> Dept Master
             </button>
           )}
           {canWrite && (
             <button 
               onClick={() => openRegModal()}
-              className="flex items-center gap-[0.5vw] bg-blue-600 text-white px-[1.2vw] py-[0.6vw] rounded-[0.5vw] font-bold text-[0.85vw] cursor-pointer hover:bg-blue-700 transition-all shadow-md shadow-blue-100"
+              className="flex items-center gap-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all shadow-xs"
             >
-              <Icon icon="solar:user-plus-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> Register Employee
+              <Icon icon="solar:user-plus-bold-duotone" className="w-[1.05vw] h-[1.05vw]" /> Register Employee
             </button>
           )}
         </div>
       </div>
 
-      <div className="bg-white border border-slate-400 rounded-[0.8vw] overflow-hidden shadow-sm flex-1 min-h-0 flex flex-col">
+      <div className="bg-white border border-gray-200 rounded-[0.6vw] overflow-hidden shadow-none flex-1 min-h-0 flex flex-col">
         <div className="flex-1 min-h-0 overflow-auto">
           <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 z-20 bg-slate-50 shadow-sm">
-            <tr className="bg-slate-50 border-b border-slate-400">
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">S. No.</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">Employee</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">ID</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">Department</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">Designation</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">Role</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider">Status</th>
-              <th className="px-[1vw] py-[0.8vw] text-[0.75vw] font-bold text-gray-800 uppercase tracking-wider text-right">Actions</th>
+            <thead className="sticky top-0 z-20 bg-gray-50/90 backdrop-blur-xs">
+            <tr className="border-b border-gray-200">
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
+              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-gray-100">
             {paginatedData.map((emp, idx) => (
-              <tr key={emp._id || idx} className="hover:bg-slate-50/50 transition-colors group">
-                <td className="px-[1vw] py-[0.8vw]">
+              <tr key={emp._id || idx} className="hover:bg-blue-50/20 transition-colors group">
+                <td className="px-[1vw] py-[0.7vw] text-[0.78vw] text-gray-500 font-medium">
                   {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                 </td>
-                <td className="px-[1vw] py-[0.8vw]">
-                  <div className="flex items-center gap-[0.8vw]">
-                    <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-[0.9vw] overflow-hidden">
-                      {emp.profilePicture ? <img src={emp.profilePicture} className="w-full h-full object-cover" /> : emp.name?.charAt(0)}
+                <td className="px-[1vw] py-[0.7vw]">
+                  <div className="flex items-center gap-[0.75vw]">
+                    <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[0.85vw] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
+                      {emp.profilePicture ? <img src={emp.profilePicture} className="w-full h-full object-cover" /> : emp.name?.charAt(0)?.toUpperCase()}
                     </div>
-                    <div>
-                      <div className="text-[0.85vw] font-bold text-slate-900">{emp.name}</div>
-                      <div className="text-[0.7vw] text-slate-500">{emp.email}</div>
+                    <div className="min-w-0">
+                      <div className="text-[0.82vw] font-bold text-gray-900 truncate">{emp.name}</div>
+                      <div className="text-[0.7vw] text-gray-500 truncate">{emp.email}</div>
                     </div>
                   </div>
                 </td>
-                <td className="px-[1vw] py-[0.8vw] text-[0.82vw] font-medium text-slate-600">{emp.userId}</td>
-                <td className="px-[1vw] py-[0.8vw]">
-                  <span className="px-[0.6vw] py-[0.2vw] bg-slate-100 text-slate-700 rounded-full text-[0.7vw] font-bold">
+                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] font-semibold text-gray-700">{emp.userId}</td>
+                <td className="px-[1vw] py-[0.7vw]">
+                  <span className="px-[0.6vw] py-[0.18vw] bg-gray-100 text-gray-700 border border-gray-200 rounded-full text-[0.7vw] font-semibold">
                     {emp.department}
                   </span>
                 </td>
-                <td className="px-[1vw] py-[0.8vw] text-[0.82vw] text-slate-600">{emp.designation}</td>
-                <td className="px-[1vw] py-[0.8vw]">
-                  <span className={`px-[0.6vw] py-[0.2vw] rounded-full text-[0.7vw] font-bold ${
-                    emp.role === "Admin" || emp.role === "Supervisor" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700"
+                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation}</td>
+                <td className="px-[1vw] py-[0.7vw]">
+                  <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold inline-flex items-center border ${
+                    emp.role === "Admin"
+                      ? "bg-purple-50 text-purple-700 border-purple-200"
+                      : emp.role === "Supervisor"
+                      ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                      : "bg-blue-50 text-blue-700 border-blue-200"
                   }`}>
                     {emp.role || "User"}
                   </span>
                 </td>
-                <td className="px-[1vw] py-[0.8vw]">
-                  <span className={`px-[0.6vw] py-[0.2vw] rounded-full text-[0.7vw] font-bold ${
-                    emp.workingStatus === "Active" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+                <td className="px-[1vw] py-[0.7vw]">
+                  <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold inline-flex items-center gap-[0.25vw] border ${
+                    emp.workingStatus === "Active" 
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
+                      : "bg-amber-50 text-amber-700 border-amber-200"
                   }`}>
+                    <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
                     {emp.workingStatus}
                   </span>
                 </td>
-                <td className="px-[1vw] py-[0.8vw] text-right">
+                <td className="px-[1vw] py-[0.7vw] text-right">
                   {((emp.role === "Admin" || emp.department === "Admin") && !isCurrentRequesterAdmin) ? (
                     <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
                       <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
@@ -486,7 +520,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       {canUpdate && (
                         <button 
                           onClick={() => openRegModal(emp)}
-                          className="p-[0.4vw] hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-blue-600 cursor-pointer"
+                          className="p-[0.35vw] hover:bg-blue-50 rounded-full transition-colors text-gray-400 hover:text-blue-600 cursor-pointer"
                           title="Edit Employee Details"
                         >
                           <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
@@ -495,14 +529,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       {canDelete && (
                         <button 
                           onClick={() => handleDeleteEmployee(emp)}
-                          className="p-[0.4vw] hover:bg-red-50 rounded-full transition-colors text-slate-400 hover:text-red-600 cursor-pointer"
+                          className="p-[0.35vw] hover:bg-rose-50 rounded-full transition-colors text-gray-400 hover:text-rose-600 cursor-pointer"
                           title="Delete Employee"
                         >
                           <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
                         </button>
                       )}
                       {!canUpdate && !canDelete && (
-                        <span className="text-[0.68vw] text-slate-400 italic">View only</span>
+                        <span className="text-[0.68vw] text-gray-400 italic">View only</span>
                       )}
                     </div>
                   )}
@@ -514,37 +548,37 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         </div>
         {paginatedData.length === 0 && (
           <div className="p-[4vw] text-center flex flex-col items-center gap-[1vw]">
-            <Users className="w-[3vw] h-[3vw] text-slate-200" />
-            <p className="text-slate-400 text-[0.9vw]">No employees found matching your search</p>
+            <Users className="w-[3vw] h-[3vw] text-gray-200" />
+            <p className="text-gray-400 text-[0.85vw]">No employees found matching your search</p>
           </div>
         )}
 
         {/* Pagination UI */}
-        <div className="border-t border-slate-400 p-[0.8vw] bg-slate-50 flex justify-between items-center flex-shrink-0">
-          <div className="text-[0.75vw] text-slate-500 font-medium">
-            Showing <span className="text-slate-900 font-bold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-slate-900 font-bold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-slate-900 font-bold">{filtered.length}</span> employees
+        <div className="border-t border-gray-200 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center flex-shrink-0">
+          <div className="text-[0.74vw] text-gray-500 font-medium">
+            Showing <span className="text-gray-900 font-bold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-bold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-bold">{filtered.length}</span> employees
           </div>
-          <div className="flex items-center gap-[0.8vw]">
+          <div className="flex items-center gap-[0.6vw]">
             <button 
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.4vw] border border-slate-400 rounded-[0.4vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white shadow-sm transition-all cursor-pointer"
+              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
-              <ChevronLeft className="w-[1vw] h-[1vw] text-slate-600" />
+              <ChevronLeft className="w-[0.95vw] h-[0.95vw]" />
             </button>
-            <div className="flex gap-[0.4vw]">
+            <div className="flex gap-[0.3vw]">
               {[...Array(totalPages)].map((_, i) => {
                 const pNum = i + 1;
                 // Basic logic to show only few pages if there are many
                 if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                  if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-slate-400">...</span>;
+                  if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
                   return null;
                 }
                 return (
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-md shadow-blue-100" : "bg-white border border-slate-400 text-slate-600 hover:border-blue-400 hover:text-blue-600"}`}
+                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
                   >
                     {pNum}
                   </button>
@@ -554,139 +588,257 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             <button 
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.4vw] border border-slate-400 rounded-[0.4vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white shadow-sm transition-all cursor-pointer"
+              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
-              <ChevronRight className="w-[1vw] h-[1vw] text-slate-600" />
+              <ChevronRight className="w-[0.95vw] h-[0.95vw]" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Registration Modal */}
+      {/* Registration & Edit Modal */}
       <AnimatePresence>
         {showRegModal && (
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[2vw]">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="bg-white rounded-[1.2vw] shadow-2xl border border-slate-400 w-full max-w-[50vw] overflow-hidden flex flex-col max-h-[90vh]">
-              <div className="p-[1.5vw] border-b border-slate-400 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-600 flex items-center justify-center">
-                    <UserPlus className="w-[1.1vw] h-[1.1vw] text-white" />
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[1.5vw]">
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-200 w-full max-w-[50vw] overflow-hidden flex flex-col max-h-[90vh]">
+              {/* Modal Header */}
+              <div className="px-[1.4vw] py-[0.9vw] border-b border-gray-200 flex items-center justify-between bg-slate-50/70 flex-shrink-0">
+                <div className="flex items-center gap-[0.7vw]">
+                  <div className="w-[2vw] h-[2vw] rounded-[0.45vw] bg-blue-600 text-white flex items-center justify-center shadow-xs">
+                    {editingEmp ? <Icon icon="solar:user-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> : <UserPlus className="w-[1.05vw] h-[1.05vw]" />}
                   </div>
                   <div>
-                    <h3 className="text-[1.1vw] font-bold text-slate-900">{editingEmp ? "Edit Employee Profile" : "Register New Employee"}</h3>
-                    <p className="text-[0.75vw] text-slate-500">{editingEmp ? `Updating details for ${editingEmp.name}` : "Create a new user profile and credentials"}</p>
+                    <h3 className="text-[0.95vw] font-bold text-gray-900 leading-tight">
+                      {editingEmp ? "Edit Employee Profile" : "Register New Employee"}
+                    </h3>
+                    <p className="text-[0.72vw] text-gray-500">
+                      {editingEmp ? `Updating profile details for ${editingEmp.name}` : "Create a new user profile and credentials"}
+                    </p>
                   </div>
                 </div>
-                <button onClick={() => setShowRegModal(false)} className="p-[0.5vw] hover:bg-slate-200 rounded-full transition-colors"><X className="w-[1.2vw] h-[1.2vw]" /></button>
+                <button 
+                  type="button"
+                  onClick={() => setShowRegModal(false)} 
+                  className="p-[0.35vw] text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+                >
+                  <X className="w-[1.05vw] h-[1.05vw]" />
+                </button>
               </div>
 
-              <form onSubmit={handleRegSubmit} className="p-[1.5vw] overflow-y-auto grid grid-cols-2 gap-[1.2vw]">
-                {/* Personal Details */}
-                <div className="col-span-2 flex items-center gap-[0.5vw] pb-[0.4vw] border-b border-slate-400 mb-[0.4vw]">
-                  <User className="w-[1vw] h-[1vw] text-blue-600" />
-                  <span className="text-[0.85vw] font-bold text-slate-800 uppercase tracking-wider">Personal Details</span>
-                </div>
-                
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Users className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Full Name *</label>
-                  <input type="text" required value={regData.name} onChange={e => setRegData({...regData, name: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" placeholder="John Doe" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><ShieldCheck className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Employee ID *</label>
-                  <input type="text" required value={regData.userId} onChange={e => setRegData({...regData, userId: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" placeholder="EMP001" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Mail className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Email Address *</label>
-                  <input type="email" required value={regData.email} onChange={e => setRegData({...regData, email: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" placeholder="john@akira.com" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Phone className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Phone Number</label>
-                  <input type="tel" value={regData.phoneNumber} onChange={e => setRegData({...regData, phoneNumber: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" placeholder="+91 ..." />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Calendar className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Date of Birth *</label>
-                  <input type="date" required value={regData.dob} onChange={e => setRegData({...regData, dob: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Users className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Gender *</label>
-                  <CustomDropdown
-                    options={["Male", "Female", "Other"]}
-                    value={regData.gender}
-                    onChange={(val) => setRegData({ ...regData, gender: val })}
-                    placeholder="Select Gender"
-                    size="md"
-                    className="w-full"
-                  />
-                </div>
-
-                {/* Professional Details */}
-                <div className="col-span-2 flex items-center gap-[0.5vw] pb-[0.4vw] border-b border-slate-400 mb-[0.4vw] mt-[0.8vw]">
-                  <Briefcase className="w-[1vw] h-[1vw] text-blue-600" />
-                  <span className="text-[0.85vw] font-bold text-slate-800 uppercase tracking-wider">Professional Details</span>
-                </div>
-
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Briefcase className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Department *</label>
-                  <div className="flex items-center gap-[0.4vw]">
-                    <div className="flex-1">
-                      <CustomDropdown
-                        searchable
-                        options={departments}
-                        value={regData.department}
-                        onChange={(val) => setRegData({ ...regData, department: val })}
-                        placeholder="Select Department"
-                        size="md"
+              {/* Modal Form Body */}
+              <form onSubmit={handleRegSubmit} className="flex-1 overflow-y-auto px-[1.4vw] py-[1.2vw] flex flex-col gap-[1.2vw]">
+                {/* 1. Personal Details Section */}
+                <div className="space-y-[0.8vw]">
+                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
+                    <User className="w-[0.9vw] h-[0.9vw] text-blue-600" />
+                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Personal Details</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Full Name *
+                      </label>
+                      <input 
+                        type="text" 
+                        required 
+                        value={regData.name} 
+                        onChange={e => setRegData({...regData, name: e.target.value})} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        placeholder="John Doe" 
                       />
                     </div>
-                    <button type="button" onClick={() => setShowDeptModal(true)} className="p-[0.55vw] bg-slate-100 hover:bg-slate-200 rounded-[0.4vw] transition-colors"><Settings className="w-[1vw] h-[1vw] text-slate-600" /></button>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Employee ID *
+                      </label>
+                      <input 
+                        type="text" 
+                        required 
+                        value={regData.userId} 
+                        onChange={e => setRegData({...regData, userId: e.target.value})} 
+                        disabled={!!editingEmp}
+                        className={`w-full border p-[0.55vw] rounded-[0.4vw] outline-none text-[0.82vw] transition-colors ${
+                          editingEmp 
+                            ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed" 
+                            : "border-gray-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
+                        }`}
+                        placeholder="EMP001" 
+                      />
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Mail className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Email Address *
+                      </label>
+                      <input 
+                        type="email" 
+                        required 
+                        value={regData.email} 
+                        onChange={e => setRegData({...regData, email: e.target.value})} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        placeholder="john@akira.com" 
+                      />
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Phone className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Phone Number
+                      </label>
+                      <input 
+                        type="tel" 
+                        value={regData.phoneNumber} 
+                        onChange={e => setRegData({...regData, phoneNumber: e.target.value})} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        placeholder="+91 ..." 
+                      />
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Birth *
+                      </label>
+                      <input 
+                        type="date" 
+                        required 
+                        value={regData.dob} 
+                        onChange={e => setRegData({...regData, dob: e.target.value})} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white transition-colors" 
+                      />
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Gender *
+                      </label>
+                      <CustomDropdown
+                        options={["Male", "Female", "Other"]}
+                        value={regData.gender}
+                        onChange={(val) => setRegData({ ...regData, gender: val })}
+                        placeholder="Select Gender"
+                        size="md"
+                        className="w-full"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Tag className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Designation *</label>
-                  <input type="text" required value={regData.designation} onChange={e => setRegData({...regData, designation: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" placeholder="Senior Engineer" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><ShieldCheck className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Role *</label>
-                  <CustomDropdown
-                    options={isCurrentRequesterAdmin ? ["User", "Supervisor", "Admin"] : ["User", "Supervisor"]}
-                    value={regData.role}
-                    onChange={(val) => setRegData({ ...regData, role: val })}
-                    placeholder="Select Role"
-                    size="md"
-                    className="w-full"
-                  />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><IndianRupee className="w-[0.9vw] h-[0.9vw] text-slate-400" /> CTC (Monthly)</label>
-                  <input type="number" min="0" value={regData.ctc} onChange={e => {
-                    const val = e.target.value;
-                    if (val === "" || Number(val) >= 0) {
-                      setRegData({...regData, ctc: val});
-                    }
-                  }} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" placeholder="Enter monthly CTC" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Calendar className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Date of Joining *</label>
-                  <input type="date" required value={regData.dateOfJoining} onChange={e => setRegData({...regData, dateOfJoining: e.target.value})} className="w-full border border-slate-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" />
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Activity className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Working Status *</label>
-                  <CustomDropdown
-                    options={["Active", "Inactive", "On Leave"]}
-                    value={regData.workingStatus}
-                    onChange={(val) => setRegData({ ...regData, workingStatus: val })}
-                    placeholder="Select Working Status"
-                    size="md"
-                    className="w-full"
-                  />
+
+                {/* 2. Professional Details Section */}
+                <div className="space-y-[0.8vw]">
+                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
+                    <Briefcase className="w-[0.9vw] h-[0.9vw] text-blue-600" />
+                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Professional Details</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Briefcase className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Department *
+                      </label>
+                      <div className="flex items-center gap-[0.4vw]">
+                        <div className="flex-1 min-w-0">
+                          <CustomDropdown
+                            searchable
+                            options={departments}
+                            value={regData.department}
+                            onChange={(val) => setRegData({ ...regData, department: val })}
+                            placeholder="Select Department"
+                            size="md"
+                          />
+                        </div>
+                        <button 
+                          type="button" 
+                          onClick={() => setShowDeptModal(true)} 
+                          className="p-[0.55vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.4vw] transition-colors cursor-pointer border border-gray-200 flex-shrink-0"
+                          title="Manage Departments"
+                        >
+                          <Settings className="w-[0.95vw] h-[0.95vw]" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Tag className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Designation *
+                      </label>
+                      <input 
+                        type="text" 
+                        required 
+                        value={regData.designation} 
+                        onChange={e => setRegData({...regData, designation: e.target.value})} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        placeholder="Senior Engineer" 
+                      />
+                    </div>
+
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Role *
+                      </label>
+                      <CustomDropdown
+                        options={isCurrentRequesterAdmin ? ["User", "Supervisor", "Admin"] : ["User", "Supervisor"]}
+                        value={regData.role}
+                        onChange={(val) => setRegData({ ...regData, role: val })}
+                        placeholder="Select Role"
+                        size="md"
+                        className="w-full"
+                      />
+                      {/* Notice when role is modified in edit mode */}
+                      {editingEmp && regData.role !== (editingEmp.role || "User") && (
+                        <p className="text-[0.68vw] text-amber-700 bg-amber-50 border border-amber-200 rounded-[0.3vw] px-[0.45vw] py-[0.2vw] flex items-center gap-[0.25vw] animate-in fade-in">
+                          <Icon icon="solar:info-circle-bold" className="w-[0.75vw] h-[0.75vw] text-amber-600 flex-shrink-0" />
+                          <span>Role changed from <strong>{editingEmp.role || "User"}</strong> to <strong>{regData.role}</strong>. Update permissions in Role Access after saving.</span>
+                        </p>
+                      )}
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <IndianRupee className="w-[0.85vw] h-[0.85vw] text-gray-400" /> CTC (Monthly)
+                      </label>
+                      <input 
+                        type="number" 
+                        min="0" 
+                        value={regData.ctc} 
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val === "" || Number(val) >= 0) {
+                            setRegData({...regData, ctc: val});
+                          }
+                        }} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        placeholder="Enter monthly CTC" 
+                      />
+                    </div>
+
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Joining *
+                      </label>
+                      <input 
+                        type="date" 
+                        required 
+                        value={regData.dateOfJoining} 
+                        onChange={e => setRegData({...regData, dateOfJoining: e.target.value})} 
+                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white transition-colors" 
+                      />
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Activity className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Working Status *
+                      </label>
+                      <CustomDropdown
+                        options={["Active", "Inactive", "On Leave"]}
+                        value={regData.workingStatus}
+                        onChange={(val) => setRegData({ ...regData, workingStatus: val })}
+                        placeholder="Select Working Status"
+                        size="md"
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                {/* Profile Picture */}
+                {/* 3. Profile Picture Section */}
                 <div 
-                  className={`col-span-2 space-y-[0.6vw] p-[1vw] rounded-[0.8vw] border-2 transition-all ${
+                  className={`space-y-[0.5vw] p-[0.9vw] rounded-[0.6vw] border-2 transition-all ${
                     isDraggingFile
                       ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/30"
-                      : "border-slate-400 bg-slate-50 hover:border-slate-500"
+                      : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
                   }`}
                   onDragOver={(e) => {
                     e.preventDefault();
@@ -701,7 +853,6 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   onDragLeave={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // Check if cursor left the container
                     if (e.currentTarget.contains(e.relatedTarget)) return;
                     setIsDraggingFile(false);
                   }}
@@ -716,40 +867,40 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]">
-                      <ImageIcon className="w-[1vw] h-[1vw] text-blue-600" /> Profile Picture
+                    <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.35vw]">
+                      <ImageIcon className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Profile Picture
                     </label>
-                    <span className="text-[0.7vw] text-slate-400">Optional: Max 2MB</span>
+                    <span className="text-[0.68vw] text-gray-400">Optional: Max 2MB</span>
                   </div>
                   
                   <div className="flex items-center gap-[1.2vw]">
                     <div 
-                      className="w-[4vw] h-[4vw] rounded-full bg-white border-2 border-slate-400 flex items-center justify-center overflow-hidden shadow-inner cursor-pointer flex-shrink-0"
+                      className="w-[3.6vw] h-[3.6vw] rounded-full bg-white border border-gray-300 flex items-center justify-center overflow-hidden shadow-2xs cursor-pointer flex-shrink-0"
                       onClick={() => fileInputRef.current?.click()}
                       title="Click to select image"
                     >
                       {regData.profilePicture ? (
                         <img src={regData.profilePicture} alt="Profile preview" className="w-full h-full object-cover" />
                       ) : (
-                        <Users className="w-[1.8vw] h-[1.8vw] text-slate-200" />
+                        <Users className="w-[1.6vw] h-[1.6vw] text-gray-300" />
                       )}
                     </div>
                     
                     <div className="flex-1">
                       <div 
                         onClick={() => fileInputRef.current?.click()}
-                        className={`flex items-center justify-between p-[0.6vw] border border-dashed rounded-[0.5vw] cursor-pointer transition-all ${
+                        className={`flex items-center justify-between px-[0.8vw] py-[0.55vw] border border-dashed rounded-[0.45vw] cursor-pointer transition-all ${
                           isDraggingFile 
                             ? "border-blue-500 bg-blue-100/50" 
-                            : "border-slate-300 hover:border-blue-400 hover:bg-white"
+                            : "border-gray-300 hover:border-blue-400 hover:bg-white bg-white/70"
                         }`}
                       >
                         <div className="flex items-center gap-[0.6vw]">
-                          <span className="py-[0.35vw] px-[0.8vw] rounded-[0.4vw] text-[0.75vw] font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow-sm inline-flex items-center gap-[0.3vw]">
+                          <span className="py-[0.25vw] px-[0.7vw] rounded-[0.35vw] text-[0.74vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-[0.3vw]">
                             <UploadCloud className="w-[0.85vw] h-[0.85vw]" />
                             Choose File
                           </span>
-                          <span className="text-[0.75vw] text-slate-500">
+                          <span className="text-[0.74vw] text-gray-500">
                             {isDraggingFile ? (
                               <span className="font-semibold text-blue-600">Drop image here...</span>
                             ) : (
@@ -757,7 +908,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             )}
                           </span>
                         </div>
-                        <span className="text-[0.7vw] text-slate-400 font-medium">PNG, JPG, WebP</span>
+                        <span className="text-[0.68vw] text-gray-400 font-medium">PNG, JPG, WebP</span>
                       </div>
 
                       <input 
@@ -769,7 +920,6 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           if (file) {
                             processImageFile(file);
                           }
-                          // Reset input value so same file can be re-selected if removed
                           e.target.value = "";
                         }}
                         className="hidden"
@@ -779,62 +929,82 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <button 
                           type="button" 
                           onClick={() => setRegData((prev) => ({ ...prev, profilePicture: null }))} 
-                          className="text-[0.7vw] text-red-500 hover:text-red-700 font-bold mt-[0.4vw] flex items-center gap-[0.2vw] transition-colors"
+                          className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold mt-[0.3vw] flex items-center gap-[0.2vw] transition-colors cursor-pointer"
                         >
-                          <X className="w-[0.8vw] h-[0.8vw]" /> Remove Photo
+                          <X className="w-[0.75vw] h-[0.75vw]" /> Remove Photo
                         </button>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Security */}
-                <div className="col-span-2 flex items-center gap-[0.5vw] pb-[0.4vw] border-b border-slate-400 mb-[0.4vw] mt-[0.8vw]">
-                  <Lock className="w-[1vw] h-[1vw] text-blue-600" />
-                  <span className="text-[0.85vw] font-bold text-slate-800 uppercase tracking-wider">Security</span>
-                </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Lock className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Password {!editingEmp && "*"}</label>
-                  <div className="relative">
-                    <input 
-                      type={showPassword ? "text" : "password"} 
-                      required={!editingEmp}
-                      value={regData.password} 
-                      onChange={e => setRegData({...regData, password: e.target.value})} 
-                      className="w-full border border-slate-400 p-[0.6vw] pr-[2.5vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" 
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                    >
-                      {showPassword ? <EyeOff className="w-[1vw] h-[1vw]" /> : <Eye className="w-[1vw] h-[1vw]" />}
-                    </button>
+                {/* 4. Security Section */}
+                <div className="space-y-[0.8vw]">
+                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
+                    <Lock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
+                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Security</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Password {!editingEmp && "*"}
+                      </label>
+                      <div className="relative">
+                        <input 
+                          type={showPassword ? "text" : "password"} 
+                          required={!editingEmp}
+                          value={regData.password} 
+                          onChange={e => setRegData({...regData, password: e.target.value})} 
+                          placeholder={editingEmp ? "Leave blank to keep existing password" : "Enter password"}
+                          className="w-full border border-gray-300 p-[0.55vw] pr-[2.2vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                        >
+                          {showPassword ? <EyeOff className="w-[0.95vw] h-[0.95vw]" /> : <Eye className="w-[0.95vw] h-[0.95vw]" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
+                        <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Confirm Password {!editingEmp && "*"}
+                      </label>
+                      <div className="relative">
+                        <input 
+                          type={showConfirmPassword ? "text" : "password"} 
+                          required={!editingEmp}
+                          value={regData.confirmPassword} 
+                          onChange={e => setRegData({...regData, confirmPassword: e.target.value})} 
+                          placeholder={editingEmp ? "Leave blank to keep existing password" : "Confirm password"}
+                          className="w-full border border-gray-300 p-[0.55vw] pr-[2.2vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-[0.95vw] h-[0.95vw]" /> : <Eye className="w-[0.95vw] h-[0.95vw]" />}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-[0.4vw]">
-                  <label className="text-[0.8vw] font-bold text-slate-700 flex items-center gap-[0.4vw]"><Lock className="w-[0.9vw] h-[0.9vw] text-slate-400" /> Confirm Password {!editingEmp && "*"}</label>
-                  <div className="relative">
-                    <input 
-                      type={showConfirmPassword ? "text" : "password"} 
-                      required={!editingEmp}
-                      value={regData.confirmPassword} 
-                      onChange={e => setRegData({...regData, confirmPassword: e.target.value})} 
-                      className="w-full border border-slate-400 p-[0.6vw] pr-[2.5vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 text-[0.85vw]" 
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-[1vw] h-[1vw]" /> : <Eye className="w-[1vw] h-[1vw]" />}
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="col-span-2 pt-[1.5vw] mt-[0.5vw] border-t border-slate-400 flex justify-end gap-[0.8vw]">
-                  <button type="button" onClick={() => setShowRegModal(false)} className="px-[1.5vw] py-[0.7vw] text-slate-600 hover:bg-slate-100 rounded-[0.6vw] text-[0.85vw] font-semibold transition-all">Cancel</button>
-                  <button type="submit" className="px-[2vw] py-[0.7vw] bg-blue-600 text-white rounded-[0.6vw] text-[0.85vw] font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">
+
+                {/* Form Action Buttons (Sticky Footer) */}
+                <div className="pt-[1vw] border-t border-gray-200 flex justify-end gap-[0.6vw] flex-shrink-0">
+                  <button 
+                    type="button" 
+                    onClick={() => setShowRegModal(false)} 
+                    className="px-[1.2vw] py-[0.5vw] text-gray-600 hover:bg-gray-100 rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="px-[1.6vw] py-[0.5vw] bg-blue-600 text-white rounded-[0.4vw] text-[0.82vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
+                  >
                     {editingEmp ? "Update Profile" : "Complete Registration"}
                   </button>
                 </div>
