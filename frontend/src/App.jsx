@@ -44,13 +44,14 @@ function MainLayout() {
       <Sidebar />
       <main
         className={`
-          flex-1 bg-slate-100 min-h-screen px-[1.2vw] py-[0.4vh] 
-          overflow-hidden
+          flex-1 bg-slate-100 h-screen px-[1.2vw] pt-[0.4vh] pb-[1vh]
+          overflow-hidden flex flex-col
           transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         `}
       >
         <NavBarWithTitle />
-        <Routes>
+        <div className="flex-1 min-h-0 w-full overflow-hidden flex flex-col">
+          <Routes>
           <Route
             path="dashboard"
             element={
@@ -217,6 +218,7 @@ function MainLayout() {
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </div>
       </main>
     </div>
   );

@@ -1215,9 +1215,9 @@ const CustomerDatabase = () => {
   };
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.9vw]">
+    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
       {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel ── */}
-      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.6vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.8vw]">
+      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.8vw] shrink-0">
         {/* Search */}
         <div className="relative flex-1 max-w-[32vw]">
           <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.95vw] h-[0.95vw]" />
@@ -1226,7 +1226,7 @@ const CustomerDatabase = () => {
             placeholder="Search by party code, description or item code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.4vw] pr-[0.9vw] h-[2.2vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+            className="w-full pl-[2.4vw] pr-[0.9vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
           />
         </div>
 
@@ -1248,7 +1248,7 @@ const CustomerDatabase = () => {
               {canWrite && (
                 <button
                   onClick={openAddModal}
-                  className="cursor-pointer flex items-center gap-[0.4vw] bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 px-[0.95vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-2xs"
+                  className="cursor-pointer flex items-center gap-[0.4vw] bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 px-[0.95vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-2xs"
                 >
                   <Plus className="w-[0.9vw] h-[0.9vw] text-gray-500" /> Add Party
                 </button>
@@ -1256,7 +1256,7 @@ const CustomerDatabase = () => {
               {canWrite && (
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-xs"
+                  className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-xs"
                 >
                   <UploadCloud className="w-[0.95vw] h-[0.95vw]" /> Upload Excel
                 </button>
@@ -1267,10 +1267,10 @@ const CustomerDatabase = () => {
       </div>
 
       {/* ── Table Controls Bar: Count, Bulk Delete, Sort Dropdown & Layout Mode Icons ── */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between shrink-0">
         {/* Left Side: Total count badge */}
         <div className="flex items-center gap-[0.5vw]">
-          <div className="flex items-center gap-[0.4vw] px-[0.85vw] py-[0.35vw] rounded-full text-[0.74vw] font-semibold bg-blue-600 text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]">
+          <div className="flex items-center gap-[0.4vw] px-[0.8vw] py-[0.3vw] rounded-full text-[0.74vw] font-semibold bg-blue-600 text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]">
             <span>All Customers</span>
             <span className="text-[0.68vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold bg-white/20 text-white">
               {partyStats.total}
@@ -1289,7 +1289,7 @@ const CustomerDatabase = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={handleSelectAllOverall}
-                  className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[0.7vw] h-[2vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
+                  className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
                 >
                   {filteredData.length > 0 && filteredData.every((i) => selectedItems.has(getRowId(i))) ? (
                     <CheckSquare className="w-[0.85vw] h-[0.85vw]" />
@@ -1303,7 +1303,7 @@ const CustomerDatabase = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={handleBulkDelete}
-                  className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[2vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
+                  className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
                 >
                   <Trash2 className="w-[0.85vw] h-[0.85vw]" /> Delete ({selectedItems.size})
                 </motion.button>
@@ -1316,7 +1316,7 @@ const CustomerDatabase = () => {
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+              className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
             >
               <option value="latest">Sort by: Latest First</option>
               <option value="oldest">Sort by: Oldest First</option>
@@ -1327,32 +1327,32 @@ const CustomerDatabase = () => {
           </div>
 
           {/* View Mode Toggle: List vs Grid */}
-          <div className="flex items-center bg-gray-100 p-[0.2vw] rounded-[0.5vw] border border-gray-200/80">
+          <div className="flex items-center bg-gray-100 p-[0.18vw] rounded-[0.5vw] border border-gray-200/80">
             <button
               onClick={() => setViewMode("list")}
-              className={`p-[0.35vw] rounded-[0.35vw] cursor-pointer transition-all ${
+              className={`p-[0.3vw] rounded-[0.35vw] cursor-pointer transition-all ${
                 viewMode === "list" ? "bg-blue-600 text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
               }`}
               title="List View"
             >
-              <List className="w-[0.9vw] h-[0.9vw]" />
+              <List className="w-[0.85vw] h-[0.85vw]" />
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-[0.35vw] rounded-[0.35vw] cursor-pointer transition-all ${
+              className={`p-[0.3vw] rounded-[0.35vw] cursor-pointer transition-all ${
                 viewMode === "grid" ? "bg-blue-600 text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
               }`}
               title="Grid View"
             >
-              <LayoutGrid className="w-[0.9vw] h-[0.9vw]" />
+              <LayoutGrid className="w-[0.85vw] h-[0.85vw]" />
             </button>
           </div>
         </div>
       </div>
 
       {/* ── Table Card ── */}
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col overflow-hidden">
-        <div className="overflow-x-auto overflow-y-auto max-h-[58vh] min-h-[52vh] w-full">
+      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 overflow-hidden min-h-0">
+        <div className="overflow-x-auto overflow-y-auto flex-1 w-full min-h-0">
           <table className="w-full text-left border-separate border-spacing-0">
             <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
               <tr>
