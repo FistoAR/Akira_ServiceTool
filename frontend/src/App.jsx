@@ -44,11 +44,15 @@ function MainLayout() {
       <Sidebar />
       <main
         className={`
-          flex-1 bg-slate-100 h-screen px-[1.2vw] pt-[0.4vh] pb-[1vh]
-          overflow-hidden flex flex-col
+          flex-1 bg-[#f4f7fb] h-screen px-[1.2vw] pt-[0.4vh] pb-[1vh]
+          overflow-hidden flex flex-col relative
           transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         `}
       >
+        {/* Subtle, ambient background lighting for depth */}
+        <div className="absolute top-0 right-0 w-[35vw] h-[25vh] bg-gradient-to-b from-blue-100/35 via-indigo-50/15 to-transparent pointer-events-none rounded-full blur-3xl -mr-[10vw] -mt-[5vh]" />
+        <div className="absolute bottom-0 left-0 w-[30vw] h-[25vh] bg-gradient-to-t from-slate-200/25 via-blue-50/10 to-transparent pointer-events-none rounded-full blur-3xl -ml-[8vw] -mb-[5vh]" />
+        
         <NavBarWithTitle />
         <div className="flex-1 min-h-0 w-full overflow-hidden flex flex-col">
           <Routes>
