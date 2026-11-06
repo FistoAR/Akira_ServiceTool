@@ -1178,12 +1178,12 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
                       {/* Bulk toggles (hidden for Dashboard since it's mutually exclusive) */}
                       {g.id !== "dashboard" && (
-                        <div className="flex items-center gap-[0.35vw] bg-gray-100/80 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
+                        <div className="flex items-center gap-[0.35vw] bg-gray-50 p-[0.18vw] rounded-[0.4vw] border border-gray-200">
                           <button
                             type="button"
                             disabled={containsProtectedAdmin}
                             onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-emerald-700 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-2xs hover:border-emerald-300"
+                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 shadow-2xs hover:border-blue-300"
                           >
                             Enable All
                           </button>
@@ -1191,7 +1191,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             type="button"
                             disabled={containsProtectedAdmin}
                             onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-gray-600 bg-white hover:bg-rose-50 hover:text-rose-700 border border-gray-200 hover:border-rose-200 shadow-2xs"
+                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-slate-600 bg-white hover:bg-slate-100 hover:text-slate-800 border border-gray-200 hover:border-gray-300 shadow-2xs"
                           >
                             Disable All
                           </button>
