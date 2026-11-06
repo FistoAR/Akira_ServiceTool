@@ -1157,8 +1157,8 @@ const CustomerDatabase = () => {
 
   return (
     <div className="w-full h-full font-sans text-[0.85vw]">
-      {/* Header & Stats Banner */}
-      <div className="flex items-center justify-between pb-[0.8vw]">
+      {/* Header Actions */}
+      <div className="flex items-center justify-between pb-[0.6vw]">
         <div>
           <h1 className="text-[1.25vw] font-bold text-gray-900 tracking-tight leading-tight flex items-center gap-[0.5vw]">
             <span className="w-[0.3vw] h-[1.1vw] bg-blue-600 rounded-full inline-block" />
@@ -1251,12 +1251,12 @@ const CustomerDatabase = () => {
 
       {/* Table Card */}
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col overflow-hidden">
-        <div className="overflow-x-auto overflow-y-auto max-h-[64vh] min-h-[58vh] w-full">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto overflow-y-auto max-h-[68vh] min-h-[60vh] w-full">
+          <table className="w-full text-left border-separate border-spacing-0">
             <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
               <tr>
                 {!isSupervisor && (
-                  <th className="p-[0.7vw] border-b border-r border-gray-200 w-[3%] text-center">
+                  <th className="p-[0.7vw] border-b border-r border-gray-200 w-[3%] text-center bg-slate-50">
                     <button
                       onClick={() => handleSelectAllPage(paginatedData)}
                       className="flex items-center justify-center w-full cursor-pointer"
@@ -1269,12 +1269,12 @@ const CustomerDatabase = () => {
                     </button>
                   </th>
                 )}
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-r border-gray-200 w-[3.5%] text-center">
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-r border-gray-200 w-[3.5%] text-center bg-slate-50">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-gray-200 w-[4.5%] text-center sticky top-0 right-0 bg-slate-50/95 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
+                  <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-gray-200 w-[4.5%] text-center sticky top-0 right-0 bg-slate-50 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
                     Actions
                   </th>
                 )}
