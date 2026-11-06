@@ -1427,36 +1427,56 @@ const CustomerDatabase = () => {
       {/* ── Manual Add Modal ───────────────────────────────────────────────────── */}
       <AnimatePresence>
         {showAddModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-[1vw]">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white w-[54vw] rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
             >
-              <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-                <h2 className="text-[1.2vw] font-semibold text-gray-900">Add Customer & Items</h2>
-                <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-red-500 cursor-pointer">
-                  <X className="w-[1.2vw] h-[1.2vw]" />
+              {/* Modal Header */}
+              <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-100 flex justify-between items-center bg-white">
+                <div className="flex items-center gap-[0.5vw]">
+                  <div className="w-[2vw] h-[2vw] rounded-[0.5vw] bg-blue-50 flex items-center justify-center text-blue-600">
+                    <UserPlus className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <h2 className="text-[1.05vw] font-bold text-gray-900 leading-none">Add Customer & Items</h2>
+                    <p className="text-[0.68vw] text-gray-400 font-medium mt-[0.15vw]">Register a new party and catalog item details</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="w-[1.8vw] h-[1.8vw] rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <X className="w-[1vw] h-[1vw]" />
                 </button>
               </div>
-              <form onSubmit={handleManualSubmit} className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto">
-                <div className="bg-gray-50 p-[1vw] rounded-[0.5vw] border border-slate-400">
-                  <h3 className="text-[0.9vw] font-bold text-gray-700 mb-[0.8vw]">Party Details</h3>
-                  <div className="grid grid-cols-2 gap-[1.5vw] mb-[0.8vw]">
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">Party Code *</label>
+
+              {/* Form Content */}
+              <form onSubmit={handleManualSubmit} className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
+                {/* Party Details Card */}
+                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-gray-200/80">
+                  <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
+                    <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
+                    <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
                       <AutocompleteInput
                         required
                         value={newEntry.partyCode}
                         onChange={handleAddPartyCodeChange}
                         suggestions={uniquePartyCodes}
                         placeholder="e.g. CUS-001"
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none w-full"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">Party Type</label>
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Type</label>
                       <CustomDropdown
                         options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={newEntry.partyType}
@@ -1466,110 +1486,114 @@ const CustomerDatabase = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-[0.4vw] mb-[0.8vw]">
-                    <label className="text-gray-600 font-medium">Party Description *</label>
+
+                  <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
+                    <label className="text-[0.74vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
                     <AutocompleteInput
                       required
                       value={newEntry.partyDescription}
                       onChange={handleAddPartyDescChange}
                       suggestions={uniquePartyDescriptions}
-                      placeholder="Company Name"
-                      className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none w-full"
+                      placeholder="Company / Customer Name"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-[1.5vw]">
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">State</label>
+
+                  <div className="grid grid-cols-2 gap-[1vw]">
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">State</label>
                       <AutocompleteInput
                         value={newEntry.state}
                         onChange={(val) => setNewEntry({ ...newEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none w-full"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">District / City</label>
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">District / City</label>
                       <AutocompleteInput
                         value={newEntry.districtCity}
                         onChange={(val) => setNewEntry({ ...newEntry, districtCity: val })}
                         suggestions={addModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none w-full"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Items section */}
-                <div className="bg-white border border-slate-400 rounded-[0.5vw] p-[1vw]">
-                  <div className="flex justify-between items-center mb-[0.5vw]">
-                    <h3 className="text-[0.9vw] font-bold text-gray-700">Product Items</h3>
+                {/* Items Section Card */}
+                <div className="bg-white border border-gray-200/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
+                  <div className="flex justify-between items-center mb-[0.6vw]">
+                    <div className="flex items-center gap-[0.4vw]">
+                      <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
+                      <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
+                    </div>
                     <button
                       type="button"
                       onClick={handleAddItemRow}
-                      className="text-blue-600 hover:text-blue-800 text-[0.8vw] font-semibold flex items-center gap-1 cursor-pointer"
+                      className="text-blue-600 hover:text-blue-700 text-[0.74vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
                     >
-                      <PlusCircle className="w-[1vw] h-[1vw]" /> Add Item
+                      <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
                     </button>
                   </div>
-                  <div className="space-y-[0.8vw]">
+
+                  <div className="space-y-[0.6vw]">
                     {newEntry.items.map((item, idx) => {
                       const isExisting = item._existing;
                       return (
                         <div
                           key={idx}
-                          className={`flex gap-[0.5vw] items-center border-b border-slate-400 pb-[0.5vw] last:border-0 ${isExisting ? "bg-blue-50/40 rounded-[0.3vw] px-[0.3vw]" : ""}`}
+                          className={`flex gap-[0.5vw] items-center border-b border-gray-100 pb-[0.6vw] last:border-0 ${isExisting ? "bg-blue-50/40 rounded-[0.4vw] p-[0.4vw]" : ""}`}
                         >
-                          {/* Existing badge */}
                           {isExisting && (
                             <div className="flex flex-col justify-end shrink-0">
-                              {idx === 0 && <div className="text-[0.75vw] text-transparent mb-[0.3vw]">X</div>}
-                              <span className="text-[0.65vw] bg-blue-100 text-blue-600 px-1 py-0.5 rounded font-semibold whitespace-nowrap">existing</span>
+                              <span className="text-[0.62vw] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Existing</span>
                             </div>
                           )}
-                          <div className="flex-1 flex flex-col gap-[0.3vw]">
-                            {idx === 0 && <label className="text-[0.75vw] text-gray-500">Product Segment</label>}
+                          <div className="flex-1 flex flex-col gap-[0.2vw]">
+                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Segment</label>}
                             <AutocompleteInput
                               required={!isExisting}
                               value={item.productSegment}
                               onChange={(val) => handleItemChange(idx, "productSegment", val)}
                               suggestions={uniqueSegments}
                               placeholder="Segment"
-                              className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw] w-full"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
-                          <div className="flex-1 flex flex-col gap-[0.3vw]">
-                            {idx === 0 && <label className="text-[0.75vw] text-gray-500">Item Code</label>}
+                          <div className="flex-1 flex flex-col gap-[0.2vw]">
+                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Item Code</label>}
                             <input
                               required={!isExisting}
                               value={item.itemCode}
                               readOnly={isExisting}
                               onChange={(e) => handleItemChange(idx, "itemCode", e.target.value)}
-                              className={`border p-[0.5vw] rounded-[0.3vw] text-[0.85vw] ${isExisting ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
-                              placeholder="Code"
+                              className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
+                              placeholder="Item Code"
                             />
                           </div>
-                          <div className="flex-[2] flex flex-col gap-[0.3vw]">
-                            {idx === 0 && <label className="text-[0.75vw] text-gray-500">Description</label>}
+                          <div className="flex-[2] flex flex-col gap-[0.2vw]">
+                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Description</label>}
                             <AutocompleteInput
                               required={!isExisting}
                               value={item.itemDescription}
                               onChange={(val) => handleItemChange(idx, "itemDescription", val)}
                               suggestions={uniqueItemDescriptions}
-                              placeholder="Description"
-                              className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw] w-full"
+                              placeholder="Item Description"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
-                          <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
-                            {idx === 0 && <label className="text-[0.75vw] text-gray-500">Warranty (days)</label>}
+                          <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
+                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Warranty (days)</label>}
                             <input
                               required={!isExisting}
                               type="number"
                               min="0"
                               value={item.warrantyPeriodDays}
                               onChange={(e) => handleItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                              className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                               placeholder="Days"
                             />
                           </div>
@@ -1579,9 +1603,9 @@ const CustomerDatabase = () => {
                               type="button"
                               onClick={() => handleRemoveItemRow(idx)}
                               disabled={newEntry.items.length === 1 && !isExisting}
-                              className={`text-red-400 hover:text-red-600 disabled:opacity-30 cursor-pointer ${idx === 0 ? "mt-[1.3vw]" : ""}`}
+                              className={`p-[0.35vw] text-gray-400 hover:text-rose-600 disabled:opacity-20 cursor-pointer transition-colors ${idx === 0 ? "mt-[1.1vw]" : ""}`}
                             >
-                              <MinusCircle className="w-[1.2vw] h-[1.2vw]" />
+                              <MinusCircle className="w-[1vw] h-[1vw]" />
                             </button>
                           </div>
                         </div>
@@ -1590,17 +1614,18 @@ const CustomerDatabase = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-[1vw] pt-[0.5vw]">
+                {/* Footer Buttons */}
+                <div className="flex justify-end gap-[0.6vw] pt-[0.4vw]">
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-[2vw] py-[0.6vw] border rounded-[0.4vw] hover:bg-gray-50 cursor-pointer"
+                    className="px-[1.2vw] h-[2.2vw] border border-gray-200 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[2vw] py-[0.6vw] bg-black text-white rounded-[0.4vw] hover:bg-gray-800 flex items-center gap-[0.5vw] cursor-pointer"
+                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.76vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
                   >
                     Save All
                   </button>
@@ -1614,42 +1639,57 @@ const CustomerDatabase = () => {
       {/* ── Edit Modal ──────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {editingPartyCode && editEntry && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-[1vw]">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white w-[54vw] rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
             >
-              <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-                <h2 className="text-[1.2vw] font-semibold text-gray-900 flex items-center gap-[0.5vw]">
-                  <Edit2 className="w-[1.1vw] h-[1.1vw] text-blue-600" />
-                  Edit Customer — <span className="text-blue-700">{editingPartyCode}</span>
-                </h2>
+              {/* Modal Header */}
+              <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-100 flex justify-between items-center bg-white">
+                <div className="flex items-center gap-[0.5vw]">
+                  <div className="w-[2vw] h-[2vw] rounded-[0.5vw] bg-blue-50 flex items-center justify-center text-blue-600">
+                    <Edit2 className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <h2 className="text-[1.05vw] font-bold text-gray-900 leading-none flex items-center gap-[0.4vw]">
+                      Edit Customer <span className="text-gray-400 font-normal">—</span> <span className="text-blue-600 font-mono font-bold">{editingPartyCode}</span>
+                    </h2>
+                    <p className="text-[0.68vw] text-gray-400 font-medium mt-[0.15vw]">Modify party metadata and catalog line items</p>
+                  </div>
+                </div>
                 <button
                   onClick={() => { setEditingPartyCode(null); setEditEntry(null); }}
-                  className="text-gray-400 hover:text-red-500 cursor-pointer"
+                  className="w-[1.8vw] h-[1.8vw] rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <X className="w-[1.2vw] h-[1.2vw]" />
+                  <X className="w-[1vw] h-[1vw]" />
                 </button>
               </div>
-              <form onSubmit={handleEditSubmit} className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto">
-                {/* Party Details */}
-                <div className="bg-gray-50 p-[1vw] rounded-[0.5vw] border border-slate-400">
-                  <h3 className="text-[0.9vw] font-bold text-gray-700 mb-[0.8vw]">Party Details</h3>
-                  <div className="grid grid-cols-2 gap-[1.5vw] mb-[0.8vw]">
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">Party Code *</label>
+
+              {/* Edit Form */}
+              <form onSubmit={handleEditSubmit} className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
+                {/* Party Details Card */}
+                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-gray-200/80">
+                  <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
+                    <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
+                    <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
                       <input
                         required
                         value={editEntry.partyCode}
                         onChange={(e) => setEditEntry({ ...editEntry, partyCode: e.target.value })}
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
                         placeholder="e.g. CUS-001"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">Party Type</label>
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Type</label>
                       <CustomDropdown
                         options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={editEntry.partyType}
@@ -1659,107 +1699,113 @@ const CustomerDatabase = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-[0.4vw] mb-[0.8vw]">
-                    <label className="text-gray-600 font-medium">Party Description *</label>
+
+                  <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
+                    <label className="text-[0.74vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
                     <input
                       required
                       value={editEntry.partyDescription}
                       onChange={(e) => setEditEntry({ ...editEntry, partyDescription: e.target.value })}
-                      className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
                       placeholder="Company Name"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-[1.5vw]">
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">State</label>
+
+                  <div className="grid grid-cols-2 gap-[1vw]">
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">State</label>
                       <AutocompleteInput
                         value={editEntry.state}
                         onChange={(val) => setEditEntry({ ...editEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none w-full"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.4vw]">
-                      <label className="text-gray-600 font-medium">District / City</label>
+                    <div className="flex flex-col gap-[0.3vw]">
+                      <label className="text-[0.74vw] font-semibold text-gray-700">District / City</label>
                       <AutocompleteInput
                         value={editEntry.districtCity}
                         onChange={(val) => setEditEntry({ ...editEntry, districtCity: val })}
                         suggestions={editModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="border p-[0.6vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none w-full"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Items */}
-                <div className="bg-white border border-slate-400 rounded-[0.5vw] p-[1vw]">
-                  <div className="flex justify-between items-center mb-[0.5vw]">
-                    <h3 className="text-[0.9vw] font-bold text-gray-700">Product Items</h3>
+                {/* Items Section Card */}
+                <div className="bg-white border border-gray-200/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
+                  <div className="flex justify-between items-center mb-[0.6vw]">
+                    <div className="flex items-center gap-[0.4vw]">
+                      <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
+                      <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
+                    </div>
                     <button
                       type="button"
                       onClick={handleEditAddItemRow}
-                      className="text-blue-600 hover:text-blue-800 text-[0.8vw] font-semibold flex items-center gap-1 cursor-pointer"
+                      className="text-blue-600 hover:text-blue-700 text-[0.74vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
                     >
-                      <PlusCircle className="w-[1vw] h-[1vw]" /> Add Item
+                      <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
                     </button>
                   </div>
-                  <div className="space-y-[0.8vw]">
+
+                  <div className="space-y-[0.6vw]">
                     {editEntry.items.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex gap-[0.5vw] items-center border-b border-slate-400 pb-[0.5vw] last:border-0"
+                        className="flex gap-[0.5vw] items-center border-b border-gray-100 pb-[0.6vw] last:border-0"
                       >
-                        <div className="flex-1 flex flex-col gap-[0.3vw]">
-                          {idx === 0 && <label className="text-[0.75vw] text-gray-500">Item Code</label>}
+                        <div className="flex-1 flex flex-col gap-[0.2vw]">
+                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Item Code</label>}
                           <input
                             required
                             value={item.itemCode}
                             onChange={(e) => handleEditItemChange(idx, "itemCode", e.target.value)}
-                            className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
                             placeholder="Code"
                           />
                         </div>
-                        <div className="flex-[2] flex flex-col gap-[0.3vw]">
-                          {idx === 0 && <label className="text-[0.75vw] text-gray-500">Description</label>}
+                        <div className="flex-[2] flex flex-col gap-[0.2vw]">
+                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Description</label>}
                           <input
                             required
                             value={item.itemDescription}
                             onChange={(e) => handleEditItemChange(idx, "itemDescription", e.target.value)}
-                            className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             placeholder="Description"
                           />
                         </div>
-                        <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
-                          {idx === 0 && <label className="text-[0.75vw] text-gray-500">Warranty (days)</label>}
+                        <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
+                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Warranty (days)</label>}
                           <input
                             required
                             type="number"
                             min="0"
                             value={item.warrantyPeriodDays}
                             onChange={(e) => handleEditItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                            className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                             placeholder="Days"
                           />
                         </div>
-                        <div className="flex-1 flex flex-col gap-[0.3vw]">
-                          {idx === 0 && <label className="text-[0.75vw] text-gray-500">Product Segment</label>}
+                        <div className="flex-1 flex flex-col gap-[0.2vw]">
+                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Product Segment</label>}
                           <AutocompleteInput
                             value={item.productSegment}
                             onChange={(val) => handleEditItemChange(idx, "productSegment", val)}
                             suggestions={uniqueSegments}
                             placeholder="Segment"
-                            className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw] w-full"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                           />
                         </div>
                         <div className="flex flex-col justify-end">
                           <button
                             type="button"
                             onClick={() => handleEditRemoveItemRow(idx)}
-                            className={`text-red-400 hover:text-red-600 cursor-pointer ${idx === 0 ? "mt-[1.3vw]" : ""}`}
+                            className={`p-[0.35vw] text-gray-400 hover:text-rose-600 cursor-pointer transition-colors ${idx === 0 ? "mt-[1.1vw]" : ""}`}
                           >
-                            <MinusCircle className="w-[1.2vw] h-[1.2vw]" />
+                            <MinusCircle className="w-[1vw] h-[1vw]" />
                           </button>
                         </div>
                       </div>
@@ -1767,19 +1813,20 @@ const CustomerDatabase = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-[1vw] pt-[0.5vw]">
+                {/* Footer Actions */}
+                <div className="flex justify-end gap-[0.6vw] pt-[0.4vw]">
                   <button
                     type="button"
                     onClick={() => { setEditingPartyCode(null); setEditEntry(null); }}
-                    className="px-[2vw] py-[0.6vw] border rounded-[0.4vw] hover:bg-gray-50 cursor-pointer"
+                    className="px-[1.2vw] h-[2.2vw] border border-gray-200 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[2vw] py-[0.6vw] bg-black text-white rounded-[0.4vw] hover:bg-gray-800 flex items-center gap-[0.5vw] cursor-pointer"
+                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.76vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
                   >
-                    <Save className="w-[1vw] h-[1vw]" /> Update
+                    <Save className="w-[0.9vw] h-[0.9vw]" /> Update
                   </button>
                 </div>
               </form>
