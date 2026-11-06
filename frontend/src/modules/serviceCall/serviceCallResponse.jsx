@@ -32,7 +32,10 @@ import {
   Download,
   Loader2,
   Plus,
+  Edit3,
+  Trash2,
 } from "lucide-react";
+import { ServiceCallForm, emptyForm } from "./ServiceCall";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
@@ -49,6 +52,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ── Storage keys (Legacy) ──────────────────────────────────────────────────────────────
 const EMPLOYEES_KEY = "employees";
 const ESCALATION_FLOWS_KEY = "escalation_flows_v2";
+const MODES_KEY = "call_modes_v1";
+const DEFAULT_MODES = ["Phone", "Email", "WhatsApp", "Portal"];
 
 const RESOLUTION_TYPES = [
   "Fixed",
@@ -1481,6 +1486,8 @@ const EscalationCard = ({
   supportReq,
   onRefresh,
   onCloseVisit,
+  onEditCall,
+  onDeleteCall,
 }) => {
   const [activeProductIdx, setActiveProductIdx] = useState(0);
   const [localTimer, setLocalTimer] = useState(null);
@@ -1851,6 +1858,52 @@ const EscalationCard = ({
                     EXHAUSTED
                   </div>
                 )}
+              {/* Edit and Delete for Creator Employee */}
+              {entry.registeredBy === currentUser?.userId && onEditCall && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditCall(entry);
+                  }}
+                  title="Edit Call"
+                  className="flex items-center gap-[0.2vw] text-[0.75vw] text-blue-600 font-bold hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-[0.45vw] py-[0.18vw] rounded transition-colors cursor-pointer border border-blue-200"
+                >
+                  <Edit3 className="w-[0.75vw] h-[0.75vw]" />
+                  Edit
+                </button>
+              )}
+
+              {entry.registeredBy === currentUser?.userId && onDeleteCall && (
+                (() => {
+                  const hasReportsOrClosed = (entry.products || []).some(
+                    (p) => p._productClosure?.status || p._resolved || (p._fieldVisit && p._fieldVisit.status === "Closed")
+                  );
+                  return (
+                    <button
+                      type="button"
+                      disabled={hasReportsOrClosed}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (hasReportsOrClosed) return;
+                        if (window.confirm(`Delete registered call ${entry.callNumber}?`)) {
+                          onDeleteCall(entry._id || entry.callId || entry.id);
+                        }
+                      }}
+                      title={hasReportsOrClosed ? "Cannot delete: Report or closure already submitted for this call" : "Delete Call"}
+                      className={`flex items-center gap-[0.2vw] text-[0.75vw] font-bold px-[0.45vw] py-[0.18vw] rounded transition-colors border ${
+                        hasReportsOrClosed
+                          ? "text-slate-400 bg-slate-100 border-slate-200 cursor-not-allowed opacity-60"
+                          : "text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border-red-200 cursor-pointer"
+                      }`}
+                    >
+                      <Trash2 className="w-[0.75vw] h-[0.75vw]" />
+                      Delete
+                    </button>
+                  );
+                })()
+              )}
+
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -4345,6 +4398,15 @@ const ServiceCallResponse = () => {
   const [loggedInUser, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Form View state for User Desk "Register Call" and "Edit Call"
+  const [view, setView] = useState("desk"); // "desk" | "form"
+  const [editingCall, setEditingCall] = useState(null);
+  const [customerDb, setCustomerDb] = useState([]);
+  const [partyTypes, setPartyTypes] = useState([]);
+  const [sites, setSites] = useState([]);
+  const [segments, setSegments] = useState([]);
+  const [modes, setModes] = useState([]);
+
   const { socket } = useSocket();
 
   const { toast } = useNotification();
@@ -4366,6 +4428,11 @@ const ServiceCallResponse = () => {
         const promises = [
           axios.get(`${API_URL}/service-calls/active`),
           axios.get(`${API_URL}/auth/employees`),
+          axios.get(`${API_URL}/master/customers`),
+          axios.get(`${API_URL}/master/party-types`),
+          axios.get(`${API_URL}/master/sites`),
+          axios.get(`${API_URL}/master/settings/${MODES_KEY}`).catch(() => ({ data: { value: DEFAULT_MODES } })),
+          axios.get(`${API_URL}/master/product-segments`),
         ];
 
         if (u?.userId) {
@@ -4377,12 +4444,38 @@ const ServiceCallResponse = () => {
           );
         }
 
-        const [activeRes, empRes, supportRes, visitRes] =
-          await Promise.all(promises);
+        const [
+          activeRes,
+          empRes,
+          custRes,
+          ptRes,
+          sitesRes,
+          modesRes,
+          segRes,
+          supportRes,
+          visitRes,
+        ] = await Promise.all(promises);
 
         setQueue(activeRes.data.map((call) => ({ ...call, callId: call._id })));
         setEmployees(empRes.data);
         localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(empRes.data));
+
+        if (custRes?.data) setCustomerDb(custRes.data);
+        if (ptRes?.data) {
+          setPartyTypes(
+            ptRes.data.length
+              ? ptRes.data.map((t) => ({ ...t, id: t._id || t.id }))
+              : [
+                  { id: 1, name: "OEM" },
+                  { id: 2, name: "End Customer" },
+                ],
+          );
+        }
+        if (sitesRes?.data) setSites(sitesRes.data || []);
+        if (segRes?.data) setSegments(segRes.data || []);
+        if (modesRes?.data) {
+          setModes(modesRes.data.value || DEFAULT_MODES);
+        }
 
         if (supportRes) setSupportReqs(supportRes.data);
         if (visitRes) setFieldVisits(visitRes.data);
@@ -4783,12 +4876,6 @@ const ServiceCallResponse = () => {
       color:
         "from-indigo-600 via-violet-600 to-purple-600 shadow-indigo-600/20",
     },
-    {
-      id: "reports",
-      label: "Action Logs",
-      icon: BarChart2,
-      color: "from-slate-800 to-slate-900 shadow-slate-900/20",
-    },
   ];
 
   const prevLiveCountsRef = useRef(liveCounts);
@@ -4852,57 +4939,213 @@ const ServiceCallResponse = () => {
     }
   };
 
+  const defaultFormData = () => ({
+    ...emptyForm(),
+    mode: modes[0] || "Phone",
+    assignedEngineer: loggedInUser?.userId || "",
+    assignedEngineerName: loggedInUser?.name || "",
+    assignedDepartment: loggedInUser?.department || "",
+  });
+
+  const handleSaveModes = async (updated) => {
+    setModes(updated);
+    try {
+      await axios.post(`${API_URL}/master/settings`, {
+        key: MODES_KEY,
+        value: updated,
+      });
+    } catch (err) {
+      console.error("Failed to save modes to server:", err);
+      toast("Could not save modes to server", "error");
+    }
+  };
+
+  const handleSaveCall = async (formRow, isEdit) => {
+    let validDateTime = formRow.dateTime;
+    if (
+      validDateTime &&
+      typeof validDateTime === "string" &&
+      !validDateTime.includes("T")
+    ) {
+      validDateTime = formRow.timestamp || new Date().toISOString();
+    }
+
+    const assignedProducts = (formRow.products || []).map((p) => ({
+      ...p,
+      _assigned: true,
+      _assignedAt: p._assignedAt || new Date().toISOString(),
+      _assignedEngineerId: loggedInUser?.userId,
+      _assignedEngineerName: loggedInUser?.name,
+      _currentDepartment: loggedInUser?.department || "Support Engineers",
+      _attended: true,
+      _deadline: null,
+      _isCritical: false,
+      _levelPointer: 0,
+      _escalationPointer: 0,
+    }));
+
+    const finalPayload = {
+      ...formRow,
+      dateTime: validDateTime,
+      status: "Assigned",
+      registeredBy: loggedInUser?.userId,
+      currentEngineerId: loggedInUser?.userId,
+      currentEngineerName: loggedInUser?.name,
+      currentDepartment: loggedInUser?.department || "Support Engineers",
+      noEscalation: true,
+      deadline: null,
+      products: assignedProducts,
+    };
+
+    const {
+      id: _ignoreId,
+      _id,
+      _products,
+      _people,
+      _queueEntry,
+      ...serverPayload
+    } = finalPayload;
+
+    if (isEdit) {
+      const callId = formRow._id || formRow.id || formRow.callId;
+      try {
+        await axios.patch(`${API_URL}/service-calls/${callId}`, serverPayload);
+        toast("Service call updated successfully", "success");
+      } catch (err) {
+        console.error("Failed to update call:", err);
+        toast("Failed to update service call", "error");
+        return;
+      }
+    } else {
+      try {
+        await axios.post(`${API_URL}/service-calls`, serverPayload);
+        toast("Service call registered successfully", "success");
+      } catch (err) {
+        console.error("Failed to create call:", err);
+        toast("Failed to register service call", "error");
+        return;
+      }
+    }
+
+    await refreshData();
+    setView("desk");
+    setEditingCall(null);
+  };
+
+  const handleDeleteCall = async (callId) => {
+    try {
+      await axios.delete(`${API_URL}/service-calls/${callId}`);
+      toast("Call deleted successfully", "success");
+      setQueue((prev) => prev.filter((c) => (c._id || c.callId || c.id) !== callId));
+    } catch (err) {
+      console.error("Failed to delete call:", err);
+      toast("Failed to delete call", "error");
+    }
+  };
+
   // Removed blocking full-screen loading spinner
+
+  if (view === "form") {
+    return (
+      <div className="w-full h-full font-sans text-[0.85vw]">
+        <ServiceCallForm
+          initialData={editingCall || defaultFormData()}
+          customerDb={customerDb}
+          serviceCalls={queue}
+          partyTypes={partyTypes}
+          sites={sites}
+          segments={segments}
+          employees={employees}
+          modes={modes}
+          onSave={handleSaveCall}
+          onBack={() => {
+            setView("desk");
+            setEditingCall(null);
+          }}
+          onSaveModes={handleSaveModes}
+          canWrite={true}
+          canUpdate={true}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-5.5rem)] text-[0.85vw] bg-slate-100/70 overflow-hidden pb-[0.6vw]">
-      {/* Premium Glass-Effect Tab Container */}
-      <div className="flex gap-[0.5vw] mb-[0.8vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] sticky top-0 z-10 shadow-sm flex-shrink-0">
-        {tabs.map((t) => (
+      {/* Top Header Toolbar with Glass Tab Container & Action Buttons */}
+      <div className="flex items-center gap-[0.8vw] mb-[0.8vw] sticky top-0 z-10 shrink-0">
+        {/* Premium Glass-Effect Tab Container */}
+        <div className="flex-1 flex gap-[0.5vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] shadow-sm">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => {
+                setActiveTab(t.id);
+                if (newActivityTabs[t.id]) {
+                  setNewActivityTabs((prev) => {
+                    const next = { ...prev };
+                    delete next[t.id];
+                    return next;
+                  });
+                }
+              }}
+              className={`flex-1 flex items-center justify-center gap-[0.5vw] py-[0.55vw] rounded-[0.5vw] font-bold transition-all duration-305 relative cursor-pointer ${
+                activeTab === t.id
+                  ? `bg-gradient-to-r ${t.color} text-white shadow-md overflow-hidden`
+                  : newActivityTabs[t.id]
+                    ? "tab-running-border text-white font-extrabold shadow-sm"
+                    : "text-slate-700 hover:bg-slate-50 hover:text-slate-900 overflow-hidden"
+              }`}
+            >
+              {activeTab === t.id && (
+                <motion.div
+                  layoutId="activeTabGlow"
+                  className="absolute inset-0 bg-white/5 opacity-10"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+              <t.icon className="w-[1vw] h-[1vw]" />
+              <span className="">{t.label}</span>
+              {t.count !== undefined && (
+                <span
+                  className={`text-[0.65vw] px-[0.45vw] py-[0.05vw] rounded-full font-bold transition-colors z-10 ${
+                    activeTab === t.id
+                      ? "bg-white/20 text-white"
+                      : newActivityTabs[t.id]
+                        ? "bg-white text-emerald-800 shadow-sm"
+                        : "bg-slate-100 text-slate-750"
+                  }`}
+                >
+                  {t.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Action Controls: Refresh & Register Call */}
+        <div className="flex items-center gap-[0.5vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] shadow-sm shrink-0">
           <button
-            key={t.id}
-            onClick={() => {
-              setActiveTab(t.id);
-              if (newActivityTabs[t.id]) {
-                setNewActivityTabs((prev) => {
-                  const next = { ...prev };
-                  delete next[t.id];
-                  return next;
-                });
-              }
-            }}
-            className={`flex-1 flex items-center justify-center gap-[0.5vw] py-[0.55vw] rounded-[0.5vw] font-bold transition-all duration-305 relative cursor-pointer ${
-              activeTab === t.id
-                ? `bg-gradient-to-r ${t.color} text-white shadow-md overflow-hidden`
-                : newActivityTabs[t.id]
-                  ? "tab-running-border text-white font-extrabold shadow-sm"
-                  : "text-slate-700 hover:bg-slate-50 hover:text-slate-900 overflow-hidden"
-            }`}
+            type="button"
+            onClick={refreshData}
+            title="Refresh Tasks"
+            className="p-[0.55vw] rounded-[0.5vw] text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-200 cursor-pointer"
           >
-            {activeTab === t.id && (
-              <motion.div
-                layoutId="activeTabGlow"
-                className="absolute inset-0 bg-white/5 opacity-10"
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              />
-            )}
-            <t.icon className="w-[1vw] h-[1vw]" />
-            <span className="">{t.label}</span>
-            {t.count !== undefined && (
-              <span
-                className={`text-[0.65vw] px-[0.45vw] py-[0.05vw] rounded-full font-bold transition-colors z-10 ${
-                  activeTab === t.id
-                    ? "bg-white/20 text-white"
-                    : newActivityTabs[t.id]
-                      ? "bg-white text-emerald-800 shadow-sm"
-                      : "bg-slate-100 text-slate-750"
-                }`}
-              >
-                {t.count}
-              </span>
-            )}
+            <RefreshCw className="w-[1vw] h-[1vw]" />
           </button>
-        ))}
+
+          <button
+            type="button"
+            onClick={() => {
+              setEditingCall(null);
+              setView("form");
+            }}
+            className="flex items-center gap-[0.4vw] px-[1vw] py-[0.55vw] bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-[0.5vw] shadow-sm hover:shadow transition-all duration-200 cursor-pointer text-[0.82vw]"
+          >
+            <Plus className="w-[1vw] h-[1vw] stroke-[2.5]" />
+            <span>Register Call</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
@@ -4962,6 +5205,16 @@ const ServiceCallResponse = () => {
                       onProductAttend={(pIdx) =>
                         handleProductAttend(e.callId, pIdx)
                       }
+                      onEditCall={(call) => {
+                        setEditingCall({
+                          ...call,
+                          id: call._id || call.callId,
+                          products: call.products || [],
+                          _editing: true,
+                        });
+                        setView("form");
+                      }}
+                      onDeleteCall={handleDeleteCall}
                     />
                   ))
                 ))}
@@ -5003,13 +5256,6 @@ const ServiceCallResponse = () => {
                   setExpandedCalls={setExpandedCalls}
                   onAssignFieldVisit={handleAssignVisit}
                   onProductClose={handleProductClose}
-                />
-              )}
-              {activeTab === "reports" && (
-                <ReportsTab
-                  currentUser={loggedInUser}
-                  queue={queue}
-                  employees={employees}
                 />
               )}
             </motion.div>

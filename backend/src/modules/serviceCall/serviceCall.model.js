@@ -81,7 +81,9 @@ const serviceCallSchema = new mongoose.Schema({
   currentDepartment: String,
   escalationLevel: { type: Number, default: 0 },
   deadline: Date,
-  escalationHistory: [mongoose.Schema.Types.Mixed]
+  escalationHistory: [mongoose.Schema.Types.Mixed],
+  registeredBy: String,
+  noEscalation: { type: Boolean, default: false }
 }, { timestamps: true });
 
 serviceCallSchema.index({ createdAt: -1 });
