@@ -3334,98 +3334,56 @@ export default function ServiceCall() {
               </div>
             </div>
 
-            {/* ── 3. Status Filter Tabs: Cleanly framed bar ── */}
-            <div className="flex gap-[0.35vw] flex-wrap items-center shrink-0">
-              {[
-                {
-                  label: "All",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:border-gray-300 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-gray-400",
-                },
-                {
-                  label: "Registered",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-blue-500",
-                },
-                {
-                  label: "Assigned",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-indigo-500",
-                },
-                {
-                  label: "Pending",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-amber-500",
-                },
-                {
-                  label: "Supporting",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-cyan-500",
-                },
-                {
-                  label: "Field Visit",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-teal-500",
-                },
-                {
-                  label: "Escalating",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-orange-500",
-                },
-                {
-                  label: "Critical",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-red-500",
-                },
-                {
-                  label: "Resolved",
-                  color: "bg-white text-gray-600 border-gray-200/80 hover:bg-gray-50/80 hover:text-gray-900",
-                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]",
-                  dot: "bg-emerald-500",
-                },
-              ].map(({ label, color, activeCls, dot }) => {
-                const isActive = filterStatus === (label === "All" ? "All" : label);
-                return (
-                  <button
-                    key={label}
-                    onClick={() =>
-                      setFilterStatus(label === "All" ? "All" : label)
-                    }
-                    className={`flex items-center gap-[0.45vw] px-[0.75vw] py-[0.32vw] rounded-full border font-semibold text-[0.72vw] cursor-pointer transition-all ${
-                      isActive ? activeCls : `${color}`
-                    }`}
-                  >
-                    <span
-                      className={`w-[0.4vw] h-[0.4vw] rounded-full transition-transform ${
-                        isActive ? "bg-white scale-110" : dot
-                      }`}
-                    />
-                    <span>{label}</span>
-                    <span
-                      className={`text-[0.66vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
-                        isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
-                      }`}
-                    >
-                      {counts[label] ?? 0}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+            {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
+            <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+              {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
+              <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+                <div className="flex gap-[0.3vw] flex-wrap items-center">
+                  {[
+                    { label: "All", dot: "bg-slate-400" },
+                    { label: "Registered", dot: "bg-blue-500" },
+                    { label: "Assigned", dot: "bg-indigo-500" },
+                    { label: "Pending", dot: "bg-amber-500" },
+                    { label: "Supporting", dot: "bg-cyan-500" },
+                    { label: "Field Visit", dot: "bg-teal-500" },
+                    { label: "Escalating", dot: "bg-orange-500" },
+                    { label: "Critical", dot: "bg-red-500" },
+                    { label: "Resolved", dot: "bg-emerald-500" },
+                  ].map(({ label, dot }) => {
+                    const isActive = filterStatus === (label === "All" ? "All" : label);
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => setFilterStatus(label === "All" ? "All" : label)}
+                        className={`flex items-center gap-[0.35vw] px-[0.6vw] py-[0.25vw] rounded-full text-[0.7vw] font-semibold cursor-pointer transition-all ${
+                          isActive
+                            ? "bg-blue-600 text-white shadow-xs"
+                            : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900"
+                        }`}
+                      >
+                        <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${isActive ? "bg-white" : dot}`} />
+                        <span>{label}</span>
+                        <span
+                          className={`text-[0.62vw] px-[0.3vw] py-[0.02vw] rounded-full font-bold ${
+                            isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"
+                          }`}
+                        >
+                          {counts[label] ?? 0}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
 
-            {/* Table Card */}
-            <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+                {/* Scoped Result Count */}
+                <div className="text-[0.72vw] text-slate-500 font-medium">
+                  Showing <span className="font-bold text-slate-800">{filteredData.length}</span> calls
+                </div>
+              </div>
+
               <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
                 <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
+                  <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300">
                     <tr>
                       {canDelete && !isSupervisor && (
                         <th className="p-[0.7vw] w-[3%] text-center">
