@@ -1029,7 +1029,6 @@ const CustomerDatabase = () => {
   };
 
   const [sortOption, setSortOption] = useState("latest");
-  const [viewMode, setViewMode] = useState("list"); // "list" | "grid"
 
   useEffect(() => { setCurrentPage(1); }, [searchTerm, filterType, sortOption]);
 
@@ -1312,28 +1311,6 @@ const CustomerDatabase = () => {
               <option value="nameDesc">Sort by: Name (Z-A)</option>
             </select>
             <ChevronRight className="w-[0.8vw] h-[0.8vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2 rotate-90" />
-          </div>
-
-          {/* View Mode Toggle: List vs Grid */}
-          <div className="flex items-center bg-gray-100 p-[0.18vw] rounded-[0.5vw] border border-gray-200/80">
-            <button
-              onClick={() => setViewMode("list")}
-              className={`p-[0.3vw] rounded-[0.35vw] cursor-pointer transition-all ${
-                viewMode === "list" ? "bg-blue-600 text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
-              }`}
-              title="List View"
-            >
-              <List className="w-[0.85vw] h-[0.85vw]" />
-            </button>
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`p-[0.3vw] rounded-[0.35vw] cursor-pointer transition-all ${
-                viewMode === "grid" ? "bg-blue-600 text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
-              }`}
-              title="Grid View"
-            >
-              <LayoutGrid className="w-[0.85vw] h-[0.85vw]" />
-            </button>
           </div>
         </div>
       </div>
