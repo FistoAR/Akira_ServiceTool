@@ -3000,6 +3000,10 @@ export default function ServiceCall() {
       }
 
       return matchSearch && matchPriority && matchStatus && matchDate;
+    }).sort((a, b) => {
+      const dateA = new Date(a.createdAt || a.timestamp || a.dateTime).getTime() || 0;
+      const dateB = new Date(b.createdAt || b.timestamp || b.dateTime).getTime() || 0;
+      return dateB - dateA;
     });
   }, [
     enrichedCalls,
@@ -3247,93 +3251,6 @@ export default function ServiceCall() {
               </div>
             </div>
 
-            {/* ── 2. Filtered Telemetry Summary Cards: Reflected directly below filters ── */}
-            <div className="grid grid-cols-4 gap-[0.7vw] shrink-0">
-              {/* 1. Total Calls */}
-              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(37,99,235,0.06)] hover:shadow-md hover:border-blue-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.7vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-                    <Phone className="w-[1vw] h-[1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.All}
-                    </div>
-                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
-                      Total Calls
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.2vw] h-[1.6vw] text-blue-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 32 Q 25 35 45 20 T 90 8" />
-                </svg>
-              </div>
-
-              {/* 2. Resolved */}
-              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(16,185,129,0.06)] hover:shadow-md hover:border-emerald-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.7vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
-                    <CheckCircle className="w-[1vw] h-[1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.Resolved}
-                    </div>
-                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
-                      Resolved
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.2vw] h-[1.6vw] text-emerald-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 30 Q 30 32 50 15 T 90 6" />
-                </svg>
-              </div>
-
-              {/* 3. Pending */}
-              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(245,158,11,0.06)] hover:shadow-md hover:border-amber-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.7vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
-                    <Clock className="w-[1vw] h-[1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.Pending}
-                    </div>
-                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
-                      Pending
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.2vw] h-[1.6vw] text-amber-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 35 Q 25 30 50 22 T 90 10" />
-                </svg>
-              </div>
-
-              {/* 4. Critical */}
-              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(239,68,68,0.06)] hover:shadow-md hover:border-rose-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.7vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
-                    <AlertCircle className="w-[1vw] h-[1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.Critical}
-                    </div>
-                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
-                      Critical
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.2vw] h-[1.6vw] text-rose-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 32 Q 35 34 55 18 T 90 8" />
-                </svg>
-              </div>
-            </div>
-
             {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
             <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
@@ -3400,10 +3317,10 @@ export default function ServiceCall() {
                         </th>
                       )}
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
-                        Call No
+                        Date & Time
                       </th>
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
-                        Date & Time
+                        Call No
                       </th>
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
                         Customer
@@ -3521,22 +3438,7 @@ export default function ServiceCall() {
                                 </>
                               )}
 
-                              {/* 1. Call No */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
-                                >
-                                  <button
-                                    onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.76vw] font-medium text-blue-600 hover:text-blue-800 hover:underline block"
-                                  >
-                                    {row.callNumber}
-                                  </button>
-                                </td>
-                              )}
-
-                              {/* 2. Date & Time */}
+                              {/* 1. Date & Time */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
@@ -3564,6 +3466,21 @@ export default function ServiceCall() {
                                       return row.dateTime || "—";
                                     }
                                   })()}
+                                </td>
+                              )}
+
+                              {/* 2. Call No */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                >
+                                  <button
+                                    onClick={() => setSummaryModalRow(row)}
+                                    className="font-mono text-left text-[0.76vw] font-medium text-blue-600 hover:text-blue-800 hover:underline block"
+                                  >
+                                    {row.callNumber}
+                                  </button>
                                 </td>
                               )}
 
