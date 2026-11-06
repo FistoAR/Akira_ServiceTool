@@ -1112,7 +1112,7 @@ const CustomerDatabase = () => {
   const visibleCols = CUSTOMER_DB_COLUMNS.filter((c) => colVis[c.key] !== false);
 
   const renderHeaderCell = (col) => (
-    <th key={col.key} className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-r border-slate-200/90 whitespace-nowrap">
+    <th key={col.key} className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-r border-slate-300/80 whitespace-nowrap">
       {col.label}
     </th>
   );
@@ -1319,10 +1319,10 @@ const CustomerDatabase = () => {
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 overflow-hidden min-h-0">
         <div className="overflow-x-auto overflow-y-auto flex-1 w-full min-h-0">
           <table className="w-full text-left border-separate border-spacing-0">
-            <thead className="bg-[#f0f4f9] sticky top-0 z-20 border-b border-slate-200 shadow-2xs">
-              <tr className="bg-[#f0f4f9]">
+            <thead className="bg-[#e4ecf7] sticky top-0 z-20 border-b border-slate-300 shadow-2xs">
+              <tr className="bg-[#e4ecf7]">
                 {!isSupervisor && (
-                  <th className="p-[0.7vw] border-b border-r border-slate-200/90 w-[3%] text-center bg-[#f0f4f9]">
+                  <th className="p-[0.7vw] border-b border-r border-slate-300/80 w-[3%] text-center bg-[#e4ecf7]">
                     <button
                       onClick={() => handleSelectAllPage(paginatedData)}
                       className="flex items-center justify-center w-full cursor-pointer"
@@ -1330,17 +1330,17 @@ const CustomerDatabase = () => {
                       {isPageSelected ? (
                         <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
                       ) : (
-                        <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
+                        <Square className="w-[1vw] h-[1vw] text-slate-400 hover:text-slate-500" />
                       )}
                     </button>
                   </th>
                 )}
-                <th className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-r border-slate-200/90 w-[3.5%] text-center bg-[#f0f4f9]">
+                <th className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-r border-slate-300/80 w-[3.5%] text-center bg-[#e4ecf7]">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-slate-200/90 w-[4.5%] text-center sticky top-0 right-0 bg-[#f0f4f9] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
+                  <th className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-slate-300/80 w-[4.5%] text-center sticky top-0 right-0 bg-[#e4ecf7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
                     Actions
                   </th>
                 )}
