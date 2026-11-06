@@ -1086,6 +1086,12 @@ const CustomerDatabase = () => {
     return result;
   }, [data, searchTerm, filterType, sortOption]);
 
+  // Dynamic party count based on active filters
+  const filteredPartyCount = useMemo(() => {
+    const uniqueParties = new Set(filteredData.map((d) => d.partyCode));
+    return uniqueParties.size;
+  }, [filteredData]);
+
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -1260,14 +1266,19 @@ const CustomerDatabase = () => {
 
       {/* ── Table Controls Bar: Count, Bulk Delete, Sort Dropdown & Layout Mode Icons ── */}
       <div className="flex items-center justify-between shrink-0">
-        {/* Left Side: Total count badge */}
-        <div className="flex items-center gap-[0.5vw]">
-          <div className="flex items-center gap-[0.4vw] px-[0.8vw] py-[0.3vw] rounded-full text-[0.74vw] font-semibold bg-blue-600 text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)]">
-            <span>All Customers</span>
-            <span className="text-[0.68vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold bg-white/20 text-white">
-              {partyStats.total}
+        {/* Left Side: Clean, subtle counter (no loud highlight pill) */}
+        <div className="flex items-center gap-[0.4vw]">
+          <span className="text-[0.76vw] font-semibold text-slate-700">
+            {filterType !== "All" || searchTerm.trim() ? "Filtered Customers" : "All Customers"}
+          </span>
+          <span className="text-[0.7vw] font-bold text-slate-500 bg-slate-200/80 px-[0.45vw] py-[0.05vw] rounded-full">
+            {filteredPartyCount}
+          </span>
+          {(filterType !== "All" || searchTerm.trim()) && (
+            <span className="text-[0.68vw] text-slate-400 font-normal">
+              (of {partyStats.total})
             </span>
-          </div>
+          )}
         </div>
 
         {/* Right Side: Bulk Delete, Sort Dropdown & Layout Mode Icons */}
