@@ -241,12 +241,17 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       if (!finalData.confirmPassword) delete finalData.confirmPassword;
 
       if (editingEmp) {
-        // Update existing
-        await axios.put(`${API_URL}/auth/employees/${editingEmp._id || editingEmp.id}`, finalData);
-        
         const oldRole = editingEmp.role || "User";
         const newRole = finalData.role || "User";
         const roleChanged = oldRole !== newRole;
+
+        // If role was changed in edit modal, remove stale existing permissions so the backend generates fresh defaults for the new role!
+        if (roleChanged) {
+          delete finalData.permissions;
+        }
+
+        // Update existing
+        await axios.put(`${API_URL}/auth/employees/${editingEmp._id || editingEmp.id}`, finalData);
 
         if (roleChanged && canEditRoleAccess) {
           toast(

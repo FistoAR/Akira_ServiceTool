@@ -394,10 +394,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
         // Supervisor preset:
         // Normal user privileges (User Dashboard, Response/workspace modules for call, material, production, troubleshoot)
         // PLUS Production NC supervisor / management pages (prodNC, prodReports)
+        // PLUS Registry pages (callReg, matInward) as READ-ONLY (no add/write, update, or delete)
         if (mod.id === "dashboardUser") {
           newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
         } else if (mod.id === "dashboardAdmin") {
           newMatrix[mod.id] = { enabled: false, read: false, write: false, update: false, delete: false };
+        } else if (mod.id === "callReg" || mod.id === "matInward") {
+          // Registry pages: Read only
+          newMatrix[mod.id] = { enabled: true, read: true, write: false, update: false, delete: false };
         } else if (mod.subGroup === "user" || mod.group === "troubleshoot") {
           // Normal user workspace modules (read, write, update)
           newMatrix[mod.id] = { enabled: true, read: true, write: true, update: true, delete: false };

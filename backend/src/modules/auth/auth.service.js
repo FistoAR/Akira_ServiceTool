@@ -60,6 +60,12 @@ const getDefaultPermissionsForRole = (role) => {
       } else if (modId === 'dashboardAdmin') {
         defaultMatrix[modId] = { enabled: false, read: false, write: false, update: false, delete: false };
       } else if (
+        modId === 'callReg' ||
+        modId === 'matInward'
+      ) {
+        // Registry pages for Supervisor: Read only (no add/update/delete)
+        defaultMatrix[modId] = { enabled: true, read: true, write: false, update: false, delete: false };
+      } else if (
         modId === 'serviceCallResponse' ||
         modId === 'serviceMaterialResponse' ||
         modId === 'productionMaterialResponse' ||
@@ -238,13 +244,13 @@ const updateUser = async (id, userData, requestingUser = null) => {
       user.profilePicture = await compressProfilePicture(userData.profilePicture);
     }
 
-    // If permissions are explicitly passed in payload, use them.
-    // If role changed and no explicit permissions passed, auto-reset and overwrite permissions with the new role defaults!
-    if (userData.permissions) {
-      user.permissions = userData.permissions;
-      user.markModified('permissions');
-    } else if (roleChanged) {
+    // If role changed, always reset and overwrite permissions with the new role's defaults.
+    // Otherwise, if permissions are explicitly passed, update them.
+    if (roleChanged) {
       user.permissions = getDefaultPermissionsForRole(newRole);
+      user.markModified('permissions');
+    } else if (userData.permissions) {
+      user.permissions = userData.permissions;
       user.markModified('permissions');
     }
 
@@ -367,4 +373,5 @@ module.exports = {
   updateUser,
   deleteUser,
   compressProfilePicture,
+  getDefaultPermissionsForRole,
 };
