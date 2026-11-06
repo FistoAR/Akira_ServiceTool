@@ -3153,11 +3153,10 @@ export default function ServiceCall() {
             {/* Header: Clean & Compact */}
             <div className="flex items-center justify-between pb-[0.2vw]">
               <div>
-                <h1 className="text-[1.25vw] font-bold text-gray-900 tracking-tight leading-tight flex items-center gap-[0.5vw]">
-                  <span className="w-[0.3vw] h-[1.1vw] bg-blue-600 rounded-full inline-block" />
+                <h1 className="text-[1.25vw] font-bold text-gray-900 tracking-tight leading-tight">
                   Service Call Registry
                 </h1>
-                <p className="text-[0.72vw] text-gray-500 font-medium mt-[0.1vw] pl-[0.8vw]">
+                <p className="text-[0.72vw] text-gray-500 font-medium mt-[0.1vw]">
                   Track, manage and resolve all service calls efficiently
                 </p>
               </div>
