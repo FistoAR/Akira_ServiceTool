@@ -3150,61 +3150,147 @@ export default function ServiceCall() {
             transition={{ duration: 0.2 }}
             className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
-            {/* Filter Toolbar: Search, Date Range, Priority Dropdown and Register Call */}
-            <div className="flex items-center justify-between bg-white px-[0.8vw] py-[0.45vw] rounded-[0.6vw] shadow-[0_1px_6px_-2px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.7vw] shrink-0">
-              {/* Left side: Search and Date Range */}
-              <div className="flex items-center gap-[0.7vw] flex-1">
-                {/* Search Box */}
-                <div className="relative flex-1 max-w-[22vw]">
-                  <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.85vw] h-[0.85vw]" />
-                  <input
-                    type="text"
-                    placeholder="Search by customer, call no, engineer..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-[2vw] pr-[0.8vw] h-[1.95vw] border border-gray-200/80 rounded-[0.45vw] text-[0.74vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
-                  />
+            {/* Top Stat KPI Cards Row: High-polish with wave sparks */}
+            <div className="grid grid-cols-4 gap-[0.8vw] shrink-0">
+              {/* 1. Total Calls */}
+              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)] hover:shadow-lg hover:border-blue-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+                    <Phone className="w-[1.1vw] h-[1.1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.All}
+                    </div>
+                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                      Total Calls
+                    </div>
+                  </div>
                 </div>
-
-                {/* Inline Date Filter */}
-                <div className="flex items-center gap-[0.3vw] border border-gray-200/80 rounded-[0.45vw] h-[1.95vw] px-[0.55vw] bg-gray-50/40 text-[0.72vw] hover:bg-white transition-all">
-                  <span className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                    From
-                  </span>
-                  <input
-                    type="date"
-                    value={filterFromDate || ""}
-                    onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="text-[0.72vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
-                  />
-                  <span className="text-gray-300 mx-[0.1vw]">-</span>
-                  <span className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                    To
-                  </span>
-                  <input
-                    type="date"
-                    value={filterToDate || ""}
-                    min={filterFromDate || undefined}
-                    onChange={(e) => setFilterToDate(e.target.value)}
-                    className="text-[0.72vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
-                  />
-                  {(filterFromDate || filterToDate) && (
-                    <button
-                      onClick={() => {
-                        setFilterFromDate("");
-                        setFilterToDate("");
-                      }}
-                      className="text-[0.65vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.2vw]"
-                      title="Clear date filter"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-blue-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 32 Q 25 35 45 20 T 90 8" />
+                </svg>
               </div>
 
-              {/* Right side: Priority Dropdown, Bulk Delete & Register Call */}
-              <div className="flex gap-[0.5vw] items-center flex-shrink-0">
+              {/* 2. Resolved */}
+              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(16,185,129,0.08)] hover:shadow-lg hover:border-emerald-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
+                    <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.Resolved}
+                    </div>
+                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                      Resolved
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-emerald-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 30 Q 30 32 50 15 T 90 6" />
+                </svg>
+              </div>
+
+              {/* 3. Pending */}
+              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(245,158,11,0.08)] hover:shadow-lg hover:border-amber-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
+                    <Clock className="w-[1.1vw] h-[1.1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.Pending}
+                    </div>
+                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                      Pending
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-amber-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 35 Q 25 30 50 22 T 90 10" />
+                </svg>
+              </div>
+
+              {/* 4. Critical */}
+              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(239,68,68,0.08)] hover:shadow-lg hover:border-rose-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
+                    <AlertCircle className="w-[1.1vw] h-[1.1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.Critical}
+                    </div>
+                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                      Critical
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-rose-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 32 Q 35 34 55 18 T 90 8" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Filter Toolbar: Unified Search, Date Range, Priority Dropdown and Register Call */}
+            <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
+              {/* Left side: Search Box */}
+              <div className="relative flex-1 max-w-[24vw]">
+                <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
+                <input
+                  type="text"
+                  placeholder="Search by Customer, Call No, Party Code or Engineer..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-slate-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none font-normal"
+                />
+              </div>
+
+              {/* Middle: Inline Date Range Filter */}
+              <div className="flex items-center gap-[0.35vw] border border-gray-200/90 rounded-[0.5vw] h-[2.1vw] px-[0.65vw] bg-slate-50/50 text-[0.74vw] hover:bg-white transition-all">
+                <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-400" />
+                <span className="text-[0.66vw] font-medium text-gray-400">
+                  From
+                </span>
+                <input
+                  type="date"
+                  value={filterFromDate || ""}
+                  onChange={(e) => setFilterFromDate(e.target.value)}
+                  className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                />
+                <span className="text-gray-300 mx-[0.2vw]">-</span>
+                <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-400" />
+                <span className="text-[0.66vw] font-medium text-gray-400">
+                  To
+                </span>
+                <input
+                  type="date"
+                  value={filterToDate || ""}
+                  min={filterFromDate || undefined}
+                  onChange={(e) => setFilterToDate(e.target.value)}
+                  className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                />
+                {(filterFromDate || filterToDate) && (
+                  <button
+                    onClick={() => {
+                      setFilterFromDate("");
+                      setFilterToDate("");
+                    }}
+                    className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.3vw]"
+                    title="Clear date filter"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Right side: Priority Dropdown, Status / Bulk Delete & Register Call */}
+              <div className="flex gap-[0.6vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
@@ -3212,7 +3298,7 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[1.95vw] rounded-[0.45vw] font-semibold text-[0.72vw] transition-all cursor-pointer shadow-none"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.72vw] transition-all cursor-pointer shadow-none"
                     >
                       <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                       Delete ({selectedItems.size})
@@ -3225,89 +3311,26 @@ export default function ServiceCall() {
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value)}
-                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/80 hover:border-gray-300 pl-[0.7vw] pr-[1.7vw] rounded-[0.45vw] outline-none cursor-pointer h-[1.95vw] text-[0.72vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[1.9vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                   >
-                    <option value="All">All Priorities</option>
+                    <option value="All">Priority</option>
                     {PRIORITIES.map((p) => (
                       <option key={p} value={p}>{p}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.5vw] top-1/2 -translate-y-1/2" />
+                  <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.55vw] top-1/2 -translate-y-1/2" />
                 </div>
 
                 {/* Action Button: Register Call */}
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
-                    className="cursor-pointer shrink-0 flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.85vw] h-[1.95vw] rounded-[0.45vw] font-semibold text-[0.72vw] transition-all shadow-xs"
+                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]"
                   >
-                    <Plus className="w-[0.85vw] h-[0.85vw]" />
+                    <Plus className="w-[0.9vw] h-[0.9vw]" />
                     Register Call
                   </button>
                 )}
-              </div>
-            </div>
-
-            {/* Top Stat Cards Row */}
-            <div className="grid grid-cols-4 gap-[0.6vw] shrink-0">
-              {/* 1. Total Calls */}
-              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Total Calls
-                  </div>
-                  <div className="text-[1.2vw] font-extrabold text-gray-900 mt-[0.1vw] leading-none tracking-tight">
-                    {counts.All}
-                  </div>
-                </div>
-                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-blue-50/80 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center justify-center text-blue-600">
-                  <Phone className="w-[0.95vw] h-[0.95vw]" />
-                </div>
-              </div>
-
-              {/* 2. Resolved */}
-              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-emerald-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Resolved
-                  </div>
-                  <div className="text-[1.2vw] font-extrabold text-emerald-600 mt-[0.1vw] leading-none tracking-tight">
-                    {counts.Resolved}
-                  </div>
-                </div>
-                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-emerald-50/80 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center justify-center text-emerald-600">
-                  <CheckCircle className="w-[0.95vw] h-[0.95vw]" />
-                </div>
-              </div>
-
-              {/* 3. Pending */}
-              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-amber-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Pending
-                  </div>
-                  <div className="text-[1.2vw] font-extrabold text-amber-500 mt-[0.1vw] leading-none tracking-tight">
-                    {counts.Pending}
-                  </div>
-                </div>
-                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition-all flex items-center justify-center text-amber-500">
-                  <Clock className="w-[0.95vw] h-[0.95vw]" />
-                </div>
-              </div>
-
-              {/* 4. Critical */}
-              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-rose-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Critical
-                  </div>
-                  <div className="text-[1.2vw] font-extrabold text-rose-600 mt-[0.1vw] leading-none tracking-tight">
-                    {counts.Critical}
-                  </div>
-                </div>
-                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-rose-50/80 group-hover:bg-rose-600 group-hover:text-white transition-all flex items-center justify-center text-rose-600">
-                  <AlertCircle className="w-[0.95vw] h-[0.95vw]" />
-                </div>
               </div>
             </div>
 
