@@ -33,16 +33,6 @@ const TabContentLoader = () => (
 );
 
 const SystemSettingsPage = () => {
-  const getCachedArray = (key) => {
-    try {
-      const item = sessionStorage.getItem(key);
-      if (!item || item === "undefined" || item === "null") return null;
-      const parsed = JSON.parse(item);
-      return Array.isArray(parsed) ? parsed : null;
-    } catch {
-      return null;
-    }
-  };
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "categories";
 
@@ -59,7 +49,7 @@ const SystemSettingsPage = () => {
   const [colVis, setColVis] = useState({ ...DEFAULT_COL_VIS });
   const [isLoading, setIsLoading] = useState(true);
 
-  // ── True Per-Tab Independent Lazy Fetching ──
+  // ── True Per-Tab Independent Fetching (Always Fresh from DB) ──
   const fetchActiveTabData = async (targetTab = activeTab, force = false) => {
     if (force) setIsRefreshing(true);
     else setIsLoading(true);
@@ -67,174 +57,97 @@ const SystemSettingsPage = () => {
     try {
       switch (targetTab) {
         case "categories": {
-          const cached = !force ? getCachedArray("master_party_types") : null;
-          if (cached) {
-            setPartyTypes(cached);
-          } else {
-            const res = await axios.get(`${API_URL}/master/party-types`);
-            const norm = Array.isArray(res.data) ? res.data.map(t => ({ ...t, id: t.id || t._id })) : [];
-            const finalPT = norm.length ? norm : [{ id: 1, name: "OEM" }, { id: 2, name: "End Customer" }];
-            setPartyTypes(finalPT);
-            sessionStorage.setItem("master_party_types", JSON.stringify(finalPT));
-          }
+          const res = await axios.get(`${API_URL}/master/party-types`);
+          const norm = Array.isArray(res.data) ? res.data.map(t => ({ ...t, id: t.id || t._id })) : [];
+          const finalPT = norm.length ? norm : [{ id: 1, name: "OEM" }, { id: 2, name: "End Customer" }];
+          setPartyTypes(finalPT);
           break;
         }
 
         case "warranty-rules": {
-          const cachedRules = !force ? getCachedArray("master_warranty_rules") : null;
-          const cachedSegs = !force ? getCachedArray("master_segments") : null;
-
-          if (cachedRules && cachedSegs) {
-            setWarrantyRules(cachedRules);
-            setSegments(cachedSegs);
-          } else {
-            const [rulesRes, segRes] = await Promise.all([
-              axios.get(`${API_URL}/master/warranty-rules`),
-              axios.get(`${API_URL}/master/product-segments`)
-            ]);
-            const normRules = Array.isArray(rulesRes.data)
-              ? rulesRes.data.map(r => ({ ...r, id: r.id || r._id, productSegment: r.productSegment || r.partyType || "Default" }))
-              : [];
-            const normSegs = Array.isArray(segRes.data)
-              ? segRes.data.map(s => ({ ...s, id: s.id || s._id }))
-              : [];
-            setWarrantyRules(normRules);
-            setSegments(normSegs);
-            sessionStorage.setItem("master_warranty_rules", JSON.stringify(normRules));
-            sessionStorage.setItem("master_segments", JSON.stringify(normSegs));
-          }
+          const [rulesRes, segRes] = await Promise.all([
+            axios.get(`${API_URL}/master/warranty-rules`),
+            axios.get(`${API_URL}/master/product-segments`)
+          ]);
+          const normRules = Array.isArray(rulesRes.data)
+            ? rulesRes.data.map(r => ({ ...r, id: r.id || r._id, productSegment: r.productSegment || r.partyType || "Default" }))
+            : [];
+          const normSegs = Array.isArray(segRes.data)
+            ? segRes.data.map(s => ({ ...s, id: s.id || s._id }))
+            : [];
+          setWarrantyRules(normRules);
+          setSegments(normSegs);
           break;
         }
 
         case "segments": {
-          const cached = sessionStorage.getItem("master_segments");
-          if (!force && cached) {
-            setSegments(JSON.parse(cached));
-          } else {
-            const res = await axios.get(`${API_URL}/master/product-segments`);
-            const norm = res.data.map(s => ({ ...s, id: s.id || s._id }));
-            setSegments(norm);
-            sessionStorage.setItem("master_segments", JSON.stringify(norm));
-          }
+          const res = await axios.get(`${API_URL}/master/product-segments`);
+          const norm = res.data.map(s => ({ ...s, id: s.id || s._id }));
+          setSegments(norm);
           break;
         }
 
         case "four-m": {
-          const cached = sessionStorage.getItem("master_four_m");
-          if (!force && cached) {
-            setFourMCategories(JSON.parse(cached));
-          } else {
-            const res = await axios.get(`${API_URL}/master/four-m-categories`);
-            const norm = res.data.map(s => ({ ...s, id: s.id || s._id }));
-            setFourMCategories(norm);
-            sessionStorage.setItem("master_four_m", JSON.stringify(norm));
-          }
+          const res = await axios.get(`${API_URL}/master/four-m-categories`);
+          const norm = res.data.map(s => ({ ...s, id: s.id || s._id }));
+          setFourMCategories(norm);
           break;
         }
 
         case "units": {
-          const cached = sessionStorage.getItem("master_units");
-          if (!force && cached) {
-            setUnits(JSON.parse(cached));
-          } else {
-            const res = await axios.get(`${API_URL}/master/units`);
-            const norm = res.data.map(u => ({ ...u, id: u.id || u._id }));
-            setUnits(norm);
-            sessionStorage.setItem("master_units", JSON.stringify(norm));
-          }
+          const res = await axios.get(`${API_URL}/master/units`);
+          const norm = res.data.map(u => ({ ...u, id: u.id || u._id }));
+          setUnits(norm);
           break;
         }
 
         case "sites": {
-          const cached = sessionStorage.getItem("master_sites");
-          if (!force && cached) {
-            setSites(JSON.parse(cached));
-          } else {
-            const res = await axios.get(`${API_URL}/master/sites`);
-            const norm = res.data.map(s => ({ ...s, id: s.id || s._id }));
-            setSites(norm);
-            sessionStorage.setItem("master_sites", JSON.stringify(norm));
-          }
+          const res = await axios.get(`${API_URL}/master/sites`);
+          const norm = res.data.map(s => ({ ...s, id: s.id || s._id }));
+          setSites(norm);
           break;
         }
 
         case "escalation": {
-          const cachedFlows = sessionStorage.getItem("master_flows");
-          const cachedPT = sessionStorage.getItem("master_party_types");
-          const cachedSegs = sessionStorage.getItem("master_segments");
-          const cachedEmps = sessionStorage.getItem("all_employees");
-          const cachedDepts = sessionStorage.getItem("master_departments");
-
-          if (!force && cachedFlows && cachedPT && cachedSegs && cachedEmps && cachedDepts) {
-            setFlows(JSON.parse(cachedFlows));
-            setPartyTypes(JSON.parse(cachedPT));
-            setSegments(JSON.parse(cachedSegs));
-            setEmployees(JSON.parse(cachedEmps));
-            setDepartments(JSON.parse(cachedDepts));
-          } else {
-            const [ptRes, segRes, flowRes, empRes, deptRes] = await Promise.all([
-              axios.get(`${API_URL}/master/party-types`),
-              axios.get(`${API_URL}/master/product-segments`),
-              axios.get(`${API_URL}/master/escalation-flows`),
-              axios.get(`${API_URL}/auth/employees`),
-              axios.get(`${API_URL}/master/settings/departments`)
-            ]);
-            const normPT = ptRes.data.map(t => ({ ...t, id: t.id || t._id }));
-            const normSegs = segRes.data.map(s => ({ ...s, id: s.id || s._id }));
-            const s = {};
-            flowRes.data.forEach(f => {
-              if (f.type !== "Service Material") s[f.type] = f.steps;
-            });
-            const depts = deptRes.data || DEFAULT_DEPTS;
-            setPartyTypes(normPT);
-            setSegments(normSegs);
-            setFlows(s);
-            setEmployees(empRes.data);
-            setDepartments(depts);
-
-            sessionStorage.setItem("master_party_types", JSON.stringify(normPT));
-            sessionStorage.setItem("master_segments", JSON.stringify(normSegs));
-            sessionStorage.setItem("master_flows", JSON.stringify(s));
-            sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
-            sessionStorage.setItem("master_departments", JSON.stringify(depts));
-          }
+          const [ptRes, segRes, flowRes, empRes, deptRes] = await Promise.all([
+            axios.get(`${API_URL}/master/party-types`),
+            axios.get(`${API_URL}/master/product-segments`),
+            axios.get(`${API_URL}/master/escalation-flows`),
+            axios.get(`${API_URL}/auth/employees`),
+            axios.get(`${API_URL}/master/settings/departments`)
+          ]);
+          const normPT = ptRes.data.map(t => ({ ...t, id: t.id || t._id }));
+          const normSegs = segRes.data.map(s => ({ ...s, id: s.id || s._id }));
+          const s = {};
+          flowRes.data.forEach(f => {
+            if (f.type !== "Service Material") s[f.type] = f.steps;
+          });
+          const depts = deptRes.data || DEFAULT_DEPTS;
+          setPartyTypes(normPT);
+          setSegments(normSegs);
+          setFlows(s);
+          setEmployees(empRes.data);
+          setDepartments(depts);
           break;
         }
 
         case "service-escalation": {
-          const cachedDepts = sessionStorage.getItem("master_departments");
-          if (!force && cachedDepts) {
-            setDepartments(JSON.parse(cachedDepts));
-          } else {
-            const deptRes = await axios.get(`${API_URL}/master/settings/departments`);
-            const depts = deptRes.data || DEFAULT_DEPTS;
-            setDepartments(depts);
-            sessionStorage.setItem("master_departments", JSON.stringify(depts));
-          }
+          const deptRes = await axios.get(`${API_URL}/master/settings/departments`);
+          const depts = deptRes.data || DEFAULT_DEPTS;
+          setDepartments(depts);
           break;
         }
 
         case "employees": {
-          const cachedEmps = sessionStorage.getItem("all_employees");
-          const cachedDepts = sessionStorage.getItem("master_departments");
+          const [empRes, deptRes] = await Promise.all([
+            axios.get(`${API_URL}/auth/employees`),
+            axios.get(`${API_URL}/master/settings/departments`)
+          ]);
+          const depts = deptRes.data || DEFAULT_DEPTS;
+          setEmployees(empRes.data);
+          setDepartments(depts);
 
-          if (!force && cachedEmps && cachedDepts) {
-            setEmployees(JSON.parse(cachedEmps));
-            setDepartments(JSON.parse(cachedDepts));
-          } else {
-            // Fast text data load (instant ms response)
-            const [empRes, deptRes] = await Promise.all([
-              axios.get(`${API_URL}/auth/employees`),
-              axios.get(`${API_URL}/master/settings/departments`)
-            ]);
-            const depts = deptRes.data || DEFAULT_DEPTS;
-            setEmployees(empRes.data);
-            setDepartments(depts);
-            sessionStorage.setItem("all_employees", JSON.stringify(empRes.data));
-            sessionStorage.setItem("master_departments", JSON.stringify(depts));
-          }
-
-          // Progressive image hydration: apply one-by-one with smooth visual pop-in
+          // Progressive image hydration
           axios
             .get(`${API_URL}/auth/employee-pictures`)
             .then(async (picRes) => {
@@ -248,7 +161,6 @@ const SystemSettingsPage = () => {
                           : e
                       )
                     );
-                    // Gentle micro-stagger (40ms) so each avatar smoothly appears one by one
                     await new Promise((resolve) => setTimeout(resolve, 40));
                   }
                 }
@@ -259,17 +171,8 @@ const SystemSettingsPage = () => {
         }
 
         case "role-access": {
-          const cachedEmps = sessionStorage.getItem("all_employees");
-          const targetUserId = searchParams.get("userId");
-          // If navigated with a target userId from notification/registration, force fresh fetch
-          if (!force && cachedEmps && !targetUserId) {
-            setEmployees(JSON.parse(cachedEmps));
-          } else {
-            const res = await axios.get(`${API_URL}/auth/employees`);
-            setEmployees(res.data);
-            sessionStorage.setItem("all_employees", JSON.stringify(res.data));
-            localStorage.setItem("all_employees", JSON.stringify(res.data));
-          }
+          const res = await axios.get(`${API_URL}/auth/employees`);
+          setEmployees(res.data);
           break;
         }
 

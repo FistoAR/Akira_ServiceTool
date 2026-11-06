@@ -36,7 +36,6 @@ const SitesSection = ({ sites = [], setSites }) => {
       const newItem = { ...res.data, id: res.data._id };
       const updated = [...safeSites, newItem];
       setSites(updated);
-      sessionStorage.setItem("master_sites", JSON.stringify(updated));
       setNewSiteName("");
       toast("Site added successfully");
     } catch (err) {
@@ -61,7 +60,6 @@ const SitesSection = ({ sites = [], setSites }) => {
       const updatedItem = { ...res.data, id: res.data._id };
       const updated = safeSites.map((x) => (x.id === editingSite.id || x._id === editingSite._id ? updatedItem : x));
       setSites(updated);
-      sessionStorage.setItem("master_sites", JSON.stringify(updated));
       setEditingSite(null);
       toast("Site updated");
     } catch (err) {
@@ -88,7 +86,6 @@ const SitesSection = ({ sites = [], setSites }) => {
         await axios.delete(`${API_URL}/master/sites/${mongoId || id}`);
         const remaining = safeSites.filter((t) => t.id !== id && t._id !== mongoId);
         setSites(remaining);
-        sessionStorage.setItem("master_sites", JSON.stringify(remaining));
         toast("Site deleted successfully");
       } catch (err) {
         toast("Failed to delete site", "error");
