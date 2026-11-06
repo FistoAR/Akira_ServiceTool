@@ -626,7 +626,15 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
               </div>
 
               {/* Modal Form Body */}
-              <form onSubmit={handleRegSubmit} className="flex-1 overflow-y-auto px-[1.4vw] py-[1.2vw] flex flex-col gap-[1.2vw]">
+              <form 
+                onSubmit={handleRegSubmit} 
+                autoComplete="off"
+                className="flex-1 overflow-y-auto px-[1.4vw] py-[1.2vw] flex flex-col gap-[1.2vw]"
+              >
+                {/* Hidden dummy inputs to prevent browser autofill heuristics from injecting credentials */}
+                <input type="text" style={{ display: "none" }} aria-hidden="true" />
+                <input type="password" style={{ display: "none" }} aria-hidden="true" />
+
                 {/* 1. Personal Details Section */}
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
@@ -642,6 +650,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <input 
                         type="text" 
                         required 
+                        name="emp_full_name_field"
+                        autoComplete="off"
                         value={regData.name} 
                         onChange={e => setRegData({...regData, name: e.target.value})} 
                         className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
@@ -655,6 +665,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <input 
                         type="text" 
                         required 
+                        name="emp_id_code_field"
+                        autoComplete="off"
                         value={regData.userId} 
                         onChange={e => setRegData({...regData, userId: e.target.value})} 
                         disabled={!!editingEmp}
@@ -673,6 +685,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <input 
                         type="email" 
                         required 
+                        name="emp_work_email_field"
+                        autoComplete="new-email"
                         value={regData.email} 
                         onChange={e => setRegData({...regData, email: e.target.value})} 
                         className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
@@ -685,6 +699,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       </label>
                       <input 
                         type="tel" 
+                        name="emp_phone_num_field"
+                        autoComplete="off"
                         value={regData.phoneNumber} 
                         onChange={e => setRegData({...regData, phoneNumber: e.target.value})} 
                         className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
@@ -698,6 +714,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <input 
                         type="date" 
                         required 
+                        autoComplete="off"
                         value={regData.dob} 
                         onChange={e => setRegData({...regData, dob: e.target.value})} 
                         className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white transition-colors" 
@@ -952,6 +969,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <div className="relative">
                         <input 
                           type={showPassword ? "text" : "password"} 
+                          name="new_user_secret_code"
+                          autoComplete="new-password"
+                          autoCorrect="off"
+                          autoCapitalize="off"
+                          spellCheck="false"
+                          data-lpignore="true"
+                          data-1p-ignore="true"
                           required={!editingEmp}
                           value={regData.password} 
                           onChange={e => setRegData({...regData, password: e.target.value})} 
@@ -974,6 +998,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <div className="relative">
                         <input 
                           type={showConfirmPassword ? "text" : "password"} 
+                          name="confirm_user_secret_code"
+                          autoComplete="new-password"
+                          autoCorrect="off"
+                          autoCapitalize="off"
+                          spellCheck="false"
+                          data-lpignore="true"
+                          data-1p-ignore="true"
                           required={!editingEmp}
                           value={regData.confirmPassword} 
                           onChange={e => setRegData({...regData, confirmPassword: e.target.value})} 
