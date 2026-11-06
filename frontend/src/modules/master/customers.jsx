@@ -1122,7 +1122,7 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `p-[0.7vw] border-r border-b border-gray-100 text-[0.76vw] ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `p-[0.7vw] border-r border-b border-slate-200 text-[0.76vw] ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
@@ -1372,10 +1372,10 @@ const CustomerDatabase = () => {
                   return (
                     <tr
                       key={i}
-                      className={`transition-colors border-b border-gray-100 ${isSelected ? "bg-blue-50/70" : "hover:bg-gray-50/60"}`}
+                      className={`transition-colors border-b border-slate-200 ${isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/70"}`}
                     >
                       {!isSupervisor && (
-                        <td className="p-[0.7vw] border-r border-b border-gray-100 text-center">
+                        <td className="p-[0.7vw] border-r border-b border-slate-200 text-center">
                           <button
                             onClick={() => handleSelectItem(row)}
                             className="flex items-center justify-center w-full cursor-pointer"
@@ -1383,22 +1383,22 @@ const CustomerDatabase = () => {
                             {isSelected ? (
                               <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
                             ) : (
-                              <Square className="w-[1vw] h-[1vw] text-gray-300 hover:text-gray-400" />
+                              <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
                             )}
                           </button>
                         </td>
                       )}
-                      <td className="p-[0.7vw] text-gray-500 font-medium border-r border-b border-gray-100 text-center text-[0.74vw]">
+                      <td className="p-[0.7vw] text-gray-500 font-medium border-r border-b border-slate-200 text-center text-[0.74vw]">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
                         renderRowCell(col, row, isSameParty, rowSpan, row.partyCode),
                       )}
-                      {/* Action buttons with edit icon and more vertical/horizontal popover */}
+                      {/* Action buttons with edit icon and delete button */}
                       {!isSameParty && !isSupervisor ? (
                         <td
                           rowSpan={rowSpan}
-                          className="border-b border-gray-100 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
+                          className="border-b border-r border-slate-200 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
                         >
                           {(canUpdate || canDelete) ? (
                             <div className="flex items-center justify-center gap-[0.4vw] px-[0.4vw]">
