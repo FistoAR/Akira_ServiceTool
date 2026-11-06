@@ -3148,194 +3148,123 @@ export default function ServiceCall() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-col gap-[1vw]"
+            className="flex flex-col gap-[0.8vw]"
           >
-            {/* Top Page Header with Banner Background */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white rounded-[0.9vw] p-[1.2vw] border border-blue-100/80 shadow-2xs">
-              <div className="relative z-10">
-                <div className="w-[2.2vw] h-[0.25vw] bg-blue-600 rounded-full mb-[0.5vw]"></div>
-                <h1 className="text-[1.35vw] font-bold text-gray-900 tracking-tight leading-tight">
+            {/* Header: Clean & Compact */}
+            <div className="flex items-center justify-between pb-[0.2vw]">
+              <div>
+                <h1 className="text-[1.25vw] font-bold text-gray-900 tracking-tight leading-tight flex items-center gap-[0.5vw]">
+                  <span className="w-[0.3vw] h-[1.1vw] bg-blue-600 rounded-full inline-block" />
                   Service Call Registry
                 </h1>
-                <p className="text-[0.75vw] text-gray-500 font-medium mt-[0.15vw]">
+                <p className="text-[0.72vw] text-gray-500 font-medium mt-[0.1vw] pl-[0.8vw]">
                   Track, manage and resolve all service calls efficiently
                 </p>
               </div>
 
-              {/* Decorative Subtle Vector Art on the Right Side */}
-              <div className="absolute right-[1.5vw] top-1/2 -translate-y-1/2 flex items-center gap-[1.2vw] opacity-25 pointer-events-none select-none">
-                <div className="relative">
-                  <div className="w-[4.5vw] h-[4.5vw] rounded-full border-[0.35vw] border-blue-400 border-dashed animate-[spin_40s_linear_infinite]" />
-                  <Settings className="w-[2.2vw] h-[2.2vw] text-blue-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                </div>
-                <div className="flex flex-col items-center gap-[0.4vw]">
-                  <ClipboardList className="w-[3.2vw] h-[3.2vw] text-indigo-600" />
-                  <div className="w-[2.5vw] h-[0.3vw] bg-indigo-300 rounded-full" />
-                </div>
-                <Wrench className="w-[2.8vw] h-[2.8vw] text-blue-500 rotate-45 -ml-[0.6vw]" />
-              </div>
+              {canWrite && !isSupervisor && (
+                <button
+                  onClick={goToForm}
+                  className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.78vw] transition-all shadow-xs"
+                >
+                  <Plus className="w-[0.95vw] h-[0.95vw]" />
+                  Register Call
+                </button>
+              )}
             </div>
 
-            {/* Top 4 Metric KPI Cards */}
-            <div className="grid grid-cols-4 gap-[1vw]">
+            {/* Top 4 KPI Stat Cards: Clean & Minimalist */}
+            <div className="grid grid-cols-4 gap-[0.8vw]">
               {/* 1. Total Calls */}
-              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                    <Phone className="w-[1.2vw] h-[1.2vw]" />
+              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+                <div>
+                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                    Total Calls
                   </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                      {counts.All}
-                    </div>
-                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                      Total Calls
-                    </div>
+                  <div className="text-[1.3vw] font-bold text-gray-900 mt-[0.15vw] leading-none">
+                    {counts.All}
                   </div>
                 </div>
-                {/* Blue Sparkline SVG */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-blue-500" viewBox="0 0 100 30" fill="none">
-                  <path
-                    d="M5 24 Q 25 26, 45 15 T 75 12 T 95 6"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5 24 Q 25 26, 45 15 T 75 12 T 95 6 L 95 28 L 5 28 Z"
-                    fill="currentColor"
-                    className="opacity-10 text-blue-500"
-                  />
-                </svg>
+                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                  <Phone className="w-[1.05vw] h-[1.05vw]" />
+                </div>
               </div>
 
               {/* 2. Resolved */}
-              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                    <CheckCircle className="w-[1.2vw] h-[1.2vw]" />
+              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+                <div>
+                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                    Resolved
                   </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                      {counts.Resolved}
-                    </div>
-                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                      Resolved
-                    </div>
+                  <div className="text-[1.3vw] font-bold text-emerald-600 mt-[0.15vw] leading-none">
+                    {counts.Resolved}
                   </div>
                 </div>
-                {/* Green Sparkline SVG */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-emerald-500" viewBox="0 0 100 30" fill="none">
-                  <path
-                    d="M5 25 Q 30 20, 50 18 T 75 8 T 95 5"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5 25 Q 30 20, 50 18 T 75 8 T 95 5 L 95 28 L 5 28 Z"
-                    fill="currentColor"
-                    className="opacity-10 text-emerald-500"
-                  />
-                </svg>
+                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <CheckCircle className="w-[1.05vw] h-[1.05vw]" />
+                </div>
               </div>
 
               {/* 3. Pending */}
-              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
-                    <Clock className="w-[1.2vw] h-[1.2vw]" />
+              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+                <div>
+                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                    Pending
                   </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                      {counts.Pending}
-                    </div>
-                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                      Pending
-                    </div>
+                  <div className="text-[1.3vw] font-bold text-amber-600 mt-[0.15vw] leading-none">
+                    {counts.Pending}
                   </div>
                 </div>
-                {/* Amber Sparkline SVG */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-amber-500" viewBox="0 0 100 30" fill="none">
-                  <path
-                    d="M5 22 Q 30 25, 55 16 T 80 18 T 95 10"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5 22 Q 30 25, 55 16 T 80 18 T 95 10 L 95 28 L 5 28 Z"
-                    fill="currentColor"
-                    className="opacity-10 text-amber-500"
-                  />
-                </svg>
+                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                  <Clock className="w-[1.05vw] h-[1.05vw]" />
+                </div>
               </div>
 
               {/* 4. Critical */}
-              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
-                    <AlertCircle className="w-[1.2vw] h-[1.2vw]" />
+              <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-gray-200/80 shadow-2xs flex items-center justify-between">
+                <div>
+                  <div className="text-[0.68vw] font-semibold text-gray-500 uppercase tracking-wider">
+                    Critical
                   </div>
-                  <div>
-                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
-                      {counts.Critical}
-                    </div>
-                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
-                      Critical
-                    </div>
+                  <div className="text-[1.3vw] font-bold text-rose-600 mt-[0.15vw] leading-none">
+                    {counts.Critical}
                   </div>
                 </div>
-                {/* Red Sparkline SVG */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-rose-500" viewBox="0 0 100 30" fill="none">
-                  <path
-                    d="M5 26 Q 25 24, 45 22 T 70 14 T 95 8"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5 26 Q 25 24, 45 22 T 70 14 T 95 8 L 95 28 L 5 28 Z"
-                    fill="currentColor"
-                    className="opacity-10 text-rose-500"
-                  />
-                </svg>
+                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
+                  <AlertCircle className="w-[1.05vw] h-[1.05vw]" />
+                </div>
               </div>
             </div>
 
-            {/* Toolbar: Search, Date Range, Priority, Status Dropdown, and Action Button */}
-            <div className="flex items-center justify-between bg-white px-[1vw] py-[0.7vw] rounded-[0.7vw] shadow-2xs border border-gray-200 gap-[0.8vw]">
-              {/* Left side: Search and Dates */}
+            {/* Filter Toolbar: Search, Date Range, Priority Dropdown */}
+            <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.6vw] shadow-2xs border border-gray-200 gap-[0.8vw]">
+              {/* Left side: Search and Date Range */}
               <div className="flex items-center gap-[0.8vw] flex-1">
                 {/* Search Box */}
                 <div className="relative flex-1 max-w-[24vw]">
-                  <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.95vw] h-[0.95vw]" />
+                  <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
                   <input
                     type="text"
-                    placeholder="Search by Customer, Call No, Party Code or Engineer..."
+                    placeholder="Search by customer, call no, engineer..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-[2.4vw] pr-[1vw] h-[2.2vw] border border-gray-200 rounded-[0.5vw] text-[0.78vw] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-gray-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+                    className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200 rounded-[0.45vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-gray-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
                   />
                 </div>
 
                 {/* Inline Date Filter */}
-                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.5vw] h-[2.2vw] px-[0.65vw] bg-gray-50/50 text-[0.76vw]">
-                  <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
+                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.45vw] h-[2.1vw] px-[0.6vw] bg-gray-50/50 text-[0.74vw]">
+                  <span className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">
                     From
                   </span>
                   <input
                     type="date"
                     value={filterFromDate || ""}
                     onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="text-[0.76vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                    className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
                   <span className="text-gray-400 mx-[0.1vw]">-</span>
-                  <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
+                  <span className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">
                     To
                   </span>
                   <input
@@ -3343,7 +3272,7 @@ export default function ServiceCall() {
                     value={filterToDate || ""}
                     min={filterFromDate || undefined}
                     onChange={(e) => setFilterToDate(e.target.value)}
-                    className="text-[0.76vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                    className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
                   {(filterFromDate || filterToDate) && (
                     <button
@@ -3351,7 +3280,7 @@ export default function ServiceCall() {
                         setFilterFromDate("");
                         setFilterToDate("");
                       }}
-                      className="text-[0.7vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.3vw]"
+                      className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.2vw]"
                       title="Clear date filter"
                     >
                       Clear
@@ -3360,7 +3289,7 @@ export default function ServiceCall() {
                 </div>
               </div>
 
-              {/* Right side: Priority, Status Filter Dropdown, Bulk Delete & Register Button */}
+              {/* Right side: Priority Dropdown and Bulk Delete */}
               <div className="flex gap-[0.6vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
@@ -3369,9 +3298,9 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 hover:border-rose-300 px-[0.85vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.78vw] transition-all cursor-pointer shadow-none"
+                      className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.45vw] font-semibold text-[0.74vw] transition-all cursor-pointer shadow-none"
                     >
-                      <Trash2 className="w-[0.9vw] h-[0.9vw]" />
+                      <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                       Delete ({selectedItems.size})
                     </motion.button>
                   )}
@@ -3382,51 +3311,20 @@ export default function ServiceCall() {
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value)}
-                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.2vw] text-[0.78vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.75vw] pr-[1.8vw] rounded-[0.45vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                   >
-                    <option value="All">Priority</option>
+                    <option value="All">All Priorities</option>
                     {PRIORITIES.map((p) => (
                       <option key={p} value={p}>{p}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-[0.85vw] h-[0.85vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
+                  <ChevronDown className="w-[0.8vw] h-[0.8vw] text-gray-400 pointer-events-none absolute right-[0.55vw] top-1/2 -translate-y-1/2" />
                 </div>
-
-                {/* Status Dropdown */}
-                <div className="relative">
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.2vw] text-[0.78vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
-                  >
-                    <option value="All">Status</option>
-                    <option value="Registered">Registered</option>
-                    <option value="Assigned">Assigned</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Supporting">Supporting</option>
-                    <option value="Field Visit">Field Visit</option>
-                    <option value="Escalating">Escalating</option>
-                    <option value="Critical">Critical</option>
-                    <option value="Resolved">Resolved</option>
-                  </select>
-                  <ChevronDown className="w-[0.85vw] h-[0.85vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
-                </div>
-
-                {/* Register Call Button */}
-                {canWrite && !isSupervisor && (
-                  <button
-                    onClick={goToForm}
-                    className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.8vw] transition-all shadow-xs"
-                  >
-                    <Plus className="w-[1vw] h-[1vw]" />
-                    Register Call
-                  </button>
-                )}
               </div>
             </div>
 
             {/* Status Summary Pill Bar */}
-            <div className="flex gap-[0.5vw] flex-wrap items-center">
+            <div className="flex gap-[0.45vw] flex-wrap items-center">
               {[
                 {
                   label: "All",
