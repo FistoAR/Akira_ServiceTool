@@ -18,6 +18,8 @@ import {
   loadCustomerDb
 } from "./masterConstants";
 
+const ITEMS_PER_PAGE = 10;
+
 const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
   const { canWrite, canUpdate, canDelete } = useModulePermissions("partyTypes");
   const safePartyTypes = Array.isArray(partyTypes) ? partyTypes : [];
@@ -26,6 +28,8 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
     name: ""
   });
   const [editingType, setEditingType] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleAdd = async () => {
     const t = newType.name.trim();
@@ -112,74 +116,157 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
     }
   };
 
+  const filteredPartyTypes = useMemo(() => {
+    return safePartyTypes.filter((type) =>
+      (type.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [safePartyTypes, searchTerm]);
+
+  const totalPages = Math.ceil(filteredPartyTypes.length / ITEMS_PER_PAGE) || 1;
+  const paginatedPartyTypes = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredPartyTypes.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredPartyTypes, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-white">
       <div className="p-[1.4vw] grid grid-cols-1 lg:grid-cols-12 gap-[1.8vw] items-start">
         {/* Left Column: Categories List */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100">
+          <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100 gap-[1vw]">
             <div>
               <h3 className="text-[0.88vw] font-bold text-gray-900">Configured Categories</h3>
               <p className="text-[0.72vw] text-gray-500">Manage client classification groups</p>
             </div>
-            <span className="text-[0.7vw] font-semibold text-gray-500 bg-gray-100 px-[0.6vw] py-[0.2vw] rounded-full">
-              {safePartyTypes.length} total
-            </span>
+            <div className="flex items-center gap-[0.6vw]">
+              <div className="relative">
+                <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search categories..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-[11vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                />
+              </div>
+              <span className="text-[0.7vw] font-semibold text-gray-500 bg-gray-100 px-[0.6vw] py-[0.2vw] rounded-full flex-shrink-0">
+                {safePartyTypes.length} total
+              </span>
+            </div>
           </div>
 
-          <div className="divide-y divide-gray-100 border border-gray-200 rounded-[0.6vw] bg-white overflow-hidden max-h-[60vh] overflow-y-auto">
-            {safePartyTypes.length === 0 ? (
-              <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
-                No categories configured yet.
-              </div>
-            ) : (
-              safePartyTypes.map((type, idx) => {
-                const badgeClass = TYPE_BADGE_COLORS[idx % TYPE_BADGE_COLORS.length];
-                const isEditingThis = editingType && (editingType._id === type._id || editingType.id === type.id);
-                return (
-                  <div
-                    key={type.id || type._id}
-                    className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
-                      isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"
-                    }`}
-                  >
-                    <div className="flex items-center gap-[0.7vw]">
-                      <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-[0.72vw] font-bold">
-                        {idx + 1}
-                      </span>
-                      <span className={`text-[0.76vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
-                        {type.name}
-                      </span>
-                    </div>
-
-                    {(canUpdate || canDelete) && (
-                      <div className="flex items-center gap-[0.4vw] opacity-0 group-hover:opacity-100 transition-opacity">
-                        {canUpdate && (
-                          <button
-                            type="button"
-                            onClick={() => setEditingType({ ...type })}
-                            className="p-[0.35vw] text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-[0.3vw] transition-colors cursor-pointer"
-                            title="Edit Category"
-                          >
-                            <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
-                          </button>
-                        )}
-                        {canDelete && (
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(type.id, type._id)}
-                            className="p-[0.35vw] text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-[0.3vw] transition-colors cursor-pointer"
-                            disabled={safePartyTypes.length === 1}
-                            title="Delete Category"
-                          >
-                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
-                          </button>
-                        )}
+          <div className="border border-gray-200 rounded-[0.6vw] bg-white overflow-hidden shadow-2xs flex flex-col">
+            <div className="divide-y divide-gray-100 min-h-[18vw]">
+              {paginatedPartyTypes.length === 0 ? (
+                <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
+                  {searchTerm ? "No categories match your search." : "No categories configured yet."}
+                </div>
+              ) : (
+                paginatedPartyTypes.map((type, idx) => {
+                  const globalIdx = (currentPage - 1) * ITEMS_PER_PAGE + idx;
+                  const badgeClass = TYPE_BADGE_COLORS[globalIdx % TYPE_BADGE_COLORS.length];
+                  const isEditingThis = editingType && (editingType._id === type._id || editingType.id === type.id);
+                  return (
+                    <div
+                      key={type.id || type._id}
+                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
+                        isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"
+                      }`}
+                    >
+                      <div className="flex items-center gap-[0.7vw]">
+                        <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-[0.72vw] font-bold">
+                          {globalIdx + 1}
+                        </span>
+                        <span className={`text-[0.76vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
+                          {type.name}
+                        </span>
                       </div>
-                    )}
+
+                      {(canUpdate || canDelete) && (
+                        <div className="flex items-center gap-[0.4vw] opacity-0 group-hover:opacity-100 transition-opacity">
+                          {canUpdate && (
+                            <button
+                              type="button"
+                              onClick={() => setEditingType({ ...type })}
+                              className="p-[0.35vw] text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-[0.3vw] transition-colors cursor-pointer"
+                              title="Edit Category"
+                            >
+                              <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
+                            </button>
+                          )}
+                          {canDelete && (
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(type.id, type._id)}
+                              className="p-[0.35vw] text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-[0.3vw] transition-colors cursor-pointer"
+                              disabled={safePartyTypes.length === 1}
+                              title="Delete Category"
+                            >
+                              <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Pagination Controls */}
+            {filteredPartyTypes.length > 0 && (
+              <div className="border-t border-gray-100 px-[1vw] py-[0.55vw] bg-gray-50/50 flex justify-between items-center flex-shrink-0">
+                <div className="text-[0.74vw] text-gray-500 font-medium">
+                  Showing <span className="text-gray-900 font-semibold">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filteredPartyTypes.length)}</span> of <span className="text-gray-900 font-semibold">{filteredPartyTypes.length}</span> categories
+                </div>
+                <div className="flex items-center gap-[0.5vw]">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="p-[0.3vw] border border-gray-200 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    title="Previous page"
+                  >
+                    <ChevronLeft className="w-[0.85vw] h-[0.85vw]" />
+                  </button>
+                  <div className="flex gap-[0.25vw]">
+                    {[...Array(totalPages)].map((_, i) => {
+                      const pNum = i + 1;
+                      if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.7vw]">...</span>;
+                        return null;
+                      }
+                      return (
+                        <button
+                          key={pNum}
+                          type="button"
+                          onClick={() => setCurrentPage(pNum)}
+                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
+                            currentPage === pNum
+                              ? "bg-blue-600 text-white shadow-2xs"
+                              : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                          }`}
+                        >
+                          {pNum}
+                        </button>
+                      );
+                    })}
                   </div>
-                );
-              })
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="p-[0.3vw] border border-gray-200 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    title="Next page"
+                  >
+                    <ChevronRight className="w-[0.85vw] h-[0.85vw]" />
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
