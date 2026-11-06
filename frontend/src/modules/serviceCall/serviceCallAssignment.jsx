@@ -6,7 +6,7 @@ import {
   AlertCircle, Tag, CheckSquare, AlertTriangle,
   MapPin, Phone, Calendar,
   UserPlus, Hash, Settings, Square, ChevronLeft, ChevronRight,
-  ClipboardList, Briefcase, Info, Loader2
+  ClipboardList, Briefcase, Info, Loader2, Sparkles, Filter, CheckCircle2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -32,9 +32,12 @@ const initials = (name = "") =>
   name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) || "?";
 
 const AVATAR_COLORS = [
-  "from-blue-500 to-blue-700", "from-indigo-500 to-indigo-700",
-  "from-violet-500 to-violet-700", "from-sky-500 to-sky-700",
-  "from-emerald-500 to-emerald-700", "from-teal-500 to-teal-700",
+  "from-blue-500 to-indigo-600",
+  "from-indigo-500 to-purple-600",
+  "from-violet-500 to-purple-700",
+  "from-sky-500 to-blue-600",
+  "from-emerald-500 to-teal-600",
+  "from-teal-500 to-cyan-600",
 ];
 const avatarColor = (name = "") => {
   let hash = 0;
@@ -54,7 +57,6 @@ const buildSegmentGroups = (calls) => {
     });
     
     if (items.length > 0) {
-      // Treat the call as one single assignable entity rather than splitting by segment
       groups.push({
         groupKey: c._id || c.id,
         callId: c._id || c.id,
@@ -65,10 +67,10 @@ const buildSegmentGroups = (calls) => {
         contactNumber: c.contactNumber || "",
         location: c.location || "",
         site: c.site || "",
-        priority: c.priority,
+        priority: c.priority || "Medium",
         dateTime: c.dateTime,
         timestamp: c.timestamp,
-        segment: items[0].p.productSegment || "—", // Reference segment for SLA/flow from the first product
+        segment: items[0].p.productSegment || "—",
         customerType: c.customerType || "All",
         status: c.status || "Registered",
         products: items,
@@ -76,8 +78,6 @@ const buildSegmentGroups = (calls) => {
     }
   });
 
-  // Show latest records first (descending by call timestamp/date)
-  // Fallback order: `timestamp` -> `dateTime` -> `createdAt` -> 0
   return groups.sort((a, b) => {
     const at = new Date(a.timestamp || a.dateTime || a.createdAt || 0).getTime();
     const bt = new Date(b.timestamp || b.dateTime || b.createdAt || 0).getTime();
@@ -98,7 +98,7 @@ export default function ServiceCallAssignment() {
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [allFlows, setAllFlows] = useState({});
-  const [slaConfig, setSlaConfig]   = useState(null); // { configured, level0, steps }
+  const [slaConfig, setSlaConfig]   = useState(null);
   const [slaLoading, setSlaLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useNotification();
@@ -121,12 +121,10 @@ export default function ServiceCallAssignment() {
         });
         setAllFlows(flows);
 
-        // Filter out calls where all unassigned products have reached the end of their escalation chain
         const custDb = lsLoad(CUSTOMER_DB_KEY, []);
         const escQueue = lsLoad(ESCALATION_KEY, []);
         
         const validCalls = callRes.data.filter(c => {
-          // If the call is already escalating (has an active timer), do not show it on Assignment Desk
           const activeEscalation = escQueue.find(q => q.callId === (c._id || c.id));
           if (activeEscalation && activeEscalation.status !== "Resolved" && activeEscalation.status !== "Closed") {
             return false;
@@ -136,7 +134,6 @@ export default function ServiceCallAssignment() {
           const partyType = custRow?.partyType || c.customerType || "All";
           
           return (c.products || []).some(p => {
-            // Only consider products that are not yet assigned or resolved or critical
             if (p._assigned || p._resolved || p._isCritical || c.status === "Critical") return false;
             
             const seg = p.productSegment || "Default";
@@ -149,13 +146,10 @@ export default function ServiceCallAssignment() {
                 { dept: "R&D", durationHours: 8, durationMins: 0 },
               ];
             }
-            
-            // A product is "dead" if its escalation level has reached or exceeded the flow length
             return (p._escalationLevel || 0) < flowSteps.length;
           });
         });
 
-        // Build groups from filtered calls
         setGroups(buildSegmentGroups(validCalls));
         setEmployees(empRes.data);
       } catch (err) {
@@ -168,20 +162,33 @@ export default function ServiceCallAssignment() {
     fetchData();
   }, []);
 
+  // KPI Counts for the top stat cards
+  const stats = useMemo(() => {
+    let pendingAssign = groups.length;
+    let critical = groups.filter(g => g.priority === "Critical").length;
+    let high = groups.filter(g => g.priority === "High").length;
+    let regular = pendingAssign - critical - high;
+    return { pendingAssign, critical, high, regular };
+  }, [groups]);
+
   const filteredGroups = useMemo(() => {
     const s = searchTerm.toLowerCase();
     let res = groups;
     
-    // 2. Dropdown Priority Filter (further refine if needed)
     if (priorityFilter !== "All") res = res.filter(g => g.priority === priorityFilter);
     
-    // 3. Search
     if (!s) return res;
     return res.filter(g =>
-      g.callNumber.toLowerCase().includes(s) ||
-      g.customerName.toLowerCase().includes(s) ||
-      g.segment.toLowerCase().includes(s) ||
-      g.products.some(({ p }) => (p.productModel || p.itemCode || "").toLowerCase().includes(s))
+      g.callNumber?.toLowerCase().includes(s) ||
+      g.customerName?.toLowerCase().includes(s) ||
+      g.partyCode?.toLowerCase().includes(s) ||
+      g.location?.toLowerCase().includes(s) ||
+      g.segment?.toLowerCase().includes(s) ||
+      g.products?.some(({ p }) => 
+        (p.productModel || "").toLowerCase().includes(s) || 
+        (p.itemCode || "").toLowerCase().includes(s) ||
+        (p.serialNumber || "").toLowerCase().includes(s)
+      )
     );
   }, [groups, searchTerm, priorityFilter]);
 
@@ -205,12 +212,10 @@ export default function ServiceCallAssignment() {
       { dept: "Service Engineer", durationHours: 4, durationMins: 0 },
       { dept: "R&D", durationHours: 8, durationMins: 0 },
     ];
-  }, [selectedGroup]);
+  }, [selectedGroup, allFlows]);
 
-  // Fetch SLA config whenever a new group is selected
   useEffect(() => {
     if (!selectedGroup) { setSlaConfig(null); return; }
-    // Reset config so we don't briefly show previous group's filtered employees
     setSlaConfig(null);
     setSlaLoading(true);
     const custDb  = lsLoad(CUSTOMER_DB_KEY, []);
@@ -234,17 +239,14 @@ export default function ServiceCallAssignment() {
         setResMins(selectedFlow[0].durationMins  || 0);
       }
     }).finally(() => setSlaLoading(false));
-  }, [selectedGroup]);
+  }, [selectedGroup, selectedFlow]);
 
   const processedEmployees = useMemo(() => {
     let eligibleIds  = new Set();
     let useEligible  = false;
     let workloadMap  = {};
     
-    // First, check if there is an explicit flow from backend
     let eligibleDept = slaConfig?.configured ? (slaConfig.level0?.dept || "") : "";
-    
-    // If no explicit flow, use the first department of the fallback selectedFlow
     if (!slaConfig?.configured && selectedFlow?.[0]) {
       eligibleDept = selectedFlow[0].dept || "";
     }
@@ -261,7 +263,6 @@ export default function ServiceCallAssignment() {
         useEligible = true;
       }
     } else if (eligibleDept) {
-      // If not configured, but we have a fallback department
       useEligible = true;
     }
 
@@ -297,7 +298,6 @@ export default function ServiceCallAssignment() {
       e.role?.toLowerCase() !== "admin" &&
       (!s || e.name?.toLowerCase().includes(s) || e.department?.toLowerCase().includes(s))
     );
-    // Sort: Available (0 tasks) first, then by number of active tasks ascending
     return filtered.sort((a, b) => a.activeTasks - b.activeTasks);
   }, [processedEmployees, engSearch]);
 
@@ -314,15 +314,15 @@ export default function ServiceCallAssignment() {
         engineerId:     selectedEngineer.userId,
         engineerName:   selectedEngineer.name,
         department:     selectedEngineer.department,
-        resHours,
-        resMins,
+        resHours:       Number(resHours),
+        resMins:        Number(resMins),
         segment:        selectedGroup.segment,
         customerType:   partyType,
       };
 
       await axios.post(`${API_URL}/service-calls/assign`, payload);
 
-      toast(`Assigned to ${selectedEngineer.name} successfully`);
+      toast(`Assigned to ${selectedEngineer.name} successfully`, "success");
       setGroups(prev => prev.filter(g => g.groupKey !== selectedGroup.groupKey));
       setSelectedGroup(null);
       setSelectedEngineer(null);
@@ -334,125 +334,271 @@ export default function ServiceCallAssignment() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col bg-white overflow-hidden rounded-xl max-h-[90vh] font-sans text-[0.85vw]">
+    <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
 
-      {/* ── HEADER ────────────────────────────────── */}
-      <div className="px-[1.5vw] py-[0.8vw] flex items-center  justify-between border-b border-slate-400">
-        {/* <div className="flex items-center gap-[0.8vw]">
-          <span className="text-[0.7vw] bg-blue-100 text-blue-700 px-[0.4vw] py-[0.1vw] rounded font-bold border border-blue-200">
-            Total :{filteredGroups.length} 
-          </span>
-        </div> */}
-
-        <div className="flex items-center gap-[1.5vw]">
-          <div className="relative">
-            <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.9vw] h-[0.9vw] text-blue-400" />
-            <input
-              type="text"
-              placeholder="Search customers or calls..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="w-[25vw] h-[2.2vw] pl-[2vw] pr-[1vw] bg-slate-50 border border-slate-400 rounded-md outline-none focus:border-blue-400 transition-all text-black font-normal"
-            />
+      {/* ── TOP KPI STAT CARDS (Consistent with ServiceCall.jsx design) ── */}
+      <div className="grid grid-cols-4 gap-[0.8vw] shrink-0">
+        {/* 1. Pending Assignment */}
+        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)] hover:shadow-lg hover:border-blue-300 transition-all flex items-center justify-between group relative overflow-hidden">
+          <div className="flex items-center gap-[0.8vw]">
+            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+              <ClipboardList className="w-[1.1vw] h-[1.1vw]" />
+            </div>
+            <div>
+              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                {stats.pendingAssign}
+              </div>
+              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                Awaiting Assignment
+              </div>
+            </div>
           </div>
-          
-          <select
-            value={priorityFilter}
-            onChange={e => setPriorityFilter(e.target.value)}
-            className="h-[2.2vw] px-[0.6vw] bg-white border border-slate-400 rounded-md outline-none focus:border-blue-400 cursor-pointer text-black font-normal"
-          >
-            <option value="All">All Priorities</option>
-            <option value="Critical">Critical</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
+          <svg className="w-[4.5vw] h-[1.8vw] text-blue-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M 0 32 Q 25 35 45 20 T 90 8" />
+          </svg>
+        </div>
+
+        {/* 2. Critical Priority */}
+        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(239,68,68,0.08)] hover:shadow-lg hover:border-rose-300 transition-all flex items-center justify-between group relative overflow-hidden">
+          <div className="flex items-center gap-[0.8vw]">
+            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
+              <AlertCircle className="w-[1.1vw] h-[1.1vw]" />
+            </div>
+            <div>
+              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                {stats.critical}
+              </div>
+              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                Critical Escalations
+              </div>
+            </div>
+          </div>
+          <svg className="w-[4.5vw] h-[1.8vw] text-rose-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M 0 32 Q 35 34 55 18 T 90 8" />
+          </svg>
+        </div>
+
+        {/* 3. High Priority */}
+        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(245,158,11,0.08)] hover:shadow-lg hover:border-amber-300 transition-all flex items-center justify-between group relative overflow-hidden">
+          <div className="flex items-center gap-[0.8vw]">
+            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
+              <Clock className="w-[1.1vw] h-[1.1vw]" />
+            </div>
+            <div>
+              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                {stats.high}
+              </div>
+              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                High Urgency
+              </div>
+            </div>
+          </div>
+          <svg className="w-[4.5vw] h-[1.8vw] text-amber-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M 0 35 Q 25 30 50 22 T 90 10" />
+          </svg>
+        </div>
+
+        {/* 4. Ready Field Engineers */}
+        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(16,185,129,0.08)] hover:shadow-lg hover:border-emerald-300 transition-all flex items-center justify-between group relative overflow-hidden">
+          <div className="flex items-center gap-[0.8vw]">
+            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
+              <Users className="w-[1.1vw] h-[1.1vw]" />
+            </div>
+            <div>
+              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                {employees.filter(e => e.role?.toLowerCase() !== "admin").length}
+              </div>
+              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
+                Engineers in Roster
+              </div>
+            </div>
+          </div>
+          <svg className="w-[4.5vw] h-[1.8vw] text-emerald-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M 0 30 Q 30 32 50 15 T 90 6" />
+          </svg>
         </div>
       </div>
 
-      {/* ── TABLE (ServiceCall.jsx Style) ────────────────────────── */}
-      <div className="flex-1 overflow-hidden px-[1.5vw] py-[1vw] flex flex-col">
-        <div className="bg-white rounded-[0.6vw] border border-slate-400 flex flex-col w-full flex-1 min-h-0 overflow-hidden">
-          <div className="flex-1 overflow-auto custom-scrollbar">
-            <table className="w-full text-left border-collapse relative">
-            <thead className="bg-blue-50 sticky top-0 z-10">
+      {/* ── FILTER & SEARCH TOOLBAR ── */}
+      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
+        {/* Left Side: Search Box */}
+        <div className="relative flex-1 max-w-[28vw]">
+          <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
+          <input
+            type="text"
+            placeholder="Search by customer, party code, call no, product, model..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-slate-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all font-normal"
+          />
+          {searchTerm && (
+            <button 
+              onClick={() => setSearchTerm("")} 
+              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+            >
+              <X className="w-[0.8vw] h-[0.8vw]" />
+            </button>
+          )}
+        </div>
+
+        {/* Right Side: Priority Filter & Active Count Pill */}
+        <div className="flex items-center gap-[0.8vw]">
+          {/* Subtle Dynamic Count indicator consistent with customers.jsx */}
+          <div className="flex items-center gap-[0.4vw]">
+            <span className="text-[0.74vw] font-medium text-slate-500">Showing:</span>
+            <span className="text-[0.72vw] font-bold text-slate-700 bg-slate-100 px-[0.5vw] py-[0.1vw] rounded-full border border-slate-200">
+              {filteredGroups.length} Calls
+            </span>
+            {priorityFilter !== "All" && (
+              <span className="text-[0.68vw] text-slate-400">({priorityFilter})</span>
+            )}
+          </div>
+
+          <div className="relative">
+            <select
+              value={priorityFilter}
+              onChange={e => setPriorityFilter(e.target.value)}
+              className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+            >
+              <option value="All">All Priorities</option>
+              <option value="Critical">Critical Priority</option>
+              <option value="High">High Priority</option>
+              <option value="Medium">Medium Priority</option>
+              <option value="Low">Low Priority</option>
+            </select>
+            <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
+          </div>
+        </div>
+      </div>
+
+      {/* ── TABLE CARD ── */}
+      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+        <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
               <tr>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 text-center w-[4%] text-[0.78vw]">S.No</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 text-center w-[10%] text-[0.78vw]">Call Info</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 text-center w-[8%] text-[0.78vw]">Category</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 w-[18%] text-[0.78vw]">Customer</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 text-center w-[8%] text-[0.78vw]">Segment</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 text-[0.78vw]">Product Details</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-r border-slate-400 text-center w-[8%] text-[0.78vw]">Urgency</th>
-                <th className="p-[0.6vw] font-bold text-black border-b border-slate-400 text-center w-[8%] text-[0.78vw]">Action</th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[4%]">
+                  S.No
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] w-[11%]">
+                  Call Ref
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[9%]">
+                  Party Type
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] w-[22%]">
+                  Customer & Site
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[10%]">
+                  Segment
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
+                  Allocated Product(s)
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[9%]">
+                  Urgency
+                </th>
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[10%] sticky top-0 right-0 bg-slate-50 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.04)]">
+                  Action
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-300 border-b border-slate-300">
+            <tbody className="divide-y divide-gray-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="py-[10vh] text-center">
-                    <div className="flex flex-col items-center justify-center gap-[1vw]">
-                      <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
-                      <span className="text-[1vw] font-bold text-blue-600">Loading Assignments...</span>
+                  <td colSpan={8} className="py-[12vh] text-center">
+                    <div className="flex flex-col items-center justify-center gap-[0.8vw]">
+                      <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-blue-600" />
+                      <span className="text-[0.85vw] font-semibold text-slate-700">Loading assignments queue...</span>
                     </div>
                   </td>
                 </tr>
               ) : paginatedGroups.length === 0 ? (
-                <tr><td colSpan={8} className="py-[10vh] text-center text-black italic font-normal">No records found.</td></tr>
+                <tr>
+                  <td colSpan={8} className="py-[12vh] text-center">
+                    <div className="flex flex-col items-center justify-center gap-[0.6vw]">
+                      <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                        <CheckCircle2 className="w-[1.8vw] h-[1.8vw] text-emerald-500" />
+                      </div>
+                      <div className="text-[0.95vw] font-semibold text-slate-700">All Calls Assigned!</div>
+                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw]">
+                        There are no pending service calls requiring allocation right now.
+                      </div>
+                    </div>
+                  </td>
+                </tr>
               ) : (
                 paginatedGroups.map((g, idx) => {
                   const rowCount = g.products.length;
                   const isCritical = g.priority === "Critical";
-                  const criticalCellClass = isCritical ? "border-t-[0.15vw] border-b-[0.15vw] border-red-300 first:border-l-[0.15vw] last:border-r-[0.15vw]" : "border-slate-400";
+                  const isHigh = g.priority === "High";
 
                   return g.products.map((item, pIdx) => (
-                    <tr key={`${g.groupKey}-${pIdx}`} className={`hover:bg-blue-50/20 transition-colors`}>
+                    <tr 
+                      key={`${g.groupKey}-${pIdx}`} 
+                      className={`hover:bg-slate-50/70 transition-colors ${
+                        isCritical ? "bg-rose-50/25" : ""
+                      }`}
+                    >
                       {pIdx === 0 && (
                         <>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] border-r text-center align-middle text-black font-normal text-[0.78vw] ${criticalCellClass}`}>
+                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle text-slate-500 font-medium text-[0.74vw] border-r border-gray-100">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}>
-                            <div className="font-semibold text-blue-600 text-[0.78vw] leading-tight">{g.callNumber}</div>
-                            <div className="text-[0.65vw] text-black font-normal mt-[0.1vw]">
-                              {new Date(g.timestamp || g.dateTime).toLocaleDateString("en-IN", { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                          <td rowSpan={rowCount} className="p-[0.75vw] align-middle border-r border-gray-100">
+                            <div className="font-bold text-blue-600 text-[0.78vw] leading-tight flex items-center gap-[0.3vw]">
+                              <span>{g.callNumber}</span>
+                            </div>
+                            <div className="text-[0.66vw] text-slate-400 font-normal mt-[0.15vw] flex items-center gap-[0.25vw]">
+                              <Calendar className="w-[0.6vw] h-[0.6vw]" />
+                              {new Date(g.timestamp || g.dateTime).toLocaleDateString("en-IN", { day: '2-digit', month: 'short', year: 'numeric' })}
                             </div>
                           </td>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}>
-                            <span className={`px-[0.5vw] py-[0.15vw] rounded text-[0.62vw] font-bold border uppercase whitespace-nowrap bg-purple-50 text-purple-700 border-purple-200`}>
-                              {g.customerType || "—"}
+                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle border-r border-gray-100">
+                            <span className="px-[0.55vw] py-[0.15vw] rounded-md text-[0.64vw] font-semibold border uppercase tracking-wider inline-block bg-purple-50 text-purple-700 border-purple-200">
+                              {g.customerType || "Standard"}
                             </span>
                           </td>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] border-r align-middle ${criticalCellClass}`}>
-                            <div className="font-semibold text-black text-[0.78vw] truncate max-w-[15vw]" title={g.customerName}>
+                          <td rowSpan={rowCount} className="p-[0.75vw] align-middle border-r border-gray-100">
+                            <div className="font-bold text-slate-800 text-[0.8vw] truncate max-w-[17vw]" title={g.customerName}>
                               {g.customerName}
                             </div>
-                            <div className="flex items-center gap-[0.4vw] mt-[0.1vw]">
-                              <span className="text-[0.6vw] text-blue-700 font-semibold bg-blue-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-400">{g.partyCode}</span>
-                              <span className="text-[0.65vw] text-black font-normal uppercase">{g.location}</span>
+                            <div className="flex flex-wrap items-center gap-[0.35vw] mt-[0.2vw]">
+                              <span className="text-[0.64vw] text-blue-700 font-semibold bg-blue-50 px-[0.35vw] py-[0.05vw] rounded border border-blue-200">
+                                {g.partyCode}
+                              </span>
+                              {g.location && (
+                                <span className="text-[0.66vw] text-slate-500 flex items-center gap-[0.15vw]">
+                                  <MapPin className="w-[0.6vw] h-[0.6vw] text-slate-400" />
+                                  {g.location}
+                                </span>
+                              )}
                               {g.site && (
-                                <span className="text-[0.6vw] text-blue-700 font-semibold bg-blue-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-400">
+                                <span className="text-[0.62vw] text-slate-600 font-medium bg-slate-100 px-[0.3vw] py-[0.05vw] rounded border border-slate-200">
                                   {g.site}
                                 </span>
                               )}
                             </div>
                           </td>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}>
-                            <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200 px-[0.5vw] py-[0.15vw] rounded text-[0.68vw] font-semibold uppercase">
+                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle border-r border-gray-100">
+                            <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.5vw] py-[0.15vw] rounded-md text-[0.68vw] font-semibold">
                               {g.segment}
                             </span>
                           </td>
                         </>
                       )}
 
-                      <td className={`p-[0.8vw] border-r align-middle ${criticalCellClass}`}>
+                      <td className="p-[0.75vw] align-middle border-r border-gray-100">
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.78vw] text-black font-normal">{item.p.productModel || item.p.itemCode}</span>
-                          <span className="text-[0.68vw] text-blue-700 font-normal">SN: {item.p.serialNumber || "—"}</span>
+                          <span className="text-[0.76vw] text-slate-800 font-semibold">{item.p.productModel || item.p.itemCode}</span>
+                          <span className="text-[0.68vw] text-slate-500 font-mono bg-slate-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-200">
+                            SN: {item.p.serialNumber || "—"}
+                          </span>
                         </div>
                         {item.p.errorCode && (
                           <div className="mt-[0.2vw]">
-                            <span className="bg-red-50 text-red-600 border border-red-100 px-[0.4vw] py-[0.05vw] rounded text-[0.65vw] font-normal uppercase">
+                            <span className="bg-rose-50 text-rose-600 border border-rose-200/80 px-[0.4vw] py-[0.05vw] rounded text-[0.64vw] font-medium uppercase inline-flex items-center gap-[0.2vw]">
+                              <AlertCircle className="w-[0.55vw] h-[0.55vw]" />
                               Err: {item.p.errorCode}
                             </span>
                           </div>
@@ -461,21 +607,28 @@ export default function ServiceCallAssignment() {
 
                       {pIdx === 0 && (
                         <>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}>
-                            <span className={`px-[0.5vw] py-[0.15vw] rounded text-[0.68vw] font-bold border uppercase whitespace-nowrap ${g.priority === 'Critical' ? 'bg-red-600 text-white border-red-700' :
-                                g.priority === 'High' ? 'bg-orange-500 text-white border-orange-600' :
-                                  'bg-blue-600 text-white border-blue-700'
-                              }`}>
+                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle border-r border-gray-100">
+                            <span className={`px-[0.6vw] py-[0.2vw] rounded-full text-[0.66vw] font-bold border uppercase tracking-wider inline-flex items-center gap-[0.2vw] ${
+                              g.priority === 'Critical' ? 'bg-rose-50 text-rose-600 border-rose-200' :
+                              g.priority === 'High' ? 'bg-amber-50 text-amber-600 border-amber-200' :
+                              'bg-blue-50 text-blue-600 border-blue-200'
+                            }`}>
+                              <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${
+                                g.priority === 'Critical' ? 'bg-rose-500' :
+                                g.priority === 'High' ? 'bg-amber-500' :
+                                'bg-blue-500'
+                              }`} />
                               {g.priority}
                             </span>
                           </td>
-                          <td rowSpan={rowCount} className={`p-[0.8vw] text-center align-middle ${criticalCellClass}`}>
+                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle sticky right-0 bg-white group-hover:bg-slate-50/70 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.04)]">
                             {canAssign ? (
                               <button
                                 onClick={() => setSelectedGroup(g)}
-                                className="cursor-pointer inline-flex items-center gap-[0.4vw] bg-blue-600 text-white px-[1vw] py-[0.45vw] rounded-md font-semibold text-[0.75vw] hover:bg-blue-700 active:scale-95 transition-all border border-blue-500"
+                                className="cursor-pointer inline-flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] py-[0.4vw] rounded-[0.45vw] font-semibold text-[0.74vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)] active:scale-95"
                               >
-                                Assign <ArrowRight className="w-[1vw] h-[1vw]" />
+                                <span>Assign</span>
+                                <ArrowRight className="w-[0.8vw] h-[0.8vw]" />
                               </button>
                             ) : (
                               <span className="text-[0.68vw] text-gray-400 italic font-medium px-[0.6vw] py-[0.2vw] bg-gray-50 border border-gray-200 rounded">
@@ -489,247 +642,383 @@ export default function ServiceCallAssignment() {
                   ))
                 })
               )}
-              </tbody>
-            </table>
-          </div>
+            </tbody>
+          </table>
         </div>
 
-        {/* Pagination */}
-        <div className="mt-[1vw] flex items-center justify-between px-[0.5vw]">
-          <p className="text-[0.75vw] text-gray-500 font-medium">
-              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredGroups.length)} of {filteredGroups.length} records
-            </p>
-            <div className="flex items-center gap-[0.5vw]">
+        {/* ── PAGINATION CONTROLS ── */}
+        <div className="py-[0.6vw] px-[1vw] border-t border-gray-200 bg-slate-50/60 flex items-center justify-between shrink-0">
+          <p className="text-[0.74vw] text-gray-500 font-medium">
+            Showing <span className="font-semibold text-slate-700">{filteredGroups.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-700">{Math.min(currentPage * ITEMS_PER_PAGE, filteredGroups.length)}</span> of <span className="font-semibold text-slate-700">{filteredGroups.length}</span> records
+          </p>
+          <div className="flex items-center gap-[0.4vw]">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-[0.6vw] h-[1.8vw] rounded-[0.4vw] border border-gray-300 hover:bg-white disabled:opacity-40 cursor-pointer text-gray-600 transition-colors flex items-center gap-[0.2vw] text-[0.72vw]"
+            >
+              <ChevronLeft className="w-[0.8vw] h-[0.8vw]" />
+              <span>Prev</span>
+            </button>
+            {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map(p => (
               <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="p-[0.5vw] rounded-md border border-slate-400 hover:bg-gray-50 disabled:opacity-30 cursor-pointer"
+                key={p}
+                onClick={() => setCurrentPage(p)}
+                className={`w-[1.8vw] h-[1.8vw] rounded-[0.4vw] border font-bold text-[0.72vw] transition-all cursor-pointer ${
+                  currentPage === p
+                    ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                    : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                }`}
               >
-                <ChevronLeft className="w-[1.2vw] h-[1.2vw]" />
+                {p}
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                <button
-                  key={p}
-                  onClick={() => setCurrentPage(p)}
-                  className={`w-[2.2vw] h-[2.2vw] rounded-md border font-bold text-[0.75vw] transition-all cursor-pointer ${
-                    currentPage === p ? "bg-blue-600 border-blue-600 text-white shadow-sm" : "bg-white border-slate-400 text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
-              <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage >= totalPages}
-                className="p-[0.5vw] rounded-md border border-slate-400 hover:bg-gray-50 disabled:opacity-30 cursor-pointer"
-              >
-                <ChevronRight className="w-[1.2vw] h-[1.2vw]" />
-              </button>
-            </div>
+            ))}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage >= totalPages || totalPages === 0}
+              className="px-[0.6vw] h-[1.8vw] rounded-[0.4vw] border border-gray-300 hover:bg-white disabled:opacity-40 cursor-pointer text-gray-600 transition-colors flex items-center gap-[0.2vw] text-[0.72vw]"
+            >
+              <span>Next</span>
+              <ChevronRight className="w-[0.8vw] h-[0.8vw]" />
+            </button>
           </div>
+        </div>
       </div>
 
-      {/* ── ASSIGNMENT MODAL ───────────────────── */}
+      {/* ── MODERN ASSIGNMENT MODAL ── */}
       <AnimatePresence>
         {selectedGroup && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-[2vw]">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setSelectedGroup(null)} />
-            <motion.div initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }}
-              className="relative w-[70vw] max-h-[90vh] bg-white rounded-xl flex flex-col overflow-hidden border border-slate-400"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              onClick={() => { setSelectedGroup(null); setSelectedEngineer(null); }}
+            />
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.96, opacity: 0, y: 10 }}
+              className="relative w-[72vw] max-h-[88vh] bg-white rounded-[1vw] flex flex-col overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200"
             >
-              {/* Header */}
-              <div className="px-[1.5vw] py-[1vw] border-b border-slate-400 flex items-center justify-between bg-blue-50/30">
-                <div className="flex items-center gap-[1vw]">
-                  <div className="w-[2.5vw] h-[2.5vw] bg-blue-600 rounded-lg flex items-center justify-center text-white border border-blue-500">
+              {/* Modal Top Header */}
+              <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-blue-50/50 via-white to-slate-50">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.4vw] h-[2.4vw] bg-blue-600 rounded-[0.6vw] flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]">
                     <UserPlus className="w-[1.2vw] h-[1.2vw]" />
                   </div>
-                  <h2 className="text-[1.2vw] font-bold text-black">{selectedGroup.customerName}</h2>
+                  <div>
+                    <div className="flex items-center gap-[0.6vw]">
+                      <h2 className="text-[1.1vw] font-bold text-slate-800 leading-tight">
+                        Allocate Field Engineer
+                      </h2>
+                      <span className="text-[0.68vw] bg-blue-100 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
+                        {selectedGroup.callNumber}
+                      </span>
+                    </div>
+                    <div className="text-[0.72vw] text-slate-500 font-medium">
+                      Assign engineer and define initial SLA response window
+                    </div>
+                  </div>
                 </div>
-                <button onClick={() => setSelectedGroup(null)} className="p-[0.5vw] hover:bg-blue-50 rounded-full text-blue-400 transition-colors">
-                  <X className="w-[1.2vw] h-[1.2vw]" />
+                <button
+                  onClick={() => { setSelectedGroup(null); setSelectedEngineer(null); }}
+                  className="p-[0.4vw] hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  <X className="w-[1.1vw] h-[1.1vw]" />
                 </button>
               </div>
 
-              {/* SLA config warning */}
+              {/* SLA warning ribbon */}
               {!slaLoading && !slaIsConfigured && selectedGroup && (
-                <div className="mx-[1.5vw] mt-[0.7vw] flex items-center gap-[0.6vw] bg-yellow-50 border border-yellow-200 rounded-lg px-[1vw] py-[0.45vw]">
-                  <AlertTriangle className="w-[0.9vw] h-[0.9vw] text-yellow-600 flex-shrink-0" />
-                  <span className="text-[0.72vw] text-yellow-700 font-medium">
-                    No SLA specifically configured for this Customer Type &amp; Segment — defaulting to first level department.
+                <div className="mx-[1.4vw] mt-[0.8vw] flex items-center gap-[0.6vw] bg-amber-50 border border-amber-200/90 rounded-[0.5vw] px-[0.8vw] py-[0.4vw]">
+                  <AlertTriangle className="w-[0.9vw] h-[0.9vw] text-amber-600 shrink-0" />
+                  <span className="text-[0.72vw] text-amber-800 font-medium">
+                    No custom SLA registered for {selectedGroup.customerType} / {selectedGroup.segment} — using standard Level-1 flow default.
                   </span>
                 </div>
               )}
 
-              {/* 1. TOP SPLIT (Width Fully) - Contact Related Details */}
-              <div className="p-[1.5vw] bg-slate-50 border-b border-blue-50 grid grid-cols-5 gap-[1.5vw]">
-                <div className="flex flex-col gap-[0.2vw]">
-                  <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><MapPin className="w-[0.7vw] h-[0.7vw]" /> Location</span>
-                  <span className="text-[0.85vw] text-black font-semibold leading-tight">{selectedGroup.location}{selectedGroup.site ? ` (${selectedGroup.site})` : ""}</span>
+              {/* Call Details Bar */}
+              <div className="px-[1.4vw] py-[0.8vw] bg-slate-50/80 border-b border-slate-200 grid grid-cols-5 gap-[1vw]">
+                <div className="flex flex-col">
+                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                    <User className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Customer
+                  </span>
+                  <span className="text-[0.8vw] text-slate-800 font-bold truncate mt-[0.1vw]" title={selectedGroup.customerName}>
+                    {selectedGroup.customerName}
+                  </span>
+                  <span className="text-[0.64vw] text-blue-600 font-mono font-medium">{selectedGroup.partyCode}</span>
                 </div>
-                <div className="flex flex-col gap-[0.2vw]">
-                  <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><User className="w-[0.7vw] h-[0.7vw]" /> Contact Person</span>
-                  <span className="text-[0.85vw] text-black font-semibold">{selectedGroup.contactPerson || "—"}</span>
+
+                <div className="flex flex-col">
+                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                    <MapPin className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Location &amp; Site
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
+                    {selectedGroup.location || "—"}
+                  </span>
+                  {selectedGroup.site && (
+                    <span className="text-[0.64vw] text-slate-500 font-medium">Site: {selectedGroup.site}</span>
+                  )}
                 </div>
-                <div className="flex flex-col gap-[0.2vw]">
-                  <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><Phone className="w-[0.7vw] h-[0.7vw]" /> Phone</span>
-                  <span className="text-[0.85vw] text-black font-semibold">{selectedGroup.contactNumber || "—"}</span>
+
+                <div className="flex flex-col">
+                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                    <Phone className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Contact
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
+                    {selectedGroup.contactPerson || "—"}
+                  </span>
+                  <span className="text-[0.64vw] text-slate-500 font-mono">{selectedGroup.contactNumber || "—"}</span>
                 </div>
-                <div className="flex flex-col gap-[0.2vw]">
-                  <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><Hash className="w-[0.7vw] h-[0.7vw]" /> Reference</span>
-                  <span className="text-[0.85vw] text-black font-semibold">{selectedGroup.callNumber}</span>
+
+                <div className="flex flex-col">
+                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                    <Tag className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Segment
+                  </span>
+                  <span className="text-[0.78vw] text-indigo-700 font-bold truncate mt-[0.1vw]">
+                    {selectedGroup.segment}
+                  </span>
+                  <span className="text-[0.64vw] text-slate-400 font-medium">Type: {selectedGroup.customerType}</span>
                 </div>
-                <div className="flex flex-col gap-[0.2vw]">
-                  <span className="text-[0.85vw] font-bold text-blue-600 flex items-center gap-[0.3vw]"><Tag className="w-[0.7vw] h-[0.7vw]" /> Segment</span>
-                  <span className="text-[0.85vw] text-black font-semibold">{selectedGroup.segment}</span>
+
+                <div className="flex flex-col">
+                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                    <AlertCircle className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Priority Level
+                  </span>
+                  <span className={`text-[0.78vw] font-bold truncate mt-[0.1vw] ${
+                    selectedGroup.priority === 'Critical' ? 'text-rose-600' :
+                    selectedGroup.priority === 'High' ? 'text-amber-600' :
+                    'text-blue-600'
+                  }`}>
+                    {selectedGroup.priority}
+                  </span>
+                  <span className="text-[0.64vw] text-slate-400 font-medium">{selectedGroup.products.length} product(s)</span>
                 </div>
               </div>
 
-              {/* 2. BOTTOM SPLIT - Horizontal Left (Employees) & Right (Assignment View) */}
-              <div className="flex-1 flex overflow-hidden">
-                {/* Left Side: Employee List */}
-                <div className="w-[45%] flex flex-col border-r border-blue-50 overflow-hidden">
-                  <div className="p-[1vw] border-b border-blue-50">
+              {/* 2-Column Split: Available Engineers vs Selected Review */}
+              <div className="flex-1 flex overflow-hidden min-h-0">
+                {/* Left Side: Eligible Engineer Roster */}
+                <div className="w-[44%] flex flex-col border-r border-slate-200 overflow-hidden bg-slate-50/40">
+                  <div className="p-[0.9vw] border-b border-slate-200 bg-white">
                     <div className="relative">
-                      <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.9vw] h-[0.9vw] text-blue-400" />
+                      <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-gray-400" />
                       <input 
                         type="text" 
-                        placeholder="Search for available engineers..." 
+                        placeholder="Search qualified engineers..." 
                         value={engSearch} 
                         onChange={e => setEngSearch(e.target.value)} 
-                        className="w-full pl-[2.2vw] pr-[2.2vw] py-[0.5vw] bg-white border border-slate-400 rounded-md outline-none focus:border-blue-400 text-[0.8vw] text-black font-normal" 
+                        className="w-full pl-[2vw] pr-[2vw] h-[2vw] bg-slate-50 border border-gray-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.74vw] text-slate-800 font-normal transition-all" 
                       />
                       {engSearch && (
                         <button 
                           onClick={() => setEngSearch("")} 
-                          className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                          className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
                         >
-                          <X className="w-[0.9vw] h-[0.9vw]" />
+                          <X className="w-[0.8vw] h-[0.8vw]" />
                         </button>
                       )}
                     </div>
                   </div>
-                  <div className="flex-1 overflow-y-auto custom-scrollbar p-[1vw] space-y-[0.6vw]">
+
+                  <div className="flex-1 overflow-y-auto custom-scrollbar p-[0.8vw] space-y-[0.5vw]">
                     {employeeListLoading ? (
                       <div className="h-full flex flex-col items-center justify-center gap-[0.8vw] text-center py-[6vh]">
                         <Loader2 className="w-[2vw] h-[2vw] animate-spin text-blue-600" />
-                        <div className="text-[0.85vw] font-semibold text-blue-700">Loading eligible engineers...</div>
-                        <div className="text-[0.7vw] text-gray-500 font-normal">
-                          Applying SLA (Level 1) rules for this customer &amp; segment
+                        <div className="text-[0.82vw] font-semibold text-slate-700">Checking SLA eligible engineers...</div>
+                        <div className="text-[0.68vw] text-slate-400 font-normal max-w-[15vw]">
+                          Matching against department requirements &amp; current active queue.
                         </div>
                       </div>
+                    ) : filteredEmployees.length === 0 ? (
+                      <div className="text-center py-[6vh] text-slate-400 text-[0.76vw]">
+                        No eligible engineers found matching query.
+                      </div>
                     ) : (
-                      filteredEmployees.map(emp => (
-                        <div key={emp.userId} onClick={() => setSelectedEngineer(emp)} 
-                          className={`flex items-center gap-[0.8vw] p-[0.8vw] rounded-lg border transition-all cursor-pointer ${
-                            selectedEngineer?.userId === emp.userId ? 'bg-blue-600 border-blue-700 text-white' : 'bg-white border-slate-400 hover:border-blue-300 hover:bg-blue-50/50'
-                          }`}>
-                          <div className={`w-[2.5vw] h-[2.5vw] rounded-lg flex items-center justify-center font-bold text-[1vw] bg-gradient-to-br ${
-                            selectedEngineer?.userId === emp.userId ? 'from-white/20 to-white/5' : avatarColor(emp.name)
-                          } text-white border border-white/20`}>{initials(emp.name)}</div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-[0.9vw]">{emp.name}</div>
-                            <div className={`text-[0.7vw] font-normal flex items-center gap-[0.4vw] mt-[0.2vw] ${selectedEngineer?.userId === emp.userId ? 'text-blue-100' : 'text-blue-600'}`}>
-                              <span>{emp.department}</span>
-                              {emp.activeTasks > 0 ? (
-                                <span className="bg-amber-100 text-amber-700 px-[0.4vw] py-[0.1vw] rounded text-[0.6vw] font-bold border border-amber-200">
-                                  Working ({emp.activeTasks} Tasks)
-                                </span>
-                              ) : (
-                                <span className="bg-green-100 text-green-700 px-[0.4vw] py-[0.1vw] rounded text-[0.6vw] font-bold border border-green-200">
-                                  Available
-                                </span>
-                              )}
+                      filteredEmployees.map(emp => {
+                        const isSelected = selectedEngineer?.userId === emp.userId;
+                        return (
+                          <div 
+                            key={emp.userId} 
+                            onClick={() => setSelectedEngineer(emp)} 
+                            className={`flex items-center gap-[0.7vw] p-[0.65vw] rounded-[0.6vw] border transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
+                                : 'bg-white border-slate-200/90 hover:border-blue-300 hover:bg-blue-50/30'
+                            }`}
+                          >
+                            <div className={`w-[2.2vw] h-[2.2vw] rounded-full flex items-center justify-center font-bold text-[0.85vw] bg-gradient-to-br ${
+                              isSelected ? 'from-white/30 to-white/10' : avatarColor(emp.name)
+                            } text-white shadow-2xs shrink-0`}>
+                              {initials(emp.name)}
                             </div>
+                            <div className="flex-1 min-w-0">
+                              <div className={`font-bold text-[0.8vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
+                                {emp.name}
+                              </div>
+                              <div className="flex items-center gap-[0.35vw] mt-[0.2vw]">
+                                <span className={`text-[0.65vw] font-medium ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>
+                                  {emp.department || "Engineer"}
+                                </span>
+                                {emp.activeTasks > 0 ? (
+                                  <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.58vw] font-bold border ${
+                                    isSelected 
+                                      ? 'bg-amber-400/20 text-amber-100 border-amber-300/30' 
+                                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                                  }`}>
+                                    {emp.activeTasks} Active
+                                  </span>
+                                ) : (
+                                  <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.58vw] font-bold border ${
+                                    isSelected 
+                                      ? 'bg-emerald-400/20 text-emerald-100 border-emerald-300/30' 
+                                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                  }`}>
+                                    Available
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {isSelected && (
+                              <CheckCircle className="w-[1.1vw] h-[1.1vw] text-white shrink-0" />
+                            )}
                           </div>
-                          {selectedEngineer?.userId === emp.userId && <CheckCircle className="w-[1.2vw] h-[1.2vw]" />}
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>
 
-                {/* Right Side: Assignment View */}
-                <div className="flex-1 bg-blue-50/10 flex flex-col overflow-hidden">
+                {/* Right Side: Assignment Details & Confirmation */}
+                <div className="flex-1 bg-white flex flex-col overflow-hidden">
                   {selectedEngineer ? (
-                    <div className="py-[.5vw] px-[2vw] flex flex-col h-full">
-                      <div className="flex-1 flex flex-col gap-[2vw] overflow-y-auto">
-                        {/* Selected Engineer Card */}
-                        <div className="bg-white p-[1.2vw] rounded-xl border border-slate-400 flex items-center gap-[1.2vw]">
-                          <div className={`w-[2.8vw] h-[2.8vw] rounded-lg flex items-center justify-center text-[1vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} border border-slate-400 shadow-none`}>
-                            {initials(selectedEngineer.name)}
-                          </div>
-                          <div>
-                            <div className="text-[1.1vw] font-bold text-black leading-none">{selectedEngineer.name}</div>
-                            <div className="text-[0.8vw] text-black font-semibold mt-[0.2vw]">{selectedEngineer.department}</div>
-                            <div className="flex items-center gap-[0.4vw] mt-[0.3vw] text-[0.72vw] text-black">
-                              <Activity className="w-[0.8vw] h-[0.8vw] text-green-500" /> {selectedEngineer.activeTasks} active tasks
+                    <div className="p-[1.4vw] flex flex-col h-full overflow-y-auto custom-scrollbar justify-between">
+                      <div className="space-y-[1.2vw]">
+                        {/* Selected Engineer Banner */}
+                        <div className="bg-slate-50 rounded-[0.7vw] p-[0.9vw] border border-slate-200 flex items-center justify-between">
+                          <div className="flex items-center gap-[0.8vw]">
+                            <div className={`w-[2.6vw] h-[2.6vw] rounded-full flex items-center justify-center text-[0.9vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
+                              {initials(selectedEngineer.name)}
+                            </div>
+                            <div>
+                              <div className="text-[0.95vw] font-bold text-slate-800 leading-tight">
+                                {selectedEngineer.name}
+                              </div>
+                              <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.1vw]">
+                                {selectedEngineer.department} &bull; {selectedEngineer.role || "Specialist"}
+                              </div>
                             </div>
                           </div>
+                          <span className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.66vw] font-bold border ${
+                            selectedEngineer.activeTasks > 0 
+                              ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          }`}>
+                            {selectedEngineer.activeTasks} Active Tasks
+                          </span>
                         </div>
 
-                        {/* Units Review */}
-                        <div className="space-y-[0.8vw]">
-                          <div className="flex items-center gap-[0.5vw] text-[0.7vw] font-bold text-blue-600 uppercase tracking-widest">
-                            <Package className="w-[1vw] h-[1vw]" /> Allocated Products ({selectedGroup.products.length})
+                        {/* Units Included */}
+                        <div>
+                          <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.5vw]">
+                            <Package className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+                            <span>Allocated Products ({selectedGroup.products.length})</span>
                           </div>
-                          <div className="space-y-[0.4vw]">
+                          <div className="space-y-[0.35vw] max-h-[12vw] overflow-y-auto custom-scrollbar pr-[0.3vw]">
                             {selectedGroup.products.map(({ p, productIdx }) => (
-                              <div key={productIdx} className="bg-white p-[0.8vw] rounded-lg border border-blue-300 flex items-center justify-between text-[0.8vw]">
-                                <span className="text-black font-semibold">{p.productModel || p.itemCode}</span>
-                                <span className="text-black font-normal">SN: {p.serialNumber || "—"}</span>
+                              <div key={productIdx} className="bg-slate-50/70 p-[0.65vw] rounded-[0.5vw] border border-slate-200 flex items-center justify-between text-[0.76vw]">
+                                <div>
+                                  <div className="text-slate-800 font-bold">{p.productModel || p.itemCode}</div>
+                                  {p.errorCode && (
+                                    <div className="text-[0.64vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
+                                  )}
+                                </div>
+                                <span className="text-slate-500 font-mono text-[0.7vw] bg-white px-[0.4vw] py-[0.1vw] rounded border border-slate-200">
+                                  SN: {p.serialNumber || "—"}
+                                </span>
                               </div>
                             ))}
                           </div>
                         </div>
 
-                        {/* Target Time Setting */}
-                        <div className="space-y-[1vw]">
-                          <div className="flex items-center gap-[0.5vw] text-[0.7vw] font-bold text-blue-600 uppercase tracking-widest">
-                            <Clock className="w-[1vw] h-[1vw]" /> Service Delivery Target
+                        {/* SLA Resolution Target */}
+                        <div>
+                          <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.5vw]">
+                            <Clock className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+                            <span>SLA Delivery Window</span>
                           </div>
-                          <div className="flex items-center gap-[1.5vw]">
-                            <div className="flex-1 flex flex-col gap-[0.4vw]">
-                              <span className="text-[0.6vw] font-bold text-gray-800 uppercase">Target Hours</span>
+                          <div className="grid grid-cols-2 gap-[0.8vw]">
+                            <div className="flex flex-col gap-[0.2vw]">
+                              <span className="text-[0.64vw] font-bold text-slate-600 uppercase">Target Hours</span>
                               <input 
                                 type="number" 
+                                min="0"
                                 value={resHours} 
                                 onChange={e => setResHours(e.target.value)} 
-                                className="w-full px-[0.8vw] py-[0.5vw] bg-white border border-slate-400 rounded-lg outline-none focus:border-blue-500 focus:ring-1 ring-blue-100 text-[1vw] font-bold text-black transition-all" 
+                                className="w-full px-[0.7vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.85vw] font-bold text-slate-800 transition-all" 
                               />
                             </div>
-                            <div className="flex-1 flex flex-col gap-[0.4vw]">
-                              <span className="text-[0.6vw] font-bold text-gray-800 uppercase">Minutes</span>
+                            <div className="flex flex-col gap-[0.2vw]">
+                              <span className="text-[0.64vw] font-bold text-slate-600 uppercase">Target Minutes</span>
                               <input 
                                 type="number" 
+                                min="0"
+                                max="59"
                                 value={resMins} 
                                 onChange={e => setResMins(e.target.value)} 
-                                className="w-full px-[0.8vw] py-[0.5vw] bg-white border border-slate-400 rounded-lg outline-none focus:border-blue-500 focus:ring-1 ring-blue-100 text-[1vw] font-bold text-black transition-all" 
+                                className="w-full px-[0.7vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.85vw] font-bold text-slate-800 transition-all" 
                               />
                             </div>
                           </div>
-                          <div className="flex items-center gap-[0.5vw] p-[0.8vw] bg-blue-50 rounded-lg border border-slate-400">
-                            <Info className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                            <span className="text-[0.7vw] text-black font-medium">Engineer will be notified of the deadline immediately.</span>
+                          <div className="flex items-center gap-[0.4vw] p-[0.6vw] bg-blue-50/70 rounded-[0.5vw] border border-blue-200/60 mt-[0.6vw]">
+                            <Info className="w-[0.8vw] h-[0.8vw] text-blue-600 shrink-0" />
+                            <span className="text-[0.68vw] text-blue-800 font-medium">
+                              Resolution target starts counting upon assignment confirmation.
+                            </span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Confirm Button */}
-                      <button 
-                        onClick={handleAssign}
-                        disabled={isAssigning}
-                        className="w-fit px-[1vw] ml-auto mt-[1.5vw] py-[.85vw] bg-blue-600 text-white rounded-xl font-bold text-[1vw] hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-[1vw] border border-blue-500 cursor-pointer"
-                      >
-                        {isAssigning ? "Processing Allocation..." : <>Confirm Assignment to {selectedEngineer.name.split(" ")[0]} <ArrowRight className="w-[1.2vw] h-[1.2vw]" /></>}
-                      </button>
+                      {/* Confirm Action Button */}
+                      <div className="pt-[1.2vw] border-t border-slate-200 flex justify-end gap-[0.6vw] mt-[1vw]">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedEngineer(null)}
+                          className="px-[1vw] h-[2.2vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.76vw] cursor-pointer transition-colors"
+                        >
+                          Change Engineer
+                        </button>
+                        <button 
+                          onClick={handleAssign}
+                          disabled={isAssigning}
+                          className="px-[1.2vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-bold text-[0.76vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-60"
+                        >
+                          {isAssigning ? (
+                            <>
+                              <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" />
+                              <span>Allocating...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>Confirm Assignment</span>
+                              <ArrowRight className="w-[0.9vw] h-[0.9vw]" />
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex-1 flex flex-col items-center justify-center text-center p-[2vw]">
-                      <div className="w-[5vw] h-[5vw] bg-blue-50 rounded-full flex items-center justify-center mb-[1vw]">
-                        <UserPlus className="w-[2.5vw] h-[2.5vw] text-blue-300" />
+                      <div className="w-[3.8vw] h-[3.8vw] bg-blue-50 rounded-full flex items-center justify-center mb-[0.8vw] text-blue-500">
+                        <UserPlus className="w-[1.8vw] h-[1.8vw]" />
                       </div>
-                      <div className="text-[1.2vw] font-bold text-slate-400">Select an Engineer</div>
-                      <div className="text-[0.8vw] text-slate-400 mt-[0.5vw]">Choose an engineer from the left panel to proceed with the allocation.</div>
+                      <div className="text-[1vw] font-bold text-slate-700">Select an Eligible Engineer</div>
+                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw] mt-[0.3vw]">
+                        Pick a qualified engineer from the list on the left to set SLA deadlines and confirm allocation.
+                      </div>
                     </div>
                   )}
                 </div>

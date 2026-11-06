@@ -3151,122 +3151,34 @@ export default function ServiceCall() {
             transition={{ duration: 0.2 }}
             className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
-            {/* Top Stat KPI Cards Row: High-polish with wave sparks */}
-            <div className="grid grid-cols-4 gap-[0.8vw] shrink-0">
-              {/* 1. Total Calls */}
-              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)] hover:shadow-lg hover:border-blue-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-                    <Phone className="w-[1.1vw] h-[1.1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.All}
-                    </div>
-                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                      Total Calls
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-blue-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 32 Q 25 35 45 20 T 90 8" />
-                </svg>
-              </div>
-
-              {/* 2. Resolved */}
-              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(16,185,129,0.08)] hover:shadow-lg hover:border-emerald-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
-                    <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.Resolved}
-                    </div>
-                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                      Resolved
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-emerald-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 30 Q 30 32 50 15 T 90 6" />
-                </svg>
-              </div>
-
-              {/* 3. Pending */}
-              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(245,158,11,0.08)] hover:shadow-lg hover:border-amber-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
-                    <Clock className="w-[1.1vw] h-[1.1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.Pending}
-                    </div>
-                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                      Pending
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-amber-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 35 Q 25 30 50 22 T 90 10" />
-                </svg>
-              </div>
-
-              {/* 4. Critical */}
-              <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(239,68,68,0.08)] hover:shadow-lg hover:border-rose-300 transition-all flex items-center justify-between group relative overflow-hidden">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
-                    <AlertCircle className="w-[1.1vw] h-[1.1vw]" />
-                  </div>
-                  <div>
-                    <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                      {counts.Critical}
-                    </div>
-                    <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                      Critical
-                    </div>
-                  </div>
-                </div>
-                {/* Sparkline wave decoration */}
-                <svg className="w-[4.5vw] h-[1.8vw] text-rose-500 stroke-current fill-none" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M 0 32 Q 35 34 55 18 T 90 8" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Filter Toolbar: Unified Search, Date Range, Priority Dropdown and Register Call */}
-            <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
+            {/* ── 1. Top Level Scoping Toolbar: Search, Date Range, Priority & Action ── */}
+            <div className="flex items-center justify-between bg-white px-[0.8vw] py-[0.45vw] rounded-[0.7vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 gap-[0.7vw] shrink-0">
               {/* Left side: Search Box */}
-              <div className="relative flex-1 max-w-[24vw]">
-                <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
+              <div className="relative flex-1 max-w-[26vw]">
+                <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.95vw] h-[0.95vw]" />
                 <input
                   type="text"
-                  placeholder="Search by Customer, Call No, Party Code or Engineer..."
+                  placeholder="Search by customer, call no, engineer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-slate-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none font-normal"
+                  className="w-full pl-[2.4vw] pr-[0.8vw] h-[2.1vw] border border-slate-200 rounded-[0.5vw] text-[0.76vw] font-medium text-slate-800 placeholder-slate-400 bg-slate-50/70 hover:bg-white focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
 
-              {/* Middle: Inline Date Range Filter */}
-              <div className="flex items-center gap-[0.35vw] border border-gray-200/90 rounded-[0.5vw] h-[2.1vw] px-[0.65vw] bg-slate-50/50 text-[0.74vw] hover:bg-white transition-all">
-                <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-400" />
-                <span className="text-[0.66vw] font-medium text-gray-400">
+              {/* Middle: Crisp Date Range Filter */}
+              <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-[0.5vw] h-[2.1vw] px-[0.6vw] bg-slate-50/70 hover:bg-white focus-within:bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/15 transition-all text-[0.74vw]">
+                <Calendar className="w-[0.85vw] h-[0.85vw] text-slate-400 shrink-0" />
+                <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">
                   From
                 </span>
                 <input
                   type="date"
                   value={filterFromDate || ""}
                   onChange={(e) => setFilterFromDate(e.target.value)}
-                  className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                  className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
                 />
-                <span className="text-gray-300 mx-[0.2vw]">-</span>
-                <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-400" />
-                <span className="text-[0.66vw] font-medium text-gray-400">
+                <span className="text-slate-300 mx-[0.1vw]">—</span>
+                <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">
                   To
                 </span>
                 <input
@@ -3274,7 +3186,7 @@ export default function ServiceCall() {
                   value={filterToDate || ""}
                   min={filterFromDate || undefined}
                   onChange={(e) => setFilterToDate(e.target.value)}
-                  className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                  className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
                 />
                 {(filterFromDate || filterToDate) && (
                   <button
@@ -3282,7 +3194,7 @@ export default function ServiceCall() {
                       setFilterFromDate("");
                       setFilterToDate("");
                     }}
-                    className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.3vw]"
+                    className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-bold cursor-pointer ml-[0.3vw] px-[0.3vw] py-[0.1vw] hover:bg-rose-50 rounded"
                     title="Clear date filter"
                   >
                     Clear
@@ -3290,8 +3202,8 @@ export default function ServiceCall() {
                 )}
               </div>
 
-              {/* Right side: Priority Dropdown, Status / Bulk Delete & Register Call */}
-              <div className="flex gap-[0.6vw] items-center flex-shrink-0">
+              {/* Right side: Priority Dropdown, Bulk Delete & Register Call */}
+              <div className="flex gap-[0.5vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
@@ -3299,9 +3211,9 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.72vw] transition-all cursor-pointer shadow-none"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.72vw] transition-all cursor-pointer shadow-none"
                     >
-                      <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                      <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                       Delete ({selectedItems.size})
                     </motion.button>
                   )}
@@ -3312,21 +3224,21 @@ export default function ServiceCall() {
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value)}
-                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[1.9vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    className="appearance-none bg-slate-50/70 hover:bg-white font-semibold text-slate-700 border border-slate-200 pl-[0.8vw] pr-[1.9vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                   >
-                    <option value="All">Priority</option>
+                    <option value="All">All Priorities</option>
                     {PRIORITIES.map((p) => (
                       <option key={p} value={p}>{p}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.55vw] top-1/2 -translate-y-1/2" />
+                  <ChevronDown className="w-[0.8vw] h-[0.8vw] text-slate-400 pointer-events-none absolute right-[0.55vw] top-1/2 -translate-y-1/2" />
                 </div>
 
-                {/* Action Button: Register Call */}
+                {/* Primary Action Button: Register Call */}
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
-                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]"
+                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
                   >
                     <Plus className="w-[0.9vw] h-[0.9vw]" />
                     Register Call
@@ -3335,7 +3247,94 @@ export default function ServiceCall() {
               </div>
             </div>
 
-            {/* Status Summary Pill Bar: Sleek, high-polish rounded pills */}
+            {/* ── 2. Filtered Telemetry Summary Cards: Reflected directly below filters ── */}
+            <div className="grid grid-cols-4 gap-[0.7vw] shrink-0">
+              {/* 1. Total Calls */}
+              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(37,99,235,0.06)] hover:shadow-md hover:border-blue-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.7vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+                    <Phone className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.All}
+                    </div>
+                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
+                      Total Calls
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.2vw] h-[1.6vw] text-blue-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 32 Q 25 35 45 20 T 90 8" />
+                </svg>
+              </div>
+
+              {/* 2. Resolved */}
+              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(16,185,129,0.06)] hover:shadow-md hover:border-emerald-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.7vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
+                    <CheckCircle className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.Resolved}
+                    </div>
+                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
+                      Resolved
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.2vw] h-[1.6vw] text-emerald-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 30 Q 30 32 50 15 T 90 6" />
+                </svg>
+              </div>
+
+              {/* 3. Pending */}
+              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(245,158,11,0.06)] hover:shadow-md hover:border-amber-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.7vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
+                    <Clock className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.Pending}
+                    </div>
+                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
+                      Pending
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.2vw] h-[1.6vw] text-amber-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 35 Q 25 30 50 22 T 90 10" />
+                </svg>
+              </div>
+
+              {/* 4. Critical */}
+              <div className="bg-white rounded-[0.7vw] px-[0.9vw] py-[0.65vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(239,68,68,0.06)] hover:shadow-md hover:border-rose-300 transition-all flex items-center justify-between group relative overflow-hidden">
+                <div className="flex items-center gap-[0.7vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
+                    <AlertCircle className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-slate-900 leading-none tracking-tight">
+                      {counts.Critical}
+                    </div>
+                    <div className="text-[0.66vw] font-semibold text-slate-500 uppercase tracking-wider mt-[0.15vw]">
+                      Critical
+                    </div>
+                  </div>
+                </div>
+                {/* Sparkline wave decoration */}
+                <svg className="w-[4.2vw] h-[1.6vw] text-rose-500 stroke-current fill-none opacity-80" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M 0 32 Q 35 34 55 18 T 90 8" />
+                </svg>
+              </div>
+            </div>
+
+            {/* ── 3. Status Filter Tabs: Cleanly framed bar ── */}
             <div className="flex gap-[0.35vw] flex-wrap items-center shrink-0">
               {[
                 {
