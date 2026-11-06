@@ -1128,7 +1128,7 @@ const CustomerDatabase = () => {
       case "partyType":
         return (
           <td key={col.key} {...spanProps} className={baseClass}>
-            <span className={`px-[0.55vw] py-[0.15vw] inline-block min-w-[5vw] text-center rounded-[0.35vw] text-[0.68vw] font-bold border ${getTypeColor(row.partyType)}`}>
+            <span className={`px-[0.55vw] py-[0.15vw] inline-block min-w-[5vw] text-center rounded-[0.35vw] text-[0.68vw] font-medium border ${getTypeColor(row.partyType)}`}>
               {row.partyType}
             </span>
           </td>
@@ -1145,18 +1145,18 @@ const CustomerDatabase = () => {
         );
       case "partyCode":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-900 font-mono font-bold"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-mono font-medium"}>
             {row.partyCode}
           </td>
         );
       case "partyDescription":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-semibold truncate max-w-[14vw]"} title={row.partyDescription}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-medium truncate max-w-[14vw]"} title={row.partyDescription}>
             {row.partyDescription}
           </td>
         );
       case "itemCode":
-        return <td key={col.key} className={baseClass + " text-gray-800 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
+        return <td key={col.key} className={baseClass + " text-gray-700 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
           <td key={col.key} className={baseClass + " text-gray-700 truncate max-w-[16vw] text-[0.74vw]"} title={row.itemDescription}>
@@ -1165,7 +1165,7 @@ const CustomerDatabase = () => {
         );
       case "warrantyPeriodDays":
         return (
-          <td key={col.key} className={baseClass + " text-gray-800 text-center font-bold"}>
+          <td key={col.key} className={baseClass + " text-gray-700 text-center font-medium"}>
             {row.warrantyPeriodDays}
           </td>
         );
