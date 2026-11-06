@@ -654,7 +654,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.name} 
                         onChange={e => setRegData({...regData, name: e.target.value})} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         placeholder="John Doe" 
                       />
                     </div>
@@ -670,7 +670,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         value={regData.userId} 
                         onChange={e => setRegData({...regData, userId: e.target.value})} 
                         disabled={!!editingEmp}
-                        className={`w-full border p-[0.55vw] rounded-[0.4vw] outline-none text-[0.82vw] transition-colors ${
+                        className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.78vw] transition-colors ${
                           editingEmp 
                             ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed" 
                             : "border-gray-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
@@ -689,7 +689,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="new-email"
                         value={regData.email} 
                         onChange={e => setRegData({...regData, email: e.target.value})} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         placeholder="john@akira.com" 
                       />
                     </div>
@@ -703,7 +703,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.phoneNumber} 
                         onChange={e => setRegData({...regData, phoneNumber: e.target.value})} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         placeholder="+91 ..." 
                       />
                     </div>
@@ -717,7 +717,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.dob} 
                         onChange={e => setRegData({...regData, dob: e.target.value})} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors" 
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
@@ -762,7 +762,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <button 
                           type="button" 
                           onClick={() => setShowDeptModal(true)} 
-                          className="p-[0.55vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.4vw] transition-colors cursor-pointer border border-gray-200 flex-shrink-0"
+                          className="h-[2.1vw] min-h-[2.1vw] px-[0.6vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.35vw] transition-colors cursor-pointer border border-gray-200 flex items-center justify-center flex-shrink-0"
                           title="Manage Departments"
                         >
                           <Settings className="w-[0.95vw] h-[0.95vw]" />
@@ -778,7 +778,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         required 
                         value={regData.designation} 
                         onChange={e => setRegData({...regData, designation: e.target.value})} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         placeholder="Senior Engineer" 
                       />
                     </div>
@@ -817,7 +817,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             setRegData({...regData, ctc: val});
                           }
                         }} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         placeholder="Enter monthly CTC" 
                       />
                     </div>
@@ -831,7 +831,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         required 
                         value={regData.dateOfJoining} 
                         onChange={e => setRegData({...regData, dateOfJoining: e.target.value})} 
-                        className="w-full border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white transition-colors" 
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors" 
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
@@ -980,7 +980,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.password} 
                           onChange={e => setRegData({...regData, password: e.target.value})} 
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Enter password"}
-                          className="w-full border border-gray-300 p-[0.55vw] pr-[2.2vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         />
                         <button 
                           type="button"
@@ -1009,7 +1009,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.confirmPassword} 
                           onChange={e => setRegData({...regData, confirmPassword: e.target.value})} 
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Confirm password"}
-                          className="w-full border border-gray-300 p-[0.55vw] pr-[2.2vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
                         />
                         <button 
                           type="button"
