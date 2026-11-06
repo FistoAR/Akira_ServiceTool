@@ -1052,21 +1052,21 @@ const CustomerDatabase = () => {
   const getTypeColor = (name) => {
     const idx = partyTypes.findIndex((t) => t.name === name);
     const colors = [
-      "bg-purple-100 text-purple-700",
-      "bg-orange-100 text-orange-700",
-      "bg-blue-100 text-blue-700",
-      "bg-green-100 text-green-700",
-      "bg-pink-100 text-pink-700",
-      "bg-indigo-100 text-indigo-700",
+      "bg-purple-50 text-purple-700 border-purple-200/80",
+      "bg-amber-50 text-amber-700 border-amber-200/80",
+      "bg-blue-50 text-blue-700 border-blue-200/80",
+      "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+      "bg-rose-50 text-rose-700 border-rose-200/80",
+      "bg-indigo-50 text-indigo-700 border-indigo-200/80",
     ];
-    return colors[idx % colors.length] || "bg-gray-100 text-gray-700";
+    return colors[idx % colors.length] || "bg-gray-50 text-gray-700 border-gray-200";
   };
 
   // Active visible columns (for table rendering)
   const visibleCols = CUSTOMER_DB_COLUMNS.filter((c) => colVis[c.key] !== false);
 
   const renderHeaderCell = (col) => (
-    <th key={col.key} className="p-[0.6vw] font-semibold text-gray-800 border-b-[1.5px] border-r-[1.5px] border-gray-400">
+    <th key={col.key} className="p-[0.65vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-r border-gray-200">
       {col.label}
     </th>
   );
@@ -1076,54 +1076,62 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `p-[0.9vw] border-r-[1.5px] border-b-[1.5px] border-gray-400 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `p-[0.7vw] border-r border-b border-gray-100 text-[0.76vw] ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
         return (
           <td key={col.key} {...spanProps} className={baseClass}>
-            <span className={`px-2 py-1 inline-block min-w-[6vw] text-center rounded text-[0.7vw] font-medium ${getTypeColor(row.partyType)}`}>
+            <span className={`px-[0.55vw] py-[0.15vw] inline-block min-w-[5vw] text-center rounded-[0.35vw] text-[0.68vw] font-bold border ${getTypeColor(row.partyType)}`}>
               {row.partyType}
             </span>
           </td>
         );
       case "productSegment":
-        return <td key={col.key} className={baseClass + " text-gray-700"}>{row.productSegment}</td>;
+        return (
+          <td key={col.key} className={baseClass + " text-gray-700 font-medium"}>
+            {row.productSegment ? (
+              <span className="inline-block bg-slate-50 text-slate-700 px-[0.45vw] py-[0.1vw] rounded text-[0.7vw] border border-slate-200/60 font-medium">
+                {row.productSegment}
+              </span>
+            ) : "—"}
+          </td>
+        );
       case "partyCode":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-semibold"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-900 font-mono font-bold"}>
             {row.partyCode}
           </td>
         );
       case "partyDescription":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 truncate max-w-[14vw]"} title={row.partyDescription}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-semibold truncate max-w-[14vw]"} title={row.partyDescription}>
             {row.partyDescription}
           </td>
         );
       case "itemCode":
-        return <td key={col.key} className={baseClass + " text-gray-800 font-mono"}>{row.itemCode}</td>;
+        return <td key={col.key} className={baseClass + " text-gray-800 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
-          <td key={col.key} className={baseClass + " text-gray-800 truncate max-w-[16vw]"} title={row.itemDescription}>
+          <td key={col.key} className={baseClass + " text-gray-700 truncate max-w-[16vw] text-[0.74vw]"} title={row.itemDescription}>
             {row.itemDescription}
           </td>
         );
       case "warrantyPeriodDays":
         return (
-          <td key={col.key} className={baseClass + " text-gray-800 text-center font-semibold"}>
+          <td key={col.key} className={baseClass + " text-gray-800 text-center font-bold"}>
             {row.warrantyPeriodDays}
           </td>
         );
       case "state":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-700"}>
             {row.state || "—"}
           </td>
         );
       case "districtCity":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-700"}>
             {row.districtCity || "—"}
           </td>
         );
@@ -1149,121 +1157,136 @@ const CustomerDatabase = () => {
 
   return (
     <div className="w-full h-full font-sans text-[0.85vw]">
-      {/* Toolbar */}
-      <div className="flex flex-col gap-[1.5vw] mb-[0.9vw]">
-        <div className="flex items-center justify-between bg-white p-[0.7vw] rounded-[0.6vw] shadow-sm border border-slate-400">
-          <div className="relative w-[35vw]">
-            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[1vw] h-[1vw]" />
-            <input
-              type="text"
-              placeholder="Search Party or Item..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-[2.5vw] pr-[1vw] h-[2.5vw] border border-gray-400 rounded-[0.8vw] focus:outline-none focus:border-gray-800"
-            />
-          </div>
-          <div className="flex gap-[1vw] items-center">
-            <AnimatePresence>
-              {selectedItems.size > 0 && !isSupervisor && canDelete && (
-                <div className="flex items-center gap-[0.5vw]">
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    onClick={handleSelectAllOverall}
-                    className="flex items-center gap-[0.5vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[1vw] h-[2.4vw] rounded-[0.4vw] font-semibold cursor-pointer"
-                  >
-                    {filteredData.length > 0 && filteredData.every((i) => selectedItems.has(getRowId(i))) ? (
-                      <CheckSquare className="w-[1vw] h-[1vw]" />
-                    ) : (
-                      <Square className="w-[1vw] h-[1vw]" />
-                    )}
-                    Select All ({filteredData.length})
-                  </motion.button>
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    onClick={handleBulkDelete}
-                    className="flex items-center gap-[0.5vw] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-[1vw] h-[2.4vw] rounded-[0.4vw] font-semibold cursor-pointer"
-                  >
-                    <Trash2 className="w-[1vw] h-[1vw]" /> Delete ({selectedItems.size})
-                  </motion.button>
-                </div>
-              )}
-            </AnimatePresence>
-            <CustomDropdown
-              options={[
-                { value: "All", label: "All Types" },
-                ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
-              ]}
-              value={filterType}
-              onChange={(val) => setFilterType(val)}
-              className="w-[10vw]"
-              size="md"
-            />
-            {!isSupervisor && (
-              <>
-                {canWrite && (
-                  <button
-                    onClick={openAddModal}
-                    className="cursor-pointer flex items-center gap-[0.5vw] bg-white border border-gray-400 hover:bg-gray-50 text-gray-700 px-[1vw] h-[2.4vw] rounded-[0.4vw]"
-                  >
-                    <UserPlus className="w-[1.2vw] h-[1.2vw]" /> Add
-                  </button>
-                )}
-                {canWrite && (
-                  <button
-                    onClick={() => setShowUploadModal(true)}
-                    className="cursor-pointer flex items-center gap-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.4vw] rounded-[0.4vw]"
-                  >
-                    <UploadCloud className="w-[1.2vw] h-[1.2vw]" /> Upload
-                  </button>
-                )}
-              </>
+      {/* Header & Stats Banner */}
+      <div className="flex items-center justify-between pb-[0.8vw]">
+        <div>
+          <h1 className="text-[1.25vw] font-bold text-gray-900 tracking-tight leading-tight flex items-center gap-[0.5vw]">
+            <span className="w-[0.3vw] h-[1.1vw] bg-blue-600 rounded-full inline-block" />
+            Customers Data
+          </h1>
+          <p className="text-[0.72vw] text-gray-500 font-medium mt-[0.1vw] pl-[0.8vw]">
+            Directory of customers, party codes, and catalog item assignments
+          </p>
+        </div>
+
+        {!isSupervisor && (
+          <div className="flex items-center gap-[0.6vw]">
+            {canWrite && (
+              <button
+                onClick={openAddModal}
+                className="cursor-pointer flex items-center gap-[0.4vw] bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 px-[0.9vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-2xs"
+              >
+                <Plus className="w-[0.9vw] h-[0.9vw] text-gray-500" /> Add Party
+              </button>
+            )}
+            {canWrite && (
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-xs"
+              >
+                <UploadCloud className="w-[0.95vw] h-[0.95vw]" /> Upload Excel
+              </button>
             )}
           </div>
+        )}
+      </div>
+
+      {/* Toolbar: Search, Party Type Filter, and Bulk Delete */}
+      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.8vw] mb-[0.8vw]">
+        {/* Search */}
+        <div className="relative flex-1 max-w-[28vw]">
+          <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
+          <input
+            type="text"
+            placeholder="Search party code, description or item code..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/80 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+          />
+        </div>
+
+        <div className="flex gap-[0.6vw] items-center">
+          <AnimatePresence>
+            {selectedItems.size > 0 && !isSupervisor && canDelete && (
+              <div className="flex items-center gap-[0.4vw]">
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  onClick={handleSelectAllOverall}
+                  className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[0.75vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.74vw] cursor-pointer shadow-none transition-all"
+                >
+                  {filteredData.length > 0 && filteredData.every((i) => selectedItems.has(getRowId(i))) ? (
+                    <CheckSquare className="w-[0.9vw] h-[0.9vw]" />
+                  ) : (
+                    <Square className="w-[0.9vw] h-[0.9vw]" />
+                  )}
+                  Select All ({filteredData.length})
+                </motion.button>
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  onClick={handleBulkDelete}
+                  className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.74vw] cursor-pointer shadow-none transition-all"
+                >
+                  <Trash2 className="w-[0.85vw] h-[0.85vw]" /> Delete ({selectedItems.size})
+                </motion.button>
+              </div>
+            )}
+          </AnimatePresence>
+
+          <CustomDropdown
+            options={[
+              { value: "All", label: "All Types" },
+              ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
+            ]}
+            value={filterType}
+            onChange={(val) => setFilterType(val)}
+            className="w-[10.5vw]"
+            size="md"
+          />
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-[0.6vw] shadow-sm border-[1.5px] border-gray-400 flex flex-col">
-        <div className="overflow-y-auto max-h-[73vh] min-h-[73vh] w-full rounded-t-[0.6vw]">
+      {/* Table Card */}
+      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col overflow-hidden">
+        <div className="overflow-x-auto overflow-y-auto max-h-[64vh] min-h-[58vh] w-full">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-blue-50 sticky top-0 z-10 shadow-sm">
+            <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
               <tr>
                 {!isSupervisor && (
-                  <th className="p-[0.6vw] border-b-[1.5px] border-r-[1.5px] border-gray-400 w-[3%] text-center">
+                  <th className="p-[0.7vw] border-b border-r border-gray-200 w-[3%] text-center">
                     <button
                       onClick={() => handleSelectAllPage(paginatedData)}
                       className="flex items-center justify-center w-full cursor-pointer"
                     >
                       {isPageSelected ? (
-                        <CheckSquare className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                        <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
                       ) : (
-                        <Square className="w-[1.1vw] h-[1.1vw] text-gray-400" />
+                        <Square className="w-[1vw] h-[1vw] text-gray-300 hover:text-gray-400" />
                       )}
                     </button>
                   </th>
                 )}
-                <th className="p-[0.6vw] font-semibold text-gray-800 border-b-[1.5px] border-r-[1.5px] border-gray-400 w-[4%] text-center">
+                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-r border-gray-200 w-[3.5%] text-center">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="p-[0.6vw] font-semibold text-gray-800 border-b-[1.5px] border-r-[1.5px] border-gray-400 w-[4%] text-center">
+                  <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] border-b border-gray-200 w-[4.5%] text-center sticky top-0 right-0 bg-slate-50/95 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
                     Actions
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y-[1.5px] divide-gray-200">
+            <tbody className="divide-y divide-gray-100">
               {isLoading ? (
                 <tr>
                   <td colSpan={totalCols} className="py-[10vw]">
                     <div className="flex flex-col items-center justify-center gap-[1vw] text-gray-500">
                       <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
-                      <p className="text-[1.1vw] font-medium">Loading customer data...</p>
+                      <p className="text-[1vw] font-medium text-blue-600">Loading customer data...</p>
                     </div>
                   </td>
                 </tr>
@@ -1283,23 +1306,23 @@ const CustomerDatabase = () => {
                   return (
                     <tr
                       key={i}
-                      className={`transition-colors border-b-[1.5px] border-gray-400 ${isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}
+                      className={`transition-colors border-b border-gray-100 ${isSelected ? "bg-blue-50/70" : "hover:bg-gray-50/60"}`}
                     >
                       {!isSupervisor && (
-                        <td className="p-[1vw] border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center">
+                        <td className="p-[0.7vw] border-r border-b border-gray-100 text-center">
                           <button
                             onClick={() => handleSelectItem(row)}
                             className="flex items-center justify-center w-full cursor-pointer"
                           >
                             {isSelected ? (
-                              <CheckSquare className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                              <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
                             ) : (
-                              <Square className="w-[1.1vw] h-[1.1vw] text-gray-300 hover:text-gray-500" />
+                              <Square className="w-[1vw] h-[1vw] text-gray-300 hover:text-gray-400" />
                             )}
                           </button>
                         </td>
                       )}
-                      <td className="p-[0.9vw] text-gray-600 font-medium border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center">
+                      <td className="p-[0.7vw] text-gray-500 font-medium border-r border-b border-gray-100 text-center text-[0.74vw]">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
@@ -1309,26 +1332,26 @@ const CustomerDatabase = () => {
                       {!isSameParty && !isSupervisor ? (
                         <td
                           rowSpan={rowSpan}
-                          className="border-r-[1.5px] border-b-[1.5px] border-gray-400 text-center align-middle bg-white"
+                          className="border-b border-gray-100 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
                         >
                           {(canUpdate || canDelete) ? (
-                            <div className="flex items-center gap-[0.15vw] px-[.5vw]">
+                            <div className="flex items-center justify-center gap-[0.3vw] px-[0.4vw]">
                               {canUpdate && (
                                 <button
                                   onClick={() => openEditModal(row.partyCode)}
-                                  className="inline-flex items-center justify-center p-[0.4vw] rounded-[0.3vw] hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
                                   title="Edit Party"
                                 >
-                                  <Edit2 className="w-[1vw] h-[1vw]" />
+                                  <Edit2 className="w-[0.9vw] h-[0.9vw]" />
                                 </button>
                               )}
                               {canDelete && (
                                 <button
                                   onClick={() => handleDeleteParty(row.partyCode)}
-                                  className="inline-flex items-center justify-center p-[0.4vw] rounded-[0.3vw] hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-rose-50 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
                                   title="Delete Party"
                                 >
-                                  <Trash2 className="w-[1vw] h-[1vw]" />
+                                  <Trash2 className="w-[0.9vw] h-[0.9vw]" />
                                 </button>
                               )}
                             </div>
@@ -1342,8 +1365,8 @@ const CustomerDatabase = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={totalCols} className="py-[4vw] text-center text-gray-400">
-                    No data found.
+                  <td colSpan={totalCols} className="py-[5vw] text-center text-gray-400 font-medium">
+                    No customer data found.
                   </td>
                 </tr>
               )}
@@ -1352,29 +1375,29 @@ const CustomerDatabase = () => {
         </div>
 
         {/* Pagination */}
-        <div className="border-t border-blue-100 p-[0.6vw] bg-blue-50 flex justify-between items-center rounded-b-[0.6vw]">
-          <div className="text-[0.8vw] text-gray-500">
+        <div className="border-t border-gray-200/80 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
+          <div className="text-[0.74vw] text-gray-500 font-medium">
             Showing{" "}
-            <span className="font-semibold text-gray-800">
+            <span className="font-semibold text-gray-900">
               {paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}
             </span>{" "}
             to{" "}
-            <span className="font-semibold text-gray-800">
+            <span className="font-semibold text-gray-900">
               {Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}
             </span>{" "}
             of{" "}
-            <span className="font-bold text-gray-800">{filteredData.length}</span>{" "}
+            <span className="font-semibold text-gray-900">{filteredData.length}</span>{" "}
             entries
           </div>
-          <div className="flex items-center gap-[1.2vw]">
+          <div className="flex items-center gap-[0.5vw]">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.4vw] border border-gray-400 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"
+              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
-              <ChevronLeft className="w-[1vw] h-[1vw] text-gray-600" />
+              <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
             </button>
-            <div className="flex gap-[0.7vw]">
+            <div className="flex gap-[0.3vw]">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pNum = i + 1;
                 if (totalPages > 5 && currentPage > 3) pNum = currentPage - 2 + i;
@@ -1383,7 +1406,7 @@ const CustomerDatabase = () => {
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-[0.3vw] text-[0.8vw] font-medium cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white" : "bg-white border border-gray-400 text-gray-600 hover:bg-gray-50"}`}
+                    className={`min-w-[1.7vw] h-[1.7vw] px-[0.4vw] flex items-center justify-center rounded-[0.4vw] text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
                   >
                     {pNum}
                   </button>
@@ -1393,9 +1416,9 @@ const CustomerDatabase = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.4vw] border border-gray-400 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"
+              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
-              <ChevronRight className="w-[1vw] h-[1vw] text-gray-600" />
+              <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
             </button>
           </div>
         </div>
