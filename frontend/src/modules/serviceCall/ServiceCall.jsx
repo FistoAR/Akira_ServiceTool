@@ -3134,43 +3134,55 @@ export default function ServiceCall() {
             transition={{ duration: 0.2 }}
           >
             {/* Toolbar */}
-            <div className="flex items-center justify-between bg-white p-[0.7vw] rounded-[0.6vw] shadow-sm border border-slate-400 mb-[0.9vw]">
-              <div className="flex items-center gap-[0.8vw]">
-                <div className="relative w-[24vw]">
-                  <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[1vw] h-[1vw]" />
+            <div className="flex items-center justify-between bg-white px-[1vw] py-[0.7vw] rounded-[0.7vw] shadow-xs border border-gray-200 mb-[0.9vw] gap-[1vw]">
+              <div className="flex items-center gap-[0.8vw] flex-1">
+                <div className="relative flex-1 max-w-[22vw]">
+                  <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.95vw] h-[0.95vw]" />
                   <input
                     type="text"
                     placeholder="Search by customer, call no, engineer…"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-[2.5vw] pr-[1vw] h-[2.5vw] border border-gray-400 rounded-[0.8vw] focus:outline-none focus:border-gray-800"
+                    className="w-full pl-[2.4vw] pr-[1vw] h-[2.2vw] border border-gray-200 rounded-[0.5vw] text-[0.8vw] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-gray-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
                   />
                 </div>
-                <div className="flex items-center gap-[0.4vw] border border-gray-400 rounded-[0.8vw] h-[2.5vw] px-[0.8vw] bg-slate-50 shadow-sm">
-                  <span className="text-[0.75vw] font-bold text-gray-500">
-                    FROM:
+                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.5vw] h-[2.2vw] px-[0.65vw] bg-gray-50/50 text-[0.78vw]">
+                  <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
+                    From
                   </span>
                   <input
                     type="date"
                     value={filterFromDate || ""}
                     onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="text-[0.8vw] text-gray-800 bg-transparent outline-none font-medium"
+                    className="text-[0.78vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
                 </div>
-                <div className="flex items-center gap-[0.4vw] border border-gray-400 rounded-[0.8vw] h-[2.5vw] px-[0.8vw] bg-slate-50 shadow-sm">
-                  <span className="text-[0.75vw] font-bold text-gray-500">
-                    TO:
+                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.5vw] h-[2.2vw] px-[0.65vw] bg-gray-50/50 text-[0.78vw]">
+                  <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
+                    To
                   </span>
                   <input
                     type="date"
                     value={filterToDate || ""}
                     min={filterFromDate || undefined}
                     onChange={(e) => setFilterToDate(e.target.value)}
-                    className="text-[0.8vw] text-gray-800 bg-transparent outline-none font-medium"
+                    className="text-[0.78vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
                 </div>
+                {(filterFromDate || filterToDate) && (
+                  <button
+                    onClick={() => {
+                      setFilterFromDate("");
+                      setFilterToDate("");
+                    }}
+                    className="text-[0.72vw] text-gray-400 hover:text-rose-600 underline font-medium cursor-pointer ml-[-0.2vw]"
+                    title="Clear date filter"
+                  >
+                    Clear dates
+                  </button>
+                )}
               </div>
-              <div className="flex gap-[0.8vw] items-center">
+              <div className="flex gap-[0.6vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
@@ -3178,119 +3190,146 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.5vw] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-[1vw] h-[2.4vw] rounded-[0.4vw] font-semibold"
+                      className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 hover:border-rose-300 px-[0.85vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.78vw] transition-all cursor-pointer shadow-none"
                     >
-                      <Trash2 className="w-[1vw] h-[1vw]" />
+                      <Trash2 className="w-[0.9vw] h-[0.9vw]" />
                       Delete ({selectedItems.size})
                     </motion.button>
                   )}
                 </AnimatePresence>
-                <select
-                  value={filterPriority}
-                  onChange={(e) => setFilterPriority(e.target.value)}
-                  className="bg-transparent font-medium text-gray-700 border border-gray-400 p-[0.4vw] rounded-[0.3vw] outline-none cursor-pointer h-[2.4vw]"
-                >
-                  <option value="All">All Priorities</option>
-                  {PRIORITIES.map((p) => (
-                    <option key={p}>{p}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={filterPriority}
+                    onChange={(e) => setFilterPriority(e.target.value)}
+                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.2vw] text-[0.78vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+                  >
+                    <option value="All">All Priorities</option>
+                    {PRIORITIES.map((p) => (
+                      <option key={p}>{p}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-[0.85vw] h-[0.85vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
+                </div>
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
-                    className="cursor-pointer flex items-center gap-[0.5vw] bg-white border border-gray-400 hover:bg-gray-50 text-gray-700 px-[1vw] h-[2.4vw] rounded-[0.4vw]"
+                    className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.8vw] transition-all shadow-xs"
                   >
-                    <Plus className="w-[1.2vw] h-[1.2vw]" />
-                    Add
+                    <Plus className="w-[1vw] h-[1vw]" />
+                    Register Call
                   </button>
                 )}
               </div>
             </div>
 
             {/* Status Summary Bar */}
-            <div className="flex gap-[1vw] mb-[0.9vw] flex-wrap">
+            <div className="flex gap-[0.5vw] mb-[0.9vw] flex-wrap items-center">
               {[
                 {
                   label: "All",
-                  color: "bg-gray-100 text-gray-700 border-slate-400",
+                  color: "bg-white text-gray-700 border-gray-200 hover:border-gray-300",
+                  activeCls: "bg-gray-900 text-white border-gray-900 shadow-2xs",
                   dot: "bg-gray-400",
                 },
                 {
                   label: "Registered",
-                  color: "bg-purple-50 text-purple-700 border-purple-200",
+                  color: "bg-white text-purple-700 border-purple-200/80 hover:bg-purple-50/50",
+                  activeCls: "bg-purple-600 text-white border-purple-600 shadow-2xs",
                   dot: "bg-purple-500",
                 },
                 {
                   label: "Assigned",
-                  color: "bg-blue-50 text-blue-700 border-blue-200",
+                  color: "bg-white text-blue-700 border-blue-200/80 hover:bg-blue-50/50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-blue-500",
                 },
                 {
                   label: "Pending",
-                  color: "bg-yellow-50 text-yellow-700 border-yellow-200",
-                  dot: "bg-yellow-500",
+                  color: "bg-white text-amber-700 border-amber-200/80 hover:bg-amber-50/50",
+                  activeCls: "bg-amber-600 text-white border-amber-600 shadow-2xs",
+                  dot: "bg-amber-500",
                 },
                 {
                   label: "Supporting",
-                  color: "bg-orange-50 text-orange-700 border-orange-200",
+                  color: "bg-white text-orange-700 border-orange-200/80 hover:bg-orange-50/50",
+                  activeCls: "bg-orange-600 text-white border-orange-600 shadow-2xs",
                   dot: "bg-orange-500",
                 },
                 {
                   label: "Field Visit",
-                  color: "bg-teal-50 text-teal-700 border-teal-200",
+                  color: "bg-white text-teal-700 border-teal-200/80 hover:bg-teal-50/50",
+                  activeCls: "bg-teal-600 text-white border-teal-600 shadow-2xs",
                   dot: "bg-teal-500",
                 },
                 {
                   label: "Escalating",
-                  color: "bg-orange-100 text-orange-800 border-orange-300",
-                  dot: "bg-orange-600",
+                  color: "bg-white text-rose-700 border-rose-200/80 hover:bg-rose-50/50",
+                  activeCls: "bg-rose-600 text-white border-rose-600 shadow-2xs",
+                  dot: "bg-rose-500",
                 },
                 {
                   label: "Critical",
-                  color: "bg-red-50 text-red-700 border-red-200",
+                  color: "bg-white text-red-700 border-red-200/80 hover:bg-red-50/50",
+                  activeCls: "bg-red-600 text-white border-red-600 shadow-2xs",
                   dot: "bg-red-500",
                 },
                 {
                   label: "Resolved",
-                  color: "bg-green-100 text-green-600 border-green-200",
-                  dot: "bg-green-500",
+                  color: "bg-white text-emerald-700 border-emerald-200/80 hover:bg-emerald-50/50",
+                  activeCls: "bg-emerald-600 text-white border-emerald-600 shadow-2xs",
+                  dot: "bg-emerald-500",
                 },
-              ].map(({ label, color, dot }) => (
-                <button
-                  key={label}
-                  onClick={() =>
-                    setFilterStatus(label === "All" ? "All" : label)
-                  }
-                  className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.55vw] rounded-[0.5vw] border font-medium text-[0.8vw] cursor-pointer transition-all ${color} ${filterStatus === (label === "All" ? "All" : label) ? "ring-2 ring-offset-1 ring-blue-300 shadow-sm" : "opacity-80 hover:opacity-100"}`}
-                >
-                  <span className={`w-[0.6vw] h-[0.6vw] rounded-full ${dot}`} />
-                  {label}
-                  <span className="font-bold">{counts[label] ?? 0}</span>
-                </button>
-              ))}
+              ].map(({ label, color, activeCls, dot }) => {
+                const isActive = filterStatus === (label === "All" ? "All" : label);
+                return (
+                  <button
+                    key={label}
+                    onClick={() =>
+                      setFilterStatus(label === "All" ? "All" : label)
+                    }
+                    className={`flex items-center gap-[0.45vw] px-[0.8vw] py-[0.35vw] rounded-[0.4vw] border font-semibold text-[0.74vw] cursor-pointer transition-all ${
+                      isActive ? activeCls : `${color} opacity-90 hover:opacity-100`
+                    }`}
+                  >
+                    <span
+                      className={`w-[0.45vw] h-[0.45vw] rounded-full ${
+                        isActive ? "bg-white" : dot
+                      }`}
+                    />
+                    <span>{label}</span>
+                    <span
+                      className={`text-[0.68vw] px-[0.35vw] py-[0.05vw] rounded-full font-bold ${
+                        isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {counts[label] ?? 0}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-[0.6vw] shadow-sm border border-slate-400 flex flex-col w-full overflow-hidden">
-              <div className="overflow-x-auto overflow-y-auto max-h-[65vh] min-h-[65vh] w-full rounded-t-[0.6vw]">
+            <div className="bg-white rounded-[0.7vw] shadow-2xs border border-gray-200 flex flex-col w-full overflow-hidden">
+              <div className="overflow-x-auto overflow-y-auto max-h-[65vh] min-h-[60vh] w-full rounded-t-[0.7vw]">
                 <table className="min-w-[120vw] w-full text-left border-collapse">
-                  <thead className="bg-blue-50 sticky top-0 z-30 shadow-sm">
+                  <thead className="bg-slate-50 sticky top-0 z-30 border-b border-gray-200">
                     <tr>
                       {canDelete && !isSupervisor && (
-                        <th className="p-[0.6vw] border-b border-r border-slate-400 w-[3%] text-center">
+                        <th className="p-[0.65vw] border-r border-gray-200 w-[3%] text-center">
                           <button
                             onClick={toggleSelectPage}
                             className="flex items-center justify-center w-full cursor-pointer"
                           >
                             {isPageSelected ? (
-                              <CheckSquare className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                              <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
                             ) : (
-                              <Square className="w-[1.1vw] h-[1.1vw] text-gray-400" />
+                              <Square className="w-[1vw] h-[1vw] text-gray-300 hover:text-gray-400" />
                             )}
                           </button>
                         </th>
                       )}
-                      <th className="p-[0.6vw] font-semibold text-gray-800 border-b border-r border-slate-400 text-center w-[3%] text-[0.78vw]">
+                      <th className="p-[0.65vw] font-bold text-gray-600 uppercase tracking-wider border-r border-gray-200 text-center w-[3%] text-[0.72vw]">
                         S.No
                       </th>
                       {[
@@ -3308,17 +3347,17 @@ export default function ServiceCall() {
                       ].map((h) => (
                         <th
                           key={h}
-                          className="p-[0.6vw] font-semibold text-center text-gray-800 border-b border-r border-slate-400 whitespace-nowrap text-[0.78vw]"
+                          className="p-[0.65vw] font-bold text-gray-600 uppercase tracking-wider border-r border-gray-200 text-center whitespace-nowrap text-[0.72vw]"
                         >
                           {h}
                         </th>
                       ))}
-                      <th className="p-[0.6vw] font-semibold text-center text-gray-800 border-b border-l border-slate-400 whitespace-nowrap text-[0.78vw] sticky top-0 right-0 bg-blue-50 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.1)]">
+                      <th className="p-[0.65vw] font-bold text-gray-600 uppercase tracking-wider border-l border-gray-200 text-center whitespace-nowrap text-[0.72vw] sticky top-0 right-0 bg-slate-50 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-300">
+                  <tbody className="divide-y divide-gray-100">
                     {isLoading ? (
                       <tr>
                         <td colSpan={13} className="py-[10vh] text-center">
@@ -3758,9 +3797,19 @@ export default function ServiceCall() {
                       <tr>
                         <td
                           colSpan={13}
-                          className="py-[4vw] text-center text-gray-400"
+                          className="py-[6vw] text-center"
                         >
-                          No records found.
+                          <div className="flex flex-col items-center justify-center gap-[0.8vw]">
+                            <div className="w-[3.6vw] h-[3.6vw] rounded-full bg-slate-100 flex items-center justify-center text-gray-400">
+                              <PhoneCall className="w-[1.8vw] h-[1.8vw]" />
+                            </div>
+                            <span className="text-[0.9vw] font-bold text-gray-700">No service calls found</span>
+                            <span className="text-[0.76vw] text-gray-400 max-w-[22vw]">
+                              {searchTerm || filterFromDate || filterToDate || filterStatus !== "All" || filterPriority !== "All"
+                                ? "No records match your active filters. Try adjusting your dates, search query or status tab."
+                                : "Click 'Register Call' to create your first service ticket."}
+                            </span>
+                          </div>
                         </td>
                       </tr>
                     )}
@@ -3769,46 +3818,51 @@ export default function ServiceCall() {
               </div>
 
               {/* Pagination */}
-              <div className="border-t border-slate-400 p-[0.6vw] bg-blue-50 flex justify-between items-center rounded-b-[0.6vw]">
-                <div className="text-[0.8vw] text-gray-500">
+              <div className="border-t border-gray-200 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
+                <div className="text-[0.74vw] text-gray-500 font-medium">
                   Showing{" "}
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-900">
                     {paginatedData.length > 0
                       ? (currentPage - 1) * ITEMS_PER_PAGE + 1
                       : 0}
                   </span>{" "}
                   to{" "}
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-900">
                     {Math.min(
                       currentPage * ITEMS_PER_PAGE,
                       filteredData.length,
                     )}
                   </span>{" "}
                   of{" "}
-                  <span className="font-bold text-gray-800">
+                  <span className="font-semibold text-gray-900">
                     {filteredData.length}
                   </span>{" "}
                   entries
                 </div>
-                <div className="flex items-center gap-[1.2vw]">
+                <div className="flex items-center gap-[0.5vw]">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-[0.4vw] border border-slate-400 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"
+                    className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                   >
-                    <ChevronLeft className="w-[1vw] h-[1vw] text-gray-600" />
+                    <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                   </button>
-                  <div className="flex gap-[0.7vw]">
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      let pNum = i + 1;
-                      if (totalPages > 5 && currentPage > 3)
-                        pNum = currentPage - 2 + i;
-                      if (pNum > totalPages) return null;
+                  <div className="flex gap-[0.3vw]">
+                    {[...Array(totalPages)].map((_, i) => {
+                      const pNum = i + 1;
+                      if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
+                        return null;
+                      }
                       return (
                         <button
                           key={pNum}
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-[0.3vw] text-[0.8vw] font-medium cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white" : "bg-white border border-slate-400 text-gray-600 hover:bg-gray-50"}`}
+                          className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                            currentPage === pNum
+                              ? "bg-blue-600 text-white shadow-2xs"
+                              : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                          }`}
                         >
                           {pNum}
                         </button>
@@ -3820,9 +3874,9 @@ export default function ServiceCall() {
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
                     }
                     disabled={currentPage === totalPages || totalPages === 0}
-                    className="p-[0.4vw] border border-slate-400 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"
+                    className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                   >
-                    <ChevronRight className="w-[1vw] h-[1vw] text-gray-600" />
+                    <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
                   </button>
                 </div>
               </div>
