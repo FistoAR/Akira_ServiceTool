@@ -18,7 +18,7 @@ import {
   loadCustomerDb
 } from "./masterConstants";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 9;
 
 const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
   const { canWrite, canUpdate, canDelete } = useModulePermissions("partyTypes");
@@ -91,7 +91,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
           <p>Are you sure you want to delete <span className="font-bold text-slate-900">"{type.name}"</span>?</p>
           {usageCount > 0 && (
             <div className="p-[0.8vw] bg-amber-50 border border-amber-200 rounded-[0.4vw]">
-               <p className="text-amber-700 font-semibold flex items-center gap-[0.4vw]">
+              <p className="text-amber-700 font-semibold flex items-center gap-[0.4vw]">
                 <AlertTriangle className="w-[1vw] h-[1vw]" /> {usageCount} records affected
               </p>
               <p className="text-amber-600 text-[0.75vw] mt-[0.2vw]">These records will be automatically reassigned to the first available category.</p>
@@ -168,9 +168,8 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                   return (
                     <div
                       key={type.id || type._id}
-                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
-                        isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"
-                      }`}
+                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"
+                        }`}
                     >
                       <div className="flex items-center gap-[0.7vw]">
                         <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-[0.72vw] font-bold">
@@ -240,11 +239,10 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                           key={pNum}
                           type="button"
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
-                            currentPage === pNum
+                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${currentPage === pNum
                               ? "bg-blue-600 text-white shadow-2xs"
                               : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
-                          }`}
+                            }`}
                         >
                           {pNum}
                         </button>
@@ -359,7 +357,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
       </div>
     </div>
   );
-  
+
 
 };
 

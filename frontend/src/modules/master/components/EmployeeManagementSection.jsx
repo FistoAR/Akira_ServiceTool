@@ -70,8 +70,8 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 
         <div className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
           <div className="flex gap-[0.5vw]">
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={newDept}
               onChange={(e) => setNewDept(e.target.value)}
               placeholder="Enter department name..."
@@ -105,7 +105,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
   const { canWrite, canUpdate, canDelete } = useModulePermissions("employees");
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 7;
   const [currentPage, setCurrentPage] = useState(1);
   const [showRegModal, setShowRegModal] = useState(false);
   const [showDeptModal, setShowDeptModal] = useState(false);
@@ -217,7 +217,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
   const handleRegSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Check if passwords match (if password is being set or changed)
     if (regData.password || regData.confirmPassword) {
       if (regData.password !== regData.confirmPassword) {
@@ -279,7 +279,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       } else {
         // Register new
         const regRes = await axios.post(`${API_URL}/auth/register`, finalData);
-        
+
         const createdRole = finalData.role || "User";
         const newUserId = finalData.userId;
 
@@ -317,7 +317,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           toast(`Employee registered successfully. Default ${createdRole} permissions enabled.`, "success");
         }
       }
-      
+
       // Full refresh from backend to ensure state consistency while preserving loaded profile pictures
       try {
         const empRes = await axios.get(`${API_URL}/auth/employees`);
@@ -342,7 +342,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       } catch (refreshErr) {
         console.error("Refresh failed:", refreshErr);
       }
-      
+
       // Clear states
       setShowRegModal(false);
       setEditingEmp(null);
@@ -439,9 +439,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
     }
   };
 
-  const filtered = (employees || []).filter(e => 
+  const filtered = (employees || []).filter(e =>
     e && (
-      e.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      e.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       e.userId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       e.department?.toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -462,8 +462,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       <div className="flex items-center justify-between gap-[1vw] flex-shrink-0">
         <div className="relative flex-1 max-w-[25vw]">
           <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-gray-400" />
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Search employees by name, ID or department..."
             className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-gray-300 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
             value={searchTerm}
@@ -472,7 +472,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         </div>
         <div className="flex gap-[0.6vw]">
           {canWrite && (
-            <button 
+            <button
               onClick={() => setShowDeptModal(true)}
               className="flex items-center gap-[0.45vw] border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.8vw] cursor-pointer transition-all shadow-none"
             >
@@ -480,7 +480,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             </button>
           )}
           {canWrite && (
-            <button 
+            <button
               onClick={() => openRegModal()}
               className="flex items-center gap-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all shadow-xs"
             >
@@ -494,93 +494,92 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         <div className="flex-1 min-h-0 overflow-auto">
           <table className="w-full text-left border-collapse">
             <thead className="sticky top-0 z-20 bg-gray-50/90 backdrop-blur-xs">
-            <tr className="border-b border-gray-200">
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
-              <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {paginatedData.map((emp, idx) => (
-              <tr key={emp._id || idx} className="hover:bg-blue-50/20 transition-colors group">
-                <td className="px-[1vw] py-[0.7vw] text-[0.78vw] text-gray-500 font-medium">
-                  {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
-                </td>
-                <td className="px-[1vw] py-[0.7vw]">
-                  <div className="flex items-center gap-[0.75vw]">
-                    <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[0.85vw] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
-                      {emp.profilePicture ? <img src={emp.profilePicture} className="w-full h-full object-cover" /> : emp.name?.charAt(0)?.toUpperCase()}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[0.82vw] font-bold text-gray-900 truncate">{emp.name}</div>
-                      <div className="text-[0.7vw] text-gray-500 truncate">{emp.email}</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] font-semibold text-gray-700">{emp.userId}</td>
-                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700">
-                  {emp.department || "—"}
-                </td>
-                <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
-                <td className="px-[1vw] py-[0.7vw] text-[0.8vw]">
-                  <span className={`font-semibold ${
-                    emp.role === "Admin"
-                      ? "text-purple-700"
-                      : emp.role === "Supervisor"
-                      ? "text-indigo-700"
-                      : "text-gray-800"
-                  }`}>
-                    {emp.role || "User"}
-                  </span>
-                </td>
-                <td className="px-[1vw] py-[0.7vw] text-[0.78vw]">
-                  <span className="inline-flex items-center gap-[0.35vw] font-medium">
-                    <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
-                    <span className={emp.workingStatus === "Active" ? "text-emerald-700" : "text-amber-700"}>
-                      {emp.workingStatus}
-                    </span>
-                  </span>
-                </td>
-                <td className="px-[1vw] py-[0.7vw] text-right">
-                  {((emp.role === "Admin" || emp.department === "Admin") && !isCurrentRequesterAdmin) ? (
-                    <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
-                      <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
-                    </span>
-                  ) : (
-                    <div className="flex items-center justify-end gap-[0.3vw]">
-                      {canUpdate && (
-                        <button 
-                          onClick={() => openRegModal(emp)}
-                          className="p-[0.35vw] hover:bg-blue-50 rounded-full transition-colors text-gray-400 hover:text-blue-600 cursor-pointer"
-                          title="Edit Employee Details"
-                        >
-                          <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
-                        </button>
-                      )}
-                      {canDelete && (
-                        <button 
-                          onClick={() => handleDeleteEmployee(emp)}
-                          className="p-[0.35vw] hover:bg-rose-50 rounded-full transition-colors text-gray-400 hover:text-rose-600 cursor-pointer"
-                          title="Delete Employee"
-                        >
-                          <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
-                        </button>
-                      )}
-                      {!canUpdate && !canDelete && (
-                        <span className="text-[0.68vw] text-gray-400 italic">View only</span>
-                      )}
-                    </div>
-                  )}
-                </td>
+              <tr className="border-b border-gray-200">
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {paginatedData.map((emp, idx) => (
+                <tr key={emp._id || idx} className="hover:bg-blue-50/20 transition-colors group">
+                  <td className="px-[1vw] py-[0.7vw] text-[0.78vw] text-gray-500 font-medium">
+                    {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
+                  </td>
+                  <td className="px-[1vw] py-[0.7vw]">
+                    <div className="flex items-center gap-[0.75vw]">
+                      <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[0.85vw] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
+                        {emp.profilePicture ? <img src={emp.profilePicture} className="w-full h-full object-cover" /> : emp.name?.charAt(0)?.toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[0.82vw] font-bold text-gray-900 truncate">{emp.name}</div>
+                        <div className="text-[0.7vw] text-gray-500 truncate">{emp.email}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] font-semibold text-gray-700">{emp.userId}</td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700">
+                    {emp.department || "—"}
+                  </td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw]">
+                    <span className={`font-semibold ${emp.role === "Admin"
+                        ? "text-purple-700"
+                        : emp.role === "Supervisor"
+                          ? "text-indigo-700"
+                          : "text-gray-800"
+                      }`}>
+                      {emp.role || "User"}
+                    </span>
+                  </td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.78vw]">
+                    <span className="inline-flex items-center gap-[0.35vw] font-medium">
+                      <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+                      <span className={emp.workingStatus === "Active" ? "text-emerald-700" : "text-amber-700"}>
+                        {emp.workingStatus}
+                      </span>
+                    </span>
+                  </td>
+                  <td className="px-[1vw] py-[0.7vw] text-right">
+                    {((emp.role === "Admin" || emp.department === "Admin") && !isCurrentRequesterAdmin) ? (
+                      <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
+                        <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
+                      </span>
+                    ) : (
+                      <div className="flex items-center justify-end gap-[0.3vw]">
+                        {canUpdate && (
+                          <button
+                            onClick={() => openRegModal(emp)}
+                            className="p-[0.35vw] hover:bg-blue-50 rounded-full transition-colors text-gray-400 hover:text-blue-600 cursor-pointer"
+                            title="Edit Employee Details"
+                          >
+                            <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDeleteEmployee(emp)}
+                            className="p-[0.35vw] hover:bg-rose-50 rounded-full transition-colors text-gray-400 hover:text-rose-600 cursor-pointer"
+                            title="Delete Employee"
+                          >
+                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
+                          </button>
+                        )}
+                        {!canUpdate && !canDelete && (
+                          <span className="text-[0.68vw] text-gray-400 italic">View only</span>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         {paginatedData.length === 0 && (
           <div className="p-[4vw] text-center flex flex-col items-center gap-[1vw]">
@@ -595,7 +594,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             Showing <span className="text-gray-900 font-semibold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-semibold">{filtered.length}</span> employees
           </div>
           <div className="flex items-center gap-[0.6vw]">
-            <button 
+            <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
@@ -621,7 +620,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 );
               })}
             </div>
-            <button 
+            <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
               className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
@@ -652,9 +651,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     </p>
                   </div>
                 </div>
-                <button 
+                <button
                   type="button"
-                  onClick={() => setShowRegModal(false)} 
+                  onClick={() => setShowRegModal(false)}
                   className="p-[0.35vw] text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                 >
                   <X className="w-[1.05vw] h-[1.05vw]" />
@@ -662,8 +661,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
               </div>
 
               {/* Modal Form Body */}
-              <form 
-                onSubmit={handleRegSubmit} 
+              <form
+                onSubmit={handleRegSubmit}
                 autoComplete="off"
                 className="flex-1 overflow-y-auto px-[1.4vw] py-[1.2vw] flex flex-col gap-[1.2vw]"
               >
@@ -677,83 +676,82 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     <User className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                     <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Personal Details</span>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Full Name *
                       </label>
-                      <input 
-                        type="text" 
-                        required 
+                      <input
+                        type="text"
+                        required
                         name="emp_full_name_field"
                         autoComplete="off"
-                        value={regData.name} 
-                        onChange={e => setRegData({...regData, name: e.target.value})} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
-                        placeholder="John Doe" 
+                        value={regData.name}
+                        onChange={e => setRegData({ ...regData, name: e.target.value })}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        placeholder="John Doe"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Employee ID *
                       </label>
-                      <input 
-                        type="text" 
-                        required 
+                      <input
+                        type="text"
+                        required
                         name="emp_id_code_field"
                         autoComplete="off"
-                        value={regData.userId} 
-                        onChange={e => setRegData({...regData, userId: e.target.value})} 
+                        value={regData.userId}
+                        onChange={e => setRegData({ ...regData, userId: e.target.value })}
                         disabled={!!editingEmp}
-                        className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.78vw] transition-colors ${
-                          editingEmp 
-                            ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed" 
+                        className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.78vw] transition-colors ${editingEmp
+                            ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed"
                             : "border-gray-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
-                        }`}
-                        placeholder="EMP001" 
+                          }`}
+                        placeholder="EMP001"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <Mail className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Email Address *
                       </label>
-                      <input 
-                        type="email" 
-                        required 
+                      <input
+                        type="email"
+                        required
                         name="emp_work_email_field"
                         autoComplete="new-email"
-                        value={regData.email} 
-                        onChange={e => setRegData({...regData, email: e.target.value})} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
-                        placeholder="john@akira.com" 
+                        value={regData.email}
+                        onChange={e => setRegData({ ...regData, email: e.target.value })}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        placeholder="john@akira.com"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <Phone className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Phone Number
                       </label>
-                      <input 
-                        type="tel" 
+                      <input
+                        type="tel"
                         name="emp_phone_num_field"
                         autoComplete="off"
-                        value={regData.phoneNumber} 
-                        onChange={e => setRegData({...regData, phoneNumber: e.target.value})} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
-                        placeholder="+91 ..." 
+                        value={regData.phoneNumber}
+                        onChange={e => setRegData({ ...regData, phoneNumber: e.target.value })}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        placeholder="+91 ..."
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Birth *
                       </label>
-                      <input 
-                        type="date" 
-                        required 
+                      <input
+                        type="date"
+                        required
                         autoComplete="off"
-                        value={regData.dob} 
-                        onChange={e => setRegData({...regData, dob: e.target.value})} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors" 
+                        value={regData.dob}
+                        onChange={e => setRegData({ ...regData, dob: e.target.value })}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
@@ -795,9 +793,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             size="md"
                           />
                         </div>
-                        <button 
-                          type="button" 
-                          onClick={() => setShowDeptModal(true)} 
+                        <button
+                          type="button"
+                          onClick={() => setShowDeptModal(true)}
                           className="h-[2.1vw] min-h-[2.1vw] px-[0.6vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.35vw] transition-colors cursor-pointer border border-gray-200 flex items-center justify-center flex-shrink-0"
                           title="Manage Departments"
                         >
@@ -809,13 +807,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <Tag className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Designation *
                       </label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={regData.designation} 
-                        onChange={e => setRegData({...regData, designation: e.target.value})} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
-                        placeholder="Senior Engineer" 
+                      <input
+                        type="text"
+                        required
+                        value={regData.designation}
+                        onChange={e => setRegData({ ...regData, designation: e.target.value })}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        placeholder="Senior Engineer"
                       />
                     </div>
 
@@ -845,18 +843,18 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <IndianRupee className="w-[0.85vw] h-[0.85vw] text-gray-400" /> CTC (Monthly)
                       </label>
-                      <input 
-                        type="number" 
-                        min="0" 
-                        value={regData.ctc} 
+                      <input
+                        type="number"
+                        min="0"
+                        value={regData.ctc}
                         onChange={e => {
                           const val = e.target.value;
                           if (val === "" || Number(val) >= 0) {
-                            setRegData({...regData, ctc: val});
+                            setRegData({ ...regData, ctc: val });
                           }
-                        }} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
-                        placeholder="Enter monthly CTC" 
+                        }}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        placeholder="Enter monthly CTC"
                       />
                     </div>
 
@@ -864,12 +862,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
                         <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Joining *
                       </label>
-                      <input 
-                        type="date" 
-                        required 
-                        value={regData.dateOfJoining} 
-                        onChange={e => setRegData({...regData, dateOfJoining: e.target.value})} 
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors" 
+                      <input
+                        type="date"
+                        required
+                        value={regData.dateOfJoining}
+                        onChange={e => setRegData({ ...regData, dateOfJoining: e.target.value })}
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
@@ -889,12 +887,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
 
                 {/* 3. Profile Picture Section */}
-                <div 
-                  className={`space-y-[0.5vw] p-[0.9vw] rounded-[0.6vw] border-2 transition-all ${
-                    isDraggingFile
+                <div
+                  className={`space-y-[0.5vw] p-[0.9vw] rounded-[0.6vw] border-2 transition-all ${isDraggingFile
                       ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/30"
                       : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
-                  }`}
+                    }`}
                   onDragOver={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -927,9 +924,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     </label>
                     <span className="text-[0.68vw] text-gray-400">Optional: Max 2MB</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-[1.2vw]">
-                    <div 
+                    <div
                       className="w-[3.6vw] h-[3.6vw] rounded-full bg-white border border-gray-300 flex items-center justify-center overflow-hidden shadow-2xs cursor-pointer flex-shrink-0"
                       onClick={() => fileInputRef.current?.click()}
                       title="Click to select image"
@@ -940,15 +937,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <Users className="w-[1.6vw] h-[1.6vw] text-gray-300" />
                       )}
                     </div>
-                    
+
                     <div className="flex-1">
-                      <div 
+                      <div
                         onClick={() => fileInputRef.current?.click()}
-                        className={`flex items-center justify-between px-[0.8vw] py-[0.55vw] border border-dashed rounded-[0.45vw] cursor-pointer transition-all ${
-                          isDraggingFile 
-                            ? "border-blue-500 bg-blue-100/50" 
+                        className={`flex items-center justify-between px-[0.8vw] py-[0.55vw] border border-dashed rounded-[0.45vw] cursor-pointer transition-all ${isDraggingFile
+                            ? "border-blue-500 bg-blue-100/50"
                             : "border-gray-300 hover:border-blue-400 hover:bg-white bg-white/70"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-[0.6vw]">
                           <span className="py-[0.25vw] px-[0.7vw] rounded-[0.35vw] text-[0.74vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-[0.3vw]">
@@ -966,9 +962,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <span className="text-[0.68vw] text-gray-400 font-medium">PNG, JPG, WebP</span>
                       </div>
 
-                      <input 
+                      <input
                         ref={fileInputRef}
-                        type="file" 
+                        type="file"
                         accept="image/*"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
@@ -981,9 +977,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
 
                       {regData.profilePicture && (
-                        <button 
-                          type="button" 
-                          onClick={() => setRegData((prev) => ({ ...prev, profilePicture: null }))} 
+                        <button
+                          type="button"
+                          onClick={() => setRegData((prev) => ({ ...prev, profilePicture: null }))}
                           className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold mt-[0.3vw] flex items-center gap-[0.2vw] transition-colors cursor-pointer"
                         >
                           <X className="w-[0.75vw] h-[0.75vw]" /> Remove Photo
@@ -1005,8 +1001,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Password {!editingEmp && "*"}
                       </label>
                       <div className="relative">
-                        <input 
-                          type={showPassword ? "text" : "password"} 
+                        <input
+                          type={showPassword ? "text" : "password"}
                           name="new_user_secret_code"
                           autoComplete="new-password"
                           autoCorrect="off"
@@ -1015,12 +1011,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           data-lpignore="true"
                           data-1p-ignore="true"
                           required={!editingEmp}
-                          value={regData.password} 
-                          onChange={e => setRegData({...regData, password: e.target.value})} 
+                          value={regData.password}
+                          onChange={e => setRegData({ ...regData, password: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Enter password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
-                        <button 
+                        <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
@@ -1034,8 +1030,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Confirm Password {!editingEmp && "*"}
                       </label>
                       <div className="relative">
-                        <input 
-                          type={showConfirmPassword ? "text" : "password"} 
+                        <input
+                          type={showConfirmPassword ? "text" : "password"}
                           name="confirm_user_secret_code"
                           autoComplete="new-password"
                           autoCorrect="off"
@@ -1044,12 +1040,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           data-lpignore="true"
                           data-1p-ignore="true"
                           required={!editingEmp}
-                          value={regData.confirmPassword} 
-                          onChange={e => setRegData({...regData, confirmPassword: e.target.value})} 
+                          value={regData.confirmPassword}
+                          onChange={e => setRegData({ ...regData, confirmPassword: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Confirm password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors" 
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
-                        <button 
+                        <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
@@ -1063,15 +1059,15 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                 {/* Form Action Buttons (Sticky Footer) */}
                 <div className="pt-[1vw] border-t border-gray-200 flex justify-end gap-[0.6vw] flex-shrink-0">
-                  <button 
-                    type="button" 
-                    onClick={() => setShowRegModal(false)} 
+                  <button
+                    type="button"
+                    onClick={() => setShowRegModal(false)}
                     className="px-[1.2vw] py-[0.5vw] text-gray-600 hover:bg-gray-100 rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="px-[1.6vw] py-[0.5vw] bg-blue-600 text-white rounded-[0.4vw] text-[0.82vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
                   >
                     {editingEmp ? "Update Profile" : "Complete Registration"}
@@ -1083,9 +1079,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         )}
       </AnimatePresence>
 
-      <DepartmentMasterModal 
-        isOpen={showDeptModal} 
-        onClose={() => setShowDeptModal(false)} 
+      <DepartmentMasterModal
+        isOpen={showDeptModal}
+        onClose={() => setShowDeptModal(false)}
         departments={departments}
         onSave={handleDeptSave}
       />

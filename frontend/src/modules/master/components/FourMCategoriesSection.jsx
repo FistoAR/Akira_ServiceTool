@@ -17,7 +17,7 @@ import {
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 9;
 
 const FourMCategoriesSection = ({ items = [], setItems }) => {
   const { canWrite, canUpdate, canDelete } = useModulePermissions("fourM");
@@ -148,9 +148,8 @@ const FourMCategoriesSection = ({ items = [], setItems }) => {
                   return (
                     <div
                       key={seg.id || seg._id || idx}
-                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
-                        isEditingThis ? "bg-cyan-50/70" : "hover:bg-gray-50/70"
-                      }`}
+                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${isEditingThis ? "bg-cyan-50/70" : "hover:bg-gray-50/70"
+                        }`}
                     >
                       {isEditingThis ? (
                         <div className="flex-1 flex items-center gap-[0.5vw]">
@@ -251,11 +250,10 @@ const FourMCategoriesSection = ({ items = [], setItems }) => {
                           key={pNum}
                           type="button"
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
-                            currentPage === pNum
+                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${currentPage === pNum
                               ? "bg-cyan-600 text-white shadow-2xs"
                               : "bg-white border border-gray-200 text-gray-700 hover:border-cyan-400 hover:text-cyan-600"
-                          }`}
+                            }`}
                         >
                           {pNum}
                         </button>
@@ -324,8 +322,8 @@ const FourMCategoriesSection = ({ items = [], setItems }) => {
       </div>
     </div>
   );
-  
-  
+
+
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

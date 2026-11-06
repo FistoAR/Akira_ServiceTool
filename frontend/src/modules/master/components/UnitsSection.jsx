@@ -17,7 +17,7 @@ import {
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 9;
 
 const UnitsSection = ({ units = [], setUnits }) => {
   const { canWrite, canUpdate, canDelete } = useModulePermissions("units");
@@ -149,9 +149,8 @@ const UnitsSection = ({ units = [], setUnits }) => {
                   return (
                     <div
                       key={type.id || type._id || idx}
-                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${
-                        isEditingThis ? "bg-emerald-50/70" : "hover:bg-gray-50/70"
-                      }`}
+                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${isEditingThis ? "bg-emerald-50/70" : "hover:bg-gray-50/70"
+                        }`}
                     >
                       {isEditingThis ? (
                         <div className="flex-1 flex items-center gap-[0.5vw]">
@@ -259,11 +258,10 @@ const UnitsSection = ({ units = [], setUnits }) => {
                           key={pNum}
                           type="button"
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
-                            currentPage === pNum
+                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${currentPage === pNum
                               ? "bg-emerald-600 text-white shadow-2xs"
                               : "bg-white border border-gray-200 text-gray-700 hover:border-emerald-400 hover:text-emerald-600"
-                          }`}
+                            }`}
                         >
                           {pNum}
                         </button>
@@ -332,7 +330,7 @@ const UnitsSection = ({ units = [], setUnits }) => {
       </div>
     </div>
   );
-  
+
 
 };
 
