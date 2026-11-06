@@ -3254,8 +3254,8 @@ export default function ServiceCall() {
             {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
             <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
-              <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-                <div className="flex gap-[0.3vw] flex-wrap items-center">
+              <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+                <div className="flex gap-[0.4vw] flex-wrap items-center">
                   {[
                     { label: "All", dot: "bg-slate-400" },
                     { label: "Registered", dot: "bg-blue-500" },
@@ -3272,17 +3272,17 @@ export default function ServiceCall() {
                       <button
                         key={label}
                         onClick={() => setFilterStatus(label === "All" ? "All" : label)}
-                        className={`flex items-center gap-[0.35vw] px-[0.6vw] py-[0.25vw] rounded-full text-[0.7vw] font-semibold cursor-pointer transition-all ${
+                        className={`flex items-center gap-[0.4vw] px-[0.75vw] py-[0.32vw] rounded-full text-[0.78vw] font-semibold cursor-pointer transition-all ${
                           isActive
                             ? "bg-blue-600 text-white shadow-xs"
-                            : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900"
+                            : "bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:text-slate-900"
                         }`}
                       >
-                        <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${isActive ? "bg-white" : dot}`} />
+                        <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isActive ? "bg-white" : dot}`} />
                         <span>{label}</span>
                         <span
-                          className={`text-[0.62vw] px-[0.3vw] py-[0.02vw] rounded-full font-bold ${
-                            isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"
+                          className={`text-[0.72vw] px-[0.4vw] py-[0.05vw] rounded-full font-bold ml-[0.1vw] ${
+                            isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-600"
                           }`}
                         >
                           {counts[label] ?? 0}
@@ -3293,7 +3293,7 @@ export default function ServiceCall() {
                 </div>
 
                 {/* Scoped Result Count */}
-                <div className="text-[0.72vw] text-slate-500 font-medium">
+                <div className="text-[0.78vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw]">
                   Showing <span className="font-bold text-slate-800">{filteredData.length}</span> calls
                 </div>
               </div>
