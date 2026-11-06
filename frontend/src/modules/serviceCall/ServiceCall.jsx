@@ -41,6 +41,7 @@ import {
   ClipboardList,
   Eye,
   Download,
+  MoreVertical,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -3059,6 +3060,20 @@ export default function ServiceCall() {
 
   const defaultFormData = () => ({ ...emptyForm(), mode: modes[0] || "Phone" });
 
+  // Active action menu popover
+  const [activeActionMenuId, setActiveActionMenuId] = useState(null);
+
+  // Close action menu when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest(".action-menu-container")) {
+        setActiveActionMenuId(null);
+      }
+    };
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, []);
+
   const counts = useMemo(() => {
     const c = {
       All: 0,
@@ -3133,21 +3148,183 @@ export default function ServiceCall() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
+            className="flex flex-col gap-[1vw]"
           >
-            {/* Toolbar */}
-            <div className="flex items-center justify-between bg-white px-[1vw] py-[0.7vw] rounded-[0.7vw] shadow-xs border border-gray-200 mb-[0.9vw] gap-[1vw]">
+            {/* Top Page Header with Banner Background */}
+            <div className="relative overflow-hidden bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white rounded-[0.9vw] p-[1.2vw] border border-blue-100/80 shadow-2xs">
+              <div className="relative z-10">
+                <div className="w-[2.2vw] h-[0.25vw] bg-blue-600 rounded-full mb-[0.5vw]"></div>
+                <h1 className="text-[1.35vw] font-bold text-gray-900 tracking-tight leading-tight">
+                  Service Call Registry
+                </h1>
+                <p className="text-[0.75vw] text-gray-500 font-medium mt-[0.15vw]">
+                  Track, manage and resolve all service calls efficiently
+                </p>
+              </div>
+
+              {/* Decorative Subtle Vector Art on the Right Side */}
+              <div className="absolute right-[1.5vw] top-1/2 -translate-y-1/2 flex items-center gap-[1.2vw] opacity-25 pointer-events-none select-none">
+                <div className="relative">
+                  <div className="w-[4.5vw] h-[4.5vw] rounded-full border-[0.35vw] border-blue-400 border-dashed animate-[spin_40s_linear_infinite]" />
+                  <Settings className="w-[2.2vw] h-[2.2vw] text-blue-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                </div>
+                <div className="flex flex-col items-center gap-[0.4vw]">
+                  <ClipboardList className="w-[3.2vw] h-[3.2vw] text-indigo-600" />
+                  <div className="w-[2.5vw] h-[0.3vw] bg-indigo-300 rounded-full" />
+                </div>
+                <Wrench className="w-[2.8vw] h-[2.8vw] text-blue-500 rotate-45 -ml-[0.6vw]" />
+              </div>
+            </div>
+
+            {/* Top 4 Metric KPI Cards */}
+            <div className="grid grid-cols-4 gap-[1vw]">
+              {/* 1. Total Calls */}
+              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                    <Phone className="w-[1.2vw] h-[1.2vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
+                      {counts.All}
+                    </div>
+                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
+                      Total Calls
+                    </div>
+                  </div>
+                </div>
+                {/* Blue Sparkline SVG */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-blue-500" viewBox="0 0 100 30" fill="none">
+                  <path
+                    d="M5 24 Q 25 26, 45 15 T 75 12 T 95 6"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M5 24 Q 25 26, 45 15 T 75 12 T 95 6 L 95 28 L 5 28 Z"
+                    fill="currentColor"
+                    className="opacity-10 text-blue-500"
+                  />
+                </svg>
+              </div>
+
+              {/* 2. Resolved */}
+              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                    <CheckCircle className="w-[1.2vw] h-[1.2vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
+                      {counts.Resolved}
+                    </div>
+                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
+                      Resolved
+                    </div>
+                  </div>
+                </div>
+                {/* Green Sparkline SVG */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-emerald-500" viewBox="0 0 100 30" fill="none">
+                  <path
+                    d="M5 25 Q 30 20, 50 18 T 75 8 T 95 5"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M5 25 Q 30 20, 50 18 T 75 8 T 95 5 L 95 28 L 5 28 Z"
+                    fill="currentColor"
+                    className="opacity-10 text-emerald-500"
+                  />
+                </svg>
+              </div>
+
+              {/* 3. Pending */}
+              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                    <Clock className="w-[1.2vw] h-[1.2vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
+                      {counts.Pending}
+                    </div>
+                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
+                      Pending
+                    </div>
+                  </div>
+                </div>
+                {/* Amber Sparkline SVG */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-amber-500" viewBox="0 0 100 30" fill="none">
+                  <path
+                    d="M5 22 Q 30 25, 55 16 T 80 18 T 95 10"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M5 22 Q 30 25, 55 16 T 80 18 T 95 10 L 95 28 L 5 28 Z"
+                    fill="currentColor"
+                    className="opacity-10 text-amber-500"
+                  />
+                </svg>
+              </div>
+
+              {/* 4. Critical */}
+              <div className="bg-white rounded-[0.8vw] p-[1vw] border border-gray-100 shadow-2xs hover:shadow-sm transition-all flex items-center justify-between">
+                <div className="flex items-center gap-[0.8vw]">
+                  <div className="w-[2.6vw] h-[2.6vw] rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
+                    <AlertCircle className="w-[1.2vw] h-[1.2vw]" />
+                  </div>
+                  <div>
+                    <div className="text-[1.3vw] font-extrabold text-gray-900 leading-none">
+                      {counts.Critical}
+                    </div>
+                    <div className="text-[0.7vw] font-semibold text-gray-400 mt-[0.2vw]">
+                      Critical
+                    </div>
+                  </div>
+                </div>
+                {/* Red Sparkline SVG */}
+                <svg className="w-[4.5vw] h-[1.8vw] text-rose-500" viewBox="0 0 100 30" fill="none">
+                  <path
+                    d="M5 26 Q 25 24, 45 22 T 70 14 T 95 8"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M5 26 Q 25 24, 45 22 T 70 14 T 95 8 L 95 28 L 5 28 Z"
+                    fill="currentColor"
+                    className="opacity-10 text-rose-500"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Toolbar: Search, Date Range, Priority, Status Dropdown, and Action Button */}
+            <div className="flex items-center justify-between bg-white px-[1vw] py-[0.7vw] rounded-[0.7vw] shadow-2xs border border-gray-200 gap-[0.8vw]">
+              {/* Left side: Search and Dates */}
               <div className="flex items-center gap-[0.8vw] flex-1">
-                <div className="relative flex-1 max-w-[22vw]">
+                {/* Search Box */}
+                <div className="relative flex-1 max-w-[24vw]">
                   <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.95vw] h-[0.95vw]" />
                   <input
                     type="text"
-                    placeholder="Search by customer, call no, engineer…"
+                    placeholder="Search by Customer, Call No, Party Code or Engineer..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-[2.4vw] pr-[1vw] h-[2.2vw] border border-gray-200 rounded-[0.5vw] text-[0.8vw] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-gray-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+                    className="w-full pl-[2.4vw] pr-[1vw] h-[2.2vw] border border-gray-200 rounded-[0.5vw] text-[0.78vw] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-gray-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
                   />
                 </div>
-                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.5vw] h-[2.2vw] px-[0.65vw] bg-gray-50/50 text-[0.78vw]">
+
+                {/* Inline Date Filter */}
+                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.5vw] h-[2.2vw] px-[0.65vw] bg-gray-50/50 text-[0.76vw]">
                   <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
                     From
                   </span>
@@ -3155,10 +3332,9 @@ export default function ServiceCall() {
                     type="date"
                     value={filterFromDate || ""}
                     onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="text-[0.78vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                    className="text-[0.76vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
-                </div>
-                <div className="flex items-center gap-[0.35vw] border border-gray-200 rounded-[0.5vw] h-[2.2vw] px-[0.65vw] bg-gray-50/50 text-[0.78vw]">
+                  <span className="text-gray-400 mx-[0.1vw]">-</span>
                   <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
                     To
                   </span>
@@ -3167,22 +3343,24 @@ export default function ServiceCall() {
                     value={filterToDate || ""}
                     min={filterFromDate || undefined}
                     onChange={(e) => setFilterToDate(e.target.value)}
-                    className="text-[0.78vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                    className="text-[0.76vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
+                  {(filterFromDate || filterToDate) && (
+                    <button
+                      onClick={() => {
+                        setFilterFromDate("");
+                        setFilterToDate("");
+                      }}
+                      className="text-[0.7vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.3vw]"
+                      title="Clear date filter"
+                    >
+                      Clear
+                    </button>
+                  )}
                 </div>
-                {(filterFromDate || filterToDate) && (
-                  <button
-                    onClick={() => {
-                      setFilterFromDate("");
-                      setFilterToDate("");
-                    }}
-                    className="text-[0.72vw] text-gray-400 hover:text-rose-600 underline font-medium cursor-pointer ml-[-0.2vw]"
-                    title="Clear date filter"
-                  >
-                    Clear dates
-                  </button>
-                )}
               </div>
+
+              {/* Right side: Priority, Status Filter Dropdown, Bulk Delete & Register Button */}
               <div className="flex gap-[0.6vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
@@ -3198,19 +3376,43 @@ export default function ServiceCall() {
                     </motion.button>
                   )}
                 </AnimatePresence>
+
+                {/* Priority Dropdown */}
                 <div className="relative">
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value)}
                     className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.2vw] text-[0.78vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                   >
-                    <option value="All">All Priorities</option>
+                    <option value="All">Priority</option>
                     {PRIORITIES.map((p) => (
-                      <option key={p}>{p}</option>
+                      <option key={p} value={p}>{p}</option>
                     ))}
                   </select>
                   <ChevronDown className="w-[0.85vw] h-[0.85vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
                 </div>
+
+                {/* Status Dropdown */}
+                <div className="relative">
+                  <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.2vw] text-[0.78vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+                  >
+                    <option value="All">Status</option>
+                    <option value="Registered">Registered</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Supporting">Supporting</option>
+                    <option value="Field Visit">Field Visit</option>
+                    <option value="Escalating">Escalating</option>
+                    <option value="Critical">Critical</option>
+                    <option value="Resolved">Resolved</option>
+                  </select>
+                  <ChevronDown className="w-[0.85vw] h-[0.85vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
+                </div>
+
+                {/* Register Call Button */}
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
@@ -3223,61 +3425,61 @@ export default function ServiceCall() {
               </div>
             </div>
 
-            {/* Status Summary Bar */}
-            <div className="flex gap-[0.5vw] mb-[0.9vw] flex-wrap items-center">
+            {/* Status Summary Pill Bar */}
+            <div className="flex gap-[0.5vw] flex-wrap items-center">
               {[
                 {
                   label: "All",
                   color: "bg-white text-gray-700 border-gray-200 hover:border-gray-300",
-                  activeCls: "bg-gray-900 text-white border-gray-900 shadow-2xs",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-gray-400",
                 },
                 {
                   label: "Registered",
-                  color: "bg-white text-purple-700 border-purple-200/80 hover:bg-purple-50/50",
-                  activeCls: "bg-purple-600 text-white border-purple-600 shadow-2xs",
-                  dot: "bg-purple-500",
-                },
-                {
-                  label: "Assigned",
-                  color: "bg-white text-blue-700 border-blue-200/80 hover:bg-blue-50/50",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
                   activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-blue-500",
                 },
                 {
+                  label: "Assigned",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  dot: "bg-indigo-500",
+                },
+                {
                   label: "Pending",
-                  color: "bg-white text-amber-700 border-amber-200/80 hover:bg-amber-50/50",
-                  activeCls: "bg-amber-600 text-white border-amber-600 shadow-2xs",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-amber-500",
                 },
                 {
                   label: "Supporting",
-                  color: "bg-white text-orange-700 border-orange-200/80 hover:bg-orange-50/50",
-                  activeCls: "bg-orange-600 text-white border-orange-600 shadow-2xs",
-                  dot: "bg-orange-500",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  dot: "bg-cyan-500",
                 },
                 {
                   label: "Field Visit",
-                  color: "bg-white text-teal-700 border-teal-200/80 hover:bg-teal-50/50",
-                  activeCls: "bg-teal-600 text-white border-teal-600 shadow-2xs",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-teal-500",
                 },
                 {
                   label: "Escalating",
-                  color: "bg-white text-rose-700 border-rose-200/80 hover:bg-rose-50/50",
-                  activeCls: "bg-rose-600 text-white border-rose-600 shadow-2xs",
-                  dot: "bg-rose-500",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
+                  dot: "bg-orange-500",
                 },
                 {
                   label: "Critical",
-                  color: "bg-white text-red-700 border-red-200/80 hover:bg-red-50/50",
-                  activeCls: "bg-red-600 text-white border-red-600 shadow-2xs",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-red-500",
                 },
                 {
                   label: "Resolved",
-                  color: "bg-white text-emerald-700 border-emerald-200/80 hover:bg-emerald-50/50",
-                  activeCls: "bg-emerald-600 text-white border-emerald-600 shadow-2xs",
+                  color: "bg-white text-gray-700 border-gray-200 hover:bg-gray-50",
+                  activeCls: "bg-blue-600 text-white border-blue-600 shadow-2xs",
                   dot: "bg-emerald-500",
                 },
               ].map(({ label, color, activeCls, dot }) => {
@@ -3288,19 +3490,19 @@ export default function ServiceCall() {
                     onClick={() =>
                       setFilterStatus(label === "All" ? "All" : label)
                     }
-                    className={`flex items-center gap-[0.45vw] px-[0.8vw] py-[0.35vw] rounded-[0.4vw] border font-semibold text-[0.74vw] cursor-pointer transition-all ${
+                    className={`flex items-center gap-[0.45vw] px-[0.75vw] py-[0.32vw] rounded-full border font-semibold text-[0.72vw] cursor-pointer transition-all ${
                       isActive ? activeCls : `${color} opacity-90 hover:opacity-100`
                     }`}
                   >
                     <span
-                      className={`w-[0.45vw] h-[0.45vw] rounded-full ${
+                      className={`w-[0.4vw] h-[0.4vw] rounded-full ${
                         isActive ? "bg-white" : dot
                       }`}
                     />
                     <span>{label}</span>
                     <span
-                      className={`text-[0.68vw] px-[0.35vw] py-[0.05vw] rounded-full font-bold ${
-                        isActive ? "bg-white/20 text-white" : "bg-gray-100 text-gray-700"
+                      className={`text-[0.66vw] px-[0.32vw] py-[0.02vw] rounded-full font-bold ${
+                        isActive ? "bg-white/20 text-white" : "text-gray-500"
                       }`}
                     >
                       {counts[label] ?? 0}
@@ -3311,13 +3513,13 @@ export default function ServiceCall() {
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-[0.7vw] shadow-2xs border border-gray-200 flex flex-col w-full overflow-hidden">
-              <div className="overflow-x-auto overflow-y-auto max-h-[65vh] min-h-[60vh] w-full rounded-t-[0.7vw]">
-                <table className="min-w-[120vw] w-full text-left border-collapse">
-                  <thead className="bg-slate-50 sticky top-0 z-30 border-b border-gray-200">
+            <div className="bg-white rounded-[0.8vw] shadow-2xs border border-gray-200 flex flex-col w-full overflow-hidden">
+              <div className="overflow-x-auto overflow-y-auto max-h-[60vh] min-h-[55vh] w-full">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-slate-50/80 sticky top-0 z-20 border-b border-gray-200">
                     <tr>
                       {canDelete && !isSupervisor && (
-                        <th className="p-[0.65vw] border-r border-gray-200 w-[3%] text-center">
+                        <th className="p-[0.7vw] w-[3%] text-center">
                           <button
                             onClick={toggleSelectPage}
                             className="flex items-center justify-center w-full cursor-pointer"
@@ -3330,30 +3532,31 @@ export default function ServiceCall() {
                           </button>
                         </th>
                       )}
-                      <th className="p-[0.65vw] font-bold text-gray-600 uppercase tracking-wider border-r border-gray-200 text-center w-[3%] text-[0.72vw]">
-                        S.No
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                        Call No
                       </th>
-                      {[
-                        "Call Info",
-                        "Category",
-                        "Customer",
-                        "Product",
-                        "Segment",
-                        "Error Code",
-                        "Mode",
-                        "Priority",
-                        "Assigned",
-                        "Status",
-                        "Summary",
-                      ].map((h) => (
-                        <th
-                          key={h}
-                          className="p-[0.65vw] font-bold text-gray-600 uppercase tracking-wider border-r border-gray-200 text-center whitespace-nowrap text-[0.72vw]"
-                        >
-                          {h}
-                        </th>
-                      ))}
-                      <th className="p-[0.65vw] font-bold text-gray-600 uppercase tracking-wider border-l border-gray-200 text-center whitespace-nowrap text-[0.72vw] sticky top-0 right-0 bg-slate-50 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                        Date & Time
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                        Customer
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                        Product / Issue
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw] text-center">
+                        Error Code
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                        Caller Details
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw] text-center">
+                        Priority
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw]">
+                        Status
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-gray-600 text-[0.72vw] text-center sticky top-0 right-0 bg-slate-50/95 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]">
                         Actions
                       </th>
                     </tr>
@@ -3361,7 +3564,7 @@ export default function ServiceCall() {
                   <tbody className="divide-y divide-gray-100">
                     {isLoading ? (
                       <tr>
-                        <td colSpan={13} className="py-[10vh] text-center">
+                        <td colSpan={10} className="py-[10vh] text-center">
                           <div className="flex flex-col items-center justify-center gap-[1vw]">
                             <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
                             <span className="text-[1vw] font-bold text-blue-600">
@@ -3371,8 +3574,7 @@ export default function ServiceCall() {
                         </td>
                       </tr>
                     ) : paginatedData.length > 0 ? (
-                      paginatedData.map((row, i) => {
-                        const sn = (currentPage - 1) * ITEMS_PER_PAGE + i + 1;
+                      paginatedData.map((row) => {
                         const allProducts =
                           row._products?.length > 0
                             ? row._products
@@ -3392,7 +3594,6 @@ export default function ServiceCall() {
                               getStatusCfg(rawStatus).label || "Registered";
                             return mappedLabel === filterStatus;
                           });
-                          // If call-level status matches but products get filtered out (e.g. Critical), show all products
                           if (
                             displayProducts.length === 0 &&
                             row.status === filterStatus
@@ -3405,7 +3606,6 @@ export default function ServiceCall() {
                         const rowId = row.id || row._id;
                         const isSelected = selectedItems.has(rowId);
 
-                        // Only render the row if there are products to display
                         if (rowCount === 0) return null;
 
                         return displayProducts.map((prod, pIdx) => {
@@ -3418,375 +3618,258 @@ export default function ServiceCall() {
                               "resolved";
                           const criticalCellClass =
                             isCritical && !isResolved
-                              ? "border-t-[0.15vw] border-b-[0.15vw] border-red-300 first:border-l-[0.15vw] last:border-r-[0.15vw]"
-                              : "border-slate-400";
+                              ? "bg-red-50/30"
+                              : "";
                           const bgClass = isSelected
-                            ? "bg-blue-50"
+                            ? "bg-blue-50/70"
                             : isResolved
-                              ? "bg-emerald-50/60 hover:bg-emerald-100/60"
-                              : "hover:bg-gray-50";
+                              ? "bg-emerald-50/40 hover:bg-emerald-50/80"
+                              : "hover:bg-gray-50/70";
 
                           return (
                             <tr
                               key={`${row.id}-${pIdx}`}
-                              className={`transition-colors border-b border-slate-400 ${bgClass}`}
+                              className={`transition-colors border-b border-gray-100 ${bgClass} ${criticalCellClass}`}
                             >
-                              {/* 0. Select + S.No (rowSpan) */}
+                              {/* 0. Select Checkbox */}
                               {pIdx === 0 && (
                                 <>
                                   {canDelete && !isSupervisor && (
                                     <td
                                       rowSpan={rowCount}
-                                      className={`p-[0.8vw] border-r text-center align-middle ${criticalCellClass}`}
+                                      className="p-[0.7vw] text-center align-middle"
                                     >
                                       <button
                                         onClick={() => toggleSelect(rowId)}
                                         className="flex items-center justify-center w-full cursor-pointer"
                                       >
                                         {isSelected ? (
-                                          <CheckSquare className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                                          <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
                                         ) : (
-                                          <Square className="w-[1.1vw] h-[1.1vw] text-gray-300 hover:text-gray-400" />
+                                          <Square className="w-[1vw] h-[1vw] text-gray-300 hover:text-gray-400" />
                                         )}
                                       </button>
                                     </td>
                                   )}
-                                  <td
-                                    rowSpan={rowCount}
-                                    className={`p-[0.8vw] border-r text-gray-600 font-medium text-center align-middle text-[0.78vw] ${criticalCellClass}`}
-                                  >
-                                    {sn}
-                                  </td>
                                 </>
                               )}
 
-                              {/* 1. Call Info — Num + DT (rowSpan) */}
+                              {/* 1. Call No */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.8vw] border-r align-middle whitespace-nowrap ${criticalCellClass}`}
-                                >
-                                  <div className="font-mono text-center text-[0.78vw] font-bold text-blue-600 mb-[0.1vw] whitespace-nowrap">
-                                    {row.callNumber}
-                                  </div>
-                                  <div className="text-[0.62vw] text-center text-gray-400 whitespace-nowrap uppercase">
-                                    {(() => {
-                                      try {
-                                        const d = new Date(
-                                          row.timestamp || row.dateTime,
-                                        );
-                                        if (isNaN(d))
-                                          return row.dateTime || "—";
-                                        return d
-                                          .toLocaleString("en-IN", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric",
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                            hour12: true,
-                                          })
-                                          .toUpperCase();
-                                      } catch {
-                                        return row.dateTime || "—";
-                                      }
-                                    })()}
-                                  </div>
-                                </td>
-                              )}
-
-                              {/* 2. Category (rowSpan) */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className={`p-[0.8vw] text-center border-r align-middle whitespace-nowrap ${criticalCellClass}`}
-                                >
-                                  <span
-                                    className={`px-[0.5vw] py-[0.15vw]  rounded text-[0.68vw] font-bold border whitespace-nowrap ${getTypeColor(row.customerType || "All")}`}
-                                  >
-                                    {row.customerType || "—"}
-                                  </span>
-                                </td>
-                              )}
-
-                              {/* 3. Customer (rowSpan) */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className={`p-[0.8vw] border-r align-middle whitespace-nowrap ${criticalCellClass}`}
-                                >
-                                  <div
-                                    className="font-semibold text-center text-gray-800 text-[0.78vw] truncate max-w-[12vw]"
-                                    title={row.customerName}
-                                  >
-                                    {row.customerName || "—"}
-                                  </div>
-                                  <div className="flex items-center justify-center gap-[0.4vw] mt-[0.1vw]">
-                                    {row.partyCode && (
-                                      <div className="text-[0.6vw] text-gray-400 font-mono">
-                                        {row.partyCode}
-                                      </div>
-                                    )}
-                                    {(row.locationType || "IPR") && (
-                                      <span
-                                        className={`text-[0.55vw] px-[0.3vw] py-[0.05vw] rounded font-bold border ${row.locationType === "Site" ? "bg-orange-50 text-orange-600 border-orange-200" : "bg-purple-50 text-purple-600 border-purple-200"}`}
-                                      >
-                                        {row.locationType || "IPR"}
-                                      </span>
-                                    )}
-                                    {row.site && (
-                                      <span className="text-[0.55vw] px-[0.3vw] py-[0.05vw] rounded font-bold border bg-blue-50 text-blue-600 border-blue-200">
-                                        {row.site}
-                                      </span>
-                                    )}
-                                  </div>
-                                </td>
-                              )}
-
-                              {/* 4. Product */}
-                              <td
-                                className={`px-[0.8vw] py-[0.55vw] text-center border-r align-middle whitespace-nowrap ${criticalCellClass}`}
-                              >
-                                <div className="flex flex-col text-center items-center whitespace-nowrap">
-                                  <div
-                                    className="text-[0.75vw] font-semibold text-gray-800 truncate max-w-[15vw]"
-                                    title={
-                                      prod?.productModel ||
-                                      prod?.itemCode ||
-                                      "—"
-                                    }
-                                  >
-                                    {prod?.productModel ||
-                                      prod?.itemCode ||
-                                      "—"}
-                                  </div>
-                                  {prod?.serialNumber && (
-                                    <div className="text-[0.62vw] text-gray-400 font-mono">
-                                      SN: {prod.serialNumber}
-                                    </div>
-                                  )}
-                                </div>
-                              </td>
-
-                              {/* 5. Segment */}
-                              <td
-                                className={`px-[0.8vw] py-[0.55vw] text-center border-r align-middle ${criticalCellClass}`}
-                              >
-                                {prod?.productSegment ? (
-                                  <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200 px-[0.45vw] py-[0.12vw] rounded text-[0.68vw] font-semibold whitespace-nowrap">
-                                    {prod.productSegment}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-300 text-[0.72vw]">
-                                    —
-                                  </span>
-                                )}
-                              </td>
-
-                              {/* 6. Error Code */}
-                              <td
-                                className={`px-[0.8vw] py-[0.55vw] text-center border-r text-center align-middle ${criticalCellClass}`}
-                              >
-                                {prod?.errorCode ? (
-                                  <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.15vw] rounded text-[0.72vw] font-mono font-bold uppercase">
-                                    {prod.errorCode}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-300 text-[0.72vw]">
-                                    —
-                                  </span>
-                                )}
-                              </td>
-
-                              {/* 7. Mode (rowSpan) */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className={`p-[0.8vw] text-center border-r align-middle text-[0.75vw] text-gray-600 whitespace-nowrap ${criticalCellClass}`}
-                                >
-                                  {row.mode || "—"}
-                                </td>
-                              )}
-
-                              {/* 8. Priority (rowSpan) */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className={`p-[0.8vw] text-center border-r align-middle whitespace-nowrap ${criticalCellClass}`}
-                                >
-                                  <span
-                                    className={`px-[0.5vw] py-[0.2vw] rounded text-[0.72vw] font-bold whitespace-nowrap ${PRIORITY_COLORS[row.priority] || "bg-gray-100 text-gray-600"}`}
-                                  >
-                                    {row.priority}
-                                  </span>
-                                </td>
-                              )}
-
-                              {/* 9. Assigned Person */}
-                              {(() => {
-                                const name =
-                                  prod?._assignedEngineerName ||
-                                  row?.assignedEngineerName ||
-                                  "";
-                                const engId =
-                                  prod?._assignedEngineerId ||
-                                  row?.assignedEngineer ||
-                                  "";
-                                const isReal =
-                                  !!name && name !== "Auto-assign Fallback";
-                                return (
-                                  <td
-                                    className={`px-[0.8vw] py-[0.55vw] text-center border-r align-middle ${criticalCellClass}`}
-                                  >
-                                    {isReal ? (
-                                      <div className="flex items-center justify-center gap-[0.4vw]">
-                                        <div
-                                          className={`w-[1.4vw] h-[1.4vw] rounded-full bg-gradient-to-br ${(() => {
-                                            const colors = [
-                                              "from-blue-400 to-blue-600",
-                                              "from-purple-400 to-purple-600",
-                                              "from-green-400 to-green-600",
-                                              "from-orange-400 to-orange-600",
-                                              "from-pink-400 to-pink-600",
-                                              "from-teal-400 to-teal-600",
-                                            ];
-                                            let h = 0;
-                                            for (
-                                              let i = 0;
-                                              i < name.length;
-                                              i++
-                                            )
-                                              h =
-                                                name.charCodeAt(i) +
-                                                ((h << 5) - h);
-                                            return colors[
-                                              Math.abs(h) % colors.length
-                                            ];
-                                          })()} flex items-center justify-center flex-shrink-0`}
-                                        >
-                                          <span className="text-white text-[0.5vw] font-bold">
-                                            {name
-                                              .split(" ")
-                                              .map((n) => n[0])
-                                              .join("")
-                                              .toUpperCase()
-                                              .slice(0, 2)}
-                                          </span>
-                                        </div>
-                                        <div className="min-w-0 flex flex-col items-start text-left">
-                                          <div
-                                            className="text-[0.72vw] font-semibold text-gray-800 truncate max-w-[7vw]"
-                                            title={name}
-                                          >
-                                            {name}
-                                          </div>
-                                          {engId && (
-                                            <div
-                                              className="text-[0.55vw] text-gray-500 font-medium truncate max-w-[7vw]"
-                                              title={engId}
-                                            >
-                                              {engId}
-                                            </div>
-                                          )}
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <span className="inline-flex items-center gap-[0.3vw] bg-amber-50 text-amber-600 border border-amber-200 px-[0.45vw] py-[0.12vw] rounded text-[0.65vw] font-semibold whitespace-nowrap">
-                                        <span className="w-[0.35vw] h-[0.35vw] rounded-full bg-amber-400 flex-shrink-0" />
-                                        Yet to Assign
-                                      </span>
-                                    )}
-                                  </td>
-                                );
-                              })()}
-
-                              {/* 10. Status */}
-                              <td
-                                className={`px-[0.8vw] py-[0.55vw] text-center border-r align-middle ${criticalCellClass}`}
-                              >
-                                {(() => {
-                                  const status = getProductStatus(
-                                    prod,
-                                    effectiveStatus,
-                                  );
-
-                                  const cfg = getStatusCfg(status);
-                                  const isProdCritical =
-                                    prod?._isCritical === true;
-                                  return (
-                                    <div className="flex flex-col items-center gap-[0.2vw]">
-                                      <span
-                                        className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.2vw] rounded text-[0.7vw] font-bold border ${cfg.cls}`}
-                                      >
-                                        {isProdCritical ? (
-                                          <AlertTriangle className="w-[0.8vw] h-[0.8vw] text-red-600 animate-pulse" />
-                                        ) : (
-                                          <span
-                                            className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`}
-                                          />
-                                        )}
-                                        {cfg.label}
-                                      </span>
-                                    </div>
-                                  );
-                                })()}
-                              </td>
-
-                              {/* 11. Summary (rowSpan) */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className={`px-[0.8vw] py-[0.55vw] text-center border-r align-middle ${criticalCellClass}`}
+                                  className="p-[0.7vw] align-middle whitespace-nowrap"
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="inline-flex items-center gap-[0.4vw] px-[0.6vw] py-[0.3vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded text-[0.75vw] font-semibold transition-all shadow-sm active:scale-95"
-                                    title="View Call Summary"
+                                    className="font-mono text-left text-[0.78vw] font-bold text-blue-600 hover:text-blue-800 hover:underline block"
                                   >
-                                    <ClipboardList className="w-[1vw] h-[1vw]" />
-                                    Summary
+                                    {row.callNumber}
                                   </button>
                                 </td>
                               )}
 
-                              {/* 12. Actions (rowSpan) */}
+                              {/* 2. Date & Time */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`px-[1vw] py-[0.4vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.1)] ${criticalCellClass} border-l border-slate-400`}
+                                  className="p-[0.7vw] align-middle whitespace-nowrap text-[0.72vw] text-gray-500"
                                 >
-                                  <div className="flex items-center justify-center gap-[0.8vw]">
-                                    {/* Edit Button */}
-                                    {canUpdate && !isSupervisor && (
-                                      <button
-                                        onClick={() => goToEdit(row)}
-                                        title="Edit Call Details"
-                                        className="group flex flex-col items-center gap-[0.2vw] text-gray-400 hover:text-blue-600 transition-all cursor-pointer"
-                                      >
-                                        <div className="p-[0.4vw] rounded-[0.5vw] bg-gray-50 border border-slate-400 group-hover:bg-blue-50 group-hover:border-blue-200 group-hover:shadow-sm transition-all">
-                                          <Edit3 className="w-[1vw] h-[1vw]" />
-                                        </div>
-                                        <span className="text-[0.52vw] font-bold uppercase tracking-wider group-hover:text-blue-700">
-                                          Edit
-                                        </span>
-                                      </button>
-                                    )}
+                                  {(() => {
+                                    try {
+                                      const d = new Date(
+                                        row.timestamp || row.dateTime,
+                                      );
+                                      if (isNaN(d))
+                                        return row.dateTime || "—";
+                                      const datePart = d.toLocaleDateString("en-GB", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                      });
+                                      const timePart = d.toLocaleTimeString("en-US", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: true,
+                                      });
+                                      return `${datePart}, ${timePart}`;
+                                    } catch {
+                                      return row.dateTime || "—";
+                                    }
+                                  })()}
+                                </td>
+                              )}
 
-                                    {/* History Button */}
-                                    <button
-                                      onClick={() =>
-                                        setHistoryModalProduct(row)
-                                      }
-                                      title="View Call History"
-                                      className="group flex flex-col items-center gap-[0.2vw] text-gray-400 hover:text-indigo-600 transition-all cursor-pointer"
-                                    >
-                                      <div className="p-[0.4vw] rounded-[0.5vw] bg-gray-50 border border-slate-400 group-hover:bg-indigo-50 group-hover:border-indigo-200 group-hover:shadow-sm transition-all">
-                                        <History className="w-[1vw] h-[1vw]" />
-                                      </div>
-                                      <span className="text-[0.52vw] font-bold uppercase tracking-wider group-hover:text-indigo-700 whitespace-nowrap">
-                                        History
+                              {/* 3. Customer */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className="p-[0.7vw] align-middle whitespace-nowrap"
+                                >
+                                  <div
+                                    className="font-semibold text-gray-800 text-[0.78vw] truncate max-w-[14vw]"
+                                    title={row.customerName}
+                                  >
+                                    {row.customerName || "—"}
+                                  </div>
+                                  <div className="flex items-center gap-[0.35vw] mt-[0.1vw]">
+                                    {row.partyCode && (
+                                      <span className="text-[0.62vw] text-gray-400 font-mono">
+                                        {row.partyCode}
                                       </span>
+                                    )}
+                                    {row.customerType && row.customerType !== "All" && (
+                                      <span className={`text-[0.55vw] px-[0.3vw] py-[0.05vw] rounded font-bold border ${getTypeColor(row.customerType)}`}>
+                                        {row.customerType}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                              )}
+
+                              {/* 4. Product / Issue */}
+                              <td className="p-[0.7vw] align-middle whitespace-nowrap">
+                                <div className="text-[0.76vw] font-semibold text-gray-800 truncate max-w-[15vw]" title={prod?.productModel || prod?.itemCode || "—"}>
+                                  {prod?.productModel || prod?.itemCode || "—"}
+                                </div>
+                                {prod?.serialNumber && (
+                                  <div className="text-[0.62vw] text-gray-400 font-mono">
+                                    SN: {prod.serialNumber}
+                                  </div>
+                                )}
+                              </td>
+
+                              {/* 5. Error Code */}
+                              <td className="p-[0.7vw] text-center align-middle whitespace-nowrap">
+                                {prod?.errorCode ? (
+                                  <span className="bg-red-50 text-red-600 border border-red-200 px-[0.45vw] py-[0.1vw] rounded text-[0.68vw] font-mono font-bold">
+                                    {prod.errorCode}
+                                  </span>
+                                ) : (
+                                  <span className="text-gray-300 text-[0.72vw]">-</span>
+                                )}
+                              </td>
+
+                              {/* 6. Caller Details */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className="p-[0.7vw] align-middle whitespace-nowrap"
+                                >
+                                  <div className="flex items-center gap-[0.4vw]">
+                                    <Phone className="w-[0.85vw] h-[0.85vw] text-gray-400" />
+                                    <div>
+                                      <div className="text-[0.74vw] font-semibold text-gray-700">
+                                        {row.contactNumber || "+91 —"}
+                                      </div>
+                                      <div className="text-[0.6vw] text-gray-400 capitalize">
+                                        {row.mode || "Phone"}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                              )}
+
+                              {/* 7. Priority */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className="p-[0.7vw] text-center align-middle whitespace-nowrap"
+                                >
+                                  {(() => {
+                                    const p = row.priority || "Medium";
+                                    let badgeStyle = "bg-yellow-50 text-yellow-700 border border-yellow-200";
+                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
+                                    else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
+                                    else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                                    return (
+                                      <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.68vw] font-bold ${badgeStyle}`}>
+                                        {p}
+                                      </span>
+                                    );
+                                  })()}
+                                </td>
+                              )}
+
+                              {/* 8. Status */}
+                              <td className="p-[0.7vw] align-middle whitespace-nowrap">
+                                {(() => {
+                                  const status = getProductStatus(prod, effectiveStatus);
+                                  const cfg = getStatusCfg(status);
+                                  return (
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] font-semibold text-gray-700">
+                                      <span className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
+                                      {cfg.label}
+                                    </span>
+                                  );
+                                })()}
+                              </td>
+
+                              {/* 9. Actions (3-Dot Menu) */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className="p-[0.7vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
+                                >
+                                  <div className="relative inline-block text-left action-menu-container">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setActiveActionMenuId(activeActionMenuId === rowId ? null : rowId);
+                                      }}
+                                      className="p-[0.35vw] text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all cursor-pointer"
+                                      title="Actions"
+                                    >
+                                      <MoreVertical className="w-[1vw] h-[1vw]" />
                                     </button>
+
+                                    {/* Action Dropdown Menu */}
+                                    <AnimatePresence>
+                                      {activeActionMenuId === rowId && (
+                                        <motion.div
+                                          initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                                          exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                                          transition={{ duration: 0.12 }}
+                                          className="absolute right-0 mt-[0.3vw] w-[8.5vw] bg-white rounded-[0.5vw] shadow-lg border border-gray-100 py-[0.3vw] z-50 text-left"
+                                        >
+                                          <button
+                                            onClick={() => {
+                                              setActiveActionMenuId(null);
+                                              setSummaryModalRow(row);
+                                            }}
+                                            className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                          >
+                                            <ClipboardList className="w-[0.85vw] h-[0.85vw]" />
+                                            View Summary
+                                          </button>
+
+                                          {canUpdate && !isSupervisor && (
+                                            <button
+                                              onClick={() => {
+                                                setActiveActionMenuId(null);
+                                                goToEdit(row);
+                                              }}
+                                              className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                            >
+                                              <Edit3 className="w-[0.85vw] h-[0.85vw]" />
+                                              Edit Call
+                                            </button>
+                                          )}
+
+                                          <button
+                                            onClick={() => {
+                                              setActiveActionMenuId(null);
+                                              setHistoryModalProduct(row);
+                                            }}
+                                            className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                                          >
+                                            <History className="w-[0.85vw] h-[0.85vw]" />
+                                            Call History
+                                          </button>
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
                                   </div>
                                 </td>
                               )}
