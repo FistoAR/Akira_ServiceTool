@@ -1112,7 +1112,12 @@ const CustomerDatabase = () => {
   const visibleCols = CUSTOMER_DB_COLUMNS.filter((c) => colVis[c.key] !== false);
 
   const renderHeaderCell = (col) => (
-    <th key={col.key} className="p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-r border-slate-300/80 whitespace-nowrap">
+    <th
+      key={col.key}
+      className={`p-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.68vw] border-b border-r border-slate-300/80 whitespace-nowrap ${
+        col.key === "state" ? "min-w-[8vw] w-[8vw]" : ""
+      }`}
+    >
       {col.label}
     </th>
   );
@@ -1171,7 +1176,7 @@ const CustomerDatabase = () => {
         );
       case "state":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-700"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-gray-700 min-w-[8vw] w-[8vw] whitespace-nowrap"}>
             {row.state || "—"}
           </td>
         );
