@@ -3150,83 +3150,7 @@ export default function ServiceCall() {
             transition={{ duration: 0.2 }}
             className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
-            {/* Top Stat Cards Row with integrated Register Call Action */}
-            <div className="flex items-center gap-[0.7vw] shrink-0">
-              <div className="grid grid-cols-4 gap-[0.6vw] flex-1">
-                {/* 1. Total Calls */}
-                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all flex items-center justify-between group">
-                  <div>
-                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                      Total Calls
-                    </div>
-                    <div className="text-[1.2vw] font-extrabold text-gray-900 mt-[0.1vw] leading-none tracking-tight">
-                      {counts.All}
-                    </div>
-                  </div>
-                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-blue-50/80 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center justify-center text-blue-600">
-                    <Phone className="w-[0.95vw] h-[0.95vw]" />
-                  </div>
-                </div>
-
-                {/* 2. Resolved */}
-                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-emerald-100 transition-all flex items-center justify-between group">
-                  <div>
-                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                      Resolved
-                    </div>
-                    <div className="text-[1.2vw] font-extrabold text-emerald-600 mt-[0.1vw] leading-none tracking-tight">
-                      {counts.Resolved}
-                    </div>
-                  </div>
-                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-emerald-50/80 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center justify-center text-emerald-600">
-                    <CheckCircle className="w-[0.95vw] h-[0.95vw]" />
-                  </div>
-                </div>
-
-                {/* 3. Pending */}
-                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-amber-100 transition-all flex items-center justify-between group">
-                  <div>
-                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                      Pending
-                    </div>
-                    <div className="text-[1.2vw] font-extrabold text-amber-500 mt-[0.1vw] leading-none tracking-tight">
-                      {counts.Pending}
-                    </div>
-                  </div>
-                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition-all flex items-center justify-center text-amber-500">
-                    <Clock className="w-[0.95vw] h-[0.95vw]" />
-                  </div>
-                </div>
-
-                {/* 4. Critical */}
-                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-rose-100 transition-all flex items-center justify-between group">
-                  <div>
-                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
-                      Critical
-                    </div>
-                    <div className="text-[1.2vw] font-extrabold text-rose-600 mt-[0.1vw] leading-none tracking-tight">
-                      {counts.Critical}
-                    </div>
-                  </div>
-                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-rose-50/80 group-hover:bg-rose-600 group-hover:text-white transition-all flex items-center justify-center text-rose-600">
-                    <AlertCircle className="w-[0.95vw] h-[0.95vw]" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button: Register Call */}
-              {canWrite && !isSupervisor && (
-                <button
-                  onClick={goToForm}
-                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.5vw] rounded-[0.6vw] font-semibold text-[0.76vw] transition-all shadow-xs"
-                >
-                  <Plus className="w-[0.95vw] h-[0.95vw]" />
-                  Register Call
-                </button>
-              )}
-            </div>
-
-            {/* Filter Toolbar: Search, Date Range, Priority Dropdown */}
+            {/* Filter Toolbar: Search, Date Range, Priority Dropdown and Register Call */}
             <div className="flex items-center justify-between bg-white px-[0.8vw] py-[0.45vw] rounded-[0.6vw] shadow-[0_1px_6px_-2px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.7vw] shrink-0">
               {/* Left side: Search and Date Range */}
               <div className="flex items-center gap-[0.7vw] flex-1">
@@ -3279,7 +3203,7 @@ export default function ServiceCall() {
                 </div>
               </div>
 
-              {/* Right side: Priority Dropdown and Bulk Delete */}
+              {/* Right side: Priority Dropdown, Bulk Delete & Register Call */}
               <div className="flex gap-[0.5vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
@@ -3309,6 +3233,80 @@ export default function ServiceCall() {
                     ))}
                   </select>
                   <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.5vw] top-1/2 -translate-y-1/2" />
+                </div>
+
+                {/* Action Button: Register Call */}
+                {canWrite && !isSupervisor && (
+                  <button
+                    onClick={goToForm}
+                    className="cursor-pointer shrink-0 flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.85vw] h-[1.95vw] rounded-[0.45vw] font-semibold text-[0.72vw] transition-all shadow-xs"
+                  >
+                    <Plus className="w-[0.85vw] h-[0.85vw]" />
+                    Register Call
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Top Stat Cards Row */}
+            <div className="grid grid-cols-4 gap-[0.6vw] shrink-0">
+              {/* 1. Total Calls */}
+              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all flex items-center justify-between group">
+                <div>
+                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                    Total Calls
+                  </div>
+                  <div className="text-[1.2vw] font-extrabold text-gray-900 mt-[0.1vw] leading-none tracking-tight">
+                    {counts.All}
+                  </div>
+                </div>
+                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-blue-50/80 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center justify-center text-blue-600">
+                  <Phone className="w-[0.95vw] h-[0.95vw]" />
+                </div>
+              </div>
+
+              {/* 2. Resolved */}
+              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-emerald-100 transition-all flex items-center justify-between group">
+                <div>
+                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                    Resolved
+                  </div>
+                  <div className="text-[1.2vw] font-extrabold text-emerald-600 mt-[0.1vw] leading-none tracking-tight">
+                    {counts.Resolved}
+                  </div>
+                </div>
+                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-emerald-50/80 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center justify-center text-emerald-600">
+                  <CheckCircle className="w-[0.95vw] h-[0.95vw]" />
+                </div>
+              </div>
+
+              {/* 3. Pending */}
+              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-amber-100 transition-all flex items-center justify-between group">
+                <div>
+                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                    Pending
+                  </div>
+                  <div className="text-[1.2vw] font-extrabold text-amber-500 mt-[0.1vw] leading-none tracking-tight">
+                    {counts.Pending}
+                  </div>
+                </div>
+                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition-all flex items-center justify-center text-amber-500">
+                  <Clock className="w-[0.95vw] h-[0.95vw]" />
+                </div>
+              </div>
+
+              {/* 4. Critical */}
+              <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-rose-100 transition-all flex items-center justify-between group">
+                <div>
+                  <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                    Critical
+                  </div>
+                  <div className="text-[1.2vw] font-extrabold text-rose-600 mt-[0.1vw] leading-none tracking-tight">
+                    {counts.Critical}
+                  </div>
+                </div>
+                <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-rose-50/80 group-hover:bg-rose-600 group-hover:text-white transition-all flex items-center justify-center text-rose-600">
+                  <AlertCircle className="w-[0.95vw] h-[0.95vw]" />
                 </div>
               </div>
             </div>
