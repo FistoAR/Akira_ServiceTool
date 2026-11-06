@@ -3316,31 +3316,31 @@ export default function ServiceCall() {
                           </button>
                         </th>
                       )}
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
                         Date & Time
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
                         Call No
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
                         Customer
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
                         Product / Issue
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] text-center border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
                         Error Code
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
                         Caller Details
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] text-center border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
                         Priority
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8vw]">
                         Status
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[6vw]">
                         Actions
                       </th>
                     </tr>
@@ -3442,7 +3442,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.72vw] text-slate-600 bg-white"
+                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
                                 >
                                   {(() => {
                                     try {
@@ -3477,7 +3477,7 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.76vw] font-medium text-blue-600 hover:text-blue-800 hover:underline block"
+                                    className="font-mono text-left text-[0.82vw] font-medium text-blue-600 hover:text-blue-800 hover:underline block"
                                   >
                                     {row.callNumber}
                                   </button>
@@ -3491,19 +3491,19 @@ export default function ServiceCall() {
                                   className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                 >
                                   <div
-                                    className="font-medium text-slate-800 text-[0.76vw] truncate max-w-[14vw]"
+                                    className="font-medium text-slate-800 text-[0.82vw] truncate max-w-[14vw]"
                                     title={row.customerName}
                                   >
                                     {row.customerName || "—"}
                                   </div>
-                                  <div className="flex items-center gap-[0.35vw] mt-[0.1vw]">
+                                  <div className="flex items-center gap-[0.35vw] mt-[0.15vw]">
                                     {row.partyCode && (
-                                      <span className="text-[0.65vw] text-slate-500 font-mono">
+                                      <span className="text-[0.7vw] text-slate-500 font-mono">
                                         {row.partyCode}
                                       </span>
                                     )}
                                     {row.customerType && row.customerType !== "All" && (
-                                      <span className={`text-[0.62vw] px-[0.35vw] py-[0.05vw] rounded font-medium border ${getTypeColor(row.customerType)}`}>
+                                      <span className={`text-[0.66vw] px-[0.4vw] py-[0.08vw] rounded font-medium border ${getTypeColor(row.customerType)}`}>
                                         {row.customerType}
                                       </span>
                                     )}
@@ -3513,11 +3513,11 @@ export default function ServiceCall() {
 
                               {/* 4. Product / Issue */}
                               <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
-                                <div className="text-[0.74vw] font-medium text-slate-800 truncate max-w-[15vw]" title={prod?.productModel || prod?.itemCode || "—"}>
+                                <div className="text-[0.8vw] font-medium text-slate-800 truncate max-w-[15vw]" title={prod?.productModel || prod?.itemCode || "—"}>
                                   {prod?.productModel || prod?.itemCode || "—"}
                                 </div>
                                 {prod?.serialNumber && (
-                                  <div className="text-[0.64vw] text-slate-500 font-mono">
+                                  <div className="text-[0.7vw] text-slate-500 font-mono mt-[0.1vw]">
                                     SN: {prod.serialNumber}
                                   </div>
                                 )}
@@ -3526,11 +3526,11 @@ export default function ServiceCall() {
                               {/* 5. Error Code */}
                               <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
                                 {prod?.errorCode ? (
-                                  <span className="bg-red-50 text-red-600 border border-red-200 px-[0.45vw] py-[0.1vw] rounded text-[0.68vw] font-mono font-medium">
+                                  <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
                                     {prod.errorCode}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-400 text-[0.72vw]">-</span>
+                                  <span className="text-slate-400 text-[0.76vw]">-</span>
                                 )}
                               </td>
 
@@ -3541,12 +3541,12 @@ export default function ServiceCall() {
                                   className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                 >
                                   <div className="flex items-center gap-[0.4vw]">
-                                    <Phone className="w-[0.85vw] h-[0.85vw] text-slate-400" />
+                                    <Phone className="w-[0.9vw] h-[0.9vw] text-slate-400 shrink-0" />
                                     <div>
-                                      <div className="text-[0.74vw] font-medium text-slate-700">
+                                      <div className="text-[0.8vw] font-medium text-slate-700">
                                         {row.contactNumber || "+91 —"}
                                       </div>
-                                      <div className="text-[0.62vw] text-slate-500 capitalize">
+                                      <div className="text-[0.68vw] text-slate-500 capitalize">
                                         {row.mode || "Phone"}
                                       </div>
                                     </div>
@@ -3567,7 +3567,7 @@ export default function ServiceCall() {
                                     else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                     else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                                     return (
-                                      <span className={`px-[0.55vw] py-[0.15vw] rounded-full text-[0.68vw] font-medium ${badgeStyle}`}>
+                                      <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
                                         {p}
                                       </span>
                                     );
@@ -3581,8 +3581,8 @@ export default function ServiceCall() {
                                   const status = getProductStatus(prod, effectiveStatus);
                                   const cfg = getStatusCfg(status);
                                   return (
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] font-medium text-slate-700">
-                                      <span className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
+                                    <span className="inline-flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-700">
+                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
                                       {cfg.label}
                                     </span>
                                   );
@@ -3601,10 +3601,10 @@ export default function ServiceCall() {
                                         e.stopPropagation();
                                         setActiveActionMenuId(activeActionMenuId === rowId ? null : rowId);
                                       }}
-                                      className="p-[0.35vw] text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                      className="p-[0.4vw] text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       title="Actions"
                                     >
-                                      <MoreVertical className="w-[1vw] h-[1vw]" />
+                                      <MoreVertical className="w-[1.1vw] h-[1.1vw]" />
                                     </button>
 
                                     {/* Action Dropdown Menu */}
@@ -3615,17 +3615,17 @@ export default function ServiceCall() {
                                           animate={{ opacity: 1, scale: 1, y: 0 }}
                                           exit={{ opacity: 0, scale: 0.95, y: -5 }}
                                           transition={{ duration: 0.12 }}
-                                          className="absolute right-0 mt-[0.3vw] w-[8.5vw] bg-white rounded-[0.5vw] shadow-lg border border-slate-200 py-[0.3vw] z-50 text-left"
+                                          className="absolute right-0 mt-[0.3vw] min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-xl border border-slate-200 py-[0.4vw] z-50 text-left"
                                         >
                                           <button
                                             onClick={() => {
                                               setActiveActionMenuId(null);
                                               setSummaryModalRow(row);
                                             }}
-                                            className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
                                           >
-                                            <ClipboardList className="w-[0.85vw] h-[0.85vw]" />
-                                            View Summary
+                                            <ClipboardList className="w-[0.9vw] h-[0.9vw] shrink-0" />
+                                            <span>View Summary</span>
                                           </button>
 
                                           {canUpdate && !isSupervisor && (
@@ -3634,10 +3634,10 @@ export default function ServiceCall() {
                                                 setActiveActionMenuId(null);
                                                 goToEdit(row);
                                               }}
-                                              className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
                                             >
-                                              <Edit3 className="w-[0.85vw] h-[0.85vw]" />
-                                              Edit Call
+                                              <Edit3 className="w-[0.9vw] h-[0.9vw] shrink-0" />
+                                              <span>Edit Call</span>
                                             </button>
                                           )}
 
@@ -3646,10 +3646,10 @@ export default function ServiceCall() {
                                               setActiveActionMenuId(null);
                                               setHistoryModalProduct(row);
                                             }}
-                                            className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
                                           >
-                                            <History className="w-[0.85vw] h-[0.85vw]" />
-                                            Call History
+                                            <History className="w-[0.9vw] h-[0.9vw] shrink-0" />
+                                            <span>Call History</span>
                                           </button>
                                         </motion.div>
                                       )}
