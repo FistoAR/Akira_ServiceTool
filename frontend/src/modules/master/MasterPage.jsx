@@ -278,8 +278,8 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Product Segments ── */}
           {activeTab === "segments" && (
-            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-teal-50 to-white">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-teal-50 to-white flex-shrink-0">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-teal-600 to-teal-700 flex items-center justify-center flex-shrink-0">
                   <Icon icon="solar:box-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
@@ -302,8 +302,8 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: 4M Categories ── */}
           {activeTab === "four-m" && (
-            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-cyan-50 to-white">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-cyan-50 to-white flex-shrink-0">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-cyan-600 to-cyan-700 flex items-center justify-center flex-shrink-0">
                   <Icon icon="solar:widget-2-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
@@ -326,8 +326,8 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Units ── */}
           {activeTab === "units" && (
-            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-emerald-50 to-white">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-emerald-50 to-white flex-shrink-0">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center flex-shrink-0">
                   <Icon icon="solar:tuning-2-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
@@ -350,8 +350,8 @@ const SystemSettingsPage = () => {
 
           {/* ── Tab: Sites ── */}
           {activeTab === "sites" && (
-            <div className="flex-1 flex flex-col overflow-y-auto min-h-0">
-              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50 to-white">
+            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50 to-white flex-shrink-0">
                 <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center flex-shrink-0">
                   <Icon icon="solar:map-point-wave-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>

@@ -123,20 +123,15 @@ const FourMCategoriesSection = ({ items = [], setItems }) => {
               <h3 className="text-[0.88vw] font-bold text-gray-900">4M Categories</h3>
               <p className="text-[0.72vw] text-gray-500">Root-cause checklist categories (Man, Machine, Material, Method)</p>
             </div>
-            <div className="flex items-center gap-[0.6vw]">
-              <div className="relative">
-                <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search 4M..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-[11vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
-                />
-              </div>
-              <span className="text-[0.7vw] font-semibold text-gray-500 bg-gray-100 px-[0.6vw] py-[0.2vw] rounded-full flex-shrink-0">
-                {safeItems.length} total
-              </span>
+            <div className="relative">
+              <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search 4M..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+              />
             </div>
           </div>
 
