@@ -3148,23 +3148,77 @@ export default function ServiceCall() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-col gap-[0.8vw]"
+            className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
-            {/* Header: Clean & Compact */}
-            <div className="flex items-center justify-between pb-[0.2vw]">
-              <div>
-                <h1 className="text-[1.25vw] font-bold text-gray-900 tracking-tight leading-tight">
-                  Service Call Registry
-                </h1>
-                <p className="text-[0.72vw] text-gray-500 font-medium mt-[0.1vw]">
-                  Track, manage and resolve all service calls efficiently
-                </p>
+            {/* Top Stat Cards Row with integrated Register Call Action */}
+            <div className="flex items-center gap-[0.7vw] shrink-0">
+              <div className="grid grid-cols-4 gap-[0.6vw] flex-1">
+                {/* 1. Total Calls */}
+                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all flex items-center justify-between group">
+                  <div>
+                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                      Total Calls
+                    </div>
+                    <div className="text-[1.2vw] font-extrabold text-gray-900 mt-[0.1vw] leading-none tracking-tight">
+                      {counts.All}
+                    </div>
+                  </div>
+                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-blue-50/80 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center justify-center text-blue-600">
+                    <Phone className="w-[0.95vw] h-[0.95vw]" />
+                  </div>
+                </div>
+
+                {/* 2. Resolved */}
+                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-emerald-100 transition-all flex items-center justify-between group">
+                  <div>
+                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                      Resolved
+                    </div>
+                    <div className="text-[1.2vw] font-extrabold text-emerald-600 mt-[0.1vw] leading-none tracking-tight">
+                      {counts.Resolved}
+                    </div>
+                  </div>
+                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-emerald-50/80 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center justify-center text-emerald-600">
+                    <CheckCircle className="w-[0.95vw] h-[0.95vw]" />
+                  </div>
+                </div>
+
+                {/* 3. Pending */}
+                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-amber-100 transition-all flex items-center justify-between group">
+                  <div>
+                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                      Pending
+                    </div>
+                    <div className="text-[1.2vw] font-extrabold text-amber-500 mt-[0.1vw] leading-none tracking-tight">
+                      {counts.Pending}
+                    </div>
+                  </div>
+                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition-all flex items-center justify-center text-amber-500">
+                    <Clock className="w-[0.95vw] h-[0.95vw]" />
+                  </div>
+                </div>
+
+                {/* 4. Critical */}
+                <div className="bg-white rounded-[0.6vw] px-[0.8vw] py-[0.55vw] border border-gray-100 shadow-[0_1px_6px_-2px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-rose-100 transition-all flex items-center justify-between group">
+                  <div>
+                    <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
+                      Critical
+                    </div>
+                    <div className="text-[1.2vw] font-extrabold text-rose-600 mt-[0.1vw] leading-none tracking-tight">
+                      {counts.Critical}
+                    </div>
+                  </div>
+                  <div className="w-[1.9vw] h-[1.9vw] rounded-[0.45vw] bg-rose-50/80 group-hover:bg-rose-600 group-hover:text-white transition-all flex items-center justify-center text-rose-600">
+                    <AlertCircle className="w-[0.95vw] h-[0.95vw]" />
+                  </div>
+                </div>
               </div>
 
+              {/* Action Button: Register Call */}
               {canWrite && !isSupervisor && (
                 <button
                   onClick={goToForm}
-                  className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.2vw] rounded-[0.5vw] font-semibold text-[0.78vw] transition-all shadow-xs"
+                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.5vw] rounded-[0.6vw] font-semibold text-[0.76vw] transition-all shadow-xs"
                 >
                   <Plus className="w-[0.95vw] h-[0.95vw]" />
                   Register Call
@@ -3172,98 +3226,35 @@ export default function ServiceCall() {
               )}
             </div>
 
-            {/* Top 4 KPI Stat Cards: Polished & Modern Pro-Max */}
-            <div className="grid grid-cols-4 gap-[0.8vw]">
-              {/* 1. Total Calls */}
-              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Total Calls
-                  </div>
-                  <div className="text-[1.4vw] font-extrabold text-gray-900 mt-[0.2vw] leading-none tracking-tight">
-                    {counts.All}
-                  </div>
-                </div>
-                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-blue-50/80 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center justify-center text-blue-600">
-                  <Phone className="w-[1.1vw] h-[1.1vw]" />
-                </div>
-              </div>
-
-              {/* 2. Resolved */}
-              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-emerald-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Resolved
-                  </div>
-                  <div className="text-[1.4vw] font-extrabold text-emerald-600 mt-[0.2vw] leading-none tracking-tight">
-                    {counts.Resolved}
-                  </div>
-                </div>
-                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-emerald-50/80 group-hover:bg-emerald-600 group-hover:text-white transition-all flex items-center justify-center text-emerald-600">
-                  <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
-                </div>
-              </div>
-
-              {/* 3. Pending */}
-              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-amber-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Pending
-                  </div>
-                  <div className="text-[1.4vw] font-extrabold text-amber-500 mt-[0.2vw] leading-none tracking-tight">
-                    {counts.Pending}
-                  </div>
-                </div>
-                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-amber-50/80 group-hover:bg-amber-500 group-hover:text-white transition-all flex items-center justify-center text-amber-500">
-                  <Clock className="w-[1.1vw] h-[1.1vw]" />
-                </div>
-              </div>
-
-              {/* 4. Critical */}
-              <div className="bg-white rounded-[0.7vw] p-[0.9vw] border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-rose-100 transition-all flex items-center justify-between group">
-                <div>
-                  <div className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider">
-                    Critical
-                  </div>
-                  <div className="text-[1.4vw] font-extrabold text-rose-600 mt-[0.2vw] leading-none tracking-tight">
-                    {counts.Critical}
-                  </div>
-                </div>
-                <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-rose-50/80 group-hover:bg-rose-600 group-hover:text-white transition-all flex items-center justify-center text-rose-600">
-                  <AlertCircle className="w-[1.1vw] h-[1.1vw]" />
-                </div>
-              </div>
-            </div>
-
             {/* Filter Toolbar: Search, Date Range, Priority Dropdown */}
-            <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.8vw]">
+            <div className="flex items-center justify-between bg-white px-[0.8vw] py-[0.45vw] rounded-[0.6vw] shadow-[0_1px_6px_-2px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.7vw] shrink-0">
               {/* Left side: Search and Date Range */}
-              <div className="flex items-center gap-[0.8vw] flex-1">
+              <div className="flex items-center gap-[0.7vw] flex-1">
                 {/* Search Box */}
-                <div className="relative flex-1 max-w-[24vw]">
-                  <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
+                <div className="relative flex-1 max-w-[22vw]">
+                  <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.85vw] h-[0.85vw]" />
                   <input
                     type="text"
                     placeholder="Search by customer, call no, engineer..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/80 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+                    className="w-full pl-[2vw] pr-[0.8vw] h-[1.95vw] border border-gray-200/80 rounded-[0.45vw] text-[0.74vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
                   />
                 </div>
 
                 {/* Inline Date Filter */}
-                <div className="flex items-center gap-[0.35vw] border border-gray-200/80 rounded-[0.5vw] h-[2.1vw] px-[0.6vw] bg-gray-50/40 text-[0.74vw] hover:bg-white transition-all">
-                  <span className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">
+                <div className="flex items-center gap-[0.3vw] border border-gray-200/80 rounded-[0.45vw] h-[1.95vw] px-[0.55vw] bg-gray-50/40 text-[0.72vw] hover:bg-white transition-all">
+                  <span className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
                     From
                   </span>
                   <input
                     type="date"
                     value={filterFromDate || ""}
                     onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                    className="text-[0.72vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
                   <span className="text-gray-300 mx-[0.1vw]">-</span>
-                  <span className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">
+                  <span className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider">
                     To
                   </span>
                   <input
@@ -3271,7 +3262,7 @@ export default function ServiceCall() {
                     value={filterToDate || ""}
                     min={filterFromDate || undefined}
                     onChange={(e) => setFilterToDate(e.target.value)}
-                    className="text-[0.74vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
+                    className="text-[0.72vw] text-gray-700 bg-transparent outline-none font-medium cursor-pointer"
                   />
                   {(filterFromDate || filterToDate) && (
                     <button
@@ -3279,7 +3270,7 @@ export default function ServiceCall() {
                         setFilterFromDate("");
                         setFilterToDate("");
                       }}
-                      className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.2vw]"
+                      className="text-[0.65vw] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer ml-[0.2vw]"
                       title="Clear date filter"
                     >
                       Clear
@@ -3289,7 +3280,7 @@ export default function ServiceCall() {
               </div>
 
               {/* Right side: Priority Dropdown and Bulk Delete */}
-              <div className="flex gap-[0.6vw] items-center flex-shrink-0">
+              <div className="flex gap-[0.5vw] items-center flex-shrink-0">
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
@@ -3297,9 +3288,9 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.74vw] transition-all cursor-pointer shadow-none"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[1.95vw] rounded-[0.45vw] font-semibold text-[0.72vw] transition-all cursor-pointer shadow-none"
                     >
-                      <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                      <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                       Delete ({selectedItems.size})
                     </motion.button>
                   )}
@@ -3310,20 +3301,20 @@ export default function ServiceCall() {
                   <select
                     value={filterPriority}
                     onChange={(e) => setFilterPriority(e.target.value)}
-                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/80 hover:border-gray-300 pl-[0.75vw] pr-[1.8vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/80 hover:border-gray-300 pl-[0.7vw] pr-[1.7vw] rounded-[0.45vw] outline-none cursor-pointer h-[1.95vw] text-[0.72vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                   >
                     <option value="All">All Priorities</option>
                     {PRIORITIES.map((p) => (
                       <option key={p} value={p}>{p}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-[0.8vw] h-[0.8vw] text-gray-400 pointer-events-none absolute right-[0.55vw] top-1/2 -translate-y-1/2" />
+                  <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.5vw] top-1/2 -translate-y-1/2" />
                 </div>
               </div>
             </div>
 
             {/* Status Summary Pill Bar: Sleek, high-polish rounded pills */}
-            <div className="flex gap-[0.45vw] flex-wrap items-center">
+            <div className="flex gap-[0.35vw] flex-wrap items-center shrink-0">
               {[
                 {
                   label: "All",
@@ -3410,8 +3401,8 @@ export default function ServiceCall() {
             </div>
 
             {/* Table Card */}
-            <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col w-full overflow-hidden">
-              <div className="overflow-x-auto overflow-y-auto max-h-[60vh] min-h-[55vh] w-full">
+            <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+              <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
                     <tr>
