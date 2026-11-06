@@ -219,12 +219,16 @@ const updateUser = async (id, userData, requestingUser = null) => {
       throw err;
     }
 
+    const oldRole = user.role || 'User';
+    const newRole = userData.role || user.role;
+    const roleChanged = userData.role && userData.role !== oldRole;
+
     user.name = userData.name || user.name;
     user.email = userData.email || user.email;
     user.phoneNumber = userData.phoneNumber || user.phoneNumber;
     user.dob = userData.dob || user.dob;
     user.gender = userData.gender || user.gender;
-    user.role = userData.role || user.role;
+    user.role = newRole;
     user.department = userData.department || user.department;
     user.designation = userData.designation || user.designation;
     user.ctc = userData.ctc || user.ctc;
@@ -233,8 +237,14 @@ const updateUser = async (id, userData, requestingUser = null) => {
     if (userData.profilePicture !== undefined) {
       user.profilePicture = await compressProfilePicture(userData.profilePicture);
     }
+
+    // If permissions are explicitly passed in payload, use them.
+    // If role changed and no explicit permissions passed, auto-reset and overwrite permissions with the new role defaults!
     if (userData.permissions) {
       user.permissions = userData.permissions;
+      user.markModified('permissions');
+    } else if (roleChanged) {
+      user.permissions = getDefaultPermissionsForRole(newRole);
       user.markModified('permissions');
     }
 

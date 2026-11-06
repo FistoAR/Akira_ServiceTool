@@ -252,7 +252,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           toast(
             <div className="space-y-[0.35vw]">
               <p>
-                Employee updated. Role changed from <span className="font-semibold text-gray-700">{oldRole}</span> to <span className="font-bold text-gray-900">{newRole}</span>.
+                Role changed from <span className="font-semibold text-gray-700">{oldRole}</span> to <span className="font-bold text-gray-900">{newRole}</span>. Permissions have been reset to {newRole} defaults.
               </p>
               <button
                 type="button"
@@ -262,7 +262,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
               >
                 <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
-                Update Role Access permissions for {editingEmp.name} &rarr;
+                Customize permissions in Role Access &rarr;
               </button>
             </div>,
             "success",
@@ -793,10 +793,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                       {/* Notice when role is modified in edit mode */}
                       {editingEmp && regData.role !== (editingEmp.role || "User") && (
-                        <p className="text-[0.68vw] text-amber-700 bg-amber-50 border border-amber-200 rounded-[0.3vw] px-[0.45vw] py-[0.2vw] flex items-center gap-[0.25vw] animate-in fade-in">
-                          <Icon icon="solar:info-circle-bold" className="w-[0.75vw] h-[0.75vw] text-amber-600 flex-shrink-0" />
-                          <span>Role changed from <strong>{editingEmp.role || "User"}</strong> to <strong>{regData.role}</strong>. Update permissions in Role Access after saving.</span>
-                        </p>
+                        <div className="text-[0.69vw] text-amber-800 bg-amber-50 border border-amber-200 rounded-[0.35vw] p-[0.45vw] flex items-start gap-[0.3vw] leading-relaxed animate-in fade-in">
+                          <Icon icon="solar:info-circle-bold" className="w-[0.85vw] h-[0.85vw] text-amber-600 flex-shrink-0 mt-[0.08vw]" />
+                          <span>
+                            It will reset the current permission of the user and overwrite with <strong>{regData.role}</strong> permissions. If you want to update permissions, please use <strong>Role Access</strong> module.
+                          </span>
+                        </div>
                       )}
                     </div>
                     <div className="space-y-[0.35vw]">
