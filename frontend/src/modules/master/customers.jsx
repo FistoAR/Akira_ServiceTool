@@ -1030,18 +1030,6 @@ const CustomerDatabase = () => {
 
   const [sortOption, setSortOption] = useState("latest");
   const [viewMode, setViewMode] = useState("list"); // "list" | "grid"
-  const [activeActionsPartyCode, setActiveActionsPartyCode] = useState(null);
-
-  // Close actions popover on click outside
-  useEffect(() => {
-    const handleOutside = (e) => {
-      if (!e.target.closest(".customer-actions-container")) {
-        setActiveActionsPartyCode(null);
-      }
-    };
-    window.addEventListener("click", handleOutside);
-    return () => window.removeEventListener("click", handleOutside);
-  }, []);
 
   useEffect(() => { setCurrentPage(1); }, [searchTerm, filterType, sortOption]);
 
@@ -1436,7 +1424,7 @@ const CustomerDatabase = () => {
                           className="border-b border-gray-100 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
                         >
                           {(canUpdate || canDelete) ? (
-                            <div className="flex items-center justify-center gap-[0.3vw] px-[0.4vw] customer-actions-container relative">
+                            <div className="flex items-center justify-center gap-[0.4vw] px-[0.4vw]">
                               {canUpdate && (
                                 <button
                                   onClick={() => openEditModal(row.partyCode)}
@@ -1446,55 +1434,15 @@ const CustomerDatabase = () => {
                                   <Edit2 className="w-[0.9vw] h-[0.9vw]" />
                                 </button>
                               )}
-                              
-                              {/* More action menu button */}
-                              <div className="relative inline-block text-left">
+                              {canDelete && (
                                 <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setActiveActionsPartyCode(activeActionsPartyCode === row.partyCode ? null : row.partyCode);
-                                  }}
-                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors cursor-pointer"
-                                  title="More Options"
+                                  onClick={() => handleDeleteParty(row.partyCode)}
+                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-rose-50 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
+                                  title="Delete Customer"
                                 >
-                                  <MoreHorizontal className="w-[0.95vw] h-[0.95vw]" />
+                                  <Trash2 className="w-[0.9vw] h-[0.9vw]" />
                                 </button>
-
-                                {/* Action Popover */}
-                                <AnimatePresence>
-                                  {activeActionsPartyCode === row.partyCode && (
-                                    <motion.div
-                                      initial={{ opacity: 0, scale: 0.95, y: -5 }}
-                                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                                      exit={{ opacity: 0, scale: 0.95, y: -5 }}
-                                      className="absolute right-0 mt-[0.3vw] w-[8.5vw] bg-white rounded-[0.5vw] shadow-lg border border-gray-100 py-[0.3vw] z-50 text-left"
-                                    >
-                                      {canUpdate && (
-                                        <button
-                                          onClick={() => {
-                                            setActiveActionsPartyCode(null);
-                                            openEditModal(row.partyCode);
-                                          }}
-                                          className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
-                                        >
-                                          <Edit2 className="w-[0.8vw] h-[0.8vw]" /> Edit Party
-                                        </button>
-                                      )}
-                                      {canDelete && (
-                                        <button
-                                          onClick={() => {
-                                            setActiveActionsPartyCode(null);
-                                            handleDeleteParty(row.partyCode);
-                                          }}
-                                          className="w-full flex items-center gap-[0.5vw] px-[0.7vw] py-[0.4vw] text-[0.74vw] font-medium text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                                        >
-                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" /> Delete Party
-                                        </button>
-                                      )}
-                                    </motion.div>
-                                  )}
-                                </AnimatePresence>
-                              </div>
+                              )}
                             </div>
                           ) : (
                             <span className="text-[0.68vw] text-slate-400 italic">View only</span>
