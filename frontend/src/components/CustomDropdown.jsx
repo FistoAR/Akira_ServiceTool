@@ -53,8 +53,11 @@ const CustomDropdown = ({
   };
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef(null);
+  const triggerRef = useRef(null);
   const searchInputRef = useRef(null);
+  const optionsListRef = useRef(null);
 
   // Normalize options into `{ value, label, icon, badge, description, image, disabled }`
   const normalizedOptions = useMemo(() => {
@@ -76,27 +79,6 @@ const CustomDropdown = ({
     });
   }, [options]);
 
-  // Outside click listener
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Auto focus search input on open
-  useEffect(() => {
-    if (isOpen && searchable && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
-    }
-    if (!isOpen) {
-      setSearchQuery("");
-    }
-  }, [isOpen, searchable]);
-
   // Filtered options based on search query
   const filteredOptions = useMemo(() => {
     if (!searchQuery.trim()) return normalizedOptions;
@@ -117,6 +99,108 @@ const CustomDropdown = ({
     }
     return normalizedOptions.find((opt) => opt.value === value) || null;
   }, [normalizedOptions, value, multiple]);
+
+  // Outside click listener
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Reset or initialize highlighted option when menu opens/closes or filtered options change
+  useEffect(() => {
+    if (isOpen) {
+      if (!multiple && value !== undefined && value !== null && value !== "") {
+        const idx = filteredOptions.findIndex((opt) => opt.value === value);
+        setHighlightedIndex(idx >= 0 ? idx : 0);
+      } else {
+        setHighlightedIndex(0);
+      }
+    } else {
+      setHighlightedIndex(-1);
+    }
+  }, [isOpen, filteredOptions, value, multiple]);
+
+  // Scroll highlighted item into view
+  useEffect(() => {
+    if (isOpen && highlightedIndex >= 0 && optionsListRef.current) {
+      const items = optionsListRef.current.querySelectorAll("[data-dropdown-item]");
+      if (items[highlightedIndex]) {
+        items[highlightedIndex].scrollIntoView({ block: "nearest" });
+      }
+    }
+  }, [highlightedIndex, isOpen]);
+
+  // Focus search input or trigger when opened
+  useEffect(() => {
+    if (isOpen) {
+      if (searchable && searchInputRef.current) {
+        setTimeout(() => searchInputRef.current?.focus(), 50);
+      } else if (triggerRef.current && document.activeElement !== triggerRef.current) {
+        triggerRef.current.focus();
+      }
+    }
+  }, [isOpen, searchable]);
+
+  // Keyboard navigation handler (Up/Down arrow, Enter, Space, Escape, Tab)
+  const handleKeyDown = (e) => {
+    if (disabled) return;
+
+    if (!isOpen) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+      return;
+    }
+
+    if (e.key === "Escape" || e.key === "Tab") {
+      if (e.key === "Escape") e.preventDefault();
+      setIsOpen(false);
+      triggerRef.current?.focus();
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (filteredOptions.length === 0) return;
+      setHighlightedIndex((prev) => {
+        let next = prev < 0 ? 0 : prev + 1;
+        while (next < filteredOptions.length && filteredOptions[next].disabled) {
+          next++;
+        }
+        return next < filteredOptions.length ? next : prev >= 0 ? prev : 0;
+      });
+      return;
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (filteredOptions.length === 0) return;
+      setHighlightedIndex((prev) => {
+        let next = prev < 0 ? filteredOptions.length - 1 : prev - 1;
+        while (next >= 0 && filteredOptions[next].disabled) {
+          next--;
+        }
+        return next >= 0 ? next : prev >= 0 ? prev : 0;
+      });
+      return;
+    }
+
+    if (e.key === "Enter" || (!searchable && e.key === " ")) {
+      e.preventDefault();
+      if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
+        const opt = filteredOptions[highlightedIndex];
+        if (opt && !opt.disabled) {
+          handleSelect(opt);
+        }
+      }
+    }
+  };
 
   // Size variations
   const sizeClasses = {
@@ -205,9 +289,11 @@ const CustomDropdown = ({
 
       {/* Dropdown Trigger */}
       <button
+        ref={triggerRef}
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
+        onKeyDown={handleKeyDown}
         className={`w-full bg-white border flex items-center justify-between gap-[0.5vw] text-left transition-all shadow-none select-none cursor-pointer ${
           sizeClasses.trigger
         } ${
@@ -328,6 +414,7 @@ const CustomDropdown = ({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder={searchPlaceholder}
                   className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.3vw] text-[0.76vw] border border-gray-200 rounded-[0.3vw] outline-none focus:border-blue-500 bg-gray-50/50"
                   onClick={(e) => e.stopPropagation()}
@@ -369,17 +456,21 @@ const CustomDropdown = ({
 
           {/* Options List */}
           <div
+            ref={optionsListRef}
             className="overflow-y-auto space-y-[0.1vw] px-[0.3vw]"
             style={{ maxHeight }}
           >
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((opt) => {
+              filteredOptions.map((opt, idx) => {
                 const selected = isOptionSelected(opt);
+                const isHighlighted = idx === highlightedIndex;
 
                 return (
                   <div
                     key={String(opt.value)}
+                    data-dropdown-item
                     onClick={() => handleSelect(opt)}
+                    onMouseEnter={() => setHighlightedIndex(idx)}
                     className={`flex items-center justify-between gap-[0.4vw] rounded-[0.3vw] transition-colors cursor-pointer ${
                       sizeClasses.option
                     } ${
@@ -387,11 +478,13 @@ const CustomDropdown = ({
                         ? "opacity-40 cursor-not-allowed bg-gray-50 text-gray-400"
                         : selected
                         ? "bg-blue-50 text-blue-700 font-semibold"
+                        : isHighlighted
+                        ? "bg-slate-100 text-gray-900"
                         : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                     } ${optionClassName}`}
                   >
                     {renderOption ? (
-                      renderOption(opt, { selected })
+                      renderOption(opt, { selected, isHighlighted })
                     ) : (
                       <>
                         <div className="flex items-center gap-[0.45vw] truncate flex-1 min-w-0">

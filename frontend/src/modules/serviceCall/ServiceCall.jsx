@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import ReactDOM from "react-dom";
 import {
   Search,
   X,
@@ -47,8 +48,10 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
+import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import ProductHistoryModal from "./ProductHistoryModal";
 import useModulePermissions from "../../components/useModulePermissions";
+import CustomDropdown from "../../components/CustomDropdown";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const CUSTOMER_DB_KEY = "customer_db_grouped_v5";
@@ -1507,9 +1510,29 @@ const ServiceCallForm = ({
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">Date & Time</label>
               <input
-                readOnly
-                value={formData.dateTime}
-                className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed outline-none"
+                type="datetime-local"
+                value={(() => {
+                  if (!formData.dateTime) return "";
+                  try {
+                    const d = new Date(formData.timestamp || formData.dateTime);
+                    if (isNaN(d.getTime())) return "";
+                    const pad = (n) => String(n).padStart(2, "0");
+                    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                  } catch {
+                    return "";
+                  }
+                })()}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (!val) return;
+                  const d = new Date(val);
+                  setFormData((p) => ({
+                    ...p,
+                    dateTime: d.toLocaleString(),
+                    timestamp: d.toISOString(),
+                  }));
+                }}
+                className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
@@ -1524,35 +1547,29 @@ const ServiceCallForm = ({
                   <Settings className="w-[0.85vw] h-[0.85vw]" />
                 </button>
               </label>
-              <select
+              <CustomDropdown
                 value={formData.mode}
-                onChange={(e) => set("mode", e.target.value)}
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-              >
-                {modes.map((m) => (
-                  <option key={m}>{m}</option>
-                ))}
-              </select>
+                onChange={(val) => set("mode", val)}
+                options={modes.map((m) => ({ value: m, label: m }))}
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+              />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">
                 Priority <span className="text-rose-500">*</span>
               </label>
-              <select
+              <CustomDropdown
                 value={formData.priority}
-                onChange={(e) => set("priority", e.target.value)}
-                className={`border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white outline-none text-[0.8vw] font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all ${
+                onChange={(val) => set("priority", val)}
+                options={PRIORITIES.map((p) => ({ value: p, label: p }))}
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] font-medium ${
                   formData.priority === "Critical"
-                    ? "text-rose-600 font-semibold"
+                    ? "!text-rose-600 !font-semibold"
                     : formData.priority === "High"
-                      ? "text-amber-600 font-semibold"
+                      ? "!text-amber-600 !font-semibold"
                       : "text-slate-800"
                 }`}
-              >
-                {PRIORITIES.map((p) => (
-                  <option key={p}>{p}</option>
-                ))}
-              </select>
+              />
             </div>
           </div>
         </div>
@@ -1571,26 +1588,23 @@ const ServiceCallForm = ({
               <label className="text-[0.76vw] font-semibold text-slate-700">
                 Customer Type
               </label>
-              <select
+              <CustomDropdown
                 value={formData.customerType}
-                onChange={(e) =>
+                onChange={(val) =>
                   setFormData((p) => ({
                     ...p,
-                    customerType: e.target.value,
+                    customerType: val,
                     partyCode: "",
                     customerName: "",
                     products: [emptyProduct()],
                   }))
                 }
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-              >
-                <option value="All">All Types</option>
-                {partyTypes.map((t) => (
-                  <option key={t.id} value={t.name}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
+                options={[
+                  { value: "All", label: "All Types" },
+                  ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
+                ]}
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+              />
             </div>
             <div
               className="flex flex-col gap-[0.35vw] col-span-2 relative"
@@ -1718,10 +1732,9 @@ const ServiceCallForm = ({
               <label className="text-[0.76vw] font-semibold text-slate-700">
                 Location Type
               </label>
-              <select
+              <CustomDropdown
                 value={formData.locationType || "IPR"}
-                onChange={(e) => {
-                  const val = e.target.value;
+                onChange={(val) => {
                   setFormData((p) => {
                     let nextLoc = p.location;
                     if (val === "Site") nextLoc = "";
@@ -1738,11 +1751,12 @@ const ServiceCallForm = ({
                     return { ...p, locationType: val, location: nextLoc };
                   });
                 }}
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-              >
-                <option value="IPR">IPR</option>
-                <option value="Site">Site</option>
-              </select>
+                options={[
+                  { value: "IPR", label: "IPR" },
+                  { value: "Site", label: "Site" },
+                ]}
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+              />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">
@@ -1761,18 +1775,19 @@ const ServiceCallForm = ({
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">Site</label>
-              <select
+              <CustomDropdown
                 value={formData.site || ""}
-                onChange={(e) => set("site", e.target.value)}
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-              >
-                <option value="">Select Site</option>
-                {sites.map((s) => (
-                  <option key={s.id || s._id || s.name} value={s.name}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => set("site", val)}
+                placeholder="Select Site"
+                options={[
+                  { value: "", label: "Select Site" },
+                  ...sites.map((s) => ({
+                    value: s.name,
+                    label: s.name,
+                  })),
+                ]}
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+              />
             </div>
             {formData.partyCode && (
               <div className="col-span-4 flex flex-col gap-[0.35vw] mt-[0.3vw]">
@@ -2020,18 +2035,18 @@ const ServiceCallForm = ({
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
                       Product Segment
                     </label>
-                    <select
+                    <CustomDropdown
                       value={product.productSegment || ""}
-                      onChange={(e) =>
-                        changeProduct(idx, "productSegment", e.target.value)
+                      onChange={(val) =>
+                        changeProduct(idx, "productSegment", val)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white outline-none text-[0.8vw] text-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-                    >
-                      <option value="">-- Select Segment --</option>
-                      {uniqueSegments.map((seg, i) => (
-                        <option key={i}>{seg}</option>
-                      ))}
-                    </select>
+                      placeholder="-- Select Segment --"
+                      options={[
+                        { value: "", label: "-- Select Segment --" },
+                        ...uniqueSegments.map((seg) => ({ value: seg, label: seg })),
+                      ]}
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                    />
                   </div>
                   <div className="col-span-1 flex flex-col gap-[0.35vw]">
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
@@ -2066,17 +2081,14 @@ const ServiceCallForm = ({
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
                       Warranty Status
                     </label>
-                    <select
+                    <CustomDropdown
                       value={product.warrantyStatus}
-                      onChange={(e) =>
-                        changeProduct(idx, "warrantyStatus", e.target.value)
+                      onChange={(val) =>
+                        changeProduct(idx, "warrantyStatus", val)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white outline-none text-[0.8vw] text-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-                    >
-                      {WARRANTY_STATUS.map((s) => (
-                        <option key={s}>{s}</option>
-                      ))}
-                    </select>
+                      options={WARRANTY_STATUS.map((s) => ({ value: s, label: s }))}
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                    />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
@@ -2096,16 +2108,17 @@ const ServiceCallForm = ({
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
                       Photo/Video Received?
                     </label>
-                    <select
+                    <CustomDropdown
                       value={product.mediaReceived || "No"}
-                      onChange={(e) =>
-                        changeProduct(idx, "mediaReceived", e.target.value)
+                      onChange={(val) =>
+                        changeProduct(idx, "mediaReceived", val)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] bg-white outline-none text-[0.8vw] text-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
+                      options={[
+                        { value: "Yes", label: "Yes" },
+                        { value: "No", label: "No" },
+                      ]}
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                    />
                   </div>
 
                   <div className="col-span-2 flex flex-col gap-[0.35vw]">
@@ -2457,22 +2470,17 @@ const ServiceCallForm = ({
                     <label className="text-gray-600 font-medium">
                       Party Type
                     </label>
-                    <select
+                    <CustomDropdown
                       value={newCustomer.partyType}
-                      onChange={(e) =>
+                      onChange={(val) =>
                         setNewCustomer({
                           ...newCustomer,
-                          partyType: e.target.value,
+                          partyType: val,
                         })
                       }
-                      className="border p-[0.6vw] rounded-[0.4vw] bg-white outline-none"
-                    >
-                      {partyTypes.map((t) => (
-                        <option key={t.id} value={t.name}>
-                          {t.name}
-                        </option>
-                      ))}
-                    </select>
+                      options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
+                      triggerClassName="!p-[0.6vw] !rounded-[0.4vw] bg-white border-gray-300"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col gap-[0.4vw] mb-[0.8vw]">
@@ -3099,17 +3107,32 @@ export default function ServiceCall() {
     else paginatedData.forEach((r) => s.add(r.id || r._id));
     setSelectedItems(s);
   };
-  const handleBulkDelete = async () => {
-    if (confirm(`Delete ${selectedItems.size} selected records?`)) {
-      const idsToDelete = Array.from(selectedItems);
-      try {
-        // Sequentially or parallelly delete from server
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState({
+    isOpen: false,
+    row: null,
+    isBulk: false,
+  });
+
+  const handleBulkDelete = () => {
+    if (selectedItems.size === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      row: null,
+      isBulk: true,
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (deleteModalState.isBulk) {
+        const idsToDelete = Array.from(selectedItems);
         await Promise.all(
           idsToDelete.map((id) =>
             axios.delete(`${API_URL}/service-calls/${id}`),
           ),
         );
-
         const remaining = serviceCalls.filter(
           (r) => !selectedItems.has(r.id || r._id),
         );
@@ -3117,10 +3140,22 @@ export default function ServiceCall() {
         lsSave(SERVICE_CALLS_KEY, remaining);
         setSelectedItems(new Set());
         toast(`${idsToDelete.length} records deleted successfully`);
-      } catch (err) {
-        console.error("Bulk delete failed", err);
-        toast("Failed to delete some records from server", "error");
+      } else if (deleteModalState.row) {
+        const targetId = deleteModalState.row.id || deleteModalState.row._id;
+        await axios.delete(`${API_URL}/service-calls/${targetId}`);
+        const remaining = serviceCalls.filter(
+          (r) => (r.id || r._id) !== targetId,
+        );
+        setServiceCalls(remaining);
+        lsSave(SERVICE_CALLS_KEY, remaining);
+        toast(`Call ${deleteModalState.row.callNumber || ""} deleted successfully`);
       }
+      setDeleteModalState({ isOpen: false, row: null, isBulk: false });
+    } catch (err) {
+      console.error("Delete operation failed", err);
+      toast("Failed to delete record(s) from server", "error");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -3128,16 +3163,26 @@ export default function ServiceCall() {
 
   // Active action menu popover
   const [activeActionMenuId, setActiveActionMenuId] = useState(null);
+  const [actionMenuCoords, setActionMenuCoords] = useState(null);
 
-  // Close action menu when clicking outside
+  // Close action menu when clicking outside or scrolling
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (!e.target.closest(".action-menu-container")) {
+      if (!e.target.closest(".action-menu-container") && !e.target.closest(".action-menu-portal")) {
         setActiveActionMenuId(null);
       }
     };
+    const handleScrollOrResize = () => {
+      setActiveActionMenuId(null);
+    };
     window.addEventListener("click", handleOutsideClick);
-    return () => window.removeEventListener("click", handleOutsideClick);
+    window.addEventListener("scroll", handleScrollOrResize, true);
+    window.addEventListener("resize", handleScrollOrResize);
+    return () => {
+      window.removeEventListener("click", handleOutsideClick);
+      window.removeEventListener("scroll", handleScrollOrResize, true);
+      window.removeEventListener("resize", handleScrollOrResize);
+    };
   }, []);
 
   const counts = useMemo(() => {
@@ -3285,18 +3330,17 @@ export default function ServiceCall() {
                 </AnimatePresence>
 
                 {/* Priority Dropdown */}
-                <div className="relative">
-                  <select
+                <div className="w-[10vw]">
+                  <CustomDropdown
+                    size="sm"
                     value={filterPriority}
-                    onChange={(e) => setFilterPriority(e.target.value)}
-                    className="appearance-none bg-slate-50/70 hover:bg-white font-semibold text-slate-700 border border-slate-200 pl-[0.8vw] pr-[1.9vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
-                  >
-                    <option value="All">All Priorities</option>
-                    {PRIORITIES.map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-[0.8vw] h-[0.8vw] text-slate-400 pointer-events-none absolute right-[0.55vw] top-1/2 -translate-y-1/2" />
+                    onChange={(val) => setFilterPriority(val)}
+                    options={[
+                      { value: "All", label: "All Priorities" },
+                      ...PRIORITIES.map((p) => ({ value: p, label: p })),
+                    ]}
+                    triggerClassName="h-[2.1vw] !rounded-[0.5vw] border-slate-200 bg-slate-50/70 hover:bg-white text-slate-700 font-semibold"
+                  />
                 </div>
 
                 {/* Primary Action Button: Register Call */}
@@ -3660,7 +3704,17 @@ export default function ServiceCall() {
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        setActiveActionMenuId(activeActionMenuId === rowId ? null : rowId);
+                                        if (activeActionMenuId === rowId) {
+                                          setActiveActionMenuId(null);
+                                          setActionMenuCoords(null);
+                                        } else {
+                                          const rect = e.currentTarget.getBoundingClientRect();
+                                          setActionMenuCoords({
+                                            top: rect.bottom + 4,
+                                            right: window.innerWidth - rect.right,
+                                          });
+                                          setActiveActionMenuId(rowId);
+                                        }
                                       }}
                                       className="p-[0.4vw] text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       title="Actions"
@@ -3668,15 +3722,22 @@ export default function ServiceCall() {
                                       <MoreVertical className="w-[1.1vw] h-[1.1vw]" />
                                     </button>
 
-                                    {/* Action Dropdown Menu */}
-                                    <AnimatePresence>
-                                      {activeActionMenuId === rowId && (
+                                    {/* Action Dropdown Menu via Portal to avoid table overflow clipping */}
+                                    {activeActionMenuId === rowId && actionMenuCoords && ReactDOM.createPortal(
+                                      <div
+                                        className="action-menu-portal fixed z-[9999]"
+                                        style={{
+                                          top: `${actionMenuCoords.top}px`,
+                                          right: `${actionMenuCoords.right}px`,
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
                                         <motion.div
                                           initial={{ opacity: 0, scale: 0.95, y: -5 }}
                                           animate={{ opacity: 1, scale: 1, y: 0 }}
                                           exit={{ opacity: 0, scale: 0.95, y: -5 }}
                                           transition={{ duration: 0.12 }}
-                                          className="absolute right-0 mt-[0.3vw] min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-xl border border-slate-200 py-[0.4vw] z-50 text-left"
+                                          className="min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-2xl border border-slate-200 py-[0.4vw] text-left"
                                         >
                                           <button
                                             onClick={() => {
@@ -3712,9 +3773,27 @@ export default function ServiceCall() {
                                             <History className="w-[0.9vw] h-[0.9vw] shrink-0" />
                                             <span>Call History</span>
                                           </button>
+
+                                          {canDelete && !isSupervisor && (
+                                            <button
+                                              onClick={() => {
+                                                setActiveActionMenuId(null);
+                                                setDeleteModalState({
+                                                  isOpen: true,
+                                                  row: row,
+                                                  isBulk: false,
+                                                });
+                                              }}
+                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer border-t border-slate-100"
+                                            >
+                                              <Trash2 className="w-[0.9vw] h-[0.9vw] shrink-0 text-rose-500" />
+                                              <span>Delete Call</span>
+                                            </button>
+                                          )}
                                         </motion.div>
-                                      )}
-                                    </AnimatePresence>
+                                      </div>,
+                                      document.body
+                                    )}
                                   </div>
                                 </td>
                               )}
@@ -3853,9 +3932,24 @@ export default function ServiceCall() {
           onClose={() => setSummaryModalRow(null)}
         />
       )}
+
+      {/* Custom Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={deleteModalState.isOpen}
+        isLoading={isDeleting}
+        title={deleteModalState.isBulk ? "Delete Selected Calls" : "Delete Service Call"}
+        itemCount={deleteModalState.isBulk ? selectedItems.size : undefined}
+        callNumber={deleteModalState.row?.callNumber}
+        onClose={() => {
+          if (!isDeleting) {
+            setDeleteModalState({ isOpen: false, row: null, isBulk: false });
+          }
+        }}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }
 
-export { ServiceCallForm, emptyForm, emptyProduct };
+export { ServiceCallForm, emptyForm, emptyProduct, CallSummaryModal, getStatusCfg, getProductStatus, deriveCallStatus, getTypeColor, PRIORITIES };
 

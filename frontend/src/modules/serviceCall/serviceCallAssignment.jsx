@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import useModulePermissions from "../../components/useModulePermissions";
+import CustomDropdown from "../../components/CustomDropdown";
 
 // ── Constants & Helpers ────────────────────────────────────────────────────────
 const SERVICE_CALLS_KEY = "service_calls_v2";
@@ -336,89 +337,6 @@ export default function ServiceCallAssignment() {
   return (
     <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
 
-      {/* ── TOP KPI STAT CARDS (Consistent with ServiceCall.jsx design) ── */}
-      <div className="grid grid-cols-4 gap-[0.8vw] shrink-0">
-        {/* 1. Pending Assignment */}
-        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)] hover:shadow-lg hover:border-blue-300 transition-all flex items-center justify-between group relative overflow-hidden">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-              <ClipboardList className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                {stats.pendingAssign}
-              </div>
-              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                Awaiting Assignment
-              </div>
-            </div>
-          </div>
-          <svg className="w-[4.5vw] h-[1.8vw] text-blue-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M 0 32 Q 25 35 45 20 T 90 8" />
-          </svg>
-        </div>
-
-        {/* 2. Critical Priority */}
-        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(239,68,68,0.08)] hover:shadow-lg hover:border-rose-300 transition-all flex items-center justify-between group relative overflow-hidden">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
-              <AlertCircle className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                {stats.critical}
-              </div>
-              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                Critical Escalations
-              </div>
-            </div>
-          </div>
-          <svg className="w-[4.5vw] h-[1.8vw] text-rose-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M 0 32 Q 35 34 55 18 T 90 8" />
-          </svg>
-        </div>
-
-        {/* 3. High Priority */}
-        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(245,158,11,0.08)] hover:shadow-lg hover:border-amber-300 transition-all flex items-center justify-between group relative overflow-hidden">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-2xs">
-              <Clock className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                {stats.high}
-              </div>
-              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                High Urgency
-              </div>
-            </div>
-          </div>
-          <svg className="w-[4.5vw] h-[1.8vw] text-amber-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M 0 35 Q 25 30 50 22 T 90 10" />
-          </svg>
-        </div>
-
-        {/* 4. Ready Field Engineers */}
-        <div className="bg-white rounded-[0.8vw] p-[0.85vw] border border-slate-200/80 shadow-[0_4px_16px_-4px_rgba(16,185,129,0.08)] hover:shadow-lg hover:border-emerald-300 transition-all flex items-center justify-between group relative overflow-hidden">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
-              <Users className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <div className="text-[1.35vw] font-extrabold text-slate-900 leading-none tracking-tight">
-                {employees.filter(e => e.role?.toLowerCase() !== "admin").length}
-              </div>
-              <div className="text-[0.66vw] font-medium text-slate-500 mt-[0.2vw]">
-                Engineers in Roster
-              </div>
-            </div>
-          </div>
-          <svg className="w-[4.5vw] h-[1.8vw] text-emerald-500 stroke-current fill-none opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 100 40" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M 0 30 Q 30 32 50 15 T 90 6" />
-          </svg>
-        </div>
-      </div>
-
       {/* ── FILTER & SEARCH TOOLBAR ── */}
       <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
         {/* Left Side: Search Box */}
@@ -454,19 +372,20 @@ export default function ServiceCallAssignment() {
             )}
           </div>
 
-          <div className="relative">
-            <select
+          <div className="w-[10vw]">
+            <CustomDropdown
+              size="sm"
               value={priorityFilter}
-              onChange={e => setPriorityFilter(e.target.value)}
-              className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2.1vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
-            >
-              <option value="All">All Priorities</option>
-              <option value="Critical">Critical Priority</option>
-              <option value="High">High Priority</option>
-              <option value="Medium">Medium Priority</option>
-              <option value="Low">Low Priority</option>
-            </select>
-            <ChevronDown className="w-[0.75vw] h-[0.75vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2" />
+              onChange={(val) => setPriorityFilter(val)}
+              options={[
+                { value: "All", label: "All Priorities" },
+                { value: "Critical", label: "Critical Priority" },
+                { value: "High", label: "High Priority" },
+                { value: "Medium", label: "Medium Priority" },
+                { value: "Low", label: "Low Priority" },
+              ]}
+              triggerClassName="h-[2.1vw] !rounded-[0.5vw] border-gray-200/90 text-gray-700 font-medium"
+            />
           </div>
         </div>
       </div>

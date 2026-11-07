@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
+import CustomDropdown from "../../components/CustomDropdown";
 import ProductHistoryModal, {
   ProductHistoryTimeline,
 } from "./ProductHistoryModal";
@@ -610,63 +611,38 @@ const ActionLogsView = ({
         <div className="flex items-center justify-between p-[1vw]">
           <div className="flex items-center gap-[0.5vw]">
             {tabsElement}
-            <div className="flex items-center ml-[0.5vw]">
-              <div className="relative">
-                <select
-                  value={activeStatusTab}
-                  onChange={(e) => {
-                    setActiveStatusTab(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="appearance-none bg-white border border-slate-300 text-slate-700 font-bold text-[0.85vw] py-[0.5vw] pl-[1vw] pr-[2vw] rounded-[0.5vw] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-sm cursor-pointer transition-colors hover:bg-slate-50"
-                >
-                  {subTabs.map((tab) => (
-                    <option
-                      key={tab}
-                      value={tab}
-                      className="font-medium text-slate-700"
-                    >
-                      {tab} ({tabCounts[tab] || 0})
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[0.6vw] text-slate-500">
-                  <svg
-                    className="fill-current h-[1vw] w-[1vw]"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
+            <div className="flex items-center ml-[0.5vw] min-w-[11vw]">
+              <CustomDropdown
+                size="sm"
+                value={activeStatusTab}
+                onChange={(val) => {
+                  setActiveStatusTab(val);
+                  setCurrentPage(1);
+                }}
+                options={subTabs.map((tab) => ({
+                  value: tab,
+                  label: `${tab} (${tabCounts[tab] || 0})`,
+                }))}
+                triggerClassName="!rounded-[0.5vw] border-slate-300 text-slate-700 font-bold"
+              />
             </div>
             {isEmployeeWise && (
-              <div className="flex items-center ml-[0.5vw]">
-                <div className="relative">
-                  <select
-                    value={involvementFilter}
-                    onChange={(e) => {
-                      setInvolvementFilter(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    className="appearance-none bg-white border border-slate-300 text-slate-700 font-bold text-[0.85vw] py-[0.5vw] pl-[1vw] pr-[2vw] rounded-[0.5vw] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-sm cursor-pointer transition-colors hover:bg-slate-50"
-                  >
-                    <option value="All">All Involvements</option>
-                    <option value="Primary">Primary</option>
-                    <option value="Field Visit">Field Visit</option>
-                    <option value="Supporting">Supporting</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[0.6vw] text-slate-500">
-                    <svg
-                      className="fill-current h-[1vw] w-[1vw]"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
+              <div className="flex items-center ml-[0.5vw] min-w-[11vw]">
+                <CustomDropdown
+                  size="sm"
+                  value={involvementFilter}
+                  onChange={(val) => {
+                    setInvolvementFilter(val);
+                    setCurrentPage(1);
+                  }}
+                  options={[
+                    { value: "All", label: "All Involvements" },
+                    { value: "Primary", label: "Primary" },
+                    { value: "Field Visit", label: "Field Visit" },
+                    { value: "Supporting", label: "Supporting" },
+                  ]}
+                  triggerClassName="!rounded-[0.5vw] border-slate-300 text-slate-700 font-bold"
+                />
               </div>
             )}
           </div>
