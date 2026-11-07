@@ -53,7 +53,19 @@ const productSchema = new mongoose.Schema({
     diagnosisSummary: String,
     status: { type: String, default: 'Open' },
     closedAt: Date
-  }
+  },
+  _closureEdits: [{
+    editedAt: { type: Date, default: Date.now },
+    editedBy: String,
+    editedByName: String,
+    role: String,
+    reason: String,
+    diffs: [{
+      field: String,
+      originalValue: mongoose.Schema.Types.Mixed,
+      editedValue: mongoose.Schema.Types.Mixed
+    }]
+  }]
 });
 
 const serviceCallSchema = new mongoose.Schema({
@@ -83,7 +95,21 @@ const serviceCallSchema = new mongoose.Schema({
   deadline: Date,
   escalationHistory: [mongoose.Schema.Types.Mixed],
   registeredBy: String,
-  noEscalation: { type: Boolean, default: false }
+  noEscalation: { type: Boolean, default: false },
+
+  // Track field-level diffs on call edits
+  editHistory: [{
+    editedAt: { type: Date, default: Date.now },
+    editedBy: String,
+    editedByName: String,
+    role: String,
+    reason: String,
+    diffs: [{
+      field: String,
+      originalValue: mongoose.Schema.Types.Mixed,
+      editedValue: mongoose.Schema.Types.Mixed
+    }]
+  }]
 }, { timestamps: true });
 
 serviceCallSchema.index({ createdAt: -1 });

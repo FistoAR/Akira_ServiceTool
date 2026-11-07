@@ -68,6 +68,7 @@ router.patch('/field-visit/:id/reschedule', serviceCallController.rescheduleFiel
 router.patch('/field-visit/:id/return', serviceCallController.returnFieldVisit);
 
 router.patch('/:id/product/:pIdx/close', serviceCallController.closeProduct);
+router.patch('/:id/product/:pIdx/edit-report', serviceCallController.editProductReport);
 router.patch('/:id/product/:pIdx/attend', serviceCallController.attendProduct);
 
 router.get('/',                  serviceCallController.getAllCalls);

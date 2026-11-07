@@ -132,6 +132,10 @@ export default function Sidebar() {
       label: "Service Call (Workspace)",
       iconify: "solar:user-speak-rounded-bold-duotone",
       show: !!loggedInUser?.permissions?.serviceCallResponse?.enabled,
+      subItems: [
+        { path: "/serviceCallResponse", label: "Workspace Queue", show: true },
+        { path: "/serviceCall/reports", label: "Reports", show: true },
+      ],
     },
     {
       path: "/serviceMaterial",

@@ -372,6 +372,119 @@ exports.closeProduct = async (req, res) => {
   }
 };
 
+// ── PATCH /api/service-calls/:id/product/:pIdx/edit-report ───────────────────
+// Allows employees (or admins) to edit a previously submitted closure/status report
+exports.editProductReport = async (req, res) => {
+  try {
+    const { id, pIdx } = req.params;
+    const {
+      status: newStatus,
+      remarks: newRemarks,
+      resolutionType: newResolutionType,
+      editReason,
+      userId,
+      name,
+      role
+    } = req.body;
+
+    const call = await ServiceCall.findById(id);
+    if (!call) return res.status(404).json({ message: 'Call not found' });
+    const product = call.products[pIdx];
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    const oldClosure = product._productClosure || {};
+    const oldStatus = oldClosure.status || (product._resolved ? 'Resolved' : 'Open');
+    const oldRemarks = oldClosure.remarks || '';
+    const oldResType = oldClosure.resolutionType || '';
+
+    // Calculate exact field differences
+    const diffs = [];
+    if (newStatus !== undefined && newStatus !== oldStatus) {
+      diffs.push({
+        field: 'status',
+        originalValue: oldStatus,
+        editedValue: newStatus
+      });
+    }
+    if (newRemarks !== undefined && newRemarks !== oldRemarks) {
+      diffs.push({
+        field: 'remarks',
+        originalValue: oldRemarks,
+        editedValue: newRemarks
+      });
+    }
+    if (newResolutionType !== undefined && newResolutionType !== oldResType) {
+      diffs.push({
+        field: 'resolutionType',
+        originalValue: oldResType,
+        editedValue: newResolutionType
+      });
+    }
+
+    // Only record if actual values changed
+    if (diffs.length > 0) {
+      if (!product._closureEdits) product._closureEdits = [];
+      product._closureEdits.push({
+        editedAt: new Date(),
+        editedBy: userId || req.user?.userId || 'Employee',
+        editedByName: name || req.user?.name || 'Employee',
+        role: role || req.user?.role || 'Employee',
+        reason: editReason || '',
+        diffs
+      });
+
+      // Update closure details
+      product._productClosure = {
+        ...oldClosure,
+        status: newStatus !== undefined ? newStatus : oldClosure.status,
+        remarks: newRemarks !== undefined ? newRemarks : oldClosure.remarks,
+        resolutionType: newResolutionType !== undefined ? newResolutionType : oldClosure.resolutionType,
+        lastEditedAt: new Date(),
+        lastEditedBy: userId || name || 'Employee',
+        lastEditReason: editReason || ''
+      };
+
+      if (newStatus === 'Resolved' || newStatus === 'Closed') {
+        product._resolved = true;
+      } else if (newStatus && newStatus !== 'Resolved' && newStatus !== 'Closed') {
+        product._resolved = false;
+      }
+
+      // Add audit history entry
+      const historyItem = {
+        status: `Report Edited (${newStatus || oldStatus})`,
+        updatedBy: userId || 'Employee',
+        updatedByName: name || 'Employee',
+        remarks: editReason ? `Reason: ${editReason}. Notes: ${newRemarks || oldRemarks}` : (newRemarks || oldRemarks),
+        metadata: {
+          isEdit: true,
+          diffs,
+          editReason: editReason || ''
+        }
+      };
+      product._history.push(historyItem);
+
+      // Recalculate call status
+      const allAssignedDone = call.products.every(p => {
+        if (!p._assigned) return true;
+        return p._resolved || p._productClosure?.status === 'Closed' || p._productClosure?.status === 'Resolved';
+      });
+      call.status = allAssignedDone ? 'Resolved' : 'Assigned';
+
+      call.markModified('products');
+      await call.save();
+      try { getIO().emit('service_call_updated', call); } catch (e) {}
+
+      return res.json(call);
+    } else {
+      return res.json({ message: 'No changes detected', call });
+    }
+  } catch (err) {
+    console.error('editProductReport Error:', err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // ── PATCH /api/service-calls/:id/product/:pIdx/attend ────────────────────────
 exports.attendProduct = async (req, res) => {
   try {
@@ -740,6 +853,77 @@ exports.updateCall = async (req, res) => {
 
     const existingCall = await ServiceCall.findById(req.params.id);
     if (!existingCall) return res.status(404).json({ message: 'Call not found' });
+
+    // ── Audit Diff Tracking (Admin & Employee edits) ──────────────────────────
+    // Compare scalar root fields between existingCall and payload
+    const auditedFields = [
+      'customerName', 'partyCode', 'contactPerson', 'contactNumber', 'emailId',
+      'location', 'site', 'locationType', 'segment', 'customerType', 'priority',
+      'mode', 'dateTime'
+    ];
+
+    const diffs = [];
+    auditedFields.forEach(f => {
+      if (payload[f] !== undefined) {
+        let oldVal = existingCall[f];
+        let newVal = payload[f];
+
+        // Format dates for comparison if applicable
+        if (f === 'dateTime') {
+          oldVal = oldVal ? new Date(oldVal).toISOString() : '';
+          newVal = newVal ? new Date(newVal).toISOString() : '';
+        }
+
+        const strOld = oldVal === null || oldVal === undefined ? '' : String(oldVal);
+        const strNew = newVal === null || newVal === undefined ? '' : String(newVal);
+
+        if (strOld !== strNew) {
+          diffs.push({
+            field: f,
+            originalValue: existingCall[f] || null,
+            editedValue: payload[f]
+          });
+        }
+      }
+    });
+
+    // Check product updates for diffs (e.g. serialNumber, errorCode, productModel)
+    if (payload.products && Array.isArray(payload.products) && existingCall.products) {
+      payload.products.forEach((p, idx) => {
+        const ep = p._id
+          ? existingCall.products.find(ex => ex._id.toString() === p._id.toString())
+          : existingCall.products[idx];
+        if (ep) {
+          ['itemCode', 'serialNumber', 'errorCode', 'productModel', 'warrantyStatus', 'callDescription'].forEach(pf => {
+            if (p[pf] !== undefined) {
+              const oldPf = ep[pf] === null || ep[pf] === undefined ? '' : String(ep[pf]);
+              const newPf = p[pf] === null || p[pf] === undefined ? '' : String(p[pf]);
+              if (oldPf !== newPf) {
+                diffs.push({
+                  field: `Product ${idx + 1} (${p.productModel || ep.productModel || 'Item'}): ${pf}`,
+                  originalValue: ep[pf] || null,
+                  editedValue: p[pf]
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+
+    if (diffs.length > 0) {
+      const editRecord = {
+        editedAt: new Date(),
+        editedBy: payload._editedBy || req.user?.userId || 'Admin',
+        editedByName: payload._editedByName || req.user?.name || 'Administrator',
+        role: payload._editedByRole || req.user?.role || 'Admin',
+        reason: payload._editReason || '',
+        diffs
+      };
+
+      if (!payload.editHistory) payload.editHistory = existingCall.editHistory || [];
+      payload.editHistory = [...payload.editHistory, editRecord];
+    }
 
     if (payload.products && Array.isArray(payload.products)) {
       // Look for any existing assignment from the payload or the existing call

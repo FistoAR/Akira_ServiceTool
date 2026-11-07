@@ -108,9 +108,8 @@ function MainLayout() {
             path="serviceCall/reports"
             element={
               <ProtectedRoute
-                requiredModules={["callReports"]}
-                requireManagement={true}
-                fallbackToResponse="/serviceCallResponse"
+                requiredModules={["callReports", "serviceCallResponse"]}
+                requireManagement={false}
               >
                 <ServiceCallReports />
               </ProtectedRoute>

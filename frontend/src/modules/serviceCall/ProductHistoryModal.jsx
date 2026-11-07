@@ -154,6 +154,39 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                       {h.remarks}
                     </div>
                   )}
+
+                  {/* Audit Diff Table if this was an edit event */}
+                  {h.metadata?.diffs && h.metadata.diffs.length > 0 && (
+                    <div className="mt-[0.5vw] bg-white rounded-[0.4vw] border border-amber-200 p-[0.5vw] overflow-hidden">
+                      <div className="text-[0.72vw] font-bold text-amber-800 uppercase tracking-wide mb-[0.3vw] flex items-center justify-between">
+                        <span>Changed Fields ({h.metadata.diffs.length})</span>
+                        {h.metadata.editReason && (
+                          <span className="font-semibold text-slate-500 normal-case">
+                            Reason: {h.metadata.editReason}
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-[0.3vw]">
+                        {h.metadata.diffs.map((d, dIdx) => (
+                          <div
+                            key={dIdx}
+                            className="text-[0.75vw] flex items-center gap-[0.5vw] py-[0.15vw] border-b border-slate-100 last:border-0"
+                          >
+                            <span className="font-semibold text-slate-700 min-w-[6vw]">
+                              {d.field}:
+                            </span>
+                            <span className="line-through text-rose-600 bg-rose-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[12vw] truncate">
+                              {d.originalValue !== null && d.originalValue !== undefined ? String(d.originalValue) : "—"}
+                            </span>
+                            <span className="text-slate-400">→</span>
+                            <span className="font-bold text-emerald-700 bg-emerald-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[12vw] truncate">
+                              {d.editedValue !== null && d.editedValue !== undefined ? String(d.editedValue) : "—"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             );

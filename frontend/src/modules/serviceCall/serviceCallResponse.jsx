@@ -1781,6 +1781,8 @@ const EscalationCard = ({
       layout
       transition={{ duration: 0.2 }}
       className={`bg-white rounded-[0.8vw] border overflow-visible transition-all duration-300 ${
+        isExpanded ? "col-span-full shadow-lg" : ""
+      } ${
         entry.status === "Resolved"
           ? "border-emerald-350 shadow-md shadow-emerald-500/5 bg-gradient-to-br from-white to-emerald-50/10"
           : isPendingTab
@@ -4414,6 +4416,7 @@ const ServiceCallResponse = () => {
   const [allCalls, setAllCalls] = useState([]);
   const [activeTab, setActiveTab] = useState("escalation");
   const [expandedCalls, setExpandedCalls] = useState({});
+  const isAnyExpanded = Object.values(expandedCalls).some(Boolean);
   const [loggedInUser, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -5203,6 +5206,9 @@ const ServiceCallResponse = () => {
     } = finalPayload;
 
     if (isEdit) {
+      serverPayload._editedBy = loggedInUser?.userId || "Employee";
+      serverPayload._editedByName = loggedInUser?.name || "Employee";
+      serverPayload._editedByRole = loggedInUser?.role || "Employee";
       const callId = formRow._id || formRow.id || formRow.callId;
       try {
         await axios.patch(`${API_URL}/service-calls/${callId}`, serverPayload);
@@ -5449,7 +5455,11 @@ const ServiceCallResponse = () => {
                   ? "flex-1 min-h-0 flex flex-col overflow-hidden"
                   : activeTab === "reports"
                     ? "flex-1 min-h-0 flex flex-col"
-                    : "grid grid-cols-2 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
+                    : activeTab === "escalation"
+                      ? isAnyExpanded
+                        ? "grid grid-cols-1 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
+                        : "grid grid-cols-1 lg:grid-cols-2 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
+                      : "grid grid-cols-1 lg:grid-cols-2 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
               }
             >
               {activeTab === "escalation" &&
@@ -6045,29 +6055,42 @@ const ServiceCallResponse = () => {
       {/* Product History Modal */}
       {historyModalProduct && (
         <ProductHistoryModal
-          history={(historyModalProduct._products || historyModalProduct.products || [])
-            .flatMap((p) => [
-              ...(p._escalationHistory || []).map((e) => ({
-                ...e,
-                timestamp: e.assignedAt,
-                status:
-                  e.status === "Pending"
-                    ? "Escalation Assigned"
-                    : e.status || "Escalated",
-                updatedByName: e.updatedByName || "System",
-                metadata: {
-                  assignedTo:
-                    e.engineerName || e.assignedToName || e.assignedTo,
-                  assignedToName: e.engineerName || e.assignedToName,
-                  dept: e.department || e.dept,
-                  remarks: e.remarks || e.reason || "",
-                  level: e.level,
-                  deadline: e.targetTime || e.deadline,
-                },
-              })),
-              ...(p._history || []),
-            ])
-            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
+          history={[
+            ...((historyModalProduct.editHistory || []).map((eh) => ({
+              status: `Call Edited (${eh.role || "Admin"})`,
+              timestamp: eh.editedAt,
+              updatedBy: eh.editedBy,
+              updatedByName: eh.editedByName,
+              remarks: eh.reason ? `Reason: ${eh.reason}` : "",
+              metadata: {
+                isEdit: true,
+                editReason: eh.reason,
+                diffs: eh.diffs || [],
+              },
+            }))),
+            ...((historyModalProduct._products || historyModalProduct.products || [])
+              .flatMap((p) => [
+                ...(p._escalationHistory || []).map((e) => ({
+                  ...e,
+                  timestamp: e.assignedAt,
+                  status:
+                    e.status === "Pending"
+                      ? "Escalation Assigned"
+                      : e.status || "Escalated",
+                  updatedByName: e.updatedByName || "System",
+                  metadata: {
+                    assignedTo:
+                      e.engineerName || e.assignedToName || e.assignedTo,
+                    assignedToName: e.engineerName || e.assignedToName,
+                    dept: e.department || e.dept,
+                    remarks: e.remarks || e.reason || "",
+                    level: e.level,
+                    deadline: e.targetTime || e.deadline,
+                  },
+                })),
+                ...(p._history || []),
+              ])),
+          ].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
           employees={employees}
           currentUser={loggedInUser}
           onClose={() => setHistoryModalProduct(null)}

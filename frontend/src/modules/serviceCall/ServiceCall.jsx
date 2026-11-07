@@ -2924,6 +2924,12 @@ export default function ServiceCall() {
       ...serverPayload
     } = finalCall;
 
+    if (isEdit) {
+      serverPayload._editedBy = currentUser?.userId || "Admin";
+      serverPayload._editedByName = currentUser?.name || "Administrator";
+      serverPayload._editedByRole = currentUser?.role || "Admin";
+    }
+
     // 3. Update the database and local store
     if (isEdit) {
       try {
@@ -3895,29 +3901,42 @@ export default function ServiceCall() {
 
       {historyModalProduct && (
         <ProductHistoryModal
-          history={(historyModalProduct._products || [])
-            .flatMap((p) => [
-              ...(p._escalationHistory || []).map((e) => ({
-                ...e,
-                timestamp: e.assignedAt,
-                status:
-                  e.status === "Pending"
-                    ? "Escalation Assigned"
-                    : e.status || "Escalated",
-                updatedByName: e.updatedByName || "System",
-                metadata: {
-                  assignedTo:
-                    e.engineerName || e.assignedToName || e.assignedTo,
-                  assignedToName: e.engineerName || e.assignedToName,
-                  dept: e.department || e.dept,
-                  remarks: e.remarks || e.reason || "",
-                  level: e.level,
-                  deadline: e.targetTime || e.deadline,
-                },
-              })),
-              ...(p._history || []),
-            ])
-            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
+          history={[
+            ...((historyModalProduct.editHistory || []).map((eh) => ({
+              status: `Call Edited (${eh.role || "Admin"})`,
+              timestamp: eh.editedAt,
+              updatedBy: eh.editedBy,
+              updatedByName: eh.editedByName,
+              remarks: eh.reason ? `Reason: ${eh.reason}` : "",
+              metadata: {
+                isEdit: true,
+                editReason: eh.reason,
+                diffs: eh.diffs || [],
+              },
+            }))),
+            ...((historyModalProduct._products || historyModalProduct.products || [])
+              .flatMap((p) => [
+                ...(p._escalationHistory || []).map((e) => ({
+                  ...e,
+                  timestamp: e.assignedAt,
+                  status:
+                    e.status === "Pending"
+                      ? "Escalation Assigned"
+                      : e.status || "Escalated",
+                  updatedByName: e.updatedByName || "System",
+                  metadata: {
+                    assignedTo:
+                      e.engineerName || e.assignedToName || e.assignedTo,
+                    assignedToName: e.engineerName || e.assignedToName,
+                    dept: e.department || e.dept,
+                    remarks: e.remarks || e.reason || "",
+                    level: e.level,
+                    deadline: e.targetTime || e.deadline,
+                  },
+                })),
+                ...(p._history || []),
+              ])),
+          ].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
           employees={employees}
           currentUser={currentUser}
           onClose={() => setHistoryModalProduct(null)}
