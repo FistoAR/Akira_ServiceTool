@@ -361,6 +361,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
               </h4>
               <div className="grid grid-cols-2 gap-[1vw]">
                 <RefInput label="Tested By" value={product.report.testedBy} />
+                <RefInput label="FQA By" value={product.report.fqaBy} />
                 <RefInput
                   label="Designators"
                   value={product.report.designators}
@@ -376,13 +377,18 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                   span={2}
                 />
                 <RefInput
+                  label="PV, CV"
+                  value={product.report.pvCv}
+                  span={2}
+                />
+                <RefInput
                   label="Root Cause"
                   value={product.report.rootCause}
                   span={2}
                 />
                 <RefInput
-                  label="Corrective Action"
-                  value={product.report.correctiveAction}
+                  label="Fault Parts"
+                  value={product.report.faultParts}
                   span={2}
                 />
                 <RefInput
@@ -390,6 +396,14 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                   value={product.report.partsReplacement}
                   span={2}
                 />
+                <RefInput
+                  label="Corrective Action"
+                  value={product.report.correctiveAction}
+                  span={2}
+                />
+                <RefInput label="Time (Hours)" value={product.report.timeInHours} />
+                <RefInput label="Material Cost" value={product.report.materialCost} />
+                <RefInput label="Man Power Cost" value={product.report.manpowerCost != null ? `₹${Number(product.report.manpowerCost).toFixed(2)}` : "—"} />
                 <RefInput label="Status" value={product.report.status} />
                 <RefInput
                   label="Disposition"
@@ -482,9 +496,19 @@ export default function ServiceMaterialInwardResponse({
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [serialFilter, setSerialFilter] = useState("");
   const [showOnlyUnsaved, setShowOnlyUnsaved] = useState(false);
   const [showOnlyUnclaimed, setShowOnlyUnclaimed] = useState(false);
   const [historySelected, setHistorySelected] = useState(null);
+  const [editReportModal, setEditReportModal] = useState(null);
+  const [editReason, setEditReason] = useState("");
+  const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+
+  // Drag-and-fill states
+  const [selection, setSelection] = useState(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [isFilling, setIsFilling] = useState(false);
+  const tableContainerRef = useRef(null);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -492,7 +516,7 @@ export default function ServiceMaterialInwardResponse({
       setShowOnlyUnsaved(false);
       setShowOnlyUnclaimed(false);
     }
-  }, [searchTerm, dateFrom, dateTo, filterStatus]);
+  }, [searchTerm, dateFrom, dateTo, serialFilter, filterStatus]);
 
   const toDateObj = (d) => {
     if (!d) return null;
@@ -731,12 +755,19 @@ export default function ServiceMaterialInwardResponse({
           Product: "",
           "Serial No": "",
           "Board Type": "",
+          "Tested By": "",
+          "FQA By": "",
           "4M Category": "",
           "Error Code": "",
           "Problem Description": "",
+          "PV, CV": "",
           "Root Cause": "",
+          "Fault Parts": "",
           "Parts Replaced": "",
           "Corrective Action": "",
+          "Time (Hours)": "",
+          "Material Cost": "",
+          "Man Power Cost": "",
           Disposition: "",
           "Completion Date": "",
           Status: "",
@@ -751,12 +782,19 @@ export default function ServiceMaterialInwardResponse({
         Product: r.product.productDescription || "",
         "Serial No": r.product.serialNumber || "",
         "Board Type": r.product.boardType || "",
+        "Tested By": r.product.report?.testedBy || "",
+        "FQA By": r.product.report?.fqaBy || "",
         "4M Category": r.product.report?.fourMCategory || "",
         "Error Code": r.product.report?.errorCode || "",
         "Problem Description": r.product.report?.problemDescription || "",
+        "PV, CV": r.product.report?.pvCv || "",
         "Root Cause": r.product.report?.rootCause || "",
+        "Fault Parts": r.product.report?.faultParts || "",
         "Parts Replaced": r.product.report?.partsReplacement || "",
         "Corrective Action": r.product.report?.correctiveAction || "",
+        "Time (Hours)": r.product.report?.timeInHours || "",
+        "Material Cost": r.product.report?.materialCost ? `₹${r.product.report.materialCost}` : "",
+        "Man Power Cost": r.product.report?.manpowerCost != null ? `₹${Number(r.product.report.manpowerCost).toFixed(2)}` : "",
         Disposition: r.product.report?.disposition || "",
         "Completion Date": r.product.report?.completedDate
           ? fmtDate(r.product.report.completedDate)
@@ -789,6 +827,12 @@ export default function ServiceMaterialInwardResponse({
         : "";
     return {
       testedBy: product.report?.testedBy || "",
+      fqaBy: product.report?.fqaBy || "",
+      timeInHours: product.report?.timeInHours || "",
+      materialCost: product.report?.materialCost || "",
+      manpowerCost: product.report?.manpowerCost != null ? product.report.manpowerCost : "",
+      pvCv: product.report?.pvCv || "",
+      faultParts: product.report?.faultParts || "",
       disposition: product.report?.disposition || "",
       fourMCategory: product.report?.fourMCategory || "",
       errorCode: product.report?.errorCode || "",
@@ -807,9 +851,23 @@ export default function ServiceMaterialInwardResponse({
   const handleDraftChange = (productId, product, field, value) => {
     setDrafts((prev) => {
       const existing = prev[productId] || getDraft(productId, product);
+      const updated = { ...existing, [field]: value, hasChanges: true };
+
+      // Auto calculate manpower cost if timeInHours changed
+      if (field === "timeInHours") {
+        const timeVal = parseFloat(value);
+        const userCtc = parseFloat(currentUser?.ctc || 0);
+        if (!isNaN(timeVal) && timeVal > 0 && userCtc > 0) {
+          const cost = (userCtc / (26 * 8)) * timeVal;
+          updated.manpowerCost = Math.round(cost * 100) / 100;
+        } else if (isNaN(timeVal) || timeVal <= 0) {
+          updated.manpowerCost = 0;
+        }
+      }
+
       return {
         ...prev,
-        [productId]: { ...existing, [field]: value, hasChanges: true },
+        [productId]: updated,
       };
     });
   };
@@ -886,8 +944,24 @@ export default function ServiceMaterialInwardResponse({
       timestamp: new Date().toISOString(),
     };
 
+    // Auto calculate manpower cost if not already computed
+    let manpowerCost = draft.manpowerCost;
+    if (draft.timeInHours && (manpowerCost === "" || manpowerCost == null)) {
+      const timeVal = parseFloat(draft.timeInHours);
+      const userCtc = parseFloat(currentUser?.ctc || 0);
+      if (!isNaN(timeVal) && timeVal > 0 && userCtc > 0) {
+        manpowerCost = Math.round(((userCtc / (26 * 8)) * timeVal) * 100) / 100;
+      }
+    }
+
     const updatedReport = {
       testedBy: draft.testedBy,
+      fqaBy: draft.fqaBy,
+      timeInHours: draft.timeInHours,
+      materialCost: draft.materialCost,
+      manpowerCost: manpowerCost != null && manpowerCost !== "" ? Number(manpowerCost) : 0,
+      pvCv: draft.pvCv,
+      faultParts: draft.faultParts,
       disposition: draft.disposition,
       fourMCategory: draft.fourMCategory,
       errorCode: draft.errorCode,
@@ -1086,6 +1160,19 @@ export default function ServiceMaterialInwardResponse({
           if (!matches) return;
         }
 
+        // Multi-Serial Number Filter
+        if (serialFilter && serialFilter.trim()) {
+          const serials = serialFilter
+            .split(/[,\s\n]+/)
+            .map((s) => s.trim().toUpperCase())
+            .filter(Boolean);
+          if (serials.length > 0) {
+            const pSerial = (p.serialNumber || "").trim().toUpperCase();
+            const matched = serials.some((target) => pSerial.includes(target));
+            if (!matched) return;
+          }
+        }
+
         const isAssignedToMe =
           p.assignedTo === (currentUser?.userId || currentUser?.id);
         const rawStatus = p.status || p.report?.status || "Open";
@@ -1140,6 +1227,7 @@ export default function ServiceMaterialInwardResponse({
     dateFrom,
     dateTo,
     searchTerm,
+    serialFilter,
     currentUser,
     showOnlyUnsaved,
     showOnlyUnclaimed,
@@ -1214,6 +1302,19 @@ export default function ServiceMaterialInwardResponse({
             (p.serialNumber || "").toLowerCase().includes(searchLower) ||
             (p.boardType || "").toLowerCase().includes(searchLower);
           if (!matches) return;
+        }
+
+        // Multi-Serial Number Filter
+        if (serialFilter && serialFilter.trim()) {
+          const serials = serialFilter
+            .split(/[,\s\n]+/)
+            .map((s) => s.trim().toUpperCase())
+            .filter(Boolean);
+          if (serials.length > 0) {
+            const pSerial = (p.serialNumber || "").trim().toUpperCase();
+            const matched = serials.some((target) => pSerial.includes(target));
+            if (!matched) return;
+          }
         }
 
         res.push({ entry: e, product: p });
@@ -1328,6 +1429,26 @@ export default function ServiceMaterialInwardResponse({
   };
 
   // Table columns configuration
+  const EDITABLE_COL_FIELDS = {
+    testedBy: "testedBy",
+    fqaBy: "fqaBy",
+    fourM: "fourMCategory",
+    errorCode: "errorCode",
+    problemDesc: "problemDescription",
+    pvCv: "pvCv",
+    designators: "designators",
+    rootCause: "rootCause",
+    faultParts: "faultParts",
+    partsReplaced: "partsReplacement",
+    correctiveAction: "correctiveAction",
+    timeInHours: "timeInHours",
+    materialCost: "materialCost",
+    disposition: "disposition",
+    completionDate: "completedDate",
+    status: "status",
+    remarks: "currentRemark",
+  };
+
   const columns = [
     { key: "sno", label: "S. No", align: "text-center" },
     { key: "date", label: "Date", align: "text-left", minW: "min-w-[7vw]" },
@@ -1357,6 +1478,12 @@ export default function ServiceMaterialInwardResponse({
       minW: "min-w-[10vw]",
     },
     {
+      key: "fqaBy",
+      label: "FQA By",
+      align: "text-left",
+      minW: "min-w-[10vw]",
+    },
+    {
       key: "fourM",
       label: "4M Category",
       align: "text-left",
@@ -1375,6 +1502,12 @@ export default function ServiceMaterialInwardResponse({
       minW: "min-w-[12vw]",
     },
     {
+      key: "pvCv",
+      label: "PV, CV",
+      align: "text-left",
+      minW: "min-w-[9vw]",
+    },
+    {
       key: "designators",
       label: "Designators",
       align: "text-left",
@@ -1387,6 +1520,12 @@ export default function ServiceMaterialInwardResponse({
       minW: "min-w-[12vw]",
     },
     {
+      key: "faultParts",
+      label: "Fault Parts",
+      align: "text-left",
+      minW: "min-w-[11vw]",
+    },
+    {
       key: "partsReplaced",
       label: "Parts Replaced",
       align: "text-left",
@@ -1397,6 +1536,24 @@ export default function ServiceMaterialInwardResponse({
       label: "Corrective Action",
       align: "text-left",
       minW: "min-w-[12vw]",
+    },
+    {
+      key: "timeInHours",
+      label: "Time (Hrs)",
+      align: "text-center",
+      minW: "min-w-[7vw]",
+    },
+    {
+      key: "materialCost",
+      label: "Material Cost",
+      align: "text-right",
+      minW: "min-w-[8vw]",
+    },
+    {
+      key: "manpowerCost",
+      label: "Man Power Cost",
+      align: "text-right",
+      minW: "min-w-[9vw]",
     },
     {
       key: "disposition",
@@ -1442,6 +1599,103 @@ export default function ServiceMaterialInwardResponse({
     },
   ];
 
+  const handleCellMouseDown = (rowIndex, colKey, e) => {
+    if (!EDITABLE_COL_FIELDS[colKey]) return;
+    setSelection({
+      startRow: rowIndex,
+      endRow: rowIndex,
+      colKey,
+    });
+    setIsSelecting(true);
+  };
+
+  const handleFillHandleMouseDown = (e, rowIndex, colKey) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSelection({
+      startRow: rowIndex,
+      endRow: rowIndex,
+      colKey,
+    });
+    setIsFilling(true);
+  };
+
+  const handleCellMouseEnter = (rowIndex, colKey) => {
+    if (isFilling && selection && selection.colKey === colKey) {
+      setSelection((prev) => ({
+        ...prev,
+        endRow: rowIndex,
+      }));
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isFilling && selection) {
+      const { startRow, endRow, colKey } = selection;
+      const field = EDITABLE_COL_FIELDS[colKey];
+      if (field) {
+        const sourceItem = paginatedItems[startRow];
+        if (sourceItem) {
+          const sourceDraft = drafts[sourceItem.product._pid] || getDraft(sourceItem.product._pid, sourceItem.product);
+          const sourceValue = sourceDraft[field];
+
+          const minR = Math.min(startRow, endRow);
+          const maxR = Math.max(startRow, endRow);
+
+          for (let r = minR; r <= maxR; r++) {
+            if (r === startRow) continue;
+            const targetItem = paginatedItems[r];
+            if (targetItem) {
+              const pid = targetItem.product._pid;
+              handleDraftChange(pid, targetItem.product, field, sourceValue);
+            }
+          }
+          toast(`Filled ${field} down from row ${minR + 1} to ${maxR + 1}`);
+        }
+      }
+    }
+    setIsSelecting(false);
+    setIsFilling(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isFilling, selection, paginatedItems, drafts]);
+
+  const getCellClass = (rowIndex, colKey) => {
+    let cls = "px-[0.8vw] py-[0.7vw] border border-gray-400 relative ";
+    if (!selection || selection.colKey !== colKey) return cls;
+    const { startRow, endRow } = selection;
+    const minR = Math.min(startRow, endRow);
+    const maxR = Math.max(startRow, endRow);
+    if (rowIndex >= minR && rowIndex <= maxR) {
+      cls += " bg-blue-50/40 border-blue-500 z-10";
+      if (rowIndex === minR) cls += " border-t-2";
+      if (rowIndex === maxR) cls += " border-b-2";
+    }
+    return cls;
+  };
+
+  const renderFillHandle = (rowIndex, colKey) => {
+    if (!selection || selection.colKey !== colKey) return null;
+    const { startRow, endRow } = selection;
+    const maxR = Math.max(startRow, endRow);
+    if (rowIndex === maxR) {
+      return (
+        <div
+          data-fill-handle="true"
+          onMouseDown={(e) => handleFillHandleMouseDown(e, startRow, colKey)}
+          className="absolute bottom-[-4px] right-[-4px] w-[9px] h-[9px] bg-blue-600 border border-white cursor-crosshair z-[60] shadow-sm rounded-sm hover:scale-125 transition-transform"
+          title="Drag down to fill value in column"
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="w-full h-[calc(100vh-5.5rem)] flex flex-col font-sans overflow-hidden pb-[0.6vw]">
       <datalist id="errorCodeList">
@@ -1460,19 +1714,40 @@ export default function ServiceMaterialInwardResponse({
           {/* Left Controls: Search & Filter Toggles */}
           <div className="flex items-center gap-[0.5vw] flex-shrink-0">
             {/* Search Input */}
-            <div className="relative w-[16vw] flex-shrink-0">
+            <div className="relative w-[15vw] flex-shrink-0">
               <Search className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-gray-400" />
               <input
                 type="text"
                 placeholder="Search product, customer, ref no…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.35vw] border border-gray-300 rounded-[0.4vw] text-[0.7vw] font-medium text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all"
+                className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.38vw] border border-gray-300 rounded-[0.4vw] text-[0.72vw] font-medium text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all shadow-sm"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
                   className="absolute right-[0.4vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 cursor-pointer"
+                >
+                  <X className="w-[0.65vw] h-[0.65vw]" />
+                </button>
+              )}
+            </div>
+
+            {/* Multi-Serial Number Filter */}
+            <div className="relative w-[16vw] flex-shrink-0">
+              <Hash className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-indigo-500" />
+              <input
+                type="text"
+                placeholder="Filter Serials (e.g. SN1, SN2)..."
+                value={serialFilter}
+                onChange={(e) => setSerialFilter(e.target.value)}
+                className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.38vw] border border-indigo-200 bg-indigo-50/20 rounded-[0.4vw] text-[0.72vw] font-medium text-indigo-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-all shadow-sm"
+                title="Filter by multiple serial numbers (comma, space, or newline separated)"
+              />
+              {serialFilter && (
+                <button
+                  onClick={() => setSerialFilter("")}
+                  className="absolute right-[0.4vw] top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-700 cursor-pointer"
                 >
                   <X className="w-[0.65vw] h-[0.65vw]" />
                 </button>
@@ -1631,7 +1906,7 @@ export default function ServiceMaterialInwardResponse({
       {/* Content */}
       {initialLoading ? (
         <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
-          <div className="overflow-auto flex-1 min-h-0">
+          <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-separate border-spacing-0">
               <thead className="sticky top-0 z-20 shadow-sm">
                 <tr className="bg-blue-50/95 backdrop-blur-md">
@@ -1665,7 +1940,7 @@ export default function ServiceMaterialInwardResponse({
       ) : (
         <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
           {/* Table Container with Internal Scroll */}
-          <div className="overflow-auto flex-1 min-h-0">
+          <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-separate border-spacing-0">
               {/* Table Header */}
               <thead className="sticky top-0 z-20 shadow-sm">
@@ -1906,7 +2181,11 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* Tested By */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "testedBy")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "testedBy", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "testedBy")}
+                          >
                             {draft ? (
                               <select
                                 value={draft.testedBy}
@@ -1927,10 +2206,37 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.testedBy || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "testedBy")}
+                          </td>
+
+                          {/* FQA By */}
+                          <td
+                            className={getCellClass(idx, "fqaBy")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "fqaBy", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "fqaBy")}
+                          >
+                            {draft ? (
+                              <input
+                                type="text"
+                                value={draft.fqaBy || ""}
+                                onChange={(e) => hc("fqaBy", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                placeholder="FQA By..."
+                              />
+                            ) : (
+                              <span className="text-[0.75vw] whitespace-nowrap">
+                                {product.report?.fqaBy || "—"}
+                              </span>
+                            )}
+                            {renderFillHandle(idx, "fqaBy")}
                           </td>
 
                           {/* 4M Category */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "fourM")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "fourM", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "fourM")}
+                          >
                             {draft ? (
                               <select
                                 value={draft.fourMCategory}
@@ -1954,10 +2260,15 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.fourMCategory || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "fourM")}
                           </td>
 
                           {/* Error Code */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "errorCode")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "errorCode", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "errorCode")}
+                          >
                             {draft ? (
                               <input
                                 type="text"
@@ -1974,10 +2285,15 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.errorCode || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "errorCode")}
                           </td>
 
                           {/* Problem Description */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "problemDesc")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "problemDesc", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "problemDesc")}
+                          >
                             {draft ? (
                               <input
                                 type="text"
@@ -1994,10 +2310,37 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.problemDescription || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "problemDesc")}
+                          </td>
+
+                          {/* PV, CV */}
+                          <td
+                            className={getCellClass(idx, "pvCv")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "pvCv", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "pvCv")}
+                          >
+                            {draft ? (
+                              <input
+                                type="text"
+                                value={draft.pvCv || ""}
+                                onChange={(e) => hc("pvCv", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                placeholder="PV, CV..."
+                              />
+                            ) : (
+                              <span className="text-[0.75vw]">
+                                {product.report?.pvCv || "—"}
+                              </span>
+                            )}
+                            {renderFillHandle(idx, "pvCv")}
                           </td>
 
                           {/* Designators */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "designators")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "designators", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "designators")}
+                          >
                             {draft ? (
                               <input
                                 type="text"
@@ -2013,10 +2356,15 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.designators || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "designators")}
                           </td>
 
                           {/* Root Cause */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "rootCause")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "rootCause", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "rootCause")}
+                          >
                             {draft ? (
                               <textarea
                                 value={draft.rootCause}
@@ -2032,10 +2380,37 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.rootCause || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "rootCause")}
+                          </td>
+
+                          {/* Fault Parts */}
+                          <td
+                            className={getCellClass(idx, "faultParts")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "faultParts", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "faultParts")}
+                          >
+                            {draft ? (
+                              <input
+                                type="text"
+                                value={draft.faultParts || ""}
+                                onChange={(e) => hc("faultParts", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[9vw]"
+                                placeholder="Fault Parts..."
+                              />
+                            ) : (
+                              <span className="text-[0.75vw]">
+                                {product.report?.faultParts || "—"}
+                              </span>
+                            )}
+                            {renderFillHandle(idx, "faultParts")}
                           </td>
 
                           {/* Parts Replaced */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "partsReplaced")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "partsReplaced", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "partsReplaced")}
+                          >
                             {draft ? (
                               <textarea
                                 value={draft.partsReplacement}
@@ -2051,10 +2426,15 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.partsReplacement || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "partsReplaced")}
                           </td>
 
                           {/* Corrective Action */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "correctiveAction")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "correctiveAction", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "correctiveAction")}
+                          >
                             {draft ? (
                               <textarea
                                 value={draft.correctiveAction}
@@ -2070,10 +2450,70 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.correctiveAction || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "correctiveAction")}
+                          </td>
+
+                          {/* Time (in hours) */}
+                          <td
+                            className={getCellClass(idx, "timeInHours")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "timeInHours", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "timeInHours")}
+                          >
+                            {draft ? (
+                              <input
+                                type="text"
+                                value={draft.timeInHours || ""}
+                                onChange={(e) => hc("timeInHours", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 text-center min-w-[5vw]"
+                                placeholder="Hrs e.g. 2.5"
+                              />
+                            ) : (
+                              <span className="text-[0.75vw] font-medium whitespace-nowrap">
+                                {product.report?.timeInHours ? `${product.report.timeInHours} hrs` : "—"}
+                              </span>
+                            )}
+                            {renderFillHandle(idx, "timeInHours")}
+                          </td>
+
+                          {/* Material Cost */}
+                          <td
+                            className={getCellClass(idx, "materialCost")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "materialCost", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "materialCost")}
+                          >
+                            {draft ? (
+                              <input
+                                type="text"
+                                value={draft.materialCost || ""}
+                                onChange={(e) => hc("materialCost", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 text-right min-w-[6vw]"
+                                placeholder="Cost e.g. 1500"
+                              />
+                            ) : (
+                              <span className="text-[0.75vw] font-medium whitespace-nowrap">
+                                {product.report?.materialCost ? `₹${product.report.materialCost}` : "—"}
+                              </span>
+                            )}
+                            {renderFillHandle(idx, "materialCost")}
+                          </td>
+
+                          {/* Man Power Cost */}
+                          <td className="px-[0.8vw] py-[0.7vw] text-right border border-gray-400">
+                            <span className="text-[0.75vw] font-semibold text-emerald-700 whitespace-nowrap">
+                              {draft && draft.manpowerCost != null && draft.manpowerCost !== ""
+                                ? `₹${Number(draft.manpowerCost).toFixed(2)}`
+                                : product.report?.manpowerCost != null
+                                ? `₹${Number(product.report.manpowerCost).toFixed(2)}`
+                                : "—"}
+                            </span>
                           </td>
 
                           {/* Disposition */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "disposition")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "disposition", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "disposition")}
+                          >
                             {draft ? (
                               <select
                                 value={draft.disposition}
@@ -2094,10 +2534,15 @@ export default function ServiceMaterialInwardResponse({
                                 {product.report?.disposition || "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "disposition")}
                           </td>
 
                           {/* Completion Date */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "completionDate")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "completionDate", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "completionDate")}
+                          >
                             {draft ? (
                               <input
                                 type="date"
@@ -2114,10 +2559,15 @@ export default function ServiceMaterialInwardResponse({
                                   : "—"}
                               </span>
                             )}
+                            {renderFillHandle(idx, "completionDate")}
                           </td>
 
                           {/* Status */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "status")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "status", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "status")}
+                          >
                             {draft ? (
                               <select
                                 value={draft.status}
@@ -2139,10 +2589,15 @@ export default function ServiceMaterialInwardResponse({
                                 {pStatus}
                               </span>
                             )}
+                            {renderFillHandle(idx, "status")}
                           </td>
 
                           {/* Remarks */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td
+                            className={getCellClass(idx, "remarks")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "remarks", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "remarks")}
+                          >
                             {draft ? (
                               <input
                                 type="text"
@@ -2158,6 +2613,7 @@ export default function ServiceMaterialInwardResponse({
                                 {pRemark}
                               </span>
                             )}
+                            {renderFillHandle(idx, "remarks")}
                           </td>
 
                           <td className="px-[0.8vw] py-[0.7vw] border border-gray-400 text-center min-w-[8vw]">
@@ -2359,13 +2815,30 @@ export default function ServiceMaterialInwardResponse({
                                 }
                               />
                             ) : (
-                              <div className="flex flex-col items-center justify-center">
+                              <div className="flex items-center justify-center gap-[0.4vw]">
                                 <span
                                   className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
                                 >
                                   <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
                                   {pStatus}
                                 </span>
+                                {(product.report || pStatus !== "Open") && (
+                                  <button
+                                    onClick={() => {
+                                      setEditReportModal({
+                                        entry,
+                                        product,
+                                        draft: { ...getDraft(product._pid, product) },
+                                      });
+                                      setEditReason("");
+                                    }}
+                                    className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer"
+                                    title="Edit Report"
+                                  >
+                                    <Edit3 className="w-[0.65vw] h-[0.65vw]" />
+                                    <span>Edit</span>
+                                  </button>
+                                )}
                               </div>
                             )}
                           </td>
@@ -2541,6 +3014,39 @@ export default function ServiceMaterialInwardResponse({
                     });
                   });
 
+                  // Add closure edit history entries if present
+                  const closureEdits = historySelected.product._closureEdits || [];
+                  closureEdits.forEach((ce) => {
+                    timeline.push({
+                      type: "closureEdit",
+                      status: "Report Edited",
+                      remark: ce.reason || "Report modified",
+                      adminName: ce.editedByName,
+                      role: ce.role,
+                      diffs: ce.diffs,
+                      timestamp: ce.editedAt,
+                    });
+                  });
+
+                  // Add general inward edit history entries if relevant to this product
+                  const inwardEdits = historySelected.entry.editHistory || [];
+                  inwardEdits.forEach((ie) => {
+                    const relevantDiffs = (ie.diffs || []).filter(
+                      (d) => d.field.includes(historySelected.product.productCode || "") || d.field.includes("Product")
+                    );
+                    if (relevantDiffs.length > 0) {
+                      timeline.push({
+                        type: "closureEdit",
+                        status: "Inward Edited",
+                        remark: ie.reason || "Material record updated",
+                        adminName: ie.editedByName,
+                        role: ie.role,
+                        diffs: relevantDiffs,
+                        timestamp: ie.editedAt,
+                      });
+                    }
+                  });
+
                   // Sort timeline chronologically (oldest to newest)
                   timeline.sort((a, b) => {
                     const tA = a.timestamp
@@ -2569,7 +3075,15 @@ export default function ServiceMaterialInwardResponse({
                         let remarkText =
                           item.remark || item.currentRemark || "";
 
-                        if (item.type === "admin") {
+                        if (item.type === "closureEdit") {
+                          cfg = {
+                            icon: Edit3,
+                            bg: "bg-purple-50 text-purple-700 border-purple-300",
+                            border: "border-purple-300",
+                            text: "text-purple-800",
+                          };
+                          label = `${item.status} (${item.role || "User"}: ${item.adminName || "—"})`;
+                        } else if (item.type === "admin") {
                           if (item.status === "Approved") {
                             cfg = {
                               icon: CheckCircle,
@@ -2649,6 +3163,30 @@ export default function ServiceMaterialInwardResponse({
                                   </p>
                                 </div>
                               )}
+
+                              {item.diffs && item.diffs.length > 0 && (
+                                <div className="mt-[0.5vw] p-[0.5vw] bg-white rounded-[0.4vw] border border-purple-100 text-[0.72vw]">
+                                  <span className="font-bold text-purple-700 block mb-[0.2vw]">
+                                    Field Changes:
+                                  </span>
+                                  <div className="space-y-[0.2vw]">
+                                    {item.diffs.map((d, di) => (
+                                      <div key={di} className="flex items-center gap-[0.4vw] flex-wrap text-slate-600">
+                                        <span className="font-semibold text-slate-800 bg-slate-100 px-[0.3vw] py-[0.05vw] rounded">
+                                          {d.field}
+                                        </span>
+                                        <span className="text-red-500 line-through">
+                                          {d.originalValue || "—"}
+                                        </span>
+                                        <span className="text-slate-400">→</span>
+                                        <span className="text-emerald-600 font-semibold">
+                                          {d.editedValue || "—"}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
@@ -2665,6 +3203,299 @@ export default function ServiceMaterialInwardResponse({
                   className="px-[1.5vw] py-[0.5vw] bg-gray-800 text-white rounded-[0.4vw] font-semibold text-[0.8vw] cursor-pointer hover:bg-gray-700 transition-all"
                 >
                   Close History
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Report Modal */}
+      <AnimatePresence>
+        {editReportModal && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[250] p-[2vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[55vw] max-h-[90vh] flex flex-col overflow-hidden"
+            >
+              <div className="px-[1.5vw] py-[1vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div>
+                  <h3 className="text-[1.1vw] font-bold text-slate-800 flex items-center gap-[0.5vw]">
+                    <Edit3 className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                    Edit Submitted Report
+                  </h3>
+                  <p className="text-[0.72vw] text-slate-500 font-medium">
+                    {editReportModal.product.productDescription} ({editReportModal.product.serialNumber})
+                  </p>
+                </div>
+                <button
+                  onClick={() => setEditReportModal(null)}
+                  className="p-[0.4vw] rounded-full hover:bg-slate-200 text-gray-400 hover:text-gray-700 transition-all cursor-pointer"
+                >
+                  <X className="w-[1vw] h-[1vw]" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1vw]">
+                <div className="grid grid-cols-3 gap-[0.8vw]">
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Status</label>
+                    <select
+                      value={editReportModal.draft.status || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, status: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500 font-semibold"
+                    >
+                      <option value="">Select</option>
+                      {STATUS_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Tested By</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.testedBy || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, testedBy: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">FQA By</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.fqaBy || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, fqaBy: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">4M Category</label>
+                    <select
+                      value={editReportModal.draft.fourMCategory || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, fourMCategory: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    >
+                      <option value="">Select</option>
+                      {fourMCategories?.map((opt) => (
+                        <option key={opt._id || opt.id} value={opt.name}>{opt.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Error Code</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.errorCode || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, errorCode: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">PV, CV</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.pvCv || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, pvCv: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-[0.8vw]">
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Problem Description</label>
+                    <textarea
+                      rows={2}
+                      value={editReportModal.draft.problemDescription || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, problemDescription: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Root Cause</label>
+                    <textarea
+                      rows={2}
+                      value={editReportModal.draft.rootCause || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, rootCause: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Fault Parts</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.faultParts || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, faultParts: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Parts Replaced</label>
+                    <textarea
+                      rows={2}
+                      value={editReportModal.draft.partsReplacement || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, partsReplacement: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Corrective Action</label>
+                    <textarea
+                      rows={2}
+                      value={editReportModal.draft.correctiveAction || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, correctiveAction: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-[0.8vw]">
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Time (Hours)</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.timeInHours || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const timeVal = parseFloat(val);
+                        const userCtc = parseFloat(currentUser?.ctc || 0);
+                        let manpower = 0;
+                        if (!isNaN(timeVal) && timeVal > 0 && userCtc > 0) {
+                          manpower = Math.round(((userCtc / (26 * 8)) * timeVal) * 100) / 100;
+                        }
+                        setEditReportModal((prev) => ({
+                          ...prev,
+                          draft: {
+                            ...prev.draft,
+                            timeInHours: val,
+                            manpowerCost: manpower,
+                          }
+                        }));
+                      }}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Material Cost (₹)</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.materialCost || ""}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, materialCost: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Man Power Cost (₹)</label>
+                    <div className="w-full text-[0.75vw] bg-slate-100 border border-gray-300 rounded p-[0.35vw] font-semibold text-emerald-700">
+                      ₹{Number(editReportModal.draft.manpowerCost || 0).toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Edit Reason input */}
+                <div className="bg-amber-50/60 border border-amber-200 rounded-[0.5vw] p-[0.8vw]">
+                  <label className="text-[0.75vw] font-bold text-amber-900 mb-[0.2vw] block">
+                    Reason for Editing (Required for change tracking)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter reason for modifying this technical report..."
+                    value={editReason}
+                    onChange={(e) => setEditReason(e.target.value)}
+                    className="w-full text-[0.75vw] border border-amber-300 rounded p-[0.38vw] bg-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                  />
+                </div>
+              </div>
+
+              <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-[0.8vw]">
+                <button
+                  type="button"
+                  onClick={() => setEditReportModal(null)}
+                  className="px-[1.2vw] py-[0.45vw] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full font-bold text-[0.75vw] cursor-pointer transition-all border-0"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={isSubmittingEdit}
+                  onClick={async () => {
+                    setIsSubmittingEdit(true);
+                    try {
+                      const res = await axios.patch(
+                        `${API_URL}/service-material/${editReportModal.entry.id}/product/${editReportModal.product._pid}/edit-report`,
+                        {
+                          report: editReportModal.draft,
+                          reason: editReason,
+                          editedBy: currentUser?.userId || currentUser?.id,
+                          editedByName: currentUser?.name || "User",
+                          role: currentUser?.role || "Employee",
+                        }
+                      );
+                      toast("Report edited and audit changes logged successfully!");
+                      const updatedRow = { ...res.data, id: res.data._id };
+                      setEntries((prev) => prev.map((e) => (e.id === editReportModal.entry.id ? updatedRow : e)));
+                      setEditReportModal(null);
+                      if (socket) {
+                        socket.emit("service-material:change");
+                      }
+                    } catch (err) {
+                      toast(err.response?.data?.message || "Failed to update report", "error");
+                    } finally {
+                      setIsSubmittingEdit(false);
+                    }
+                  }}
+                  className="flex items-center gap-[0.4vw] px-[1.5vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-[0.75vw] cursor-pointer transition-all shadow-md border-0"
+                >
+                  {isSubmittingEdit ? (
+                    <>
+                      <Loader2 className="w-[0.8vw] h-[0.8vw] animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-[0.8vw] h-[0.8vw]" />
+                      Save Modifications
+                    </>
+                  )}
                 </button>
               </div>
             </motion.div>

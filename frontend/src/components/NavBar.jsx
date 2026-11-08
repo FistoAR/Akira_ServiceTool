@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Phone, User, LogOut, Building2, IdCard, Mail, Gift } from "lucide-react";
+import { Phone, User, LogOut, Building2, IdCard, Mail, Gift, Maximize, Minimize } from "lucide-react";
 import NotificationsDropdown from "./NotificationsDropdown";
+import { useSidebar } from "./SidePannel";
 
 const NavBar = ({ type }) => {
   const [showProfile, setShowProfile] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const profileRef = useRef(null);
+  const { isFullScreen, toggleFullScreen } = useSidebar();
 
   // Load logged-in user from localStorage
   useEffect(() => {
@@ -84,6 +86,26 @@ const NavBar = ({ type }) => {
           )}
 
           <div className={`flex gap-[0.8vw] items-center`}>
+            {/* Full Screen Toggle Button */}
+            <button
+              type="button"
+              onClick={toggleFullScreen}
+              title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
+              className="flex items-center gap-[0.35vw] bg-white border border-gray-300 rounded-full px-[0.6vw] py-[0.38vw] hover:shadow-md hover:border-gray-400 text-slate-700 hover:text-blue-600 transition-all cursor-pointer font-semibold text-[0.72vw]"
+            >
+              {isFullScreen ? (
+                <>
+                  <Minimize className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                  <span>Exit Fullscreen</span>
+                </>
+              ) : (
+                <>
+                  <Maximize className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                  <span>Fullscreen</span>
+                </>
+              )}
+            </button>
+
             <div className="flex items-center space-x-3 bg-white border border-gray-300 rounded-full px-[0.4vw] py-[0.33vw] hover:shadow-md hover:border-gray-400 transition-all duration-200">
               {/* Notification Icon */}
               <NotificationsDropdown />

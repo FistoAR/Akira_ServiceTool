@@ -52,6 +52,7 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import ProductHistoryModal from "./ProductHistoryModal";
 import useModulePermissions from "../../components/useModulePermissions";
 import CustomDropdown from "../../components/CustomDropdown";
+import { useSocket } from "../../contexts/SocketContext";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const CUSTOMER_DB_KEY = "customer_db_grouped_v5";
@@ -2760,6 +2761,7 @@ const ProductStatusCell = ({ prod, callStatus }) => {
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function ServiceCall() {
   const { toast } = useNotification();
+  const { socket } = useSocket();
   const currentUser = lsLoad("currentUser", { name: "System" });
   const [view, setView] = useState("table");
   const [editingRow, setEditingRow] = useState(null);
@@ -2791,6 +2793,14 @@ export default function ServiceCall() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Instant cache display for immediate rendering without layout flash
+      try {
+        const cachedCalls = localStorage.getItem("service_calls_cache");
+        if (cachedCalls && !serviceCalls.length) {
+          setServiceCalls(JSON.parse(cachedCalls));
+        }
+      } catch (e) {}
+
       setIsLoading(true);
       try {
         const [
@@ -2816,6 +2826,9 @@ export default function ServiceCall() {
         ]);
 
         setServiceCalls(callsRes.data);
+        try {
+          localStorage.setItem("service_calls_cache", JSON.stringify(callsRes.data));
+        } catch (e) {}
         setCustomerDb(custRes.data);
         setSites(sitesRes.data || []);
         setPartyTypes(
@@ -2844,7 +2857,30 @@ export default function ServiceCall() {
     fetchData();
     const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
     if (user?.role === "Supervisor") setIsSupervisor(true);
-  }, []);
+
+    if (socket) {
+      const handleSocketCall = (updatedCall) => {
+        if (!updatedCall) return;
+        if (updatedCall.deleted) {
+          setServiceCalls((prev) => prev.filter((c) => (c._id || c.callId || c.id) !== updatedCall.callId));
+        } else {
+          setServiceCalls((prev) => {
+            const id = updatedCall._id || updatedCall.id;
+            const exists = prev.some((c) => (c._id || c.id) === id);
+            if (exists) {
+              return prev.map((c) => ((c._id || c.id) === id ? updatedCall : c));
+            }
+            return [updatedCall, ...prev];
+          });
+        }
+      };
+
+      socket.on("service_call_updated", handleSocketCall);
+      return () => {
+        socket.off("service_call_updated", handleSocketCall);
+      };
+    }
+  }, [socket]);
 
   // Keep escalation queue in sync
   useEffect(() => {

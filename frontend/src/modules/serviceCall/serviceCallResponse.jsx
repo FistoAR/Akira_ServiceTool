@@ -1906,9 +1906,7 @@ const EscalationCard = ({
                       onClick={(e) => {
                         e.stopPropagation();
                         if (hasReportsOrClosed) return;
-                        if (window.confirm(`Delete registered call ${entry.callNumber}?`)) {
-                          onDeleteCall(entry._id || entry.callId || entry.id);
-                        }
+                        onDeleteCall(entry);
                       }}
                       title={hasReportsOrClosed ? "Cannot delete: Report or closure already submitted for this call" : "Delete Call"}
                       className={`flex items-center gap-[0.2vw] text-[0.75vw] font-bold px-[0.45vw] py-[0.18vw] rounded transition-colors border ${
@@ -5506,7 +5504,12 @@ const ServiceCallResponse = () => {
                         });
                         setView("form");
                       }}
-                      onDeleteCall={handleDeleteCall}
+                      onDeleteCall={(call) => {
+                        setDeleteModalState({
+                          isOpen: true,
+                          row: call,
+                        });
+                      }}
                     />
                   ))
                 ))}

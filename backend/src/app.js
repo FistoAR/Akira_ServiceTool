@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const logger = require('./utils/logger');
 
 const authRoutes = require('./modules/auth/auth.routes');
@@ -14,6 +15,13 @@ const path = require('path');
 const app = express();
 
 // Middlewares
+app.use(compression({
+  threshold: 1024, // Compress responses above 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) return false;
+    return compression.filter(req, res);
+  }
+}));
 app.use(cors({
   origin: true, // Reflect the request origin
   credentials: true, // Allow cookies/authorization headers

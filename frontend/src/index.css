@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/* Base font scaling: boosted font sizes and comfortable button/control sizing across all screens */
+html {
+  font-size: 15.5px;
+}
+
+@media (min-width: 1440px) {
+  html {
+    font-size: 16.5px;
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 17.5px;
+  }
+}
+
+/* Global button and input comfort scaling */
+button:not([class*="p-0"]):not([class*="w-"]):not([class*="h-"]) {
+  min-height: 2.1rem;
+}
+
 /* index.css - Add these animations */
 
 @keyframes slideIn {

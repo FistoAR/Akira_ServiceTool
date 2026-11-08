@@ -37,16 +37,17 @@ function NavBarWithTitle() {
 }
 
 function MainLayout() {
-  const { isCollapsed } = useSidebar();
+  const { isCollapsed, isFullScreen } = useSidebar();
 
   return (
-    <div className="flex w-screen h-screen overflow-hidden">
-      <Sidebar />
+    <div className="flex w-screen h-screen overflow-hidden relative">
+      {!isFullScreen && <Sidebar />}
       <main
         className={`
-          flex-1 bg-[#f2f8ff] h-screen px-[1.2vw] pt-[0.4vh] pb-[1vh]
+          flex-1 bg-[#f2f8ff] h-screen
+          ${isFullScreen ? "px-[1.5vw] py-[0.8vh] z-50 w-full" : "px-[1.2vw] pt-[0.4vh] pb-[1vh]"}
           overflow-hidden flex flex-col
-          transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+          transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
         `}
       >
         <NavBarWithTitle />

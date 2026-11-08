@@ -560,7 +560,7 @@ const EditableProductTable = ({
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <div className="flex bg-gray-100 p-[0.2vw] rounded-[0.4vw] w-full border border-gray-600">
                             {typeOptions.map(opt => (
-                              <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly || prod._autoCalculated} className={`flex-1 py-[0.3vw] text-[0.7vw] font-semibold rounded-[0.3vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
+                              <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly} className={`flex-1 py-[0.3vw] text-[0.7vw] font-semibold rounded-[0.3vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
                             ))}
                           </div>
                           {renderFillHandle(index, 5)}
@@ -572,8 +572,8 @@ const EditableProductTable = ({
                               type="date" 
                               value={prod.expectedDeliveryDate} 
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
-                              disabled={(isReadOnly && !allowPartialEdit) || prod._autoCalculated} 
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all appearance-none text-black font-semibold disabled:bg-transparent" 
+                              disabled={isReadOnly && !allowPartialEdit} 
+                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.5vw] outline-none transition-all appearance-none text-black font-semibold disabled:bg-transparent disabled:border-transparent cursor-pointer disabled:cursor-not-allowed" 
                             />
                             <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none" />
                           </div>

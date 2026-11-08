@@ -116,6 +116,11 @@ serviceCallSchema.index({ createdAt: -1 });
 serviceCallSchema.index({ status: 1 });
 serviceCallSchema.index({ priority: 1 });
 serviceCallSchema.index({ currentEngineerId: 1 });
+serviceCallSchema.index({ callNumber: 1 });
+serviceCallSchema.index({ partyCode: 1 });
+serviceCallSchema.index({ customerName: 1 });
+serviceCallSchema.index({ 'products.serialNumber': 1 });
+serviceCallSchema.index({ 'products._assignedEngineerId': 1 });
 
 // Indexes for nested product arrays to speed up Action Logs queries
 serviceCallSchema.index({ 'products._supportPersonId': 1 });

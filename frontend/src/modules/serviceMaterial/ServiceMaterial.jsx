@@ -34,6 +34,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import EditableProductTable from "./EditableProductTable";
+import CustomDropdown from "../../components/CustomDropdown";
 import { io } from "socket.io-client";
 import useModulePermissions from "../../components/useModulePermissions";
 
@@ -182,6 +183,7 @@ const emptyBase = () => ({
   refNoInternal: "",
   customerName: "",
   customerCode: "",
+  site: "",
   category: "",
   assignedTo: "",
   assignedToName: "",
@@ -1130,6 +1132,7 @@ const InwardForm = ({
   employees,
   boardTypes,
   units,
+  sites = [],
   entries,
   partyTypes = [],
   onSave,
@@ -1147,6 +1150,7 @@ const InwardForm = ({
     refNoInternal: initialData.refNoInternal || "",
     customerName: initialData.customerName || "",
     customerCode: initialData.customerCode || "",
+    site: initialData.site || "",
     category: initialData.category || "",
     assignedTo: initialData.assignedTo || "",
     assignedToName: initialData.assignedToName || "",
@@ -1820,25 +1824,25 @@ const InwardForm = ({
               <label className="font-semibold text-black uppercase text-[0.72vw]">
                 Category
               </label>
-              <select
+              <CustomDropdown
                 value={base.category}
-                onChange={(e) => {
-                  sb("category", e.target.value);
-                  // Reset selected customer since it might not belong to this category
+                onChange={(val) => {
+                  sb("category", val);
                   setCustSearch("");
                   sb("customerName", "");
                   sb("customerCode", "");
                 }}
                 disabled={isReadOnly}
-                className="w-full border border-gray-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:border-blue-500 shadow-none text-gray-800 font-semibold bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
-              >
-                <option value="">Select Category (All)</option>
-                {partyTypes.map((t) => (
-                  <option key={t.id || t._id} value={t.name}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
+                placeholder="Select Category (All)"
+                options={[
+                  { value: "", label: "Select Category (All)" },
+                  ...partyTypes.map((t) => ({
+                    value: t.name,
+                    label: t.name,
+                  })),
+                ]}
+                triggerClassName="h-[2.5vw] !rounded-[0.4vw] border-gray-400 text-[0.8vw] text-gray-800 font-semibold bg-white"
+              />
             </div>
 
             {/* Row 2 */}
@@ -1917,60 +1921,45 @@ const InwardForm = ({
               />
             </div>
 
-            <div
-              className="col-span-1 flex flex-col gap-[0.3vw] relative"
-              ref={unitRef}
-            >
+            <div className="col-span-1 flex flex-col gap-[0.3vw]">
+              <label className="font-semibold text-black uppercase text-[0.72vw]">
+                Site
+              </label>
+              <CustomDropdown
+                value={base.site || ""}
+                onChange={(val) => sb("site", val)}
+                disabled={isReadOnly}
+                placeholder="Select Site"
+                options={[
+                  { value: "", label: "Select Site" },
+                  ...sites.map((s) => ({
+                    value: s.name,
+                    label: s.name,
+                  })),
+                ]}
+                triggerClassName="h-[2.5vw] !rounded-[0.4vw] border-gray-400 text-[0.8vw] text-gray-800 font-semibold bg-white"
+              />
+            </div>
+
+            {/* Row 3 - Unit */}
+            <div className="col-span-1 flex flex-col gap-[0.3vw]">
               <label className="font-semibold text-black uppercase text-[0.72vw]">
                 Unit
               </label>
-              <div className="relative">
-                <input
-                  value={base.unit}
-                  onChange={(e) => {
-                    if (!isReadOnly) {
-                      sb("unit", e.target.value);
-                      setShowUnitDrop(true);
-                      setUnitActiveIndex(-1);
-                    }
-                  }}
-                  onKeyDown={handleUnitKeyDown}
-                  onFocus={() => {
-                    if (!isReadOnly) {
-                      setShowUnitDrop(true);
-                      setUnitActiveIndex(-1);
-                    }
-                  }}
-                  disabled={isReadOnly}
-                  placeholder="Select or enter unit…"
-                  className="w-full border border-gray-400 p-[0.6vw] rounded-[0.4vw] outline-none focus:border-blue-500 shadow-none text-gray-800 font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed"
-                />
-                <ChevronDown className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-gray-800 cursor-pointer pointer-events-none" />
-              </div>
-              {showUnitDrop && !isReadOnly && (
-                <div className="absolute top-full left-0 w-full bg-white border border-gray-400 shadow-lg rounded-[0.4vw] mt-[0.3vw] max-h-[12vw] overflow-y-auto z-30">
-                  <div className="unit-drop-container">
-                    {filteredUnits.map((u, i) => (
-                      <div
-                        key={i}
-                        onClick={() => {
-                          sb("unit", u.name);
-                          setShowUnitDrop(false);
-                          setUnitActiveIndex(-1);
-                        }}
-                        className={`p-[0.6vw] cursor-pointer border-b border-gray-50 last:border-0 font-semibold text-gray-900 ${i === unitActiveIndex ? "bg-blue-100" : "hover:bg-blue-50"}`}
-                      >
-                        {u.name}
-                      </div>
-                    ))}
-                  </div>
-                  {filteredUnits.length === 0 && (
-                    <div className="p-[0.6vw] text-center text-gray-600 font-medium">
-                      No matching units
-                    </div>
-                  )}
-                </div>
-              )}
+              <CustomDropdown
+                value={base.unit || ""}
+                onChange={(val) => sb("unit", val)}
+                disabled={isReadOnly}
+                placeholder="Select Unit"
+                options={[
+                  { value: "", label: "Select Unit" },
+                  ...(units || []).map((u) => ({
+                    value: u.name,
+                    label: u.name,
+                  })),
+                ]}
+                triggerClassName="h-[2.5vw] !rounded-[0.4vw] border-gray-400 text-[0.8vw] text-gray-800 font-semibold bg-white"
+              />
             </div>
           </div>
         </div>
@@ -3217,6 +3206,13 @@ const AdminTableView = ({
                           </span>
                         )}
 
+                        {/* Site */}
+                        {rows[0]?.site && (
+                          <span className="text-[0.7vw] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                            Site: {rows[0].site}
+                          </span>
+                        )}
+
                         <div className="ml-auto flex items-center gap-[0.8vw]" />
                       </div>
                     </td>
@@ -3694,6 +3690,7 @@ export default function App() {
   const [employees, setEmployees] = useState([]);
   const [boardTypes, setBoardTypes] = useState([]);
   const [units, setUnits] = useState([]);
+  const [sites, setSites] = useState([]);
   const [partyTypes, setPartyTypes] = useState([]);
   const [reportsRowId, setReportsRowId] = useState(null);
   const [selectedReportProduct, setSelectedReportProduct] = useState(null);
@@ -3712,22 +3709,23 @@ export default function App() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Instant cache display for immediate rendering
       try {
-        const materialRes = await axios
-          .get(`${API_URL}/service-material`)
-          .catch(() => ({ data: lsLoad(INWARD_KEY, []) }));
-        const customerRes = await axios
-          .get(`${API_URL}/master/customers`)
-          .catch(() => ({ data: [] }));
-        const boardRes = await axios
-          .get(`${API_URL}/master/board-types`)
-          .catch(() => ({ data: [] }));
-        const unitsRes = await axios
-          .get(`${API_URL}/master/units`)
-          .catch(() => ({ data: [] }));
-        const ptRes = await axios
-          .get(`${API_URL}/master/party-types`)
-          .catch(() => ({ data: [] }));
+        const cached = localStorage.getItem("service_material_cache");
+        if (cached && !entries.length) {
+          setEntries(JSON.parse(cached));
+        }
+      } catch (e) {}
+
+      try {
+        const [materialRes, customerRes, boardRes, unitsRes, sitesRes, ptRes] = await Promise.all([
+          axios.get(`${API_URL}/service-material`).catch(() => ({ data: lsLoad(INWARD_KEY, []) })),
+          axios.get(`${API_URL}/master/customers`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/master/board-types`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/master/units`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/master/sites`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] })),
+        ]);
 
         // Map backend _id to id for frontend compatibility (only for real API responses)
         const mappedEntries = materialRes.data.map((item) => ({
@@ -3736,9 +3734,13 @@ export default function App() {
         }));
 
         setEntries(mappedEntries);
+        try {
+          localStorage.setItem("service_material_cache", JSON.stringify(mappedEntries));
+        } catch (e) {}
         setCustomerDb(customerRes.data);
         setBoardTypes(boardRes.data);
         setUnits(unitsRes.data);
+        setSites(sitesRes.data || []);
         setPartyTypes(ptRes.data || []);
       } catch (err) {
         console.error("Failed to fetch data:", err);
@@ -4122,6 +4124,7 @@ export default function App() {
             employees={employees}
             boardTypes={boardTypes}
             units={units}
+            sites={sites}
             entries={entries}
             partyTypes={partyTypes}
             onSave={handleSave}

@@ -13,5 +13,9 @@ const customerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 customerSchema.index({ partyCode: 1, itemCode: 1 }, { unique: true });
+customerSchema.index({ partyCode: 1 });
+customerSchema.index({ partyDescription: 1 });
+customerSchema.index({ itemCode: 1 });
+customerSchema.index({ productSegment: 1 });
 
 module.exports = mongoose.model('Customer', customerSchema);

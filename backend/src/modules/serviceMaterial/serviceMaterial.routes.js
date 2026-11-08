@@ -10,6 +10,7 @@ router.put('/:id', serviceMaterialController.updateInward);
 router.delete('/:id', serviceMaterialController.deleteInward);
 router.patch('/:id/claim-product', serviceMaterialController.claimProduct);
 router.patch('/:id/report', upload.single('image'), serviceMaterialController.updateProductReport);
+router.patch('/:id/product/:productId/edit-report', serviceMaterialController.editProductReport);
 router.patch('/:id/product/:productId/final-status', serviceMaterialController.updateFinalStatus);
 
 module.exports = router;

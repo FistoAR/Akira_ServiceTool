@@ -131,7 +131,25 @@ exports.getSLAEmployees = async (req, res) => {
 // ── GET /api/service-calls ────────────────────────────────────────────────────
 exports.getAllCalls = async (req, res) => {
   try {
-    const calls = await ServiceCall.find().lean().sort({ createdAt: -1 });
+    const filter = {};
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+    if (req.query.priority) {
+      filter.priority = req.query.priority;
+    }
+    if (req.query.engineerId) {
+      filter.currentEngineerId = req.query.engineerId;
+    }
+
+    let query = ServiceCall.find(filter).lean().sort({ createdAt: -1 });
+
+    // Optional lightweight summary mode for fast dashboard lists
+    if (req.query.lite === 'true') {
+      query = query.select('-editHistory -products._closureEdits');
+    }
+
+    const calls = await query;
     res.json(calls);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -193,6 +211,8 @@ exports.createCall = async (req, res) => {
         priority: 'Critical'
       });
     }
+
+    try { getIO().emit('service_call_updated', call); } catch (e) {}
 
     res.status(201).json(call);
   } catch (err) {
