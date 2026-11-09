@@ -1,20 +1,43 @@
 @import "tailwindcss";
 
+/* Base HTML/Body reset: strictly lock viewport to 100% without parent page scrollbars */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden !important;
+}
+
 /* Base font scaling: boosted font sizes and comfortable button/control sizing across all screens */
 html {
-  font-size: 15.5px;
+  font-size: 16.5px;
 }
 
 @media (min-width: 1440px) {
   html {
-    font-size: 16.5px;
+    font-size: 17.5px;
   }
 }
 
 @media (min-width: 1920px) {
   html {
-    font-size: 17.5px;
+    font-size: 18.5px;
   }
+}
+
+/* Ensure legible font and icon sizes in tables, inputs, badges and buttons */
+input, select, textarea, button {
+  font-size: max(13px, 0.78vw);
+}
+
+svg.lucide {
+  min-width: 15px;
+  min-height: 15px;
 }
 
 /* Global button and input comfort scaling */

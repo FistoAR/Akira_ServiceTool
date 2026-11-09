@@ -17,16 +17,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB server limit (frontend restricts to 5MB with compression)
   fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png|webp/;
-    const mimetype = filetypes.test(file.mimetype);
+    const filetypes = /jpeg|jpg|png|webp|pdf/;
+    const mimetype = filetypes.test(file.mimetype) || file.mimetype === 'application/pdf';
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
-    if (mimetype && extname) {
+    if (mimetype || extname) {
       return cb(null, true);
     }
-    cb(new Error('Only images are allowed (jpeg, jpg, png, webp)'));
+    cb(new Error('Only images (jpeg, jpg, png, webp) and PDF documents are allowed'));
   }
 });
 

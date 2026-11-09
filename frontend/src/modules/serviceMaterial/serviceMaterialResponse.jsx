@@ -25,6 +25,7 @@ import {
   Info,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   Shield,
   Plus,
   Edit3,
@@ -33,12 +34,16 @@ import {
   Search,
   Upload,
   Save,
+  Filter,
+  ListFilter,
+  Trash2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useNotification } from "../../components/NotificationContext";
 import { useSocket } from "../../contexts/SocketContext";
+import { processUploadFile } from "../../utils/fileUploadHelper";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -377,9 +382,12 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                   span={2}
                 />
                 <RefInput
-                  label="PV, CV"
-                  value={product.report.pvCv}
-                  span={2}
+                  label="PV"
+                  value={product.report.pv || (product.report.pvCv ? product.report.pvCv.split(',')[0]?.trim() : "")}
+                />
+                <RefInput
+                  label="CV"
+                  value={product.report.cv || (product.report.pvCv ? product.report.pvCv.split(',')[1]?.trim() : "")}
                 />
                 <RefInput
                   label="Root Cause"
@@ -411,42 +419,56 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                 />
                 <div className="col-span-2">
                   <label className="text-[0.75vw] font-semibold text-black mb-[0.25vw] block">
-                    Technical Image
+                    Technical Attachment (Image / PDF)
                   </label>
                   {product.report.image ? (
                     <div className="mt-[0.5vw]">
-                      <img
-                        src={
-                          product.report.image.startsWith("data:") ||
-                          product.report.image.startsWith("http")
-                            ? product.report.image
-                            : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
-                        }
-                        alt="Report"
-                        className="max-w-[15vw] rounded-[0.4vw] border border-gray-400 shadow-sm cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => {
-                          const url =
+                      {product.report.image.toLowerCase().endsWith(".pdf") ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const url = product.report.image.startsWith("http")
+                              ? product.report.image
+                              : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
+                            setDocPreviewModal({
+                              url,
+                              title: `${product.productDescription || "Product"} - Technical PDF`,
+                              isPdf: true,
+                            });
+                          }}
+                          className="inline-flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vw] bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-[0.4vw] text-[0.75vw] font-bold shadow-xs transition-colors cursor-pointer"
+                        >
+                          <FileText className="w-[1vw] h-[1vw] text-red-600" />
+                          <span>View PDF Document</span>
+                        </button>
+                      ) : (
+                        <img
+                          src={
                             product.report.image.startsWith("data:") ||
                             product.report.image.startsWith("http")
                               ? product.report.image
-                              : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
-                          // For base64 strings, open in a new window using a clean iframe to bypass browser about:blank restrictions
-                          if (url.startsWith("data:")) {
-                            const win = window.open();
-                            win.document.write(
-                              '<iframe src="' +
-                                url +
-                                '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>',
-                            );
-                          } else {
-                            window.open(url, "_blank");
+                              : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                           }
-                        }}
-                      />
+                          alt="Report"
+                          className="max-w-[15vw] rounded-[0.4vw] border border-gray-400 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                          onClick={() => {
+                            const url =
+                              product.report.image.startsWith("data:") ||
+                              product.report.image.startsWith("http")
+                                ? product.report.image
+                                : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
+                            setDocPreviewModal({
+                              url,
+                              title: `${product.productDescription || "Product"} - Technical Image`,
+                              isPdf: false,
+                            });
+                          }}
+                        />
+                      )}
                     </div>
                   ) : (
                     <div className="text-[0.75vw] text-gray-400 italic">
-                      No image uploaded
+                      No document uploaded
                     </div>
                   )}
                 </div>
@@ -463,6 +485,71 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
           </button>
         </div>
       </motion.div>
+      {/* In-App Document Preview Modal (for Image & PDF without navigating away) */}
+      <AnimatePresence>
+        {docPreviewModal && (
+          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[110] p-[1.5vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[75vw] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] bg-slate-900 text-white">
+                <div className="flex items-center gap-[0.6vw]">
+                  {docPreviewModal.isPdf ? (
+                    <FileText className="w-[1.2vw] h-[1.2vw] text-red-400" />
+                  ) : (
+                    <Eye className="w-[1.2vw] h-[1.2vw] text-blue-400" />
+                  )}
+                  <h3 className="text-[0.9vw] font-bold text-white tracking-wide">
+                    {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-[0.8vw]">
+                  <a
+                    href={docPreviewModal.url}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[0.72vw] text-slate-300 hover:text-white flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                  >
+                    <Download className="w-[0.8vw] h-[0.8vw]" />
+                    <span>Download</span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setDocPreviewModal(null)}
+                    className="text-slate-400 hover:text-white p-[0.3vw] rounded-full hover:bg-white/10 transition-colors cursor-pointer border-0 bg-transparent"
+                  >
+                    <X className="w-[1.1vw] h-[1.1vw]" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 bg-slate-100 flex items-center justify-center overflow-hidden p-[1vw]">
+                {docPreviewModal.isPdf ? (
+                  <iframe
+                    src={`${docPreviewModal.url}#toolbar=1&navpanes=0`}
+                    title="PDF Document"
+                    className="w-full h-full rounded-[0.4vw] border border-slate-300 bg-white shadow-inner"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center overflow-auto p-[1vw]">
+                    <img
+                      src={docPreviewModal.url}
+                      alt="Attachment Preview"
+                      className="max-h-full max-w-full object-contain rounded-[0.4vw] shadow-md border border-slate-300 bg-white"
+                    />
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -489,6 +576,7 @@ export default function ServiceMaterialInwardResponse({
   const [isBulkSaving, setIsBulkSaving] = useState(false);
   const isSavingRef = useRef(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showFiltersPanel, setShowFiltersPanel] = useState(false);
   const [exportFormat, setExportFormat] = useState("pdf"); // "pdf" or "excel"
   const [withHistory, setWithHistory] = useState(false);
 
@@ -497,9 +585,48 @@ export default function ServiceMaterialInwardResponse({
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [serialFilter, setSerialFilter] = useState("");
+  const [showSerialFilterModal, setShowSerialFilterModal] = useState(false);
+  const [tempSerialInput, setTempSerialInput] = useState("");
   const [showOnlyUnsaved, setShowOnlyUnsaved] = useState(false);
+
+  // Parsed array of active serial tokens for badges/filtering
+  const activeSerials = useMemo(() => {
+    if (!serialFilter || !serialFilter.trim()) return [];
+    return serialFilter
+      .split(/[,\s\n]+/)
+      .map((s) => s.trim().toUpperCase())
+      .filter(Boolean);
+  }, [serialFilter]);
+
+  const removeSerialToken = (tokenToRemove) => {
+    const updated = activeSerials.filter((s) => s !== tokenToRemove);
+    setSerialFilter(updated.join(", "));
+  };
+
+  const clearAllSerials = () => {
+    setSerialFilter("");
+    setTempSerialInput("");
+  };
+
+  const openSerialModal = () => {
+    setTempSerialInput(
+      activeSerials.length > 0 ? activeSerials.join("\n") : ""
+    );
+    setShowSerialFilterModal(true);
+  };
+
+  const applySerialModal = () => {
+    const tokens = tempSerialInput
+      .split(/[,\s\n]+/)
+      .map((s) => s.trim().toUpperCase())
+      .filter(Boolean);
+    const uniqueTokens = Array.from(new Set(tokens));
+    setSerialFilter(uniqueTokens.join(", "));
+    setShowSerialFilterModal(false);
+  };
   const [showOnlyUnclaimed, setShowOnlyUnclaimed] = useState(false);
   const [historySelected, setHistorySelected] = useState(null);
+  const [docPreviewModal, setDocPreviewModal] = useState(null); // { url, title, isPdf }
   const [editReportModal, setEditReportModal] = useState(null);
   const [editReason, setEditReason] = useState("");
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
@@ -787,7 +914,8 @@ export default function ServiceMaterialInwardResponse({
         "4M Category": r.product.report?.fourMCategory || "",
         "Error Code": r.product.report?.errorCode || "",
         "Problem Description": r.product.report?.problemDescription || "",
-        "PV, CV": r.product.report?.pvCv || "",
+        PV: r.product.report?.pv || (r.product.report?.pvCv ? r.product.report.pvCv.split(',')[0]?.trim() : ""),
+        CV: r.product.report?.cv || (r.product.report?.pvCv ? r.product.report.pvCv.split(',')[1]?.trim() : ""),
         "Root Cause": r.product.report?.rootCause || "",
         "Fault Parts": r.product.report?.faultParts || "",
         "Parts Replaced": r.product.report?.partsReplacement || "",
@@ -832,6 +960,8 @@ export default function ServiceMaterialInwardResponse({
       materialCost: product.report?.materialCost || "",
       manpowerCost: product.report?.manpowerCost != null ? product.report.manpowerCost : "",
       pvCv: product.report?.pvCv || "",
+      pv: product.report?.pv || (product.report?.pvCv ? product.report.pvCv.split(',')[0]?.trim() : ""),
+      cv: product.report?.cv || (product.report?.pvCv ? product.report.pvCv.split(',')[1]?.trim() : ""),
       faultParts: product.report?.faultParts || "",
       disposition: product.report?.disposition || "",
       fourMCategory: product.report?.fourMCategory || "",
@@ -872,25 +1002,39 @@ export default function ServiceMaterialInwardResponse({
     });
   };
 
-  const handleImageChange = (productId, product, e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setDrafts((prev) => {
-          const existing = prev[productId] || getDraft(productId, product);
-          return {
-            ...prev,
-            [productId]: {
-              ...existing,
-              imageFile: file,
-              imagePreview: reader.result,
-              hasChanges: true,
-            },
-          };
-        });
-      };
-      reader.readAsDataURL(file);
+  const handleImageChange = async (productId, product, e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const processed = await processUploadFile(file);
+      if (!processed) return;
+
+      setDrafts((prev) => {
+        const existing = prev[productId] || getDraft(productId, product);
+        return {
+          ...prev,
+          [productId]: {
+            ...existing,
+            imageFile: processed.file,
+            imagePreview: processed.preview,
+            isPdf: processed.isPdf,
+            fileName: processed.name,
+            hasChanges: true,
+          },
+        };
+      });
+
+      toast(`File "${file.name}" ready for upload (optimized).`, "success");
+    } catch (err) {
+      toast(
+        err.message ||
+          "The uploaded document is too large. Please compress and upload under 5MB.",
+        "error"
+      );
+    } finally {
+      // Clear input so user can re-select same file if needed
+      e.target.value = "";
     }
   };
 
@@ -960,7 +1104,9 @@ export default function ServiceMaterialInwardResponse({
       timeInHours: draft.timeInHours,
       materialCost: draft.materialCost,
       manpowerCost: manpowerCost != null && manpowerCost !== "" ? Number(manpowerCost) : 0,
-      pvCv: draft.pvCv,
+      pv: draft.pv || "",
+      cv: draft.cv || "",
+      pvCv: [draft.pv, draft.cv].filter(Boolean).join(", ") || draft.pvCv || "",
       faultParts: draft.faultParts,
       disposition: draft.disposition,
       fourMCategory: draft.fourMCategory,
@@ -1346,6 +1492,7 @@ export default function ServiceMaterialInwardResponse({
     entries,
     filterStatus,
     searchTerm,
+    serialFilter,
     dateFrom,
     dateTo,
     currentUser,
@@ -1435,7 +1582,8 @@ export default function ServiceMaterialInwardResponse({
     fourM: "fourMCategory",
     errorCode: "errorCode",
     problemDesc: "problemDescription",
-    pvCv: "pvCv",
+    pv: "pv",
+    cv: "cv",
     designators: "designators",
     rootCause: "rootCause",
     faultParts: "faultParts",
@@ -1485,7 +1633,11 @@ export default function ServiceMaterialInwardResponse({
     },
     {
       key: "fourM",
-      label: "4M Category",
+      label: (
+        <span>
+          4M Category <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+        </span>
+      ),
       align: "text-left",
       minW: "min-w-[10vw]",
     },
@@ -1497,15 +1649,25 @@ export default function ServiceMaterialInwardResponse({
     },
     {
       key: "problemDesc",
-      label: "Problem Desc",
+      label: (
+        <span>
+          Problem Desc <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+        </span>
+      ),
       align: "text-left",
       minW: "min-w-[12vw]",
     },
     {
-      key: "pvCv",
-      label: "PV, CV",
+      key: "pv",
+      label: "PV",
       align: "text-left",
-      minW: "min-w-[9vw]",
+      minW: "min-w-[7vw]",
+    },
+    {
+      key: "cv",
+      label: "CV",
+      align: "text-left",
+      minW: "min-w-[7vw]",
     },
     {
       key: "designators",
@@ -1515,7 +1677,11 @@ export default function ServiceMaterialInwardResponse({
     },
     {
       key: "rootCause",
-      label: "Root Cause",
+      label: (
+        <span>
+          Root Cause <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+        </span>
+      ),
       align: "text-left",
       minW: "min-w-[12vw]",
     },
@@ -1533,7 +1699,11 @@ export default function ServiceMaterialInwardResponse({
     },
     {
       key: "correctiveAction",
-      label: "Corrective Action",
+      label: (
+        <span>
+          Corrective Action <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+        </span>
+      ),
       align: "text-left",
       minW: "min-w-[12vw]",
     },
@@ -1569,7 +1739,11 @@ export default function ServiceMaterialInwardResponse({
     },
     {
       key: "status",
-      label: "Status",
+      label: (
+        <span>
+          Status <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+        </span>
+      ),
       align: "text-center",
       minW: "min-w-[10vw]",
     },
@@ -1697,7 +1871,7 @@ export default function ServiceMaterialInwardResponse({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-5.5rem)] flex flex-col font-sans overflow-hidden pb-[0.6vw]">
+    <div className="w-full flex-1 min-h-0 flex flex-col font-sans overflow-hidden pb-[0.4vw]">
       <datalist id="errorCodeList">
         {errorCodeHistory?.map((opt, i) => (
           <option key={i} value={opt} />
@@ -1708,13 +1882,13 @@ export default function ServiceMaterialInwardResponse({
           <option key={i} value={opt} />
         ))}
       </datalist>
-      {/* ── Search & Date Filters Toolbar ────────────────────────────────────── */}
-      <div className="bg-white rounded-[0.7vw] border border-slate-200 shadow-sm mb-[0.6vw] px-[0.8vw] py-[0.45vw] flex-shrink-0">
-        <div className="flex items-center justify-between gap-[0.5vw] flex-nowrap w-full text-[0.7vw]">
-          {/* Left Controls: Search & Filter Toggles */}
-          <div className="flex items-center gap-[0.5vw] flex-shrink-0">
+      {/* ── Search & Filter Controls Toolbar ────────────────────────────────────── */}
+      <div className="bg-white rounded-[0.7vw] border border-slate-200 shadow-sm mb-[0.6vw] px-[0.8vw] py-[0.45vw] flex-shrink-0 transition-all">
+        <div className="flex items-center justify-between gap-[0.6vw] flex-nowrap w-full text-[0.7vw]">
+          {/* Left Controls: Search, Serials & More Filters Toggle */}
+          <div className="flex items-center gap-[0.5vw] flex-1 min-w-0">
             {/* Search Input */}
-            <div className="relative w-[15vw] flex-shrink-0">
+            <div className="relative w-[18vw] min-w-[200px] flex-shrink-0">
               <Search className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-gray-400" />
               <input
                 type="text"
@@ -1733,144 +1907,136 @@ export default function ServiceMaterialInwardResponse({
               )}
             </div>
 
-            {/* Multi-Serial Number Filter */}
-            <div className="relative w-[16vw] flex-shrink-0">
-              <Hash className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-indigo-500" />
-              <input
-                type="text"
-                placeholder="Filter Serials (e.g. SN1, SN2)..."
-                value={serialFilter}
-                onChange={(e) => setSerialFilter(e.target.value)}
-                className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.38vw] border border-indigo-200 bg-indigo-50/20 rounded-[0.4vw] text-[0.72vw] font-medium text-indigo-900 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-all shadow-sm"
-                title="Filter by multiple serial numbers (comma, space, or newline separated)"
-              />
-              {serialFilter && (
-                <button
-                  onClick={() => setSerialFilter("")}
-                  className="absolute right-[0.4vw] top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-700 cursor-pointer"
-                >
-                  <X className="w-[0.65vw] h-[0.65vw]" />
-                </button>
+            {/* Multi-Serial Number Filter Button & Quick Display */}
+            <div className="flex items-center gap-[0.35vw] flex-shrink-0">
+              <button
+                type="button"
+                onClick={openSerialModal}
+                className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
+                  activeSerials.length > 0
+                    ? "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100"
+                    : "bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50/60 hover:border-indigo-300"
+                }`}
+                title="Filter by multiple serial numbers (Batch / List / Paste)"
+              >
+                <ListFilter className="w-[0.85vw] h-[0.85vw]" />
+                <span>Filter Serials</span>
+                {activeSerials.length > 0 && (
+                  <span className="px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-bold bg-white text-indigo-700 shadow-xs">
+                    {activeSerials.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Show active serial chips for quick removal right in toolbar */}
+              {activeSerials.length > 0 && (
+                <div className="flex items-center gap-[0.25vw] max-w-[14vw] overflow-x-auto scrollbar-none py-[0.1vw]">
+                  {activeSerials.slice(0, 2).map((sn) => (
+                    <span
+                      key={sn}
+                      className="inline-flex items-center gap-[0.2vw] px-[0.4vw] py-[0.18vw] rounded-[0.3vw] bg-indigo-50 border border-indigo-200 text-indigo-800 text-[0.65vw] font-semibold shadow-2xs whitespace-nowrap"
+                    >
+                      <span>{sn}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeSerialToken(sn)}
+                        className="text-indigo-400 hover:text-indigo-700 cursor-pointer ml-[0.1vw]"
+                        title={`Remove ${sn}`}
+                      >
+                        <X className="w-[0.55vw] h-[0.55vw]" />
+                      </button>
+                    </span>
+                  ))}
+                  {activeSerials.length > 2 && (
+                    <button
+                      type="button"
+                      onClick={openSerialModal}
+                      className="text-[0.62vw] text-indigo-600 font-bold bg-indigo-50 px-[0.35vw] py-[0.18vw] rounded-[0.3vw] border border-indigo-200 hover:bg-indigo-100 cursor-pointer whitespace-nowrap"
+                    >
+                      +{activeSerials.length - 2} more
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={clearAllSerials}
+                    className="text-[0.62vw] text-red-500 hover:text-red-700 font-semibold px-[0.25vw] cursor-pointer whitespace-nowrap"
+                    title="Clear serial filter"
+                  >
+                    Clear
+                  </button>
+                </div>
               )}
             </div>
 
-            {/* Unsaved & Unclaimed Toggle Buttons */}
-            {filterStatus === "All" && (
-              <div className="flex items-center gap-[0.4vw] flex-shrink-0">
-                <button
-                  onClick={() => {
-                    setShowOnlyUnsaved((prev) => !prev);
-                    if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
-                  }}
-                  className={`flex items-center gap-[0.3vw] px-[0.5vw] py-[0.35vw] rounded-[0.4vw] border text-[0.68vw] font-semibold cursor-pointer transition-all shadow-sm whitespace-nowrap ${
-                    showOnlyUnsaved
-                      ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
-                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <div
-                    className={`w-[0.38vw] h-[0.38vw] rounded-full ${showOnlyUnsaved ? "bg-white animate-pulse" : "bg-gray-400"}`}
-                  />
-                  <span>Unsaved Records Only</span>
-                </button>
+            {/* More Filters Toggle Button (wraps Unclaimed, Unsaved, and Dates) */}
+            <button
+              type="button"
+              onClick={() => setShowFiltersPanel((p) => !p)}
+              className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm flex-shrink-0 ${
+                showFiltersPanel || (dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved)
+                  ? "bg-blue-50 border-blue-300 text-blue-700 shadow-blue-50"
+                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+              }`}
+              title="Toggle Date and Status Filters"
+            >
+              <Filter className="w-[0.8vw] h-[0.8vw] text-blue-600" />
+              <span>Filters</span>
+              {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
+                <span className="w-[0.42vw] h-[0.42vw] rounded-full bg-blue-600 animate-pulse" />
+              )}
+              <ChevronDown
+                className={`w-[0.75vw] h-[0.75vw] text-slate-400 transition-transform duration-200 ${
+                  showFiltersPanel ? "rotate-180 text-blue-600" : ""
+                }`}
+              />
+            </button>
 
-                <button
-                  onClick={() => {
-                    setShowOnlyUnclaimed((prev) => !prev);
-                    if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
-                  }}
-                  className={`flex items-center gap-[0.3vw] px-[0.5vw] py-[0.35vw] rounded-[0.4vw] border text-[0.68vw] font-semibold cursor-pointer transition-all shadow-sm whitespace-nowrap ${
-                    showOnlyUnclaimed
-                      ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"
-                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <div
-                    className={`w-[0.38vw] h-[0.38vw] rounded-full ${showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-gray-400"}`}
-                  />
-                  <span>Unclaimed Records Only</span>
-                </button>
-              </div>
-            )}
+            {/* Quick Active Filter Badges */}
+            <div className="flex items-center gap-[0.3vw] flex-wrap overflow-hidden">
+              {showOnlyUnclaimed && (
+                <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.15vw] rounded-[0.3vw] bg-blue-50 border border-blue-200 text-blue-700 text-[0.65vw] font-bold shadow-2xs whitespace-nowrap">
+                  Unclaimed Only
+                  <button
+                    type="button"
+                    onClick={() => setShowOnlyUnclaimed(false)}
+                    className="hover:text-blue-900 cursor-pointer"
+                  >
+                    <X className="w-[0.55vw] h-[0.55vw]" />
+                  </button>
+                </span>
+              )}
+              {showOnlyUnsaved && (
+                <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.15vw] rounded-[0.3vw] bg-purple-50 border border-purple-200 text-purple-700 text-[0.65vw] font-bold shadow-2xs whitespace-nowrap">
+                  Unsaved Only
+                  <button
+                    type="button"
+                    onClick={() => setShowOnlyUnsaved(false)}
+                    className="hover:text-purple-900 cursor-pointer"
+                  >
+                    <X className="w-[0.55vw] h-[0.55vw]" />
+                  </button>
+                </span>
+              )}
+              {(dateFrom || dateTo) && (
+                <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.15vw] rounded-[0.3vw] bg-amber-50 border border-amber-200 text-amber-700 text-[0.65vw] font-bold shadow-2xs whitespace-nowrap">
+                  📅 {dateFrom || "Start"} → {dateTo || "End"}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDateFrom("");
+                      setDateTo("");
+                    }}
+                    className="hover:text-amber-900 cursor-pointer"
+                  >
+                    <X className="w-[0.55vw] h-[0.55vw]" />
+                  </button>
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Right Controls: Date Pickers, Sync & Export */}
+          {/* Right Controls: Export */}
           <div className="flex items-center gap-[0.5vw] flex-shrink-0 ml-auto">
-            {/* Date From */}
-            <div className="flex items-center gap-[0.3vw] flex-shrink-0">
-              <span className="text-[0.68vw] font-semibold text-gray-500 whitespace-nowrap">
-                From
-              </span>
-              <div className="relative">
-                <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-gray-400 pointer-events-none" />
-                <input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-gray-300 rounded-[0.38vw] text-[0.65vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all w-[7.2vw]"
-                />
-              </div>
-            </div>
-
-            {/* Date To */}
-            <div className="flex items-center gap-[0.3vw] flex-shrink-0">
-              <span className="text-[0.68vw] font-semibold text-gray-500 whitespace-nowrap">
-                To
-              </span>
-              <div className="relative">
-                <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-gray-400 pointer-events-none" />
-                <input
-                  type="date"
-                  value={dateTo}
-                  min={dateFrom}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-gray-300 rounded-[0.38vw] text-[0.65vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all w-[7.2vw]"
-                />
-              </div>
-            </div>
-
-            {(dateFrom || dateTo) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setDateFrom("");
-                  setDateTo("");
-                }}
-                className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.3vw] rounded-[0.38vw] border border-red-200 text-red-500 bg-red-50 hover:bg-red-100 text-[0.65vw] font-semibold transition-all cursor-pointer whitespace-nowrap flex-shrink-0"
-              >
-                <X className="w-[0.6vw] h-[0.6vw]" /> Clear
-              </button>
-            )}
-
-            {/* Last Sync + Refresh */}
-            <div className="flex items-center gap-[0.4vw] bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.28vw] rounded-[0.4vw] flex-shrink-0">
-              <div className="flex flex-col items-end leading-tight">
-                <span className="text-[0.58vw] text-slate-400 font-medium tracking-wide">
-                  Last Sync
-                </span>
-                <span className="text-[0.68vw] font-semibold text-slate-700 tabular-nums">
-                  {lastSyncTime
-                    .toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                    .toLowerCase()
-                    .replace(/\s+/g, "")}
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  fetchData();
-                  toast("Data refreshed manually");
-                }}
-                className="w-[1.5vw] h-[1.5vw] flex items-center justify-center rounded-[0.35vw] text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer"
-                title="Refresh Data"
-              >
-                <RefreshCw className="w-[0.8vw] h-[0.8vw]" />
-              </button>
-            </div>
-
             {/* Export Button */}
             <button
               type="button"
@@ -1882,6 +2048,126 @@ export default function ServiceMaterialInwardResponse({
             </button>
           </div>
         </div>
+
+        {/* Collapsible Filters Tray (shown below button when clicked) */}
+        <AnimatePresence>
+          {showFiltersPanel && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden border-t border-slate-100 mt-[0.45vw] pt-[0.45vw]"
+            >
+              <div className="flex items-center justify-between gap-[1vw] flex-wrap bg-slate-50/70 p-[0.6vw] rounded-[0.5vw] border border-slate-200/70">
+                {/* Left Side: Unsaved & Unclaimed Toggles */}
+                <div className="flex items-center gap-[0.6vw] flex-wrap">
+                  <span className="text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider">
+                    Quick Views:
+                  </span>
+                  {filterStatus === "All" ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowOnlyUnclaimed((prev) => !prev);
+                          if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
+                        }}
+                        className={`flex items-center gap-[0.3vw] px-[0.65vw] py-[0.35vw] rounded-[0.4vw] border text-[0.7vw] font-semibold cursor-pointer transition-all shadow-xs ${
+                          showOnlyUnclaimed
+                            ? "bg-blue-600 border-blue-600 text-white shadow-blue-200"
+                            : "bg-white border-slate-300 text-slate-700 hover:bg-slate-100"
+                        }`}
+                      >
+                        <div
+                          className={`w-[0.4vw] h-[0.4vw] rounded-full ${
+                            showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-slate-400"
+                          }`}
+                        />
+                        <span>Unclaimed Records Only</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowOnlyUnsaved((prev) => !prev);
+                          if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
+                        }}
+                        className={`flex items-center gap-[0.3vw] px-[0.65vw] py-[0.35vw] rounded-[0.4vw] border text-[0.7vw] font-semibold cursor-pointer transition-all shadow-xs ${
+                          showOnlyUnsaved
+                            ? "bg-blue-600 border-blue-600 text-white shadow-blue-200"
+                            : "bg-white border-slate-300 text-slate-700 hover:bg-slate-100"
+                        }`}
+                      >
+                        <div
+                          className={`w-[0.4vw] h-[0.4vw] rounded-full ${
+                            showOnlyUnsaved ? "bg-white animate-pulse" : "bg-slate-400"
+                          }`}
+                        />
+                        <span>Unsaved Records Only</span>
+                      </button>
+                    </>
+                  ) : (
+                    <span className="text-[0.68vw] text-slate-400 italic">
+                      (Available when 'All' tab is selected)
+                    </span>
+                  )}
+                </div>
+
+                {/* Right Side: Date Range Filter */}
+                <div className="flex items-center gap-[0.6vw] flex-wrap ml-auto">
+                  <span className="text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider">
+                    Date Range:
+                  </span>
+                  {/* From Date */}
+                  <div className="flex items-center gap-[0.3vw]">
+                    <span className="text-[0.68vw] font-semibold text-slate-600">From</span>
+                    <div className="relative">
+                      <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-slate-400 pointer-events-none" />
+                      <input
+                        type="date"
+                        value={dateFrom}
+                        onChange={(e) => setDateFrom(e.target.value)}
+                        className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-slate-300 rounded-[0.38vw] text-[0.68vw] font-medium text-slate-700 outline-none focus:border-blue-500 bg-white shadow-2xs w-[7.8vw]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* To Date */}
+                  <div className="flex items-center gap-[0.3vw]">
+                    <span className="text-[0.68vw] font-semibold text-slate-600">To</span>
+                    <div className="relative">
+                      <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-slate-400 pointer-events-none" />
+                      <input
+                        type="date"
+                        value={dateTo}
+                        min={dateFrom}
+                        onChange={(e) => setDateTo(e.target.value)}
+                        className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-slate-300 rounded-[0.38vw] text-[0.68vw] font-medium text-slate-700 outline-none focus:border-blue-500 bg-white shadow-2xs w-[7.8vw]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Clear Date Filter Button */}
+                  {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDateFrom("");
+                        setDateTo("");
+                        setShowOnlyUnclaimed(false);
+                        setShowOnlyUnsaved(false);
+                      }}
+                      className="flex items-center gap-[0.2vw] px-[0.55vw] py-[0.3vw] rounded-[0.38vw] border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 text-[0.68vw] font-bold transition-all cursor-pointer shadow-2xs ml-[0.3vw]"
+                    >
+                      <X className="w-[0.65vw] h-[0.65vw]" /> Reset All
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Header */}
@@ -1908,12 +2194,12 @@ export default function ServiceMaterialInwardResponse({
         <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-separate border-spacing-0">
-              <thead className="sticky top-0 z-20 shadow-sm">
-                <tr className="bg-blue-50/95 backdrop-blur-md">
+              <thead className="sticky top-0 z-30 shadow-sm">
+                <tr className="bg-[#e9edf4]">
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-semibold text-black whitespace-nowrap border-b border-r border-blue-200 last:border-r-0`}
+                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-bold text-slate-800 whitespace-nowrap border-b-2 border-r border-slate-300 last:border-r-0 sticky top-0 z-30 bg-[#e9edf4]`}
                     >
                       {col.label}
                     </th>
@@ -1943,12 +2229,12 @@ export default function ServiceMaterialInwardResponse({
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-separate border-spacing-0">
               {/* Table Header */}
-              <thead className="sticky top-0 z-20 shadow-sm">
-                <tr className="bg-blue-50/95 backdrop-blur-md">
+              <thead className="sticky top-0 z-30 shadow-sm">
+                <tr className="bg-[#e9edf4]">
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-semibold text-black whitespace-nowrap border-b border-r border-blue-200 last:border-r-0`}
+                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-bold text-slate-800 whitespace-nowrap border-b-2 border-r border-slate-300 last:border-r-0 sticky top-0 z-30 bg-[#e9edf4]`}
                     >
                       {col.label}
                     </th>
@@ -2003,8 +2289,11 @@ export default function ServiceMaterialInwardResponse({
                       isAdminReturnedProduct &&
                       product.assignedTo ===
                         (currentUser?.userId || currentUser?.id);
+                    // Allow inline editing when claimed by me (except when already in Completed tab or pending final admin approval)
+                    const canEditInline =
+                      (isClaimedByMe && filterStatus !== "Completed") || isResubmitting;
                     const draft =
-                      (isClaimedByMe && isUnsavedRecord) || isResubmitting
+                      canEditInline
                         ? getDraft(product._pid, product)
                         : null;
                     const hc = (field, val) =>
@@ -2016,7 +2305,7 @@ export default function ServiceMaterialInwardResponse({
                           <tr className="bg-slate-50 border-y border-slate-200">
                             <td
                               colSpan={columns.length}
-                              className="p-0 border-b border-slate-200 bg-slate-50"
+                              className="p-0 border-b border-slate-200 bg-slate-50 sticky top-[2.4vw] z-20 shadow-xs"
                             >
                               <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
                                 <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
@@ -2313,26 +2602,48 @@ export default function ServiceMaterialInwardResponse({
                             {renderFillHandle(idx, "problemDesc")}
                           </td>
 
-                          {/* PV, CV */}
+                          {/* PV */}
                           <td
-                            className={getCellClass(idx, "pvCv")}
-                            onMouseDown={(e) => handleCellMouseDown(idx, "pvCv", e)}
-                            onMouseEnter={() => handleCellMouseEnter(idx, "pvCv")}
+                            className={getCellClass(idx, "pv")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "pv", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "pv")}
                           >
                             {draft ? (
                               <input
                                 type="text"
-                                value={draft.pvCv || ""}
-                                onChange={(e) => hc("pvCv", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
-                                placeholder="PV, CV..."
+                                value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
+                                onChange={(e) => hc("pv", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                placeholder="PV..."
                               />
                             ) : (
                               <span className="text-[0.75vw]">
-                                {product.report?.pvCv || "—"}
+                                {product.report?.pv || (product.report?.pvCv ? product.report.pvCv.split(',')[0]?.trim() : "—")}
                               </span>
                             )}
-                            {renderFillHandle(idx, "pvCv")}
+                            {renderFillHandle(idx, "pv")}
+                          </td>
+
+                          {/* CV */}
+                          <td
+                            className={getCellClass(idx, "cv")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "cv", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "cv")}
+                          >
+                            {draft ? (
+                              <input
+                                type="text"
+                                value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
+                                onChange={(e) => hc("cv", e.target.value)}
+                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                placeholder="CV..."
+                              />
+                            ) : (
+                              <span className="text-[0.75vw]">
+                                {product.report?.cv || (product.report?.pvCv ? product.report.pvCv.split(',')[1]?.trim() : "—")}
+                              </span>
+                            )}
+                            {renderFillHandle(idx, "cv")}
                           </td>
 
                           {/* Designators */}
@@ -2622,7 +2933,7 @@ export default function ServiceMaterialInwardResponse({
                                 <input
                                   type="file"
                                   id={`file-${product._pid}`}
-                                  accept="image/*"
+                                  accept="image/*,application/pdf,.pdf"
                                   onChange={(e) =>
                                     handleImageChange(product._pid, product, e)
                                   }
@@ -2631,64 +2942,133 @@ export default function ServiceMaterialInwardResponse({
                                 <label
                                   htmlFor={`file-${product._pid}`}
                                   className="flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] bg-blue-50 border border-blue-200 text-blue-600 rounded-[0.4vw] cursor-pointer hover:bg-blue-600 hover:text-white transition-all shadow-sm text-[0.7vw] font-semibold"
-                                  title="Upload Image"
+                                  title="Upload Image or PDF"
                                 >
                                   <Upload className="w-[0.8vw] h-[0.8vw]" />
                                   <span>Upload</span>
                                 </label>
-                                {(draft.imagePreview || draft.image) && (
-                                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-400 flex-shrink-0 relative group shadow-sm">
+                                {(draft.imagePreview || draft.imageFile || draft.image) && (
+                                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-400 flex-shrink-0 relative group shadow-sm flex items-center justify-center bg-white overflow-hidden">
+                                    {draft.isPdf || (draft.image && draft.image.toLowerCase().endsWith(".pdf")) ? (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          const url = draft.image
+                                            ? draft.image.startsWith("http")
+                                              ? draft.image
+                                              : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`
+                                            : draft.imagePreview || "";
+                                          setDocPreviewModal({
+                                            url,
+                                            title: draft.fileName || `${product.productDescription || "Product"} - Technical PDF`,
+                                            isPdf: true,
+                                          });
+                                        }}
+                                        className="w-full h-full flex flex-col items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-0"
+                                        title={draft.fileName || "PDF Document"}
+                                      >
+                                        <FileText className="w-[1.1vw] h-[1.1vw]" />
+                                        <span className="text-[0.45vw] font-bold">PDF</span>
+                                      </button>
+                                    ) : (
+                                      <>
+                                        <img
+                                          src={
+                                            draft.imagePreview ||
+                                            (draft.image.startsWith("http")
+                                              ? draft.image
+                                              : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`)
+                                          }
+                                          alt="preview"
+                                          className="w-full h-full object-cover rounded-[0.4vw] cursor-pointer"
+                                          onClick={() => {
+                                            const url = draft.imagePreview ||
+                                              (draft.image.startsWith("http")
+                                                ? draft.image
+                                                : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`);
+                                            setDocPreviewModal({
+                                              url,
+                                              title: `${product.productDescription || "Product"} - Technical Image`,
+                                              isPdf: false,
+                                            });
+                                          }}
+                                        />
+
+                                        {/* Hover Preview Tooltip */}
+                                        <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+0.5vw)] z-50 bg-white border border-slate-300 rounded-[0.6vw] shadow-xl p-[0.4vw] w-[12vw] pointer-events-none">
+                                          <img
+                                            src={
+                                              draft.imagePreview ||
+                                              (draft.image.startsWith("http")
+                                                ? draft.image
+                                                : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`)
+                                            }
+                                            alt="hover-preview"
+                                            className="w-full h-auto rounded-[0.4vw] object-contain max-h-[12vw]"
+                                          />
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            ) : product.report?.image ? (
+                              <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-400 relative group shadow-sm mx-auto flex items-center justify-center bg-white overflow-hidden">
+                                {product.report.image.toLowerCase().endsWith(".pdf") ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const url = product.report.image.startsWith("http")
+                                        ? product.report.image
+                                        : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
+                                      setDocPreviewModal({
+                                        url,
+                                        title: `${product.productDescription || "Product"} - Technical PDF`,
+                                        isPdf: true,
+                                      });
+                                    }}
+                                    className="w-full h-full flex flex-col items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-0"
+                                    title="View PDF"
+                                  >
+                                    <FileText className="w-[1.1vw] h-[1.1vw]" />
+                                    <span className="text-[0.45vw] font-bold">PDF</span>
+                                  </button>
+                                ) : (
+                                  <>
                                     <img
                                       src={
-                                        draft.imagePreview ||
-                                        (draft.image.startsWith("http")
-                                          ? draft.image
-                                          : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`)
+                                        product.report.image.startsWith("http")
+                                          ? product.report.image
+                                          : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                                       }
                                       alt="preview"
-                                      className="w-full h-full object-cover rounded-[0.4vw]"
+                                      className="w-full h-full object-cover rounded-[0.4vw] cursor-pointer"
+                                      onClick={() => {
+                                        const url = product.report.image.startsWith("http")
+                                          ? product.report.image
+                                          : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
+                                        setDocPreviewModal({
+                                          url,
+                                          title: `${product.productDescription || "Product"} - Technical Image`,
+                                          isPdf: false,
+                                        });
+                                      }}
                                     />
 
                                     {/* Hover Preview Tooltip */}
                                     <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+0.5vw)] z-50 bg-white border border-slate-300 rounded-[0.6vw] shadow-xl p-[0.4vw] w-[12vw] pointer-events-none">
                                       <img
                                         src={
-                                          draft.imagePreview ||
-                                          (draft.image.startsWith("http")
-                                            ? draft.image
-                                            : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`)
+                                          product.report.image.startsWith("http")
+                                            ? product.report.image
+                                            : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                                         }
                                         alt="hover-preview"
                                         className="w-full h-auto rounded-[0.4vw] object-contain max-h-[12vw]"
                                       />
                                     </div>
-                                  </div>
+                                  </>
                                 )}
-                              </div>
-                            ) : product.report?.image ? (
-                              <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-400 relative group shadow-sm mx-auto">
-                                <img
-                                  src={
-                                    product.report.image.startsWith("http")
-                                      ? product.report.image
-                                      : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
-                                  }
-                                  alt="preview"
-                                  className="w-full h-full object-cover rounded-[0.4vw]"
-                                />
-
-                                {/* Hover Preview Tooltip */}
-                                <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+0.5vw)] z-50 bg-white border border-slate-300 rounded-[0.6vw] shadow-xl p-[0.4vw] w-[12vw] pointer-events-none">
-                                  <img
-                                    src={
-                                      product.report.image.startsWith("http")
-                                        ? product.report.image
-                                        : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
-                                    }
-                                    alt="hover-preview"
-                                    className="w-full h-auto rounded-[0.4vw] object-contain max-h-[12vw]"
-                                  />
-                                </div>
                               </div>
                             ) : (
                               <span className="text-[0.75vw] text-gray-400">
@@ -3309,13 +3689,25 @@ export default function ServiceMaterialInwardResponse({
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">PV, CV</label>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">PV</label>
                     <input
                       type="text"
-                      value={editReportModal.draft.pvCv || ""}
+                      value={editReportModal.draft.pv !== undefined ? editReportModal.draft.pv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[0]?.trim() : "")}
                       onChange={(e) => setEditReportModal((prev) => ({
                         ...prev,
-                        draft: { ...prev.draft, pvCv: e.target.value }
+                        draft: { ...prev.draft, pv: e.target.value }
+                      }))}
+                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">CV</label>
+                    <input
+                      type="text"
+                      value={editReportModal.draft.cv !== undefined ? editReportModal.draft.cv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[1]?.trim() : "")}
+                      onChange={(e) => setEditReportModal((prev) => ({
+                        ...prev,
+                        draft: { ...prev.draft, cv: e.target.value }
                       }))}
                       className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
                     />
@@ -3585,6 +3977,185 @@ export default function ServiceMaterialInwardResponse({
                 >
                   Export
                 </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Multi-Serial Filter Modal */}
+      <AnimatePresence>
+        {showSerialFilterModal && (
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center z-[70] p-[1vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[30vw] max-w-[500px] flex flex-col overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-[1.2vw] py-[0.9vw] bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-indigo-100">
+                <div className="flex items-center gap-[0.5vw]">
+                  <div className="w-[1.8vw] h-[1.8vw] rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-sm">
+                    <ListFilter className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[0.95vw] font-bold text-slate-900 leading-tight">
+                      Filter by Serial Numbers
+                    </h3>
+                    <p className="text-[0.68vw] text-slate-500 font-medium">
+                      Paste or enter multiple serial numbers to filter the records
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSerialFilterModal(false)}
+                  className="w-[1.6vw] h-[1.6vw] rounded-full hover:bg-white text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <X className="w-[0.9vw] h-[0.9vw]" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-[1.2vw] flex flex-col gap-[0.8vw]">
+                <div>
+                  <div className="flex items-center justify-between mb-[0.3vw]">
+                    <label className="text-[0.72vw] font-bold text-slate-700">
+                      Serial Numbers (one per line, comma or space separated)
+                    </label>
+                    {tempSerialInput.trim() && (
+                      <span className="text-[0.65vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.4vw] py-[0.1vw] rounded">
+                        {
+                          tempSerialInput
+                            .split(/[,\s\n]+/)
+                            .map((s) => s.trim())
+                            .filter(Boolean).length
+                        }{" "}
+                        detected
+                      </span>
+                    )}
+                  </div>
+                  <textarea
+                    rows={6}
+                    value={tempSerialInput}
+                    onChange={(e) => setTempSerialInput(e.target.value)}
+                    placeholder="Example:&#10;NB2326Jhjh&#10;CSF2326xJjkjh&#10;FGF2326xJjkjh"
+                    className="w-full p-[0.7vw] border border-slate-300 rounded-[0.5vw] text-[0.75vw] font-mono font-medium text-slate-800 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all resize-y shadow-inner placeholder:font-sans placeholder:text-slate-400"
+                    autoFocus
+                  />
+                  <p className="text-[0.65vw] text-slate-500 mt-[0.3vw]">
+                    Tip: You can copy a column of serial numbers directly from Excel or Google Sheets and paste here.
+                  </p>
+                </div>
+
+                {/* Quick actions inside modal */}
+                <div className="flex items-center justify-between pt-[0.4vw] border-t border-slate-100 text-[0.7vw]">
+                  <button
+                    type="button"
+                    onClick={() => setTempSerialInput("")}
+                    className="text-slate-500 hover:text-red-600 font-semibold flex items-center gap-[0.3vw] cursor-pointer"
+                  >
+                    <Trash2 className="w-[0.75vw] h-[0.75vw]" />
+                    <span>Clear text</span>
+                  </button>
+                  <span className="text-slate-400 text-[0.65vw]">
+                    Matching is case-insensitive
+                  </span>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-end gap-[0.6vw] px-[1.2vw] py-[0.8vw] bg-slate-50 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setShowSerialFilterModal(false)}
+                  className="px-[1.2vw] py-[0.45vw] bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-[0.4vw] font-semibold text-[0.75vw] cursor-pointer transition-all shadow-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearAllSerials();
+                    setShowSerialFilterModal(false);
+                  }}
+                  className="px-[1vw] py-[0.45vw] bg-red-50 hover:bg-red-100 text-red-600 rounded-[0.4vw] font-semibold text-[0.75vw] cursor-pointer transition-all"
+                >
+                  Reset Filter
+                </button>
+                <button
+                  type="button"
+                  onClick={applySerialModal}
+                  className="px-[1.5vw] py-[0.45vw] bg-indigo-600 hover:bg-indigo-700 text-white rounded-[0.4vw] font-semibold text-[0.75vw] cursor-pointer transition-all shadow-sm"
+                >
+                  Apply Filter
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      {/* In-App Document Preview Modal (for Image & PDF without navigating away) */}
+      <AnimatePresence>
+        {docPreviewModal && (
+          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[110] p-[1.5vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[75vw] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] bg-slate-900 text-white">
+                <div className="flex items-center gap-[0.6vw]">
+                  {docPreviewModal.isPdf ? (
+                    <FileText className="w-[1.2vw] h-[1.2vw] text-red-400" />
+                  ) : (
+                    <Eye className="w-[1.2vw] h-[1.2vw] text-blue-400" />
+                  )}
+                  <h3 className="text-[0.9vw] font-bold text-white tracking-wide">
+                    {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-[0.8vw]">
+                  <a
+                    href={docPreviewModal.url}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[0.72vw] text-slate-300 hover:text-white flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                  >
+                    <Download className="w-[0.8vw] h-[0.8vw]" />
+                    <span>Download</span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setDocPreviewModal(null)}
+                    className="text-slate-400 hover:text-white p-[0.3vw] rounded-full hover:bg-white/10 transition-colors cursor-pointer border-0 bg-transparent"
+                  >
+                    <X className="w-[1.1vw] h-[1.1vw]" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 bg-slate-100 flex items-center justify-center overflow-hidden p-[1vw]">
+                {docPreviewModal.isPdf ? (
+                  <iframe
+                    src={`${docPreviewModal.url}#toolbar=1&navpanes=0`}
+                    title="PDF Document"
+                    className="w-full h-full rounded-[0.4vw] border border-slate-300 bg-white shadow-inner"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center overflow-auto p-[1vw]">
+                    <img
+                      src={docPreviewModal.url}
+                      alt="Attachment Preview"
+                      className="max-h-full max-w-full object-contain rounded-[0.4vw] shadow-md border border-slate-300 bg-white"
+                    />
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>

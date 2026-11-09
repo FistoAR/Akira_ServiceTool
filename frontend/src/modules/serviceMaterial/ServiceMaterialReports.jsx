@@ -1507,35 +1507,6 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             )}
 
             <div className="flex items-center gap-[0.8vw] flex-shrink-0">
-              {/* Last Sync + Refresh */}
-              <div className="flex items-center gap-[0.5vw] bg-slate-50 border border-slate-200 px-[0.7vw] py-[0.35vw] rounded-[0.5vw]">
-                <div className="flex flex-col items-end leading-tight">
-                  <span className="text-[0.6vw] text-slate-400 font-medium tracking-wide">
-                    Last Sync
-                  </span>
-                  <span className="text-[0.7vw] font-semibold text-slate-700 tabular-nums">
-                    {lastSyncTime
-                      .toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })
-                      .toLowerCase()
-                      .replace(/\s+/g, "")}
-                  </span>
-                </div>
-                <button
-                  onClick={() => {
-                    fetchData();
-                    toast("Data refreshed manually");
-                  }}
-                  className="w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer"
-                  title="Refresh Data"
-                >
-                  <RefreshCw className="w-[0.9vw] h-[0.9vw]" />
-                </button>
-              </div>
-
               {/* Export Button */}
               <button
                 type="button"

@@ -5281,7 +5281,7 @@ const ServiceCallResponse = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5.5rem)] text-[0.85vw] bg-slate-100/70 overflow-hidden pb-[0.6vw]">
+    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 overflow-hidden pb-[0.4vw]">
       {/* Top Header Toolbar with Glass Tab Container & Action Buttons */}
       <div className="flex items-center gap-[0.8vw] mb-[0.6vw] sticky top-0 z-10 shrink-0">
         {/* Premium Glass-Effect Tab Container */}

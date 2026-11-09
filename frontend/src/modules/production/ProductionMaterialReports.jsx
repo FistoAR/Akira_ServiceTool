@@ -900,7 +900,7 @@ export default function ProductionMaterialReports() {
   }
 
   return (
-    <div className="w-full h-[calc(100vh-60px)] flex flex-col font-sans text-[14px] md:text-[0.85vw] bg-blue-50/30 p-2 md:p-[0.6vw] rounded-xl md:rounded-[1vw] overflow-hidden">
+    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[14px] md:text-[0.85vw] bg-blue-50/30 p-2 md:p-[0.6vw] rounded-xl md:rounded-[1vw] overflow-hidden">
       {/* Header Panel */}
       <div className="flex-shrink-0 bg-white border border-slate-400 rounded-xl md:rounded-[0.8vw] shadow-sm mb-3 md:mb-[0.8vw] overflow-hidden">
         <div className="bg-[#1e40af] px-4 md:px-[1.5vw] py-3 md:py-[1vw] flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-[0.8vw] relative">

@@ -210,7 +210,7 @@ const SystemSettingsPage = () => {
   );
 
   return (
-    <div className="w-full h-[calc(100vh-4.4rem)] flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
+    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
        
         <div className="flex-1 bg-white border border-slate-400 rounded-[0.6vw] shadow-sm mb-[1vw] overflow-hidden flex flex-col">
           {/* ── Tab: Categories ── */}

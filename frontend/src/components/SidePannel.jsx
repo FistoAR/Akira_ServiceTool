@@ -147,9 +147,9 @@ export default function Sidebar() {
     return !!(p?.incharge || p?.isAdmin || p?.write || p?.update || p?.delete);
   };
 
-  const canManageServiceCall = ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess);
-  const canManageServiceMaterial = ["matInward", "matReports"].some(hasAccess);
-  const canManageProductionMaterial = ["prodNC", "prodReports"].some(hasAccess);
+  const canManageServiceCall = ["callReg", "callAssign", "callEscalation", "callReports", "serviceCallResponse"].some(hasAccess);
+  const canManageServiceMaterial = ["matInward", "matReports", "serviceMaterialResponse"].some(hasAccess);
+  const canManageProductionMaterial = ["prodNC", "prodReports", "productionMaterialResponse"].some(hasAccess);
   const canManageCustomers = hasAccess("customers");
 
   console.log("loggedInUser in SidePannel:", loggedInUser);
@@ -190,55 +190,36 @@ export default function Sidebar() {
       path: "/serviceCall",
       label: "Service Call",
       icon: CallIcon,
-      show: canManageServiceCall && ["callReg", "callAssign", "callEscalation", "callReports"].some(hasAccess),
+      show: canManageServiceCall,
       subItems: [
         { path: "/serviceCall", label: "Call Registration", show: hasAccess("callReg") },
         { path: "/serviceCall/assignment", label: "Call Assignment", show: hasAccess("callAssign") },
         { path: "/serviceCall/escalations", label: "Escalating Calls", show: hasAccess("callEscalation") },
+        { path: "/serviceCallResponse", label: "Call Response", show: hasAccess("serviceCallResponse") },
         { path: "/serviceCall/reports", label: "Call Reports", show: hasAccess("callReports") },
       ].filter(sub => sub.show),
-    },
-    {
-      path: "/serviceCallResponse",
-      label: "Service Call (Workspace)",
-      iconify: "solar:user-speak-rounded-bold-duotone",
-      show: !!loggedInUser?.permissions?.serviceCallResponse?.enabled,
-      subItems: [
-        { path: "/serviceCallResponse", label: "Workspace Queue", show: true },
-        { path: "/serviceCall/reports", label: "Reports", show: true },
-      ],
     },
     {
       path: "/serviceMaterial",
       label: "Service Material",
       icon: ServiceIcon,
-      show: canManageServiceMaterial && ["matInward", "matReports"].some(hasAccess),
+      show: canManageServiceMaterial,
       subItems: [
         { path: "/serviceMaterial", label: "Material Inward Register", show: hasAccess("matInward") },
+        { path: "/serviceMaterialResponse", label: "Material Response", show: hasAccess("serviceMaterialResponse") },
         { path: "/serviceMaterial/reports", label: "Reports", show: hasAccess("matReports") },
       ].filter(sub => sub.show),
-    },
-    {
-      path: "/serviceMaterialResponse",
-      label: "Service Material (Workspace)",
-      iconify: "solar:settings-minimalistic-bold-duotone",
-      show: !!loggedInUser?.permissions?.serviceMaterialResponse?.enabled,
     },
     {
       path: "/productionMaterial",
       label: "Production Material",
       icon: ProductionIcon,
-      show: canManageProductionMaterial && ["prodNC", "prodReports"].some(hasAccess),
+      show: canManageProductionMaterial,
       subItems: [
         { path: "/productionMaterial", label: "Production NC", show: hasAccess("prodNC") },
+        { path: "/productionMaterialResponse", label: "Production Response", show: hasAccess("productionMaterialResponse") },
         { path: "/productionMaterial/reports", label: "Reports", show: hasAccess("prodReports") },
       ].filter(sub => sub.show),
-    },
-    {
-      path: "/productionMaterialResponse",
-      label: "Production Material (Workspace)",
-      iconify: "solar:box-minimalistic-bold-duotone",
-      show: !!loggedInUser?.permissions?.productionMaterialResponse?.enabled,
     },
     {
       path: "/troubleshoot",

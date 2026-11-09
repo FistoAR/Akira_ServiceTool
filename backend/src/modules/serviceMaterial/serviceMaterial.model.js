@@ -7,6 +7,8 @@ const reportSchema = new mongoose.Schema({
   materialCost: String,
   manpowerCost: Number,
   pvCv: String,
+  pv: String,
+  cv: String,
   faultParts: String,
   designators: String,
   image: String,

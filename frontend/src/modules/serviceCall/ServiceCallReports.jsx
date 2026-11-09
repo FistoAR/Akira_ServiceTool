@@ -566,7 +566,7 @@ export default function ServiceCallReports() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5.5rem)] text-[0.85vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
+    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
       {/* ── Top Header Bar ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
         {/* Main Tab Navigation */}

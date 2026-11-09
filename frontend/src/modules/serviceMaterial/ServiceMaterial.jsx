@@ -809,24 +809,36 @@ const ProductReportModal = ({ product, onClose }) => {
             </div>
           </div>
 
-          {/* Report Image */}
+          {/* Report Attachment */}
           {r.image && (
             <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.2vw] shadow-sm flex flex-col gap-[0.6vw]">
               <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
-                Report Attachment
+                Report Attachment (Image / PDF)
               </span>
-              <div className="rounded-[0.6vw] overflow-hidden border border-slate-200 bg-slate-100 max-h-[25vh] flex justify-center items-center">
-                <img
-                  src={`${API_URL.replace("/api", "")}${r.image}`}
-                  alt="Report Attachment"
-                  className="max-h-[25vh] w-auto object-contain cursor-pointer hover:scale-105 transition-all"
-                  onClick={() =>
-                    window.open(
-                      `${API_URL.replace("/api", "")}${r.image}`,
-                      "_blank",
-                    )
-                  }
-                />
+              <div className="rounded-[0.6vw] overflow-hidden border border-slate-200 bg-slate-100 max-h-[25vh] p-[0.6vw] flex justify-center items-center">
+                {r.image.toLowerCase().endsWith(".pdf") ? (
+                  <a
+                    href={`${API_URL.replace("/api", "")}${r.image}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-[0.5vw] px-[1vw] py-[0.6vw] bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-[0.4vw] font-bold text-[0.78vw] shadow-xs cursor-pointer transition-colors"
+                  >
+                    <FileText className="w-[1.2vw] h-[1.2vw] text-red-600" />
+                    <span>Open Attached PDF Document</span>
+                  </a>
+                ) : (
+                  <img
+                    src={`${API_URL.replace("/api", "")}${r.image}`}
+                    alt="Report Attachment"
+                    className="max-h-[23vh] w-auto object-contain cursor-pointer hover:scale-105 transition-all"
+                    onClick={() =>
+                      window.open(
+                        `${API_URL.replace("/api", "")}${r.image}`,
+                        "_blank",
+                      )
+                    }
+                  />
+                )}
               </div>
             </div>
           )}
@@ -3027,14 +3039,14 @@ const AdminTableView = ({
         <table className="w-full text-left border-collapse">
           {/* ── THEAD ─────────────────────────────────────────────────────── */}
           <thead
-            className="sticky top-0 z-10"
+            className="sticky top-0 z-30 shadow-xs"
             style={{ background: "#1a73e8" }}
           >
             <tr>
               {canDelete && !isSupervisor && (
                 <th
                   rowSpan={2}
-                  className="p-[0.6vw] border-b-2 border-r border-blue-400/30 text-center align-middle w-[2.5%] sticky top-0 z-20"
+                  className="p-[0.6vw] border-b border-r border-blue-400/30 text-center align-middle w-[2.5%] sticky top-0 z-30"
                   style={{ background: "#1a73e8" }}
                 >
                   <button
@@ -3061,7 +3073,7 @@ const AdminTableView = ({
 
               <th
                 rowSpan={2}
-                className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b-2 border-r border-blue-400/30 whitespace-nowrap text-[0.8vw] align-middle w-[3%] sticky top-0 z-20"
+                className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b border-r border-blue-400/30 whitespace-nowrap text-[0.8vw] align-middle w-[3%] sticky top-0 z-30"
                 style={{ background: "#1a73e8" }}
               >
                 S. No
@@ -3070,7 +3082,7 @@ const AdminTableView = ({
               {/* Products super-header */}
               <th
                 colSpan={productCols.length}
-                className="px-[0.6vw] py-[0.45vw] font-semibold text-white border-b border-r border-blue-400/30 text-center text-[0.8vw] tracking-wide sticky top-0 z-20"
+                className="px-[0.6vw] py-[0.45vw] font-semibold text-white border-b border-r border-blue-400/30 text-center text-[0.8vw] tracking-wide sticky top-0 z-30"
                 style={{ background: "#1a73e8" }}
               >
                 Products
@@ -3089,7 +3101,7 @@ const AdminTableView = ({
                           : "100px",
                     background: "#1a73e8",
                   }}
-                  className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b-2 border-r border-blue-400/30 last:border-r-0 whitespace-nowrap text-[0.8vw] align-middle sticky top-0 z-20"
+                  className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b border-r border-blue-400/30 last:border-r-0 whitespace-nowrap text-[0.8vw] align-middle sticky top-0 z-30"
                 >
                   {h}
                 </th>
@@ -3111,7 +3123,7 @@ const AdminTableView = ({
                             : "125px",
                     background: "#1a73e8",
                   }}
-                  className="px-[0.6vw] py-[0.45vw] font-semibold text-white/90 text-center border-b-2 border-r border-blue-400/30 whitespace-nowrap text-[0.76vw] sticky top-[2.1vw] z-20"
+                  className="px-[0.6vw] py-[0.45vw] font-semibold text-white/90 text-center border-b border-r border-blue-400/30 whitespace-nowrap text-[0.76vw] sticky top-[1.8vw] z-30"
                 >
                   {h}
                 </th>
@@ -3158,7 +3170,7 @@ const AdminTableView = ({
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.9vw] py-[0.65vw] border-l-[4px] border-[#1a73e8] sticky top-[4.0vw] z-10 bg-white shadow-sm border-b border-gray-600"
+                      className="px-[0.9vw] py-[0.65vw] border-l-[4px] border-[#1a73e8] bg-white shadow-sm border-b border-gray-600 sticky top-[3.75vw] z-20"
                     >
                       <div className="flex items-center gap-[0.7vw]">
                         {isCustomerCollapsed ? (
@@ -4209,40 +4221,6 @@ export default function App() {
               )}
 
               <div className="ml-auto flex gap-[0.8vw] items-center">
-                {/* Last Sync + Refresh */}
-                <div className="flex items-center gap-[0.5vw] bg-slate-50 border border-slate-200 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] h-[2.4vw]">
-                  <div className="flex flex-col items-end leading-tight">
-                    <span className="text-[0.6vw] text-slate-400 font-medium tracking-wide">
-                      Last Sync
-                    </span>
-                    <span className="text-[0.7vw] font-semibold text-slate-700 tabular-nums">
-                      {lastSyncTime
-                        .toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: true,
-                        })
-                        .toLowerCase()
-                        .replace(/\s+/g, "")}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // We can access fetchData indirectly or define it outside or pass it.
-                      // Wait, let's find the correct fetch function to call.
-                      // In the main App, we have a trigger or function. Let's make sure we handle it.
-                      document.dispatchEvent(
-                        new CustomEvent("refresh-service-material"),
-                      );
-                    }}
-                    className="w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-slate-500 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-200 transition-all cursor-pointer"
-                    title="Refresh Data"
-                  >
-                    <RefreshCw className="w-[0.9vw] h-[0.9vw]" />
-                  </button>
-                </div>
-
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button

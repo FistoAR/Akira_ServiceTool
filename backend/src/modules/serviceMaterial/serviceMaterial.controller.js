@@ -232,7 +232,7 @@ exports.updateProductReport = async (req, res) => {
     // ── Audit Diff Tracking for Report updates ──────────────────────────────
     const oldReport = product.report || {};
     const reportAuditedFields = [
-      'testedBy', 'fqaBy', 'timeInHours', 'materialCost', 'pvCv', 'faultParts',
+      'testedBy', 'fqaBy', 'timeInHours', 'materialCost', 'pvCv', 'pv', 'cv', 'faultParts',
       'designators', 'disposition', 'fourMCategory', 'errorCode',
       'problemDescription', 'rootCause', 'partsReplacement', 'correctiveAction',
       'completedDate', 'status'
@@ -335,6 +335,8 @@ exports.editProductReport = async (req, res) => {
       errorCode,
       problemDescription,
       pvCv,
+      pv,
+      cv,
       rootCause,
       faultParts,
       partsReplacement,
@@ -367,6 +369,8 @@ exports.editProductReport = async (req, res) => {
       { key: 'fourMCategory', label: '4M Category', old: oldReport.fourMCategory, new: fourMCategory },
       { key: 'errorCode', label: 'Error Code', old: oldReport.errorCode, new: errorCode },
       { key: 'problemDescription', label: 'Problem Description', old: oldReport.problemDescription, new: problemDescription },
+      { key: 'pv', label: 'PV', old: oldReport.pv, new: pv },
+      { key: 'cv', label: 'CV', old: oldReport.cv, new: cv },
       { key: 'pvCv', label: 'PV, CV', old: oldReport.pvCv, new: pvCv },
       { key: 'rootCause', label: 'Root Cause', old: oldReport.rootCause, new: rootCause },
       { key: 'faultParts', label: 'Fault Parts', old: oldReport.faultParts, new: faultParts },
@@ -439,6 +443,8 @@ exports.editProductReport = async (req, res) => {
       ...(errorCode !== undefined && { errorCode }),
       ...(problemDescription !== undefined && { problemDescription }),
       ...(pvCv !== undefined && { pvCv }),
+      ...(pv !== undefined && { pv }),
+      ...(cv !== undefined && { cv }),
       ...(rootCause !== undefined && { rootCause }),
       ...(faultParts !== undefined && { faultParts }),
       ...(partsReplacement !== undefined && { partsReplacement }),
