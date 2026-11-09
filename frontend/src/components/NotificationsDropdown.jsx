@@ -6,9 +6,129 @@ import {
   CheckCheck,
   ChevronDown,
   X,
-  Trash2
+  Trash2,
+  Clock,
+  AlertTriangle,
+  Flame,
+  UserCheck,
+  ArrowUpRight,
+  RotateCcw,
+  Package,
+  Wrench,
+  CheckCircle2,
+  Sparkles,
+  Inbox
 } from 'lucide-react';
 import { useSocket } from '../contexts/SocketContext';
+
+// Helper to determine contextual notification styling & icons based on Pro-Max visual hierarchy
+const getNotificationVisuals = (notification) => {
+  const title = (notification.title || '').toLowerCase();
+  const type = notification.type || '';
+  const priority = notification.priority || 'Medium';
+
+  // 1. Critical / SLA Exhausted
+  if (type === 'Critical' || priority === 'Critical' || title.includes('critical') || title.includes('exhausted')) {
+    return {
+      icon: Flame,
+      iconColor: 'text-rose-600',
+      iconBg: 'bg-rose-100/90 border-rose-200',
+      badgeBg: 'bg-rose-50 text-rose-700 border-rose-200',
+      badgeText: 'Critical',
+      cardBorder: 'border-l-[0.28vw] border-l-rose-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-rose-50/30'
+    };
+  }
+
+  // 2. SLA Warning / 50% Warning / Impending escalation
+  if (title.includes('warning') || title.includes('50%') || title.includes('deadline')) {
+    return {
+      icon: AlertTriangle,
+      iconColor: 'text-amber-600',
+      iconBg: 'bg-amber-100/90 border-amber-200',
+      badgeBg: 'bg-amber-50 text-amber-700 border-amber-200',
+      badgeText: 'SLA Warning',
+      cardBorder: 'border-l-[0.28vw] border-l-amber-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-amber-50/30'
+    };
+  }
+
+  // 3. Reverse Escalation / Returned
+  if (title.includes('reverse') || title.includes('return')) {
+    return {
+      icon: RotateCcw,
+      iconColor: 'text-purple-600',
+      iconBg: 'bg-purple-100/90 border-purple-200',
+      badgeBg: 'bg-purple-50 text-purple-700 border-purple-200',
+      badgeText: 'Returned',
+      cardBorder: 'border-l-[0.28vw] border-l-purple-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-purple-50/30'
+    };
+  }
+
+  // 4. Escalation
+  if (type === 'Escalation' || title.includes('escalat')) {
+    return {
+      icon: ArrowUpRight,
+      iconColor: 'text-indigo-600',
+      iconBg: 'bg-indigo-100/90 border-indigo-200',
+      badgeBg: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      badgeText: 'Escalation',
+      cardBorder: 'border-l-[0.28vw] border-l-indigo-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-indigo-50/30'
+    };
+  }
+
+  // 5. Assignment / New Call
+  if (type === 'Assignment' || title.includes('assigned')) {
+    return {
+      icon: UserCheck,
+      iconColor: 'text-blue-600',
+      iconBg: 'bg-blue-100/90 border-blue-200',
+      badgeBg: 'bg-blue-50 text-blue-700 border-blue-200',
+      badgeText: 'Assigned',
+      cardBorder: 'border-l-[0.28vw] border-l-blue-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-blue-50/30'
+    };
+  }
+
+  // 6. Service Material / Production
+  if (type === 'Service Material' || title.includes('material')) {
+    return {
+      icon: Package,
+      iconColor: 'text-emerald-600',
+      iconBg: 'bg-emerald-100/90 border-emerald-200',
+      badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      badgeText: 'Material',
+      cardBorder: 'border-l-[0.28vw] border-l-emerald-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-emerald-50/30'
+    };
+  }
+
+  // 7. Resolved / Closed
+  if (title.includes('resolved') || title.includes('attended') || title.includes('closed')) {
+    return {
+      icon: CheckCircle2,
+      iconColor: 'text-teal-600',
+      iconBg: 'bg-teal-100/90 border-teal-200',
+      badgeBg: 'bg-teal-50 text-teal-700 border-teal-200',
+      badgeText: 'Activity',
+      cardBorder: 'border-l-[0.28vw] border-l-teal-500 hover:border-slate-300',
+      accentGlow: 'hover:bg-teal-50/30'
+    };
+  }
+
+  // Default Activity
+  return {
+    icon: Bell,
+    iconColor: 'text-slate-600',
+    iconBg: 'bg-slate-100 border-slate-200',
+    badgeBg: 'bg-slate-100 text-slate-700 border-slate-200',
+    badgeText: type || 'Alert',
+    cardBorder: 'border-l-[0.28vw] border-l-slate-400 hover:border-slate-300',
+    accentGlow: 'hover:bg-slate-50'
+  };
+};
 
 const NotificationsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -291,64 +411,90 @@ const NotificationsDropdown = () => {
             </div>
 
             {/* List Content */}
-            <div className="max-h-[25vw] overflow-y-auto bg-white flex flex-col min-h-[15vw] divide-y divide-slate-200">
+            <div className="max-h-[28vw] overflow-y-auto bg-slate-50/50 flex flex-col min-h-[16vw] divide-y divide-slate-100">
               {filteredNotifications.length === 0 ? (
                 <div className="py-[4vw] flex flex-col items-center justify-center text-center my-auto">
-                  <div className="w-[3vw] h-[3vw] rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center mb-[0.6vw]">
-                    <Bell className="w-[1.4vw] h-[1.4vw] text-slate-350" />
+                  <div className="w-[3.6vw] h-[3.6vw] rounded-full border border-slate-200/80 bg-white shadow-sm flex items-center justify-center mb-[0.8vw]">
+                    <Inbox className="w-[1.6vw] h-[1.6vw] text-slate-350" />
                   </div>
-                  <p className="text-[0.85vw] font-semibold text-indigo-955">Inbox is empty</p>
-                  <p className="text-[0.72vw] text-slate-500 max-w-[80%] mt-[0.1vw]">You don't have any notifications in this filter.</p>
+                  <p className="text-[0.9vw] font-bold text-slate-800">You're all caught up!</p>
+                  <p className="text-[0.72vw] text-slate-500 max-w-[75%] mt-[0.2vw] leading-relaxed">
+                    No new alerts or escalations pending in this category.
+                  </p>
                 </div>
               ) : (
-                <div className="flex flex-col divide-y divide-slate-200">
+                <div className="flex flex-col p-[0.6vw] gap-[0.5vw]">
                   <AnimatePresence initial={false}>
-                    {filteredNotifications.map((n) => (
-                      <motion.div
-                        key={n._id}
-                        layout
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 50, transition: { duration: 0.18 } }}
-                        className={`relative p-[1vw] flex gap-[0.6vw] transition-all cursor-pointer ${!n.isRead ? 'bg-blue-50 hover:bg-blue-100' : 'bg-slate-50 hover:bg-slate-100'}`}
-                        onClick={() => !n.isRead && markAsRead(n._id)}
-                      >
-                        {/* Unread Status Marker */}
-                        <div className="w-[0.5vw] flex items-start justify-center pt-[0.4vw]">
-                          {!n.isRead && (
-                            <div className="w-[0.45vw] h-[0.45vw] bg-blue-600 rounded-full flex-shrink-0" />
-                          )}
-                        </div>
+                    {filteredNotifications.map((n) => {
+                      const visuals = getNotificationVisuals(n);
+                      const IconComp = visuals.icon;
+                      const isUnread = !n.isRead;
 
-                        {/* Main Text Content */}
-                        <div className="flex-1 min-w-0 pr-[1vw]">
-                          <h4 className="text-[0.82vw] font-semibold text-indigo-950 leading-snug">
-                            {n.title}
-                          </h4>
-                          <p className="text-[0.75vw] text-slate-600 leading-relaxed mt-[0.15vw] font-normal break-words pr-[0.5vw] whitespace-pre-line">
-                            {n.message}
-                          </p>
-                        </div>
+                      return (
+                        <motion.div
+                          key={n._id}
+                          layout
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+                          className={`group relative rounded-[0.8vw] p-[0.8vw] flex items-start gap-[0.8vw] transition-all cursor-pointer border ${
+                            isUnread
+                              ? 'bg-white border-blue-200/90 shadow-sm shadow-blue-500/5'
+                              : 'bg-white/80 border-slate-200/70 hover:bg-white hover:border-slate-300 shadow-2xs'
+                          } ${visuals.cardBorder} ${visuals.accentGlow}`}
+                          onClick={() => isUnread && markAsRead(n._id)}
+                        >
+                          {/* Left Visual Icon / Badge */}
+                          <div className="relative shrink-0 mt-[0.1vw]">
+                            <div className={`w-[2.2vw] h-[2.2vw] rounded-[0.6vw] flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
+                              <IconComp className={`w-[1.1vw] h-[1.1vw] ${visuals.iconColor}`} />
+                            </div>
+                            {isUnread && (
+                              <span className="absolute -top-[0.2vw] -right-[0.2vw] w-[0.55vw] h-[0.55vw] bg-blue-600 rounded-full border-[0.12vw] border-white shadow-xs" />
+                            )}
+                          </div>
 
-                        {/* Action Block Right */}
-                        <div className="flex flex-col items-end justify-between w-[3.5vw] flex-shrink-0 relative">
-                          <span className="text-[0.68vw] font-medium text-slate-400 text-right w-full block">
-                            {formatTimeShort(n.createdAt)}
-                          </span>
+                          {/* Content Body */}
+                          <div className="flex-1 min-w-0 pr-[0.4vw]">
+                            {/* Top meta row: Category pill + time */}
+                            <div className="flex items-center justify-between gap-[0.4vw] mb-[0.25vw]">
+                              <span className={`inline-flex items-center text-[0.62vw] font-bold px-[0.45vw] py-[0.08vw] rounded-[0.3vw] border uppercase tracking-wider ${visuals.badgeBg}`}>
+                                {visuals.badgeText}
+                              </span>
 
-                          {/* Direct Delete X Button */}
+                              <div className="flex items-center gap-[0.2vw] text-[0.68vw] text-slate-400 font-medium shrink-0">
+                                <Clock className="w-[0.7vw] h-[0.7vw]" />
+                                <span>{formatTimeShort(n.createdAt)}</span>
+                              </div>
+                            </div>
+
+                            {/* Notification Title */}
+                            <h4 className={`text-[0.82vw] leading-snug font-bold ${
+                              isUnread ? 'text-slate-900' : 'text-slate-750'
+                            }`}>
+                              {n.title}
+                            </h4>
+
+                            {/* Notification Message */}
+                            <p className="text-[0.73vw] text-slate-600 leading-relaxed mt-[0.2vw] font-medium break-words whitespace-pre-line line-clamp-3">
+                              {n.message}
+                            </p>
+                          </div>
+
+                          {/* Dismiss Button (Visible on Hover / Accessible) */}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               deleteNotification(n._id);
                             }}
-                            className="p-[0.2vw] text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors cursor-pointer mt-auto"
+                            title="Dismiss notification"
+                            className="opacity-0 group-hover:opacity-100 p-[0.3vw] text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-[0.4vw] transition-all cursor-pointer shrink-0 self-start"
                           >
-                            <X className="w-[0.9vw] h-[0.9vw]" />
+                            <X className="w-[0.85vw] h-[0.85vw]" />
                           </button>
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.div>
+                      );
+                    })}
                   </AnimatePresence>
                 </div>
               )}

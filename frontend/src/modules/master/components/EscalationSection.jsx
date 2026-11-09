@@ -658,6 +658,8 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
   const [saved, setSaved] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [origFlows, setOrigFlows] = useState({});
+  const [reverseFlows, setReverseFlows] = useState({}); // { [key]: { enabled, durationHours, durationMins, onTimeout } }
+  const [origReverseFlows, setOrigReverseFlows] = useState({});
 
   useEffect(() => {
     if (flows && Object.keys(flows).length > 0) { setOrigFlows(JSON.parse(JSON.stringify(flows))); return; }
@@ -665,8 +667,14 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
       try {
         const res = await axios.get(`${API_URL}/master/escalation-flows`);
         const s = {};
+        const rev = {};
         res.data.forEach(f => {
-          if (f.type !== "Service Material") s[f.type] = f.steps;
+          if (f.type !== "Service Material") {
+            s[f.type] = f.steps;
+            if (f.reverseEscalation) {
+              rev[f.type] = f.reverseEscalation;
+            }
+          }
         });
 
         // Generate and auto-save defaults for missing party types
@@ -689,7 +697,17 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
               durationMins: 0,
             }));
             s[key] = steps;
-            promises.push(axios.post(`${API_URL}/master/escalation-flows`, { type: key, steps }));
+            rev[key] = {
+              enabled: true,
+              durationHours: 2,
+              durationMins: 0,
+              onTimeout: 'same_person'
+            };
+            promises.push(axios.post(`${API_URL}/master/escalation-flows`, {
+              type: key,
+              steps,
+              reverseEscalation: rev[key]
+            }));
             dbChanged = true;
           }
         });
@@ -700,6 +718,8 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
 
         setOrigFlows(JSON.parse(JSON.stringify(s)));
         setFlows(s);
+        setOrigReverseFlows(JSON.parse(JSON.stringify(rev)));
+        setReverseFlows(rev);
       } catch (err) {
         toast("Failed to load escalation flows", "error");
       }
@@ -709,8 +729,10 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
     }
   }, [partyTypes, employees]);
   useEffect(() => {
-    setHasChanges(JSON.stringify(flows) !== JSON.stringify(origFlows));
-  }, [flows, origFlows]);
+    const flowsChanged = JSON.stringify(flows) !== JSON.stringify(origFlows);
+    const revChanged = JSON.stringify(reverseFlows) !== JSON.stringify(origReverseFlows);
+    setHasChanges(flowsChanged || revChanged);
+  }, [flows, origFlows, reverseFlows, origReverseFlows]);
 
   const getFlowKey = (partyName, segmentName = "Default") => `${partyName}|${segmentName || "Default"}`;
 
@@ -732,19 +754,49 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
     return [];
   };
 
+  const getReverseConfig = (partyName, segName) => {
+    const key = getFlowKey(partyName, segName);
+    return reverseFlows[key] || {
+      enabled: true,
+      durationHours: 2,
+      durationMins: 0,
+      onTimeout: 'same_person'
+    };
+  };
+
+  const updateReverseConfig = (partyName, segName, updates) => {
+    const key = getFlowKey(partyName, segName);
+    const current = getReverseConfig(partyName, segName);
+    setReverseFlows((prev) => ({
+      ...prev,
+      [key]: { ...current, ...updates }
+    }));
+  };
+
   const updateFlow = (partyName, segName, steps) =>
     setFlows((prev) => ({ ...prev, [getFlowKey(partyName, segName)]: steps }));
 
-  const resetType = (partyName, segName) =>
+  const resetType = (partyName, segName) => {
+    const key = getFlowKey(partyName, segName);
     setFlows((prev) => ({
       ...prev,
-      [getFlowKey(partyName, segName)]: segName === "Default" ? DEFAULT_DEPTS.map((dept) => ({
+      [key]: segName === "Default" ? DEFAULT_DEPTS.map((dept) => ({
         dept,
         engineerIds: getDeptIds(dept),
         durationHours: 2,
         durationMins: 0,
       })) : [],
     }));
+    setReverseFlows((prev) => ({
+      ...prev,
+      [key]: {
+        enabled: true,
+        durationHours: 2,
+        durationMins: 0,
+        onTimeout: 'same_person'
+      }
+    }));
+  };
 
   const handleSave = async () => {
     try {
@@ -759,15 +811,26 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
           engineerIds: (step.engineerIds || []).filter(id => validIds.has(id))
         }));
         sanitizedFlows[type] = sanitizedSteps;
-        return axios.post(`${API_URL}/master/escalation-flows`, { type, steps: sanitizedSteps });
+        const revConf = reverseFlows[type] || {
+          enabled: true,
+          durationHours: 2,
+          durationMins: 0,
+          onTimeout: 'same_person'
+        };
+        return axios.post(`${API_URL}/master/escalation-flows`, {
+          type,
+          steps: sanitizedSteps,
+          reverseEscalation: revConf
+        });
       });
       await Promise.all(promises);
       
       setFlows(sanitizedFlows);
       setOrigFlows(JSON.parse(JSON.stringify(sanitizedFlows)));
+      setOrigReverseFlows(JSON.parse(JSON.stringify(reverseFlows)));
       setHasChanges(false);
       setSaved(true);
-      toast("Escalation flows saved successfully");
+      toast("Escalation & Reverse Escalation flows saved successfully");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       toast("Failed to save flows", "error");
@@ -974,13 +1037,97 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
                       </div>
 
                       <div className="grid grid-cols-5 gap-[1.5vw]">
-                        <div className="col-span-3">
+                        <div className="col-span-3 flex flex-col gap-[1vw]">
                           <FlowEditor
                             steps={steps}
                             departments={departments}
                             employees={employees}
                             onChange={(s) => updateFlow(type.name, curSeg, s)}
                           />
+
+                          {/* Reverse Escalation Rule Configuration Box */}
+                          {(() => {
+                            const rev = getReverseConfig(type.name, curSeg);
+                            return (
+                              <div className="border border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-white rounded-[0.6vw] p-[0.9vw] shadow-2xs">
+                                <div className="flex items-center justify-between pb-[0.6vw] border-b border-indigo-100">
+                                  <div className="flex items-center gap-[0.45vw]">
+                                    <RotateCcw className="w-[0.9vw] h-[0.9vw] text-indigo-600" />
+                                    <div>
+                                      <h5 className="text-[0.78vw] font-bold text-slate-800">
+                                        Reverse Escalation & SLA Rule
+                                      </h5>
+                                      <p className="text-[0.66vw] text-slate-500">
+                                        Allows technician to return the call back to the person it came from with SLA timer
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <label className="flex items-center gap-[0.35vw] cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={rev.enabled !== false}
+                                      onChange={(e) => updateReverseConfig(type.name, curSeg, { enabled: e.target.checked })}
+                                      className="rounded text-indigo-600 focus:ring-indigo-500 w-[0.85vw] h-[0.85vw]"
+                                    />
+                                    <span className="text-[0.72vw] font-bold text-slate-700">Enable</span>
+                                  </label>
+                                </div>
+
+                                {rev.enabled !== false && (
+                                  <div className="grid grid-cols-2 gap-[0.9vw] mt-[0.7vw]">
+                                    {/* Reverse SLA Duration */}
+                                    <div className="flex flex-col gap-[0.3vw]">
+                                      <label className="text-[0.7vw] font-bold text-slate-700 flex items-center gap-[0.25vw]">
+                                        <Clock className="w-[0.75vw] h-[0.75vw] text-indigo-600" /> Reverse SLA Timer (Wait Time)
+                                      </label>
+                                      <div className="flex items-center gap-[0.4vw]">
+                                        <div className="flex items-center gap-[0.2vw]">
+                                          <input
+                                            type="number"
+                                            min="0"
+                                            max="72"
+                                            value={rev.durationHours ?? 2}
+                                            onChange={(e) => updateReverseConfig(type.name, curSeg, { durationHours: parseInt(e.target.value) || 0 })}
+                                            className="w-[3.5vw] border border-slate-300 rounded-[0.35vw] px-[0.4vw] py-[0.25vw] text-[0.75vw] font-mono text-center font-bold text-slate-800"
+                                          />
+                                          <span className="text-[0.68vw] text-slate-500 font-semibold">hrs</span>
+                                        </div>
+                                        <div className="flex items-center gap-[0.2vw]">
+                                          <input
+                                            type="number"
+                                            min="0"
+                                            max="59"
+                                            value={rev.durationMins ?? 0}
+                                            onChange={(e) => updateReverseConfig(type.name, curSeg, { durationMins: parseInt(e.target.value) || 0 })}
+                                            className="w-[3.5vw] border border-slate-300 rounded-[0.35vw] px-[0.4vw] py-[0.25vw] text-[0.75vw] font-mono text-center font-bold text-slate-800"
+                                          />
+                                          <span className="text-[0.68vw] text-slate-500 font-semibold">mins</span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Timeout Action */}
+                                    <div className="flex flex-col gap-[0.3vw]">
+                                      <label className="text-[0.7vw] font-bold text-slate-700">
+                                        If user doesn't attend / SLA expires:
+                                      </label>
+                                      <CustomDropdown
+                                        size="sm"
+                                        value={rev.onTimeout || 'same_person'}
+                                        onChange={(val) => updateReverseConfig(type.name, curSeg, { onTimeout: val })}
+                                        options={[
+                                          { value: 'same_person', label: 'Keep with same person (Extend SLA)' },
+                                          { value: 'next_in_chain', label: 'Jump to next person in chain' },
+                                          { value: 'critical', label: 'Mark as Critical Unresolved' },
+                                        ]}
+                                        triggerClassName="!rounded-[0.35vw] text-[0.74vw] font-semibold border-slate-300 text-slate-800"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className="col-span-2 flex flex-col gap-[0.8vw]">
                           <ChainPreview steps={steps} employees={employees} />

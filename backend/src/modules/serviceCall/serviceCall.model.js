@@ -35,6 +35,11 @@ const productSchema = new mongoose.Schema({
   _productClosure: mongoose.Schema.Types.Mixed,
   _attended: { type: Boolean, default: false },
   _attendedAt: Date,
+  _isReverseEscalated: { type: Boolean, default: false },
+  _reverseEscalatedFrom: String,
+  _reverseEscalatedFromName: String,
+  _reverseEscalationReason: String,
+  _reverseEscalationAt: Date,
   _history: [{
     status: String,
     timestamp: { type: Date, default: Date.now },

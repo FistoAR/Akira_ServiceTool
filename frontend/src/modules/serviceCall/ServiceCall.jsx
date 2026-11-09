@@ -1079,6 +1079,7 @@ const ServiceCallForm = ({
   onSaveModes,
   canWrite = true,
   canUpdate = true,
+  allowEditDate = false,
 }) => {
   const [formData, setFormData] = useState(initialData || {});
   const [previewImage, setPreviewImage] = useState(null);
@@ -1459,7 +1460,7 @@ const ServiceCallForm = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -30 }}
       transition={{ duration: 0.2 }}
-      className="w-full font-sans max-h-[90vh] overflow-y-auto pr-[0.3vw]"
+      className="w-full font-sans flex-1 min-h-0 overflow-y-auto pr-[0.3vw]"
     >
       {/* Top Header Card */}
       <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 mb-[0.9vw]">
@@ -1510,31 +1511,58 @@ const ServiceCallForm = ({
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">Date & Time</label>
-              <input
-                type="datetime-local"
-                value={(() => {
-                  if (!formData.dateTime) return "";
-                  try {
-                    const d = new Date(formData.timestamp || formData.dateTime);
-                    if (isNaN(d.getTime())) return "";
-                    const pad = (n) => String(n).padStart(2, "0");
-                    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-                  } catch {
-                    return "";
-                  }
-                })()}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (!val) return;
-                  const d = new Date(val);
-                  setFormData((p) => ({
-                    ...p,
-                    dateTime: d.toLocaleString(),
-                    timestamp: d.toISOString(),
-                  }));
-                }}
-                className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
-              />
+              {allowEditDate ? (
+                <input
+                  type="datetime-local"
+                  value={(() => {
+                    if (!formData.dateTime) return "";
+                    try {
+                      const d = new Date(formData.timestamp || formData.dateTime);
+                      if (isNaN(d.getTime())) return "";
+                      const pad = (n) => String(n).padStart(2, "0");
+                      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                    } catch {
+                      return "";
+                    }
+                  })()}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (!val) return;
+                    const d = new Date(val);
+                    setFormData((p) => ({
+                      ...p,
+                      dateTime: d.toLocaleString(),
+                      timestamp: d.toISOString(),
+                    }));
+                  }}
+                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
+                />
+              ) : (
+                <input
+                  readOnly
+                  value={(() => {
+                    if (!formData.dateTime) return "";
+                    try {
+                      const d = new Date(formData.timestamp || formData.dateTime);
+                      if (isNaN(d.getTime())) return formData.dateTime;
+                      const pad = (n) => String(n).padStart(2, "0");
+                      const day = pad(d.getDate());
+                      const month = pad(d.getMonth() + 1);
+                      const year = d.getFullYear();
+                      let hours = d.getHours();
+                      const ampm = hours >= 12 ? "PM" : "AM";
+                      hours = hours % 12;
+                      hours = hours ? hours : 12;
+                      const minutes = pad(d.getMinutes());
+                      return `${day}-${month}-${year} ${pad(hours)}:${minutes} ${ampm}`;
+                    } catch {
+                      return formData.dateTime || "";
+                    }
+                  })()}
+                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  title="Auto date (read only)"
+                />
+              )}
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center justify-between">
@@ -3972,7 +4000,7 @@ export default function ServiceCall() {
                 })),
                 ...(p._history || []),
               ])),
-          ].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))}
+          ].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0))}
           employees={employees}
           currentUser={currentUser}
           onClose={() => setHistoryModalProduct(null)}

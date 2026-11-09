@@ -552,6 +552,161 @@ exports.attendProduct = async (req, res) => {
   }
 };
 
+// ── PATCH /api/service-calls/:id/product/:pIdx/reverse-escalate ───────────────
+exports.reverseEscalateProduct = async (req, res) => {
+  try {
+    const { id, pIdx } = req.params;
+    const { userId, name, reason } = req.body;
+
+    const call = await ServiceCall.findById(id);
+    if (!call || !call.products[pIdx]) return res.status(404).json({ message: 'Call or product not found' });
+
+    const prod = call.products[pIdx];
+    const escHistory = prod._escalationHistory || [];
+
+    // Identify target person (who escalated it to this user)
+    let targetEngineerId = null;
+    let targetEngineerName = null;
+    let targetDepartment = null;
+    let targetLevel = 0;
+
+    for (let i = escHistory.length - 1; i >= 0; i--) {
+      const h = escHistory[i];
+      if (h.engineerId && h.engineerId !== prod._assignedEngineerId && h.engineerId !== userId) {
+        targetEngineerId = h.engineerId;
+        targetEngineerName = h.engineerName;
+        targetDepartment = h.department;
+        targetLevel = h.level ?? 0;
+        break;
+      }
+    }
+
+    // Fallback: If not found in escalation history, check registeredBy or previous engineer
+    if (!targetEngineerId) {
+      if (call.registeredBy && call.registeredBy !== userId && call.registeredBy !== prod._assignedEngineerId) {
+        targetEngineerId = call.registeredBy;
+        const regUser = await User.findOne({ userId: call.registeredBy }).lean();
+        targetEngineerName = regUser?.name || 'Original Registrar';
+        targetDepartment = regUser?.department || 'Support Desk';
+      } else if (escHistory.length > 0) {
+        targetEngineerId = escHistory[0].engineerId;
+        targetEngineerName = escHistory[0].engineerName;
+        targetDepartment = escHistory[0].department;
+        targetLevel = escHistory[0].level ?? 0;
+      }
+    }
+
+    if (!targetEngineerId) {
+      return res.status(400).json({ message: 'No previous engineer or registrar found to reverse-escalate to.' });
+    }
+
+    // Resolve reverse escalation SLA configuration
+    const flow = await resolveFlow(call.customerType || 'All', prod.productSegment || prod._assignedSegment || '');
+    const revConfig = flow?.reverseEscalation || {
+      enabled: true,
+      durationHours: 2,
+      durationMins: 0,
+      onTimeout: 'same_person'
+    };
+
+    const durationMs = ((revConfig.durationHours || 2) * 60 + (revConfig.durationMins || 0)) * 60000;
+    const now = new Date();
+    const newDeadline = new Date(now.getTime() + durationMs);
+
+    // Save previous state into product and update assignment
+    const previousEngId = prod._assignedEngineerId || userId;
+    const previousEngName = prod._assignedEngineerName || name;
+
+    prod._assignedEngineerId = targetEngineerId;
+    prod._assignedEngineerName = targetEngineerName;
+    prod._currentDepartment = targetDepartment || prod._currentDepartment;
+    prod._levelPointer = targetLevel;
+    prod._attended = false;
+    prod._attendedAt = null;
+    prod._deadline = newDeadline;
+    prod._isReverseEscalated = true;
+    prod._reverseEscalatedFrom = previousEngId;
+    prod._reverseEscalatedFromName = previousEngName;
+    prod._reverseEscalationReason = reason || 'Sent back to previous engineer';
+    prod._reverseEscalationAt = now;
+
+    // Record in history
+    const histEntry = {
+      level: targetLevel,
+      department: targetDepartment || prod._currentDepartment,
+      engineerId: targetEngineerId,
+      engineerName: targetEngineerName,
+      assignedAt: now,
+      deadline: newDeadline,
+      status: 'Reverse Escalated',
+      reason: reason || `Reverse Escalated by ${previousEngName}`,
+    };
+    prod._escalationHistory = [...(prod._escalationHistory || []), histEntry];
+
+    const historyItem = {
+      status: 'Reverse Escalated',
+      updatedBy: userId || 'Employee',
+      updatedByName: name || 'Employee',
+      remarks: reason ? `Reverse escalated back to ${targetEngineerName}: ${reason}` : `Reverse escalated back to ${targetEngineerName}`,
+      metadata: {
+        targetEngineerId,
+        targetEngineerName,
+        previousEngId,
+        previousEngName,
+        deadline: newDeadline
+      }
+    };
+    prod._history.push(historyItem);
+
+    // Update root call state if applicable
+    if (call.currentEngineerId === previousEngId || !call.currentEngineerId) {
+      call.currentEngineerId = targetEngineerId;
+      call.currentEngineerName = targetEngineerName;
+      call.currentDepartment = targetDepartment || call.currentDepartment;
+      call.escalationHistory = [...(call.escalationHistory || []), histEntry];
+    }
+
+    call.markModified('products');
+    await call.save();
+    try { getIO().emit('service_call_updated', call); } catch (e) {}
+
+    // Send notifications
+    try {
+      const { sendNotification } = require('../notification/notification.controller');
+      
+      // 1. Notify the target engineer
+      await sendNotification({
+        recipient: targetEngineerId,
+        sender: userId || 'System',
+        type: 'Escalation',
+        title: `Call Returned (Reverse Escalation): #${call.callNumber}`,
+        message: `Call #${call.callNumber} for ${call.customerName || 'Customer'} was reverse-escalated back to you by ${previousEngName}. Reason: ${reason || 'Needs review'}. SLA: ${revConfig.durationHours}h ${revConfig.durationMins || 0}m.`,
+        data: { callId: call._id, callNumber: call.callNumber, productIdx: pIdx },
+        priority: 'High'
+      });
+
+      // 2. Also notify the creator / registrar if different
+      if (call.registeredBy && call.registeredBy !== targetEngineerId && call.registeredBy !== userId) {
+        await sendNotification({
+          recipient: call.registeredBy,
+          sender: userId || 'System',
+          type: 'Activity',
+          title: `Call #${call.callNumber} Reverse-Escalated`,
+          message: `${previousEngName} returned product in Call #${call.callNumber} back to ${targetEngineerName}. Reason: ${reason || 'N/A'}.`,
+          data: { callId: call._id, callNumber: call.callNumber },
+          priority: 'Medium'
+        });
+      }
+    } catch (notifErr) {
+      console.error('Reverse escalation notification error:', notifErr);
+    }
+
+    res.json(call);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // ── POST /api/service-calls/support ──────────────────────────────────────────
 exports.createSupportRequest = async (req, res) => {
   try {

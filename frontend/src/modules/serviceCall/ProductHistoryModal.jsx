@@ -12,6 +12,14 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
       </div>
     );
   }
+
+  // Sort history in reverse chronological order (latest event first)
+  const sortedHistory = [...history].sort((a, b) => {
+    const tA = new Date(a.timestamp || a.date || a.editedAt || 0).getTime();
+    const tB = new Date(b.timestamp || b.date || b.editedAt || 0).getTime();
+    return tB - tA;
+  });
+
   return (
     <div className={hideHeader ? "" : "mt-[1vw] pt-[1vw] border-t border-slate-300"}>
       {!hideHeader && (
@@ -31,7 +39,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
 
       {(show || forceShow) && (
         <div className="space-y-[0.8vw] pl-[0.5vw]">
-          {history.map((h, i) => {
+          {sortedHistory.map((h, i) => {
             const emp = employees?.find(e => e.userId === h.updatedBy);
             const displayName = emp ? `${emp.name} (${emp.department})` : (h.updatedByName || h.updatedBy || 'System');
             const isSupportEvent = h.status?.toLowerCase().includes('support') || !!h.metadata?.supportPerson;
@@ -62,7 +70,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                 <div key={i} className="flex gap-[0.8vw] relative">
                   <div className="flex flex-col items-center">
                     <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${isSlaBreached ? 'bg-rose-500' : 'bg-slate-400'}`} />
-                    {i !== history.length - 1 && (
+                    {i !== sortedHistory.length - 1 && (
                       <div className="w-[1px] h-full bg-slate-300 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.27vw]" />
                     )}
                   </div>
@@ -105,7 +113,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
               <div key={i} className="flex gap-[0.8vw] relative">
                 <div className="flex flex-col items-center">
                   <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${isHighlightedEvent ? 'bg-blue-500 ring-2 ring-blue-200' : 'bg-indigo-500'}`} />
-                  {i !== history.length - 1 && (
+                  {i !== sortedHistory.length - 1 && (
                     <div className="w-[1px] h-full bg-slate-300 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.27vw]" />
                   )}
                 </div>

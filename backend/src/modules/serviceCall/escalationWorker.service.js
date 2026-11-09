@@ -25,7 +25,12 @@ function flowKey(customerType, segment) {
 async function loadFlowMap() {
   const flows = await EscalationFlow.find().lean();
   const map   = {};
-  flows.forEach(f => { map[f.type] = f.steps; });
+  flows.forEach(f => {
+    map[f.type] = {
+      steps: f.steps,
+      reverseEscalation: f.reverseEscalation,
+    };
+  });
   return map;
 }
 
@@ -42,8 +47,8 @@ async function loadUserMap() {
  * Resolve the best matching SLA steps for a given customerType + segment.
  * Priority: exact → fallback default segment → customerType-only.
  */
-function resolveSteps(flowMap, customerType, segment) {
-  return (
+function resolveFlowObject(flowMap, customerType, segment) {
+  const item = (
     flowMap[flowKey(customerType, segment)] ||
     flowMap[flowKey(customerType, 'Default')] ||
     flowMap[customerType] ||
@@ -51,6 +56,16 @@ function resolveSteps(flowMap, customerType, segment) {
     flowMap['Default'] ||
     null
   );
+  if (!item) return null;
+  // If item is object with steps and reverseEscalation
+  if (item.steps) return item;
+  // If legacy array
+  return { steps: item, reverseEscalation: null };
+}
+
+function resolveSteps(flowMap, customerType, segment) {
+  const resolved = resolveFlowObject(flowMap, customerType, segment);
+  return resolved?.steps || null;
 }
 
 // ─── Core escalation logic ────────────────────────────────────────────────────
@@ -99,6 +114,66 @@ async function runEscalationCheck() {
         if (prod._productClosure?.status === 'Closed') continue;
         if (prod._supportRequested)    continue;
         if (prod._attended)            continue;
+
+        // Special handling if this product is under Reverse Escalation timer
+        if (prod._isReverseEscalated) {
+          const flowObj = resolveFlowObject(
+            flowMap,
+            call.customerType || 'All',
+            prod.productSegment || prod._assignedSegment || ''
+          );
+          const revConfig = flowObj?.reverseEscalation || {
+            enabled: true,
+            durationHours: 2,
+            durationMins: 0,
+            onTimeout: 'same_person'
+          };
+
+          const timeoutAction = revConfig.onTimeout || 'same_person';
+
+          if (timeoutAction === 'same_person') {
+            // Give extra time to the same person, re-alert them
+            const durationMs = ((revConfig.durationHours || 2) * 60 + (revConfig.durationMins || 0)) * 60000;
+            const newDeadline = new Date(now.getTime() + durationMs);
+            prod._deadline = newDeadline;
+
+            const histEntry = {
+              level: prod._levelPointer || 0,
+              department: prod._currentDepartment,
+              engineerId: prod._assignedEngineerId,
+              engineerName: prod._assignedEngineerName,
+              assignedAt: now,
+              deadline: newDeadline,
+              status: 'Reverse SLA Extended',
+              reason: 'Reverse Escalation SLA Breached - Kept with same person',
+            };
+            prod._escalationHistory = [...(prod._escalationHistory || []), histEntry];
+
+            try {
+              const { sendNotification } = require('../notification/notification.controller');
+              sendNotification({
+                recipient: prod._assignedEngineerId,
+                type: 'Escalation',
+                title: 'Reverse SLA Breached: Action Required',
+                message: `Call #${call.callNumber} reverse-escalated SLA has expired. Please attend immediately.`,
+                data: { callId: call._id, callNumber: call.callNumber },
+                priority: 'High'
+              }).catch(() => {});
+            } catch (e) {}
+
+            modified = true;
+            continue;
+          } else if (timeoutAction === 'critical') {
+            // Mark Critical immediately
+            prod._isCritical = true;
+            call.status = 'Critical';
+            modified = true;
+            _emitCritical(io, call, pIdx, prod);
+            continue;
+          }
+          // If onTimeout is 'next_in_chain', clear reverse escalated flag and fall through to forward escalation logic
+          prod._isReverseEscalated = false;
+        }
 
         // Find SLA steps for this product
         const steps = resolveSteps(

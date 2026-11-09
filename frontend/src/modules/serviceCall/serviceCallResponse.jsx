@@ -1448,6 +1448,54 @@ const ProductClosurePanel = ({
               </motion.div>
             )}
 
+            {selected === "ReverseEscalate" && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="bg-rose-50 border border-rose-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-[0.85vw] font-black text-rose-900 flex items-center gap-[0.35vw]">
+                    <RotateCcw className="w-[0.9vw] h-[0.9vw]" /> Reverse Escalate (Send Back)
+                  </div>
+                  <span className="text-[0.68vw] bg-rose-100 text-rose-800 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-rose-200">
+                    Returns to Sender with SLA
+                  </span>
+                </div>
+                <textarea
+                  rows="2"
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                  placeholder="Enter reason for sending this call back to the previous engineer..."
+                  className="w-full border border-slate-300 rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-100 transition-all shadow-sm resize-none"
+                />
+                <button
+                  disabled={isSubmitting || !remarks.trim()}
+                  onClick={async () => {
+                    setIsSubmitting(true);
+                    try {
+                      if (onReverseEscalate) {
+                        await onReverseEscalate(prodIdx, remarks);
+                        setSelected("");
+                        setRemarks("");
+                      }
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                  className="w-full py-[0.6vw] bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-[0.5vw] font-bold text-[0.75vw] transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                  ) : (
+                    <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                  )}
+                  Confirm Reverse Escalation
+                </button>
+              </motion.div>
+            )}
+
             {selected === "Returned" && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
@@ -2241,56 +2289,307 @@ const PendingTab = ({
   employees,
   onProductClose,
   onAssignFieldVisit,
-  expandedCalls,
-  setExpandedCalls,
   onSupportRequest,
   onProductAttend,
+  onOpenRespond,
+  onOpenHistory,
 }) => {
-  const items = queue.filter((e) => {
-    const hasUserProducts = (e.products || []).some(
-      (p) =>
-        p._assignedEngineerId === currentUser?.userId &&
-        p._productClosure?.status === "Pending" &&
-        !p._supportRequested,
-    );
-    return hasUserProducts;
-  });
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  if (items.length === 0)
-    return (
-      <div className="bg-white rounded-[0.8vw] p-[3vw] text-center border border-slate-400 text-slate-600 font-bold shadow-sm">
-        No pending products.
-      </div>
-    );
+  const items = useMemo(() => {
+    return (queue || []).filter((e) => {
+      const hasUserProducts = (e.products || []).some(
+        (p) =>
+          p._assignedEngineerId === currentUser?.userId &&
+          p._productClosure?.status === "Pending" &&
+          !p._supportRequested,
+      );
+      return hasUserProducts;
+    });
+  }, [queue, currentUser]);
+
+  const paginatedCalls = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return items.slice(start, start + pageSize);
+  }, [items, page, pageSize]);
+
+  const totalPages = Math.ceil(items.length / pageSize) || 1;
+
   return (
-    <div className="space-y-[0.8vw]">
-      {items.map((e) => (
-        <EscalationCard
-          key={e.callId}
-          entry={e}
-          currentUser={currentUser}
-          employees={employees}
-          isPendingTab
-          isExpanded={!!expandedCalls[e.callId]}
-          onToggle={() =>
-            setExpandedCalls((prev) => ({
-              ...prev,
-              [e.callId]: !prev[e.callId],
-            }))
-          }
-          onProductClose={(pIdx, d) => onProductClose(e.callId, pIdx, d)}
-          onAssignFieldVisit={(f, p) =>
-            onAssignFieldVisit(e.callId, "Field Visit", f, p)
-          }
-          onSupportRequest={(p, d) => onSupportRequest(e.callId, p, d)}
-          onProductAttend={(pIdx) => onProductAttend(e.callId, pIdx)}
-        />
-      ))}
+    <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+        <div className="flex items-center gap-[0.5vw]">
+          <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-bold text-slate-800">
+            <AlertCircle className="w-[0.95vw] h-[0.95vw] text-amber-500" />
+            Pending Checks Queue
+          </span>
+          <span className="text-[0.68vw] bg-amber-50 border border-amber-200 text-amber-700 px-[0.45vw] py-[0.1vw] rounded-full font-bold">
+            {items.length} Pending
+          </span>
+        </div>
+        <div className="text-[0.76vw] text-slate-500 font-medium">
+          Showing <span className="font-bold text-slate-800">{items.length}</span> calls
+        </div>
+      </div>
+
+      {/* Table Area */}
+      <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+        <table className="w-full text-left border-separate border-spacing-0">
+          <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
+            <tr className="bg-[#e9edf4]">
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
+                Date & Time
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
+                Call No
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
+                Customer
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[14vw]">
+                Product / Issue
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                Error Code
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                Priority
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                Pending Remarks
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[9vw]">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedCalls.length > 0 ? (
+              paginatedCalls.map((row) => {
+                const userProds = (row.products || []).filter(
+                  (p) =>
+                    p._assignedEngineerId === currentUser?.userId &&
+                    p._productClosure?.status === "Pending" &&
+                    !p._supportRequested
+                );
+                const allProducts = userProds.length > 0 ? userProds : (row.products || [{}]);
+                const rowCount = allProducts.length;
+                const rowId = row.id || row._id || row.callId;
+
+                return allProducts.map((prod, pIdx) => {
+                  const actualIdx = (row.products || []).findIndex((p) => p === prod || (p.serialNumber && p.serialNumber === prod.serialNumber));
+                  const safeIdx = actualIdx !== -1 ? actualIdx : pIdx;
+
+                  return (
+                    <tr
+                      key={`${rowId}-${pIdx}`}
+                      className="transition-colors bg-white hover:bg-amber-50/20"
+                    >
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
+                        >
+                          {(() => {
+                            try {
+                              const d = new Date(row.dateTime || row.timestamp || row.createdAt);
+                              if (isNaN(d.getTime())) return row.dateTime || "—";
+                              return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" }) +
+                                ", " +
+                                d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+                            } catch {
+                              return row.dateTime || "—";
+                            }
+                          })()}
+                        </td>
+                      )}
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                        >
+                          <div className="font-mono text-[0.8vw] font-bold text-slate-800">
+                            {row.callNumber || row.callNo}
+                          </div>
+                          <div className="text-[0.65vw] text-slate-500 font-semibold mt-[0.1vw]">
+                            {rowCount} Pending Item{rowCount > 1 ? "s" : ""}
+                          </div>
+                        </td>
+                      )}
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white"
+                        >
+                          <div className="font-semibold text-slate-900 text-[0.82vw]">
+                            {row.customerName || row.partyDescription}
+                          </div>
+                          <div className="flex items-center gap-[0.4vw] mt-[0.1vw] flex-wrap">
+                            {row.partyCode && (
+                              <span className="text-[0.68vw] text-slate-500 font-mono">
+                                {row.partyCode}
+                              </span>
+                            )}
+                            {row.customerType && (
+                              <span
+                                className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded font-semibold border ${getTypeColor(
+                                  row.customerType,
+                                )}`}
+                              >
+                                {row.customerType}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      )}
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                        <div className="font-medium text-slate-850 text-[0.8vw]">
+                          {prod?.productModel || prod?.itemCode || "—"}
+                        </div>
+                        {prod?.serialNumber && (
+                          <div className="text-[0.68vw] text-slate-500 font-mono">
+                            SN: {prod.serialNumber}
+                          </div>
+                        )}
+                        {prod?.callDescription && (
+                          <div className="text-[0.72vw] text-slate-600 line-clamp-1 italic mt-[0.1vw]">
+                            {prod.callDescription}
+                          </div>
+                        )}
+                      </td>
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                        {prod?.errorCode ? (
+                          <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
+                            {prod.errorCode}
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 text-[0.76vw]">-</span>
+                        )}
+                      </td>
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
+                        >
+                          {(() => {
+                            const p = row.priority || "Medium";
+                            let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
+                            if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
+                            else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
+                            else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                            return (
+                              <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
+                                {p}
+                              </span>
+                            );
+                          })()}
+                        </td>
+                      )}
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                        <span className="inline-flex items-center gap-[0.25vw] text-amber-800 font-bold text-[0.72vw] bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.1vw] rounded mb-[0.2vw]">
+                          <AlertCircle className="w-[0.7vw] h-[0.7vw] text-amber-600" /> Pending Check
+                        </span>
+                        <div className="text-[0.74vw] text-slate-700 line-clamp-2">
+                          {prod._productClosure?.remarks || "No pending remarks recorded"}
+                        </div>
+                      </td>
+
+                      <td className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                        <div className="flex items-center justify-center gap-[0.4vw]">
+                          <button
+                            type="button"
+                            onClick={() => onOpenRespond({ entry: row, callId: row.callId || row._id, prod, pIdx: safeIdx })}
+                            className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.28vw] rounded-[0.4vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[0.74vw] shadow-xs active:scale-95 transition-all cursor-pointer"
+                            title="Respond / Resolve"
+                          >
+                            <Edit3 className="w-[0.72vw] h-[0.72vw]" />
+                            Respond
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onOpenHistory(row)}
+                            className="p-[0.32vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer"
+                            title="View History"
+                          >
+                            <History className="w-[0.95vw] h-[0.95vw]" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                });
+              })
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center py-[4vw] text-slate-500">
+                  <div className="flex flex-col items-center justify-center gap-[0.6vw]">
+                    <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
+                      <AlertCircle className="w-[1.6vw] h-[1.6vw] text-slate-400" />
+                    </div>
+                    <p className="text-[0.9vw] font-bold text-slate-700">No pending checks found</p>
+                    <p className="text-[0.75vw] text-slate-400">All checks and tasks are up to date.</p>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Footer */}
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-200 bg-slate-50/50 shrink-0">
+        <div className="text-[0.75vw] text-slate-600 font-medium">
+          Showing <span className="font-bold text-slate-800">{items.length > 0 ? (page - 1) * pageSize + 1 : 0}</span> to{" "}
+          <span className="font-bold text-slate-800">{Math.min(page * pageSize, items.length)}</span> of{" "}
+          <span className="font-bold text-slate-800">{items.length}</span> entries
+        </div>
+        <div className="flex items-center gap-[0.5vw]">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+          >
+            <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+          </button>
+          <div className="flex gap-[0.3vw]">
+            {[...Array(totalPages)].map((_, i) => {
+              const pNum = i + 1;
+              return (
+                <button
+                  key={pNum}
+                  onClick={() => setPage(pNum)}
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                    page === pNum
+                      ? "bg-amber-500 text-white shadow-2xs"
+                      : "bg-white border border-slate-200 text-slate-700 hover:border-amber-400 hover:text-amber-600"
+                  }`}
+                >
+                  {pNum}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages || totalPages === 0}
+            className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+          >
+            <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
-// ── Allocated Action Panel ────────────────────────────────────────────────────
 const AllocatedActionPanel = ({
   entry,
   product,
@@ -2799,183 +3098,427 @@ const SupportRequestsTab = ({
   onRefresh,
   queue,
   employees,
-  expandedCalls,
-  setExpandedCalls,
   onProductClose,
   onAssignFieldVisit,
   onSupportRequest,
   onProductAttend,
+  onOpenRespond,
+  onOpenHistory,
 }) => {
-  const askedForSupportCalls = (queue || []).filter((e) => {
-    return (e.products || []).some(
-      (p) =>
-        p._assignedEngineerId === currentUser?.userId &&
-        p._supportRequested === true &&
-        p._productClosure?.status !== "Field Visit Required" &&
-        p._productClosure?.status !== "Closed",
-    );
-  });
+  const [subView, setSubView] = useState("assigned"); // "assigned" | "asked"
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  const assignedForSupportCalls = (queue || []).filter((e) => {
-    return (e.products || []).some(
-      (p) =>
-        p._supportPersonId === currentUser?.userId &&
-        p._supportRequested === true &&
-        !p._resolved &&
-        p._productClosure?.status !== "Closed" &&
-        p._productClosure?.status !== "Field Visit Required",
+  const askedForSupportCalls = useMemo(() => {
+    return (queue || []).filter((e) =>
+      (e.products || []).some(
+        (p) =>
+          p._assignedEngineerId === currentUser?.userId &&
+          p._supportRequested === true &&
+          p._productClosure?.status !== "Field Visit Required" &&
+          p._productClosure?.status !== "Closed"
+      )
     );
-  });
+  }, [queue, currentUser]);
+
+  const assignedForSupportCalls = useMemo(() => {
+    return (queue || []).filter((e) =>
+      (e.products || []).some(
+        (p) =>
+          p._supportPersonId === currentUser?.userId &&
+          p._supportRequested === true &&
+          !p._resolved &&
+          p._productClosure?.status !== "Closed" &&
+          p._productClosure?.status !== "Field Visit Required"
+      )
+    );
+  }, [queue, currentUser]);
+
+  const currentItems = subView === "assigned" ? assignedForSupportCalls : askedForSupportCalls;
+
+  const paginatedCalls = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return currentItems.slice(start, start + pageSize);
+  }, [currentItems, page, pageSize]);
+
+  const totalPages = Math.ceil(currentItems.length / pageSize) || 1;
 
   return (
-    <div className="col-span-2 grid grid-cols-2 gap-[1.5vw]">
-      {/* Left Column: Asked for Support */}
-      <div className="space-y-[0.8vw]">
-        <div className="bg-white rounded-[0.8vw] p-[0.6vw] px-[0.9vw] border border-slate-400 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-[0.6vw]">
-            <h2 className="text-[1vw] font-semibold text-slate-800">
-              Asked for Support
-            </h2>
+    <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+      {/* Top Toggle Bar */}
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+        <div className="flex items-center gap-[0.7vw]">
+          <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-bold text-slate-800">
+            <HelpCircle className="w-[0.95vw] h-[0.95vw] text-sky-600" />
+            Support Desk
+          </span>
+
+          {/* Toggle pills */}
+          <div className="flex items-center p-[0.2vw] bg-slate-200/70 rounded-[0.5vw] border border-slate-300">
+            <button
+              type="button"
+              onClick={() => { setSubView("assigned"); setPage(1); }}
+              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.74vw] font-bold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                subView === "assigned" ? "bg-white text-indigo-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <span>Assigned to Me</span>
+              <span className={`text-[0.62vw] px-[0.4vw] py-[0.02vw] rounded-full font-bold ${
+                subView === "assigned" ? "bg-indigo-100 text-indigo-800" : "bg-slate-300/80 text-slate-700"
+              }`}>
+                {assignedForSupportCalls.length}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setSubView("asked"); setPage(1); }}
+              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.74vw] font-bold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                subView === "asked" ? "bg-white text-blue-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <span>Asked by Me</span>
+              <span className={`text-[0.62vw] px-[0.4vw] py-[0.02vw] rounded-full font-bold ${
+                subView === "asked" ? "bg-blue-100 text-blue-800" : "bg-slate-300/80 text-slate-700"
+              }`}>
+                {askedForSupportCalls.length}
+              </span>
+            </button>
           </div>
-          <Badge
-            label={`${askedForSupportCalls.length} Requests`}
-            color="blue"
-          />
         </div>
 
-        {askedForSupportCalls.length === 0 ? (
-          <div className="bg-white rounded-[0.8vw] p-[1.8vw] text-center border border-slate-400 text-slate-600 font-bold shadow-sm">
-            No support requested by you.
-          </div>
-        ) : (
-          <div className="grid gap-[0.8vw]">
-            {askedForSupportCalls.map((e) => (
-              <EscalationCard
-                key={e.callId}
-                entry={e}
-                currentUser={currentUser}
-                employees={employees}
-                isSupportDeskAsked={true}
-                isExpanded={!!expandedCalls[e.callId]}
-                onToggle={() =>
-                  setExpandedCalls((prev) => ({
-                    ...prev,
-                    [e.callId]: !prev[e.callId],
-                  }))
-                }
-                onProductClose={(pIdx, d) => onProductClose(e.callId, pIdx, d)}
-                onAssignFieldVisit={(f, p) =>
-                  onAssignFieldVisit(e.callId, "Field Visit", f, p)
-                }
-                onSupportRequest={(p, d) => onSupportRequest(e.callId, p, d)}
-                onProductAttend={(pIdx) => onProductAttend(e.callId, pIdx)}
-              />
-            ))}
-          </div>
-        )}
+        <div className="text-[0.76vw] text-slate-500 font-medium">
+          Showing <span className="font-bold text-slate-800">{currentItems.length}</span> requests
+        </div>
       </div>
 
-      {/* Right Column: Assigned for Support */}
-      <div className="space-y-[0.8vw]">
-        <div className="bg-white rounded-[0.8vw] p-[0.6vw] px-[0.9vw] border border-slate-400 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-[0.6vw]">
-            <h2 className="text-[1vw] font-semibold text-slate-800">
-              Assigned for Support
-            </h2>
-          </div>
-          <Badge
-            label={`${assignedForSupportCalls.length} Pending`}
-            color="orange"
-          />
-        </div>
+      {/* Table Area */}
+      <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+        <table className="w-full text-left border-separate border-spacing-0">
+          <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
+            <tr className="bg-[#e9edf4]">
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
+                Date & Time
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
+                Call No
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
+                Customer
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[14vw]">
+                Product / Issue
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                Priority
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[12vw]">
+                {subView === "assigned" ? "Requested By & Notes" : "Support Person & Status"}
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[9vw]">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedCalls.length > 0 ? (
+              paginatedCalls.map((row) => {
+                const targetProds = (row.products || []).filter((p) =>
+                  subView === "assigned"
+                    ? p._supportPersonId === currentUser?.userId && p._supportRequested
+                    : p._assignedEngineerId === currentUser?.userId && p._supportRequested
+                );
+                const allProducts = targetProds.length > 0 ? targetProds : (row.products || [{}]);
+                const rowCount = allProducts.length;
+                const rowId = row.id || row._id || row.callId;
 
-        {assignedForSupportCalls.length === 0 ? (
-          <div className="bg-white rounded-[0.8vw] p-[1.8vw] text-center border border-slate-400 text-slate-600 font-bold shadow-sm">
-            No support tasks assigned to you.
+                return allProducts.map((prod, pIdx) => {
+                  const actualIdx = (row.products || []).findIndex((p) => p === prod || (p.serialNumber && p.serialNumber === prod.serialNumber));
+                  const safeIdx = actualIdx !== -1 ? actualIdx : pIdx;
+
+                  return (
+                    <tr
+                      key={`${rowId}-${pIdx}`}
+                      className="transition-colors bg-white hover:bg-sky-50/20"
+                    >
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
+                        >
+                          {(() => {
+                            try {
+                              const d = new Date(row.dateTime || row.timestamp || row.createdAt);
+                              if (isNaN(d.getTime())) return row.dateTime || "—";
+                              return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" }) +
+                                ", " +
+                                d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+                            } catch {
+                              return row.dateTime || "—";
+                            }
+                          })()}
+                        </td>
+                      )}
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                        >
+                          <div className="font-mono text-[0.8vw] font-bold text-slate-800">
+                            {row.callNumber || row.callNo}
+                          </div>
+                          <div className="text-[0.65vw] text-slate-500 font-semibold mt-[0.1vw]">
+                            {rowCount} Support Item{rowCount > 1 ? "s" : ""}
+                          </div>
+                        </td>
+                      )}
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white"
+                        >
+                          <div className="font-semibold text-slate-900 text-[0.82vw]">
+                            {row.customerName || row.partyDescription}
+                          </div>
+                          <div className="flex items-center gap-[0.4vw] mt-[0.1vw] flex-wrap">
+                            {row.partyCode && (
+                              <span className="text-[0.68vw] text-slate-500 font-mono">
+                                {row.partyCode}
+                              </span>
+                            )}
+                            {row.customerType && (
+                              <span
+                                className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded font-semibold border ${getTypeColor(
+                                  row.customerType,
+                                )}`}
+                              >
+                                {row.customerType}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      )}
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                        <div className="font-medium text-slate-850 text-[0.8vw]">
+                          {prod?.productModel || prod?.itemCode || "—"}
+                        </div>
+                        {prod?.serialNumber && (
+                          <div className="text-[0.68vw] text-slate-500 font-mono">
+                            SN: {prod.serialNumber}
+                          </div>
+                        )}
+                        {prod?.callDescription && (
+                          <div className="text-[0.72vw] text-slate-600 line-clamp-1 italic mt-[0.1vw]">
+                            {prod.callDescription}
+                          </div>
+                        )}
+                      </td>
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
+                        >
+                          {(() => {
+                            const p = row.priority || "Medium";
+                            let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
+                            if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
+                            else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
+                            else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                            return (
+                              <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
+                                {p}
+                              </span>
+                            );
+                          })()}
+                        </td>
+                      )}
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                        {subView === "assigned" ? (
+                          <div>
+                            <div className="text-[0.76vw] font-semibold text-slate-800">
+                              From: {prod._assignedEngineerName || row.currentEngineerName || "Engineer"}
+                            </div>
+                            <div className="text-[0.72vw] text-slate-600 italic line-clamp-2 mt-[0.1vw]">
+                              {prod._supportNotes || prod._productClosure?.remarks || "Need specialized support"}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="text-[0.76vw] font-semibold text-sky-800">
+                              Assigned to: {prod._supportPersonName || "Support Engineer"}
+                            </div>
+                            <span className="inline-block mt-[0.15vw] text-[0.68vw] bg-sky-50 text-sky-700 px-[0.4vw] py-[0.05vw] rounded border border-sky-200 font-medium">
+                              Awaiting Return
+                            </span>
+                          </div>
+                        )}
+                      </td>
+
+                      <td className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                        <div className="flex items-center justify-center gap-[0.4vw]">
+                          <button
+                            type="button"
+                            onClick={() => onOpenRespond({ entry: row, callId: row.callId || row._id, prod, pIdx: safeIdx })}
+                            className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.28vw] rounded-[0.4vw] bg-sky-600 hover:bg-sky-700 text-white font-bold text-[0.74vw] shadow-xs active:scale-95 transition-all cursor-pointer"
+                            title="Respond to Request"
+                          >
+                            <Edit3 className="w-[0.72vw] h-[0.72vw]" />
+                            Respond
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onOpenHistory(row)}
+                            className="p-[0.32vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer"
+                            title="View History"
+                          >
+                            <History className="w-[0.95vw] h-[0.95vw]" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                });
+              })
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center py-[4vw] text-slate-500">
+                  <div className="flex flex-col items-center justify-center gap-[0.6vw]">
+                    <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
+                      <HelpCircle className="w-[1.6vw] h-[1.6vw] text-slate-400" />
+                    </div>
+                    <p className="text-[0.9vw] font-bold text-slate-700">No support requests in this queue</p>
+                    <p className="text-[0.75vw] text-slate-400">Everything is in sync.</p>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Footer */}
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-200 bg-slate-50/50 shrink-0">
+        <div className="text-[0.75vw] text-slate-600 font-medium">
+          Showing <span className="font-bold text-slate-800">{currentItems.length > 0 ? (page - 1) * pageSize + 1 : 0}</span> to{" "}
+          <span className="font-bold text-slate-800">{Math.min(page * pageSize, currentItems.length)}</span> of{" "}
+          <span className="font-bold text-slate-800">{currentItems.length}</span> entries
+        </div>
+        <div className="flex items-center gap-[0.5vw]">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+          >
+            <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+          </button>
+          <div className="flex gap-[0.3vw]">
+            {[...Array(totalPages)].map((_, i) => {
+              const pNum = i + 1;
+              return (
+                <button
+                  key={pNum}
+                  onClick={() => setPage(pNum)}
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                    page === pNum
+                      ? "bg-sky-600 text-white shadow-2xs"
+                      : "bg-white border border-slate-200 text-slate-700 hover:border-sky-400 hover:text-sky-600"
+                  }`}
+                >
+                  {pNum}
+                </button>
+              );
+            })}
           </div>
-        ) : (
-          <div className="grid gap-[0.8vw]">
-            {assignedForSupportCalls.map((call) => (
-              <EscalationCard
-                key={`support-${call.callId}`}
-                entry={call}
-                currentUser={currentUser}
-                employees={employees}
-                isSupportDeskAssigned={true}
-                isExpanded={!!expandedCalls[`support-${call.callId}`]}
-                onToggle={() =>
-                  setExpandedCalls((prev) => ({
-                    ...prev,
-                    [`support-${call.callId}`]: !prev[`support-${call.callId}`],
-                  }))
-                }
-                onRefresh={onRefresh}
-                onProductClose={(pIdx, d) =>
-                  onProductClose(call.callId, pIdx, d)
-                }
-                onAssignFieldVisit={(f, p) =>
-                  onAssignFieldVisit(call.callId, "Field Visit", f, p)
-                }
-                onSupportRequest={(p, d) => onSupportRequest(call.callId, p, d)}
-                onProductAttend={(pIdx) => onProductAttend(call.callId, pIdx)}
-              />
-            ))}
-          </div>
-        )}
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages || totalPages === 0}
+            className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+          >
+            <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 const VisitsTab = ({
-  type,
+  type = "Field Visit",
   queue,
   currentUser,
   onRefresh,
   employees,
-  expandedCalls,
-  setExpandedCalls,
   onAssignFieldVisit,
   onProductClose,
+  onOpenRespond,
+  onOpenHistory,
 }) => {
-  const activeProducts = [];
-  (queue || []).forEach((call) => {
-    (call.products || []).forEach((p, pIdx) => {
-      if (
-        p._fieldVisit &&
-        p._fieldVisit.status !== "Closed" &&
-        p._productClosure?.status !== "Resolved" &&
-        p._productClosure?.status !== "Closed"
-      ) {
-        activeProducts.push({ call, p, pIdx });
-      }
-    });
-  });
+  const [subView, setSubView] = useState("assigned"); // "assigned" | "allocated"
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  const allocatedVisits = activeProducts.filter(
-    ({ p }) =>
-      p._fieldVisit.assignedBy === currentUser?.userId &&
-      (p._fieldVisit.assignedTo !== currentUser?.userId ||
-        p._fieldVisit.status === "Returned"),
-  );
-  const assignedVisits = activeProducts.filter(
-    ({ p }) =>
-      p._fieldVisit.assignedTo === currentUser?.userId &&
-      p._fieldVisit.status !== "Returned",
-  );
+  const activeProducts = useMemo(() => {
+    const list = [];
+    (queue || []).forEach((call) => {
+      (call.products || []).forEach((p, pIdx) => {
+        if (
+          p._fieldVisit &&
+          p._fieldVisit.status !== "Closed" &&
+          p._productClosure?.status !== "Resolved" &&
+          p._productClosure?.status !== "Closed"
+        ) {
+          list.push({ call, p, pIdx });
+        }
+      });
+    });
+    return list;
+  }, [queue]);
+
+  const allocatedVisits = useMemo(() => {
+    return activeProducts.filter(
+      ({ p }) =>
+        p._fieldVisit.assignedBy === currentUser?.userId &&
+        (p._fieldVisit.assignedTo !== currentUser?.userId || p._fieldVisit.status === "Returned")
+    );
+  }, [activeProducts, currentUser]);
+
+  const assignedVisits = useMemo(() => {
+    return activeProducts.filter(
+      ({ p }) =>
+        p._fieldVisit.assignedTo === currentUser?.userId &&
+        p._fieldVisit.status !== "Returned"
+    );
+  }, [activeProducts, currentUser]);
 
   const getUniqueCalls = (visits) => {
     const callMap = new Map();
-    visits.forEach(({ call }) => {
-      if (!callMap.has(call._id)) {
-        callMap.set(call._id, call);
+    visits.forEach(({ call, p, pIdx }) => {
+      const id = call._id || call.callId || call.id;
+      if (!callMap.has(id)) {
+        callMap.set(id, { ...call, _matchingVisitProducts: [{ p, pIdx }] });
+      } else {
+        callMap.get(id)._matchingVisitProducts.push({ p, pIdx });
       }
     });
     return Array.from(callMap.values());
   };
 
-  const allocatedCalls = getUniqueCalls(allocatedVisits);
-  const assignedCalls = getUniqueCalls(assignedVisits);
+  const currentCalls = useMemo(() => {
+    const visits = subView === "assigned" ? assignedVisits : allocatedVisits;
+    return getUniqueCalls(visits);
+  }, [subView, assignedVisits, allocatedVisits]);
+
+  const paginatedCalls = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return currentCalls.slice(start, start + pageSize);
+  }, [currentCalls, page, pageSize]);
+
+  const totalPages = Math.ceil(currentCalls.length / pageSize) || 1;
 
   const handleCloseVisit = async (callId, pIdx) => {
     try {
@@ -2985,1424 +3528,305 @@ const VisitsTab = ({
           productIdx: pIdx,
           closedBy: currentUser?.userId,
           closedByName: currentUser?.name,
-        },
+        }
       );
-      onRefresh();
+      if (onRefresh) onRefresh();
     } catch (err) {
       alert("Failed to close field visit");
     }
   };
 
   return (
-    <div className="col-span-2 grid grid-cols-2 gap-[1.5vw]">
-      {/* Left Column: Allocated Field Visits */}
-      <div className="space-y-[0.8vw]">
-        <div className="bg-white rounded-[0.8vw] p-[0.6vw] px-[0.9vw] border border-slate-400 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-[0.6vw]">
-            <h2 className="text-[1vw] font-semibold text-slate-800">
-              Allocated {type}s
-            </h2>
+    <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+      {/* Top Toggle Bar */}
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+        <div className="flex items-center gap-[0.7vw]">
+          <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-bold text-slate-800">
+            <MapPin className="w-[0.95vw] h-[0.95vw] text-purple-600" />
+            Field Visits Desk
+          </span>
+
+          {/* Toggle pills */}
+          <div className="flex items-center p-[0.2vw] bg-slate-200/70 rounded-[0.5vw] border border-slate-300">
+            <button
+              type="button"
+              onClick={() => { setSubView("assigned"); setPage(1); }}
+              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.74vw] font-bold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                subView === "assigned" ? "bg-white text-purple-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <span>Assigned to Me</span>
+              <span className={`text-[0.62vw] px-[0.4vw] py-[0.02vw] rounded-full font-bold ${
+                subView === "assigned" ? "bg-purple-100 text-purple-800" : "bg-slate-300/80 text-slate-700"
+              }`}>
+                {assignedVisits.length}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setSubView("allocated"); setPage(1); }}
+              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.74vw] font-bold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                subView === "allocated" ? "bg-white text-indigo-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <span>Allocated by Me</span>
+              <span className={`text-[0.62vw] px-[0.4vw] py-[0.02vw] rounded-full font-bold ${
+                subView === "allocated" ? "bg-indigo-100 text-indigo-800" : "bg-slate-300/80 text-slate-700"
+              }`}>
+                {allocatedVisits.length}
+              </span>
+            </button>
           </div>
-          <Badge label={`${allocatedCalls.length} Allocated`} color="indigo" />
         </div>
 
-        {allocatedCalls.length === 0 ? (
-          <div className="bg-white rounded-[0.8vw] p-[1.8vw] text-center border border-slate-400 text-slate-600 font-bold shadow-sm">
-            No field visits allocated by you.
-          </div>
-        ) : (
-          <div className="grid gap-[0.8vw]">
-            {allocatedCalls.map((call) => (
-              <EscalationCard
-                key={`alloc-${call._id}`}
-                entry={call}
-                currentUser={currentUser}
-                employees={employees}
-                isFieldVisitTab
-                isAllocatedView
-                isExpanded={!!expandedCalls[call._id]}
-                onToggle={() =>
-                  setExpandedCalls((prev) => ({
-                    ...prev,
-                    [call._id]: !prev[call._id],
-                  }))
-                }
-                onAssignFieldVisit={(f, p) =>
-                  onAssignFieldVisit(call._id, "Field Visit", f, p)
-                }
-                onProductClose={(pIdx, d) => onProductClose(call._id, pIdx, d)}
-                onCloseVisit={handleCloseVisit}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Right Column: Assigned Field Visits */}
-      <div className="space-y-[0.8vw]">
-        <div className="bg-white rounded-[0.8vw] p-[0.6vw] px-[0.9vw] border border-slate-400 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-[0.6vw]">
-            <h2 className="text-[1vw] font-semibold text-slate-800">
-              Assigned {type}s
-            </h2>
-          </div>
-          <Badge label={`${assignedCalls.length} Assigned`} color="amber" />
+        <div className="text-[0.76vw] text-slate-500 font-medium">
+          Showing <span className="font-bold text-slate-800">{currentCalls.length}</span> visits
         </div>
-
-        {assignedCalls.length === 0 ? (
-          <div className="bg-white rounded-[0.8vw] p-[1.8vw] text-center border border-slate-400 text-slate-600 font-bold shadow-sm">
-            No field visits assigned to you.
-          </div>
-        ) : (
-          <div className="grid gap-[0.8vw]">
-            {assignedCalls.map((call) => (
-              <EscalationCard
-                key={`assign-${call._id}`}
-                entry={call}
-                currentUser={currentUser}
-                employees={employees}
-                isFieldVisitTab
-                isExpanded={!!expandedCalls[call._id]}
-                onToggle={() =>
-                  setExpandedCalls((prev) => ({
-                    ...prev,
-                    [call._id]: !prev[call._id],
-                  }))
-                }
-                onCloseVisit={handleCloseVisit}
-              />
-            ))}
-          </div>
-        )}
       </div>
-    </div>
-  );
-};
 
-// ── History Modal ─────────────────────────────────────────────────────────────
-// ── Escalation History Modal ──────────────────────────────────────────────────
-const EscalationHistoryModal = ({ history, onClose }) => {
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-[2vw]">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-[1vw] shadow-2xl w-full max-w-[45vw] max-h-[85vh] flex flex-col overflow-hidden"
-      >
-        <div className="px-[1.5vw] py-[1.2vw] border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white flex items-center justify-between">
-          <div className="flex items-center gap-[0.8vw]">
-            <History className="w-[1.2vw] h-[1.2vw] text-rose-500" />
-            <h2 className="text-[1.2vw] font-black text-slate-800 tracking-tight">
-              Escalation History
-            </h2>
+      {/* Table Area */}
+      <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+        <table className="w-full text-left border-separate border-spacing-0">
+          <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
+            <tr className="bg-[#e9edf4]">
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
+                Visit Date / Time
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
+                Call No
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
+                Customer & Site
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[14vw]">
+                Product / Issue
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                Priority
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[12vw]">
+                {subView === "assigned" ? "Objective & Allocated By" : "Assigned Engineer & Status"}
+              </th>
+              <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[10vw]">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedCalls.length > 0 ? (
+              paginatedCalls.map((row) => {
+                const visitProducts = row._matchingVisitProducts || [{ p: row.products?.[0] || {}, pIdx: 0 }];
+                const rowCount = visitProducts.length;
+                const rowId = row.id || row._id || row.callId;
+
+                return visitProducts.map(({ p: prod, pIdx: safeIdx }, pIdx) => {
+                  return (
+                    <tr
+                      key={`${rowId}-${pIdx}`}
+                      className="transition-colors bg-white hover:bg-purple-50/20"
+                    >
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
+                        >
+                          {(() => {
+                            const dateVal = prod._fieldVisit?.visitDate || row.dateTime || row.timestamp || row.createdAt;
+                            try {
+                              const d = new Date(dateVal);
+                              if (isNaN(d.getTime())) return dateVal || "—";
+                              return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+                            } catch {
+                              return dateVal || "—";
+                            }
+                          })()}
+                        </td>
+                      )}
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                        >
+                          <div className="font-mono text-[0.8vw] font-bold text-slate-800">
+                            {row.callNumber || row.callNo}
+                          </div>
+                          <div className="text-[0.65vw] text-slate-500 font-semibold mt-[0.1vw]">
+                            {rowCount} Visit Item{rowCount > 1 ? "s" : ""}
+                          </div>
+                        </td>
+                      )}
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white"
+                        >
+                          <div className="font-semibold text-slate-900 text-[0.82vw]">
+                            {row.customerName || row.partyDescription}
+                          </div>
+                          <div className="flex items-center gap-[0.4vw] mt-[0.1vw] flex-wrap">
+                            {row.site && (
+                              <span className="text-[0.68vw] text-slate-600 font-medium">
+                                Site: {row.site}
+                              </span>
+                            )}
+                            {row.customerType && (
+                              <span
+                                className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded font-semibold border ${getTypeColor(
+                                  row.customerType,
+                                )}`}
+                              >
+                                {row.customerType}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      )}
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                        <div className="font-medium text-slate-850 text-[0.8vw]">
+                          {prod?.productModel || prod?.itemCode || "—"}
+                        </div>
+                        {prod?.serialNumber && (
+                          <div className="text-[0.68vw] text-slate-500 font-mono">
+                            SN: {prod.serialNumber}
+                          </div>
+                        )}
+                        {prod?.callDescription && (
+                          <div className="text-[0.72vw] text-slate-600 line-clamp-1 italic mt-[0.1vw]">
+                            {prod.callDescription}
+                          </div>
+                        )}
+                      </td>
+
+                      {pIdx === 0 && (
+                        <td
+                          rowSpan={rowCount}
+                          className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
+                        >
+                          {(() => {
+                            const p = row.priority || "Medium";
+                            let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
+                            if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
+                            else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
+                            else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                            return (
+                              <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
+                                {p}
+                              </span>
+                            );
+                          })()}
+                        </td>
+                      )}
+
+                      <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                        {subView === "assigned" ? (
+                          <div>
+                            <div className="text-[0.76vw] font-semibold text-slate-800">
+                              By: {prod._fieldVisit?.assignedByName || "Lead"}
+                            </div>
+                            <div className="text-[0.72vw] text-slate-600 italic line-clamp-2 mt-[0.1vw]">
+                              {prod._fieldVisit?.diagnosisSummary || "Onsite inspection required"}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="text-[0.76vw] font-semibold text-purple-800">
+                              Assigned to: {prod._fieldVisit?.assignedToName || "Technician"}
+                            </div>
+                            <span className="inline-block mt-[0.15vw] text-[0.68vw] bg-purple-50 text-purple-700 px-[0.4vw] py-[0.05vw] rounded border border-purple-200 font-medium">
+                              {prod._fieldVisit?.status || "In Progress"}
+                            </span>
+                          </div>
+                        )}
+                      </td>
+
+                      <td className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                        <div className="flex items-center justify-center gap-[0.4vw]">
+                          <button
+                            type="button"
+                            onClick={() => onOpenRespond({ entry: row, callId: row.callId || row._id, prod, pIdx: safeIdx })}
+                            className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.28vw] rounded-[0.4vw] bg-purple-600 hover:bg-purple-700 text-white font-bold text-[0.74vw] shadow-xs active:scale-95 transition-all cursor-pointer"
+                            title="Manage Field Visit / Closure"
+                          >
+                            <Edit3 className="w-[0.72vw] h-[0.72vw]" />
+                            Respond
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onOpenHistory(row)}
+                            className="p-[0.32vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer"
+                            title="View History"
+                          >
+                            <History className="w-[0.95vw] h-[0.95vw]" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                });
+              })
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center py-[4vw] text-slate-500">
+                  <div className="flex flex-col items-center justify-center gap-[0.6vw]">
+                    <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
+                      <MapPin className="w-[1.6vw] h-[1.6vw] text-slate-400" />
+                    </div>
+                    <p className="text-[0.9vw] font-bold text-slate-700">No field visits in this queue</p>
+                    <p className="text-[0.75vw] text-slate-400">All field visit allocations are up to date.</p>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Footer */}
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-200 bg-slate-50/50 shrink-0">
+        <div className="text-[0.75vw] text-slate-600 font-medium">
+          Showing <span className="font-bold text-slate-800">{currentCalls.length > 0 ? (page - 1) * pageSize + 1 : 0}</span> to{" "}
+          <span className="font-bold text-slate-800">{Math.min(page * pageSize, currentCalls.length)}</span> of{" "}
+          <span className="font-bold text-slate-800">{currentCalls.length}</span> entries
+        </div>
+        <div className="flex items-center gap-[0.5vw]">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+          >
+            <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+          </button>
+          <div className="flex gap-[0.3vw]">
+            {[...Array(totalPages)].map((_, i) => {
+              const pNum = i + 1;
+              return (
+                <button
+                  key={pNum}
+                  onClick={() => setPage(pNum)}
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                    page === pNum
+                      ? "bg-purple-600 text-white shadow-2xs"
+                      : "bg-white border border-slate-200 text-slate-700 hover:border-purple-400 hover:text-purple-600"
+                  }`}
+                >
+                  {pNum}
+                </button>
+              );
+            })}
           </div>
           <button
-            onClick={onClose}
-            className="p-[0.5vw] hover:bg-slate-200 rounded-full transition-colors"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages || totalPages === 0}
+            className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
           >
-            <X className="w-[1.2vw] h-[1.2vw] text-slate-500" />
+            <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
           </button>
         </div>
-        <div className="p-[1.5vw] overflow-y-auto bg-slate-50 flex-1">
-          {!history || history.length === 0 ? (
-            <div className="text-center p-[2vw] text-slate-500 text-[0.9vw] font-semibold">
-              No escalation history found.
-            </div>
-          ) : (
-            <div className="relative pl-[1.5vw] space-y-[1.5vw]">
-              <div className="absolute left-[0.4vw] top-[0.5vw] bottom-[0.5vw] w-[2px] bg-slate-200" />
-              {history.map((h, i) => (
-                <div key={i} className="relative">
-                  <div
-                    className={`absolute -left-[1.5vw] mt-[0.3vw] w-[0.8vw] h-[0.8vw] rounded-full border-2 border-white ${h.reason === "SLA Auto-Escalation" ? "bg-rose-500" : "bg-blue-500"} shadow-sm z-10`}
-                  />
-                  <div className="bg-white p-[1vw] rounded-[0.8vw] border border-slate-200 shadow-sm">
-                    <div className="flex justify-between items-start mb-[0.5vw]">
-                      <div>
-                        <div className="font-bold text-slate-800 text-[0.9vw]">
-                          {h.engineerName || h.engineerId}
-                        </div>
-                        <div className="text-slate-500 text-[0.75vw] flex items-center gap-[0.4vw] mt-[0.2vw]">
-                          <User className="w-[0.8vw] h-[0.8vw]" /> Level{" "}
-                          {h.level} - {h.department}
-                        </div>
-                      </div>
-                    </div>
-                    {h.reason && (
-                      <div className="mt-[0.6vw] p-[0.6vw] bg-slate-50 rounded-[0.4vw] border border-slate-100 text-[0.8vw] text-slate-700">
-                        <span className="font-semibold text-slate-800">
-                          Reason:
-                        </span>{" "}
-                        {h.reason}
-                      </div>
-                    )}
-                    <div className="mt-[0.6vw] flex items-center justify-between text-[0.75vw] text-slate-500">
-                      <div className="flex items-center gap-[0.4vw]">
-                        <Clock className="w-[0.8vw] h-[0.8vw]" />
-                        Assigned: {new Date(h.assignedAt).toLocaleString()}
-                      </div>
-                      {h.deadline && (
-                        <div className="flex items-center gap-[0.4vw] text-rose-500 font-semibold">
-                          <AlertCircle className="w-[0.8vw] h-[0.8vw]" />
-                          Deadline: {new Date(h.deadline).toLocaleString()}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
-const getEscalationDates = (item) => {
-  const escHistory = item.product._escalationHistory || [];
-  let startDate = "N/A";
-  let endDate = "Pending";
-
-  if (escHistory.length > 0) {
-    const startObj = new Date(escHistory[0].assignedAt);
-    startDate = startObj.toLocaleString("en-GB", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    const history = item.product._history || [];
-    const closureEvent = history.find(
-      (h) => h.status === "Resolved" || h.status === "Closed",
-    );
-
-    if (closureEvent) {
-      endDate = new Date(closureEvent.timestamp).toLocaleString("en-GB", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-    }
-  }
-
-  return { startDate, endDate };
-};
-
-const getEscalationDuration = (item) => {
-  const escHistory = item.product._escalationHistory || [];
-  if (escHistory.length === 0) return "N/A";
-
-  const startTime = new Date(escHistory[0].assignedAt).getTime();
-  const history = item.product._history || [];
-  let endTime = new Date().getTime();
-
-  const closureEvent = history.find(
-    (h) => h.status === "Resolved" || h.status === "Closed",
-  );
-  if (closureEvent) {
-    endTime = new Date(closureEvent.timestamp).getTime();
-  } else if (history.length > 0) {
-    endTime = new Date(history[history.length - 1].timestamp).getTime();
-  }
-
-  if (endTime <= startTime) return "0m";
-
-  const diffMs = endTime - startTime;
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diffMs / 1000 / 60) % 60);
-
-  let parts = [];
-  if (days > 0) parts.push(`${days}d`);
-  if (hours > 0) parts.push(`${hours}h`);
-  parts.push(`${minutes}m`);
-
-  return parts.join(" ");
-};
-
-// ── Reports Tab ───────────────────────────────────────────────────────────────
-const ReportsTab = ({ currentUser, queue, employees }) => {
-  const [activeSubTab, setActiveSubTab] = useState("All");
-  const [childTab, setChildTab] = useState("Allocated");
-  const [historyModalOpen, setHistoryModalOpen] = useState(null);
-  const [escalationModalOpen, setEscalationModalOpen] = useState(null);
-  const [allCalls, setAllCalls] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const itemsPerPage = 10;
-
-  const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [exportFormat, setExportFormat] = useState("pdf");
-  const [exportWithHistory, setExportWithHistory] = useState(false);
-
-  const fetchAll = async (showLoading = false) => {
-    try {
-      if (showLoading) setIsLoading(true);
-      const { data } = await axios.get(`${API_URL}/service-calls`);
-      setAllCalls(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      if (showLoading) setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAll(true);
-  }, []);
-
-  const { socket } = useSocket();
-  useEffect(() => {
-    if (!socket) return;
-    const handleUpdate = (updatedCall) => {
-      if (updatedCall.deleted) {
-        setAllCalls((prev) => prev.filter((c) => c._id !== updatedCall.callId));
-        return;
-      }
-      setAllCalls((prev) => {
-        const exists = prev.some((c) => c._id === updatedCall._id);
-        return exists
-          ? prev.map((c) => (c._id === updatedCall._id ? updatedCall : c))
-          : [updatedCall, ...prev];
-      });
-    };
-
-    // Fallback: If socket disconnects and reconnects, fetch full array to catch up on missed events
-    const handleReconnect = () => fetchAll(false);
-
-    socket.on("service_call_updated", handleUpdate);
-    socket.on("connect", handleReconnect);
-
-    return () => {
-      socket.off("service_call_updated", handleUpdate);
-      socket.off("connect", handleReconnect);
-    };
-  }, [socket]);
-
-  const subTabs = [
-    "All",
-    "Attended",
-    "Pending",
-    "Supporting",
-    "Field Visit",
-    "Resolved",
-    "Escalation Missed",
-  ];
-
-  const { groupedData, tabCounts, childTabCounts } = useMemo(() => {
-    const uid = currentUser?.userId;
-    if (!uid) return { groupedData: [], tabCounts: {}, childTabCounts: {} };
-
-    let groupsMap = {};
-    const counts = {
-      All: 0,
-      Attended: 0,
-      Pending: 0,
-      Supporting: 0,
-      "Field Visit": 0,
-      Resolved: 0,
-      "Escalation Missed": 0,
-    };
-    const childCounts = {
-      Supporting_Allocated: 0,
-      Supporting_Assigned: 0,
-      "Field Visit_Allocated": 0,
-      "Field Visit_Assigned": 0,
-    };
-    const lowerQuery = searchQuery.toLowerCase();
-
-    (allCalls.length > 0 ? allCalls : queue).forEach((call) => {
-      let callMatchesForTab = {
-        All: false,
-        Attended: false,
-        Pending: false,
-        Supporting: false,
-        "Field Visit": false,
-        Resolved: false,
-      };
-      let callMatchesChild = {
-        Supporting_Allocated: false,
-        Supporting_Assigned: false,
-        "Field Visit_Allocated": false,
-        "Field Visit_Assigned": false,
-      };
-      let matchingProductsForActiveTab = [];
-
-      (call.products || []).forEach((p, pIdx) => {
-        let missedEscalation = false;
-        const hist = p._escalationHistory || [];
-        for (let i = 0; i < hist.length; i++) {
-          if (hist[i].engineerId === uid) {
-            if (
-              i + 1 < hist.length &&
-              hist[i + 1].reason === "SLA Auto-Escalation"
-            ) {
-              missedEscalation = true;
-              break;
-            }
-            if (i === hist.length - 1 && p._isCritical && !p._attended) {
-              missedEscalation = true;
-              break;
-            }
-          }
-        }
-
-        const isUserInvolvedWithoutMissed = Boolean(
-          currentUser?.department === "Admin" ||
-          (p._assignedEngineerId === uid &&
-            p._assigned !== false &&
-            !p._isCritical &&
-            p._attended) ||
-          p._fieldVisit?.assignedBy === uid ||
-          p._fieldVisit?.assignedTo === uid ||
-          p._supportPersonId === uid ||
-          (p._history || []).some(
-            (h) => h.status === "Returned from Support" && h.updatedBy === uid,
-          ),
-        );
-
-        const isUserInvolved = isUserInvolvedWithoutMissed || missedEscalation;
-
-        p.isMissedEscalation = missedEscalation;
-
-        if (!isUserInvolved) return;
-
-        const isAdmin = currentUser?.department === "Admin";
-        const isPrimary = p._assignedEngineerId === uid;
-        const isFvAssigner = p._fieldVisit?.assignedBy === uid;
-        const isSupportPerson = p._supportPersonId === uid;
-        const isFvAssignee = p._fieldVisit?.assignedTo === uid;
-
-        const isFullyResolved = Boolean(
-          p._productClosure?.status === "Resolved" ||
-          p._productClosure?.status === "Closed" ||
-          p._resolved,
-        );
-        const isActuallyPending = Boolean(
-          !isFullyResolved &&
-          p._productClosure?.status === "Pending" &&
-          !p._supportRequested,
-        );
-        const hasActiveFieldVisit = Boolean(
-          !isFullyResolved &&
-          !isActuallyPending &&
-          (p._productClosure?.status === "Field Visit Required" ||
-            p._productClosure?.status === "Returned from Field Visit" ||
-            (p._fieldVisit?.isAssigned &&
-              p._fieldVisit.status !== "Closed" &&
-              p._fieldVisit.status !== "Returned")),
-        );
-        const hasActiveSupport = Boolean(
-          !isFullyResolved &&
-          !isActuallyPending &&
-          !hasActiveFieldVisit &&
-          (p._supportRequested ||
-            p._productClosure?.status === "Returned from Support"),
-        );
-
-        let supportingAllocated = false;
-        let supportingAssigned = false;
-        let fieldVisitAllocated = false;
-        let fieldVisitAssigned = false;
-        let isEscalation = false;
-        let isPending = false;
-        let isResolvedTab = false;
-
-        if (isFullyResolved) {
-          if (isAdmin || isPrimary) isResolvedTab = true;
-        } else {
-          if (isAdmin || isPrimary || isFvAssigner) {
-            if (isActuallyPending) isPending = true;
-            else if (
-              hasActiveFieldVisit &&
-              (!isFvAssignee ||
-                p._productClosure?.status === "Returned from Field Visit")
-            )
-              fieldVisitAllocated = true;
-            else if (
-              hasActiveSupport &&
-              (!isSupportPerson ||
-                p._productClosure?.status === "Returned from Support")
-            )
-              supportingAllocated = true;
-            else if (p._attended) isEscalation = true;
-          }
-        }
-
-        if (
-          !hasActiveFieldVisit &&
-          (isSupportPerson ||
-            (p._history || []).some(
-              (h) =>
-                h.status === "Returned from Support" && h.updatedBy === uid,
-            ))
-        ) {
-          supportingAssigned = true;
-        } else if (isAdmin && hasActiveSupport && p._supportPersonId) {
-          supportingAssigned = true;
-        }
-
-        if (
-          isFvAssignee ||
-          (p._history || []).some(
-            (h) => h.status === "Field Visit Returned" && h.updatedBy === uid,
-          )
-        ) {
-          fieldVisitAssigned = true;
-        } else if (
-          isAdmin &&
-          hasActiveFieldVisit &&
-          p._fieldVisit?.assignedTo
-        ) {
-          fieldVisitAssigned = true;
-        }
-
-        const matchesTab = {
-          All: isUserInvolvedWithoutMissed,
-          Attended: isEscalation,
-          Pending: isPending,
-          Supporting: supportingAllocated || supportingAssigned,
-          "Field Visit": fieldVisitAllocated || fieldVisitAssigned,
-          Resolved: isResolvedTab,
-          "Escalation Missed": missedEscalation,
-        };
-
-        let searchMatch = true;
-        if (lowerQuery.trim() !== "") {
-          searchMatch =
-            (call.callNumber || "").toLowerCase().includes(lowerQuery) ||
-            (call.customerName || "").toLowerCase().includes(lowerQuery) ||
-            (call.partyCode || "").toLowerCase().includes(lowerQuery) ||
-            (p.productModel || "").toLowerCase().includes(lowerQuery) ||
-            (p.itemCode || "").toLowerCase().includes(lowerQuery);
-        }
-
-        const pStatus =
-          p._productClosure?.status === "Closed" || p._resolved
-            ? "Resolved"
-            : p._productClosure?.status || "Open";
-        let statusMatch = true;
-        if (statusFilter !== "All") {
-          if (statusFilter === "Resolved" && pStatus !== "Resolved")
-            statusMatch = false;
-          if (statusFilter === "Pending" && pStatus !== "Pending")
-            statusMatch = false;
-        }
-
-        if (searchMatch && statusMatch) {
-          subTabs.forEach((tab) => {
-            if (matchesTab[tab]) callMatchesForTab[tab] = true;
-          });
-
-          if (supportingAllocated)
-            callMatchesChild["Supporting_Allocated"] = true;
-          if (supportingAssigned)
-            callMatchesChild["Supporting_Assigned"] = true;
-          if (fieldVisitAllocated)
-            callMatchesChild["Field Visit_Allocated"] = true;
-          if (fieldVisitAssigned)
-            callMatchesChild["Field Visit_Assigned"] = true;
-
-          if (matchesTab[activeSubTab]) {
-            if (activeSubTab === "Supporting") {
-              if (childTab === "Allocated" && supportingAllocated)
-                matchingProductsForActiveTab.push({ product: p, pIdx });
-              if (childTab === "Assigned" && supportingAssigned)
-                matchingProductsForActiveTab.push({ product: p, pIdx });
-            } else if (activeSubTab === "Field Visit") {
-              if (childTab === "Allocated" && fieldVisitAllocated)
-                matchingProductsForActiveTab.push({ product: p, pIdx });
-              if (childTab === "Assigned" && fieldVisitAssigned)
-                matchingProductsForActiveTab.push({ product: p, pIdx });
-            } else {
-              matchingProductsForActiveTab.push({ product: p, pIdx });
-            }
-          }
-        }
-      });
-
-      subTabs.forEach((tab) => {
-        if (callMatchesForTab[tab]) counts[tab]++;
-      });
-      Object.keys(callMatchesChild).forEach((k) => {
-        if (callMatchesChild[k]) childCounts[k]++;
-      });
-
-      if (matchingProductsForActiveTab.length > 0) {
-        groupsMap[call._id] = { call, products: matchingProductsForActiveTab };
-      }
-    });
-
-    counts["Supporting"] =
-      childCounts["Supporting_Allocated"] + childCounts["Supporting_Assigned"];
-    counts["Field Visit"] =
-      childCounts["Field Visit_Allocated"] +
-      childCounts["Field Visit_Assigned"];
-
-    return {
-      groupedData: Object.values(groupsMap).sort(
-        (a, b) =>
-          new Date(b.call.createdAt).getTime() -
-          new Date(a.call.createdAt).getTime(),
-      ),
-      tabCounts: counts,
-      childTabCounts: childCounts,
-    };
-  }, [queue, currentUser, activeSubTab, childTab, allCalls, searchQuery]);
-
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return groupedData.slice(start, start + itemsPerPage);
-  }, [groupedData, currentPage]);
-
-  const totalPages = Math.ceil(groupedData.length / itemsPerPage);
-
-  const executeExport = () => {
-    let headers = [];
-    if (exportFormat === "excel") {
-      headers = [
-        "S.No",
-        "Call Number",
-        "Registered Date",
-        "Category",
-        "Customer",
-        "Customer Code",
-        "Product",
-        "Segment",
-        "Error Code",
-        "Product Issue",
-        "Mode",
-        "Start Date",
-        "End Date",
-        "Duration",
-        "Pending",
-        "Supporting",
-        "Field visit",
-        "Resolved",
-      ];
-    } else {
-      headers = [
-        "S.No",
-        "Call Info",
-        "Category",
-        "Customer",
-        "Product",
-        "Error Code",
-        "Mode",
-        "Duration",
-      ];
-    }
-
-    if (activeSubTab === "All") headers.push("Status");
-    if (exportWithHistory) headers.push("History");
-
-    const rows = [];
-    groupedData.forEach((group, gIdx) => {
-      group.products.forEach((item, pIdx) => {
-        let row;
-
-        if (exportFormat === "excel") {
-          row = [
-            pIdx === 0 ? gIdx + 1 : "",
-            pIdx === 0 ? group.call.callNumber : "",
-            pIdx === 0
-              ? new Date(group.call.createdAt).toLocaleString("en-GB", {
-                  month: "2-digit",
-                  day: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })
-              : "",
-            pIdx === 0
-              ? group.call.customerType || group.call.callCategory || "OEM"
-              : "",
-            pIdx === 0 ? group.call.customerName : "",
-            pIdx === 0
-              ? group.call.partyCode || group.call.customerCode || "N/A"
-              : "",
-            item.product.productModel || item.product.itemCode,
-            item.product.productSegment || group.call.segment || "N/A",
-            item.product.errorCode || "N/A",
-            item.product.callDescription || group.call.callDescription || "N/A",
-            pIdx === 0 ? group.call.callMode || "Phone" : "",
-          ];
-          const dates = getEscalationDates(item);
-          row.push(dates.startDate, dates.endDate);
-          row.push(getEscalationDuration(item));
-
-          const getRemarks = (statuses) => {
-            const events = (item.product._history || []).filter((h) =>
-              statuses.includes(h.status),
-            );
-            if (events.length === 0) return "";
-            if (events.length === 1) return events[0].remarks || "N/A";
-            return events
-              .map((e, idx) => `${idx + 1}. ${e.remarks || "N/A"}`)
-              .join("\n");
-          };
-
-          row.push(getRemarks(["Pending", "Updated"]));
-          row.push(getRemarks(["Support Requested"]));
-          row.push(
-            getRemarks([
-              "Field Visit Assigned",
-              "Field Visit Requested",
-              "Field Visit Required",
-            ]),
-          );
-          row.push(getRemarks(["Resolved", "Closed"]));
-        } else {
-          row = [
-            pIdx === 0 ? gIdx + 1 : "",
-            pIdx === 0
-              ? `${group.call.callNumber} - ${new Date(group.call.createdAt).toLocaleString("en-US", { month: "2-digit", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true })}`
-              : "",
-            pIdx === 0
-              ? group.call.customerType || group.call.callCategory || "OEM"
-              : "",
-            pIdx === 0
-              ? `${group.call.customerName} (Cus ${group.call.partyCode || group.call.customerCode || "N/A"})`
-              : "",
-            `${item.product.productModel || item.product.itemCode}\n(${item.product.productSegment || group.call.segment || "N/A"})`,
-            item.product.errorCode || "N/A",
-            pIdx === 0 ? group.call.callMode || "Phone" : "",
-          ];
-          row.push(getEscalationDuration(item));
-        }
-        if (activeSubTab === "All") {
-          const pStatus =
-            item.product._productClosure?.status ||
-            (item.product._resolved ? "Resolved" : "Open");
-          row.push(pStatus === "Closed" ? "Resolved" : pStatus);
-        }
-        if (exportWithHistory) {
-          let historyText = "";
-
-          if (activeSubTab === "Escalation Missed") {
-            const escHistory =
-              group.call._escalationHistory ||
-              group.call.escalationHistory ||
-              [];
-            historyText = escHistory
-              .map((h) => {
-                const assignedDt = h.assignedAt
-                  ? new Date(h.assignedAt).toLocaleString("en-US", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : "N/A";
-                const deadlineDt = h.deadline
-                  ? new Date(h.deadline).toLocaleString("en-US", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : "N/A";
-
-                let text = `[Level ${h.level}] Assigned to: ${h.engineerName || h.engineerId} (${h.department || "N/A"})\n`;
-                text += `Assigned At: ${assignedDt} | Deadline: ${deadlineDt}\n`;
-                if (h.reason) text += `Reason: ${h.reason}\n`;
-                if (h.escalatedAt)
-                  text += `Escalated At: ${new Date(h.escalatedAt).toLocaleString("en-US", { month: "2-digit", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true })}`;
-                return text.trim();
-              })
-              .join("\n--------------------------------------------------\n");
-          } else {
-            historyText = (item.product._history || [])
-              .map((h) => {
-                const dt = new Date(h.timestamp).toLocaleString("en-US", {
-                  month: "2-digit",
-                  day: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                });
-                let text = `[${dt}] ${h.status} by ${h.updatedByName || "System"}`;
-
-                if (h.metadata?.supportPerson) {
-                  text += ` (Sent to: ${h.metadata.supportPerson.name})`;
-                } else if (h.metadata?.assignedTo) {
-                  text += ` (Assigned to: ${h.metadata.assignedToName || h.metadata.assignedTo})`;
-                } else if (
-                  h.metadata?.returnedTo ||
-                  h.status === "Field Visit Returned"
-                ) {
-                  text += ` (Returned to: ${h.metadata?.returnedTo || "Support"})`;
-                }
-
-                if (h.remarks) text += `: ${h.remarks}`;
-                return text;
-              })
-              .join("\n--------------------------------------------------\n");
-          }
-
-          row.push(historyText || "No history");
-        }
-        rows.push(row);
-      });
-    });
-
-    const exportDateStr = `Export Date: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`;
-
-    let displayFilter = activeSubTab;
-    if (activeSubTab === "Supporting") {
-      displayFilter =
-        childTab === "Allocated" ? "Asked for support" : "Assigned for support";
-    } else if (activeSubTab === "Field Visit") {
-      displayFilter =
-        childTab === "Allocated"
-          ? "Allocated Field Visit"
-          : "Assigned Field Visit";
-    }
-
-    const statusStr = `Status Filter: ${displayFilter}`;
-    const userStr = `Generated By: ${currentUser?.name || "Unknown"} (${currentUser?.department || currentUser?.dept || "Unknown"})`;
-
-    if (exportFormat === "excel") {
-      const metaRows = [[exportDateStr], [statusStr], [userStr], []];
-      const aoaData = [
-        ...metaRows,
-        headers,
-        ...rows.map((r) =>
-          r.map((c) => (typeof c === "object" && c !== null ? c.content : c)),
-        ),
-      ];
-      const worksheet = XLSX.utils.aoa_to_sheet(aoaData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Action Logs");
-      XLSX.writeFile(
-        workbook,
-        `Action_Logs_${new Date().toISOString().split("T")[0]}.xlsx`,
-      );
-    } else {
-      const doc = new jsPDF("landscape");
-      doc.setFontSize(10);
-      doc.text("Action Logs", 14, 15);
-      doc.text(exportDateStr, 14, 20);
-      doc.text(statusStr, 14, 25);
-      doc.text(userStr, 14, 30);
-      autoTable(doc, {
-        head: [headers],
-        body: rows,
-        startY: 35,
-        theme: "grid",
-        styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
-        columnStyles: exportWithHistory
-          ? {
-              [headers.length - 1]: { cellWidth: 80 },
-            }
-          : {},
-      });
-      doc.save(`Action_Logs_${new Date().toISOString().split("T")[0]}.pdf`);
-    }
-    setExportModalOpen(false);
-  };
-
-  return (
-    <div className="w-full h-full bg-white rounded-[0.8vw] shadow-sm border border-slate-300 overflow-hidden col-span-2 flex flex-col flex-1 min-h-0">
-      {/* Sub Tabs */}
-      <div className="flex flex-col border-b border-slate-200 bg-slate-50">
-        <div className="flex items-center justify-between p-[1vw]">
-          <div className="flex gap-[0.5vw]">
-            {subTabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => {
-                  setActiveSubTab(tab);
-                  setChildTab("Allocated");
-                  setCurrentPage(1);
-                }}
-                className={`px-[1.2vw] py-[0.5vw] rounded-[2vw] text-[0.8vw] font-bold border transition-colors cursor-pointer ${
-                  activeSubTab === tab
-                    ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                    : "bg-white text-slate-600 border-slate-300 hover:bg-slate-100"
-                }`}
-              >
-                {tab} ({tabCounts[tab] || 0})
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="relative">
-              <Search className="w-[1.2vw] h-[1.2vw] absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search logs..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="pl-[2.5vw] pr-[1vw] py-[0.5vw] w-[18vw] rounded-[0.4vw] border border-slate-300 text-[0.8vw] font-bold text-slate-700 bg-white outline-none focus:border-indigo-500 placeholder-slate-400"
-              />
-            </div>
-
-            <button
-              onClick={() => setExportModalOpen(true)}
-              className="flex items-center gap-[0.4vw] px-[1vw] py-[0.5vw] bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 rounded-[0.4vw] text-[0.8vw] font-bold transition-colors cursor-pointer shadow-sm"
-            >
-              <Download className="w-[1vw] h-[1vw]" />
-              Export
-            </button>
-          </div>
-        </div>
-
-        {(activeSubTab === "Supporting" || activeSubTab === "Field Visit") && (
-          <div className="px-[1vw] pb-[0.8vw] pt-0">
-            <div className="inline-flex bg-slate-200/70 p-[0.2vw] rounded-[0.5vw]">
-              <button
-                onClick={() => {
-                  setChildTab("Allocated");
-                  setCurrentPage(1);
-                }}
-                className={`px-[1.2vw] py-[0.3vw] rounded-[0.3vw] text-[0.75vw] font-bold transition-all duration-200 cursor-pointer ${
-                  childTab === "Allocated"
-                    ? "bg-white text-indigo-700 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-300/50"
-                }`}
-              >
-                {activeSubTab === "Supporting"
-                  ? "Asked for support"
-                  : activeSubTab === "Field Visit"
-                    ? "Allocated Field Visit"
-                    : "Allocated"}{" "}
-                ({childTabCounts[`${activeSubTab}_Allocated`] || 0})
-              </button>
-              <button
-                onClick={() => {
-                  setChildTab("Assigned");
-                  setCurrentPage(1);
-                }}
-                className={`px-[1.2vw] py-[0.3vw] rounded-[0.3vw] text-[0.75vw] font-bold transition-all duration-200 cursor-pointer ${
-                  childTab === "Assigned"
-                    ? "bg-white text-indigo-700 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-300/50"
-                }`}
-              >
-                {activeSubTab === "Supporting"
-                  ? "Assigned for support"
-                  : activeSubTab === "Field Visit"
-                    ? "Assigned Field Visit"
-                    : "Assigned"}{" "}
-                ({childTabCounts[`${activeSubTab}_Assigned`] || 0})
-              </button>
-            </div>
-          </div>
-        )}
       </div>
-
-      {/* Table */}
-      <div className="flex-1 min-h-0 flex flex-col justify-between overflow-hidden">
-        <div className="flex-1 min-h-0 overflow-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 z-20 shadow-sm bg-slate-100">
-              <tr className="bg-slate-100 text-slate-700 text-[0.85vw] font-semibold border-b border-slate-300">
-                <th className="px-[0.6vw] py-[1vw] w-[3%] border-r border-slate-300 whitespace-nowrap">
-                  S.No
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[15%] border-r border-slate-300 whitespace-nowrap">
-                  Call Info
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[10%] border-r border-slate-300 whitespace-nowrap">
-                  Category
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[15%] border-r border-slate-300">
-                  Customer
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[15%] border-r border-slate-300">
-                  Product
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[10%] border-r border-slate-300 whitespace-nowrap">
-                  Segment
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[10%] border-r border-slate-300 whitespace-nowrap">
-                  Error Code
-                </th>
-                <th className="px-[0.6vw] py-[1vw] w-[10%] border-r border-slate-300 whitespace-nowrap">
-                  Mode
-                </th>
-                {(activeSubTab === "All" ||
-                  activeSubTab === "Supporting" ||
-                  activeSubTab === "Field Visit") && (
-                  <th className="px-[0.6vw] py-[1vw] w-[10%] border-r border-slate-300 whitespace-nowrap">
-                    Status
-                  </th>
-                )}
-                <th className="px-[0.6vw] py-[1vw] w-[12%] text-center whitespace-nowrap">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={9}
-                    className="p-[3vw] text-center text-slate-500 font-bold text-[0.9vw]"
-                  >
-                    No {activeSubTab.toLowerCase()} records found.
-                  </td>
-                </tr>
-              ) : (
-                paginatedData.map((group, groupIndex) => (
-                  <React.Fragment key={group.call._id || group.call.callId}>
-                    {group.products.map((item, pIndex) => (
-                      <tr
-                        key={`${group.call._id}_${item.pIdx}`}
-                        className={`hover:bg-slate-50 transition-colors ${pIndex === group.products.length - 1 ? "border-b border-slate-300" : "border-b border-slate-100"}`}
-                      >
-                        {pIndex === 0 && (
-                          <>
-                            <td
-                              className="px-[0.6vw] py-[1vw] text-[0.95vw] font-semibold text-slate-600 border-r border-slate-300 whitespace-nowrap"
-                              rowSpan={group.products.length}
-                            >
-                              {(currentPage - 1) * itemsPerPage +
-                                groupIndex +
-                                1}
-                            </td>
-                            <td
-                              className="px-[0.6vw] py-[1vw] border-r border-slate-300 whitespace-nowrap"
-                              rowSpan={group.products.length}
-                            >
-                              <div className="text-[0.95vw] font-semibold text-indigo-700">
-                                {group.call.callNumber}
-                              </div>
-                              <div className="text-[0.8vw] font-semibold text-slate-500">
-                                {new Date(group.call.createdAt).toLocaleString(
-                                  "en-US",
-                                  {
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                    year: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hour12: true,
-                                  },
-                                )}
-                              </div>
-                            </td>
-                            <td
-                              className="px-[0.6vw] py-[1vw] border-r border-slate-300 whitespace-nowrap"
-                              rowSpan={group.products.length}
-                            >
-                              <div className="text-[0.9vw] font-semibold text-slate-800">
-                                {group.call.customerType ||
-                                  group.call.callCategory ||
-                                  "OEM"}
-                              </div>
-                            </td>
-                            <td
-                              className="px-[0.6vw] py-[1vw] border-r border-slate-300"
-                              rowSpan={group.products.length}
-                            >
-                              <div className="text-[0.95vw] font-semibold text-slate-800">
-                                {group.call.customerName}
-                              </div>
-                              <div className="flex flex-wrap items-center gap-[0.3vw] mt-[0.1vw]">
-                                <span className="text-[0.8vw] font-semibold text-slate-500 whitespace-nowrap">
-                                  {group.call.partyCode ||
-                                    group.call.customerCode ||
-                                    "N/A"}
-                                </span>
-                                <span className="px-[0.3vw] bg-purple-100 text-purple-700 text-[0.75vw] font-semibold rounded inline-block whitespace-nowrap">
-                                  {group.call.locationType || "IPR"}
-                                </span>
-                                {group.call.site && (
-                                  <span className="px-[0.3vw] bg-blue-100 text-blue-700 text-[0.75vw] font-semibold rounded inline-block whitespace-nowrap">
-                                    {group.call.site}
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-                          </>
-                        )}
-                        <td className="px-[0.6vw] py-[1vw] border-r border-slate-300">
-                          <div className="text-[0.95vw] font-semibold text-slate-800">
-                            {item.product.productModel || item.product.itemCode}
-                          </div>
-                        </td>
-                        <td className="px-[0.6vw] py-[1vw] border-r border-slate-300 whitespace-nowrap">
-                          <div className="text-[0.9vw] font-semibold text-slate-800">
-                            {item.product.productSegment ||
-                              group.call.segment ||
-                              "N/A"}
-                          </div>
-                        </td>
-                        <td className="px-[0.6vw] py-[1vw] border-r border-slate-300 whitespace-nowrap">
-                          <div className="text-[0.9vw] font-semibold text-slate-800">
-                            {item.product.errorCode || "N/A"}
-                          </div>
-                        </td>
-                        {pIndex === 0 && (
-                          <td
-                            className="px-[0.6vw] py-[1vw] text-[0.95vw] font-semibold text-slate-600 border-r border-slate-300 whitespace-nowrap"
-                            rowSpan={group.products.length}
-                          >
-                            {group.call.callMode || "Phone"}
-                          </td>
-                        )}
-                        {(activeSubTab === "All" ||
-                          activeSubTab === "Supporting" ||
-                          activeSubTab === "Field Visit") && (
-                          <td className="px-[0.6vw] py-[1vw] border-r border-slate-300 whitespace-nowrap">
-                            <span
-                              className={`px-[0.6vw] py-[0.2vw] rounded-[0.4vw] text-[0.85vw] font-semibold inline-block whitespace-nowrap ${(() => {
-                                const uid = currentUser?.userId;
-                                const pStatus =
-                                  item.product._productClosure?.status ||
-                                  (item.product._resolved
-                                    ? "Resolved"
-                                    : "Open");
-                                if (
-                                  pStatus === "Resolved" ||
-                                  pStatus === "Closed"
-                                )
-                                  return "bg-emerald-50 text-emerald-700 border border-emerald-200";
-
-                                if (pStatus === "Returned from Support")
-                                  return "bg-gray-100 text-gray-700 border border-gray-300";
-                                if (
-                                  pStatus === "Returned from Field Visit" ||
-                                  pStatus === "Field Visit Returned"
-                                )
-                                  return "bg-gray-100 text-gray-700 border border-gray-300";
-
-                                const isFieldVisitActive =
-                                  pStatus === "Field Visit Required" ||
-                                  (item.product._fieldVisit?.isAssigned &&
-                                    item.product._fieldVisit?.status !==
-                                      "Closed" &&
-                                    item.product._fieldVisit?.status !==
-                                      "Returned");
-                                if (isFieldVisitActive) {
-                                  if (
-                                    item.product._fieldVisit?.assignedTo ===
-                                      uid &&
-                                    item.product._assignedEngineerId !== uid
-                                  ) {
-                                    return "bg-blue-50 text-blue-700 border border-blue-200";
-                                  }
-                                  return "bg-amber-50 text-amber-700 border border-amber-200"; // Generic field visit active color
-                                }
-
-                                if (
-                                  item.product._supportPersonId === uid &&
-                                  item.product._assignedEngineerId !== uid
-                                ) {
-                                  return "bg-blue-50 text-blue-700 border border-blue-200";
-                                }
-                                const isReturnedSupport = (
-                                  item.product._history || []
-                                ).some(
-                                  (h) =>
-                                    h.status === "Returned from Support" &&
-                                    h.updatedBy === uid,
-                                );
-                                if (isReturnedSupport)
-                                  return "bg-gray-100 text-gray-700 border border-gray-300";
-
-                                const isReturnedFieldVisit = (
-                                  item.product._history || []
-                                ).some(
-                                  (h) =>
-                                    h.status === "Field Visit Returned" &&
-                                    h.updatedBy === uid,
-                                );
-                                if (isReturnedFieldVisit)
-                                  return "bg-gray-100 text-gray-700 border border-gray-300";
-
-                                if (
-                                  item.product._supportRequested &&
-                                  !item.product._resolved &&
-                                  pStatus !== "Closed"
-                                ) {
-                                  return "bg-blue-50 text-blue-700 border border-blue-200";
-                                }
-                                if (pStatus === "Pending")
-                                  return "bg-amber-50 text-amber-700 border border-amber-200";
-                                if (
-                                  pStatus === "Open" &&
-                                  item.product._attended
-                                )
-                                  return "bg-indigo-50 text-indigo-700 border border-indigo-200";
-                                return "bg-slate-50 text-slate-700 border border-slate-200";
-                              })()}`}
-                            >
-                              {(() => {
-                                const uid = currentUser?.userId;
-                                const pStatus =
-                                  item.product._productClosure?.status ||
-                                  (item.product._resolved
-                                    ? "Resolved"
-                                    : "Open");
-                                if (
-                                  pStatus === "Resolved" ||
-                                  pStatus === "Closed"
-                                )
-                                  return "Resolved";
-
-                                if (pStatus === "Returned from Support")
-                                  return "Returned Support";
-                                if (
-                                  pStatus === "Returned from Field Visit" ||
-                                  pStatus === "Field Visit Returned"
-                                )
-                                  return "Returned Field Visit";
-
-                                const isFieldVisitActive =
-                                  pStatus === "Field Visit Required" ||
-                                  (item.product._fieldVisit?.isAssigned &&
-                                    item.product._fieldVisit?.status !==
-                                      "Closed" &&
-                                    item.product._fieldVisit?.status !==
-                                      "Returned");
-                                if (isFieldVisitActive) {
-                                  if (
-                                    item.product._fieldVisit?.assignedTo ===
-                                      uid &&
-                                    item.product._assignedEngineerId !== uid
-                                  ) {
-                                    return "Assigned Field Visit";
-                                  }
-                                  return "Field Visit"; // Or whatever pStatus says, but "Field Visit" is clear
-                                }
-
-                                if (
-                                  item.product._supportPersonId === uid &&
-                                  item.product._assignedEngineerId !== uid
-                                ) {
-                                  return "Assigned Support";
-                                }
-                                const isReturnedSupport = (
-                                  item.product._history || []
-                                ).some(
-                                  (h) =>
-                                    h.status === "Returned from Support" &&
-                                    h.updatedBy === uid,
-                                );
-                                if (isReturnedSupport)
-                                  return "Returned Support";
-
-                                const isReturnedFieldVisit = (
-                                  item.product._history || []
-                                ).some(
-                                  (h) =>
-                                    h.status === "Field Visit Returned" &&
-                                    h.updatedBy === uid,
-                                );
-                                if (isReturnedFieldVisit)
-                                  return "Returned Field Visit";
-
-                                if (
-                                  item.product._supportRequested &&
-                                  !item.product._resolved &&
-                                  pStatus !== "Closed"
-                                ) {
-                                  return "Support Requested";
-                                }
-                                if (
-                                  pStatus === "Open" &&
-                                  item.product._attended
-                                )
-                                  return "Attended";
-                                return pStatus;
-                              })()}
-                            </span>
-                          </td>
-                        )}
-                        <td className="px-[0.6vw] py-[1vw] text-center whitespace-nowrap">
-                          {activeSubTab === "Escalation Missed" ? (
-                            <button
-                              onClick={() =>
-                                setEscalationModalOpen(item.product)
-                              }
-                              className="inline-flex items-center gap-[0.3vw] px-[0.8vw] py-[0.4vw] bg-rose-50 border border-rose-300 rounded-[0.5vw] hover:bg-rose-100 text-rose-700 font-bold text-[0.75vw] transition-colors cursor-pointer shadow-sm"
-                            >
-                              <History className="w-[1vw] h-[1vw]" />
-                              Escalation History
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => setHistoryModalOpen(item.product)}
-                              className="inline-flex items-center gap-[0.3vw] px-[0.8vw] py-[0.4vw] bg-white border border-slate-300 rounded-[0.5vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.75vw] transition-colors cursor-pointer shadow-sm"
-                            >
-                              <History className="w-[1vw] h-[1vw]" />
-                              View History
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </React.Fragment>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-        {/* Pagination Controls */}
-        <div className="flex items-center justify-between p-[0.8vw] border-t border-slate-200 bg-slate-50 flex-shrink-0">
-          <div className="text-[0.75vw] font-bold text-slate-500">
-            Showing{" "}
-            {groupedData.length === 0
-              ? 0
-              : (currentPage - 1) * itemsPerPage + 1}{" "}
-            to {Math.min(currentPage * itemsPerPage, groupedData.length)} of{" "}
-            {groupedData.length} records
-          </div>
-          <div className="flex gap-[0.5vw]">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-[0.8vw] py-[0.4vw] rounded-[0.4vw] border border-slate-300 bg-white text-slate-600 font-bold text-[0.75vw] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              Previous
-            </button>
-            <div className="flex items-center gap-[0.2vw]">
-              {Array.from({ length: Math.max(totalPages, 1) }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`w-[1.8vw] h-[1.8vw] rounded-[0.4vw] flex items-center justify-center text-[0.75vw] font-bold transition-colors cursor-pointer ${currentPage === i + 1 ? "bg-indigo-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages || totalPages === 0}
-              className="px-[0.8vw] py-[0.4vw] rounded-[0.4vw] border border-slate-300 bg-white text-slate-600 font-bold text-[0.75vw] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {historyModalOpen && (
-          <ProductHistoryModal
-            history={historyModalOpen._history}
-            employees={employees}
-            currentUser={currentUser}
-            onClose={() => setHistoryModalOpen(null)}
-          />
-        )}
-
-        {escalationModalOpen && (
-          <EscalationHistoryModal
-            history={escalationModalOpen._escalationHistory}
-            onClose={() => setEscalationModalOpen(null)}
-          />
-        )}
-        {exportModalOpen && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[9999] flex justify-center items-center p-[2vw]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[0.8vw] shadow-xl w-[25vw] overflow-hidden flex flex-col"
-            >
-              <div className="p-[1.5vw] pb-[0.5vw]">
-                <h3 className="font-extrabold text-[1.1vw] text-slate-800">
-                  Export Options
-                </h3>
-              </div>
-              <div className="p-[1.5vw] flex flex-col gap-[1vw]">
-                <label className="flex items-center gap-[0.8vw] cursor-pointer group">
-                  <div className="relative flex items-center justify-center">
-                    <input
-                      type="radio"
-                      name="format"
-                      value="pdf"
-                      checked={exportFormat === "pdf"}
-                      onChange={() => setExportFormat("pdf")}
-                      className="peer sr-only"
-                    />
-                    <div className="w-[1.2vw] h-[1.2vw] rounded-full border-2 border-slate-300 peer-checked:border-blue-600 peer-checked:border-[0.35vw] transition-all"></div>
-                  </div>
-                  <span className="text-[0.9vw] text-slate-700 font-medium group-hover:text-slate-900">
-                    Export as PDF
-                  </span>
-                </label>
-
-                <label className="flex items-center gap-[0.8vw] cursor-pointer group">
-                  <div className="relative flex items-center justify-center">
-                    <input
-                      type="radio"
-                      name="format"
-                      value="excel"
-                      checked={exportFormat === "excel"}
-                      onChange={() => setExportFormat("excel")}
-                      className="peer sr-only"
-                    />
-                    <div className="w-[1.2vw] h-[1.2vw] rounded-full border-2 border-slate-300 peer-checked:border-blue-600 peer-checked:border-[0.35vw] transition-all"></div>
-                  </div>
-                  <span className="text-[0.9vw] text-slate-700 font-medium group-hover:text-slate-900">
-                    Export as Excel
-                  </span>
-                </label>
-
-                <div className="border-t border-slate-100 my-[0.2vw]"></div>
-
-                <label className="flex items-center gap-[0.8vw] cursor-pointer group">
-                  <div className="relative flex items-center justify-center">
-                    <input
-                      type="checkbox"
-                      checked={exportWithHistory}
-                      onChange={(e) => setExportWithHistory(e.target.checked)}
-                      className="peer sr-only"
-                    />
-                    <div className="w-[1.2vw] h-[1.2vw] rounded-[0.3vw] border-2 border-slate-300 peer-checked:bg-blue-600 peer-checked:border-blue-600 flex items-center justify-center transition-colors">
-                      <CheckCircle className="w-[0.8vw] h-[0.8vw] text-white opacity-0 peer-checked:opacity-100" />
-                    </div>
-                  </div>
-                  <span className="text-[0.9vw] text-slate-700 font-medium group-hover:text-slate-900">
-                    With History
-                  </span>
-                </label>
-              </div>
-              <div className="p-[1.2vw] flex justify-center gap-[1vw] pt-0 pb-[1.5vw]">
-                <button
-                  onClick={() => setExportModalOpen(false)}
-                  className="px-[2vw] py-[0.6vw] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-[2vw] font-bold text-[0.85vw] transition-colors cursor-pointer w-1/2"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={executeExport}
-                  className="px-[2vw] py-[0.6vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[2vw] font-bold text-[0.85vw] transition-colors cursor-pointer shadow-md w-1/2"
-                >
-                  Export
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
@@ -4428,6 +3852,20 @@ const ServiceCallResponse = () => {
   const [selfAssignedStatus, setSelfAssignedStatus] = useState("All");
   const [selfAssignedPage, setSelfAssignedPage] = useState(1);
   const [selfAssignedPageSize] = useState(10);
+  const [escalationPage, setEscalationPage] = useState(1);
+  const [escalationPageSize] = useState(10);
+  const [activeModalProduct, setActiveModalProduct] = useState(null);
+  const [reverseModalItem, setReverseModalItem] = useState(null);
+  const [reverseReason, setReverseReason] = useState("");
+  const [isSubmittingReverse, setIsSubmittingReverse] = useState(false);
+  const [editingReportItem, setEditingReportItem] = useState(null);
+  const [editForm, setEditForm] = useState({
+    status: "",
+    remarks: "",
+    resolutionType: "",
+    editReason: "",
+  });
+  const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const [activeActionMenuId, setActiveActionMenuId] = useState(null);
   const [actionMenuCoords, setActionMenuCoords] = useState(null);
   const [summaryModalRow, setSummaryModalRow] = useState(null);
@@ -4824,6 +4262,13 @@ const ServiceCallResponse = () => {
     });
   }, [filteredQueue, loggedInUser]);
 
+  const escalationPaginatedCalls = useMemo(() => {
+    const start = (escalationPage - 1) * escalationPageSize;
+    return myEscalations.slice(start, start + escalationPageSize);
+  }, [myEscalations, escalationPage, escalationPageSize]);
+
+  const escalationTotalPages = Math.ceil(myEscalations.length / escalationPageSize) || 1;
+
   const liveCounts = useMemo(() => {
     const uid = loggedInUser?.userId;
 
@@ -5000,6 +4445,98 @@ const ServiceCallResponse = () => {
         err.response?.data || err.message,
       );
       toast("Failed to assign support request", "error");
+    }
+  };
+
+  // Reverse Escalate handler
+  const handleReverseEscalateInline = async (callId, productIdx, reason) => {
+    setIsSubmittingReverse(true);
+    try {
+      await axios.patch(`${API_URL}/service-calls/${callId}/product/${productIdx}/reverse-escalate`, {
+        userId: loggedInUser?.userId,
+        name: loggedInUser?.name,
+        reason: reason || "Reverse escalated back to previous assignee",
+      });
+      toast("Product reverse-escalated successfully", "success");
+      setReverseModalItem(null);
+      setReverseReason("");
+      await refreshData();
+    } catch (err) {
+      console.error("Failed to reverse escalate:", err);
+      toast(err.response?.data?.message || "Failed to reverse escalate", "error");
+    } finally {
+      setIsSubmittingReverse(false);
+    }
+  };
+
+  const handleOpenReverseEscalate = (call, product, productIdx) => {
+    const hist = product?._escalationHistory || [];
+    let prevName = "";
+    for (let i = hist.length - 1; i >= 0; i--) {
+      const h = hist[i];
+      if (h.assignedTo && h.assignedTo !== loggedInUser?.userId) {
+        prevName = h.engineerName || h.assignedToName || h.assignedTo;
+        break;
+      }
+    }
+    if (!prevName) {
+      prevName = call.registeredByName || call.registeredBy || "Creator";
+    }
+
+    setReverseModalItem({
+      callId: call._id || call.callId || call.id,
+      callNumber: call.callNumber,
+      productIdx,
+      product,
+      previousAssigneeName: prevName,
+    });
+    setReverseReason("");
+  };
+
+  const handleOpenEditReport = (call, product, productIdx) => {
+    const closure = product?._productClosure || {};
+    setEditingReportItem({
+      callId: call._id || call.callId || call.id,
+      callNumber: call.callNumber,
+      productIdx,
+      product,
+    });
+    setEditForm({
+      status: closure.status || (product?._resolved ? "Resolved" : "Pending"),
+      remarks: closure.remarks || "",
+      resolutionType: closure.resolutionType || "",
+      editReason: "",
+    });
+  };
+
+  const handleSaveEditedReport = async () => {
+    if (!editingReportItem) return;
+    if (!editForm.editReason.trim()) {
+      toast("Please provide a reason for editing this report", "error");
+      return;
+    }
+    setIsSubmittingEdit(true);
+    try {
+      await axios.patch(
+        `${API_URL}/service-calls/${editingReportItem.callId}/product/${editingReportItem.productIdx}/edit-report`,
+        {
+          status: editForm.status,
+          remarks: editForm.remarks,
+          resolutionType: editForm.resolutionType,
+          userId: loggedInUser?.userId,
+          name: loggedInUser?.name,
+          role: loggedInUser?.role,
+          editReason: editForm.editReason,
+        }
+      );
+      toast("Report updated successfully", "success");
+      setEditingReportItem(null);
+      await refreshData();
+    } catch (err) {
+      console.error("Failed to edit report:", err);
+      toast("Failed to update report", "error");
+    } finally {
+      setIsSubmittingEdit(false);
     }
   };
 
@@ -5449,71 +4986,380 @@ const ServiceCallResponse = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
               className={
-                activeTab === "self_assigned"
-                  ? "flex-1 min-h-0 flex flex-col overflow-hidden"
-                  : activeTab === "reports"
-                    ? "flex-1 min-h-0 flex flex-col"
-                    : activeTab === "escalation"
-                      ? isAnyExpanded
-                        ? "grid grid-cols-1 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
-                        : "grid grid-cols-1 lg:grid-cols-2 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
-                      : "grid grid-cols-1 lg:grid-cols-2 gap-[0.8vw] items-start flex-1 overflow-y-auto pr-[0.3vw] pb-[2vw]"
+                activeTab === "reports"
+                  ? "flex-1 min-h-0 flex flex-col"
+                  : "flex-1 min-h-0 flex flex-col overflow-hidden"
               }
             >
-              {activeTab === "escalation" &&
-                (myEscalations.length === 0 ? (
-                  <div className="bg-white rounded-[0.8vw] p-[3vw] text-center border border-slate-400 text-slate-650 font-bold shadow-sm col-span-2">
-                    <p>
-                      No valid calls available in your queue to work on at this
-                      moment.
-                    </p>
-                  </div>
-                ) : (
-                  myEscalations.map((e) => (
-                    <EscalationCard
-                      key={e._id || e.callId}
-                      entry={e}
-                      currentUser={loggedInUser}
-                      employees={employees}
-                      timer={timers.find((t) => t.callNumber === e.callNumber)}
-                      isExpanded={!!expandedCalls[e._id || e.callId]}
-                      onToggle={() =>
-                        setExpandedCalls((prev) => ({
-                          ...prev,
-                          [e._id || e.callId]: !prev[e._id || e.callId],
-                        }))
-                      }
-                      onSupportRequest={(p, d) =>
-                        handleSupportRequest(e._id || e.callId, p, d)
-                      }
-                      onAssignFieldVisit={(f, p) =>
-                        handleAssignVisit(e.callId, "Field Visit", f, p)
-                      }
-                      onProductClose={(p, d) =>
-                        handleProductClose(e.callId, p, d)
-                      }
-                      onProductAttend={(pIdx) =>
-                        handleProductAttend(e.callId, pIdx)
-                      }
-                      onEditCall={(call) => {
-                        setEditingCall({
-                          ...call,
-                          id: call._id || call.callId,
-                          products: call.products || [],
-                          _editing: true,
-                        });
-                        setView("form");
-                      }}
-                      onDeleteCall={(call) => {
-                        setDeleteModalState({
-                          isOpen: true,
-                          row: call,
-                        });
-                      }}
-                    />
-                  ))
-                ))}
+              {activeTab === "escalation" && (
+                <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+                  {/* Top Bar for Escalations */}
+                  <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+                    <div className="flex items-center gap-[0.5vw]">
+                      <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-bold text-slate-800">
+                        <Shield className="w-[0.95vw] h-[0.95vw] text-indigo-600" />
+                        Escalated & Assigned Queue
+                      </span>
+                      <span className="text-[0.68vw] bg-indigo-50 border border-indigo-200 text-indigo-700 px-[0.45vw] py-[0.1vw] rounded-full font-bold">
+                        {myEscalations.length} Active Calls
+                      </span>
+                    </div>
 
+                    <div className="text-[0.76vw] text-slate-500 font-medium">
+                      Showing <span className="font-bold text-slate-800">{myEscalations.length}</span> calls
+                    </div>
+                  </div>
+
+                  {/* Table area */}
+                  <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+                    <table className="w-full text-left border-separate border-spacing-0">
+                      <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
+                        <tr className="bg-[#e9edf4]">
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
+                            Date & Time
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
+                            Call No
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
+                            Customer
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[14vw]">
+                            Product / Issue
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                            Error Code
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                            Priority
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8.5vw]">
+                            SLA Timer
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8.5vw]">
+                            Status / Level
+                          </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[10vw]">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {escalationPaginatedCalls.length > 0 ? (
+                          escalationPaginatedCalls.map((row) => {
+                            const allProducts =
+                              row._products?.length > 0
+                                ? row._products
+                                : row.products?.length > 0
+                                  ? row.products
+                                  : [{}];
+
+                            const rowCount = allProducts.length;
+                            const rowId = row.id || row._id || row.callId;
+                            const callTimer = timers.find((t) => t.callNumber === row.callNumber);
+
+                            return allProducts.map((prod, pIdx) => {
+                              const isAttended = prod._attended || row.status === "Resolved";
+                              const isActionable =
+                                (loggedInUser?.department === "Admin" || prod._assignedEngineerId === loggedInUser?.userId) &&
+                                !prod._resolved &&
+                                prod._productClosure?.status !== "Closed";
+
+                              return (
+                                <tr
+                                  key={`${rowId}-${pIdx}`}
+                                  className={`transition-colors ${
+                                    isAttended
+                                      ? "bg-slate-50/50 hover:bg-slate-100/60"
+                                      : "bg-white hover:bg-indigo-50/20"
+                                  }`}
+                                >
+                                  {/* Date & Time */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
+                                    >
+                                      {(() => {
+                                        try {
+                                          const d = new Date(row.dateTime || row.timestamp || row.createdAt);
+                                          if (isNaN(d.getTime())) return row.dateTime || "—";
+                                          const datePart = d.toLocaleDateString("en-GB", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                          });
+                                          const timePart = d.toLocaleTimeString("en-US", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            hour12: true,
+                                          });
+                                          return `${datePart}, ${timePart}`;
+                                        } catch {
+                                          return row.dateTime || "—";
+                                        }
+                                      })()}
+                                    </td>
+                                  )}
+
+                                  {/* Call No */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                    >
+                                      <div className="font-mono text-[0.8vw] font-bold text-slate-800">
+                                        {row.callNumber || row.callNo}
+                                      </div>
+                                      <div className="text-[0.65vw] text-slate-500 font-semibold mt-[0.1vw]">
+                                        {rowCount} Product{rowCount > 1 ? "s" : ""}
+                                      </div>
+                                    </td>
+                                  )}
+
+                                  {/* Customer */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white"
+                                    >
+                                      <div className="font-semibold text-slate-900 text-[0.82vw]">
+                                        {row.customerName || row.partyDescription}
+                                      </div>
+                                      <div className="flex items-center gap-[0.4vw] mt-[0.1vw] flex-wrap">
+                                        {row.partyCode && (
+                                          <span className="text-[0.68vw] text-slate-500 font-mono">
+                                            {row.partyCode}
+                                          </span>
+                                        )}
+                                        {row.customerType && (
+                                          <span
+                                            className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded font-semibold border ${getTypeColor(
+                                              row.customerType,
+                                            )}`}
+                                          >
+                                            {row.customerType}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </td>
+                                  )}
+
+                                  {/* Product / Issue */}
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                                    <div className="font-medium text-slate-850 text-[0.8vw]">
+                                      {prod?.productModel || prod?.itemCode || "—"}
+                                    </div>
+                                    {prod?.serialNumber && (
+                                      <div className="text-[0.68vw] text-slate-500 font-mono">
+                                        SN: {prod.serialNumber}
+                                      </div>
+                                    )}
+                                    {prod?.callDescription && (
+                                      <div className="text-[0.72vw] text-slate-600 line-clamp-1 italic mt-[0.1vw]">
+                                        {prod.callDescription}
+                                      </div>
+                                    )}
+                                  </td>
+
+                                  {/* Error Code */}
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                                    {prod?.errorCode ? (
+                                      <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
+                                        {prod.errorCode}
+                                      </span>
+                                    ) : (
+                                      <span className="text-slate-400 text-[0.76vw]">-</span>
+                                    )}
+                                  </td>
+
+                                  {/* Priority */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
+                                    >
+                                      {(() => {
+                                        const p = row.priority || "Medium";
+                                        let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
+                                        if (p === "Urgent" || p === "Critical")
+                                          badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
+                                        else if (p === "High")
+                                          badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
+                                        else if (p === "Low")
+                                          badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                                        return (
+                                          <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
+                                            {p}
+                                          </span>
+                                        );
+                                      })()}
+                                    </td>
+                                  )}
+
+                                  {/* SLA Timer */}
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                                    {prod._attended ? (
+                                      <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-bold text-[0.74vw] bg-emerald-50 border border-emerald-200 px-[0.5vw] py-[0.15vw] rounded-full">
+                                        <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                        Attended
+                                      </span>
+                                    ) : callTimer ? (
+                                      <span
+                                        className={`inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs ${
+                                          callTimer.isExpired
+                                            ? "bg-rose-100 text-rose-800 border-rose-300 animate-pulse"
+                                            : "bg-amber-100 text-amber-900 border-amber-300"
+                                        }`}
+                                      >
+                                        <Clock className="w-[0.75vw] h-[0.75vw]" />
+                                        {callTimer.remainingFormatted}
+                                      </span>
+                                    ) : row.status === "Critical" ? (
+                                      <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
+                                        <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
+                                      </span>
+                                    ) : (
+                                      <span className="text-slate-400 text-[0.74vw]">—</span>
+                                    )}
+                                  </td>
+
+                                  {/* Status / Level */}
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
+                                    {(() => {
+                                      const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
+                                      return (
+                                        <div>
+                                          <div className="font-semibold text-[0.78vw] text-slate-800">
+                                            {prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated")}
+                                          </div>
+                                          <div className="text-[0.68vw] text-slate-500 font-medium">
+                                            {prod._assignedEngineerName || row.currentEngineerName || "Assigned"}
+                                          </div>
+                                        </div>
+                                      );
+                                    })()}
+                                  </td>
+
+                                  {/* Action Buttons */}
+                                  <td className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                                    <div className="flex items-center justify-center gap-[0.4vw]">
+                                      {/* Primary Attend/Action Button */}
+                                      {isActionable && !prod._attended && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleProductAttend(row.callId || row._id, pIdx)}
+                                          className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.28vw] rounded-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.74vw] shadow-xs active:scale-95 transition-all cursor-pointer"
+                                          title="Attend to halt auto-escalation timer"
+                                        >
+                                          <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                          Attend
+                                        </button>
+                                      )}
+
+                                      {/* Respond / Modal Action */}
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setActiveModalProduct({
+                                            entry: row,
+                                            callId: row.callId || row._id,
+                                            prod,
+                                            pIdx,
+                                          });
+                                        }}
+                                        className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] rounded-[0.4vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-[0.74vw] transition-all cursor-pointer"
+                                        title="Respond or Close Product"
+                                      >
+                                        <Edit3 className="w-[0.72vw] h-[0.72vw]" />
+                                        Respond
+                                      </button>
+
+                                      {/* History button */}
+                                      <button
+                                        type="button"
+                                        onClick={() => setHistoryModalProduct(row)}
+                                        className="p-[0.32vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer"
+                                        title="View Call History"
+                                      >
+                                        <History className="w-[0.95vw] h-[0.95vw]" />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            });
+                          })
+                        ) : (
+                          <tr>
+                            <td colSpan="9" className="text-center py-[3vw] text-slate-500">
+                              <p className="text-[0.9vw] font-bold text-slate-700">No active calls in your escalation queue</p>
+                              <p className="text-[0.75vw] text-slate-400 mt-[0.2vw]">
+                                All assigned escalation tasks have been attended or resolved.
+                              </p>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pagination Footer */}
+                  <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-200 bg-slate-50/50 shrink-0">
+                    <div className="text-[0.75vw] text-slate-600 font-medium">
+                      Showing{" "}
+                      <span className="font-bold text-slate-800">
+                        {myEscalations.length > 0 ? (escalationPage - 1) * escalationPageSize + 1 : 0}
+                      </span>{" "}
+                      to{" "}
+                      <span className="font-bold text-slate-800">
+                        {Math.min(escalationPage * escalationPageSize, myEscalations.length)}
+                      </span>{" "}
+                      of{" "}
+                      <span className="font-bold text-slate-800">
+                        {myEscalations.length}
+                      </span>{" "}
+                      entries
+                    </div>
+                    <div className="flex items-center gap-[0.5vw]">
+                      <button
+                        onClick={() => setEscalationPage((p) => Math.max(1, p - 1))}
+                        disabled={escalationPage === 1}
+                        className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+                      >
+                        <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+                      </button>
+                      <div className="flex gap-[0.3vw]">
+                        {[...Array(escalationTotalPages)].map((_, i) => {
+                          const pNum = i + 1;
+                          return (
+                            <button
+                              key={pNum}
+                              onClick={() => setEscalationPage(pNum)}
+                              className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                                escalationPage === pNum
+                                  ? "bg-indigo-600 text-white shadow-2xs"
+                                  : "bg-white border border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600"
+                              }`}
+                            >
+                              {pNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <button
+                        onClick={() =>
+                          setEscalationPage((p) => Math.min(escalationTotalPages, p + 1))
+                        }
+                        disabled={escalationPage === escalationTotalPages || escalationTotalPages === 0}
+                        className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+                      >
+                        <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               {/* ── Self Assigned Tab: Full Table View ── */}
               {activeTab === "self_assigned" && (
                 <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
@@ -6008,10 +5854,10 @@ const ServiceCallResponse = () => {
                   employees={employees}
                   onProductClose={handleProductClose}
                   onAssignFieldVisit={handleAssignVisit}
-                  expandedCalls={expandedCalls}
-                  setExpandedCalls={setExpandedCalls}
                   onSupportRequest={handleSupportRequest}
                   onProductAttend={handleProductAttend}
+                  onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenHistory={(call) => setHistoryModalProduct(call)}
                 />
               )}
               {activeTab === "support" && (
@@ -6020,12 +5866,12 @@ const ServiceCallResponse = () => {
                   onRefresh={refreshData}
                   queue={filteredQueue}
                   employees={employees}
-                  expandedCalls={expandedCalls}
-                  setExpandedCalls={setExpandedCalls}
                   onProductClose={handleProductClose}
                   onAssignFieldVisit={handleAssignVisit}
                   onSupportRequest={handleSupportRequest}
                   onProductAttend={handleProductAttend}
+                  onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenHistory={(call) => setHistoryModalProduct(call)}
                 />
               )}
               {activeTab === "fieldvisit" && (
@@ -6035,10 +5881,10 @@ const ServiceCallResponse = () => {
                   currentUser={loggedInUser}
                   onRefresh={refreshData}
                   employees={employees}
-                  expandedCalls={expandedCalls}
-                  setExpandedCalls={setExpandedCalls}
                   onAssignFieldVisit={handleAssignVisit}
                   onProductClose={handleProductClose}
+                  onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenHistory={(call) => setHistoryModalProduct(call)}
                 />
               )}
             </motion.div>

@@ -116,8 +116,12 @@ exports.getEscalationFlows = async (req, res) => {
 };
 exports.saveEscalationFlow = async (req, res) => {
   try {
-    const { type, steps } = req.body;
-    const flow = await EscalationFlow.findOneAndUpdate({ type }, { steps }, { upsert: true, new: true });
+    const { type, steps, reverseEscalation } = req.body;
+    const updateDoc = { steps };
+    if (reverseEscalation !== undefined) {
+      updateDoc.reverseEscalation = reverseEscalation;
+    }
+    const flow = await EscalationFlow.findOneAndUpdate({ type }, updateDoc, { upsert: true, new: true });
     res.json(flow);
   } catch (err) { res.status(500).json({ message: err.message }); }
 };

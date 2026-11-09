@@ -70,6 +70,7 @@ router.patch('/field-visit/:id/return', serviceCallController.returnFieldVisit);
 router.patch('/:id/product/:pIdx/close', serviceCallController.closeProduct);
 router.patch('/:id/product/:pIdx/edit-report', serviceCallController.editProductReport);
 router.patch('/:id/product/:pIdx/attend', serviceCallController.attendProduct);
+router.patch('/:id/product/:pIdx/reverse-escalate', serviceCallController.reverseEscalateProduct);
 
 router.get('/',                  serviceCallController.getAllCalls);
 router.post('/',                 serviceCallController.createCall);
