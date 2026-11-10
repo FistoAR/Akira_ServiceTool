@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import {
+  Search,
   Wrench,
+  RotateCcw,
+  CheckSquare,
+  Play,
   CheckCircle,
   Clock,
   MapPin,
@@ -13,7 +17,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AssignVisitModal } from "./AssignVisitModal";
-import { API_URL, RESOLUTION_TYPES } from "./ResponseConstants";
+import { API_URL, RESOLUTION_TYPES, load, EMPLOYEES_KEY } from "./ResponseConstants";
 
 const ProductClosurePanel = ({
   prod,

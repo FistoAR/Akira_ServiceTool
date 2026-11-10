@@ -113,3 +113,4 @@ export const IssueDetailsContainer = ({ product }) => {
     </div>
   );
 };
+

@@ -775,7 +775,182 @@ export default function ServiceCallReports() {
       });
       ws["!cols"] = colWidths;
 
+      // ── Build Summary Report (Registered, Assigned, Escalated, Closed by Day, Week, Month) ──
+      const parseDateSafe = (dStr) => {
+        if (!dStr) return null;
+        const d = new Date(dStr);
+        return isNaN(d.getTime()) ? null : d;
+      };
+
+      const getDayKey = (d) => {
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      };
+
+      const getWeekKey = (d) => {
+        const temp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        const dayNum = temp.getUTCDay() || 7;
+        temp.setUTCDate(temp.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(temp.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil(((temp - yearStart) / 86400000 + 1) / 7);
+        return `${temp.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+      };
+
+      const getMonthKey = (d) => {
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+      };
+
+      const daySummary = {};
+      const weekSummary = {};
+      const monthSummary = {};
+
+      const initBucket = () => ({ registered: 0, assigned: 0, escalated: 0, closed: 0 });
+
+      filteredCalls.forEach((c) => {
+        const cDate = parseDateSafe(c.createdAt || c.dateTime);
+        const prods = c.products && c.products.length > 0 ? c.products : [{}];
+        const callEscHistory = c.escalationHistory || c._escalationHistory || [];
+
+        prods.forEach((p) => {
+          // Dates
+          const regDate = cDate || new Date();
+          const pAttendedOrAssigned = p._assigned || p._attended || p._assignedEngineerName || c.currentEngineerName;
+          const assignDate = parseDateSafe(p._assignedAt || c.assignedAt || c.assignmentDate || regDate);
+
+          const combinedEsc = [...callEscHistory, ...(p._escalationHistory || [])];
+          const isEscalated =
+            combinedEsc.length > 0 ||
+            p._escalationLevel > 0 ||
+            c.escalationLevel > 0 ||
+            p._isCritical ||
+            c.priority === "Critical";
+          const escDate = combinedEsc.length > 0
+            ? parseDateSafe(combinedEsc[0].assignedAt || combinedEsc[0].timestamp || regDate)
+            : regDate;
+
+          const isClosed =
+            p._resolved ||
+            p._productClosure?.status === "Closed" ||
+            p._productClosure?.status === "Resolved";
+          const closeDate = parseDateSafe(
+            p._productClosure?.closedAt || p._productClosure?.date || p._productClosure?.updatedAt
+          );
+
+          // 1. Registered
+          const dKey = getDayKey(regDate);
+          const wKey = getWeekKey(regDate);
+          const mKey = getMonthKey(regDate);
+
+          if (!daySummary[dKey]) daySummary[dKey] = initBucket();
+          if (!weekSummary[wKey]) weekSummary[wKey] = initBucket();
+          if (!monthSummary[mKey]) monthSummary[mKey] = initBucket();
+
+          daySummary[dKey].registered += 1;
+          weekSummary[wKey].registered += 1;
+          monthSummary[mKey].registered += 1;
+
+          // 2. Assigned
+          if (pAttendedOrAssigned && assignDate) {
+            const adKey = getDayKey(assignDate);
+            const awKey = getWeekKey(assignDate);
+            const amKey = getMonthKey(assignDate);
+            if (!daySummary[adKey]) daySummary[adKey] = initBucket();
+            if (!weekSummary[awKey]) weekSummary[awKey] = initBucket();
+            if (!monthSummary[amKey]) monthSummary[amKey] = initBucket();
+            daySummary[adKey].assigned += 1;
+            weekSummary[awKey].assigned += 1;
+            monthSummary[amKey].assigned += 1;
+          }
+
+          // 3. Escalated
+          if (isEscalated && escDate) {
+            const edKey = getDayKey(escDate);
+            const ewKey = getWeekKey(escDate);
+            const emKey = getMonthKey(escDate);
+            if (!daySummary[edKey]) daySummary[edKey] = initBucket();
+            if (!weekSummary[ewKey]) weekSummary[ewKey] = initBucket();
+            if (!monthSummary[emKey]) monthSummary[emKey] = initBucket();
+            daySummary[edKey].escalated += 1;
+            weekSummary[ewKey].escalated += 1;
+            monthSummary[emKey].escalated += 1;
+          }
+
+          // 4. Closed
+          if (isClosed && closeDate) {
+            const cdKey = getDayKey(closeDate);
+            const cwKey = getWeekKey(closeDate);
+            const cmKey = getMonthKey(closeDate);
+            if (!daySummary[cdKey]) daySummary[cdKey] = initBucket();
+            if (!weekSummary[cwKey]) weekSummary[cwKey] = initBucket();
+            if (!monthSummary[cmKey]) monthSummary[cmKey] = initBucket();
+            daySummary[cdKey].closed += 1;
+            weekSummary[cwKey].closed += 1;
+            monthSummary[cmKey].closed += 1;
+          }
+        });
+      });
+
+      // Format Summary Sheet rows
+      const summaryRows = [];
+
+      // Section 1: Daily Summary
+      summaryRows.push({ "Period Type": "DAILY SUMMARY", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
+      Object.keys(daySummary).sort().reverse().forEach((k) => {
+        summaryRows.push({
+          "Period Type": "Day",
+          "Period": k,
+          "Registered": daySummary[k].registered,
+          "Assigned": daySummary[k].assigned,
+          "Escalated": daySummary[k].escalated,
+          "Closed": daySummary[k].closed,
+        });
+      });
+
+      // Space
+      summaryRows.push({ "Period Type": "", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
+
+      // Section 2: Weekly Summary
+      summaryRows.push({ "Period Type": "WEEKLY SUMMARY", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
+      Object.keys(weekSummary).sort().reverse().forEach((k) => {
+        summaryRows.push({
+          "Period Type": "Week",
+          "Period": k,
+          "Registered": weekSummary[k].registered,
+          "Assigned": weekSummary[k].assigned,
+          "Escalated": weekSummary[k].escalated,
+          "Closed": weekSummary[k].closed,
+        });
+      });
+
+      // Space
+      summaryRows.push({ "Period Type": "", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
+
+      // Section 3: Monthly Summary
+      summaryRows.push({ "Period Type": "MONTHLY SUMMARY", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
+      Object.keys(monthSummary).sort().reverse().forEach((k) => {
+        summaryRows.push({
+          "Period Type": "Month",
+          "Period": k,
+          "Registered": monthSummary[k].registered,
+          "Assigned": monthSummary[k].assigned,
+          "Escalated": monthSummary[k].escalated,
+          "Closed": monthSummary[k].closed,
+        });
+      });
+
+      const summaryWs = XLSX.utils.json_to_sheet(summaryRows);
+      summaryWs["!cols"] = [
+        { wch: 22 },
+        { wch: 18 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 14 },
+        { wch: 14 },
+      ];
+
       const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, summaryWs, "Summary Report");
       XLSX.utils.book_append_sheet(wb, ws, "Service Calls Report");
       XLSX.writeFile(wb, `Service_Call_Reports_${getTodayStr()}.xlsx`);
       toast("Excel report downloaded successfully", "success");

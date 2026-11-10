@@ -92,3 +92,4 @@ export const PROD_STATUS_CFG = {
     cls: "bg-rose-50/70 border-rose-350 text-rose-800",
   },
 };
+

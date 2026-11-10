@@ -5,7 +5,8 @@ import {
   Eye,
   History,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  HelpCircle
 } from "lucide-react";
 import { getTypeColor } from "../ServiceCall";
 

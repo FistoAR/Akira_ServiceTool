@@ -208,3 +208,4 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
     </div>
   );
 };
+

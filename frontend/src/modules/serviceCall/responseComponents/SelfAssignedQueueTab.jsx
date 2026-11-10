@@ -12,7 +12,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
-import { getTypeColor, getStatusCfg } from "../ServiceCall";
+import { getTypeColor, getStatusCfg, deriveCallStatus } from "../ServiceCall";
 
 export const SelfAssignedQueueTab = ({
   selfAssignedRawCalls,
@@ -23,7 +23,7 @@ export const SelfAssignedQueueTab = ({
   selfAssignedPage,
   selfAssignedTotalPages,
   selfAssignedPageSize,
-  selfAssignedFiltered,
+  selfAssignedFilteredCalls = [],
   loggedInUser,
   employees,
   activeActionMenuId,
@@ -36,7 +36,8 @@ export const SelfAssignedQueueTab = ({
   setEditingReportItem,
   setEditForm,
   handleDeleteCall,
-  handleOpenEditCall,
+  setEditingCall,
+  setView,
 }) => {
   return (
                 <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">

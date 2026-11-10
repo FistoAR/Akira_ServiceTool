@@ -137,6 +137,9 @@ const getNotificationVisuals = (notification) => {
 
 const NotificationsDropdown = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+
   const handleNotificationClick = (n) => {
     if (!n.isRead) markAsRead(n._id);
     setSelectedNotification(n);

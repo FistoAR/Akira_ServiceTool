@@ -144,3 +144,4 @@ export const ProductSLATimer = ({ product, globalTimer }) => {
     </div>
   );
 };
+

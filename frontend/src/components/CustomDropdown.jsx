@@ -168,26 +168,32 @@ const CustomDropdown = ({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       if (filteredOptions.length === 0) return;
-      setHighlightedIndex((prev) => {
-        let next = prev < 0 ? 0 : prev + 1;
-        while (next < filteredOptions.length && filteredOptions[next].disabled) {
-          next++;
+      let nextIdx = highlightedIndex < 0 ? 0 : highlightedIndex + 1;
+      while (nextIdx < filteredOptions.length && filteredOptions[nextIdx].disabled) {
+        nextIdx++;
+      }
+      if (nextIdx < filteredOptions.length) {
+        setHighlightedIndex(nextIdx);
+        if (!multiple) {
+          onChange?.(filteredOptions[nextIdx].value, filteredOptions[nextIdx]);
         }
-        return next < filteredOptions.length ? next : prev >= 0 ? prev : 0;
-      });
+      }
       return;
     }
 
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (filteredOptions.length === 0) return;
-      setHighlightedIndex((prev) => {
-        let next = prev < 0 ? filteredOptions.length - 1 : prev - 1;
-        while (next >= 0 && filteredOptions[next].disabled) {
-          next--;
+      let nextIdx = highlightedIndex < 0 ? filteredOptions.length - 1 : highlightedIndex - 1;
+      while (nextIdx >= 0 && filteredOptions[nextIdx].disabled) {
+        nextIdx--;
+      }
+      if (nextIdx >= 0) {
+        setHighlightedIndex(nextIdx);
+        if (!multiple) {
+          onChange?.(filteredOptions[nextIdx].value, filteredOptions[nextIdx]);
         }
-        return next >= 0 ? next : prev >= 0 ? prev : 0;
-      });
+      }
       return;
     }
 
