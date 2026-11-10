@@ -621,7 +621,7 @@ export const EscalationQueueTab = ({
                   onChange={(e) => setNewAssignee(e.target.value)}
                   className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 bg-white"
                 >
-                  <option value="">-- Keep Current Assignee (Cancel Timer Only) --</option>
+                  <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
                   {(employees || []).map((emp) => (
                     <option key={emp.userId} value={emp.userId}>
                       {emp.name} ({emp.department || "Service"})

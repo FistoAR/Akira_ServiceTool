@@ -173,10 +173,12 @@ exports.getCustomerHistory = async (req, res) => {
 };
 
 // ── GET /api/service-calls/pending ───────────────────────────────────────────
-// Returns calls that have at least one product that is un-assigned.
+// Returns calls that have at least one product that is un-assigned or returned for re-assignment.
 exports.getPendingAssignments = async (req, res) => {
   try {
-    const calls = await ServiceCall.find({ status: 'Registered' }).lean().sort({ createdAt: -1 });
+    const calls = await ServiceCall.find({
+      status: { $in: ['Registered', 'Pending Assignment'] }
+    }).lean().sort({ createdAt: -1 });
     res.json(calls);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -626,8 +628,9 @@ exports.cancelEscalationProduct = async (req, res) => {
       }
     });
 
-    // If Admin immediately re-assigned to someone else
+    // If Admin immediately re-assigned to someone else in modal
     if (newAssigneeId) {
+      prod._assigned = true;
       prod._assignedEngineerId = newAssigneeId;
       prod._assignedEngineerName = newAssigneeName || 'Engineer';
       prod._assignedDepartment = newDepartment || prod._assignedDepartment;
@@ -662,6 +665,23 @@ exports.cancelEscalationProduct = async (req, res) => {
         call.currentEngineerId = newAssigneeId;
         call.currentEngineerName = newAssigneeName;
         call.currentDepartment = newDepartment || call.currentDepartment;
+      }
+    } else {
+      // No new assignee specified -> Mark product unassigned so it returns to Call Assignment page
+      prod._assigned = false;
+      prod._assignedEngineerId = null;
+      prod._assignedEngineerName = null;
+      prod._assignedDepartment = null;
+      prod._deadline = null;
+      prod._alerted50 = false;
+      prod._attended = false;
+
+      // Update call-level status if all active products are now unassigned
+      const anyOtherAssigned = (call.products || []).some((p, i) => i !== Number(pIdx) && p._assigned && !p._resolved);
+      if (!anyOtherAssigned) {
+        call.status = 'Pending Assignment';
+        call.currentEngineerId = null;
+        call.currentEngineerName = null;
       }
     }
 

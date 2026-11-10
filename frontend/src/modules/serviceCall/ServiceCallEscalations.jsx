@@ -624,7 +624,7 @@ const ServiceCallEscalations = () => {
                   </span>
                 </div>
                 <p className="text-[0.72vw] text-slate-600 leading-relaxed">
-                  Cancelling the escalation will stop the SLA timer and remove the call from the active escalating queue.
+                  Cancelling the escalation stops the timer and immediately returns the call to the <strong>Call Assignment page</strong> so Admin can reassign it.
                 </p>
               </div>
 
@@ -652,7 +652,7 @@ const ServiceCallEscalations = () => {
                     onChange={(e) => setNewAssignee(e.target.value)}
                     className="w-full px-[0.75vw] py-[0.5vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-slate-900 font-semibold bg-white cursor-pointer transition-all"
                   >
-                    <option value="">-- Keep Current Assignee (Halt Timer Only) --</option>
+                    <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
                     {(employees || []).map((emp) => (
                       <option key={emp.userId} value={emp.userId}>
                         {emp.name} ({emp.department || "Service"})
