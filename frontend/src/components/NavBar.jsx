@@ -124,7 +124,7 @@ const NavBar = ({ type }) => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <div className="w-full h-full bg-indigo-600 flex items-center justify-center">
                       <span className="text-white text-[0.65vw] font-bold select-none">
                         {loggedInUser ? getInitials(loggedInUser.name) : "U"}
                       </span>
@@ -134,154 +134,119 @@ const NavBar = ({ type }) => {
 
                 {/* Profile Dropdown */}
                 {showProfile && loggedInUser && (
-                  <div className="absolute right-0 mt-[0.6vw] w-[20vw] bg-white rounded-[1.2vw] shadow-[0_20px_50px_-12px_rgba(15,23,42,0.25)] border border-slate-200/90 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
-                    {/* Header with modern deep gradient & subtle glass accent */}
-                    <div className="relative bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 px-[1.2vw] pt-[1.2vw] pb-[1.4vw] overflow-hidden">
-                      {/* Decorative ambient blurred blobs */}
-                      <div className="absolute -top-[1.5vw] -right-[1.5vw] w-[5vw] h-[5vw] bg-white/10 rounded-full blur-xl pointer-events-none" />
-                      <div className="absolute -bottom-[2vw] -left-[1vw] w-[6vw] h-[6vw] bg-purple-400/20 rounded-full blur-xl pointer-events-none" />
-
-                      <div className="relative flex items-center gap-[0.9vw]">
-                        <div className="relative shrink-0">
-                          <div className="w-[3.4vw] h-[3.4vw] rounded-full bg-white/20 backdrop-blur-md p-[0.15vw] border-2 border-white/50 shadow-md flex items-center justify-center overflow-hidden">
-                            {loggedInUser.profilePicture ? (
-                              <img 
-                                src={loggedInUser.profilePicture} 
-                                alt="Profile Large" 
-                                className="w-full h-full object-cover rounded-full"
-                              />
-                            ) : (
-                              <span className="text-white text-[1.1vw] font-black tracking-wider">
-                                {getInitials(loggedInUser.name)}
-                              </span>
-                            )}
-                          </div>
-                          {/* Online status indicator */}
-                          <span className="absolute bottom-0 right-0 w-[0.8vw] h-[0.8vw] bg-emerald-500 border-2 border-indigo-700 rounded-full shadow-xs" title="Online" />
+                  <div className="absolute right-0 mt-[0.6vw] w-[19vw] bg-white rounded-[1vw] shadow-[0_12px_40px_-8px_rgba(15,23,42,0.18)] border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
+                    {/* Header: Clean solid white with soft slate divider */}
+                    <div className="p-[1.1vw] bg-white border-b border-slate-100 flex items-center gap-[0.85vw]">
+                      <div className="relative shrink-0">
+                        <div className="w-[3.2vw] h-[3.2vw] rounded-full bg-slate-100 border border-slate-200 shadow-2xs flex items-center justify-center overflow-hidden">
+                          {loggedInUser.profilePicture ? (
+                            <img 
+                              src={loggedInUser.profilePicture} 
+                              alt="Profile Large" 
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-indigo-650 text-[1.1vw] font-bold tracking-wider">
+                              {getInitials(loggedInUser.name)}
+                            </span>
+                          )}
                         </div>
+                        {/* Status dot */}
+                        <span className="absolute bottom-0 right-0 w-[0.75vw] h-[0.75vw] bg-emerald-500 border-2 border-white rounded-full shadow-2xs" />
+                      </div>
 
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-[0.35vw]">
-                            <h3 className="text-white text-[1.05vw] font-bold leading-tight truncate">
-                              {loggedInUser.name}
-                            </h3>
-                            <span title="Verified Employee">
-                              <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-emerald-300 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-[0.35vw]">
+                          <h3 className="text-slate-900 text-[1vw] font-bold leading-tight truncate">
+                            {loggedInUser.name}
+                          </h3>
+                          <span title="Verified User">
+                            <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-indigo-600 shrink-0" />
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-[0.35vw] mt-[0.25vw] flex-wrap">
+                          <span className="inline-flex items-center px-[0.45vw] py-[0.1vw] rounded-[0.3vw] text-[0.62vw] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            {loggedInUser.department || "Staff"}
+                          </span>
+                          {loggedInUser.role && (
+                            <span className="text-[0.6vw] font-bold text-slate-500 uppercase tracking-wider bg-slate-100 border border-slate-200 px-[0.35vw] py-[0.08vw] rounded-[0.3vw]">
+                              {loggedInUser.role}
                             </span>
-                          </div>
-                          <div className="flex items-center gap-[0.4vw] mt-[0.3vw] flex-wrap">
-                            <span
-                              className={`inline-flex items-center px-[0.55vw] py-[0.15vw] rounded-full text-[0.62vw] font-bold tracking-wide shadow-xs bg-white/95 text-indigo-800 backdrop-blur-xs`}
-                            >
-                              {loggedInUser.department || "General Staff"}
-                            </span>
-                            {loggedInUser.role && (
-                              <span className="text-[0.6vw] font-semibold text-white/80 uppercase tracking-wider bg-black/20 px-[0.4vw] py-[0.1vw] rounded-full">
-                                {loggedInUser.role}
-                              </span>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
 
-                    {/* Details section */}
-                    <div className="p-[0.9vw] space-y-[0.45vw] bg-slate-50/50">
+                    {/* Information Grid Rows */}
+                    <div className="p-[0.8vw] divide-y divide-slate-100 text-[0.78vw]">
                       {/* Employee ID */}
-                      <div className="flex items-center gap-[0.7vw] p-[0.6vw] rounded-[0.8vw] bg-white border border-slate-150 hover:border-indigo-200 hover:shadow-xs transition-all group">
-                        <div className="w-[2.2vw] h-[2.2vw] rounded-[0.6vw] bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 group-hover:scale-105 transition-transform">
-                          <IdCard className="w-[1.1vw] h-[1.1vw]" />
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
+                        <div className="flex items-center gap-[0.55vw] text-slate-500">
+                          <IdCard className="w-[0.95vw] h-[0.95vw] text-slate-400" />
+                          <span className="text-[0.7vw] font-medium text-slate-500">Employee ID</span>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[0.6vw] text-slate-400 font-bold uppercase tracking-wider">
-                            Employee ID
-                          </p>
-                          <p className="text-[0.82vw] text-slate-800 font-bold font-mono tracking-tight mt-[0.05vw]">
-                            {loggedInUser.userId || "—"}
-                          </p>
-                        </div>
+                        <span className="font-semibold text-slate-800 font-mono text-[0.76vw]">
+                          {loggedInUser.userId || "—"}
+                        </span>
                       </div>
 
                       {/* Full Name */}
-                      <div className="flex items-center gap-[0.7vw] p-[0.6vw] rounded-[0.8vw] bg-white border border-slate-150 hover:border-emerald-200 hover:shadow-xs transition-all group">
-                        <div className="w-[2.2vw] h-[2.2vw] rounded-[0.6vw] bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 group-hover:scale-105 transition-transform">
-                          <User className="w-[1.1vw] h-[1.1vw]" />
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
+                        <div className="flex items-center gap-[0.55vw] text-slate-500">
+                          <User className="w-[0.95vw] h-[0.95vw] text-slate-400" />
+                          <span className="text-[0.7vw] font-medium text-slate-500">Full Name</span>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[0.6vw] text-slate-400 font-bold uppercase tracking-wider">
-                            Full Name
-                          </p>
-                          <p className="text-[0.82vw] text-slate-800 font-bold truncate mt-[0.05vw]">
-                            {loggedInUser.name || "—"}
-                          </p>
-                        </div>
+                        <span className="font-semibold text-slate-800 truncate max-w-[10vw]">
+                          {loggedInUser.name || "—"}
+                        </span>
                       </div>
 
                       {/* Department */}
-                      <div className="flex items-center gap-[0.7vw] p-[0.6vw] rounded-[0.8vw] bg-white border border-slate-150 hover:border-purple-200 hover:shadow-xs transition-all group">
-                        <div className="w-[2.2vw] h-[2.2vw] rounded-[0.6vw] bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 border border-purple-100 group-hover:scale-105 transition-transform">
-                          <Building2 className="w-[1.1vw] h-[1.1vw]" />
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
+                        <div className="flex items-center gap-[0.55vw] text-slate-500">
+                          <Building2 className="w-[0.95vw] h-[0.95vw] text-slate-400" />
+                          <span className="text-[0.7vw] font-medium text-slate-500">Department</span>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[0.6vw] text-slate-400 font-bold uppercase tracking-wider">
-                            Department
-                          </p>
-                          <p className="text-[0.82vw] text-slate-800 font-bold truncate mt-[0.05vw]">
-                            {loggedInUser.department || "—"}
-                          </p>
-                        </div>
+                        <span className="font-semibold text-slate-800 truncate max-w-[10vw]">
+                          {loggedInUser.department || "—"}
+                        </span>
                       </div>
 
-                      {/* Email Address */}
+                      {/* Email */}
                       {loggedInUser.email && (
-                        <div className="flex items-center gap-[0.7vw] p-[0.6vw] rounded-[0.8vw] bg-white border border-slate-150 hover:border-amber-200 hover:shadow-xs transition-all group">
-                          <div className="w-[2.2vw] h-[2.2vw] rounded-[0.6vw] bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 group-hover:scale-105 transition-transform">
-                            <Mail className="w-[1.1vw] h-[1.1vw]" />
+                        <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
+                          <div className="flex items-center gap-[0.55vw] text-slate-500">
+                            <Mail className="w-[0.95vw] h-[0.95vw] text-slate-400" />
+                            <span className="text-[0.7vw] font-medium text-slate-500">Email</span>
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-[0.6vw] text-slate-400 font-bold uppercase tracking-wider">
-                              Email Address
-                            </p>
-                            <p className="text-[0.8vw] text-slate-800 font-bold truncate mt-[0.05vw] font-mono">
-                              {loggedInUser.email}
-                            </p>
-                          </div>
+                          <span className="font-semibold text-slate-800 font-mono text-[0.73vw] truncate max-w-[11vw]" title={loggedInUser.email}>
+                            {loggedInUser.email}
+                          </span>
                         </div>
                       )}
 
-                      {/* Date of Birth */}
+                      {/* DOB */}
                       {loggedInUser.dob && (
-                        <div className="flex items-center gap-[0.7vw] p-[0.6vw] rounded-[0.8vw] bg-white border border-slate-150 hover:border-pink-200 hover:shadow-xs transition-all group">
-                          <div className="w-[2.2vw] h-[2.2vw] rounded-[0.6vw] bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 border border-pink-100 group-hover:scale-105 transition-transform">
-                            <Gift className="w-[1.1vw] h-[1.1vw]" />
+                        <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
+                          <div className="flex items-center gap-[0.55vw] text-slate-500">
+                            <Gift className="w-[0.95vw] h-[0.95vw] text-slate-400" />
+                            <span className="text-[0.7vw] font-medium text-slate-500">Date of Birth</span>
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-[0.6vw] text-slate-400 font-bold uppercase tracking-wider">
-                              Date of Birth
-                            </p>
-                            <p className="text-[0.82vw] text-slate-800 font-bold mt-[0.05vw]">
-                              {formatDate(loggedInUser.dob)}
-                            </p>
-                          </div>
+                          <span className="font-semibold text-slate-800">
+                            {formatDate(loggedInUser.dob)}
+                          </span>
                         </div>
                       )}
                     </div>
 
-                    {/* Footer / Sign Out Section */}
-                    <div className="p-[0.9vw] pt-[0.6vw] bg-white border-t border-slate-200/80">
+                    {/* Sign Out CTA */}
+                    <div className="p-[0.7vw] bg-slate-50/70 border-t border-slate-100">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-between p-[0.6vw] rounded-[0.8vw] text-rose-600 bg-rose-50/70 hover:bg-rose-100/90 border border-rose-200/80 transition-all duration-200 group cursor-pointer shadow-xs hover:shadow-sm"
+                        className="w-full flex items-center justify-center gap-[0.5vw] py-[0.45vw] px-[0.8vw] rounded-[0.6vw] text-rose-600 hover:text-rose-700 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 transition-all duration-150 cursor-pointer text-[0.78vw] font-semibold shadow-2xs hover:shadow-xs group"
                       >
-                        <div className="flex items-center gap-[0.6vw]">
-                          <div className="w-[2vw] h-[2vw] rounded-[0.5vw] bg-white shadow-2xs flex items-center justify-center text-rose-600 group-hover:scale-110 group-hover:text-rose-700 transition-all">
-                            <LogOut className="w-[1vw] h-[1vw]" />
-                          </div>
-                          <span className="text-[0.82vw] font-bold text-rose-700">
-                            Sign Out
-                          </span>
-                        </div>
-                        <ChevronRight className="w-[0.9vw] h-[0.9vw] text-rose-400 group-hover:translate-x-1 transition-transform" />
+                        <LogOut className="w-[0.95vw] h-[0.95vw] group-hover:-translate-x-0.5 transition-transform" />
+                        <span>Sign Out</span>
                       </button>
                     </div>
                   </div>
