@@ -149,7 +149,7 @@ export default function ServiceCallReports() {
     );
   }, [currentUser]);
 
-  // View state: "registered" | "escalations" | "assignments"
+  // View state: "registered" | "escalations" | "assignments" | "employees"
   const [activeMainView, setActiveMainView] = useState("registered");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
@@ -408,6 +408,46 @@ export default function ServiceCallReports() {
     return list;
   }, [filteredCalls]);
 
+  // Employee Report Aggregation
+  const employeeReportData = useMemo(() => {
+    return employees
+      .filter((emp) => emp.role?.toLowerCase() !== "admin")
+      .map((emp) => {
+        const empCalls = filteredCalls.filter((call) =>
+          (call.products || []).some(
+            (p) =>
+              p._assignedEngineerId === emp.userId ||
+              p._supportPersonId === emp.userId ||
+              p._fieldVisit?.assignedTo === emp.userId ||
+              p._fieldVisit?.assignedBy === emp.userId ||
+              call.registeredBy === emp.userId,
+          ),
+        );
+
+        const closedCount = empCalls.reduce((acc, call) => {
+          const cProds = (call.products || []).filter(
+            (p) =>
+              (p._assignedEngineerId === emp.userId ||
+                p._supportPersonId === emp.userId ||
+                p._fieldVisit?.assignedTo === emp.userId) &&
+              (p._resolved ||
+                p._productClosure?.status === "Closed" ||
+                p._productClosure?.status === "Resolved"),
+          );
+          return acc + cProds.length;
+        }, 0);
+
+        return {
+          ...emp,
+          totalAssigned: empCalls.length,
+          closedCount,
+          pendingCount: Math.max(0, empCalls.length - closedCount),
+          calls: empCalls,
+        };
+      })
+      .sort((a, b) => b.totalAssigned - a.totalAssigned);
+  }, [employees, filteredCalls]);
+
   // Assignment Report (Per User Analytics) Aggregation
   const assignmentReportData = useMemo(() => {
     return employees
@@ -544,6 +584,9 @@ export default function ServiceCallReports() {
     if (activeMainView === "assignments") {
       return selectedEmployee ? selectedEmployeeCalls : assignmentReportData;
     }
+    if (activeMainView === "employees") {
+      return selectedEmployee ? selectedEmployeeCalls : employeeReportData;
+    }
     return filteredCalls;
   }, [
     activeMainView,
@@ -552,6 +595,7 @@ export default function ServiceCallReports() {
     selectedEmployee,
     selectedEmployeeCalls,
     assignmentReportData,
+    employeeReportData,
   ]);
 
   const paginatedData = useMemo(() => {
@@ -787,13 +831,31 @@ export default function ServiceCallReports() {
             }}
             className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
               activeMainView === "assignments"
-                ? "bg-teal-600 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
             }`}
           >
             <UserCheck className="w-[0.9vw] h-[0.9vw]" />
             <span>Assignment Report ({assignmentReportData.length})</span>
           </button>
+
+          {isAdmin && (
+            <button
+              onClick={() => {
+                setActiveMainView("employees");
+                setSelectedEmployee(null);
+                setCurrentPage(1);
+              }}
+              className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
+                activeMainView === "employees"
+                  ? "bg-teal-600 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              }`}
+            >
+              <Users className="w-[0.9vw] h-[0.9vw]" />
+              <span>Employee Overview ({employees.length})</span>
+            </button>
+          )}
         </div>
 
         {/* Global Controls & Filters */}
@@ -1409,6 +1471,434 @@ export default function ServiceCallReports() {
 
             {/* VIEW 3: Assignment Report (Per User Analytics) */}
             {activeMainView === "assignments" && (
+              <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                {!selectedEmployee ? (
+                  <div className="flex-1 overflow-auto">
+                    <table className="w-full text-left border-collapse min-w-[70vw]">
+                      <thead className="sticky top-0 bg-[#f8fafc] z-10 border-b border-slate-200 text-slate-500 uppercase font-bold tracking-wider text-[0.68vw]">
+                        <tr>
+                          <th className="py-[0.7vw] px-[0.8vw] w-[3.5vw] text-center whitespace-nowrap">#</th>
+                          <th className="py-[0.7vw] px-[0.8vw] whitespace-nowrap">User</th>
+                          <th className="py-[0.7vw] px-[0.8vw] whitespace-nowrap">Department</th>
+                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Calls</th>
+                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Self Assigned</th>
+                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Open</th>
+                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Closed</th>
+                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Avg Response</th>
+                          <th className="py-[0.7vw] px-[0.8vw] text-right pr-[1.2vw] w-[8vw] whitespace-nowrap">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-[0.78vw]">
+                        {paginatedData.length === 0 ? (
+                          <tr>
+                            <td colSpan={9} className="py-[4vw] text-center text-slate-400 font-medium">
+                              No assignment records found.
+                            </td>
+                          </tr>
+                        ) : (
+                          paginatedData.map((emp, idx) => (
+                            <tr
+                              key={emp.userId || idx}
+                              className="hover:bg-slate-50/80 transition-colors group"
+                            >
+                              {/* Index */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-center font-medium text-slate-400 whitespace-nowrap text-[0.72vw]">
+                                {(currentPage - 1) * rowsPerPage + idx + 1}
+                              </td>
+
+                              {/* User */}
+                              <td className="py-[0.65vw] px-[0.8vw] whitespace-nowrap">
+                                <div className="flex items-center gap-[0.6vw]">
+                                  <div className="w-[1.9vw] h-[1.9vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex items-center justify-center font-bold text-[0.75vw] shrink-0">
+                                    {emp.name.charAt(0).toUpperCase()}
+                                  </div>
+                                  <div>
+                                    <div className="font-semibold text-slate-800 leading-tight">{emp.name}</div>
+                                    <div className="text-[0.68vw] text-slate-400 font-mono">{emp.userId}</div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              {/* Department */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-slate-500 whitespace-nowrap font-medium text-[0.75vw]">
+                                {emp.department || "—"}
+                              </td>
+
+                              {/* Calls */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
+                                <span className={`font-semibold ${emp.callsPerUser > 0 ? "text-slate-800" : "text-slate-300"}`}>
+                                  {emp.callsPerUser}
+                                </span>
+                              </td>
+
+                              {/* Self Assigned */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
+                                <span className={`font-semibold ${emp.selfAssignedCount > 0 ? "text-indigo-600" : "text-slate-300"}`}>
+                                  {emp.selfAssignedCount}
+                                </span>
+                              </td>
+
+                              {/* Open */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
+                                <span className={`font-semibold ${emp.openCount > 0 ? "text-amber-600 font-bold" : "text-slate-300"}`}>
+                                  {emp.openCount}
+                                </span>
+                              </td>
+
+                              {/* Closed */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
+                                <span className={`font-semibold ${emp.closedCount > 0 ? "text-emerald-600 font-bold" : "text-slate-300"}`}>
+                                  {emp.closedCount}
+                                </span>
+                              </td>
+
+                              {/* Avg Response */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
+                                {emp.avgResponseTime !== "—" ? (
+                                  <span className="font-mono text-slate-700 text-[0.72vw] font-medium">
+                                    {emp.avgResponseTime}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-300">—</span>
+                                )}
+                              </td>
+
+                              {/* Action */}
+                              <td className="py-[0.65vw] px-[0.8vw] text-right pr-[1.2vw] whitespace-nowrap">
+                                <button
+                                  onClick={() => {
+                                    setSelectedEmployee(emp);
+                                    setCurrentPage(1);
+                                  }}
+                                  disabled={emp.callsPerUser === 0}
+                                  className={`inline-flex items-center gap-[0.2vw] px-[0.55vw] py-[0.25vw] rounded-[0.35vw] font-semibold text-[0.72vw] transition-all cursor-pointer ${
+                                    emp.callsPerUser > 0
+                                      ? "text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 border border-transparent hover:border-indigo-100"
+                                      : "text-slate-300 cursor-not-allowed"
+                                  }`}
+                                >
+                                  <span>View</span>
+                                  <ChevronRight className="w-[0.75vw] h-[0.75vw]" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  /* Drilldown view for selected employee calls */
+                  <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                    <div className="px-[1vw] py-[0.6vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
+                      <div className="flex items-center gap-[0.7vw]">
+                        <button
+                          onClick={() => {
+                            setSelectedEmployee(null);
+                            setCurrentPage(1);
+                          }}
+                          className="p-[0.4vw] bg-white border border-slate-300 rounded-[0.4vw] text-slate-600 hover:bg-slate-100 cursor-pointer"
+                        >
+                          <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
+                        </button>
+                        <div>
+                          <span className="text-[0.9vw] font-bold text-slate-800">
+                            {selectedEmployee.name}
+                          </span>
+                          <span className="text-[0.72vw] text-slate-500 ml-[0.5vw]">
+                            ({selectedEmployee.department}) • {selectedEmployeeCalls.length} Assigned Calls
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-auto">
+                      <table className="w-full text-left border-collapse min-w-[75vw]">
+                        <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                          <tr>
+                            <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Type</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Registered</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Assigned</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Closed</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
+                            <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                          {paginatedData.map((call, cIdx) => {
+                            const prods = call.products && call.products.length > 0 ? call.products : [{}];
+                            const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
+                            return prods.map((prod, pIdx) => {
+                              const pStatus = getCallProductStatus(prod, call.status);
+                              const cfg = getStatusCfg(pStatus);
+                              const isClosed =
+                                prod._resolved ||
+                                prod._productClosure?.status === "Closed" ||
+                                prod._productClosure?.status === "Resolved";
+
+                              return (
+                                <tr key={`${call._id}-${pIdx}`} className="hover:bg-slate-50 transition-colors">
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 bg-white whitespace-nowrap"
+                                    >
+                                      {callSno}
+                                    </td>
+                                  )}
+                                  <td className="p-[0.7vw] border-r border-slate-200 font-mono font-bold text-indigo-700 whitespace-nowrap">
+                                    {call.callNumber}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">
+                                    <span className={`px-[0.5vw] py-[0.12vw] rounded text-[0.72vw] font-bold ${
+                                      call.noEscalation ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"
+                                    }`}>
+                                      {call.noEscalation ? "Self Assigned" : "Registered Call"}
+                                    </span>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[12vw]">
+                                    <div className="font-bold text-slate-800 truncate">{call.customerName}</div>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[14vw]">
+                                    <div className="font-semibold text-slate-800 truncate">
+                                      {prod.productModel || prod.itemCode || "—"}
+                                    </div>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-600">
+                                    {fmtDateTime(call.createdAt)}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-indigo-700 font-semibold">
+                                    {fmtDateTime(prod._assignedAt || call.createdAt)}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-emerald-700 font-semibold">
+                                    {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-bold text-slate-700">
+                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full shrink-0 ${cfg.dot}`} />
+                                      {cfg.label}
+                                    </span>
+                                  </td>
+                                  <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                    <div className="flex items-center justify-center gap-[0.35vw]">
+                                      <button
+                                        onClick={() => setSelectedInfoCall(call)}
+                                        title="View Full Call Details"
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                      >
+                                        <Info className="w-[0.8vw] h-[0.8vw]" />
+                                        Info
+                                      </button>
+                                      <button
+                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                      >
+                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        Edit
+                                      </button>
+                                      <button
+                                        onClick={() => setHistoryModalCall(call)}
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                      >
+                                        <History className="w-[0.8vw] h-[0.8vw]" />
+                                        History
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            });
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* VIEW 4: Employee Overview & Specific Reports */}
+            {activeMainView === "employees" && (
+              <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                {!selectedEmployee ? (
+                  <div className="flex-1 overflow-auto">
+                    <table className="w-full text-left border-collapse min-w-[60vw]">
+                      <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                        <tr>
+                          <th className="p-[0.7vw] border-r border-slate-200 w-[5%] text-center">S.No</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 w-[30%]">Employee</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 w-[20%]">Department</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 w-[15%] text-center">Total Assigned</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 w-[15%] text-center">Closed Calls</th>
+                          <th className="p-[0.7vw] text-center w-[15%]">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                        {paginatedData.map((emp, idx) => (
+                          <tr key={emp.userId || idx} className="hover:bg-slate-50 transition-colors">
+                            <td className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500">
+                              {(currentPage - 1) * rowsPerPage + idx + 1}
+                            </td>
+                            <td className="p-[0.7vw] border-r border-slate-200">
+                              <div className="flex items-center gap-[0.7vw]">
+                                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-teal-50 border border-teal-200 text-teal-800 flex items-center justify-center font-bold text-[0.85vw]">
+                                  {emp.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                  <div className="font-bold text-slate-800 text-[0.85vw]">{emp.name}</div>
+                                  <div className="text-[0.7vw] text-slate-500 font-mono">{emp.userId}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="p-[0.7vw] border-r border-slate-200 font-semibold text-slate-700">
+                              {emp.department || "—"}
+                            </td>
+                            <td className="p-[0.7vw] border-r border-slate-200 text-center">
+                              <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.55vw] py-[0.15vw] rounded-full text-[0.78vw]">
+                                {emp.totalAssigned}
+                              </span>
+                            </td>
+                            <td className="p-[0.7vw] border-r border-slate-200 text-center">
+                              <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.55vw] py-[0.15vw] rounded-full text-[0.78vw]">
+                                {emp.closedCount}
+                              </span>
+                            </td>
+                            <td className="p-[0.7vw] text-center">
+                              <button
+                                onClick={() => {
+                                  setSelectedEmployee(emp);
+                                  setCurrentPage(1);
+                                }}
+                                className="inline-flex items-center gap-[0.3vw] px-[0.8vw] py-[0.38vw] bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-[0.4vw] text-[0.75vw] transition-colors cursor-pointer shadow-2xs"
+                              >
+                                <span>View Calls</span>
+                                <ChevronRight className="w-[0.8vw] h-[0.8vw]" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  /* Drilldown view for selected employee */
+                  <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                    <div className="px-[1vw] py-[0.6vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
+                      <div className="flex items-center gap-[0.7vw]">
+                        <button
+                          onClick={() => {
+                            setSelectedEmployee(null);
+                            setCurrentPage(1);
+                          }}
+                          className="p-[0.4vw] bg-white border border-slate-300 rounded-[0.4vw] text-slate-600 hover:bg-slate-100 cursor-pointer"
+                        >
+                          <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
+                        </button>
+                        <div>
+                          <span className="text-[0.9vw] font-bold text-slate-800">
+                            {selectedEmployee.name}
+                          </span>
+                          <span className="text-[0.72vw] text-slate-500 ml-[0.5vw]">
+                            ({selectedEmployee.department}) • {selectedEmployeeCalls.length} Allocated Calls
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-auto">
+                      <table className="w-full text-left border-collapse min-w-[75vw]">
+                        <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                          <tr>
+                            <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Registered</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Assigned</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Closed</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
+                            <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                          {paginatedData.map((call, cIdx) => {
+                            const prods = call.products && call.products.length > 0 ? call.products : [{}];
+                            const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
+                            return prods.map((prod, pIdx) => {
+                              const pStatus = getCallProductStatus(prod, call.status);
+                              const cfg = getStatusCfg(pStatus);
+                              const isClosed =
+                                prod._resolved ||
+                                prod._productClosure?.status === "Closed" ||
+                                prod._productClosure?.status === "Resolved";
+
+                              return (
+                                <tr key={`${call._id}-${pIdx}`} className="hover:bg-slate-50 transition-colors">
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 bg-white whitespace-nowrap"
+                                    >
+                                      {callSno}
+                                    </td>
+                                  )}
+                                  <td className="p-[0.7vw] border-r border-slate-200 font-mono font-bold text-indigo-700">
+                                    {call.callNumber}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[12vw]">
+                                    <div className="font-bold text-slate-800 truncate">{call.customerName}</div>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[14vw]">
+                                    <div className="font-semibold text-slate-800 truncate">
+                                      {prod.productModel || prod.itemCode || "—"}
+                                    </div>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-600">
+                                    {fmtDateTime(call.createdAt)}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-indigo-700 font-semibold">
+                                    {fmtDateTime(prod._assignedAt || call.createdAt)}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-emerald-700 font-semibold">
+                                    {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-bold text-slate-700">
+                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full shrink-0 ${cfg.dot}`} />
+                                      {cfg.label}
+                                    </span>
+                                  </td>
+                                  <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                    <button
+                                      onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer mr-[0.3vw]"
+                                    >
+                                      <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                      Edit
+                                    </button>
+                                    <button
+                                      onClick={() => setHistoryModalCall(call)}
+                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                    >
+                                      <History className="w-[0.8vw] h-[0.8vw]" />
+                                      History
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            });
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* ── Pagination Footer ────────────────────────────────────── */}
             <div className="flex items-center justify-between px-[1vw] py-[0.6vw] border-t border-slate-200 bg-slate-50 shrink-0">
