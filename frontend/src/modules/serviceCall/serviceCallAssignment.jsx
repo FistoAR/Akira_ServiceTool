@@ -452,6 +452,7 @@ export default function ServiceCallAssignment() {
           <div className="w-[9.5vw]">
             <CustomDropdown
               size="sm"
+              align="right"
               value={priorityFilter}
               onChange={(val) => setPriorityFilter(val)}
               options={[
