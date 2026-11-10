@@ -30,7 +30,7 @@ const PendingTab = ({
     return (queue || []).filter((e) => {
       const hasUserProducts = (e.products || []).some(
         (p) =>
-          p._assignedEngineerId === currentUser?.userId &&
+          (p._assignedEngineerId === currentUser?.userId || p._supportPersonId === currentUser?.userId || p._productClosure?.userId === currentUser?.userId) &&
           p._productClosure?.status === "Pending" &&
           !p._supportRequested,
       );
@@ -99,7 +99,7 @@ const PendingTab = ({
               paginatedCalls.map((row) => {
                 const userProds = (row.products || []).filter(
                   (p) =>
-                    p._assignedEngineerId === currentUser?.userId &&
+                    (p._assignedEngineerId === currentUser?.userId || p._supportPersonId === currentUser?.userId || p._productClosure?.userId === currentUser?.userId) &&
                     p._productClosure?.status === "Pending" &&
                     !p._supportRequested
                 );

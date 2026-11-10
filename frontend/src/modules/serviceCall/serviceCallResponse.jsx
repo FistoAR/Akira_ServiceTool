@@ -610,7 +610,7 @@ const ServiceCallResponse = () => {
       pending: queue.filter((e) => {
         return (e.products || []).some(
           (p) =>
-            p._assignedEngineerId === uid &&
+            (p._assignedEngineerId === uid || p._supportPersonId === uid || p._productClosure?.userId === uid) &&
             p._productClosure?.status === "Pending" &&
             !p._supportRequested,
         );
