@@ -439,57 +439,40 @@ const NotificationsDropdown = () => {
               </div>
             </div>
 
-            {/* Horizontal Tabs Row */}
-            <div className="px-[1vw] border-b border-slate-200 bg-white flex flex-col gap-[0.5vw]">
-              <div className="flex items-center gap-[1.2vw] border-b border-slate-100/85">
-                {['All', 'Service Call', 'Service Material'].map(tab => {
-                  const count = getUnreadCount(tab);
+            {/* Modern Single-Tier Navigation Bar */}
+            <div className="px-[1vw] py-[0.5vw] border-b border-slate-200 bg-white flex items-center justify-between gap-[0.6vw]">
+              <div className="flex items-center gap-[0.4vw] overflow-x-auto">
+                {[
+                  { id: 'all', label: 'All', count: getUnreadCount('All') },
+                  { id: 'Service Call', label: 'Service Calls', count: getUnreadCount('Service Call') },
+                  { id: 'Service Material', label: 'Materials', count: getUnreadCount('Service Material') }
+                ].map((tab) => {
+                  const isActive = activeMainTab === (tab.id === 'all' ? 'All' : tab.id);
                   return (
                     <button
-                      key={tab}
+                      key={tab.id}
                       onClick={() => {
-                        setActiveMainTab(tab);
+                        setActiveMainTab(tab.id === 'all' ? 'All' : tab.id);
                         setActiveSubTab('all');
                       }}
-                      className={`relative pb-[0.5vw] text-[0.82vw] font-semibold transition-all cursor-pointer flex items-center gap-[0.2vw] ${activeMainTab === tab ? 'text-indigo-650 font-bold' : 'text-slate-500 hover:text-indigo-550'}`}
+                      className={`px-[0.65vw] py-[0.25vw] rounded-[0.4vw] text-[0.74vw] font-semibold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                        isActive 
+                          ? 'bg-slate-900 text-white shadow-2xs' 
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                      }`}
                     >
-                      {tab}
-                      {count > 0 && (
-                        <span className="text-[0.62vw] bg-indigo-50 text-indigo-705 px-[0.35vw] py-[0.05vw] rounded-full font-semibold border border-indigo-100 shadow-sm">
-                          {count}
+                      <span>{tab.label}</span>
+                      {tab.count > 0 && (
+                        <span className={`text-[0.6vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
+                          isActive ? 'bg-white text-slate-900' : 'bg-indigo-50 text-indigo-700'
+                        }`}>
+                          {tab.count}
                         </span>
-                      )}
-                      {activeMainTab === tab && (
-                        <motion.div layoutId="mainTabIndicator" className="absolute bottom-0 left-0 right-0 h-[0.12vw] bg-indigo-650 rounded-full" />
                       )}
                     </button>
                   );
                 })}
               </div>
-
-              {/* Secondary Sub Tabs for Service Call */}
-              {activeMainTab === 'Service Call' && (
-                <div className="flex items-center gap-[0.5vw] pb-[0.5vw] animate-in fade-in slide-in-from-top-1 duration-200">
-                  {['all', 'Assignment', 'Escalation', 'Critical'].map(tab => {
-                    const count = getUnreadCount('Service Call', tab);
-                    const label = tab === 'all' ? 'All' : tab === 'Assignment' ? 'Assignments' : tab === 'Escalation' ? 'Escalations' : tab;
-                    return (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveSubTab(tab)}
-                        className={`px-[0.6vw] py-[0.2vw] rounded-full text-[0.7vw] font-semibold transition-all border cursor-pointer flex items-center gap-[0.2vw] ${activeSubTab === tab ? 'bg-indigo-600 text-white border-indigo-700 shadow-sm' : 'bg-white text-slate-650 border-slate-200 hover:border-slate-350 hover:bg-slate-50'}`}
-                      >
-                        {label}
-                        {count > 0 && (
-                          <span className={`text-[0.58vw] px-[0.25vw] py-[0.02vw] rounded-full font-semibold ${activeSubTab === tab ? 'bg-white text-indigo-600' : 'bg-indigo-50 text-indigo-700 border border-indigo-100'}`}>
-                            {count}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
             </div>
 
             {/* List Content */}
