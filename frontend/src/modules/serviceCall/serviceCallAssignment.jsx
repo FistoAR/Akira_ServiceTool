@@ -400,7 +400,7 @@ export default function ServiceCallAssignment() {
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
               <tr className="bg-[#e9edf4]">
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center w-[5%]">
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center w-[4%]">
                   S.No
                 </th>
                 <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
@@ -408,6 +408,9 @@ export default function ServiceCallAssignment() {
                 </th>
                 <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[18vw]">
                   Customer & Site
+                </th>
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center whitespace-nowrap min-w-[8vw]">
+                  Customer Type
                 </th>
                 <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[17vw]">
                   Product & Segment
@@ -423,7 +426,7 @@ export default function ServiceCallAssignment() {
             <tbody className="divide-y divide-gray-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="py-[12vh] text-center">
+                  <td colSpan={7} className="py-[12vh] text-center">
                     <div className="flex flex-col items-center justify-center gap-[0.8vw]">
                       <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-blue-600" />
                       <span className="text-[0.85vw] font-semibold text-slate-700">Loading assignments queue...</span>
@@ -432,7 +435,7 @@ export default function ServiceCallAssignment() {
                 </tr>
               ) : paginatedGroups.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-[12vh] text-center">
+                  <td colSpan={7} className="py-[12vh] text-center">
                     <div className="flex flex-col items-center justify-center gap-[0.6vw]">
                       <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                         <CheckCircle2 className="w-[1.8vw] h-[1.8vw] text-emerald-500" />
@@ -520,11 +523,6 @@ export default function ServiceCallAssignment() {
                                   {g.partyCode}
                                 </span>
                               )}
-                              {g.customerType && (
-                                <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] rounded font-semibold border shrink-0 bg-purple-50 text-purple-700 border-purple-200">
-                                  {g.customerType}
-                                </span>
-                              )}
                             </div>
                             {(g.location || g.site) && (
                               <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.2vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
@@ -532,6 +530,13 @@ export default function ServiceCallAssignment() {
                                 <span className="truncate">{g.site ? `${g.site} • ` : ""}{g.location}</span>
                               </div>
                             )}
+                          </td>
+
+                          {/* 4. Customer Type */}
+                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
+                            <span className="px-[0.6vw] py-[0.18vw] rounded-md text-[0.68vw] font-bold border uppercase tracking-wider inline-block bg-purple-50 text-purple-700 border-purple-200">
+                              {g.customerType || "Standard"}
+                            </span>
                           </td>
                         </>
                       )}
