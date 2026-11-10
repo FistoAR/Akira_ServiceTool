@@ -304,6 +304,7 @@ const ServiceCallEscalations = () => {
   const [filterFromDate, setFilterFromDate] = useState("");
   const [filterToDate, setFilterToDate] = useState("");
   const [trackingEntry, setTrackingEntry] = useState(null);
+  const [selectedInfoCall, setSelectedInfoCall] = useState(null);
 
   useEffect(() => {
     if (workerReady) setIsWorkerReady(true);
