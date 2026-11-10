@@ -101,6 +101,8 @@ export default function ServiceCallAssignment() {
   const [resHours, setResHours] = useState(0);
   const [resMins, setResMins] = useState(0);
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const [customerTypeFilter, setCustomerTypeFilter] = useState("All");
+  const [customerTypes, setCustomerTypes] = useState([]);
   const [filterFromDate, setFilterFromDate] = useState("");
   const [filterToDate, setFilterToDate] = useState("");
   const fromDateRef = useRef(null);
@@ -118,11 +120,15 @@ export default function ServiceCallAssignment() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const [callRes, empRes, flowRes] = await Promise.all([
+        const [callRes, empRes, flowRes, partyRes] = await Promise.all([
           axios.get(`${API_URL}/service-calls/pending`),
           axios.get(`${API_URL}/auth/employees`),
-          axios.get(`${API_URL}/master/escalation-flows`)
+          axios.get(`${API_URL}/master/escalation-flows`),
+          axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] }))
         ]);
+        if (partyRes?.data) {
+          setCustomerTypes(partyRes.data.map(p => p.name || p));
+        }
 
         const flows = {};
         flowRes.data.forEach(f => {
@@ -185,6 +191,7 @@ export default function ServiceCallAssignment() {
     let res = groups;
     
     if (priorityFilter !== "All") res = res.filter(g => g.priority === priorityFilter);
+    if (customerTypeFilter !== "All") res = res.filter(g => (g.customerType || "Standard") === customerTypeFilter);
 
     if (filterFromDate || filterToDate) {
       res = res.filter(g => {
@@ -217,7 +224,7 @@ export default function ServiceCallAssignment() {
         (p.serialNumber || "").toLowerCase().includes(s)
       )
     );
-  }, [groups, searchTerm, priorityFilter, filterFromDate, filterToDate]);
+  }, [groups, searchTerm, priorityFilter, customerTypeFilter, filterFromDate, filterToDate]);
 
   const totalPages = Math.ceil(filteredGroups.length / ITEMS_PER_PAGE);
   const paginatedGroups = useMemo(() => {
@@ -225,7 +232,15 @@ export default function ServiceCallAssignment() {
     return filteredGroups.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredGroups, currentPage]);
 
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, priorityFilter, filterFromDate, filterToDate]);
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, priorityFilter, customerTypeFilter, filterFromDate, filterToDate]);
+
+  const availableCustomerTypes = useMemo(() => {
+    const set = new Set(customerTypes);
+    groups.forEach(g => {
+      if (g.customerType && g.customerType !== "All") set.add(g.customerType);
+    });
+    return Array.from(set).filter(Boolean);
+  }, [customerTypes, groups]);
 
   const selectedFlow = useMemo(() => {
     if (!selectedGroup) return null;
@@ -447,6 +462,21 @@ export default function ServiceCallAssignment() {
               <span>Clear</span>
             </button>
           )}
+
+          {/* Customer Type Dropdown */}
+          <div className="w-[9.5vw]">
+            <CustomDropdown
+              size="sm"
+              align="right"
+              value={customerTypeFilter}
+              onChange={(val) => setCustomerTypeFilter(val)}
+              options={[
+                { value: "All", label: "All Types" },
+                ...availableCustomerTypes.map((t) => ({ value: t, label: t })),
+              ]}
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+            />
+          </div>
 
           {/* Priority Dropdown (Pill shaped) */}
           <div className="w-[9.5vw]">
