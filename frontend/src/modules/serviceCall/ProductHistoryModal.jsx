@@ -1,6 +1,64 @@
 import React, { useState } from "react";
 import { Clock, History, X, Info } from "lucide-react";
 
+const FIELD_LABEL_MAP = {
+  dateTime: "Date & Time",
+  callNumber: "Call No",
+  customerName: "Customer Name",
+  partyCode: "Party Code",
+  contactPerson: "Contact Person",
+  contactNumber: "Contact Number",
+  emailId: "Email ID",
+  location: "Location",
+  site: "Site",
+  priority: "Priority",
+  mode: "Call Mode",
+  callDescription: "Description",
+  productModel: "Product Model",
+  itemCode: "Item Code",
+  serialNumber: "Serial Number",
+  errorCode: "Error Code",
+  warrantyStatus: "Warranty Status",
+  remarks: "Remarks",
+  status: "Status",
+};
+
+const formatFieldValue = (field, val) => {
+  if (val === null || val === undefined || val === "") return "—";
+  if (typeof val === "boolean") return val ? "Yes" : "No";
+
+  // Check if date string or timestamp
+  if (
+    typeof val === "string" &&
+    (field.toLowerCase().includes("date") ||
+      field.toLowerCase().includes("time") ||
+      field === "dateTime" ||
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(val))
+  ) {
+    const d = new Date(val);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    }
+  }
+
+  if (typeof val === "object") {
+    try {
+      return JSON.stringify(val);
+    } catch {
+      return String(val);
+    }
+  }
+
+  return String(val);
+};
+
 export const ProductHistoryTimeline = ({ history, employees, currentUser, forceShow = false, hideHeader = false }) => {
   const [show, setShow] = useState(forceShow);
 
@@ -175,23 +233,35 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                         )}
                       </div>
                       <div className="space-y-[0.3vw]">
-                        {h.metadata.diffs.map((d, dIdx) => (
-                          <div
-                            key={dIdx}
-                            className="text-[0.75vw] flex items-center gap-[0.5vw] py-[0.15vw] border-b border-slate-100 last:border-0"
-                          >
-                            <span className="font-semibold text-slate-700 min-w-[6vw]">
-                              {d.field}:
-                            </span>
-                            <span className="line-through text-rose-600 bg-rose-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[12vw] truncate">
-                              {d.originalValue !== null && d.originalValue !== undefined ? String(d.originalValue) : "—"}
-                            </span>
-                            <span className="text-slate-400">→</span>
-                            <span className="font-bold text-emerald-700 bg-emerald-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[12vw] truncate">
-                              {d.editedValue !== null && d.editedValue !== undefined ? String(d.editedValue) : "—"}
-                            </span>
-                          </div>
-                        ))}
+                        {h.metadata.diffs.map((d, dIdx) => {
+                          const label = FIELD_LABEL_MAP[d.field] || d.field;
+                          const origFormatted = formatFieldValue(d.field, d.originalValue);
+                          const editFormatted = formatFieldValue(d.field, d.editedValue);
+
+                          return (
+                            <div
+                              key={dIdx}
+                              className="text-[0.75vw] flex items-center gap-[0.5vw] py-[0.15vw] border-b border-slate-100 last:border-0"
+                            >
+                              <span className="font-semibold text-slate-700 min-w-[6.5vw]">
+                                {label}:
+                              </span>
+                              <span
+                                className="line-through text-rose-600 bg-rose-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[15vw] truncate"
+                                title={origFormatted}
+                              >
+                                {origFormatted}
+                              </span>
+                              <span className="text-slate-400">→</span>
+                              <span
+                                className="font-bold text-emerald-700 bg-emerald-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[15vw] truncate"
+                                title={editFormatted}
+                              >
+                                {editFormatted}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}

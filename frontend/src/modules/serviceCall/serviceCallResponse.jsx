@@ -1253,7 +1253,7 @@ const ServiceCallResponse = () => {
               {activeTab === "escalation" && (
                 <EscalationQueueTab
                   myEscalations={myEscalations}
-                  paginatedEscalations={paginatedEscalations}
+                  paginatedEscalations={escalationPaginatedCalls}
                   escalationPage={escalationPage}
                   setEscalationPage={setEscalationPage}
                   escalationTotalPages={escalationTotalPages}
