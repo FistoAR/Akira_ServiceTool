@@ -51,6 +51,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import ProductHistoryModal from "./ProductHistoryModal";
+import { CallDetailsModal } from "./responseComponents/CallDetailsModal";
 import ServiceCallForm from "./ServiceCallForm";
 import useModulePermissions from "../../components/useModulePermissions";
 import CustomDropdown from "../../components/CustomDropdown";
@@ -1157,6 +1158,7 @@ export default function ServiceCall() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [summaryModalRow, setSummaryModalRow] = useState(null);
+  const [selectedInfoCall, setSelectedInfoCall] = useState(null);
   const [historyModalProduct, setHistoryModalProduct] = useState(null);
 
   useEffect(() => {
@@ -2111,10 +2113,10 @@ export default function ServiceCall() {
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        setSummaryModalRow(row);
+                                        setSelectedInfoCall(row);
                                       }}
                                       className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
-                                      title="Quick View Summary"
+                                      title="View Call Details"
                                     >
                                       <Eye className="w-[1vw] h-[1vw]" />
                                     </button>
@@ -2357,6 +2359,15 @@ export default function ServiceCall() {
       )}
 
       {/* Call Summary Modal */}
+      {/* Full Call Details Modal (Overview, Products, Audit Timeline) */}
+      {selectedInfoCall && (
+        <CallDetailsModal
+          call={selectedInfoCall}
+          employees={employees}
+          onClose={() => setSelectedInfoCall(null)}
+        />
+      )}
+
       {summaryModalRow && (
         <CallSummaryModal
           row={summaryModalRow}
