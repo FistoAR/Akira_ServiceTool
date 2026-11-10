@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import {
-  AlertTriangle, Clock, History, Shield, CheckSquare, Search,
+  AlertTriangle, Clock, History, Shield, CheckSquare, Search, RotateCcw, Calendar, Eye,
   X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package, Ban, ArrowRightLeft, AlertCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useEscalationWorker from "../../service/useEscalationWorker";
 import { useNotification } from "../../components/NotificationContext";
+import CustomDropdown from "../../components/CustomDropdown";
+import { CallDetailsModal } from "./responseComponents/CallDetailsModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -301,6 +303,9 @@ const ServiceCallEscalations = () => {
   const [isWorkerReady, setIsWorkerReady] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [priorityFilter, setPriorityFilter] = useState("All");
+  const fromDateRef = useRef(null);
+  const toDateRef = useRef(null);
   const [filterFromDate, setFilterFromDate] = useState("");
   const [filterToDate, setFilterToDate] = useState("");
   const [trackingEntry, setTrackingEntry] = useState(null);
@@ -365,6 +370,7 @@ const ServiceCallEscalations = () => {
       const isExhausted = e.status === "Critical_Unresolved" || e.status === "Critical";
       
       const isCritical = e.status === "Critical_Unresolved" || e.status === "Critical" || e.priority === "Critical" || timer?.isExpired;
+      if (priorityFilter !== "All" && e.priority !== priorityFilter) return false;
       if (statusFilter === "Critical" && !isCritical) return false;
       if (statusFilter === "Escalating" && isCritical) return false;
 
@@ -411,7 +417,7 @@ const ServiceCallEscalations = () => {
       
       return new Date(timeB) - new Date(timeA);
     });
-  }, [calls, timers, searchTerm, statusFilter, filterFromDate, filterToDate]);
+  }, [calls, timers, searchTerm, statusFilter, priorityFilter, filterFromDate, filterToDate]);
 
   const counts = useMemo(() => {
     let escalating = 0;
@@ -447,63 +453,144 @@ const ServiceCallEscalations = () => {
   }, [calls, timers, filterFromDate, filterToDate]);
 
   return (
-    <div className="w-full h-[90vh]  bg-slate-100/70 rounded-[1vw]  flex flex-col font-sans">
-      <div className="flex justify-between items-center bg-white p-[1vw] rounded-[0.8vw] shadow-sm border border-slate-400 mb-[1vw]">
-        <div className="flex items-center gap-[0.8vw]">
-          {["All", "Escalating", "Critical"].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setStatusFilter(tab)}
-              className={`cursor-pointer px-[1.2vw] py-[0.5vw] rounded-[0.5vw] text-[0.85vw] font-bold transition-all shadow-sm active:scale-95 flex items-center gap-[0.5vw] border
-                ${statusFilter === tab 
-                  ? (tab === "Critical" ? 'bg-red-600 text-white border-red-700' : 'bg-indigo-600 text-white border-indigo-700')
-                  : (tab === "Critical" ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50')
-                }`}
-            >
-              {tab === "Critical" && <Shield className="w-[1vw] h-[1vw]" />}
-              {tab}
-              <span className={`px-[0.4vw] py-[0.1vw] rounded-full text-[0.7vw] ${
-                statusFilter === tab ? 'bg-white/20' : 'bg-slate-100'
-              }`}>
-                {counts[tab]}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-[1vw]">
-          <div className="flex items-center gap-[0.5vw]">
-            <label className="text-[0.75vw] font-bold text-slate-600 uppercase tracking-wider">From:</label>
-            <input 
-              type="date" 
-              value={filterFromDate}
-              onChange={(e) => setFilterFromDate(e.target.value)}
-              className="border border-slate-300 rounded-[0.4vw] px-[0.6vw] py-[0.3vw] text-[0.8vw] text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-sm bg-slate-50 hover:bg-white transition-colors"
+    <div className="w-full h-full flex flex-col font-sans min-h-0">
+      <div className="flex flex-col gap-[0.55vw] mb-[0.6vw] shrink-0">
+        {/* Top Level Scoping Toolbar: Soft Pill Search, Date Range, Status & Priority */}
+        <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+          {/* Left side: Soft Pill Search Box */}
+          <div className="relative w-[18vw]">
+            <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+            <input
+              type="text"
+              placeholder="Search escalations, customer, engineer..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+              >
+                <X className="w-[0.7vw] h-[0.7vw]" />
+              </button>
+            )}
           </div>
-          <div className="flex items-center gap-[0.5vw]">
-            <label className="text-[0.75vw] font-bold text-slate-600 uppercase tracking-wider">To:</label>
-            <input 
-              type="date"
-              min={filterFromDate}
-              value={filterToDate}
-              onChange={(e) => setFilterToDate(e.target.value)}
-              className="border border-slate-300 rounded-[0.4vw] px-[0.6vw] py-[0.3vw] text-[0.8vw] text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-sm bg-slate-50 hover:bg-white transition-colors"
-            />
-          </div>
-          <div className="relative w-[20vw]">
-            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[1vw] h-[1vw]" />
-            <input 
-              type="text" 
-              placeholder="Search escalations..."
-              value={searchTerm} 
-              onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-[2.5vw] pr-[1vw] h-[2.2vw] border border-gray-400 rounded-[0.6vw] focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-[0.8vw]" 
-            />
+
+          {/* Right cluster: Status Pills, Date Range Capsule, Clear & Priority */}
+          <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+            {/* Status Segmented Buttons */}
+            <div className="flex items-center gap-[0.3vw] bg-slate-100/80 p-[0.2vw] rounded-full border border-slate-200">
+              {[
+                { label: "All", count: counts.All, dot: "bg-blue-600" },
+                { label: "Escalating", count: counts.Escalating, dot: "bg-amber-500" },
+                { label: "Critical", count: counts.Critical, dot: "bg-rose-500" },
+              ].map(({ label, count, dot }) => {
+                const isActive = statusFilter === label;
+                return (
+                  <button
+                    key={label}
+                    onClick={() => setStatusFilter(label)}
+                    className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.8vw] rounded-full text-[0.72vw] font-bold cursor-pointer transition-all ${
+                      isActive
+                        ? (label === "Critical" ? "bg-rose-600 text-white shadow-xs" : "bg-blue-600 text-white shadow-xs")
+                        : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                    }`}
+                  >
+                    <span className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${isActive ? "bg-white" : dot}`} />
+                    <span>{label}</span>
+                    <span className={`text-[0.66vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                      isActive ? "bg-white/25 text-white" : "bg-slate-200/80 text-slate-700"
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Unified Date Range Capsule */}
+            <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+              <button
+                type="button"
+                onClick={() => {
+                  if (fromDateRef.current) {
+                    try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
+                  }
+                }}
+                className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center"
+                title="Choose from date"
+              >
+                <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+              </button>
+              <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+              <input
+                ref={fromDateRef}
+                type="date"
+                value={filterFromDate || ""}
+                onChange={(e) => setFilterFromDate(e.target.value)}
+                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              />
+              <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
+              <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+              <input
+                ref={toDateRef}
+                type="date"
+                value={filterToDate || ""}
+                min={filterFromDate || undefined}
+                onChange={(e) => setFilterToDate(e.target.value)}
+                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (toDateRef.current) {
+                    try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
+                  }
+                }}
+                className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+                title="Choose to date"
+              >
+                <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+              </button>
+            </div>
+
+            {/* Reset / Clear Button */}
+            {(filterFromDate || filterToDate) && (
+              <button
+                onClick={() => {
+                  setFilterFromDate("");
+                  setFilterToDate("");
+                }}
+                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                title="Clear date filter"
+              >
+                <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                <span>Clear</span>
+              </button>
+            )}
+
+            {/* Priority Dropdown (Pill shaped) */}
+            <div className="w-[9.5vw]">
+              <CustomDropdown
+                size="sm"
+                align="right"
+                value={priorityFilter}
+                onChange={(val) => setPriorityFilter(val)}
+                options={[
+                  { value: "All", label: "All Priorities" },
+                  { value: "Critical", label: "Critical Priority" },
+                  { value: "High", label: "High Priority" },
+                  { value: "Medium", label: "Medium Priority" },
+                  { value: "Low", label: "Low Priority" },
+                ]}
+                triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              />
+            </div>
           </div>
         </div>
       </div>
-
-      <div className="flex-1 overflow-hidden flex flex-col bg-white rounded-[0.8vw] border border-slate-400 shadow-sm">
+      <div className="flex-1 overflow-hidden flex flex-col bg-slate-50/50 rounded-[0.8vw] border border-slate-200/80 shadow-xs">
         <div className="flex-1 overflow-y-auto p-[1vw]">
           {loading || !isWorkerReady ? (
             <div className="flex flex-col items-center justify-center h-full">
@@ -529,14 +616,24 @@ const ServiceCallEscalations = () => {
                 }
 
                 return (
-                  <div key={call.callId} className={`flex flex-col md:flex-row justify-between p-[1vw] rounded-[0.8vw] shadow-sm hover:shadow-md transition-shadow border ${isCritical ? 'border-red-300 bg-red-50/30 shadow-[0_0_8px_rgba(239,68,68,0.1)]' : 'border-slate-300 bg-white'}`}>
+                  <div key={call.callId} className={`flex flex-col md:flex-row justify-between p-[1vw] rounded-[0.8vw] shadow-xs hover:shadow-md transition-all border bg-white ${
+                    isCritical
+                      ? 'border-slate-200 border-l-[0.35vw] border-l-rose-500'
+                      : 'border-slate-200 border-l-[0.35vw] border-l-amber-500'
+                  }`}>
                     <div className="flex-1 space-y-[0.8vw] pr-[1vw]">
                       <div className="flex items-center gap-[0.8vw] flex-wrap">
                         <div className="flex items-center gap-[0.4vw]">
                           <span className="flex items-center justify-center w-[1.5vw] h-[1.5vw] bg-slate-200 text-slate-700 rounded-full font-bold text-[0.8vw]">
                             {index + 1}
                           </span>
-                          <span className="font-mono text-[1.1vw] font-bold text-slate-900 tracking-tight">{call.callNumber}</span>
+                          <button
+                          onClick={() => setSelectedInfoCall(call)}
+                          className="font-mono text-[1.05vw] font-bold text-[#6e000a] hover:text-[#990011] hover:underline block leading-tight cursor-pointer"
+                          title="View Call Details"
+                        >
+                          {call.callNumber}
+                        </button>
                         </div>
                         <Badge label={call.priority} color={call.priority === "Critical" ? "red" : "slate"} />
                         {call.customerType && (
@@ -633,9 +730,18 @@ const ServiceCallEscalations = () => {
                         </div>
                         
                         <div className="flex items-center gap-[0.4vw] w-full mt-[0.35vw]">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedInfoCall(call)}
+                            className="p-[0.45vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-[0.45vw] border border-blue-200/80 transition-all cursor-pointer shrink-0"
+                            title="Quick View Call Details"
+                          >
+                            <Eye className="w-[0.9vw] h-[0.9vw]" />
+                          </button>
+
                           <button 
                             onClick={() => setTrackingEntry(call)}
-                            className="flex-1 inline-flex items-center justify-center gap-[0.35vw] bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white py-[0.45vw] px-[0.7vw] rounded-[0.45vw] text-[0.78vw] font-bold shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap"
+                            className="flex-1 inline-flex items-center justify-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-[0.45vw] px-[0.6vw] rounded-[0.45vw] text-[0.74vw] font-bold shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap"
                             title="View Escalation Tracking History"
                           >
                             <History className="w-[0.85vw] h-[0.85vw] shrink-0" />
