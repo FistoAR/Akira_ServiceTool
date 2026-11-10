@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { motion } from "framer-motion";
 import {
+  CheckSquare,
+  Square,
   UserCheck,
   User,
   Phone,
@@ -19,6 +21,9 @@ import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
 import { getTypeColor, getStatusCfg, deriveCallStatus } from "../ServiceCall";
 
 export const SelfAssignedQueueTab = ({
+  selectedItems,
+  setSelectedItems,
+  onBulkDelete,
   selfAssignedRawCalls,
   selfAssignedStatus,
   setSelfAssignedStatus,
@@ -44,17 +49,55 @@ export const SelfAssignedQueueTab = ({
   setEditingCall,
   setView,
 }) => {
+  const [internalSelected, setInternalSelected] = React.useState(new Set());
+  const selected = selectedItems || internalSelected;
+  const setSelected = setSelectedItems || setInternalSelected;
+
+  const isPageSelected =
+    selfAssignedPaginatedCalls.length > 0 &&
+    selfAssignedPaginatedCalls.every((r) => selected.has(r.id || r._id || r.callId));
+
+  const isAllFilteredSelected =
+    selfAssignedFilteredCalls.length > 0 &&
+    selfAssignedFilteredCalls.every((r) => selected.has(r.id || r._id || r.callId));
+
+  const toggleSelect = (id) => {
+    const s = new Set(selected);
+    s.has(id) ? s.delete(id) : s.add(id);
+    setSelected(s);
+  };
+
+  const toggleSelectPage = () => {
+    const s = new Set(selected);
+    if (isPageSelected) {
+      selfAssignedPaginatedCalls.forEach((r) => s.delete(r.id || r._id || r.callId));
+    } else {
+      selfAssignedPaginatedCalls.forEach((r) => s.add(r.id || r._id || r.callId));
+    }
+    setSelected(s);
+  };
+
+  const selectAllFiltered = () => {
+    const s = new Set(selected);
+    selfAssignedFilteredCalls.forEach((r) => s.add(r.id || r._id || r.callId));
+    setSelected(s);
+  };
+
+  const clearAllSelected = () => {
+    setSelected(new Set());
+  };
+
   return (
                 <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
                   {/* Status chips bar */}
                   <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-                    <div className="flex gap-[0.4vw] flex-wrap items-center">
+                    <div className="flex items-center gap-[0.3vw] bg-white p-[0.25vw] rounded-full border border-slate-200/90 shadow-2xs overflow-x-auto">
                       {[
                         { label: "All", dot: "bg-slate-400" },
                         { label: "Assigned", dot: "bg-indigo-500" },
                         { label: "Pending", dot: "bg-amber-500" },
-                        { label: "Supporting", dot: "bg-cyan-500" },
-                        { label: "Field Visit", dot: "bg-teal-500" },
+                        { label: "Supporting", dot: "bg-sky-500" },
+                        { label: "Field Visit", dot: "bg-purple-500" },
                         { label: "Resolved", dot: "bg-emerald-500" },
                       ].map(({ label, dot }) => {
                         const isActive = selfAssignedStatus === label;
@@ -76,17 +119,27 @@ export const SelfAssignedQueueTab = ({
                               setSelfAssignedStatus(label);
                               setSelfAssignedPage(1);
                             }}
-                            className={`flex items-center gap-[0.4vw] px-[0.75vw] py-[0.32vw] rounded-full text-[0.78vw] font-semibold cursor-pointer transition-all ${
+                            className={`flex items-center gap-[0.35vw] px-[0.72vw] py-[0.28vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                               isActive
-                                ? "bg-teal-600 text-white shadow-xs"
-                                : "bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:text-slate-900"
+                                ? "bg-blue-600 text-white shadow-xs font-semibold"
+                                : "text-slate-700 hover:text-slate-900 hover:bg-slate-100/70"
                             }`}
                           >
-                            <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isActive ? "bg-white" : dot}`} />
-                            <span>{label}</span>
+                            {label !== "All" && (
+                              <span
+                                className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
+                                  isActive ? "bg-white" : dot
+                                }`}
+                              />
+                            )}
+                            <span className={isActive ? "text-white font-bold" : "text-slate-700 font-semibold"}>
+                              {label}
+                            </span>
                             <span
-                              className={`text-[0.72vw] px-[0.4vw] py-[0.05vw] rounded-full font-bold ml-[0.1vw] ${
-                                isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-600"
+                              className={`text-[0.68vw] font-bold ml-[0.1vw] transition-all ${
+                                isActive
+                                  ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                                  : "text-slate-400"
                               }`}
                             >
                               {count}
@@ -96,8 +149,39 @@ export const SelfAssignedQueueTab = ({
                       })}
                     </div>
 
-                    <div className="text-[0.78vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw]">
-                      Showing <span className="font-bold text-slate-800">{selfAssignedFilteredCalls.length}</span> calls
+                    <div className="flex items-center gap-[0.6vw]">
+                      {selected.size > 0 && (
+                        <div className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 px-[0.6vw] py-[0.18vw] rounded-full text-[0.72vw] text-blue-800 font-semibold animate-fadeIn">
+                          <span>{selected.size} selected</span>
+                          {onBulkDelete && (
+                            <button
+                              type="button"
+                              onClick={() => onBulkDelete(Array.from(selected))}
+                              className="text-rose-600 hover:text-rose-800 font-bold ml-[0.3vw] cursor-pointer flex items-center gap-[0.2vw]"
+                              title="Delete selected calls"
+                            >
+                              <Trash2 className="w-[0.75vw] h-[0.75vw]" />
+                              <span>Delete</span>
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={clearAllSelected}
+                            className="text-slate-400 hover:text-slate-600 ml-[0.2vw] cursor-pointer"
+                            title="Clear selection"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.3vw] flex items-center gap-[0.3vw]">
+                        <span>Showing</span>
+                        <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+                          {selfAssignedFilteredCalls.length}
+                        </span>
+                        <span>calls</span>
+                      </div>
                     </div>
                   </div>
 
@@ -106,6 +190,20 @@ export const SelfAssignedQueueTab = ({
                     <table className="w-full text-left border-separate border-spacing-0">
                       <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
                         <tr className="bg-[#e9edf4]">
+                          <th className="p-[0.7vw] border-b-2 border-r border-slate-300 w-[3%] text-center bg-[#e9edf4]">
+                            <button
+                              type="button"
+                              onClick={toggleSelectPage}
+                              className="flex items-center justify-center w-full cursor-pointer"
+                              title={isPageSelected ? "Deselect page" : "Select page"}
+                            >
+                              {isPageSelected ? (
+                                <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
+                              ) : (
+                                <Square className="w-[1vw] h-[1vw] text-slate-400 hover:text-slate-500" />
+                              )}
+                            </button>
+                          </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[3.5vw]">
                             S.No
                           </th>
@@ -131,7 +229,7 @@ export const SelfAssignedQueueTab = ({
                             Priority
                           </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[7.5vw]">
-                            Origin Type
+                            Origin
                           </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8vw]">
                             Status
@@ -142,6 +240,43 @@ export const SelfAssignedQueueTab = ({
                         </tr>
                       </thead>
                       <tbody>
+                        {/* Gmail / Linear-style Bulk Selection Banner when page is selected and total records > page size */}
+                        {isPageSelected && selfAssignedFilteredCalls.length > selfAssignedPaginatedCalls.length && (
+                          <tr>
+                            <td
+                              colSpan={12}
+                              className="bg-blue-50/80 border-b border-blue-200 px-[1.2vw] py-[0.45vw] text-center text-[0.76vw] text-slate-700 font-medium"
+                            >
+                              {!isAllFilteredSelected ? (
+                                <div className="flex items-center justify-center gap-[0.5vw]">
+                                  <span>
+                                    All <strong className="text-slate-900">{selfAssignedPaginatedCalls.length}</strong> calls on this page are selected.
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={selectAllFiltered}
+                                    className="font-bold text-blue-700 hover:text-blue-900 underline hover:no-underline cursor-pointer transition-colors"
+                                  >
+                                    Select all {selfAssignedFilteredCalls.length} calls
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex items-center justify-center gap-[0.5vw]">
+                                  <span className="text-blue-900 font-semibold">
+                                    ✓ All {selfAssignedFilteredCalls.length} calls are selected across all pages.
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={clearAllSelected}
+                                    className="font-bold text-rose-600 hover:text-rose-800 underline hover:no-underline cursor-pointer transition-colors ml-[0.3vw]"
+                                  >
+                                    Clear selection
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        )}
                         {selfAssignedPaginatedCalls.length > 0 ? (
                           selfAssignedPaginatedCalls.map((row, rIdx) => {
                             const allProducts =
@@ -181,6 +316,26 @@ export const SelfAssignedQueueTab = ({
                                   key={`${rowId}-${pIdx}`}
                                   className="transition-colors bg-white hover:bg-slate-50/70"
                                 >
+                                  {/* Checkbox */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle bg-white w-[3%]"
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() => toggleSelect(rowId)}
+                                        className="flex items-center justify-center w-full cursor-pointer"
+                                      >
+                                        {selected.has(rowId) ? (
+                                          <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
+                                        ) : (
+                                          <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
+                                        )}
+                                      </button>
+                                    </td>
+                                  )}
+
                                   {/* S.No */}
                                   {pIdx === 0 && (
                                     <td
@@ -225,9 +380,9 @@ export const SelfAssignedQueueTab = ({
                                       rowSpan={rowCount}
                                       className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                     >
-                                      <div className="font-mono text-[0.8vw] font-bold text-slate-800">
+                                      <button type="button" onClick={() => onOpenRespond && onOpenRespond({ entry: row, callId: row.callId || row._id, prod: row.products?.[0] || {}, pIdx: 0 })} title="Respond / View Details" className="font-mono text-[0.8vw] font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer text-left">
                                         {row.callNumber || row.callNo}
-                                      </div>
+                                      </button>
                                     </td>
                                   )}
 

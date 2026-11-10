@@ -104,10 +104,10 @@ export const EscalationQueueTab = ({
                             SLA Timer
                           </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[7.5vw]">
-                            Origin Type
+                            Origin
                           </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8.5vw]">
-                            Status / Level
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw] text-center">
+                            Status
                           </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[10vw]">
                             Actions
@@ -184,9 +184,9 @@ export const EscalationQueueTab = ({
                                       rowSpan={rowCount}
                                       className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                     >
-                                      <div className="font-mono text-[0.8vw] font-bold text-slate-800">
+                                      <button type="button" onClick={() => onOpenInfo && onOpenInfo(row)} title="View Call Details" className="font-mono text-[0.8vw] font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer text-left">
                                         {row.callNumber || row.callNo}
-                                      </div>
+                                      </button>
                                       <div className="text-[0.65vw] text-slate-500 font-semibold mt-[0.1vw]">
                                         {rowCount} Product{rowCount > 1 ? "s" : ""}
                                       </div>

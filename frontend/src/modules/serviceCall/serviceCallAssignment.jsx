@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import {
-  Search, X, RotateCcw, User, CheckCircle, Clock,
+  Search, X, RotateCcw, RefreshCw, User, CheckCircle, Clock,
   ArrowRight, Activity, Shield, Package,
   Layers, ChevronDown, ChevronUp, Users,
   AlertCircle, Tag, CheckSquare, AlertTriangle,
@@ -116,66 +116,67 @@ export default function ServiceCallAssignment() {
   const { canWrite, canUpdate } = useModulePermissions("callAssign");
   const canAssign = canWrite || canUpdate;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const [callRes, empRes, flowRes, partyRes] = await Promise.all([
-          axios.get(`${API_URL}/service-calls/pending`),
-          axios.get(`${API_URL}/auth/employees`),
-          axios.get(`${API_URL}/master/escalation-flows`),
-          axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] }))
-        ]);
-        if (partyRes?.data) {
-          setCustomerTypes(partyRes.data.map(p => p.name || p));
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const [callRes, empRes, flowRes, partyRes] = await Promise.all([
+        axios.get(`${API_URL}/service-calls/pending`),
+        axios.get(`${API_URL}/auth/employees`),
+        axios.get(`${API_URL}/master/escalation-flows`),
+        axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] }))
+      ]);
+      if (partyRes?.data) {
+        setCustomerTypes(partyRes.data.map(p => p.name || p));
+      }
+
+      const flows = {};
+      flowRes.data.forEach(f => {
+        flows[f.type] = f.steps;
+      });
+      setAllFlows(flows);
+
+      const custDb = lsLoad(CUSTOMER_DB_KEY, []);
+      const escQueue = lsLoad(ESCALATION_KEY, []);
+      
+      const validCalls = callRes.data.filter(c => {
+        const activeEscalation = escQueue.find(q => q.callId === (c._id || c.id));
+        if (activeEscalation && activeEscalation.status !== "Resolved" && activeEscalation.status !== "Closed") {
+          return false;
         }
 
-        const flows = {};
-        flowRes.data.forEach(f => {
-          flows[f.type] = f.steps;
-        });
-        setAllFlows(flows);
-
-        const custDb = lsLoad(CUSTOMER_DB_KEY, []);
-        const escQueue = lsLoad(ESCALATION_KEY, []);
+        const custRow = custDb.find(r => r.partyCode === c.partyCode);
+        const partyType = custRow?.partyType || c.customerType || "All";
         
-        const validCalls = callRes.data.filter(c => {
-          const activeEscalation = escQueue.find(q => q.callId === (c._id || c.id));
-          if (activeEscalation && activeEscalation.status !== "Resolved" && activeEscalation.status !== "Closed") {
-            return false;
-          }
-
-          const custRow = custDb.find(r => r.partyCode === c.partyCode);
-          const partyType = custRow?.partyType || c.customerType || "All";
+        return (c.products || []).some(p => {
+          if (p._assigned || p._resolved || p._isCritical || c.status === "Critical") return false;
           
-          return (c.products || []).some(p => {
-            if (p._assigned || p._resolved || p._isCritical || c.status === "Critical") return false;
-            
-            const seg = p.productSegment || "Default";
-            const flowKey = `${partyType}|${seg}`;
-            let flowSteps = flows[flowKey];
-            if (!flowSteps || flowSteps.length === 0) {
-              flowSteps = flows[`${partyType}|Default`] || flows[partyType] || [
-                { dept: "Support Engineer", durationHours: 2, durationMins: 0 },
-                { dept: "Service Engineer", durationHours: 4, durationMins: 0 },
-                { dept: "R&D", durationHours: 8, durationMins: 0 },
-              ];
-            }
-            return (p._escalationLevel || 0) < flowSteps.length;
-          });
+          const seg = p.productSegment || "Default";
+          const flowKey = `${partyType}|${seg}`;
+          let flowSteps = flows[flowKey];
+          if (!flowSteps || flowSteps.length === 0) {
+            flowSteps = flows[`${partyType}|Default`] || flows[partyType] || [
+              { dept: "Support Engineer", durationHours: 2, durationMins: 0 },
+              { dept: "Service Engineer", durationHours: 4, durationMins: 0 },
+              { dept: "R&D", durationHours: 8, durationMins: 0 },
+            ];
+          }
+          return (p._escalationLevel || 0) < flowSteps.length;
         });
+      });
 
-        setGroups(buildSegmentGroups(validCalls));
-        setEmployees(empRes.data);
-      } catch (err) {
-        console.error("Fetch failed", err);
-        toast("Failed to load data from server", "error");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      setGroups(buildSegmentGroups(validCalls));
+      setEmployees(empRes.data);
+    } catch (err) {
+      console.error("Fetch failed", err);
+      toast("Failed to load data from server", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // KPI Counts for the top stat cards
   const stats = useMemo(() => {
@@ -495,6 +496,18 @@ export default function ServiceCallAssignment() {
               triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
             />
           </div>
+
+          {/* Refresh Button */}
+          <button
+            type="button"
+            onClick={fetchData}
+            disabled={isLoading}
+            className="flex items-center gap-[0.35vw] h-[2.2vw] px-[0.85vw] rounded-full text-[0.75vw] font-bold text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 border border-slate-200 transition-all cursor-pointer shadow-2xs shrink-0 disabled:opacity-50"
+            title="Refresh pending calls"
+          >
+            <RefreshCw className={`w-[0.8vw] h-[0.8vw] text-slate-500 ${isLoading ? "animate-spin text-blue-600" : ""}`} />
+            <span>Refresh</span>
+          </button>
         </div>
       </div>
       {/* ── TABLE CARD ── */}

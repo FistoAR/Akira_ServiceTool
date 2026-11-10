@@ -10,42 +10,129 @@ import {
   Shield,
   CheckCircle,
   ChevronRight,
+  TrendingUp,
+  Clock,
+  Sparkles,
+  ClipboardList,
 } from "lucide-react";
 
-export function KpiCard({ label, value, sub, icon: Icon, accent = "indigo", alert = false }) {
+/**
+ * Minimal inline Sparkline SVG for KPI cards
+ */
+function Sparkline({ color = "#6366f1", height = 28, width = 80 }) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 80 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0 overflow-visible"
+    >
+      <path
+        d="M2 20 C 14 17, 20 22, 28 13 C 38 4, 46 19, 55 9 C 64 0, 71 11, 78 9"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * KPI Metric Card with Sparkline & icon box
+ */
+export function KpiCard({
+  label,
+  value,
+  sub,
+  icon: Icon,
+  accent = "indigo",
+  alert = false,
+  sparkColor = "#6366f1",
+}) {
   const accents = {
-    indigo: { bg: "bg-indigo-50", text: "text-indigo-600", ring: "ring-indigo-100" },
-    blue: { bg: "bg-blue-50", text: "text-blue-600", ring: "ring-blue-100" },
-    emerald: { bg: "bg-emerald-50", text: "text-emerald-600", ring: "ring-emerald-100" },
-    amber: { bg: "bg-amber-50", text: "text-amber-600", ring: "ring-amber-100" },
-    red: { bg: "bg-red-50", text: "text-red-600", ring: "ring-red-100" },
-    slate: { bg: "bg-slate-100", text: "text-slate-600", ring: "ring-slate-100" },
+    indigo: {
+      bg: "bg-indigo-50/70",
+      text: "text-indigo-600",
+      ring: "border-indigo-100",
+      spark: "#6366f1",
+    },
+    blue: {
+      bg: "bg-blue-50/70",
+      text: "text-blue-600",
+      ring: "border-blue-100",
+      spark: "#3b82f6",
+    },
+    amber: {
+      bg: "bg-amber-50/70",
+      text: "text-amber-600",
+      ring: "border-amber-100",
+      spark: "#f59e0b",
+    },
+    red: {
+      bg: "bg-rose-50/70",
+      text: "text-rose-600",
+      ring: "border-rose-200",
+      spark: "#f43f5e",
+    },
+    slate: {
+      bg: "bg-slate-50",
+      text: "text-slate-600",
+      ring: "border-slate-200",
+      spark: "#64748b",
+    },
   };
   const a = accents[accent] || accents.indigo;
+  const isAlert = alert || accent === "red";
 
   return (
     <div
-      className={`group relative bg-white rounded-[0.65vw] px-[1vw] py-[0.85vw] flex flex-col justify-between
-        ring-1 ${alert ? "ring-red-200" : "ring-slate-200"}
-        shadow-[0_1px_2px_rgba(15,23,42,0.04)]
-        hover:shadow-[0_4px_14px_rgba(15,23,42,0.07)] hover:-translate-y-[0.05vw]
-        transition-all duration-200`}
+      className={`relative bg-white rounded-xl p-4 flex flex-col justify-between border transition-all duration-200
+        ${
+          isAlert
+            ? "border-rose-200 shadow-[0_2px_10px_-2px_rgba(244,63,94,0.08)] bg-rose-50/[0.15]"
+            : "border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] hover:shadow-md"
+        }`}
     >
       <div className="flex items-start justify-between">
-        <p className="text-[0.62vw] font-semibold uppercase tracking-[0.08em] text-slate-500">
+        <p
+          className={`text-xs font-bold uppercase tracking-wider ${
+            isAlert ? "text-rose-600" : "text-slate-500"
+          }`}
+        >
           {label}
         </p>
-        <div className={`w-[1.9vw] h-[1.9vw] rounded-[0.45vw] flex items-center justify-center ${a.bg} ${a.text} ring-1 ${a.ring}`}>
-          <Icon className="w-[0.95vw] h-[0.95vw]" strokeWidth={2.2} />
+        <div
+          className={`w-8 h-8 rounded-lg flex items-center justify-center border ${a.bg} ${a.text} ${a.ring}`}
+        >
+          <Icon className="w-4 h-4" strokeWidth={2.2} />
         </div>
       </div>
-      <div className="mt-[0.5vw]">
-        <h3 className={`text-[1.55vw] font-bold leading-none tracking-tight ${alert ? "text-red-600" : "text-slate-800"}`}>
-          {value}
-        </h3>
-        {sub && (
-          <p className="text-[0.62vw] text-slate-400 mt-[0.3vw] font-medium truncate">{sub}</p>
-        )}
+
+      <div className="mt-3 flex items-end justify-between gap-2">
+        <div>
+          <h3
+            className={`text-2xl font-bold leading-none tracking-tight ${
+              isAlert ? "text-rose-600" : "text-slate-800"
+            }`}
+          >
+            {value}
+          </h3>
+          {sub && (
+            <p
+              className={`text-xs mt-1.5 font-medium truncate ${
+                isAlert ? "text-rose-500" : "text-slate-400"
+              }`}
+            >
+              {sub}
+            </p>
+          )}
+        </div>
+        <div className="pb-0.5">
+          <Sparkline color={a.spark || sparkColor} />
+        </div>
       </div>
     </div>
   );
@@ -55,15 +142,15 @@ export function PanelHeader({ icon: Icon, title, count, actionLabel, onAction, t
   const tones = {
     slate: "text-slate-800",
     indigo: "text-indigo-700",
-    red: "text-red-700",
+    red: "text-rose-600",
   };
   return (
-    <div className="flex items-center justify-between px-[1vw] py-[0.65vw] border-b border-slate-100 flex-shrink-0">
-      <h3 className={`text-[0.8vw] font-bold flex items-center gap-[0.45vw] ${tones[tone]}`}>
-        <Icon className="w-[0.9vw] h-[0.9vw]" strokeWidth={2.2} />
+    <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 flex-shrink-0">
+      <h3 className={`text-sm font-bold flex items-center gap-2 ${tones[tone]}`}>
+        <Icon className="w-4 h-4" strokeWidth={2.2} />
         {title}
         {count !== undefined && (
-          <span className="text-[0.62vw] font-semibold px-[0.4vw] py-[0.08vw] rounded-full bg-slate-100 text-slate-600">
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
             {count}
           </span>
         )}
@@ -71,75 +158,203 @@ export function PanelHeader({ icon: Icon, title, count, actionLabel, onAction, t
       {actionLabel && (
         <button
           onClick={onAction}
-          className="text-[0.65vw] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
+          className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-colors cursor-pointer"
         >
           {actionLabel}
-          <ChevronRight className="w-[0.7vw] h-[0.7vw]" />
+          <ChevronRight className="w-3.5 h-3.5" />
         </button>
       )}
     </div>
   );
 }
 
-export function ProgressRow({ label, value, total, color = "#3b82f6" }) {
-  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
-  return (
-    <div className="space-y-[0.25vw]">
-      <div className="flex items-center justify-between text-[0.68vw]">
-        <span className="text-slate-600 font-medium truncate max-w-[14vw]">{label}</span>
-        <div className="flex items-center gap-[0.4vw]">
-          <span className="font-bold text-slate-800 font-mono">{value}</span>
-          <span className="text-slate-400 text-[0.6vw] font-mono">{pct}%</span>
-        </div>
-      </div>
-      <div className="h-[0.32vw] w-full rounded-full bg-slate-100 overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-500 ease-out"
-          style={{ width: `${pct}%`, backgroundColor: color }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function EmptyState({ icon: Icon, title }) {
   return (
-    <div className="h-full flex flex-col items-center justify-center text-center py-[2vw]">
-      <div className="w-[2vw] h-[2vw] rounded-full bg-slate-50 flex items-center justify-center mb-[0.4vw]">
-        <Icon className="w-[1vw] h-[1vw] text-slate-400" />
+    <div className="h-full flex flex-col items-center justify-center text-center py-6">
+      <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center mb-2">
+        <Icon className="w-5 h-5 text-slate-400" strokeWidth={2} />
       </div>
-      <p className="text-[0.68vw] font-medium text-slate-400">{title}</p>
+      <p className="text-xs font-medium text-slate-400">{title}</p>
     </div>
   );
 }
 
-export default function AdminDashboard({ stats, totalRegisteredCalls, customersCount, navigate }) {
+/**
+ * Clean SVG Donut Chart with center label
+ */
+function DonutChart({ segments, total, label = "Total Calls", size = 150 }) {
+  const strokeWidth = 24;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  let accumulatedPercent = 0;
+  const validSegments = segments.filter((s) => s.value > 0);
+
+  return (
+    <div
+      className="relative flex items-center justify-center shrink-0"
+      style={{ width: `${size}px`, height: `${size}px` }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="-rotate-90 transform"
+      >
+        {/* Background track circle */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="#f1f5f9"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+
+        {validSegments.length === 0 ? (
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke="#cbd5e1"
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
+        ) : (
+          validSegments.map((seg, idx) => {
+            const pct = total > 0 ? seg.value / total : 0;
+            const strokeDasharray = `${pct * circumference} ${circumference}`;
+            const strokeDashoffset = -accumulatedPercent * circumference;
+            accumulatedPercent += pct;
+
+            return (
+              <circle
+                key={idx}
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                stroke={seg.color}
+                strokeWidth={strokeWidth}
+                strokeDasharray={strokeDasharray}
+                strokeDashoffset={strokeDashoffset}
+                fill="none"
+                strokeLinecap="butt"
+                className="transition-all duration-700 ease-out"
+              />
+            );
+          })
+        )}
+      </svg>
+
+      {/* Center text */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+        <span className="text-2xl font-bold leading-none text-slate-800">
+          {total}
+        </span>
+        <span className="text-[11px] font-medium text-slate-400 mt-1">
+          {label}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export default function AdminDashboard({
+  stats,
+  totalRegisteredCalls,
+  customersCount,
+  navigate,
+}) {
   const matTotal =
     stats.unclaimedMaterials +
     stats.claimedMaterials +
     stats.approvedMaterials +
-    stats.deniedMaterials || 1;
+    stats.deniedMaterials;
+
+  // Segments for Service Calls Donut Breakdown
+  const callSegments = [
+    {
+      label: "Registered / Unassigned",
+      value: stats.callStatus.Registered || 0,
+      color: "#3b82f6", // Blue
+    },
+    {
+      label: "Open / In Progress",
+      value:
+        (stats.callStatus.Open || 0) +
+        (stats.callStatus.Assigned || 0) +
+        (stats.callStatus.Pending || 0),
+      color: "#2563eb", // Deep blue
+    },
+    {
+      label: "Escalated",
+      value: stats.callStatus.Escalated || 0,
+      color: "#f59e0b", // Amber / Orange
+    },
+    {
+      label: "Critical / Breached",
+      value: stats.callStatus.Critical || 0,
+      color: "#ef4444", // Red
+    },
+    {
+      label: "Resolved",
+      value: stats.callStatus.Resolved || 0,
+      color: "#10b981", // Green
+    },
+  ];
+
+  // Segments for Service Materials Donut Breakdown
+  const materialSegments = [
+    {
+      label: "Unclaimed Inwards",
+      value: stats.unclaimedMaterials || 0,
+      color: "#94a3b8", // Slate
+    },
+    {
+      label: "Claimed & Pending",
+      value: Math.max(0, stats.claimedMaterials - stats.completedMaterials),
+      color: "#3b82f6", // Blue
+    },
+    {
+      label: "Resolved (Review Needed)",
+      value: stats.completedMaterials || 0,
+      color: "#8b5cf6", // Violet
+    },
+    {
+      label: "Approved by Admin",
+      value: stats.approvedMaterials || 0,
+      color: "#10b981", // Green
+    },
+    {
+      label: "Denied by Admin",
+      value: stats.deniedMaterials || 0,
+      color: "#ef4444", // Red
+    },
+  ];
+
+  const totalCallsCount = stats.totalCalls || totalRegisteredCalls || 0;
+  const totalMaterialsCount = matTotal || 0;
 
   return (
-    <div className="flex-1 flex flex-col gap-[0.9vw] min-h-0">
-      {/* KPI strip */}
-      <div className="grid grid-cols-5 gap-[0.9vw] flex-shrink-0">
+    <div className="flex-1 flex flex-col justify-between gap-3 min-h-0 overflow-hidden">
+      {/* ── 1. Top KPI Cards Row ────────────────────────────── */}
+      <div className="grid grid-cols-5 gap-3 flex-shrink-0">
         <KpiCard
-          label="Registered Calls"
+          label="REGISTERED CALLS"
           value={totalRegisteredCalls}
-          sub={`${stats.callStatus.Resolved} resolved`}
+          sub={`${stats.callStatus.Resolved || 0} resolved`}
           icon={Phone}
           accent="blue"
         />
         <KpiCard
-          label="Escalated"
+          label="ESCALATED"
           value={stats.activeEscalated.length}
           sub="Active chains"
           icon={ArrowUpRight}
           accent="amber"
         />
         <KpiCard
-          label="SLA Breached"
+          label="SLA BREACHED"
           value={stats.criticalCalls.length}
           sub="Immediate action"
           icon={AlertTriangle}
@@ -147,14 +362,14 @@ export default function AdminDashboard({ stats, totalRegisteredCalls, customersC
           alert={stats.criticalCalls.length > 0}
         />
         <KpiCard
-          label="Pending Approvals"
+          label="PENDING APPROVALS"
           value={stats.completedMaterials}
           sub="Materials to review"
           icon={CheckSquare}
           accent="indigo"
         />
         <KpiCard
-          label="Customers"
+          label="CUSTOMERS"
           value={customersCount}
           sub="Active client base"
           icon={Users}
@@ -162,199 +377,269 @@ export default function AdminDashboard({ stats, totalRegisteredCalls, customersC
         />
       </div>
 
-      {/* Middle: breakdowns */}
-      <div className="grid grid-cols-2 gap-[0.9vw] flex-shrink-0 h-[16.5vw]">
-        <section className="bg-white rounded-[0.7vw] ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.04)] flex flex-col overflow-hidden">
-          <PanelHeader icon={Activity} title="Service Calls Breakdown" tone="indigo" />
-          <div className="flex-1 px-[1vw] py-[0.85vw] flex flex-col justify-center gap-[0.62vw]">
-            <ProgressRow
-              label="Registered / Unassigned"
-              value={stats.callStatus.Registered}
-              total={stats.totalCalls || 1}
-              color="#94a3b8"
+      {/* ── 2. Middle Row: Donut Chart Breakdowns ────────────── */}
+      <div className="grid grid-cols-2 gap-3 flex-1 min-h-0">
+        {/* Card: Service Calls Breakdown */}
+        <section className="bg-white rounded-xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-4 flex flex-col justify-between min-h-0 overflow-hidden">
+          <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm flex-shrink-0">
+            <Activity className="w-4 h-4" strokeWidth={2.2} />
+            <span>Service Calls Breakdown</span>
+          </div>
+
+          <div className="flex items-center justify-between gap-6 my-auto px-2 flex-1 min-h-0">
+            {/* Donut Chart */}
+            <DonutChart
+              segments={callSegments}
+              total={totalCallsCount}
+              label="Total Calls"
+              size={140}
             />
-            <ProgressRow
-              label="Open / In Progress"
-              value={
-                stats.callStatus.Open +
-                stats.callStatus.Assigned +
-                stats.callStatus.Pending
-              }
-              total={stats.totalCalls || 1}
-              color="#3b82f6"
-            />
-            <ProgressRow
-              label="Escalated"
-              value={stats.callStatus.Escalated}
-              total={stats.totalCalls || 1}
-              color="#eab308"
-            />
-            <ProgressRow
-              label="Critical / Breached"
-              value={stats.callStatus.Critical}
-              total={stats.totalCalls || 1}
-              color="#ef4444"
-            />
-            <ProgressRow
-              label="Resolved"
-              value={stats.callStatus.Resolved}
-              total={stats.totalCalls || 1}
-              color="#10b981"
-            />
+
+            {/* Legend & Stats Table */}
+            <div className="flex-1 space-y-2">
+              {callSegments.map((item, idx) => {
+                const pct =
+                  totalCallsCount > 0
+                    ? Math.round((item.value / totalCallsCount) * 100)
+                    : 0;
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between text-xs"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="text-slate-600 font-medium">
+                        {item.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-slate-800 font-mono text-xs">
+                        {item.value}
+                      </span>
+                      <span className="text-slate-400 font-mono text-xs w-8 text-right">
+                        {pct}%
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-center flex-shrink-0">
+            <button
+              onClick={() => navigate("/serviceCall")}
+              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5 transition-colors cursor-pointer group"
+            >
+              <span>View all service calls</span>
+              <span className="group-hover:translate-x-0.5 transition-transform">
+                &rarr;
+              </span>
+            </button>
           </div>
         </section>
 
-        <section className="bg-white rounded-[0.7vw] ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.04)] flex flex-col overflow-hidden">
-          <PanelHeader icon={Boxes} title="Service Materials Breakdown" tone="indigo" />
-          <div className="flex-1 px-[1vw] py-[0.85vw] flex flex-col justify-center gap-[0.62vw]">
-            <ProgressRow
-              label="Unclaimed Inwards"
-              value={stats.unclaimedMaterials}
-              total={matTotal}
-              color="#94a3b8"
+        {/* Card: Service Materials Breakdown */}
+        <section className="bg-white rounded-xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-4 flex flex-col justify-between min-h-0 overflow-hidden">
+          <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm flex-shrink-0">
+            <Boxes className="w-4 h-4" strokeWidth={2.2} />
+            <span>Service Materials Breakdown</span>
+          </div>
+
+          <div className="flex items-center justify-between gap-6 my-auto px-2 flex-1 min-h-0">
+            {/* Donut Chart */}
+            <DonutChart
+              segments={materialSegments}
+              total={totalMaterialsCount}
+              label="Total Items"
+              size={140}
             />
-            <ProgressRow
-              label="Claimed & Pending"
-              value={stats.claimedMaterials - stats.completedMaterials}
-              total={matTotal}
-              color="#3b82f6"
-            />
-            <ProgressRow
-              label="Resolved (Review Needed)"
-              value={stats.completedMaterials}
-              total={matTotal}
-              color="#8b5cf6"
-            />
-            <ProgressRow
-              label="Approved by Admin"
-              value={stats.approvedMaterials}
-              total={matTotal}
-              color="#10b981"
-            />
-            <ProgressRow
-              label="Denied by Admin"
-              value={stats.deniedMaterials}
-              total={matTotal}
-              color="#ef4444"
-            />
+
+            {/* Legend & Stats Table */}
+            <div className="flex-1 space-y-2">
+              {materialSegments.map((item, idx) => {
+                const pct =
+                  totalMaterialsCount > 0
+                    ? Math.round((item.value / totalMaterialsCount) * 100)
+                    : 0;
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between text-xs"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="text-slate-600 font-medium">
+                        {item.label}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-slate-800 font-mono text-xs">
+                        {item.value}
+                      </span>
+                      <span className="text-slate-400 font-mono text-xs w-8 text-right">
+                        {pct}%
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-center flex-shrink-0">
+            <button
+              onClick={() => navigate("/serviceMaterial")}
+              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1.5 transition-colors cursor-pointer group"
+            >
+              <span>View materials</span>
+              <span className="group-hover:translate-x-0.5 transition-transform">
+                &rarr;
+              </span>
+            </button>
           </div>
         </section>
       </div>
 
-      {/* Bottom: approvals + SLA */}
-      <div className="grid grid-cols-3 gap-[0.9vw] flex-1 min-h-0">
-        <section className="col-span-2 bg-white rounded-[0.7vw] ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.04)] flex flex-col overflow-hidden">
-          <PanelHeader
-            icon={CheckSquare}
-            title="Materials Awaiting Approval"
-            count={stats.pendingAdminReviews.length}
-            actionLabel="Review"
-            onAction={() => navigate("/serviceMaterial")}
-            tone="indigo"
-          />
-          <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+      {/* ── 3. Bottom Row: Approvals & SLA Breaches ────────────── */}
+      <div className="grid grid-cols-2 gap-3 flex-1 min-h-0">
+        {/* Materials Awaiting Approval */}
+        <section className="bg-white rounded-xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-4 flex flex-col justify-between min-h-0 overflow-hidden">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 flex-shrink-0">
+            <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+              <CheckSquare className="w-4 h-4" strokeWidth={2.2} />
+              <span>Materials Awaiting Approval</span>
+              <span className="ml-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold text-xs">
+                {stats.pendingAdminReviews.length}
+              </span>
+            </div>
+            <button
+              onClick={() => navigate("/serviceMaterial")}
+              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              <span>Review all</span>
+              <span>&rarr;</span>
+            </button>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center py-2 min-h-0 overflow-y-auto">
             {stats.pendingAdminReviews.length === 0 ? (
-              <EmptyState
-                icon={CheckCircle}
-                title="No pending reviews — all clear!"
-              />
+              <div className="flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-indigo-50/70 border border-indigo-100 flex items-center justify-center mb-2 text-indigo-500 shadow-2xs">
+                  <ClipboardList className="w-6 h-6" strokeWidth={1.8} />
+                </div>
+                <h4 className="text-sm font-bold text-slate-700">
+                  No pending reviews — all clear!
+                </h4>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Great job! There are currently no materials awaiting approval.
+                </p>
+              </div>
             ) : (
-              <table className="w-full text-left border-collapse text-[0.7vw]">
-                <thead className="sticky top-0 bg-slate-50 z-10">
-                  <tr className="border-b border-slate-200">
-                    <th className="px-[0.8vw] py-[0.5vw] font-semibold text-slate-500 uppercase tracking-wider text-[0.6vw]">
-                      Product
-                    </th>
-                    <th className="px-[0.8vw] py-[0.5vw] font-semibold text-slate-500 uppercase tracking-wider text-[0.6vw]">
-                      Customer
-                    </th>
-                    <th className="px-[0.8vw] py-[0.5vw] font-semibold text-slate-500 uppercase tracking-wider text-[0.6vw]">
-                      Assigned To
-                    </th>
-                    <th className="px-[0.8vw] py-[0.5vw] font-semibold text-slate-500 uppercase tracking-wider text-[0.6vw]">
-                      Serial
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats.pendingAdminReviews.map(({ entry, product }) => (
-                    <tr
-                      key={product._pid}
-                      onClick={() => navigate("/serviceMaterial")}
-                      className="border-b border-slate-100 hover:bg-indigo-50/40 transition-colors cursor-pointer"
-                    >
-                      <td className="px-[0.8vw] py-[0.55vw] font-semibold text-slate-800 max-w-[12vw] truncate">
+              <div className="w-full space-y-1.5 overflow-y-auto max-h-full">
+                {stats.pendingAdminReviews.map(({ entry, product }) => (
+                  <div
+                    key={product._pid}
+                    onClick={() => navigate("/serviceMaterial")}
+                    className="flex items-center justify-between p-2 rounded-lg border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer"
+                  >
+                    <div>
+                      <div className="font-bold text-slate-800 text-xs">
                         {product.productDescription || "—"}
-                      </td>
-                      <td className="px-[0.8vw] py-[0.55vw] text-slate-600 truncate max-w-[10vw]">
-                        {entry.customerName || "—"}
-                      </td>
-                      <td className="px-[0.8vw] py-[0.55vw] text-indigo-700 font-semibold">
-                        {product.assignedToName || "—"}
-                      </td>
-                      <td className="px-[0.8vw] py-[0.55vw] font-mono text-slate-500">
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        {entry.customerName || "—"} • SN:{" "}
                         {product.serialNumber || "—"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded">
+                      {product.assignedToName || "Assigned"}
+                    </span>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </section>
 
-        <section className="col-span-1 bg-white rounded-[0.7vw] ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.04)] flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between px-[1vw] py-[0.65vw] border-b border-slate-100 flex-shrink-0 bg-red-50/50">
-            <h3 className="text-[0.8vw] font-bold flex items-center gap-[0.45vw] text-red-700">
-              <AlertTriangle className="w-[0.9vw] h-[0.9vw]" strokeWidth={2.2} />
-              Active SLA Breaches
-              <span className="text-[0.62vw] font-semibold px-[0.4vw] py-[0.08vw] rounded-full bg-red-100 text-red-700">
+        {/* Active SLA Breaches */}
+        <section className="bg-white rounded-xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-4 flex flex-col justify-between min-h-0 overflow-hidden">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 flex-shrink-0">
+            <div className="flex items-center gap-2 text-rose-600 font-bold text-sm">
+              <AlertTriangle className="w-4 h-4" strokeWidth={2.2} />
+              <span>Active SLA Breaches</span>
+              <span className="ml-1 px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold text-xs">
                 {stats.criticalCalls.length}
               </span>
-            </h3>
+            </div>
             <button
               onClick={() => navigate("/serviceCall/escalations")}
-              className="text-[0.65vw] font-semibold text-red-600 hover:text-red-800 transition-colors cursor-pointer"
+              className="text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1 transition-colors cursor-pointer"
             >
-              Manage
+              <span>Manage all</span>
+              <span>&rarr;</span>
             </button>
           </div>
-          <div className="flex-1 min-h-0 overflow-y-auto px-[0.7vw] py-[0.6vw] space-y-[0.45vw] custom-scrollbar">
+
+          <div className="flex-1 flex flex-col justify-center py-2 min-h-0 overflow-y-auto">
             {stats.criticalCalls.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center">
-                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 flex items-center justify-center mb-[0.5vw]">
-                  <Shield className="w-[1.1vw] h-[1.1vw] text-emerald-500" />
+              <div className="flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-2 text-emerald-600">
+                  <Shield className="w-6 h-6" strokeWidth={1.8} />
                 </div>
-                <p className="text-[0.7vw] font-semibold text-slate-500">
+                <h4 className="text-sm font-bold text-slate-700">
                   No SLA breaches — system healthy
+                </h4>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  All current service calls are operating within expected time limits.
                 </p>
               </div>
             ) : (
-              stats.criticalCalls.slice(0, 6).map((call) => (
-                <div
-                  key={call._id}
-                  onClick={() => navigate("/serviceCall/escalations")}
-                  className="px-[0.7vw] py-[0.5vw] rounded-[0.45vw] ring-1 ring-red-200 bg-red-50/40
-                    hover:bg-red-50 hover:ring-red-300 transition-all cursor-pointer"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono font-bold text-[0.7vw] text-red-800">
-                      {call.callNumber}
-                    </span>
-                    <span className="text-[0.55vw] bg-red-100 text-red-800 px-[0.35vw] py-[0.08vw] rounded font-bold uppercase tracking-wide">
-                      Breach
-                    </span>
+              <div className="space-y-2 overflow-y-auto max-h-full">
+                {stats.criticalCalls.slice(0, 3).map((call) => (
+                  <div
+                    key={call._id || call.callNumber}
+                    onClick={() => navigate("/serviceCall/escalations")}
+                    className="flex items-center justify-between p-2.5 rounded-lg border border-rose-100 bg-rose-50/30 hover:bg-rose-50/70 hover:border-rose-200 transition-colors cursor-pointer"
+                  >
+                    <div>
+                      <div className="font-mono font-bold text-rose-600 text-xs">
+                        {call.callNumber}
+                      </div>
+                      <div className="text-xs font-semibold text-slate-700 mt-0.5">
+                        {call.customerName || "—"}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wide text-rose-600 bg-rose-100/70 border border-rose-200 px-1.5 py-0.5 rounded">
+                        BREACH
+                      </span>
+                      <div className="text-[11px] text-slate-400 mt-0.5">
+                        Immediate action
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[0.65vw] text-slate-700 font-semibold truncate mt-[0.15vw]">
-                    {call.customerName}
-                  </p>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </section>
+      </div>
+
+      {/* ── 4. Bottom Info Notification Bar ───────────────────── */}
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50/50 border border-indigo-100/80 rounded-lg text-xs text-indigo-900/80 flex-shrink-0">
+        <Sparkles className="w-3.5 h-3.5 text-indigo-500 shrink-0" strokeWidth={2} />
+        <span>
+          Keep an eye on SLA breaches and pending approvals to maintain seamless operations.
+        </span>
       </div>
     </div>
   );
 }
-

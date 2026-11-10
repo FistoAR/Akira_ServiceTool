@@ -15,34 +15,29 @@ body,
 
 /* Base font scaling: boosted font sizes and comfortable button/control sizing across all screens */
 html {
-  font-size: 16.5px;
+  font-size: 16px;
 }
 
 @media (min-width: 1440px) {
   html {
-    font-size: 17.5px;
+    font-size: 16px;
   }
 }
 
 @media (min-width: 1920px) {
   html {
-    font-size: 18.5px;
+    font-size: 16px;
   }
 }
 
 /* Ensure legible font and icon sizes in tables, inputs, badges and buttons */
 input, select, textarea, button {
-  font-size: max(13px, 0.78vw);
+  font-size: max(12px, 0.78vw);
 }
 
-svg.lucide {
-  min-width: 15px;
-  min-height: 15px;
-}
-
-/* Global button and input comfort scaling */
-button:not([class*="p-0"]):not([class*="w-"]):not([class*="h-"]) {
-  min-height: 2.1rem;
+/* Global button and input comfort scaling - do not stretch utility or inline buttons */
+button:not([class*="p-0"]):not([class*="w-"]):not([class*="h-"]):not([class*="py-"]):not([class*="rounded-full"]) {
+  min-height: 2rem;
 }
 
 /* index.css - Add these animations */
@@ -161,4 +156,16 @@ button:not([class*="p-0"]):not([class*="w-"]):not([class*="h-"]) {
 @keyframes shimmer {
   0% { background-position: -200% 0, 0 0; }
   100% { background-position: 200% 0, 0 0; }
+}
+
+/* Hide default browser native calendar icon */
+.no-native-calendar::-webkit-calendar-picker-indicator {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.no-native-calendar {
+  -moz-appearance: textfield;
 }

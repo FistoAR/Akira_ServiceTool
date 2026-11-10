@@ -42,6 +42,7 @@ import {
   ClipboardList,
   UserCheck,
   PhoneCall,
+  RotateCcw,
 } from "lucide-react";
 import {
   ServiceCallForm,
@@ -110,6 +111,8 @@ const ServiceCallResponse = () => {
   const [filterFromDate, setFilterFromDate] = useState("");
   const [filterToDate, setFilterToDate] = useState("");
   const [filterPriority, setFilterPriority] = useState("All");
+  const fromDateRef = useRef(null);
+  const toDateRef = useRef(null);
 
   useEffect(() => {
     if (urlSearch) {
@@ -1071,11 +1074,53 @@ const ServiceCallResponse = () => {
     setEditingCall(null);
   };
 
+const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState({
     isOpen: false,
     row: null,
+    isBulk: false,
+    bulkIds: [],
   });
+
+  const handleBulkDelete = (ids) => {
+    if (!ids || ids.length === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      row: null,
+      isBulk: true,
+      bulkIds: ids,
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (deleteModalState.isBulk) {
+        const ids = deleteModalState.bulkIds;
+        await Promise.all(
+          ids.map((id) => axios.delete(`${API_URL}/service-calls/${id}`))
+        );
+        toast(`${ids.length} records deleted successfully`, "success");
+        setQueue((prev) => prev.filter((c) => !ids.includes(c._id || c.callId || c.id)));
+        setSelectedSelfAssigned(new Set());
+      } else if (deleteModalState.row) {
+        const targetId =
+          deleteModalState.row._id ||
+          deleteModalState.row.callId ||
+          deleteModalState.row.id;
+        await axios.delete(`${API_URL}/service-calls/${targetId}`);
+        toast("Call deleted successfully", "success");
+        setQueue((prev) => prev.filter((c) => (c._id || c.callId || c.id) !== targetId));
+      }
+      setDeleteModalState({ isOpen: false, row: null, isBulk: false, bulkIds: [] });
+    } catch (err) {
+      console.error("Delete operation failed:", err);
+      toast("Failed to delete record(s)", "error");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleDeleteCall = async (callId) => {
     setIsDeleting(true);
@@ -1083,7 +1128,7 @@ const ServiceCallResponse = () => {
       await axios.delete(`${API_URL}/service-calls/${callId}`);
       toast("Call deleted successfully", "success");
       setQueue((prev) => prev.filter((c) => (c._id || c.callId || c.id) !== callId));
-      setDeleteModalState({ isOpen: false, row: null });
+      setDeleteModalState({ isOpen: false, row: null, isBulk: false, bulkIds: [] });
     } catch (err) {
       console.error("Failed to delete call:", err);
       toast("Failed to delete call", "error");
@@ -1122,10 +1167,10 @@ const ServiceCallResponse = () => {
 
   return (
     <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 overflow-hidden pb-[0.4vw]">
-      {/* Top Header Toolbar with Glass Tab Container & Action Buttons */}
+      {/* Top Header Toolbar with Sleek Pill Tabs & Action Controls */}
       <div className="flex items-center gap-[0.8vw] mb-[0.6vw] sticky top-0 z-10 shrink-0">
-        {/* Premium Glass-Effect Tab Container */}
-        <div className="flex-1 flex gap-[0.5vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] shadow-sm">
+        {/* Sleek Pill Tab Container */}
+        <div className="flex-1 flex gap-[0.4vw] bg-white rounded-full p-[0.3vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 overflow-x-auto">
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -1139,24 +1184,24 @@ const ServiceCallResponse = () => {
                   });
                 }
               }}
-              className={`flex-1 flex items-center justify-center gap-[0.5vw] py-[0.55vw] rounded-[0.5vw] font-bold transition-all duration-305 relative cursor-pointer ${
+              className={`flex-1 flex items-center justify-center gap-[0.4vw] py-[0.45vw] px-[0.8vw] rounded-full text-[0.78vw] font-bold transition-all duration-200 relative cursor-pointer whitespace-nowrap ${
                 activeTab === t.id
-                  ? `bg-gradient-to-r ${t.color} text-white shadow-md overflow-hidden`
+                  ? "bg-indigo-600 text-white shadow-sm"
                   : newActivityTabs[t.id]
-                    ? "tab-running-border text-white font-extrabold shadow-sm"
-                    : "text-slate-700 hover:bg-slate-50 hover:text-slate-900 overflow-hidden"
+                    ? "bg-emerald-50 text-emerald-700 font-extrabold border border-emerald-200"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
-              <t.icon className="w-[1vw] h-[1vw]" />
-              <span className="">{t.label}</span>
+              <t.icon className="w-[0.9vw] h-[0.9vw]" />
+              <span>{t.label}</span>
               {t.count !== undefined && (
                 <span
-                  className={`text-[0.65vw] px-[0.45vw] py-[0.05vw] rounded-full font-bold transition-colors z-10 ${
+                  className={`text-[0.65vw] px-[0.45vw] py-[0.05vw] rounded-full font-bold transition-colors ${
                     activeTab === t.id
                       ? "bg-white/20 text-white"
                       : newActivityTabs[t.id]
-                        ? "bg-white text-emerald-800 shadow-sm"
-                        : "bg-slate-100 text-slate-750"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : "bg-slate-100 text-slate-600"
                   }`}
                 >
                   {t.count}
@@ -1167,14 +1212,14 @@ const ServiceCallResponse = () => {
         </div>
 
         {/* Action Controls: Refresh & Register Call */}
-        <div className="flex items-center gap-[0.5vw] bg-white/80 backdrop-blur-md border border-slate-400 rounded-[0.8vw] p-[0.35vw] shadow-sm shrink-0">
+        <div className="flex items-center gap-[0.4vw] bg-white rounded-full p-[0.3vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 shrink-0">
           <button
             type="button"
             onClick={refreshData}
             title="Refresh Tasks"
-            className="p-[0.55vw] rounded-[0.5vw] text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-200 cursor-pointer"
+            className="p-[0.55vw] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
           >
-            <RefreshCw className="w-[1vw] h-[1vw]" />
+            <RefreshCw className="w-[0.95vw] h-[0.95vw]" />
           </button>
 
           <button
@@ -1183,19 +1228,19 @@ const ServiceCallResponse = () => {
               setEditingCall(null);
               setView("form");
             }}
-            className="flex items-center gap-[0.4vw] px-[1vw] py-[0.55vw] bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-[0.5vw] shadow-sm hover:shadow transition-all duration-200 cursor-pointer text-[0.82vw]"
+            className="flex items-center gap-[0.35vw] px-[0.95vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-full shadow-xs hover:shadow transition-all duration-200 cursor-pointer text-[0.78vw]"
           >
-            <Plus className="w-[1vw] h-[1vw] stroke-[2.5]" />
+            <Plus className="w-[0.9vw] h-[0.9vw] stroke-[2.5]" />
             <span>Register Call</span>
           </button>
         </div>
       </div>
 
-      {/* ── Global Search & Date/Priority Filters Toolbar across all tabs ── */}
-      <div className="flex items-center justify-between bg-white px-[0.8vw] py-[0.45vw] rounded-[0.7vw] shadow-sm border border-slate-200 gap-[0.7vw] shrink-0 mb-[0.6vw]">
-        {/* Left side: Search Box */}
+      {/* ── FILTER & SEARCH TOOLBAR (Matching Entry & Reports page) ── */}
+      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0 mb-[0.6vw]">
+        {/* Left side: Soft Pill Search Box */}
         <div className="relative flex-1 max-w-[28vw]">
-          <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.95vw] h-[0.95vw]" />
+          <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
           <input
             type="text"
             placeholder="Search by customer, party code, call no, product, model..."
@@ -1204,39 +1249,73 @@ const ServiceCallResponse = () => {
               setSearchQuery(e.target.value);
               setSelfAssignedPage(1);
             }}
-            className="w-full pl-[2.4vw] pr-[0.8vw] h-[2.1vw] border border-slate-200 rounded-[0.5vw] text-[0.76vw] font-medium text-slate-800 placeholder-slate-400 bg-slate-50/70 hover:bg-white focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+            >
+              <X className="w-[0.7vw] h-[0.7vw]" />
+            </button>
+          )}
         </div>
 
-        {/* Middle: Crisp Date Range Filter */}
-        <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-[0.5vw] h-[2.1vw] px-[0.6vw] bg-slate-50/70 hover:bg-white focus-within:bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/15 transition-all text-[0.74vw]">
-          <Calendar className="w-[0.85vw] h-[0.85vw] text-slate-400 shrink-0" />
-          <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">
-            From
-          </span>
-          <input
-            type="date"
-            value={filterFromDate || ""}
-            onChange={(e) => {
-              setFilterFromDate(e.target.value);
-              setSelfAssignedPage(1);
-            }}
-            className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer border-none p-0 focus:ring-0"
-          />
-          <span className="text-slate-300 mx-[0.1vw]">—</span>
-          <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">
-            To
-          </span>
-          <input
-            type="date"
-            value={filterToDate || ""}
-            min={filterFromDate || undefined}
-            onChange={(e) => {
-              setFilterToDate(e.target.value);
-              setSelfAssignedPage(1);
-            }}
-            className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer border-none p-0 focus:ring-0"
-          />
+        {/* Right side: Unified Capsule Date Range & Priority Filter */}
+        <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+          {/* Unified Date Range Capsule */}
+          <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+            <button
+              type="button"
+              onClick={() => {
+                if (fromDateRef.current) {
+                  try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
+                }
+              }}
+              className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center"
+              title="Choose from date"
+            >
+              <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+            </button>
+            <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+            <input
+              ref={fromDateRef}
+              type="date"
+              value={filterFromDate || ""}
+              onChange={(e) => {
+                setFilterFromDate(e.target.value);
+                setSelfAssignedPage(1);
+              }}
+              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+            />
+            <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
+            <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+            <input
+              ref={toDateRef}
+              type="date"
+              value={filterToDate || ""}
+              min={filterFromDate || undefined}
+              onChange={(e) => {
+                setFilterToDate(e.target.value);
+                setSelfAssignedPage(1);
+              }}
+              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (toDateRef.current) {
+                  try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
+                }
+              }}
+              className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+              title="Choose to date"
+            >
+              <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+            </button>
+          </div>
+
+          {/* Reset / Clear Button */}
           {(filterFromDate || filterToDate) && (
             <button
               onClick={() => {
@@ -1244,19 +1323,19 @@ const ServiceCallResponse = () => {
                 setFilterToDate("");
                 setSelfAssignedPage(1);
               }}
-              className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-bold cursor-pointer ml-[0.3vw] px-[0.3vw] py-[0.1vw] hover:bg-rose-50 rounded"
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
-              Clear
+              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+              <span>Clear</span>
             </button>
           )}
-        </div>
 
-        {/* Right side: Priority Dropdown */}
-        <div className="flex gap-[0.5vw] items-center flex-shrink-0">
-          <div className="w-[10vw]">
+          {/* Priority Dropdown (Pill shaped) */}
+          <div className="w-[9.5vw]">
             <CustomDropdown
               size="sm"
+              align="right"
               value={filterPriority}
               onChange={(val) => {
                 setFilterPriority(val);
@@ -1266,13 +1345,14 @@ const ServiceCallResponse = () => {
                 { value: "All", label: "All Priorities" },
                 ...PRIORITIES.map((p) => ({ value: p, label: p })),
               ]}
-              triggerClassName="h-[2.1vw] !rounded-[0.5vw] border-slate-200 bg-slate-50/70 hover:bg-white text-slate-700 font-semibold"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
             />
           </div>
         </div>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-100/70 p-[1.2vw] rounded-[1vw] border border-slate-400 shadow-inner">
             <RefreshCw className="w-[3vw] h-[3vw] text-indigo-650 animate-spin mb-[1vw]" />
@@ -1325,6 +1405,9 @@ const ServiceCallResponse = () => {
               {/* ── Self Assigned Tab: Full Table View ── */}
               {activeTab === "self_assigned" && (
                 <SelfAssignedQueueTab
+                  selectedItems={selectedSelfAssigned}
+                  setSelectedItems={setSelectedSelfAssigned}
+                  onBulkDelete={handleBulkDelete}
                   selfAssignedRawCalls={selfAssignedRawCalls}
                   selfAssignedStatus={selfAssignedStatus}
                   setSelfAssignedStatus={setSelfAssignedStatus}
@@ -1525,22 +1608,15 @@ const ServiceCallResponse = () => {
       <ConfirmDeleteModal
         isOpen={deleteModalState.isOpen}
         isLoading={isDeleting}
-        title="Delete Service Call"
+        title={deleteModalState.isBulk ? "Delete Selected Calls" : "Delete Service Call"}
+        itemCount={deleteModalState.isBulk ? deleteModalState.bulkIds?.length : undefined}
         callNumber={deleteModalState.row?.callNumber}
         onClose={() => {
           if (!isDeleting) {
-            setDeleteModalState({ isOpen: false, row: null });
+            setDeleteModalState({ isOpen: false, row: null, isBulk: false, bulkIds: [] });
           }
         }}
-        onConfirm={() => {
-          if (deleteModalState.row) {
-            const callId =
-              deleteModalState.row._id ||
-              deleteModalState.row.callId ||
-              deleteModalState.row.id;
-            handleDeleteCall(callId);
-          }
-        }}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   );

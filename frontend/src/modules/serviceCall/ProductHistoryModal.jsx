@@ -21,6 +21,8 @@ const FIELD_LABEL_MAP = {
   warrantyStatus: "Warranty Status",
   remarks: "Remarks",
   status: "Status",
+  resolutionType: "Resolution Type",
+  editReason: "Edit Reason",
 };
 
 const formatFieldValue = (field, val) => {
@@ -223,42 +225,66 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
 
                   {/* Audit Diff Table if this was an edit event */}
                   {h.metadata?.diffs && h.metadata.diffs.length > 0 && (
-                    <div className="mt-[0.5vw] bg-white rounded-[0.4vw] border border-amber-200 p-[0.5vw] overflow-hidden">
-                      <div className="text-[0.72vw] font-bold text-amber-800 uppercase tracking-wide mb-[0.3vw] flex items-center justify-between">
-                        <span>Changed Fields ({h.metadata.diffs.length})</span>
+                    <div className="mt-[0.55vw] bg-white rounded-[0.5vw] border border-amber-200/80 shadow-2xs overflow-hidden">
+                      <div className="bg-amber-50/50 px-[0.65vw] py-[0.3vw] border-b border-amber-100/80 flex items-center justify-between text-[0.72vw]">
+                        <span className="font-semibold text-amber-900 flex items-center gap-[0.35vw]">
+                          <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-amber-500" />
+                          Changed Fields ({h.metadata.diffs.length})
+                        </span>
                         {h.metadata.editReason && (
-                          <span className="font-semibold text-slate-500 normal-case">
-                            Reason: {h.metadata.editReason}
+                          <span className="font-normal text-slate-500 text-[0.7vw]">
+                            Reason: <span className="text-slate-700">{h.metadata.editReason}</span>
                           </span>
                         )}
                       </div>
-                      <div className="space-y-[0.3vw]">
+
+                      <div className="p-[0.45vw] space-y-[0.3vw]">
                         {h.metadata.diffs.map((d, dIdx) => {
-                          const label = FIELD_LABEL_MAP[d.field] || d.field;
+                          const label = FIELD_LABEL_MAP[d.field] || (d.field.charAt(0).toUpperCase() + d.field.slice(1).replace(/([A-Z])/g, ' $1'));
                           const origFormatted = formatFieldValue(d.field, d.originalValue);
                           const editFormatted = formatFieldValue(d.field, d.editedValue);
 
                           return (
                             <div
                               key={dIdx}
-                              className="text-[0.75vw] flex items-center gap-[0.5vw] py-[0.15vw] border-b border-slate-100 last:border-0"
+                              className="text-[0.74vw] bg-slate-50/60 rounded-[0.35vw] p-[0.4vw] border border-slate-200/60"
                             >
-                              <span className="font-semibold text-slate-700 min-w-[6.5vw]">
-                                {label}:
-                              </span>
-                              <span
-                                className="line-through text-rose-600 bg-rose-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[15vw] truncate"
-                                title={origFormatted}
-                              >
-                                {origFormatted}
-                              </span>
-                              <span className="text-slate-400">→</span>
-                              <span
-                                className="font-bold text-emerald-700 bg-emerald-50 px-[0.3vw] py-[0.05vw] rounded text-[0.7vw] max-w-[15vw] truncate"
-                                title={editFormatted}
-                              >
-                                {editFormatted}
-                              </span>
+                              <div className="font-medium text-slate-500 text-[0.68vw] uppercase tracking-wide mb-[0.2vw]">
+                                {label}
+                              </div>
+
+                              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
+                                {/* Previous Value */}
+                                <div className="bg-white rounded-[0.3vw] px-[0.4vw] py-[0.28vw] border border-slate-200/80">
+                                  <div className="text-[0.6vw] font-medium text-slate-400 uppercase tracking-wider mb-[0.05vw]">
+                                    Previous
+                                  </div>
+                                  <div
+                                    className="text-slate-650 font-normal text-[0.74vw] break-words"
+                                    title={origFormatted}
+                                  >
+                                    {origFormatted}
+                                  </div>
+                                </div>
+
+                                {/* Arrow Indicator */}
+                                <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                  →
+                                </div>
+
+                                {/* Updated Value */}
+                                <div className="bg-emerald-50/40 rounded-[0.3vw] px-[0.4vw] py-[0.28vw] border border-emerald-200/80">
+                                  <div className="text-[0.6vw] font-medium text-emerald-600 uppercase tracking-wider mb-[0.05vw]">
+                                    Updated
+                                  </div>
+                                  <div
+                                    className="text-emerald-800 font-medium text-[0.74vw] break-words"
+                                    title={editFormatted}
+                                  >
+                                    {editFormatted}
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           );
                         })}

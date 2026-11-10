@@ -45,6 +45,7 @@ import {
   Download,
   MoreVertical,
   Calendar,
+  RotateCcw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -191,7 +192,8 @@ const deriveCallStatus = (products = [], currentStatus = "Registered") => {
   if (products.length === 0) {
     if (currentStatus === "Critical" || currentStatus === "Critical_Unresolved")
       return "Critical";
-    if (currentStatus === "Escalated") return "Escalating";
+    if (currentStatus === "Escalated" || currentStatus === "Escalating")
+      return "Escalating";
     return currentStatus;
   }
 
@@ -200,12 +202,16 @@ const deriveCallStatus = (products = [], currentStatus = "Registered") => {
 
   if (currentStatus === "Critical" || currentStatus === "Critical_Unresolved")
     return "Critical";
-  if (currentStatus === "Escalated") return "Escalating";
 
   if (stats.some((s) => s === "support")) return "Supporting";
   if (stats.some((s) => s === "field_visit")) return "Field Visit";
   if (stats.some((s) => s === "pending")) return "Pending";
-  if (stats.some((s) => s === "escalated")) return "Escalating";
+  if (
+    stats.some((s) => s === "escalated") ||
+    currentStatus === "Escalated" ||
+    currentStatus === "Escalating"
+  )
+    return "Escalating";
 
   if (stats.some((s) => s === "assigned" || s === "attended"))
     return "Assigned";
@@ -223,6 +229,21 @@ const lsLoad = (key, fb) => {
   }
 };
 const lsSave = (key, v) => localStorage.setItem(key, JSON.stringify(v));
+
+const getCustomerTypeTextColor = (type) => {
+  switch (type) {
+    case "OEM":
+      return "text-blue-600";
+    case "End Customer":
+      return "text-emerald-600";
+    case "Distributor":
+      return "text-purple-600";
+    case "Dealer":
+      return "text-amber-600";
+    default:
+      return "text-slate-700";
+  }
+};
 
 const getTypeColor = (type, types = []) => {
   if (types.length > 0) {
@@ -1160,6 +1181,8 @@ export default function ServiceCall() {
   const [summaryModalRow, setSummaryModalRow] = useState(null);
   const [selectedInfoCall, setSelectedInfoCall] = useState(null);
   const [historyModalProduct, setHistoryModalProduct] = useState(null);
+  const fromDateRef = useRef(null);
+  const toDateRef = useRef(null);
 
   useEffect(() => {
     if (urlSearch) {
@@ -1515,16 +1538,34 @@ export default function ServiceCall() {
     paginatedData.length > 0 &&
     paginatedData.every((r) => selectedItems.has(r.id || r._id));
 
+  const isAllFilteredSelected =
+    filteredData.length > 0 &&
+    filteredData.every((r) => selectedItems.has(r.id || r._id));
+
   const toggleSelect = (id) => {
     const s = new Set(selectedItems);
     s.has(id) ? s.delete(id) : s.add(id);
     setSelectedItems(s);
   };
+
   const toggleSelectPage = () => {
     const s = new Set(selectedItems);
-    if (isPageSelected) paginatedData.forEach((r) => s.delete(r.id || r._id));
-    else paginatedData.forEach((r) => s.add(r.id || r._id));
+    if (isPageSelected) {
+      paginatedData.forEach((r) => s.delete(r.id || r._id));
+    } else {
+      paginatedData.forEach((r) => s.add(r.id || r._id));
+    }
     setSelectedItems(s);
+  };
+
+  const selectAllFiltered = () => {
+    const s = new Set(selectedItems);
+    filteredData.forEach((r) => s.add(r.id || r._id));
+    setSelectedItems(s);
+  };
+
+  const clearAllSelected = () => {
+    setSelectedItems(new Set());
   };
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState({
@@ -1642,10 +1683,9 @@ export default function ServiceCall() {
       if (!matchDate || !matchSearch || !matchPriority) return;
 
       c.All += 1;
-      const callStatus = deriveCallStatus(row._products, row.status);
-      const mappedLabel = getStatusCfg(callStatus)?.label || "Registered";
-      if (c[mappedLabel] !== undefined) {
-        c[mappedLabel]++;
+      const callStatus = row.status || "Registered";
+      if (c[callStatus] !== undefined) {
+        c[callStatus]++;
       }
     });
     return c;
@@ -1681,58 +1721,108 @@ export default function ServiceCall() {
             className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
             {/* ── 1. Top Level Scoping Toolbar: Search, Date Range, Priority & Action ── */}
-            <div className="flex items-center justify-between bg-white px-[0.8vw] py-[0.45vw] rounded-[0.7vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 gap-[0.7vw] shrink-0">
-              {/* Left side: Search Box */}
-              <div className="relative flex-1 max-w-[26vw]">
-                <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.95vw] h-[0.95vw]" />
+            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+              {/* Left side: Soft Pill Search Box */}
+              <div className="relative w-[18vw]">
+                <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
                 <input
                   type="text"
-                  placeholder="Search by customer, call no, engineer..."
+                  placeholder="Search customer, call no, engineer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-[2.4vw] pr-[0.8vw] h-[2.1vw] border border-slate-200 rounded-[0.5vw] text-[0.76vw] font-medium text-slate-800 placeholder-slate-400 bg-slate-50/70 hover:bg-white focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+                  >
+                    <X className="w-[0.7vw] h-[0.7vw]" />
+                  </button>
+                )}
               </div>
 
-              {/* Middle: Crisp Date Range Filter */}
-              <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-[0.5vw] h-[2.1vw] px-[0.6vw] bg-slate-50/70 hover:bg-white focus-within:bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/15 transition-all text-[0.74vw]">
-                <Calendar className="w-[0.85vw] h-[0.85vw] text-slate-400 shrink-0" />
-                <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">
-                  From
-                </span>
-                <input
-                  type="date"
-                  value={filterFromDate || ""}
-                  onChange={(e) => setFilterFromDate(e.target.value)}
-                  className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
-                />
-                <span className="text-slate-300 mx-[0.1vw]">—</span>
-                <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">
-                  To
-                </span>
-                <input
-                  type="date"
-                  value={filterToDate || ""}
-                  min={filterFromDate || undefined}
-                  onChange={(e) => setFilterToDate(e.target.value)}
-                  className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
-                />
+              {/* Right cluster: Date Range, Clear, Priority & Register Call */}
+              <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+                {/* Unified Date Range Capsule */}
+                <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (fromDateRef.current) {
+                        try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
+                      }
+                    }}
+                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center"
+                    title="Choose from date"
+                  >
+                    <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                  </button>
+                  <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+                  <input
+                    ref={fromDateRef}
+                    type="date"
+                    value={filterFromDate || ""}
+                    onChange={(e) => setFilterFromDate(e.target.value)}
+                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                  />
+                  <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
+                  <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+                  <input
+                    ref={toDateRef}
+                    type="date"
+                    value={filterToDate || ""}
+                    min={filterFromDate || undefined}
+                    onChange={(e) => setFilterToDate(e.target.value)}
+                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (toDateRef.current) {
+                        try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
+                      }
+                    }}
+                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+                    title="Choose to date"
+                  >
+                    <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                  </button>
+                </div>
+
+                {/* Reset / Clear Button */}
                 {(filterFromDate || filterToDate) && (
                   <button
                     onClick={() => {
                       setFilterFromDate("");
                       setFilterToDate("");
                     }}
-                    className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-bold cursor-pointer ml-[0.3vw] px-[0.3vw] py-[0.1vw] hover:bg-rose-50 rounded"
+                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
                     title="Clear date filter"
                   >
-                    Clear
+                    <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                    <span>Clear</span>
                   </button>
                 )}
-              </div>
 
-              {/* Right side: Priority Dropdown, Bulk Delete & Register Call */}
-              <div className="flex gap-[0.5vw] items-center flex-shrink-0">
+                {/* Unselect All Button (Visible whenever any row is selected) */}
+                <AnimatePresence>
+                  {selectedItems.size > 0 && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      onClick={clearAllSelected}
+                      className="flex items-center gap-[0.35vw] bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/90 px-[0.8vw] h-[2.2vw] rounded-full font-medium text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                      title="Unselect all selected calls"
+                    >
+                      <X className="w-[0.8vw] h-[0.8vw] text-slate-500" />
+                      <span>Unselect All</span>
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+
+                {/* Bulk Delete */}
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
@@ -1740,7 +1830,7 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.75vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.72vw] transition-all cursor-pointer shadow-none"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.8vw] h-[2.2vw] rounded-full font-semibold text-[0.72vw] transition-all cursor-pointer shadow-2xs"
                     >
                       <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                       Delete ({selectedItems.size})
@@ -1748,8 +1838,8 @@ export default function ServiceCall() {
                   )}
                 </AnimatePresence>
 
-                {/* Priority Dropdown */}
-                <div className="w-[10vw]">
+                {/* Priority Dropdown (Pill shaped) */}
+                <div className="w-[9.5vw]">
                   <CustomDropdown
                     size="sm"
                     value={filterPriority}
@@ -1758,7 +1848,7 @@ export default function ServiceCall() {
                       { value: "All", label: "All Priorities" },
                       ...PRIORITIES.map((p) => ({ value: p, label: p })),
                     ]}
-                    triggerClassName="h-[2.1vw] !rounded-[0.5vw] border-slate-200 bg-slate-50/70 hover:bg-white text-slate-700 font-semibold"
+                    triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
                   />
                 </div>
 
@@ -1766,7 +1856,7 @@ export default function ServiceCall() {
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
-                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
+                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
                   >
                     <Plus className="w-[0.9vw] h-[0.9vw]" />
                     Register Call
@@ -1778,38 +1868,51 @@ export default function ServiceCall() {
             {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
             <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
-              <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-                <div className="flex gap-[0.4vw] flex-wrap items-center">
+              <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+                {/* Sleek Connected Segmented Track for Status Tabs */}
+                <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] max-w-full overflow-x-auto">
                   {[
-                    { label: "All", dot: "bg-slate-400" },
+                    { label: "All", dot: "bg-blue-600" },
                     { label: "Registered", dot: "bg-blue-500" },
-                    { label: "Assigned", dot: "bg-indigo-500" },
+                    { label: "Assigned", dot: "bg-indigo-600" },
                     { label: "Pending", dot: "bg-amber-500" },
-                    { label: "Supporting", dot: "bg-cyan-500" },
-                    { label: "Field Visit", dot: "bg-teal-500" },
+                    { label: "Supporting", dot: "bg-sky-500" },
+                    { label: "Field Visit", dot: "bg-slate-400" },
                     { label: "Escalating", dot: "bg-orange-500" },
-                    { label: "Critical", dot: "bg-red-500" },
-                    { label: "Resolved", dot: "bg-emerald-500" },
+                    { label: "Critical", dot: "bg-rose-600" },
+                    { label: "Resolved", dot: "bg-emerald-600" },
                   ].map(({ label, dot }) => {
                     const isActive = filterStatus === (label === "All" ? "All" : label);
+                    const count = counts[label] ?? 0;
+
                     return (
                       <button
                         key={label}
                         onClick={() => setFilterStatus(label === "All" ? "All" : label)}
-                        className={`flex items-center gap-[0.4vw] px-[0.75vw] py-[0.32vw] rounded-full text-[0.78vw] font-semibold cursor-pointer transition-all ${
+                        className={`flex items-center gap-[0.4vw] px-[0.72vw] py-[0.28vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                           isActive
-                            ? "bg-blue-600 text-white shadow-xs"
-                            : "bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:text-slate-900"
+                            ? "bg-blue-600 text-white shadow-xs font-semibold"
+                            : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                         }`}
                       >
-                        <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isActive ? "bg-white" : dot}`} />
-                        <span>{label}</span>
+                        {label !== "All" && (
+                          <span
+                            className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
+                              isActive ? "bg-white" : dot
+                            }`}
+                          />
+                        )}
+                        <span className={isActive ? "text-white" : "text-slate-700"}>
+                          {label}
+                        </span>
                         <span
-                          className={`text-[0.72vw] px-[0.4vw] py-[0.05vw] rounded-full font-bold ml-[0.1vw] ${
-                            isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-600"
+                          className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                            isActive
+                              ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                              : "text-slate-400"
                           }`}
                         >
-                          {counts[label] ?? 0}
+                          {count}
                         </span>
                       </button>
                     );
@@ -1817,8 +1920,12 @@ export default function ServiceCall() {
                 </div>
 
                 {/* Scoped Result Count */}
-                <div className="text-[0.78vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw]">
-                  Showing <span className="font-bold text-slate-800">{filteredData.length}</span> calls
+                <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+                  <span>Showing</span>
+                  <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+                    {filteredData.length}
+                  </span>
+                  <span>calls</span>
                 </div>
               </div>
 
@@ -1840,11 +1947,17 @@ export default function ServiceCall() {
                           </button>
                         </th>
                       )}
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap w-[3.5vw]">
+                        S.No
+                      </th>
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
                         Call No & Date
                       </th>
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
                         Customer & Contact
+                      </th>
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[7vw]">
+                        Customer Type
                       </th>
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
                         Product / System
@@ -1861,9 +1974,46 @@ export default function ServiceCall() {
                     </tr>
                   </thead>
                   <tbody>
+                    {/* Gmail / Linear-style Bulk Selection Banner when page is selected and total records > page size */}
+                    {isPageSelected && filteredData.length > paginatedData.length && (
+                      <tr>
+                        <td
+                          colSpan={canDelete && !isSupervisor ? 9 : 8}
+                          className="bg-blue-50/80 border-b border-blue-200 px-[1.2vw] py-[0.45vw] text-center text-[0.76vw] text-slate-700 font-medium"
+                        >
+                          {!isAllFilteredSelected ? (
+                            <div className="flex items-center justify-center gap-[0.5vw]">
+                              <span>
+                                All <strong className="text-slate-900">{paginatedData.length}</strong> calls on this page are selected.
+                              </span>
+                              <button
+                                type="button"
+                                onClick={selectAllFiltered}
+                                className="font-bold text-blue-700 hover:text-blue-900 underline hover:no-underline cursor-pointer transition-colors"
+                              >
+                                Select all {filteredData.length} calls
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-[0.5vw]">
+                              <span className="text-blue-900 font-semibold">
+                                ✓ All {filteredData.length} calls are selected across all pages.
+                              </span>
+                              <button
+                                type="button"
+                                onClick={clearAllSelected}
+                                className="font-bold text-rose-600 hover:text-rose-800 underline hover:no-underline cursor-pointer transition-colors ml-[0.3vw]"
+                              >
+                                Clear selection
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
                     {isLoading ? (
                       <tr>
-                        <td colSpan={7} className="py-[10vh] text-center border-b border-slate-200">
+                        <td colSpan={9} className="py-[10vh] text-center border-b border-slate-200">
                           <div className="flex flex-col items-center justify-center gap-[1vw]">
                             <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
                             <span className="text-[1vw] font-medium text-blue-600">
@@ -1873,7 +2023,7 @@ export default function ServiceCall() {
                         </td>
                       </tr>
                     ) : paginatedData.length > 0 ? (
-                      paginatedData.map((row) => {
+                      paginatedData.map((row, rowIdx) => {
                         const allProducts =
                           row._products?.length > 0
                             ? row._products
@@ -1904,31 +2054,19 @@ export default function ServiceCall() {
                         const rowCount = displayProducts.length;
                         const rowId = row.id || row._id;
                         const isSelected = selectedItems.has(rowId);
+                        const cellBg = isSelected ? "bg-blue-50/70" : "bg-white";
 
                         if (rowCount === 0) return null;
 
                         return displayProducts.map((prod, pIdx) => {
-                          const isCritical =
-                            prod?._isCritical === true ||
-                            row.status === "Critical";
-                          const isResolved =
-                            effectiveStatus === "Resolved" ||
-                            deriveCallStatus(allProducts, effectiveStatus) ===
-                              "resolved";
-                          const criticalCellClass =
-                            isCritical && !isResolved
-                              ? "bg-red-50/40"
-                              : "";
                           const bgClass = isSelected
                             ? "bg-blue-50/70"
-                            : isResolved
-                              ? "bg-emerald-50/30 hover:bg-emerald-50/60"
-                              : "hover:bg-slate-50/70";
+                            : "bg-white hover:bg-slate-50/70";
 
                           return (
                             <tr
                               key={`${row.id}-${pIdx}`}
-                              className={`transition-colors ${bgClass} ${criticalCellClass}`}
+                              className={`transition-colors ${bgClass}`}
                             >
                               {/* 0. Select Checkbox */}
                               {pIdx === 0 && (
@@ -1936,7 +2074,7 @@ export default function ServiceCall() {
                                   {canDelete && !isSupervisor && (
                                     <td
                                       rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle bg-white"
+                                      className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle ${cellBg}`}
                                     >
                                       <button
                                         onClick={() => toggleSelect(rowId)}
@@ -1953,19 +2091,30 @@ export default function ServiceCall() {
                                 </>
                               )}
 
+                              {/* S.No */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap font-semibold text-slate-600 text-[0.74vw] ${cellBg}`}
+                                >
+                                  {(currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1}
+                                </td>
+                              )}
+
                               {/* 1. Call No & Date */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                  className={`p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.84vw] font-bold text-blue-600 hover:text-blue-800 hover:underline block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-[0.84vw] font-normal text-[#6e000a] hover:text-[#990011] hover:underline block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.2vw] flex items-center gap-[0.25vw]">
+                                  <div className="text-[0.72vw] text-gray-800 font-medium mt-[0.2vw] flex items-center gap-[0.28vw]">
+                                    <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
@@ -1993,7 +2142,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                  className={`p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   <div
                                     className="font-semibold text-slate-900 text-[0.82vw] truncate max-w-[15vw]"
@@ -2017,12 +2166,23 @@ export default function ServiceCall() {
                                         {row.partyCode}
                                       </span>
                                     )}
-                                    {row.customerType && row.customerType !== "All" && (
-                                      <span className={`text-[0.64vw] px-[0.35vw] py-[0.05vw] rounded font-medium border shrink-0 ${getTypeColor(row.customerType)}`}>
-                                        {row.customerType}
-                                      </span>
-                                    )}
                                   </div>
+                                </td>
+                              )}
+
+                              {/* 2b. Customer Type (Dedicated Column) */}
+                              {pIdx === 0 && (
+                                <td
+                                  rowSpan={rowCount}
+                                  className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap font-bold text-[0.78vw] ${cellBg}`}
+                                >
+                                  {row.customerType && row.customerType !== "All" ? (
+                                    <span className={getCustomerTypeTextColor(row.customerType)}>
+                                      {row.customerType}
+                                    </span>
+                                  ) : (
+                                    <span className="text-slate-400 font-normal">—</span>
+                                  )}
                                 </td>
                               )}
 
@@ -2054,7 +2214,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
+                                  className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   {(() => {
                                     const p = row.priority || "Medium";
@@ -2106,7 +2266,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]"
+                                  className={`p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : "bg-white"}`}
                                 >
                                   <div className="flex items-center justify-center gap-[0.3vw] action-menu-container">
                                     {/* Direct 1-click Info modal */}
@@ -2225,7 +2385,7 @@ export default function ServiceCall() {
                     ) : (
                       <tr>
                         <td
-                          colSpan={7}
+                          colSpan={9}
                           className="py-[6vw] text-center border-b border-slate-200"
                         >
                           <div className="flex flex-col items-center justify-center gap-[0.8vw]">
