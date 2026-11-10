@@ -1,4 +1,6 @@
 import React from "react";
+import ReactDOM from "react-dom";
+import { motion } from "framer-motion";
 import {
   UserCheck,
   User,
@@ -8,6 +10,7 @@ import {
   Trash2,
   Eye,
   History,
+  ClipboardList,
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
@@ -36,6 +39,7 @@ export const SelfAssignedQueueTab = ({
   setEditingReportItem,
   setEditForm,
   handleDeleteCall,
+  setDeleteModalState,
   setEditingCall,
   setView,
 }) => {

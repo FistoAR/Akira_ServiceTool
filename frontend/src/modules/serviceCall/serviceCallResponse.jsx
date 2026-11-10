@@ -1343,6 +1343,7 @@ const ServiceCallResponse = () => {
                   setEditingReportItem={setEditingReportItem}
                   setEditForm={setEditForm}
                   handleDeleteCall={handleDeleteCall}
+                  setDeleteModalState={setDeleteModalState}
                   setEditingCall={setEditingCall}
                   setView={setView}
                 />
