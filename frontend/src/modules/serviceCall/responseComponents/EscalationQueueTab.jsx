@@ -276,14 +276,6 @@ export const EscalationQueueTab = ({
                                   {/* SLA Timer */}
                                   <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
                                     <div className="inline-flex items-center justify-center gap-[0.35vw]">
-                                      {prod._isReverseEscalated && (
-                                        <span
-                                          title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                          className="inline-flex items-center justify-center w-[1.3vw] h-[1.3vw] rounded-full bg-rose-600 text-white font-black text-[0.68vw] shadow-xs cursor-help select-none"
-                                        >
-                                          R
-                                        </span>
-                                      )}
                                       {prod._attended ? (
                                         <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-bold text-[0.74vw] bg-emerald-50 border border-emerald-200 px-[0.5vw] py-[0.15vw] rounded-full">
                                           <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
@@ -291,16 +283,24 @@ export const EscalationQueueTab = ({
                                         </span>
                                       ) : callTimer ? (
                                         <span
-                                          className={`inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs ${
+                                          className={`inline-flex items-center gap-[0.3vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs ${
                                             prod._isReverseEscalated
                                               ? callTimer.isExpired
                                                 ? "bg-rose-100 text-rose-800 border-rose-400 animate-pulse"
-                                                : "bg-rose-50 text-rose-700 border-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.15)]"
+                                                : "bg-rose-50 text-rose-800 border-rose-200 shadow-2xs"
                                               : callTimer.isExpired
                                                 ? "bg-rose-100 text-rose-800 border-rose-300 animate-pulse"
                                                 : "bg-amber-100 text-amber-900 border-amber-300"
                                           }`}
                                         >
+                                          {prod._isReverseEscalated && (
+                                            <span
+                                              title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
+                                              className="inline-flex items-center justify-center w-[1.05vw] h-[1.05vw] rounded bg-rose-200/80 text-rose-800 font-black text-[0.62vw] border border-rose-300/80 select-none cursor-help mr-[0.1vw]"
+                                            >
+                                              R
+                                            </span>
+                                          )}
                                           <Clock className="w-[0.75vw] h-[0.75vw]" />
                                           {callTimer.remainingFormatted}
                                         </span>
@@ -318,7 +318,13 @@ export const EscalationQueueTab = ({
                                               <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
                                             </span>
                                           ) : (
-                                            <span className="inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs bg-rose-50 text-rose-700 border-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.15)]">
+                                            <span className="inline-flex items-center gap-[0.3vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs bg-rose-50 text-rose-800 border-rose-200">
+                                              <span
+                                                title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
+                                                className="inline-flex items-center justify-center w-[1.05vw] h-[1.05vw] rounded bg-rose-200/80 text-rose-800 font-black text-[0.62vw] border border-rose-300/80 select-none cursor-help mr-[0.1vw]"
+                                              >
+                                                R
+                                              </span>
                                               <Clock className="w-[0.75vw] h-[0.75vw]" />
                                               {formatted}
                                             </span>

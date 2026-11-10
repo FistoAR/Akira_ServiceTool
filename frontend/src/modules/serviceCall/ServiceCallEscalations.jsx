@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import {
   AlertTriangle, Clock, History, Shield, CheckSquare, Search,
-  X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package, Slash
+  X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package, Ban, ArrowRightLeft, AlertCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useEscalationWorker from "../../service/useEscalationWorker";
@@ -542,13 +542,14 @@ const ServiceCallEscalations = () => {
                            </div>
                         </div>
                         
-                        <div className="flex items-center gap-[0.4vw] w-full mt-[0.2vw]">
+                        <div className="flex items-center gap-[0.4vw] w-full mt-[0.35vw]">
                           <button 
                             onClick={() => setTrackingEntry(call)}
-                            className="flex-1 flex items-center justify-center gap-[0.35vw] bg-indigo-600 hover:bg-indigo-700 text-white py-[0.48vw] rounded-[0.4vw] text-[0.82vw] font-bold shadow-sm transition-all cursor-pointer"
+                            className="flex-1 inline-flex items-center justify-center gap-[0.35vw] bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white py-[0.45vw] px-[0.7vw] rounded-[0.45vw] text-[0.78vw] font-bold shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap"
                             title="View Escalation Tracking History"
                           >
-                            <History className="w-[0.85vw] h-[0.85vw]" /> View History
+                            <History className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                            <span>View History</span>
                           </button>
 
                           <button
@@ -567,11 +568,11 @@ const ServiceCallEscalations = () => {
                               setCancelReason("");
                               setNewAssignee("");
                             }}
-                            className="flex items-center justify-center gap-[0.3vw] px-[0.6vw] py-[0.48vw] rounded-[0.4vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold text-[0.82vw] transition-all cursor-pointer shrink-0 shadow-2xs"
+                            className="inline-flex items-center justify-center gap-[0.32vw] px-[0.65vw] py-[0.45vw] rounded-[0.45vw] bg-rose-50 hover:bg-rose-100/90 active:bg-rose-200/80 text-rose-700 border border-rose-300 hover:border-rose-400 font-bold text-[0.78vw] transition-all cursor-pointer shrink-0 shadow-2xs whitespace-nowrap"
                             title="Cancel Escalation / Stop Timer & Reassign"
                           >
-                            <Slash className="w-[0.85vw] h-[0.85vw]" />
-                            Cancel Escalation
+                            <Ban className="w-[0.85vw] h-[0.85vw] shrink-0 text-rose-600" />
+                            <span>Cancel Escalation</span>
                           </button>
                         </div>
                       </div>
@@ -590,22 +591,22 @@ const ServiceCallEscalations = () => {
 
       {/* Cancel Escalation Modal */}
       {cancelModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-[1vw]">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-[1vw]">
           <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col font-sans">
-            <div className="px-[1.2vw] py-[0.85vw] border-b border-slate-200 bg-rose-50/70 flex items-center justify-between">
+            <div className="px-[1.2vw] py-[0.85vw] border-b border-rose-100 bg-rose-50/80 flex items-center justify-between">
               <div>
-                <h3 className="text-[0.95vw] font-bold text-rose-900 flex items-center gap-[0.4vw]">
-                  <Slash className="w-[1vw] h-[1vw] text-rose-600" />
-                  Stop / Cancel Escalation
+                <h3 className="text-[0.95vw] font-bold text-rose-950 flex items-center gap-[0.45vw]">
+                  <Ban className="w-[1vw] h-[1vw] text-rose-600" />
+                  Cancel Escalation & Re-assign
                 </h3>
-                <div className="text-[0.72vw] text-rose-700 font-mono mt-[0.1vw]">
-                  {cancelModal.callNumber} • Product: {cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Product'}
+                <div className="text-[0.72vw] text-rose-800 font-medium mt-[0.15vw]">
+                  <span className="font-bold">{cancelModal.callNumber}</span> • {cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Product'}
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setCancelModal(null)}
-                className="p-[0.3vw] text-slate-400 hover:text-slate-600 rounded-[0.4vw] hover:bg-slate-200/60 transition-colors cursor-pointer"
+                className="p-[0.35vw] text-slate-400 hover:text-slate-700 rounded-[0.4vw] hover:bg-white/80 transition-colors cursor-pointer"
               >
                 <X className="w-[1vw] h-[1vw]" />
               </button>
@@ -613,63 +614,70 @@ const ServiceCallEscalations = () => {
 
             <form
               onSubmit={handleCancelEscalationSubmit}
-              className="p-[1.2vw] flex flex-col gap-[0.85vw]"
+              className="p-[1.2vw] flex flex-col gap-[0.9vw]"
             >
-              <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.7vw] text-[0.74vw] text-slate-700">
-                <span className="font-bold">Current Assignee:</span>{" "}
-                <span className="text-indigo-700 font-semibold">{cancelModal.currentAssignee || "None"}</span>
-                <p className="text-[0.7vw] text-slate-500 mt-[0.2vw]">
-                  Stopping the escalation will halt the timer and remove the call from the escalating queue.
+              <div className="bg-slate-50 border border-slate-200/90 rounded-[0.55vw] p-[0.75vw] text-[0.76vw] text-slate-800">
+                <div className="flex items-center gap-[0.4vw] mb-[0.2vw]">
+                  <span className="font-bold text-slate-900">Current Assignee:</span>
+                  <span className="text-[#2563eb] font-bold bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded-[0.3vw]">
+                    {cancelModal.currentAssignee || "None"}
+                  </span>
+                </div>
+                <p className="text-[0.72vw] text-slate-600 leading-relaxed">
+                  Cancelling the escalation will stop the SLA timer and remove the call from the active escalating queue.
                 </p>
               </div>
 
               <div>
-                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
-                  Reason for Stopping Escalation *
+                <label className="block text-[0.76vw] font-bold text-slate-800 mb-[0.3vw]">
+                  Reason for Stopping Escalation <span className="text-rose-600">*</span>
                 </label>
                 <textarea
                   rows={2}
                   required
                   value={cancelReason}
                   onChange={(e) => setCancelReason(e.target.value)}
-                  placeholder="e.g. Wrongly assigned, false alarm, handled over phone..."
-                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-slate-800 font-medium resize-none"
+                  placeholder="e.g. Wrongly assigned to this engineer, handled directly over phone..."
+                  className="w-full px-[0.75vw] py-[0.5vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 text-slate-900 font-medium resize-none placeholder:text-slate-400 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                <label className="block text-[0.76vw] font-bold text-slate-800 mb-[0.3vw]">
                   Re-assign To (Optional)
                 </label>
-                <select
-                  value={newAssignee}
-                  onChange={(e) => setNewAssignee(e.target.value)}
-                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 bg-white"
-                >
-                  <option value="">-- Keep Current Assignee (Halt Timer Only) --</option>
-                  {(employees || []).map((emp) => (
-                    <option key={emp.userId} value={emp.userId}>
-                      {emp.name} ({emp.department || "Service"})
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={newAssignee}
+                    onChange={(e) => setNewAssignee(e.target.value)}
+                    className="w-full px-[0.75vw] py-[0.5vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-slate-900 font-semibold bg-white cursor-pointer transition-all"
+                  >
+                    <option value="">-- Keep Current Assignee (Halt Timer Only) --</option>
+                    {(employees || []).map((emp) => (
+                      <option key={emp.userId} value={emp.userId}>
+                        {emp.name} ({emp.department || "Service"})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
-              <div className="pt-[0.5vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
+              <div className="pt-[0.6vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-200">
                 <button
                   type="button"
                   disabled={isSubmittingCancel}
                   onClick={() => setCancelModal(null)}
-                  className="px-[0.9vw] py-[0.4vw] text-[0.78vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 rounded-[0.4vw] transition-colors cursor-pointer"
+                  className="px-[0.95vw] py-[0.42vw] text-[0.78vw] font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-[0.4vw] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingCancel || !cancelReason.trim()}
-                  className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
+                  className="px-[1.15vw] py-[0.42vw] text-[0.78vw] font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.4vw] shadow-xs hover:shadow-sm disabled:opacity-50"
                 >
-                  {isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}
+                  <Ban className="w-[0.85vw] h-[0.85vw]" />
+                  <span>{isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}</span>
                 </button>
               </div>
             </form>
