@@ -135,10 +135,10 @@ const NavBar = ({ type }) => {
                 {/* Profile Dropdown */}
                 {showProfile && loggedInUser && (
                   <div className="absolute right-0 mt-[0.6vw] w-[20vw] bg-white rounded-[1vw] shadow-[0_16px_40px_-8px_rgba(15,23,42,0.16)] border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
-                    {/* Header: Refined Akira Indigo / Brand Blue */}
-                    <div className="p-[1.1vw] bg-[#4338ca] flex items-center gap-[0.85vw]">
+                    {/* Header: Solid #2088ce with coordinated accents */}
+                    <div className="p-[1.1vw] bg-[#2088ce] flex items-center gap-[0.85vw]">
                       <div className="relative shrink-0">
-                        <div className="w-[3.3vw] h-[3.3vw] rounded-full bg-white/15 border-2 border-white/60 shadow-sm flex items-center justify-center overflow-hidden">
+                        <div className="w-[3.3vw] h-[3.3vw] rounded-full bg-white/20 border-2 border-white/80 shadow-sm flex items-center justify-center overflow-hidden">
                           {loggedInUser.profilePicture ? (
                             <img 
                               src={loggedInUser.profilePicture} 
@@ -159,15 +159,15 @@ const NavBar = ({ type }) => {
                             {loggedInUser.name}
                           </h3>
                           <span title="Verified User">
-                            <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-indigo-200 shrink-0" />
+                            <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-sky-100 shrink-0" />
                           </span>
                         </div>
                         <div className="flex items-center gap-[0.35vw] mt-[0.25vw] flex-wrap">
-                          <span className="inline-flex items-center px-[0.45vw] py-[0.1vw] rounded-[0.25vw] text-[0.62vw] font-medium bg-white text-indigo-900 shadow-2xs">
+                          <span className="inline-flex items-center px-[0.45vw] py-[0.1vw] rounded-[0.25vw] text-[0.62vw] font-semibold bg-white text-[#166498] shadow-2xs">
                             {loggedInUser.department || "Staff"}
                           </span>
                           {loggedInUser.role && (
-                            <span className="text-[0.6vw] font-medium text-white/90 bg-indigo-900/40 border border-white/20 px-[0.35vw] py-[0.08vw] rounded-[0.25vw] uppercase tracking-wider">
+                            <span className="text-[0.6vw] font-medium text-white/95 bg-[#125887]/50 border border-white/25 px-[0.35vw] py-[0.08vw] rounded-[0.25vw] uppercase tracking-wider">
                               {loggedInUser.role}
                             </span>
                           )}

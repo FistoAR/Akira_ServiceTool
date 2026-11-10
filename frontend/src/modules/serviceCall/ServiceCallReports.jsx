@@ -2121,9 +2121,10 @@ export default function ServiceCallReports() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 8 }}
               transition={{ duration: 0.15 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[28vw] overflow-hidden flex flex-col font-sans"
+              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[36vw] overflow-hidden flex flex-col font-sans"
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Header */}
               <div className="px-[1.2vw] py-[0.85vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between">
                 <div>
                   <h3 className="text-[0.95vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
@@ -2144,70 +2145,92 @@ export default function ServiceCallReports() {
                 </button>
               </div>
 
+              {/* Action Tabs (Mirroring Respond Modal) */}
               <form onSubmit={handleSaveEditReport} className="p-[1.2vw] flex flex-col gap-[0.9vw]">
                 <div>
-                  <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
-                    Report Status
+                  <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.35vw]">
+                    Report Outcome / Status
                   </label>
-                  <CustomDropdown
-                    size="sm"
-                    value={editForm.status}
-                    onChange={(val) => setEditForm((prev) => ({ ...prev, status: val }))}
-                    options={[
-                      { value: "Resolved", label: "Resolved" },
-                      { value: "Pending", label: "Pending" },
-                      { value: "Field Visit Required", label: "Field Visit Required" },
-                      { value: "Supporting", label: "Supporting" },
-                      { value: "Open", label: "Open" },
-                    ]}
-                    triggerClassName="w-full !rounded-[0.45vw] border-slate-300 font-semibold text-slate-800"
-                  />
+                  <div className="grid grid-cols-4 gap-[0.4vw]">
+                    {[
+                      { k: "Resolved", l: "Resolve", e: "✓", c: "bg-emerald-600 text-white border-emerald-600" },
+                      { k: "Pending", l: "Pending", e: "⏸", c: "bg-amber-500 text-white border-amber-500" },
+                      { k: "Field Visit Required", l: "Field Visit", e: "📍", c: "bg-indigo-600 text-white border-indigo-600" },
+                      { k: "Supporting", l: "Support", e: "🔄", c: "bg-blue-600 text-white border-blue-600" },
+                    ].map((tab) => (
+                      <button
+                        type="button"
+                        key={tab.k}
+                        onClick={() => setEditForm((prev) => ({ ...prev, status: tab.k }))}
+                        className={`py-[0.4vw] text-[0.76vw] font-bold rounded-[0.45vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.25vw] ${
+                          editForm.status === tab.k
+                            ? tab.c
+                            : "bg-white border-slate-300 text-slate-650 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span>{tab.e}</span>
+                        <span>{tab.l}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {editForm.status === "Resolved" && (
                   <div>
-                    <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                    <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.3vw]">
                       Resolution Type
                     </label>
-                    <CustomDropdown
-                      size="sm"
-                      value={editForm.resolutionType}
-                      onChange={(val) => setEditForm((prev) => ({ ...prev, resolutionType: val }))}
-                      options={[
-                        { value: "Normal Resolution", label: "Normal Resolution" },
-                        { value: "Configuration Fixed", label: "Configuration Fixed" },
-                        { value: "Parts Replaced", label: "Parts Replaced" },
-                        { value: "Client Training Provided", label: "Client Training Provided" },
-                        { value: "Hardware Reset", label: "Hardware Reset" },
-                      ]}
-                      triggerClassName="w-full !rounded-[0.45vw] border-slate-300 font-semibold text-slate-800"
-                    />
+                    <div className="grid grid-cols-3 gap-[0.35vw]">
+                      {[
+                        "Fixed",
+                        "Part Replaced",
+                        "Configured",
+                        "Component Replaced",
+                        "Client Training",
+                        "Hardware Reset",
+                      ].map((rt) => (
+                        <button
+                          type="button"
+                          key={rt}
+                          onClick={() => setEditForm((prev) => ({ ...prev, resolutionType: rt }))}
+                          className={`py-[0.3vw] text-[0.7vw] font-bold rounded-[0.4vw] border transition-all cursor-pointer text-center ${
+                            editForm.resolutionType === rt
+                              ? "bg-emerald-50 border-emerald-500 text-emerald-800"
+                              : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                          }`}
+                        >
+                          {rt}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
 
                 <div>
                   <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
-                    Report Remarks / Resolution Notes
+                    {editForm.status === "Resolved" ? "Resolution Details / Solution Notes" : editForm.status === "Pending" ? "Pending Reason & Details" : "Report Remarks / Findings"} *
                   </label>
                   <textarea
                     rows={3}
+                    required
                     value={editForm.remarks}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, remarks: e.target.value }))}
-                    placeholder="Enter updated report findings or remarks..."
-                    className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    placeholder="Enter comprehensive findings, steps taken, or pending reason..."
+                    className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 font-medium"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
-                    Reason for Editing Report <span className="text-slate-400 font-normal">(Optional)</span>
+                    Mandatory Reason for Editing Report *
                   </label>
                   <input
                     type="text"
+                    required
                     value={editForm.editReason}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, editReason: e.target.value }))}
-                    placeholder="e.g. Corrected typo in remarks, updated resolution..."
-                    className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800"
+                    placeholder="e.g. Corrected faulty capacitor replaced details, customer update..."
+                    className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 font-medium"
                   />
                 </div>
 
@@ -2222,8 +2245,8 @@ export default function ServiceCallReports() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isSubmittingEdit}
-                    className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-60"
+                    disabled={isSubmittingEdit || !editForm.remarks.trim() || !editForm.editReason.trim()}
+                    className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
                   >
                     {isSubmittingEdit ? "Saving..." : "Save Changes"}
                   </button>
@@ -2233,7 +2256,7 @@ export default function ServiceCallReports() {
           </div>
         )}
 
-        {/* History Modal */}
+                {/* History Modal */}
         {historyModalCall && (
           <ProductHistoryModal
             history={[

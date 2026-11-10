@@ -807,6 +807,25 @@ const ServiceCallResponse = () => {
     }
   };
 
+  
+  const handleCancelEscalation = async ({ callId, pIdx, reason, newAssigneeId, newAssigneeName, newDepartment }) => {
+    try {
+      await axios.post(`${API_URL}/service-calls/${callId}/product/${pIdx}/cancel-escalation`, {
+        adminId: loggedInUser?.userId,
+        adminName: loggedInUser?.name,
+        reason,
+        newAssigneeId,
+        newAssigneeName,
+        newDepartment,
+      });
+      toast("Escalation cancelled successfully", "success");
+      await refreshData();
+    } catch (err) {
+      console.error("Failed to cancel escalation:", err);
+      toast("Failed to cancel escalation", "error");
+    }
+  };
+
   const handleAssignVisit = async (callId, type, form, productIdx) => {
     const entry = queue.find((e) => e.callId === callId);
     if (!entry) return;
@@ -1283,6 +1302,7 @@ const ServiceCallResponse = () => {
                   setEditingReportItem={setEditingReportItem}
                   setEditForm={setEditForm}
                   handleDeleteCall={handleDeleteCall}
+                  onCancelEscalation={handleCancelEscalation}
                 />
               )}
               {/* ── Self Assigned Tab: Full Table View ── */}

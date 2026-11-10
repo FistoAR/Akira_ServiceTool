@@ -14,7 +14,9 @@ import {
   History,
   ChevronLeft,
   ChevronRight,
-  Loader2
+  Loader2,
+  Slash,
+  X
 } from "lucide-react";
 import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
 import { getTypeColor } from "../ServiceCall";
@@ -41,7 +43,14 @@ export const EscalationQueueTab = ({
   setEditingReportItem,
   setEditForm,
   handleDeleteCall,
+  onCancelEscalation,
 }) => {
+  const [cancelModal, setCancelModal] = React.useState(null);
+  const [cancelReason, setCancelReason] = React.useState("");
+  const [newAssignee, setNewAssignee] = React.useState("");
+  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
+  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
+
   return (
                 <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
                   {/* Top Bar for Escalations */}
@@ -122,7 +131,13 @@ export const EscalationQueueTab = ({
                                 !prod._resolved &&
                                 prod._productClosure?.status !== "Closed";
 
-                              return (
+                              const [cancelModal, setCancelModal] = React.useState(null);
+  const [cancelReason, setCancelReason] = React.useState("");
+  const [newAssignee, setNewAssignee] = React.useState("");
+  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
+  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
+
+  return (
                                 <tr
                                   key={`${rowId}-${pIdx}`}
                                   className="transition-colors bg-white hover:bg-indigo-50/20"
@@ -251,7 +266,13 @@ export const EscalationQueueTab = ({
                                           badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                         else if (p === "Low")
                                           badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
-                                        return (
+                                        const [cancelModal, setCancelModal] = React.useState(null);
+  const [cancelReason, setCancelReason] = React.useState("");
+  const [newAssignee, setNewAssignee] = React.useState("");
+  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
+  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
+
+  return (
                                           <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
                                             {p}
                                           </span>
@@ -309,7 +330,13 @@ export const EscalationQueueTab = ({
                                   <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
                                     {(() => {
                                       const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
-                                      return (
+                                      const [cancelModal, setCancelModal] = React.useState(null);
+  const [cancelReason, setCancelReason] = React.useState("");
+  const [newAssignee, setNewAssignee] = React.useState("");
+  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
+  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
+
+  return (
                                         <div>
                                           <div className="font-semibold text-[0.78vw] text-slate-800">
                                             {prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated")}
@@ -335,6 +362,29 @@ export const EscalationQueueTab = ({
                                         >
                                           <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
                                           Attend
+                                        </button>
+                                      )}
+
+                                      {/* Admin Stop Escalation Button */}
+                                      {isAdmin && (
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            setCancelModal({
+                                              callId: row.callId || row._id,
+                                              callNumber: row.callNumber,
+                                              prod,
+                                              pIdx,
+                                              currentAssignee: prod._assignedEngineerName || row.currentEngineerName,
+                                            });
+                                            setCancelReason("");
+                                            setNewAssignee("");
+                                          }}
+                                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] rounded-[0.4vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-[0.72vw] transition-all cursor-pointer"
+                                          title="Stop Escalation & Re-assign"
+                                        >
+                                          <Slash className="w-[0.7vw] h-[0.7vw]" />
+                                          Stop Esc.
                                         </button>
                                       )}
 
@@ -413,7 +463,13 @@ export const EscalationQueueTab = ({
                       <div className="flex gap-[0.3vw]">
                         {[...Array(escalationTotalPages)].map((_, i) => {
                           const pNum = i + 1;
-                          return (
+                          const [cancelModal, setCancelModal] = React.useState(null);
+  const [cancelReason, setCancelReason] = React.useState("");
+  const [newAssignee, setNewAssignee] = React.useState("");
+  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
+  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
+
+  return (
                             <button
                               key={pNum}
                               onClick={() => setEscalationPage(pNum)}
@@ -439,6 +495,115 @@ export const EscalationQueueTab = ({
                       </button>
                     </div>
                   </div>
+                </div
+      {/* Admin Cancel / Stop Escalation Modal */}
+      {cancelModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-[1vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col font-sans">
+            <div className="px-[1.2vw] py-[0.85vw] border-b border-slate-200 bg-rose-50/70 flex items-center justify-between">
+              <div>
+                <h3 className="text-[0.95vw] font-bold text-rose-900 flex items-center gap-[0.4vw]">
+                  <Slash className="w-[1vw] h-[1vw] text-rose-600" />
+                  Stop / Cancel Escalation
+                </h3>
+                <div className="text-[0.72vw] text-rose-700 font-mono mt-[0.1vw]">
+                  {cancelModal.callNumber} • Product: {cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Product'}
                 </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCancelModal(null)}
+                className="p-[0.3vw] text-slate-400 hover:text-slate-600 rounded-[0.4vw] hover:bg-slate-200/60 transition-colors cursor-pointer"
+              >
+                <X className="w-[1vw] h-[1vw]" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!cancelReason.trim()) return;
+                setIsSubmittingCancel(true);
+                try {
+                  const selectedEmp = employees.find((emp) => emp.userId === newAssignee);
+                  if (onCancelEscalation) {
+                    await onCancelEscalation({
+                      callId: cancelModal.callId,
+                      pIdx: cancelModal.pIdx,
+                      reason: cancelReason,
+                      newAssigneeId: selectedEmp?.userId || null,
+                      newAssigneeName: selectedEmp?.name || null,
+                      newDepartment: selectedEmp?.department || null,
+                    });
+                  }
+                  setCancelModal(null);
+                } finally {
+                  setIsSubmittingCancel(false);
+                }
+              }}
+              className="p-[1.2vw] flex flex-col gap-[0.85vw]"
+            >
+              <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.7vw] text-[0.74vw] text-slate-700">
+                <span className="font-bold">Current Assignee:</span>{" "}
+                <span className="text-indigo-700 font-semibold">{cancelModal.currentAssignee || "None"}</span>
+                <p className="text-[0.7vw] text-slate-500 mt-[0.2vw]">
+                  Stopping the escalation will halt the timer and notify the current engineer.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                  Reason for Stopping Escalation *
+                </label>
+                <textarea
+                  rows={2}
+                  required
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  placeholder="e.g. Handled over phone directly, false escalation, reassigning to senior tech..."
+                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-slate-800 font-medium resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                  Re-assign To (Optional)
+                </label>
+                <select
+                  value={newAssignee}
+                  onChange={(e) => setNewAssignee(e.target.value)}
+                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 bg-white"
+                >
+                  <option value="">-- Keep Current Assignee (Cancel Timer Only) --</option>
+                  {(employees || []).map((emp) => (
+                    <option key={emp.userId} value={emp.userId}>
+                      {emp.name} ({emp.department || "Service"})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pt-[0.5vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
+                <button
+                  type="button"
+                  disabled={isSubmittingCancel}
+                  onClick={() => setCancelModal(null)}
+                  className="px-[0.9vw] py-[0.4vw] text-[0.78vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 rounded-[0.4vw] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingCancel || !cancelReason.trim()}
+                  className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
+                >
+                  {isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+>
   );
 };
