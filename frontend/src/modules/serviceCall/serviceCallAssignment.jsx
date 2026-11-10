@@ -544,7 +544,7 @@ export default function ServiceCallAssignment() {
                           <td rowSpan={rowCount} className="p-[0.7vw] align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
                             <button
                               onClick={() => setSelectedInfoCall(g.rawCall || g)}
-                              className="font-mono text-left text-[0.84vw] font-bold text-[#6e000a] hover:text-[#990011] hover:underline block leading-tight cursor-pointer"
+                              className="font-mono text-left text-[0.84vw] font-normal text-[#6e000a] hover:text-[#990011] hover:underline block leading-tight cursor-pointer"
                               title="View Call Details"
                             >
                               {g.callNumber}
