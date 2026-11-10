@@ -1959,7 +1959,7 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.84vw] font-bold text-blue-600 hover:text-blue-800 hover:underline block leading-tight"
+                                    className="font-mono text-left text-[0.84vw] font-bold text-blue-600 hover:text-blue-800 hover:underline block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
@@ -1999,11 +1999,11 @@ export default function ServiceCall() {
                                   >
                                     {row.customerName || "—"}
                                   </div>
-                                  <div className="flex items-center gap-[0.4vw] mt-[0.25vw] flex-wrap">
+                                  <div className="flex items-center gap-[0.45vw] mt-[0.25vw] flex-wrap">
                                     {row.contactNumber && (
                                       <a
                                         href={`tel:${row.contactNumber}`}
-                                        className="inline-flex items-center gap-[0.25vw] text-[0.72vw] font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                        className="inline-flex items-center gap-[0.25vw] text-[0.72vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
                                         title="Click to call"
                                       >
                                         <Phone className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
@@ -2011,12 +2011,12 @@ export default function ServiceCall() {
                                       </a>
                                     )}
                                     {row.partyCode && (
-                                      <span className="text-[0.68vw] text-slate-500 font-mono">
+                                      <span className="text-[0.68vw] text-slate-500 font-mono shrink-0">
                                         {row.partyCode}
                                       </span>
                                     )}
                                     {row.customerType && row.customerType !== "All" && (
-                                      <span className={`text-[0.64vw] px-[0.35vw] py-[0.05vw] rounded font-medium border ${getTypeColor(row.customerType)}`}>
+                                      <span className={`text-[0.64vw] px-[0.35vw] py-[0.05vw] rounded font-medium border shrink-0 ${getTypeColor(row.customerType)}`}>
                                         {row.customerType}
                                       </span>
                                     )}
@@ -2057,7 +2057,7 @@ export default function ServiceCall() {
                                   {(() => {
                                     const p = row.priority || "Medium";
                                     let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
-                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
+                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200 shadow-2xs font-bold";
                                     else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                     else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                                     return (
@@ -2069,27 +2069,57 @@ export default function ServiceCall() {
                                 </td>
                               )}
 
-                              {/* 5. Status */}
+                              {/* 5. Status & Assignee */}
                               <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
                                 {(() => {
                                   const status = getProductStatus(prod, effectiveStatus);
                                   const cfg = getStatusCfg(status);
+                                  const engineerName =
+                                    prod?._assignedEngineerName ||
+                                    prod?._engineerName ||
+                                    prod?.assignedToName ||
+                                    row.assignedToName ||
+                                    row.currentEngineerName ||
+                                    row.assignedEngineer ||
+                                    (row.assignedTo ? employees?.find(e => e.userId === row.assignedTo || e._id === row.assignedTo)?.name : null);
                                   return (
-                                    <span className="inline-flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-800">
-                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
-                                      {cfg.label}
-                                    </span>
+                                    <div>
+                                      <div className="inline-flex items-center gap-[0.4vw] text-[0.8vw] font-semibold text-slate-800">
+                                        <span className={`w-[0.5vw] h-[0.5vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
+                                        <span>{cfg.label}</span>
+                                      </div>
+                                      <div className="mt-[0.15vw] text-[0.68vw] text-slate-500 font-medium">
+                                        {engineerName ? (
+                                          <span className="text-slate-600">to: <span className="text-indigo-600 font-semibold">{engineerName}</span></span>
+                                        ) : (
+                                          <span className="text-slate-400 italic">Unassigned</span>
+                                        )}
+                                      </div>
+                                    </div>
                                   );
                                 })()}
                               </td>
 
-                              {/* 9. Actions (3-Dot Menu) */}
+                              {/* 6. Actions (Direct Info + 3-Dot Menu) */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
                                   className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]"
                                 >
-                                  <div className="relative inline-block text-left action-menu-container">
+                                  <div className="flex items-center justify-center gap-[0.3vw] action-menu-container">
+                                    {/* Direct 1-click Info modal */}
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSummaryModalRow(row);
+                                      }}
+                                      className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                                      title="Quick View Summary"
+                                    >
+                                      <Eye className="w-[1vw] h-[1vw]" />
+                                    </button>
+
+                                    {/* 3-Dot Menu */}
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
@@ -2105,11 +2135,12 @@ export default function ServiceCall() {
                                           setActiveActionMenuId(rowId);
                                         }
                                       }}
-                                      className="p-[0.4vw] text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
-                                      title="Actions"
+                                      className="p-[0.35vw] text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                      title="More Actions"
                                     >
-                                      <MoreVertical className="w-[1.1vw] h-[1.1vw]" />
+                                      <MoreVertical className="w-[1vw] h-[1vw]" />
                                     </button>
+                                  </div>
 
                                     {/* Action Dropdown Menu via Portal to avoid table overflow clipping */}
                                     {activeActionMenuId === rowId && actionMenuCoords && ReactDOM.createPortal(
@@ -2183,7 +2214,6 @@ export default function ServiceCall() {
                                       </div>,
                                       document.body
                                     )}
-                                  </div>
                                 </td>
                               )}
                             </tr>
@@ -2193,7 +2223,7 @@ export default function ServiceCall() {
                     ) : (
                       <tr>
                         <td
-                          colSpan={10}
+                          colSpan={7}
                           className="py-[6vw] text-center border-b border-slate-200"
                         >
                           <div className="flex flex-col items-center justify-center gap-[0.8vw]">
