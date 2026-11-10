@@ -13,6 +13,8 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import useModulePermissions from "../../components/useModulePermissions";
 import CustomDropdown from "../../components/CustomDropdown";
+import { CallDetailsModal } from "./responseComponents/CallDetailsModal";
+import { Eye } from "lucide-react";
 
 // ── Constants & Helpers ────────────────────────────────────────────────────────
 const SERVICE_CALLS_KEY = "service_calls_v2";
@@ -75,6 +77,7 @@ const buildSegmentGroups = (calls) => {
         customerType: c.customerType || "All",
         status: c.status || "Registered",
         products: items,
+        rawCall: c,
       });
     }
   });
@@ -91,6 +94,7 @@ export default function ServiceCallAssignment() {
   const [employees, setEmployees] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedEngineer, setSelectedEngineer] = useState(null);
+  const [selectedInfoCall, setSelectedInfoCall] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [engSearch, setEngSearch] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
@@ -394,30 +398,24 @@ export default function ServiceCallAssignment() {
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-50/90 sticky top-0 z-20 border-b border-gray-200">
-              <tr>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[4%]">
+            <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
+              <tr className="bg-[#e9edf4]">
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center w-[5%]">
                   S.No
                 </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] w-[11%]">
-                  Call Ref
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                  Call Ref & Date
                 </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[9%]">
-                  Party Type
-                </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] w-[22%]">
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[18vw]">
                   Customer & Site
                 </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[10%]">
-                  Segment
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[17vw]">
+                  Product & Segment
                 </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw]">
-                  Allocated Product(s)
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center whitespace-nowrap min-w-[7vw]">
+                  Priority
                 </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[9%]">
-                  Urgency
-                </th>
-                <th className="p-[0.7vw] font-bold text-gray-500 uppercase tracking-wider text-[0.68vw] text-center w-[10%] sticky top-0 right-0 bg-slate-50 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.04)]">
+                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[8vw]">
                   Action
                 </th>
               </tr>
@@ -425,7 +423,7 @@ export default function ServiceCallAssignment() {
             <tbody className="divide-y divide-gray-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="py-[12vh] text-center">
+                  <td colSpan={6} className="py-[12vh] text-center">
                     <div className="flex flex-col items-center justify-center gap-[0.8vw]">
                       <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-blue-600" />
                       <span className="text-[0.85vw] font-semibold text-slate-700">Loading assignments queue...</span>
@@ -434,7 +432,7 @@ export default function ServiceCallAssignment() {
                 </tr>
               ) : paginatedGroups.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-[12vh] text-center">
+                  <td colSpan={6} className="py-[12vh] text-center">
                     <div className="flex flex-col items-center justify-center gap-[0.6vw]">
                       <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                         <CheckCircle2 className="w-[1.8vw] h-[1.8vw] text-emerald-500" />
@@ -453,107 +451,153 @@ export default function ServiceCallAssignment() {
                   const isHigh = g.priority === "High";
 
                   return g.products.map((item, pIdx) => (
-                    <tr 
-                      key={`${g.groupKey}-${pIdx}`} 
+                    <tr
+                      key={`${g.groupKey}-${pIdx}`}
                       className={`hover:bg-slate-50/70 transition-colors ${
-                        isCritical ? "bg-rose-50/25" : ""
+                        isCritical ? "bg-rose-50/30" : ""
                       }`}
                     >
                       {pIdx === 0 && (
                         <>
-                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle text-slate-500 font-medium text-[0.74vw] border-r border-gray-100">
+                          {/* 1. S.No */}
+                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle text-slate-600 font-medium text-[0.74vw] border-r border-b border-slate-200 bg-white">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
-                          <td rowSpan={rowCount} className="p-[0.75vw] align-middle border-r border-gray-100">
-                            <div className="font-bold text-blue-600 text-[0.78vw] leading-tight flex items-center gap-[0.3vw]">
-                              <span>{g.callNumber}</span>
-                            </div>
-                            <div className="text-[0.66vw] text-slate-400 font-normal mt-[0.15vw] flex items-center gap-[0.25vw]">
-                              <Calendar className="w-[0.6vw] h-[0.6vw]" />
-                              {new Date(g.timestamp || g.dateTime).toLocaleDateString("en-IN", { day: '2-digit', month: 'short', year: 'numeric' })}
+
+                          {/* 2. Call Ref & Date */}
+                          <td rowSpan={rowCount} className="p-[0.7vw] align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
+                            <button
+                              onClick={() => setSelectedInfoCall(g.rawCall || g)}
+                              className="font-mono text-left text-[0.84vw] font-bold text-blue-600 hover:text-blue-800 hover:underline block leading-tight cursor-pointer"
+                              title="View Call Details"
+                            >
+                              {g.callNumber}
+                            </button>
+                            <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.2vw] flex items-center gap-[0.25vw]">
+                              <Calendar className="w-[0.7vw] h-[0.7vw] text-slate-400 shrink-0" />
+                              <span>
+                                {(() => {
+                                  try {
+                                    const d = new Date(g.timestamp || g.dateTime);
+                                    return isNaN(d) ? (g.dateTime || "—") : d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+                                  } catch {
+                                    return g.dateTime || "—";
+                                  }
+                                })()}
+                              </span>
                             </div>
                           </td>
-                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle border-r border-gray-100">
-                            <span className="px-[0.55vw] py-[0.15vw] rounded-md text-[0.64vw] font-semibold border uppercase tracking-wider inline-block bg-purple-50 text-purple-700 border-purple-200">
-                              {g.customerType || "Standard"}
-                            </span>
-                          </td>
-                          <td rowSpan={rowCount} className="p-[0.75vw] align-middle border-r border-gray-100">
-                            <div className="font-bold text-slate-800 text-[0.8vw] truncate max-w-[17vw]" title={g.customerName}>
+
+                          {/* 3. Customer & Site */}
+                          <td rowSpan={rowCount} className="p-[0.7vw] align-middle border-r border-b border-slate-200 bg-white">
+                            <div className="font-semibold text-slate-900 text-[0.82vw] truncate max-w-[17vw]" title={g.customerName}>
                               {g.customerName}
                             </div>
-                            <div className="flex flex-wrap items-center gap-[0.35vw] mt-[0.2vw]">
-                              <span className="text-[0.64vw] text-blue-700 font-semibold bg-blue-50 px-[0.35vw] py-[0.05vw] rounded border border-blue-200">
-                                {g.partyCode}
-                              </span>
-                              {g.location && (
-                                <span className="text-[0.66vw] text-slate-500 flex items-center gap-[0.15vw]">
-                                  <MapPin className="w-[0.6vw] h-[0.6vw] text-slate-400" />
-                                  {g.location}
+                            <div className="flex flex-wrap items-center gap-[0.35vw] mt-[0.25vw]">
+                              {g.contactNumber && (
+                                <a
+                                  href={`tel:${g.contactNumber}`}
+                                  className="inline-flex items-center gap-[0.25vw] text-[0.72vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                  title="Click to call"
+                                >
+                                  <Phone className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
+                                  <span>{g.contactNumber}</span>
+                                </a>
+                              )}
+                              {g.partyCode && (
+                                <span className="text-[0.68vw] text-slate-500 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200 shrink-0">
+                                  {g.partyCode}
                                 </span>
                               )}
-                              {g.site && (
-                                <span className="text-[0.62vw] text-slate-600 font-medium bg-slate-100 px-[0.3vw] py-[0.05vw] rounded border border-slate-200">
-                                  {g.site}
+                              {g.customerType && (
+                                <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] rounded font-semibold border shrink-0 bg-purple-50 text-purple-700 border-purple-200">
+                                  {g.customerType}
                                 </span>
                               )}
                             </div>
-                          </td>
-                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle border-r border-gray-100">
-                            <span className="inline-block bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.5vw] py-[0.15vw] rounded-md text-[0.68vw] font-semibold">
-                              {g.segment}
-                            </span>
+                            {(g.location || g.site) && (
+                              <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.2vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
+                                <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
+                                <span className="truncate">{g.site ? `${g.site} • ` : ""}{g.location}</span>
+                              </div>
+                            )}
                           </td>
                         </>
                       )}
 
-                      <td className="p-[0.75vw] align-middle border-r border-gray-100">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[0.76vw] text-slate-800 font-semibold">{item.p.productModel || item.p.itemCode}</span>
-                          <span className="text-[0.68vw] text-slate-500 font-mono bg-slate-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-200">
-                            SN: {item.p.serialNumber || "—"}
-                          </span>
+                      {/* 4. Product & Segment */}
+                      <td className="p-[0.7vw] align-middle border-r border-b border-slate-200 whitespace-nowrap">
+                        <div className="flex items-center gap-[0.35vw]">
+                          <span className="text-[0.8vw] text-slate-900 font-semibold">{item.p.productModel || item.p.itemCode}</span>
+                          {g.segment && g.segment !== "—" && (
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.4vw] py-[0.05vw] rounded text-[0.64vw] font-semibold">
+                              {g.segment}
+                            </span>
+                          )}
                         </div>
-                        {item.p.errorCode && (
-                          <div className="mt-[0.2vw]">
-                            <span className="bg-rose-50 text-rose-600 border border-rose-200/80 px-[0.4vw] py-[0.05vw] rounded text-[0.64vw] font-medium uppercase inline-flex items-center gap-[0.2vw]">
-                              <AlertCircle className="w-[0.55vw] h-[0.55vw]" />
+                        <div className="flex items-center gap-[0.3vw] mt-[0.2vw] flex-wrap">
+                          {item.p.serialNumber && (
+                            <span className="text-[0.68vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                              SN: {item.p.serialNumber}
+                            </span>
+                          )}
+                          {item.p.errorCode && (
+                            <span className="bg-rose-50 text-rose-600 border border-rose-200 px-[0.35vw] py-[0.05vw] rounded text-[0.66vw] font-mono font-semibold">
                               Err: {item.p.errorCode}
                             </span>
-                          </div>
-                        )}
+                          )}
+                          {g.products.length > 1 && (
+                            <span className="text-[0.64vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                              +{g.products.length - 1} more
+                            </span>
+                          )}
+                        </div>
                       </td>
 
                       {pIdx === 0 && (
                         <>
-                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle border-r border-gray-100">
-                            <span className={`px-[0.6vw] py-[0.2vw] rounded-full text-[0.66vw] font-bold border uppercase tracking-wider inline-flex items-center gap-[0.2vw] ${
-                              g.priority === 'Critical' ? 'bg-rose-50 text-rose-600 border-rose-200' :
-                              g.priority === 'High' ? 'bg-amber-50 text-amber-600 border-amber-200' :
-                              'bg-blue-50 text-blue-600 border-blue-200'
-                            }`}>
-                              <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${
-                                g.priority === 'Critical' ? 'bg-rose-500' :
-                                g.priority === 'High' ? 'bg-amber-500' :
-                                'bg-blue-500'
-                              }`} />
-                              {g.priority}
-                            </span>
+                          {/* 5. Priority */}
+                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
+                            {(() => {
+                              const p = g.priority || "Medium";
+                              let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
+                              if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200 shadow-2xs font-bold";
+                              else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
+                              else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                              return (
+                                <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-semibold ${badgeStyle}`}>
+                                  {p}
+                                </span>
+                              );
+                            })()}
                           </td>
-                          <td rowSpan={rowCount} className="p-[0.75vw] text-center align-middle sticky right-0 bg-white group-hover:bg-slate-50/70 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.04)]">
-                            {canAssign ? (
+
+                          {/* 6. Action */}
+                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-200 whitespace-nowrap">
+                            <div className="flex items-center justify-center gap-[0.4vw]">
+                              {/* Direct 1-Click Info Modal Button */}
                               <button
-                                onClick={() => setSelectedGroup(g)}
-                                className="cursor-pointer inline-flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] py-[0.4vw] rounded-[0.45vw] font-semibold text-[0.74vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)] active:scale-95"
+                                onClick={() => setSelectedInfoCall(g.rawCall || g)}
+                                className="p-[0.38vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer border border-blue-200/60"
+                                title="View Call Details"
                               >
-                                <span>Assign</span>
-                                <ArrowRight className="w-[0.8vw] h-[0.8vw]" />
+                                <Eye className="w-[0.95vw] h-[0.95vw]" />
                               </button>
-                            ) : (
-                              <span className="text-[0.68vw] text-gray-400 italic font-medium px-[0.6vw] py-[0.2vw] bg-gray-50 border border-gray-200 rounded">
-                                View Only
-                              </span>
-                            )}
+
+                              {canAssign ? (
+                                <button
+                                  onClick={() => setSelectedGroup(g)}
+                                  className="cursor-pointer inline-flex items-center gap-[0.3vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.85vw] py-[0.38vw] rounded-[0.45vw] font-semibold text-[0.74vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.35)] active:scale-95"
+                                >
+                                  <span>Assign</span>
+                                  <ArrowRight className="w-[0.75vw] h-[0.75vw]" />
+                                </button>
+                              ) : (
+                                <span className="text-[0.68vw] text-gray-400 italic font-medium px-[0.6vw] py-[0.2vw] bg-gray-50 border border-gray-200 rounded">
+                                  View Only
+                                </span>
+                              )}
+                            </div>
                           </td>
                         </>
                       )}
@@ -946,6 +990,15 @@ export default function ServiceCallAssignment() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Full Details Call Modal */}
+      {selectedInfoCall && (
+        <CallDetailsModal
+          call={selectedInfoCall}
+          employees={employees}
+          onClose={() => setSelectedInfoCall(null)}
+        />
+      )}
     </div>
   );
 }

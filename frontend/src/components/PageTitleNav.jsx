@@ -7,10 +7,14 @@ export function usePageTitle() {
     "/dashboard": "Dashboard",
     "/customers": "Customers Data",
     "/escalation": "Escalation",
-    "/serviceCall": "Service Call",
+    "/serviceCall": "Service Call Entry",
+    "/serviceCall/assignment": "Call Assignment",
+    "/serviceCall/escalations": "Escalated Calls",
+    "/serviceCall/reports": "Service Call Reports",
+    "/serviceCallResponse": "Call Response",
     "/serviceMaterial": "Service Material",
     "/productionMaterial": "Production Material",
-    "/masterPage":"Master Access",
+    "/masterPage": "Master Access",
     "/troubleshoot": "Troubleshoot"
   };
 
