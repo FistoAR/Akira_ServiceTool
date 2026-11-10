@@ -2,10 +2,11 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import {
   AlertTriangle, Clock, History, Shield, CheckSquare, Search,
-  X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package
+  X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package, Slash
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useEscalationWorker from "../../service/useEscalationWorker";
+import { useNotification } from "../../components/NotificationContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -187,6 +188,25 @@ const TrackingModal = ({ entry, onClose }) => {
 // ── Admin Escalations Component ─────────────────────────────────────────────
 const ServiceCallEscalations = () => {
   const { timers, isWorkerReady: workerReady } = useEscalationWorker();
+  const { toast } = useNotification();
+  const [currentUser] = useState(() => JSON.parse(sessionStorage.getItem("loggedInUser") || "{}"));
+  const [employees, setEmployees] = useState([]);
+  const [cancelModal, setCancelModal] = useState(null);
+  const [cancelReason, setCancelReason] = useState("");
+  const [newAssignee, setNewAssignee] = useState("");
+  const [isSubmittingCancel, setIsSubmittingCancel] = useState(false);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/auth/employees`);
+        setEmployees(data || []);
+      } catch (err) {
+        console.error("Failed to load employees for escalation cancellation", err);
+      }
+    };
+    fetchEmployees();
+  }, []);
   const [calls, setCalls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isWorkerReady, setIsWorkerReady] = useState(false);
@@ -201,22 +221,48 @@ const ServiceCallEscalations = () => {
   }, [workerReady]);
 
   useEffect(() => {
-    const fetchCalls = async () => {
-      try {
-        const { data } = await axios.get(`${API_URL}/service-calls/active`);
-        // Map _id to callId to match timer logic
-        setCalls(data.map(call => ({ ...call, callId: call._id })));
-      } catch (err) {
-        console.error("Failed to fetch active calls", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
+  const fetchCalls = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/service-calls/active`);
+      // Map _id to callId to match timer logic
+      setCalls(data.map(call => ({ ...call, callId: call._id })));
+    } catch (err) {
+      console.error("Failed to fetch active calls", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchCalls();
     const interval = setInterval(fetchCalls, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleCancelEscalationSubmit = async (e) => {
+    e.preventDefault();
+    if (!cancelReason.trim() || !cancelModal) return;
+    setIsSubmittingCancel(true);
+    try {
+      const selectedEmp = employees.find((emp) => emp.userId === newAssignee);
+      await axios.post(`${API_URL}/service-calls/${cancelModal.callId}/product/${cancelModal.pIdx}/cancel-escalation`, {
+        adminId: currentUser?.userId,
+        adminName: currentUser?.name,
+        reason: cancelReason,
+        newAssigneeId: selectedEmp?.userId || null,
+        newAssigneeName: selectedEmp?.name || null,
+        newDepartment: selectedEmp?.department || null,
+      });
+      toast("Escalation cancelled & updated successfully", "success");
+      setCancelModal(null);
+      await fetchCalls();
+    } catch (err) {
+      console.error("Failed to cancel escalation:", err);
+      toast(err.response?.data?.message || "Failed to cancel escalation", "error");
+    } finally {
+      setIsSubmittingCancel(false);
+    }
+  };
 
   const escalatingCalls = useMemo(() => {
     return calls.filter(e => {
@@ -497,12 +543,38 @@ const ServiceCallEscalations = () => {
                            </div>
                         </div>
                         
-                        <button 
-                          onClick={() => setTrackingEntry(call)}
-                          className="flex items-center justify-center gap-[0.4vw] bg-indigo-600 hover:bg-indigo-700 text-white w-full py-[0.5vw] rounded-[0.4vw] text-[0.85vw] font-bold shadow-sm transition-all cursor-pointer mt-[0.2vw]"
-                        >
-                          <History className="w-[0.9vw] h-[0.9vw]" /> View History
-                        </button>
+                        <div className="flex items-center gap-[0.4vw] w-full mt-[0.2vw]">
+                          <button 
+                            onClick={() => setTrackingEntry(call)}
+                            className="flex-1 flex items-center justify-center gap-[0.35vw] bg-indigo-600 hover:bg-indigo-700 text-white py-[0.48vw] rounded-[0.4vw] text-[0.82vw] font-bold shadow-sm transition-all cursor-pointer"
+                            title="View Escalation Tracking History"
+                          >
+                            <History className="w-[0.85vw] h-[0.85vw]" /> View History
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const activePIdx = (call.products || []).findIndex(p => !p._resolved && p._productClosure?.status !== "Closed" && !p._attended);
+                              const targetPIdx = activePIdx !== -1 ? activePIdx : 0;
+                              const targetProd = (call.products || [])[targetPIdx] || {};
+                              setCancelModal({
+                                callId: call.callId || call._id,
+                                callNumber: call.callNumber,
+                                prod: targetProd,
+                                pIdx: targetPIdx,
+                                currentAssignee: timer?.currentEngineerName || targetProd._assignedEngineerName || call.currentEngineerName,
+                              });
+                              setCancelReason("");
+                              setNewAssignee("");
+                            }}
+                            className="flex items-center justify-center gap-[0.3vw] px-[0.6vw] py-[0.48vw] rounded-[0.4vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold text-[0.82vw] transition-all cursor-pointer shrink-0 shadow-2xs"
+                            title="Cancel Escalation / Stop Timer & Reassign"
+                          >
+                            <Slash className="w-[0.85vw] h-[0.85vw]" />
+                            Cancel Escalation
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -516,6 +588,95 @@ const ServiceCallEscalations = () => {
       <AnimatePresence>
         {trackingEntry && <TrackingModal entry={trackingEntry} onClose={() => setTrackingEntry(null)} />}
       </AnimatePresence>
+
+      {/* Cancel Escalation Modal */}
+      {cancelModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-[1vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col font-sans">
+            <div className="px-[1.2vw] py-[0.85vw] border-b border-slate-200 bg-rose-50/70 flex items-center justify-between">
+              <div>
+                <h3 className="text-[0.95vw] font-bold text-rose-900 flex items-center gap-[0.4vw]">
+                  <Slash className="w-[1vw] h-[1vw] text-rose-600" />
+                  Stop / Cancel Escalation
+                </h3>
+                <div className="text-[0.72vw] text-rose-700 font-mono mt-[0.1vw]">
+                  {cancelModal.callNumber} • Product: {cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Product'}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCancelModal(null)}
+                className="p-[0.3vw] text-slate-400 hover:text-slate-600 rounded-[0.4vw] hover:bg-slate-200/60 transition-colors cursor-pointer"
+              >
+                <X className="w-[1vw] h-[1vw]" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleCancelEscalationSubmit}
+              className="p-[1.2vw] flex flex-col gap-[0.85vw]"
+            >
+              <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.7vw] text-[0.74vw] text-slate-700">
+                <span className="font-bold">Current Assignee:</span>{" "}
+                <span className="text-indigo-700 font-semibold">{cancelModal.currentAssignee || "None"}</span>
+                <p className="text-[0.7vw] text-slate-500 mt-[0.2vw]">
+                  Stopping the escalation will halt the timer and remove the call from the escalating queue.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                  Reason for Stopping Escalation *
+                </label>
+                <textarea
+                  rows={2}
+                  required
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  placeholder="e.g. Wrongly assigned, false alarm, handled over phone..."
+                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-slate-800 font-medium resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                  Re-assign To (Optional)
+                </label>
+                <select
+                  value={newAssignee}
+                  onChange={(e) => setNewAssignee(e.target.value)}
+                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 bg-white"
+                >
+                  <option value="">-- Keep Current Assignee (Halt Timer Only) --</option>
+                  {(employees || []).map((emp) => (
+                    <option key={emp.userId} value={emp.userId}>
+                      {emp.name} ({emp.department || "Service"})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pt-[0.5vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
+                <button
+                  type="button"
+                  disabled={isSubmittingCancel}
+                  onClick={() => setCancelModal(null)}
+                  className="px-[0.9vw] py-[0.4vw] text-[0.78vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 rounded-[0.4vw] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingCancel || !cancelReason.trim()}
+                  className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
+                >
+                  {isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

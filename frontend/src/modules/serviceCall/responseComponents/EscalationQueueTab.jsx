@@ -17,6 +17,7 @@ import {
   ChevronRight,
   Loader2,
   Slash,
+  RotateCcw,
   X
 } from "lucide-react";
 import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
@@ -274,49 +275,63 @@ export const EscalationQueueTab = ({
 
                                   {/* SLA Timer */}
                                   <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
-                                    {prod._attended ? (
-                                      <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-bold text-[0.74vw] bg-emerald-50 border border-emerald-200 px-[0.5vw] py-[0.15vw] rounded-full">
-                                        <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
-                                        Attended
-                                      </span>
-                                    ) : callTimer ? (
-                                      <span
-                                        className={`inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs ${
-                                          callTimer.isExpired
-                                            ? "bg-rose-100 text-rose-800 border-rose-300 animate-pulse"
-                                            : "bg-amber-100 text-amber-900 border-amber-300"
-                                        }`}
-                                      >
-                                        <Clock className="w-[0.75vw] h-[0.75vw]" />
-                                        {callTimer.remainingFormatted}
-                                      </span>
-                                    ) : (prod._isReverseEscalated && prod._deadline && !prod._attended) ? (
-                                      (() => {
-                                        const remainingMs = Math.max(0, new Date(prod._deadline) - new Date());
-                                        const hours = Math.floor(remainingMs / 3600000);
-                                        const minutes = Math.floor((remainingMs % 3600000) / 60000);
-                                        const seconds = Math.floor((remainingMs % 60000) / 1000);
-                                        const formatted = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-                                        const isExpired = remainingMs === 0;
+                                    <div className="inline-flex items-center justify-center gap-[0.35vw]">
+                                      {prod._isReverseEscalated && (
+                                        <span
+                                          title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
+                                          className="inline-flex items-center justify-center w-[1.3vw] h-[1.3vw] rounded-full bg-rose-600 text-white font-black text-[0.68vw] shadow-xs cursor-help select-none"
+                                        >
+                                          R
+                                        </span>
+                                      )}
+                                      {prod._attended ? (
+                                        <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-bold text-[0.74vw] bg-emerald-50 border border-emerald-200 px-[0.5vw] py-[0.15vw] rounded-full">
+                                          <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                          Attended
+                                        </span>
+                                      ) : callTimer ? (
+                                        <span
+                                          className={`inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs ${
+                                            prod._isReverseEscalated
+                                              ? callTimer.isExpired
+                                                ? "bg-rose-100 text-rose-800 border-rose-400 animate-pulse"
+                                                : "bg-rose-50 text-rose-700 border-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.15)]"
+                                              : callTimer.isExpired
+                                                ? "bg-rose-100 text-rose-800 border-rose-300 animate-pulse"
+                                                : "bg-amber-100 text-amber-900 border-amber-300"
+                                          }`}
+                                        >
+                                          <Clock className="w-[0.75vw] h-[0.75vw]" />
+                                          {callTimer.remainingFormatted}
+                                        </span>
+                                      ) : (prod._isReverseEscalated && prod._deadline && !prod._attended) ? (
+                                        (() => {
+                                          const remainingMs = Math.max(0, new Date(prod._deadline) - new Date());
+                                          const hours = Math.floor(remainingMs / 3600000);
+                                          const minutes = Math.floor((remainingMs % 3600000) / 60000);
+                                          const seconds = Math.floor((remainingMs % 60000) / 1000);
+                                          const formatted = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                                          const isExpired = remainingMs === 0;
 
-                                        return isExpired ? (
-                                          <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
-                                            <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
-                                          </span>
-                                        ) : (
-                                          <span className="inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs bg-amber-100 text-amber-900 border-amber-300">
-                                            <Clock className="w-[0.75vw] h-[0.75vw]" />
-                                            {formatted}
-                                          </span>
-                                        );
-                                      })()
-                                    ) : row.status === "Critical" ? (
-                                      <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
-                                        <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
-                                      </span>
-                                    ) : (
-                                      <span className="text-slate-400 text-[0.74vw]">—</span>
-                                    )}
+                                          return isExpired ? (
+                                            <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
+                                              <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
+                                            </span>
+                                          ) : (
+                                            <span className="inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs bg-rose-50 text-rose-700 border-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.15)]">
+                                              <Clock className="w-[0.75vw] h-[0.75vw]" />
+                                              {formatted}
+                                            </span>
+                                          );
+                                        })()
+                                      ) : row.status === "Critical" ? (
+                                        <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
+                                          <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
+                                        </span>
+                                      ) : (
+                                        <span className="text-slate-400 text-[0.74vw]">—</span>
+                                      )}
+                                    </div>
                                   </td>
 
                                   {/* Origin Type */}
@@ -343,10 +358,21 @@ export const EscalationQueueTab = ({
                                       const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
                                       return (
                                         <div>
-                                          <div className="font-semibold text-[0.78vw] text-slate-800">
-                                            {prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated")}
+                                          <div className="flex items-center gap-[0.35vw]">
+                                            <span className="font-semibold text-[0.78vw] text-slate-800">
+                                              {prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated")}
+                                            </span>
+                                            {prod._isReverseEscalated && (
+                                              <span
+                                                title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` from ${prod._reverseEscalatedFromName}` : ""}`}
+                                                className="inline-flex items-center gap-[0.15vw] px-[0.35vw] py-[0.05vw] rounded text-[0.62vw] font-bold bg-rose-50 text-rose-700 border border-rose-200"
+                                              >
+                                                <RotateCcw className="w-[0.6vw] h-[0.6vw]" />
+                                                Rev Esc
+                                              </span>
+                                            )}
                                           </div>
-                                          <div className="text-[0.68vw] text-slate-500 font-medium">
+                                          <div className="text-[0.68vw] text-slate-500 font-medium mt-[0.1vw]">
                                             {prod._assignedEngineerName || row.currentEngineerName || "Assigned"}
                                           </div>
                                         </div>
@@ -393,23 +419,25 @@ export const EscalationQueueTab = ({
                                         </button>
                                       )}
 
-                                      {/* Respond / Modal Action */}
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          onOpenRespond({
-                                            entry: row,
-                                            callId: row.callId || row._id,
-                                            prod,
-                                            pIdx,
-                                          });
-                                        }}
-                                        className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] rounded-[0.4vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-[0.74vw] transition-all cursor-pointer"
-                                        title="Respond or Close Product"
-                                      >
-                                        <Edit3 className="w-[0.72vw] h-[0.72vw]" />
-                                        Respond
-                                      </button>
+                                      {/* Respond / Modal Action: Shown directly for self-assigned, or only after attended for regular assigned/escalated calls */}
+                                      {((row.isSelfAssigned || row.noEscalation || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name) || prod._attended || row.status === "Resolved" || isAdmin) && (
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            onOpenRespond({
+                                              entry: row,
+                                              callId: row.callId || row._id,
+                                              prod,
+                                              pIdx,
+                                            });
+                                          }}
+                                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] rounded-[0.4vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-[0.74vw] transition-all cursor-pointer"
+                                          title="Respond or Close Product"
+                                        >
+                                          <Edit3 className="w-[0.72vw] h-[0.72vw]" />
+                                          Respond
+                                        </button>
+                                      )}
 
                                       {/* Info button */}
                                       {onOpenInfo && (
