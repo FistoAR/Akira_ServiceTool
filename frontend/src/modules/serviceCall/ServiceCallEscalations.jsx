@@ -678,6 +678,15 @@ const ServiceCallEscalations = () => {
         {trackingEntry && <TrackingModal entry={trackingEntry} onClose={() => setTrackingEntry(null)} />}
       </AnimatePresence>
 
+      {/* Full Call Details Modal */}
+      {selectedInfoCall && (
+        <CallDetailsModal
+          call={selectedInfoCall}
+          employees={employees}
+          onClose={() => setSelectedInfoCall(null)}
+        />
+      )}
+
       {/* Cancel Escalation Modal */}
       {cancelModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-[1vw]">
