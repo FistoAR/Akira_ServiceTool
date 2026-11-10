@@ -134,11 +134,11 @@ const NavBar = ({ type }) => {
 
                 {/* Profile Dropdown */}
                 {showProfile && loggedInUser && (
-                  <div className="absolute right-0 mt-[0.6vw] w-[19vw] bg-white rounded-[1vw] shadow-[0_12px_40px_-8px_rgba(15,23,42,0.18)] border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
-                    {/* Header: Clean solid white with soft slate divider */}
-                    <div className="p-[1.1vw] bg-white border-b border-slate-100 flex items-center gap-[0.85vw]">
+                  <div className="absolute right-0 mt-[0.6vw] w-[20vw] bg-white rounded-[1vw] shadow-[0_16px_40px_-8px_rgba(15,23,42,0.18)] border border-slate-300 overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
+                    {/* Header: Solid Akira Blue / Navy accent banner for distinct visual grounding */}
+                    <div className="p-[1.1vw] bg-[#1e293b] flex items-center gap-[0.85vw]">
                       <div className="relative shrink-0">
-                        <div className="w-[3.2vw] h-[3.2vw] rounded-full bg-slate-100 border border-slate-200 shadow-2xs flex items-center justify-center overflow-hidden">
+                        <div className="w-[3.3vw] h-[3.3vw] rounded-full bg-slate-800 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                           {loggedInUser.profilePicture ? (
                             <img 
                               src={loggedInUser.profilePicture} 
@@ -146,30 +146,30 @@ const NavBar = ({ type }) => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <span className="text-indigo-650 text-[1.1vw] font-bold tracking-wider">
+                            <span className="text-white text-[1.15vw] font-black tracking-wider">
                               {getInitials(loggedInUser.name)}
                             </span>
                           )}
                         </div>
                         {/* Status dot */}
-                        <span className="absolute bottom-0 right-0 w-[0.75vw] h-[0.75vw] bg-emerald-500 border-2 border-white rounded-full shadow-2xs" />
+                        <span className="absolute bottom-0 right-0 w-[0.75vw] h-[0.75vw] bg-emerald-500 border-2 border-[#1e293b] rounded-full shadow-xs" />
                       </div>
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-[0.35vw]">
-                          <h3 className="text-slate-900 text-[1vw] font-bold leading-tight truncate">
+                          <h3 className="text-white text-[1.05vw] font-bold leading-tight truncate">
                             {loggedInUser.name}
                           </h3>
                           <span title="Verified User">
-                            <ShieldCheck className="w-[0.9vw] h-[0.9vw] text-indigo-600 shrink-0" />
+                            <ShieldCheck className="w-[0.95vw] h-[0.95vw] text-emerald-400 shrink-0" />
                           </span>
                         </div>
-                        <div className="flex items-center gap-[0.35vw] mt-[0.25vw] flex-wrap">
-                          <span className="inline-flex items-center px-[0.45vw] py-[0.1vw] rounded-[0.3vw] text-[0.62vw] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        <div className="flex items-center gap-[0.35vw] mt-[0.3vw] flex-wrap">
+                          <span className="inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-[0.3vw] text-[0.65vw] font-bold bg-white text-slate-900 shadow-xs">
                             {loggedInUser.department || "Staff"}
                           </span>
                           {loggedInUser.role && (
-                            <span className="text-[0.6vw] font-bold text-slate-500 uppercase tracking-wider bg-slate-100 border border-slate-200 px-[0.35vw] py-[0.08vw] rounded-[0.3vw]">
+                            <span className="text-[0.62vw] font-bold text-white bg-slate-700 border border-slate-600 px-[0.4vw] py-[0.1vw] rounded-[0.3vw] uppercase tracking-wider">
                               {loggedInUser.role}
                             </span>
                           )}
@@ -177,49 +177,49 @@ const NavBar = ({ type }) => {
                       </div>
                     </div>
 
-                    {/* Information Grid Rows */}
-                    <div className="p-[0.8vw] divide-y divide-slate-100 text-[0.78vw]">
+                    {/* Information Grid Rows: High Contrast, Crisp Typography */}
+                    <div className="p-[0.8vw] space-y-[0.35vw] bg-slate-50/80">
                       {/* Employee ID */}
-                      <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
-                        <div className="flex items-center gap-[0.55vw] text-slate-500">
-                          <IdCard className="w-[0.95vw] h-[0.95vw] text-slate-400" />
-                          <span className="text-[0.7vw] font-medium text-slate-500">Employee ID</span>
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200 rounded-[0.5vw] hover:border-slate-350 transition-colors">
+                        <div className="flex items-center gap-[0.55vw]">
+                          <IdCard className="w-[1vw] h-[1vw] text-blue-700" />
+                          <span className="text-[0.73vw] font-bold text-slate-800">Employee ID</span>
                         </div>
-                        <span className="font-semibold text-slate-800 font-mono text-[0.76vw]">
+                        <span className="font-bold text-slate-950 font-mono text-[0.82vw]">
                           {loggedInUser.userId || "—"}
                         </span>
                       </div>
 
                       {/* Full Name */}
-                      <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
-                        <div className="flex items-center gap-[0.55vw] text-slate-500">
-                          <User className="w-[0.95vw] h-[0.95vw] text-slate-400" />
-                          <span className="text-[0.7vw] font-medium text-slate-500">Full Name</span>
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200 rounded-[0.5vw] hover:border-slate-350 transition-colors">
+                        <div className="flex items-center gap-[0.55vw]">
+                          <User className="w-[1vw] h-[1vw] text-emerald-700" />
+                          <span className="text-[0.73vw] font-bold text-slate-800">Full Name</span>
                         </div>
-                        <span className="font-semibold text-slate-800 truncate max-w-[10vw]">
+                        <span className="font-bold text-slate-950 text-[0.82vw] truncate max-w-[11vw]">
                           {loggedInUser.name || "—"}
                         </span>
                       </div>
 
                       {/* Department */}
-                      <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
-                        <div className="flex items-center gap-[0.55vw] text-slate-500">
-                          <Building2 className="w-[0.95vw] h-[0.95vw] text-slate-400" />
-                          <span className="text-[0.7vw] font-medium text-slate-500">Department</span>
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200 rounded-[0.5vw] hover:border-slate-350 transition-colors">
+                        <div className="flex items-center gap-[0.55vw]">
+                          <Building2 className="w-[1vw] h-[1vw] text-purple-700" />
+                          <span className="text-[0.73vw] font-bold text-slate-800">Department</span>
                         </div>
-                        <span className="font-semibold text-slate-800 truncate max-w-[10vw]">
+                        <span className="font-bold text-slate-950 text-[0.82vw] truncate max-w-[11vw]">
                           {loggedInUser.department || "—"}
                         </span>
                       </div>
 
                       {/* Email */}
                       {loggedInUser.email && (
-                        <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
-                          <div className="flex items-center gap-[0.55vw] text-slate-500">
-                            <Mail className="w-[0.95vw] h-[0.95vw] text-slate-400" />
-                            <span className="text-[0.7vw] font-medium text-slate-500">Email</span>
+                        <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200 rounded-[0.5vw] hover:border-slate-350 transition-colors">
+                          <div className="flex items-center gap-[0.55vw]">
+                            <Mail className="w-[1vw] h-[1vw] text-amber-700" />
+                            <span className="text-[0.73vw] font-bold text-slate-800">Email</span>
                           </div>
-                          <span className="font-semibold text-slate-800 font-mono text-[0.73vw] truncate max-w-[11vw]" title={loggedInUser.email}>
+                          <span className="font-bold text-slate-950 font-mono text-[0.78vw] truncate max-w-[11vw]" title={loggedInUser.email}>
                             {loggedInUser.email}
                           </span>
                         </div>
@@ -227,12 +227,12 @@ const NavBar = ({ type }) => {
 
                       {/* DOB */}
                       {loggedInUser.dob && (
-                        <div className="flex items-center justify-between py-[0.55vw] px-[0.3vw] hover:bg-slate-50/80 rounded-[0.4vw] transition-colors">
-                          <div className="flex items-center gap-[0.55vw] text-slate-500">
-                            <Gift className="w-[0.95vw] h-[0.95vw] text-slate-400" />
-                            <span className="text-[0.7vw] font-medium text-slate-500">Date of Birth</span>
+                        <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200 rounded-[0.5vw] hover:border-slate-350 transition-colors">
+                          <div className="flex items-center gap-[0.55vw]">
+                            <Gift className="w-[1vw] h-[1vw] text-rose-700" />
+                            <span className="text-[0.73vw] font-bold text-slate-800">Date of Birth</span>
                           </div>
-                          <span className="font-semibold text-slate-800">
+                          <span className="font-bold text-slate-950 text-[0.82vw]">
                             {formatDate(loggedInUser.dob)}
                           </span>
                         </div>
@@ -240,12 +240,12 @@ const NavBar = ({ type }) => {
                     </div>
 
                     {/* Sign Out CTA */}
-                    <div className="p-[0.7vw] bg-slate-50/70 border-t border-slate-100">
+                    <div className="p-[0.8vw] bg-white border-t border-slate-200">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-[0.5vw] py-[0.45vw] px-[0.8vw] rounded-[0.6vw] text-rose-600 hover:text-rose-700 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 transition-all duration-150 cursor-pointer text-[0.78vw] font-semibold shadow-2xs hover:shadow-xs group"
+                        className="w-full flex items-center justify-center gap-[0.55vw] py-[0.5vw] px-[0.8vw] rounded-[0.6vw] text-rose-700 hover:text-white bg-rose-50 hover:bg-rose-600 border border-rose-300 hover:border-rose-600 transition-all duration-150 cursor-pointer text-[0.82vw] font-bold shadow-2xs hover:shadow-sm group"
                       >
-                        <LogOut className="w-[0.95vw] h-[0.95vw] group-hover:-translate-x-0.5 transition-transform" />
+                        <LogOut className="w-[1vw] h-[1vw] group-hover:-translate-x-0.5 transition-transform" />
                         <span>Sign Out</span>
                       </button>
                     </div>

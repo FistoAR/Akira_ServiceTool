@@ -553,6 +553,147 @@ exports.attendProduct = async (req, res) => {
 };
 
 // ── PATCH /api/service-calls/:id/product/:pIdx/reverse-escalate ───────────────
+
+// ── POST /api/service-calls/:id/product/:pIdx/cancel-escalation ───────────────
+// Allows Admin to cancel an active escalation, stop auto-escalation timer, notify users, and optionally re-assign
+exports.cancelEscalationProduct = async (req, res) => {
+  try {
+    const { id, pIdx } = req.params;
+    const {
+      adminId,
+      adminName,
+      reason,
+      newAssigneeId,
+      newAssigneeName,
+      newDepartment
+    } = req.body;
+
+    const call = await ServiceCall.findById(id);
+    if (!call || !call.products[pIdx]) {
+      return res.status(404).json({ message: 'Call or product not found' });
+    }
+
+    const prod = call.products[pIdx];
+    const prevEngineerId = prod._assignedEngineerId;
+    const prevEngineerName = prod._assignedEngineerName || 'Assigned Engineer';
+
+    // Stop escalation on product
+    prod._escalationLevel = 0;
+    prod._escalationActive = false;
+    prod._attended = true; // Halts SLA timer
+
+    const now = new Date();
+    const cancelReason = reason || 'Escalation cancelled by Admin';
+
+    // Add cancellation entry to escalation history
+    const cancelHist = {
+      level: 0,
+      assignedAt: now,
+      engineerId: prevEngineerId,
+      engineerName: prevEngineerName,
+      status: 'Escalation Cancelled',
+      reason: `${cancelReason} (by ${adminName || 'Admin'})`,
+      updatedByName: adminName || 'Admin'
+    };
+    prod._escalationHistory = [...(prod._escalationHistory || []), cancelHist];
+
+    // Audit log
+    prod._history.push({
+      status: 'Escalation Cancelled by Admin',
+      updatedBy: adminId || 'Admin',
+      updatedByName: adminName || 'Admin',
+      remarks: `Escalation stopped for ${prevEngineerName}. Reason: ${cancelReason}`,
+      metadata: {
+        cancelledBy: adminName,
+        previousAssigneeId: prevEngineerId,
+        previousAssigneeName: prevEngineerName,
+        reason: cancelReason,
+        timestamp: now
+      }
+    });
+
+    // If Admin immediately re-assigned to someone else
+    if (newAssigneeId) {
+      prod._assignedEngineerId = newAssigneeId;
+      prod._assignedEngineerName = newAssigneeName || 'Engineer';
+      prod._assignedDepartment = newDepartment || prod._assignedDepartment;
+      prod._assignedAt = now;
+      prod._attended = false; // Reset attendance for new engineer
+
+      const reassignHist = {
+        level: 1,
+        assignedAt: now,
+        engineerId: newAssigneeId,
+        engineerName: newAssigneeName,
+        department: newDepartment,
+        status: 'Re-assigned by Admin',
+        reason: `Re-assigned after escalation cancellation: ${cancelReason}`,
+        updatedByName: adminName || 'Admin'
+      };
+      prod._escalationHistory.push(reassignHist);
+
+      prod._history.push({
+        status: 'Re-assigned by Admin',
+        updatedBy: adminId || 'Admin',
+        updatedByName: adminName || 'Admin',
+        remarks: `Re-assigned to ${newAssigneeName} (${newDepartment || 'Service'})`,
+        metadata: {
+          newAssigneeId,
+          newAssigneeName,
+          newDepartment
+        }
+      });
+
+      if (call.currentEngineerId === prevEngineerId || !call.currentEngineerId) {
+        call.currentEngineerId = newAssigneeId;
+        call.currentEngineerName = newAssigneeName;
+        call.currentDepartment = newDepartment || call.currentDepartment;
+      }
+    }
+
+    call.markModified('products');
+    await call.save();
+    try { getIO().emit('service_call_updated', call); } catch (e) {}
+
+    // Send notifications
+    try {
+      const { sendNotification } = require('../notification/notification.controller');
+
+      // 1. Notify the previous engineer that escalation has been stopped
+      if (prevEngineerId) {
+        await sendNotification({
+          recipient: prevEngineerId,
+          sender: adminId || 'Admin',
+          type: 'Escalation',
+          title: `Escalation Cancelled: #${call.callNumber}`,
+          message: `The escalation on Call #${call.callNumber} (${prod.productModel || prod.itemCode || 'Product'}) was cancelled by ${adminName || 'Admin'}. Reason: ${cancelReason}`,
+          data: { callId: call._id, callNumber: call.callNumber, productIdx: pIdx },
+          priority: 'High'
+        });
+      }
+
+      // 2. Notify new engineer if re-assigned
+      if (newAssigneeId && newAssigneeId !== prevEngineerId) {
+        await sendNotification({
+          recipient: newAssigneeId,
+          sender: adminId || 'Admin',
+          type: 'Assignment',
+          title: `New Call Assignment: #${call.callNumber}`,
+          message: `You were assigned Call #${call.callNumber} (${prod.productModel || prod.itemCode || 'Product'}) by ${adminName || 'Admin'}.`,
+          data: { callId: call._id, callNumber: call.callNumber, productIdx: pIdx },
+          priority: 'High'
+        });
+      }
+    } catch (notifErr) {
+      console.error('Cancel escalation notification error:', notifErr);
+    }
+
+    res.json({ message: 'Escalation cancelled successfully', call });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 exports.reverseEscalateProduct = async (req, res) => {
   try {
     const { id, pIdx } = req.params;
