@@ -277,7 +277,7 @@ exports.assignServiceCall = async (req, res) => {
       prod._deadline             = deadline;
       prod._isCritical           = false;
       prod._alerted50            = false;
-      prod._escalationHistory    = [historyEntry];
+      prod._escalationHistory    = [...(prod._escalationHistory || []), historyEntry];
     });
 
     // Call-level state
@@ -610,6 +610,7 @@ exports.cancelEscalationProduct = async (req, res) => {
       updatedByName: adminName || 'Admin'
     };
     prod._escalationHistory = [...(prod._escalationHistory || []), cancelHist];
+    call.escalationHistory = [...(call.escalationHistory || []), cancelHist];
 
     // Audit log
     prod._history.push({
@@ -646,6 +647,7 @@ exports.cancelEscalationProduct = async (req, res) => {
         updatedByName: adminName || 'Admin'
       };
       prod._escalationHistory.push(reassignHist);
+      call.escalationHistory = [...(call.escalationHistory || []), reassignHist];
 
       prod._history.push({
         status: 'Re-assigned by Admin',

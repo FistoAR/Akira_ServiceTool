@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import {
   AlertTriangle, Clock, History, Shield, CheckSquare, Search,
-  X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package
+  X, BarChart2, Activity, ChevronRight, User, Phone, MapPin, Loader2, Package, Ban
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useEscalationWorker from "../service/useEscalationWorker";
@@ -33,42 +33,81 @@ const TrackingModal = ({ entry, onClose }) => {
   const events = [];
   const seenKeys = new Set();
 
+  const isMultiProduct = (entry.products || []).length > 1;
+
+  // 1. Process Product-level escalations and cancellations first
+  (entry.products || []).forEach((p, i) => {
+    // Only show badge when there are multiple products (e.g. "Product 1", "Product 2"); hide redundant "Product Level"
+    const scopeLabel = isMultiProduct ? `Product ${i + 1}` : null;
+
+    (p._escalationHistory || []).forEach(h => {
+      const timeStr = h.assignedAt || h.timestamp;
+      const isCancelled = h.status === "Escalation Cancelled" || String(h.status).includes("Cancel");
+      const key = `${timeStr}_${h.engineerName}_${isCancelled ? "Cancelled" : h.status}`;
+      if (!seenKeys.has(key)) {
+        seenKeys.add(key);
+        events.push({
+          time: timeStr,
+          deadline: h.deadline,
+          person: h.engineerName,
+          dept: h.department,
+          status: isCancelled ? "Escalation Cancelled" : (h.status || "Assigned"),
+          level: h.level || 0,
+          remarks: h.remarks || h.reason,
+          cancelledBy: h.updatedByName,
+          scope: scopeLabel
+        });
+      }
+    });
+
+    (p._history || []).forEach(h => {
+      const st = h.status || "";
+      if (st.includes("Cancel") || st.includes("Cancelled")) {
+        const hTime = h.timestamp || h.metadata?.timestamp;
+        const personName = h.metadata?.previousAssigneeName || h.updatedByName || "Admin";
+        // Deduplicate cancellation across _history and _escalationHistory
+        const key1 = `${hTime}_${personName}_Cancelled`;
+        const key2 = `${h.metadata?.timestamp}_${personName}_Cancelled`;
+        if (!seenKeys.has(key1) && !seenKeys.has(key2)) {
+          seenKeys.add(key1);
+          events.push({
+            time: hTime,
+            deadline: null,
+            person: personName,
+            dept: h.metadata?.department || "",
+            status: "Escalation Cancelled",
+            level: 0,
+            remarks: h.remarks || h.metadata?.reason || "Escalation cancelled by Admin",
+            cancelledBy: h.updatedByName || h.metadata?.cancelledBy,
+            scope: scopeLabel
+          });
+        }
+      }
+    });
+  });
+
+  // 2. Process Call-level events (for single-product calls, skip duplicates already captured at product level)
   (entry.escalationHistory || []).forEach(h => {
-    const key = `${h.assignedAt || h.timestamp}_${h.engineerName}_${h.status}`;
+    const timeStr = h.assignedAt || h.timestamp;
+    const isCancelled = h.status === "Escalation Cancelled" || String(h.status).includes("Cancel");
+    const key = `${timeStr}_${h.engineerName}_${isCancelled ? "Cancelled" : h.status}`;
     if (!seenKeys.has(key)) {
       seenKeys.add(key);
       events.push({
-        time: h.assignedAt || h.timestamp,
+        time: timeStr,
         deadline: h.deadline,
         person: h.engineerName,
         dept: h.department,
-        status: h.status || "Assigned",
+        status: isCancelled ? "Escalation Cancelled" : (h.status || "Assigned"),
         level: h.level || 0,
         remarks: h.remarks || h.reason,
-        scope: "Call Level"
+        cancelledBy: h.updatedByName,
+        scope: isMultiProduct ? "Call Level" : null
       });
     }
   });
   
-  (entry.products || []).forEach((p, i) => {
-    (p._escalationHistory || []).forEach(h => {
-      const key = `${h.assignedAt || h.timestamp}_${h.engineerName}_${h.status}`;
-      if (!seenKeys.has(key)) {
-        seenKeys.add(key);
-        events.push({
-          time: h.assignedAt || h.timestamp,
-          deadline: h.deadline,
-          person: h.engineerName,
-          dept: h.department,
-          status: h.status || "Assigned",
-          level: h.level || 0,
-          remarks: h.remarks || h.reason,
-          scope: `Product ${i + 1}`
-        });
-      }
-    });
-  });
-  
+  // Sort chronological first to determine transition states correctly
   events.sort((a,b) => new Date(a.time) - new Date(b.time));
 
   const now = new Date();
@@ -76,6 +115,9 @@ const TrackingModal = ({ entry, onClose }) => {
 
   pastEvents = pastEvents.map((ev, index) => {
     const isLast = index === pastEvents.length - 1;
+    if (ev.status === "Escalation Cancelled" || ev.status === "Re-assigned by Admin") {
+      return ev;
+    }
     if (!isLast && (ev.status === "Pending" || ev.status === "Assigned")) {
       return { ...ev, status: ev.remarks?.includes("SLA") ? "SLA Breached" : "Escalated" };
     }
@@ -86,6 +128,9 @@ const TrackingModal = ({ entry, onClose }) => {
     }
     return ev;
   });
+
+  // Reverse so latest event is shown on top
+  pastEvents.reverse();
 
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-[2vw]">
@@ -118,27 +163,53 @@ const TrackingModal = ({ entry, onClose }) => {
            ) : (
              <div className="space-y-[0.8vw] pl-[0.5vw]">
                {pastEvents.map((ev, i) => {
+                 const isCancelled = ev.status === "Escalation Cancelled";
                  const isHighlightedEvent = ev.status === "SLA Breached" || ev.status === "Critical Escalation";
                  
                  return (
                    <div key={i} className="flex gap-[0.8vw] relative">
                      <div className="flex flex-col items-center">
-                       <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${isHighlightedEvent ? 'bg-rose-500 ring-2 ring-rose-200' : 'bg-indigo-500'}`} />
+                       <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${
+                         isCancelled 
+                           ? 'bg-amber-500 ring-2 ring-amber-200' 
+                           : isHighlightedEvent 
+                             ? 'bg-rose-500 ring-2 ring-rose-200' 
+                             : 'bg-indigo-500'
+                       }`} />
                        {i !== pastEvents.length - 1 && (
                          <div className="w-[1px] h-full bg-slate-300 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.27vw]" />
                        )}
                      </div>
                      <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-sm ${
-                       isHighlightedEvent 
-                         ? 'bg-rose-50 border-[2px] border-rose-300' 
-                         : 'bg-slate-50 border border-slate-200'
+                       isCancelled
+                         ? 'bg-amber-50/70 border border-amber-200'
+                         : isHighlightedEvent 
+                           ? 'bg-rose-50 border-[2px] border-rose-300' 
+                           : 'bg-slate-50 border border-slate-200'
                      }`}>
                        <div className="flex justify-between items-start mb-[0.2vw]">
-                         <span className={`text-[1vw] font-bold flex items-center gap-[0.4vw] ${isHighlightedEvent ? 'text-rose-900' : 'text-slate-900'}`}>
-                           {ev.status} 
+                         <span className={`text-[1vw] font-bold flex items-center gap-[0.4vw] ${
+                           isCancelled 
+                             ? 'text-amber-900' 
+                             : isHighlightedEvent 
+                               ? 'text-rose-900' 
+                               : 'text-slate-900'
+                         }`}>
+                           {isCancelled ? (
+                             <span className="inline-flex items-center gap-[0.3vw]">
+                               <Ban className="w-[0.9vw] h-[0.9vw] text-amber-600 inline" />
+                               Escalation Cancelled
+                             </span>
+                           ) : (
+                             ev.status
+                           )}
                            {ev.scope && (
                              <span className={`px-[0.4vw] py-[0.1vw] rounded-[0.2vw] text-[0.65vw] ml-[0.2vw] font-black tracking-wide border ${
-                               isHighlightedEvent ? 'bg-rose-100 border-rose-300 text-rose-700' : 'bg-slate-100 border-slate-300 text-slate-600'
+                               isCancelled
+                                 ? 'bg-amber-100 border-amber-300 text-amber-800'
+                                 : isHighlightedEvent 
+                                   ? 'bg-rose-100 border-rose-300 text-rose-700' 
+                                   : 'bg-slate-100 border-slate-300 text-slate-600'
                              }`}>
                                {ev.scope}
                              </span>
@@ -151,9 +222,23 @@ const TrackingModal = ({ entry, onClose }) => {
                            })}
                          </span>
                        </div>
-                         <div className="text-[0.85vw] text-slate-600 mb-[0.2vw]">
-                         By: <span className="font-semibold text-slate-800">{ev.person || "System / Auto"}</span> 
-                         <span className="text-slate-500 ml-[0.4vw]">({ev.dept || "N/A"}) - Level {ev.level + 1}</span>
+
+                       <div className="text-[0.85vw] text-slate-600 mb-[0.2vw]">
+                         {isCancelled ? (
+                           <>
+                             Assigned to: <span className="font-semibold text-slate-800">{ev.person || "N/A"}</span>
+                             {ev.cancelledBy && (
+                               <span className="text-amber-800 font-semibold ml-[0.5vw]">
+                                 (Cancelled by: {ev.cancelledBy})
+                               </span>
+                             )}
+                           </>
+                         ) : (
+                           <>
+                             By: <span className="font-semibold text-slate-800">{ev.person || "System / Auto"}</span> 
+                             <span className="text-slate-500 ml-[0.4vw]">({ev.dept || "N/A"}) - Level {ev.level + 1}</span>
+                           </>
+                         )}
                        </div>
                        
                        {ev.deadline && (
@@ -167,7 +252,11 @@ const TrackingModal = ({ entry, onClose }) => {
                        
                        {ev.remarks && (
                          <div className={`text-[0.85vw] border rounded-[0.4vw] p-[0.6vw] mt-[0.4vw] font-semibold ${
-                           isHighlightedEvent ? 'bg-white text-rose-800 border-rose-200' : 'bg-white text-slate-700 border-slate-200'
+                           isCancelled
+                             ? 'bg-white text-amber-900 border-amber-200'
+                             : isHighlightedEvent 
+                               ? 'bg-white text-rose-800 border-rose-200' 
+                               : 'bg-white text-slate-700 border-slate-200'
                          }`}>
                            {ev.remarks}
                          </div>
