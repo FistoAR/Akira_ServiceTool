@@ -603,11 +603,36 @@ export default function ServiceCallReports() {
   // Edit Report Handlers
   const handleOpenEditReport = (call, prod, pIdx) => {
     const closure = prod._productClosure || {};
+
+    // Check if reverse escalation condition is met (previous engineer exists in chain and not self-assigned)
+    const isSelfAssigned = Boolean(
+      call?.noEscalation ||
+      call?.isSelfAssigned ||
+      (call?.registeredBy === currentUser?.userId && call?.currentEngineerId === currentUser?.userId)
+    );
+    const escHist = prod?._escalationHistory || call?.escalationHistory || [];
+    let hasPreviousEngineer = false;
+    let prevName = "";
+    for (let i = escHist.length - 1; i >= 0; i--) {
+      const h = escHist[i];
+      const engId = h.engineerId || h.assignedTo;
+      const engName = h.engineerName || h.assignedToName || h.name;
+      if (engId && engId !== currentUser?.userId) {
+        hasPreviousEngineer = true;
+        prevName = engName || engId;
+        break;
+      }
+    }
+
+    const canReverse = !isSelfAssigned && hasPreviousEngineer;
+
     setEditingReportItem({
       callId: call._id || call.id || call.callNumber,
       callNumber: call.callNumber,
       productIdx: pIdx,
       product: prod,
+      canReverse,
+      previousAssigneeName: prevName,
     });
     setEditForm({
       status: closure.status || (prod._resolved ? "Resolved" : "Pending"),
@@ -622,24 +647,36 @@ export default function ServiceCallReports() {
     if (!editingReportItem) return;
     setIsSubmittingEdit(true);
     try {
-      await axios.patch(
-        `${API_URL}/service-calls/${editingReportItem.callId}/product/${editingReportItem.productIdx}/edit-report`,
-        {
-          status: editForm.status,
-          remarks: editForm.remarks,
-          resolutionType: editForm.resolutionType,
-          editReason: editForm.editReason,
-          userId: currentUser?.userId || "Employee",
-          name: currentUser?.name || "Employee",
-          role: currentUser?.role || "Employee",
-        },
-      );
-      toast("Report updated successfully", "success");
+      if (editForm.status === "ReverseEscalate") {
+        await axios.patch(
+          `${API_URL}/service-calls/${editingReportItem.callId}/product/${editingReportItem.productIdx}/reverse-escalate`,
+          {
+            userId: currentUser?.userId,
+            name: currentUser?.name,
+            reason: editForm.remarks,
+          }
+        );
+        toast("Report reverse-escalated successfully", "success");
+      } else {
+        await axios.patch(
+          `${API_URL}/service-calls/${editingReportItem.callId}/product/${editingReportItem.productIdx}/edit-report`,
+          {
+            status: editForm.status,
+            remarks: editForm.remarks,
+            resolutionType: editForm.resolutionType,
+            editReason: editForm.editReason,
+            userId: currentUser?.userId || "Employee",
+            name: currentUser?.name || "Employee",
+            role: currentUser?.role || "Employee",
+          },
+        );
+        toast("Report updated successfully", "success");
+      }
       setEditingReportItem(null);
       fetchData();
     } catch (err) {
       console.error("Failed to update report:", err);
-      toast("Failed to update report", "error");
+      toast(err.response?.data?.message || "Failed to update report", "error");
     } finally {
       setIsSubmittingEdit(false);
     }
@@ -1357,17 +1394,17 @@ export default function ServiceCallReports() {
                   <table className="w-full text-left border-collapse">
                     <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
                       <tr>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Origin</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer & Contact</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Product / Model</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[9.5vw] whitespace-nowrap">Registered</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[8vw] whitespace-nowrap">Assigned</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Escalation</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
-                        <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[10.5vw] whitespace-nowrap">Registered Date</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[6.5vw] whitespace-nowrap">Origin</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer & Contact</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Product / Model</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Assigned</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Escalation</th>
+                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                        <th className="py-[0.8vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5.5vw]">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-[0.8vw]">
@@ -1408,36 +1445,35 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]"
+                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]"
                                   >
                                     {callSno}
                                   </td>
                                 )}
 
-                                {/* 1. Origin Distinction */}
+                                {/* 1. Registered Date (Moved to 2nd Column) */}
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap bg-white"
+                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                   >
-                                    {isSelf ? (
-                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
-                                        <UserCheck className="w-[0.65vw] h-[0.65vw]" />
-                                        Self Assigned
-                                      </span>
-                                    ) : (
-                                      <span className="text-slate-500 font-medium text-[0.72vw]">
-                                        Registered
-                                      </span>
-                                    )}
+                                    <div className="text-[0.74vw] text-slate-800 font-medium flex items-center gap-[0.3vw]">
+                                      <Calendar className="w-[0.75vw] h-[0.75vw] text-slate-400 shrink-0" />
+                                      <span>{fmtDateTime(call.createdAt || call.dateTime)}</span>
+                                    </div>
+                                    {call.registeredByName && call.registeredByName !== "System" ? (
+                                      <div className="text-[0.66vw] text-slate-400 mt-[0.1vw]">
+                                        By: {call.registeredByName}
+                                      </div>
+                                    ) : null}
                                   </td>
                                 )}
 
-                                {/* 2. Call Number (Clickable directly to info modal) */}
+                                {/* 2. Call Number */}
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
                                       <button
@@ -1459,11 +1495,30 @@ export default function ServiceCallReports() {
                                   </td>
                                 )}
 
-                                {/* 3. Customer */}
+                                {/* 3. Origin Distinction */}
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle bg-white max-w-[14vw]"
+                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap bg-white"
+                                  >
+                                    {isSelf ? (
+                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                                        <UserCheck className="w-[0.65vw] h-[0.65vw]" />
+                                        Self Assigned
+                                      </span>
+                                    ) : (
+                                      <span className="text-slate-500 font-medium text-[0.72vw]">
+                                        Registered
+                                      </span>
+                                    )}
+                                  </td>
+                                )}
+
+                                {/* 4. Customer */}
+                                {pIdx === 0 && (
+                                  <td
+                                    rowSpan={rowCount}
+                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle bg-white max-w-[14vw]"
                                   >
                                     <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
                                       {call.customerName || "—"}
@@ -1488,11 +1543,11 @@ export default function ServiceCallReports() {
                                   </td>
                                 )}
 
-                                {/* 3b. Customer Type (Dedicated Column) */}
+                                {/* 5. Customer Type */}
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.65vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]"
+                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]"
                                   >
                                     {call.customerType && call.customerType !== "All" ? (
                                       <span className={getCustomerTypeTextColor(call.customerType)}>
@@ -1504,8 +1559,8 @@ export default function ServiceCallReports() {
                                   </td>
                                 )}
 
-                                {/* 4. Product / Model */}
-                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle max-w-[13vw]">
+                                {/* 6. Product / Model */}
+                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle max-w-[14vw]">
                                   <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={prod.productModel || prod.itemCode}>
                                     {prod.productModel || prod.itemCode || "—"}
                                   </div>
@@ -1518,26 +1573,8 @@ export default function ServiceCallReports() {
                                   )}
                                 </td>
 
-                                {/* 5. Registered Info */}
-                                {pIdx === 0 && (
-                                  <td
-                                    rowSpan={rowCount}
-                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
-                                  >
-                                    <div className="text-[0.72vw] text-gray-800 font-medium flex items-center gap-[0.25vw]">
-                                      <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
-                                      <span>{fmtDateTime(call.createdAt || call.dateTime)}</span>
-                                    </div>
-                                    {call.registeredByName && call.registeredByName !== "System" ? (
-                                      <div className="text-[0.66vw] text-slate-400 mt-[0.08vw]">
-                                        By: {call.registeredByName}
-                                      </div>
-                                    ) : null}
-                                  </td>
-                                )}
-
-                                {/* 6. Assigned Info */}
-                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
+                                {/* 7. Assigned Info */}
+                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
                                   {prod._assignedEngineerName || call.currentEngineerName ? (
                                     <div>
                                       <div className="font-semibold text-slate-800 text-[0.75vw]">
@@ -1552,8 +1589,8 @@ export default function ServiceCallReports() {
                                   )}
                                 </td>
 
-                                {/* 7. Escalated Info */}
-                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
+                                {/* 8. Escalation Info */}
+                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
                                   {isEscalated ? (
                                     <div className="inline-flex flex-col items-center">
                                       <span className="inline-flex items-center gap-[0.2vw] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-[0.4vw] py-[0.08vw] rounded text-[0.68vw]">
@@ -1570,8 +1607,8 @@ export default function ServiceCallReports() {
                                   )}
                                 </td>
 
-                                {/* 8. Status (Clean Status matching ServiceCall) */}
-                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
+                                {/* 9. Status */}
+                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
                                   <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
                                     <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isClosed ? "bg-emerald-500" : cfg.dot}`} />
                                     <span>{isClosed ? "Resolved" : cfg.label}</span>
@@ -1583,8 +1620,8 @@ export default function ServiceCallReports() {
                                   )}
                                 </td>
 
-                                {/* 9. Actions Column (Sleek Icon Buttons) */}
-                                <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                {/* 10. Actions Column (Sleek Icon Buttons) */}
+                                <td className="py-[0.8vw] px-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                   <div className="flex items-center justify-center gap-[0.3vw]">
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
@@ -2226,6 +2263,17 @@ export default function ServiceCallReports() {
                         activeStyle: "bg-blue-600 text-white border-blue-600 shadow-sm",
                         hoverStyle: "hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300",
                       },
+                      ...(editingReportItem.canReverse
+                        ? [
+                            {
+                              k: "ReverseEscalate",
+                              l: "Reverse Escalate",
+                              icon: <RotateCcw className="w-[0.85vw] h-[0.85vw]" />,
+                              activeStyle: "bg-rose-600 text-white border-rose-600 shadow-sm",
+                              hoverStyle: "hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300",
+                            },
+                          ]
+                        : []),
                     ].map((tab) => {
                       const isActive = editForm.status === tab.k;
                       return (
@@ -2247,38 +2295,16 @@ export default function ServiceCallReports() {
                   </div>
                 </div>
 
-                {/* Resolution Type (if Resolved) */}
-                {editForm.status === "Resolved" && (
-                  <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.76vw] font-medium text-slate-700">
-                      Resolution Type
-                    </label>
-                    <div className="grid grid-cols-3 gap-[0.35vw]">
-                      {[
-                        "Fixed",
-                        "Part Replaced",
-                        "Configured",
-                        "Component Replaced",
-                        "Client Training",
-                        "Hardware Reset",
-                      ].map((rt) => {
-                        const isSelected = editForm.resolutionType === rt;
-                        return (
-                          <button
-                            type="button"
-                            key={rt}
-                            onClick={() => setEditForm((prev) => ({ ...prev, resolutionType: rt }))}
-                            className={`py-[0.35vw] text-[0.72vw] font-medium rounded-[0.4vw] border transition-all cursor-pointer text-center ${
-                              isSelected
-                                ? "bg-emerald-50 border-emerald-500 text-emerald-800 font-semibold"
-                                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                            }`}
-                          >
-                            {rt}
-                          </button>
-                        );
-                      })}
-                    </div>
+                {/* Reverse Escalate Info Notice (if ReverseEscalate selected) */}
+                {editForm.status === "ReverseEscalate" && (
+                  <div className="bg-rose-50/70 border border-rose-200/80 rounded-[0.55vw] p-[0.75vw] text-[0.72vw] text-rose-800 flex items-center gap-[0.5vw]">
+                    <RotateCcw className="w-[0.85vw] h-[0.85vw] text-rose-600 shrink-0" />
+                    <span>
+                      This report will be sent back to previous assignee:{" "}
+                      <strong className="font-semibold text-rose-950">
+                        {editingReportItem.previousAssigneeName || "Previous Engineer"}
+                      </strong>
+                    </span>
                   </div>
                 )}
 
@@ -2290,6 +2316,8 @@ export default function ServiceCallReports() {
                         ? "Resolution Details / Solution Notes"
                         : editForm.status === "Pending"
                         ? "Pending Reason & Details"
+                        : editForm.status === "ReverseEscalate"
+                        ? "Reason for Reverse Escalating"
                         : "Report Remarks / Findings"}{" "}
                       <span className="text-rose-500">*</span>
                     </span>
@@ -2300,28 +2328,34 @@ export default function ServiceCallReports() {
                     required
                     value={editForm.remarks}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, remarks: e.target.value }))}
-                    placeholder="Enter comprehensive findings, steps taken, or reason..."
+                    placeholder={
+                      editForm.status === "ReverseEscalate"
+                        ? "Enter reason for sending this report back to the previous engineer..."
+                        : "Enter comprehensive findings, steps taken, or reason..."
+                    }
                     className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
                   />
                 </div>
 
-                {/* Mandatory Edit Reason */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
-                    <span>
-                      Mandatory Reason for Editing Report <span className="text-rose-500">*</span>
-                    </span>
-                    <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.editReason}
-                    onChange={(e) => setEditForm((prev) => ({ ...prev, editReason: e.target.value }))}
-                    placeholder="e.g. Corrected faulty capacitor replaced details, customer update..."
-                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
-                  />
-                </div>
+                {/* Mandatory Edit Reason (only needed when updating report, not when reverse escalating) */}
+                {editForm.status !== "ReverseEscalate" && (
+                  <div className="flex flex-col gap-[0.3vw]">
+                    <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                      <span>
+                        Mandatory Reason for Editing Report <span className="text-rose-500">*</span>
+                      </span>
+                      <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editForm.editReason}
+                      onChange={(e) => setEditForm((prev) => ({ ...prev, editReason: e.target.value }))}
+                      placeholder="e.g. Corrected faulty capacitor replaced details, customer update..."
+                      className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
+                    />
+                  </div>
+                )}
 
                 {/* Footer Buttons */}
                 <div className="pt-[0.8vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
@@ -2335,10 +2369,24 @@ export default function ServiceCallReports() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isSubmittingEdit || !editForm.remarks.trim() || !editForm.editReason.trim()}
-                    className="px-[1.1vw] py-[0.45vw] text-[0.75vw] font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-[0_2px_8px_-1px_rgba(79,70,229,0.3)] disabled:opacity-50 active:scale-98"
+                    disabled={
+                      isSubmittingEdit ||
+                      !editForm.remarks.trim() ||
+                      (editForm.status !== "ReverseEscalate" && !editForm.editReason.trim())
+                    }
+                    className={`px-[1.1vw] py-[0.45vw] text-[0.75vw] font-semibold text-white rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50 active:scale-98 ${
+                      editForm.status === "ReverseEscalate"
+                        ? "bg-rose-600 hover:bg-rose-700 active:bg-rose-800 shadow-rose-500/20"
+                        : "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-indigo-500/20"
+                    }`}
                   >
-                    <span>{isSubmittingEdit ? "Saving..." : "Save Changes"}</span>
+                    <span>
+                      {isSubmittingEdit
+                        ? "Saving..."
+                        : editForm.status === "ReverseEscalate"
+                        ? "Confirm Reverse Escalate"
+                        : "Save Changes"}
+                    </span>
                   </button>
                 </div>
               </form>
