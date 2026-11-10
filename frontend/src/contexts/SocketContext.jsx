@@ -20,8 +20,13 @@ export const SocketProvider = ({ children }) => {
     try {
       const baseUrl = import.meta.env.VITE_API_URL;
       const res = await axios.get(`${baseUrl}/notifications/${userId}`);
-      setNotifications(res.data);
-      setUnreadCount(res.data.filter(n => !n.isRead).length);
+      const sorted = (res.data || []).sort((a, b) => {
+        const timeA = new Date(a.createdAt || a.timestamp || 0).getTime();
+        const timeB = new Date(b.createdAt || b.timestamp || 0).getTime();
+        return timeB - timeA;
+      });
+      setNotifications(sorted);
+      setUnreadCount(sorted.filter(n => !n.isRead).length);
     } catch (err) {
       console.error('Error fetching notifications:', err);
     }

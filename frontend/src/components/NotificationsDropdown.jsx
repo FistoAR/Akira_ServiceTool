@@ -288,11 +288,10 @@ const NotificationsDropdown = () => {
     }).sort((a, b) => {
       const timeA = new Date(a.createdAt || a.timestamp || 0).getTime();
       const timeB = new Date(b.createdAt || b.timestamp || 0).getTime();
-      // Latest notification always comes first (Desc) by default
-      if (sortOrder === 'Asc') return timeA - timeB;
+      // Latest notification always comes first by default
       return timeB - timeA;
     });
-  }, [notifications, activeMainTab, activeSubTab, onlyUnread, sortOrder]);
+  }, [notifications, activeMainTab, activeSubTab, onlyUnread]);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -373,17 +372,10 @@ const NotificationsDropdown = () => {
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.75vw] font-semibold text-indigo-955">Sort: {sortOrder}</span>
-                          <button
-                            onClick={() => {
-                              const nextVal = sortOrder === 'Asc' ? 'Desc' : 'Asc';
-                              setSortOrder(nextVal);
-                              updateSettings({ onlyUnread, sortOrder: nextVal });
-                            }}
-                            className="text-[0.65vw] font-bold text-indigo-650 hover:underline cursor-pointer"
-                          >
-                            Toggle
-                          </button>
+                          <span className="text-[0.75vw] font-semibold text-indigo-955">Sort</span>
+                          <span className="text-[0.68vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.4vw] py-[0.1vw] rounded">
+                            Latest First
+                          </span>
                         </div>
                       </motion.div>
                     )}

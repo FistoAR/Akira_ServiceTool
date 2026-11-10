@@ -66,6 +66,9 @@ export const EscalationQueueTab = ({
                     <table className="w-full text-left border-separate border-spacing-0">
                       <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
                         <tr className="bg-[#e9edf4]">
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[3.5vw]">
+                            S.No
+                          </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
                             Date & Time
                           </th>
@@ -87,6 +90,9 @@ export const EscalationQueueTab = ({
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8.5vw]">
                             SLA Timer
                           </th>
+                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[7.5vw]">
+                            Origin Type
+                          </th>
                           <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8.5vw]">
                             Status / Level
                           </th>
@@ -97,7 +103,7 @@ export const EscalationQueueTab = ({
                       </thead>
                       <tbody>
                         {escalationPaginatedCalls.length > 0 ? (
-                          escalationPaginatedCalls.map((row) => {
+                          escalationPaginatedCalls.map((row, rIdx) => {
                             const allProducts =
                               row._products?.length > 0
                                 ? row._products
@@ -125,6 +131,16 @@ export const EscalationQueueTab = ({
                                       : "bg-white hover:bg-indigo-50/20"
                                   }`}
                                 >
+                                  {/* S.No */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap text-[0.75vw] font-bold text-slate-600 bg-white"
+                                    >
+                                      {(escalationPage - 1) * escalationPageSize + rIdx + 1}
+                                    </td>
+                                  )}
+
                                   {/* Date & Time */}
                                   {pIdx === 0 && (
                                     <td
@@ -275,6 +291,24 @@ export const EscalationQueueTab = ({
                                     )}
                                   </td>
 
+                                  {/* Origin Type */}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={rowCount}
+                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
+                                    >
+                                      {row.isSelfAssigned || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name ? (
+                                        <span className="inline-flex items-center px-[0.45vw] py-[0.12vw] rounded-full text-[0.66vw] font-bold bg-amber-50 text-amber-700 border border-amber-250">
+                                          Self Assigned
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center px-[0.45vw] py-[0.12vw] rounded-full text-[0.66vw] font-bold bg-indigo-50 text-indigo-700 border border-indigo-250">
+                                          Assigned
+                                        </span>
+                                      )}
+                                    </td>
+                                  )}
+
                                   {/* Status / Level */}
                                   <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
                                     {(() => {
@@ -343,7 +377,7 @@ export const EscalationQueueTab = ({
                           })
                         ) : (
                           <tr>
-                            <td colSpan="9" className="text-center py-[3vw] text-slate-500">
+                            <td colSpan="11" className="text-center py-[3vw] text-slate-500">
                               <p className="text-[0.9vw] font-bold text-slate-700">No active calls in your escalation queue</p>
                               <p className="text-[0.75vw] text-slate-400 mt-[0.2vw]">
                                 All assigned escalation tasks have been attended or resolved.
