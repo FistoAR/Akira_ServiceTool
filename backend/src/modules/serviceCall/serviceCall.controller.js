@@ -266,6 +266,10 @@ exports.assignServiceCall = async (req, res) => {
       prod._assignedAt           = now;
       prod._assignedEngineerId   = engineerId;
       prod._assignedEngineerName = engineerName;
+      if (!prod._initialEngineerId) {
+        prod._initialEngineerId   = engineerId;
+        prod._initialEngineerName = engineerName;
+      }
       prod._currentDepartment    = department;
       prod._escalationLevel      = 0;
       prod._levelPointer         = 0;
@@ -280,6 +284,10 @@ exports.assignServiceCall = async (req, res) => {
     call.status              = 'Assigned';
     call.currentEngineerId   = engineerId;
     call.currentEngineerName = engineerName;
+    if (!call.initialEngineerId) {
+      call.initialEngineerId   = engineerId;
+      call.initialEngineerName = engineerName;
+    }
     call.currentDepartment   = department;
     call.escalationLevel     = 0;
     call.deadline            = deadline;
@@ -294,8 +302,8 @@ exports.assignServiceCall = async (req, res) => {
     await sendNotification({
       recipient: engineerId,
       type: 'Assignment',
-      title: `Call Assigned: ${engineerName}`,
-      message: `Call #${call.callNumber}${call.customerName ? ` for ${call.customerName}` : ''} has been assigned to ${engineerName}.`,
+      title: 'New Service Call Assigned',
+      message: `Call #${call.callNumber}${call.customerName ? ` for ${call.customerName}` : ''} has been assigned to you.`,
       data: { callId: call._id, callNumber: call.callNumber },
       priority: 'High'
     });
@@ -1292,7 +1300,13 @@ exports.updateCall = async (req, res) => {
         if (isAssigned && (!p._assigned || !p._assignedEngineerId)) {
           p._assigned = true;
           if (engId) p._assignedEngineerId = engId;
-          if (engName) p._assignedEngineerName = engName;
+          if (engName) {
+          p._assignedEngineerName = engName;
+          if (!p._initialEngineerName) {
+            p._initialEngineerId = engId;
+            p._initialEngineerName = engName;
+          }
+        }
           
           // Stop escalation/timer for this new product since the tech already owns the call
           p._attended = true;

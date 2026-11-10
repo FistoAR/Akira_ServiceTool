@@ -125,9 +125,19 @@ export const SocketProvider = ({ children }) => {
         
         if (Notification.permission === 'granted') {
           try {
-            const nativeNotif = new Notification(notification.title, {
-              body: notification.message,
-              icon: '/logo.png',
+            // Determine active logged-in user name
+            const currentUser = JSON.parse(sessionStorage.getItem('loggedInUser') || '{}');
+            const userName = currentUser?.name || currentUser?.username || user?.name || user?.username || '';
+            const userRole = currentUser?.role || user?.role || '';
+            
+            // Format Title and Body with User line separate from Title and Body
+            const notifTitle = notification.title || 'Service Notification';
+            const userHeader = userName ? `User: ${userName}${userRole ? ` (${userRole})` : ''}\n` : '';
+            const notifBody = `${userHeader}${notification.message || ''}`;
+
+            const nativeNotif = new Notification(notifTitle, {
+              body: notifBody,
+              icon: '/SidePannelLogos/service.png',
               data: notification.data || {}
             });
 

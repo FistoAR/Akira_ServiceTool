@@ -286,8 +286,8 @@ async function runEscalationCheck() {
           await sendNotification({
             recipient: nextEngineer.userId,
             type: 'Assignment',
-            title: `Call Escalated: ${nextEngineer.name} (SLA Breached)`,
-            message: `SLA Breached! Call #${call.callNumber} for ${call.customerName} was breached by ${oldEngineerName || 'previous level'} and has been escalated to ${nextEngineer.name}.`,
+            title: 'Call Escalated (SLA Breached)',
+            message: `SLA Breached! Call #${call.callNumber} for ${call.customerName} was breached by ${oldEngineerName || 'previous level'} and has been escalated to you.`,
             data: { callId: call._id, callNumber: call.callNumber, escalatedFrom: oldEngineerName },
             priority: 'High'
           });
@@ -389,14 +389,13 @@ async function check50PercentAlerts(io) {
 
         if (now.getTime() >= fiftyPercentTime) {
           // Send 50% alert notification
-          const engName = prod._assignedEngineerName || call.currentEngineerName || 'Engineer';
           const { sendNotification } = require('../controllers/notification.controller');
           await sendNotification({
             recipient: prod._assignedEngineerId,
             sender: 'System',
             type: 'Escalation',
-            title: `SLA 50% Warning: ${engName}`,
-            message: `Call #${call.callNumber} assigned to ${engName} has reached 50% SLA time and will be escalated soon.`,
+            title: 'SLA Deadline 50% Warning',
+            message: `Call #${call.callNumber} has reached 50% of the scheduled SLA time and will be escalated soon.`,
             data: { callId: call._id, callNumber: call.callNumber, productIdx: pIdx },
             priority: 'High'
           });

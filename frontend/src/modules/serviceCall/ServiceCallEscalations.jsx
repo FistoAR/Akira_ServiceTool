@@ -463,9 +463,9 @@ const ServiceCallEscalations = () => {
                                      {p.productSegment}
                                    </span>
                                  )}
-                                 {p._assignedEngineerName && (
-                                   <span className="text-[0.7vw] font-bold bg-indigo-50 border border-indigo-100 text-indigo-700 px-[0.5vw] py-[0.2vw] rounded">
-                                     Assigned to: {p._assignedEngineerName}
+                                 {(p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName) && (
+                                   <span className="text-[0.7vw] font-bold bg-slate-100 border border-slate-200 text-slate-700 px-[0.5vw] py-[0.2vw] rounded">
+                                     Assigned to: {p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName}
                                    </span>
                                  )}
                                </div>

@@ -15,6 +15,8 @@ const productSchema = new mongoose.Schema({
   _assignedAt: Date,
   _assignedEngineerId: String,
   _assignedEngineerName: String,
+  _initialEngineerId: String,
+  _initialEngineerName: String,
   _escalationLevel: { type: Number, default: 0 },
   _currentDepartment: String,
   _assignedSegment: String,
@@ -95,6 +97,8 @@ const serviceCallSchema = new mongoose.Schema({
   // SLA / Escalation Fields
   currentEngineerId: String,
   currentEngineerName: String,
+  initialEngineerId: String,
+  initialEngineerName: String,
   currentDepartment: String,
   escalationLevel: { type: Number, default: 0 },
   deadline: Date,
