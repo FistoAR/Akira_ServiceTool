@@ -176,9 +176,7 @@ exports.getCustomerHistory = async (req, res) => {
 // Returns calls that have at least one product that is un-assigned or returned for re-assignment.
 exports.getPendingAssignments = async (req, res) => {
   try {
-    const calls = await ServiceCall.find({
-      status: { $in: ['Registered', 'Pending Assignment'] }
-    }).lean().sort({ createdAt: -1 });
+    const calls = await ServiceCall.find({ status: 'Registered' }).lean().sort({ createdAt: -1 });
     res.json(calls);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -679,7 +677,7 @@ exports.cancelEscalationProduct = async (req, res) => {
       // Update call-level status if all active products are now unassigned
       const anyOtherAssigned = (call.products || []).some((p, i) => i !== Number(pIdx) && p._assigned && !p._resolved);
       if (!anyOtherAssigned) {
-        call.status = 'Pending Assignment';
+        call.status = 'Registered';
         call.currentEngineerId = null;
         call.currentEngineerName = null;
       }
