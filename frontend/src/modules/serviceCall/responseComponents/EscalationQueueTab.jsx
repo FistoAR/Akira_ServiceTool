@@ -52,7 +52,8 @@ export const EscalationQueueTab = ({
   const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
 
   return (
-                <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+    <>
+      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
                   {/* Top Bar for Escalations */}
                   <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
                     <div className="flex items-center gap-[0.5vw]">
@@ -495,7 +496,8 @@ export const EscalationQueueTab = ({
                       </button>
                     </div>
                   </div>
-                </div
+                </div>
+
       {/* Admin Cancel / Stop Escalation Modal */}
       {cancelModal && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-[1vw]">
@@ -604,6 +606,6 @@ export const EscalationQueueTab = ({
           </div>
         </div>
       )}
->
+    </>
   );
 };

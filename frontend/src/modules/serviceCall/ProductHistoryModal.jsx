@@ -127,38 +127,38 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
               return (
                 <div key={i} className="flex gap-[0.8vw] relative">
                   <div className="flex flex-col items-center">
-                    <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${isSlaBreached ? 'bg-rose-500' : 'bg-slate-400'}`} />
+                    <div className={`w-[0.55vw] h-[0.55vw] rounded-full mt-[0.2vw] z-10 ${isSlaBreached ? 'bg-rose-500' : 'bg-slate-400'}`} />
                     {i !== sortedHistory.length - 1 && (
-                      <div className="w-[1px] h-full bg-slate-300 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.27vw]" />
+                      <div className="w-[1px] h-full bg-slate-200 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.25vw]" />
                     )}
                   </div>
-                  <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-sm bg-white border ${
-                    isSlaBreached ? 'border-rose-300' : 'border-slate-200'
+                  <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-xs bg-white border ${
+                    isSlaBreached ? 'border-rose-200' : 'border-slate-200'
                   }`}>
                     <div className="flex justify-between items-start mb-[0.2vw]">
-                      <span className={`text-[1vw] font-bold ${isSlaBreached ? 'text-rose-700' : 'text-slate-900'} flex items-center gap-[0.4vw]`}>
+                      <span className={`text-[0.9vw] font-semibold ${isSlaBreached ? 'text-rose-700' : 'text-slate-850'} flex items-center gap-[0.4vw]`}>
                         {h.status}
-                        {h.metadata?.level > 0 && <span className="bg-rose-50 text-rose-600 px-[0.3vw] py-[0.1vw] rounded text-[0.6vw] border border-rose-200 font-bold uppercase tracking-wider">Call Level</span>}
+                        {h.metadata?.level > 0 && <span className="bg-rose-50 text-rose-600 px-[0.3vw] py-[0.05vw] rounded text-[0.6vw] border border-rose-200 font-medium uppercase tracking-wider">Call Level</span>}
                       </span>
-                      <span className="text-[0.8vw] text-slate-500 font-medium">
+                      <span className="text-[0.75vw] text-slate-500 font-normal">
                         {new Date(h.timestamp).toLocaleString('en-GB', {
                           month: '2-digit', day: '2-digit', year: 'numeric',
                           hour: '2-digit', minute: '2-digit', hour12: true
                         })}
                       </span>
                     </div>
-                    <div className="text-[0.85vw] text-slate-600 mb-[0.2vw] flex items-center gap-[0.3vw]">
-                      To: <span className="font-bold text-slate-800">{h.metadata?.assignedToName || displayName}</span> 
-                      {h.metadata?.dept && <span className="text-slate-500">({h.metadata.dept})</span>}
-                      {h.metadata?.level > 0 && <span className="text-slate-500">- Level {h.metadata.level}</span>}
+                    <div className="text-[0.8vw] text-slate-650 mb-[0.2vw] flex items-center gap-[0.3vw]">
+                      To: <span className="font-semibold text-slate-800">{h.metadata?.assignedToName || displayName}</span> 
+                      {h.metadata?.dept && <span className="text-slate-500 font-normal">({h.metadata.dept})</span>}
+                      {h.metadata?.level > 0 && <span className="text-slate-500 font-normal">- Level {h.metadata.level}</span>}
                     </div>
                     {h.metadata?.deadline && (
-                      <div className="text-[0.75vw] text-slate-500 flex items-center gap-[0.3vw] mb-[0.3vw]">
-                        <Clock className="w-[0.8vw] h-[0.8vw]" /> Deadline: {new Date(h.metadata.deadline).toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
+                      <div className="text-[0.73vw] text-slate-500 font-normal flex items-center gap-[0.3vw] mb-[0.25vw]">
+                        <Clock className="w-[0.75vw] h-[0.75vw] text-slate-400" /> Deadline: {new Date(h.metadata.deadline).toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
                       </div>
                     )}
                     {h.metadata?.remarks && (
-                      <div className={`text-[0.8vw] font-semibold mt-[0.4vw] ${isSlaBreached ? 'text-rose-700 bg-rose-50 border border-rose-100 p-[0.4vw] rounded' : 'text-slate-700'}`}>
+                      <div className={`text-[0.78vw] font-normal mt-[0.35vw] ${isSlaBreached ? 'text-rose-700 bg-rose-50/70 border border-rose-100 p-[0.4vw] rounded' : 'text-slate-700'}`}>
                         {h.metadata.remarks}
                       </div>
                     )}
@@ -170,54 +170,56 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
             return (
               <div key={i} className="flex gap-[0.8vw] relative">
                 <div className="flex flex-col items-center">
-                  <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${isHighlightedEvent ? 'bg-blue-500 ring-2 ring-blue-200' : 'bg-indigo-500'}`} />
+                  <div className={`w-[0.55vw] h-[0.55vw] rounded-full mt-[0.2vw] z-10 ${isHighlightedEvent ? 'bg-blue-500 ring-2 ring-blue-100' : 'bg-indigo-500'}`} />
                   {i !== sortedHistory.length - 1 && (
-                    <div className="w-[1px] h-full bg-slate-300 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.27vw]" />
+                    <div className="w-[1px] h-full bg-slate-200 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.25vw]" />
                   )}
                 </div>
-                <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-sm ${
+                <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-xs bg-white border ${
                   isHighlightedEvent 
-                    ? 'bg-blue-50 border-[2px] border-blue-400' 
-                    : 'bg-slate-50 border border-slate-200'
+                    ? 'border-blue-300' 
+                    : 'border-slate-200'
                 }`}>
                   <div className="flex justify-between items-start mb-[0.2vw]">
-                    <span className={`text-[1vw] font-bold ${isHighlightedEvent ? 'text-blue-900' : 'text-slate-900'}`}>
+                    <span className={`text-[0.9vw] font-semibold ${isHighlightedEvent ? 'text-blue-900' : 'text-slate-850'}`}>
                       {h.status === 'Closed' || h.status === 'Close' ? 'Resolved' : h.status}
                     </span>
-                    <span className="text-[0.8vw] text-slate-500 font-medium">
+                    <span className="text-[0.75vw] text-slate-500 font-normal">
                       {new Date(h.timestamp).toLocaleString('en-GB', {
                         month: '2-digit', day: '2-digit', year: 'numeric',
                         hour: '2-digit', minute: '2-digit', hour12: true
                       })}
                     </span>
                   </div>
-                  <div className="text-[0.85vw] text-slate-600 mb-[0.2vw]">
+                  <div className="text-[0.8vw] text-slate-650 mb-[0.2vw]">
                     By: <span className="font-semibold text-slate-800">{displayName}</span>
                   </div>
                   {h.metadata?.supportPerson && (
-                    <div className="text-[0.85vw] text-indigo-700 font-bold mb-[0.2vw]">
+                    <div className="text-[0.8vw] text-indigo-700 font-medium mb-[0.2vw]">
                       Sent to: {h.metadata.supportPerson.name} ({h.metadata.supportPerson.department || 'Support'})
                     </div>
                   )}
                   {h.metadata?.assignedTo && (
-                    <div className="text-[0.85vw] text-indigo-700 font-bold mb-[0.2vw]">
+                    <div className="text-[0.8vw] text-indigo-700 font-medium mb-[0.2vw]">
                       Assigned to: {h.metadata.assignedToName || h.metadata.assignedTo}
                       {h.metadata.visitDate && ` • Visit Date: ${new Date(h.metadata.visitDate).toLocaleDateString()}`}
                     </div>
                   )}
                   {h.metadata?.visitDate && !h.metadata?.assignedTo && (
-                    <div className="text-[0.85vw] text-indigo-700 font-bold mb-[0.2vw]">
+                    <div className="text-[0.8vw] text-indigo-700 font-medium mb-[0.2vw]">
                       New Visit Date: {new Date(h.metadata.visitDate).toLocaleDateString()}
                     </div>
                   )}
                   {(h.metadata?.returnedTo || h.status === 'Field Visit Returned') && (
-                    <div className="text-[0.85vw] text-amber-700 font-bold mb-[0.2vw]">
+                    <div className="text-[0.8vw] text-amber-700 font-medium mb-[0.2vw]">
                       Returned to: {h.metadata?.returnedTo || 'Support'}
                     </div>
                   )}
                   {h.remarks && (
-                    <div className="text-[0.85vw] text-slate-700 bg-white border border-slate-200 rounded-[0.4vw] p-[0.6vw] mt-[0.4vw]">
+                    <div className="text-[0.8vw] text-slate-700 bg-slate-50 border border-slate-200/80 rounded-[0.4vw] p-[0.5vw] mt-[0.35vw] font-normal leading-relaxed">
                       {h.remarks}
+                    </div>
+                  )}
                     </div>
                   )}
 
@@ -285,13 +287,13 @@ export const ProductHistoryModal = ({ history, employees, currentUser, onClose }
         className="bg-slate-50 w-full max-w-[40vw] max-h-[80vh] rounded-[1vw] shadow-2xl flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-[1.2vw] border-b border-slate-200 bg-white flex justify-between items-center">
-          <h2 className="text-[1.2vw] font-black text-slate-800 flex items-center gap-[0.5vw]">
-            <History className="w-[1.4vw] h-[1.4vw] text-indigo-600" />
+        <div className="p-[1.1vw] border-b border-slate-200 bg-white flex justify-between items-center">
+          <h2 className="text-[1.1vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
+            <History className="w-[1.3vw] h-[1.3vw] text-indigo-600" />
             Product History
           </h2>
-          <button onClick={onClose} className="p-[0.5vw] hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
-            <X className="w-[1.2vw] h-[1.2vw] text-slate-500" />
+          <button onClick={onClose} className="p-[0.4vw] hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
+            <X className="w-[1.1vw] h-[1.1vw] text-slate-500" />
           </button>
         </div>
         <div className="p-[1.5vw] overflow-y-auto">
