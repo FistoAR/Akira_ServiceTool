@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, cloneElement } from "react";
 import {
   Search,
   Wrench,
@@ -82,6 +82,11 @@ const ProductClosurePanel = ({
       bg: "bg-blue-50 text-blue-700 border-blue-300",
       icon: <MapPin className="w-[0.85vw] h-[0.85vw]" />,
       label: "Field Visit",
+    },
+    "Support Requested": {
+      bg: "bg-sky-50 text-sky-700 border-sky-300",
+      icon: <HelpCircle className="w-[0.85vw] h-[0.85vw]" />,
+      label: "Support Requested",
     },
   };
 
@@ -257,6 +262,31 @@ const ProductClosurePanel = ({
     };
   }, [prod, currentUser]);
 
+  // Reverse escalate is ONLY available after the product has been attended AND no report/status record has been submitted by the current user
+  const canReverseEscalate = useMemo(() => {
+    if (reverseTargetInfo.isFirstAssigned || isSupportDeskAssigned) return false;
+
+    // Must be attended
+    const isAttended = Boolean(prod?._attended || prod?._attendedAt);
+    if (!isAttended) return false;
+
+    // If any product closure status is already set (e.g. Pending, Resolved, Field Visit, etc.)
+    if (prod?._productClosure?.status) return false;
+
+    // If user has any non-attended report in history
+    const uid = currentUser?.userId;
+    const history = prod?._history || [];
+    const hasUserReport = history.some((h) => {
+      const byUser = h.updatedBy === uid || h.metadata?.userId === uid;
+      const isAttendedEvent = h.status === 'Attended';
+      return byUser && !isAttendedEvent;
+    });
+
+    if (hasUserReport) return false;
+
+    return true;
+  }, [reverseTargetInfo, isSupportDeskAssigned, prod, currentUser]);
+
   const tabs = [
     {
       id: "Open",
@@ -310,7 +340,7 @@ const ProductClosurePanel = ({
           },
         ]
       : []),
-    ...(!reverseTargetInfo.isFirstAssigned && !isSupportDeskAssigned
+    ...(canReverseEscalate
       ? [
           {
             id: "ReverseEscalate",
@@ -338,7 +368,7 @@ const ProductClosurePanel = ({
         ) : null}
 
         <div className="flex flex-col gap-[0.7vw]">
-          <div className="grid grid-cols-4 gap-[0.5vw]">
+          <div className="flex items-center gap-[0.4vw] w-full flex-nowrap">
             {tabs.map((t) => {
               const isActive = selected === t.id;
               return (
@@ -351,14 +381,19 @@ const ProductClosurePanel = ({
                     setNotes("");
                     setErrors({});
                   }}
-                  className={`flex items-center justify-center gap-[0.4vw] py-[0.55vw] px-[0.6vw] rounded-[0.5vw] border text-[0.78vw] font-bold transition-all cursor-pointer shadow-2xs ${
+                  className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.76vw] font-bold transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
                     isActive
                       ? t.activeStyle
                       : `bg-white border-slate-300 text-slate-700 ${t.hoverStyle}`
                   }`}
                 >
-                  {t.icon}
-                  <span>{t.l}</span>
+                  {t.icon &&
+                    (isActive
+                      ? cloneElement(t.icon, {
+                          className: `${t.icon.props.className || "w-[0.9vw] h-[0.9vw]"} text-white`,
+                        })
+                      : t.icon)}
+                  <span className="truncate">{t.l}</span>
                 </button>
               );
             })}

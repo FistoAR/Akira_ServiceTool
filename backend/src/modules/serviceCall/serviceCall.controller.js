@@ -827,7 +827,7 @@ exports.reverseEscalateProduct = async (req, res) => {
         sender: userId || 'System',
         type: 'Escalation',
         title: `Call Returned (Reverse Escalation): #${call.callNumber}`,
-        message: `Call #${call.callNumber} for ${call.customerName || 'Customer'} was reverse-escalated back to you by ${previousEngName}. Reason: ${reason || 'Needs review'}. SLA: ${revConfig.durationHours}h ${revConfig.durationMins || 0}m.`,
+        message: `Call #${call.callNumber} for ${call.customerName || 'Customer'} was reverse-escalated back to ${targetEngineerName} by ${previousEngName}. Reason: ${reason || 'Needs review'}. SLA: ${revConfig.durationHours}h ${revConfig.durationMins || 0}m.`,
         data: { callId: call._id, callNumber: call.callNumber, productIdx: pIdx },
         priority: 'High'
       });
@@ -866,6 +866,13 @@ exports.createSupportRequest = async (req, res) => {
     call.products[productIdx]._supportPersonId = supportPerson.userId;
     call.products[productIdx]._supportPersonName = supportPerson.name;
     call.products[productIdx]._supportRequestedAt = new Date();
+    call.products[productIdx]._productClosure = {
+      status: 'Support Requested',
+      remarks: notes,
+      supportPersonId: supportPerson.userId,
+      supportPersonName: supportPerson.name,
+      updatedAt: new Date()
+    };
     
     const historyItem = {
       status: 'Support Requested',

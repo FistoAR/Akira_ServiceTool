@@ -361,8 +361,8 @@ async function runEscalationCheck() {
           await sendNotification({
             recipient: nextEngineer.userId,
             type: 'Assignment',
-            title: 'Call Escalated to You (SLA Breached)',
-            message: `SLA Breached! Call #${call.callNumber} for ${call.customerName} was breached by ${oldEngineerName || 'previous level'} and has been escalated to you.`,
+            title: `Call Escalated: ${nextEngineer.name} (SLA Breached)`,
+            message: `SLA Breached! Call #${call.callNumber} for ${call.customerName} was breached by ${oldEngineerName || 'previous level'} and has been escalated to ${nextEngineer.name}.`,
             data: { callId: call._id, callNumber: call.callNumber, escalatedFrom: oldEngineerName },
             priority: 'High'
           });

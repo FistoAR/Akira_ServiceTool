@@ -62,18 +62,22 @@ const getCleanNotificationContent = (n) => {
     } else {
       message = parts[0].replace(/Product status updated to "[^"]*" by /, 'Updated by ');
     }
-  } else if (message.includes('was reverse-escalated back to you by')) {
+  } else if (message.includes('was reverse-escalated back to')) {
     const reasonMatch = message.match(/Reason:\s*(.*?)(\.|$)/);
     const byMatch = message.match(/by\s+([^.]+)/);
+    const toMatch = message.match(/back to\s+([^\s]+)/);
     const who = byMatch ? byMatch[1].split('.')[0].trim() : 'previous engineer';
+    const toName = toMatch ? toMatch[1].trim() : '';
     const reason = reasonMatch && reasonMatch[1] && reasonMatch[1] !== 'Needs review' ? ` (${reasonMatch[1].trim()})` : '';
-    message = `Returned by ${who}${reason}`;
+    message = `Returned by ${who}${toName && toName !== 'you' ? ` to ${toName}` : ''}${reason}`;
   } else if (message.includes('will be escalated to the next person soon')) {
     message = '50% of SLA time reached. Approaching escalation.';
-  } else if (message.includes('was breached by') && message.includes('has been escalated to you')) {
+  } else if (message.includes('was breached by') && (message.includes('has been escalated to') || message.includes('escalated to'))) {
     const byMatch = message.match(/breached by\s+([^\s]+)/);
+    const toMatch = message.match(/escalated to\s+([^\s.]+)/);
     const who = byMatch ? byMatch[1] : 'engineer';
-    message = `SLA breached by ${who} and escalated to you.`;
+    const toName = toMatch ? toMatch[1] : 'you';
+    message = `SLA breached by ${who} and escalated to ${toName}.`;
   } else if (message.includes('all level exhausted and it assigned to')) {
     const toMatch = message.match(/assigned to the\s+"?([^"]+)"?/);
     const who = toMatch ? toMatch[1] : 'admin';

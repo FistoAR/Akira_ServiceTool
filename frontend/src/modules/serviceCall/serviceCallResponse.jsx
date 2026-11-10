@@ -1394,7 +1394,7 @@ const ServiceCallResponse = () => {
       {/* Respond Modal for Product */}
       {activeModalProduct && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-[1vw]">
-          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[42vw] max-h-[90vh] flex flex-col overflow-hidden">
+          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[48vw] max-h-[90vh] flex flex-col overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] border-b border-slate-200 bg-slate-50/80 shrink-0">
               <div>
