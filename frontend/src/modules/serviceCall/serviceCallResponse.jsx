@@ -834,8 +834,10 @@ const ServiceCallResponse = () => {
   };
 
   const handleAssignVisit = async (callId, type, form, productIdx) => {
-    const entry = queue.find((e) => e.callId === callId);
-    if (!entry) return;
+    const entry = queue.find((e) => (e.callId === callId || e._id === callId || e.id === callId)) ||
+      allCalls.find((e) => (e.callId === callId || e._id === callId || e.id === callId)) ||
+      (activeModalProduct?.entry?._id === callId || activeModalProduct?.callId === callId ? activeModalProduct.entry : null);
+    if (!entry && !callId) return;
     try {
       await axios.post(`${API_URL}/service-calls/field-visit`, {
         callId,
@@ -847,6 +849,7 @@ const ServiceCallResponse = () => {
         ...form,
       });
       toast("Field visit assigned", "success");
+      setActiveModalProduct(null);
 
       const { data: qData } = await axios.get(
         `${API_URL}/service-calls/active`,

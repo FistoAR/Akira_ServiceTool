@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Search, CheckCircle, Loader2, X } from "lucide-react";
+import { Search, CheckCircle, Loader2, X, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { load, EMPLOYEES_KEY } from "./ResponseConstants";
+import { useNotification } from "../../../components/NotificationContext";
 
 export const AssignVisitModal = ({
   type,
@@ -13,10 +14,12 @@ export const AssignVisitModal = ({
   onClose,
   inlineMode = false,
 }) => {
+  const { toast } = useNotification();
   const employees = propsEmployees || load(EMPLOYEES_KEY, []);
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -39,6 +42,7 @@ export const AssignVisitModal = ({
           e.department.toLowerCase().includes(q)),
     );
   }, [employees, currentUser, search]);
+
   const [form, setForm] = useState({
     assignedTo: "",
     assignedToName: "",
@@ -46,7 +50,12 @@ export const AssignVisitModal = ({
     visitDate: "",
     diagnosisSummary: "",
   });
-  const sf = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+
+  const sf = (k, v) => {
+    setForm((p) => ({ ...p, [k]: v }));
+    setErrors((p) => ({ ...p, [k]: null }));
+  };
+
   const isFV = type === "Field Visit";
 
   const formBody = (
@@ -65,6 +74,7 @@ export const AssignVisitModal = ({
             onChange={(e) => {
               setSearch(e.target.value);
               setShowDropdown(true);
+              setErrors((p) => ({ ...p, assignedTo: null }));
               if (!e.target.value) {
                 sf("assignedTo", "");
                 sf("assignedToName", "");
@@ -72,9 +82,21 @@ export const AssignVisitModal = ({
             }}
             onFocus={() => setShowDropdown(true)}
             placeholder="Search and select specialist..."
-            className={`w-full border border-slate-400 pl-[2vw] p-[0.6vw] text-[0.85vw] outline-none bg-white transition-all shadow-sm ${showDropdown ? "rounded-t-[0.5vw] border-b-0 border-indigo-400" : "rounded-[0.5vw] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"}`}
+            className={`w-full border pl-[2vw] p-[0.6vw] text-[0.85vw] outline-none bg-white transition-all shadow-sm ${
+              errors.assignedTo
+                ? "border-rose-500 rounded-[0.5vw] focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                : showDropdown
+                ? "rounded-t-[0.5vw] border-b-0 border-indigo-400"
+                : "border-slate-400 rounded-[0.5vw] focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+            }`}
           />
         </div>
+        {errors.assignedTo && (
+          <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+            <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+            {errors.assignedTo}
+          </div>
+        )}
         {showDropdown && (
           <div className="absolute top-full left-0 right-0 bg-white border border-indigo-400 border-t-0 rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto shadow-xl z-[9999] p-[0.3vw]">
             {candidates.length > 0 ? (
@@ -86,8 +108,13 @@ export const AssignVisitModal = ({
                     sf("assignedToName", emp.name);
                     setSearch(`${emp.name} (${emp.department})`);
                     setShowDropdown(false);
+                    setErrors((p) => ({ ...p, assignedTo: null }));
                   }}
-                  className={`p-[0.6vw] flex items-center justify-between rounded-[0.4vw] cursor-pointer font-bold text-[0.85vw] transition-colors ${form.assignedTo === emp.userId ? "bg-indigo-50 text-indigo-800" : "text-slate-700 hover:bg-slate-100"}`}
+                  className={`p-[0.6vw] flex items-center justify-between rounded-[0.4vw] cursor-pointer font-bold text-[0.85vw] transition-colors ${
+                    form.assignedTo === emp.userId
+                      ? "bg-indigo-50 text-indigo-800"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
                 >
                   <div className="flex flex-col">
                     <span>{emp.name}</span>
@@ -108,6 +135,7 @@ export const AssignVisitModal = ({
           </div>
         )}
       </div>
+
       <div className="flex flex-col gap-[0.3vw]">
         <label className="text-[0.85vw] font-semibold text-slate-800">
           {isFV ? "Scheduled Visit Date *" : "Received Date *"}
@@ -117,9 +145,20 @@ export const AssignVisitModal = ({
           value={form.visitDate}
           min={new Date().toISOString().split("T")[0]}
           onChange={(e) => sf("visitDate", e.target.value)}
-          className="border border-slate-300 rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-semibold outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all bg-white shadow-2xs text-slate-800"
+          className={`border rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-semibold outline-none transition-all bg-white shadow-2xs text-slate-800 ${
+            errors.visitDate
+              ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+              : "border-slate-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+          }`}
         />
+        {errors.visitDate && (
+          <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+            <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+            {errors.visitDate}
+          </div>
+        )}
       </div>
+
       <div className="flex flex-col gap-[0.3vw]">
         <label className="text-[0.85vw] font-semibold text-slate-800">
           Diagnosis Summary
@@ -139,14 +178,21 @@ export const AssignVisitModal = ({
     <button
       disabled={isSubmitting}
       onClick={async () => {
+        setErrors({});
+        const newErr = {};
         if (!form.assignedTo) {
-          alert("Please select a person.");
-          return;
+          newErr.assignedTo = "Please select an engineer/person.";
         }
         if (!form.visitDate) {
-          alert("Please select a visit date.");
+          newErr.visitDate = "Please select a scheduled visit date.";
+        }
+        if (Object.keys(newErr).length > 0) {
+          setErrors(newErr);
+          const firstMsg = newErr.assignedTo || newErr.visitDate;
+          toast(firstMsg, "error");
           return;
         }
+
         setIsSubmitting(true);
         try {
           await onSave(form);
@@ -161,7 +207,7 @@ export const AssignVisitModal = ({
       ) : (
         <CheckCircle className="w-[0.85vw] h-[0.85vw]" />
       )}
-      Save Assignment
+      Assign Field Visit
     </button>
   );
 
@@ -211,4 +257,3 @@ export const AssignVisitModal = ({
     </div>
   );
 };
-

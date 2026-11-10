@@ -362,12 +362,13 @@ async function _emitCritical(io, call, pIdx, prod) {
 async function check50PercentAlerts(io) {
   try {
     const now = new Date();
-    // Find calls that are active and have assigned products that are not resolved, not critical, and not already alerted 50%
+    // Find calls that are active and have assigned products that are not resolved, not critical, not attended, and not already alerted 50%
     const calls = await ServiceCall.find({
       status: { $ne: 'Resolved' },
       'products._assigned': true,
       'products._resolved': { $ne: true },
       'products._isCritical': { $ne: true },
+      'products._attended': { $ne: true },
       'products._alerted50': { $ne: true }
     });
 
@@ -375,7 +376,7 @@ async function check50PercentAlerts(io) {
       let modified = false;
       for (let pIdx = 0; pIdx < call.products.length; pIdx++) {
         const prod = call.products[pIdx];
-        if (!prod._assigned || prod._resolved || prod._isCritical || prod._alerted50) continue;
+        if (!prod._assigned || prod._resolved || prod._isCritical || prod._attended || prod._alerted50) continue;
         if (!prod._assignedAt || !prod._deadline) continue;
 
         const assignedTime = new Date(prod._assignedAt).getTime();

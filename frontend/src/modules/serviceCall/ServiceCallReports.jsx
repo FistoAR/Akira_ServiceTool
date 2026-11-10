@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import CustomDropdown from "../../components/CustomDropdown";
 import ProductHistoryModal from "./ProductHistoryModal";
+import { CallDetailsModal } from "./responseComponents/CallDetailsModal";
 import {
   FileText,
   Download,

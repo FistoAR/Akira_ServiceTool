@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import axios from "axios";
 import {
   Search,
   Wrench,
@@ -17,11 +16,13 @@ import {
   LifeBuoy,
   PauseCircle,
   CheckCircle2,
-  Undo2
+  Undo2,
+  AlertCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AssignVisitModal } from "./AssignVisitModal";
 import { API_URL, RESOLUTION_TYPES, load, EMPLOYEES_KEY } from "./ResponseConstants";
+import { useNotification } from "../../../components/NotificationContext";
 
 const ProductClosurePanel = ({
   prod,
@@ -38,6 +39,7 @@ const ProductClosurePanel = ({
   isSupportDeskAsked,
   isSupportDeskAssigned,
 }) => {
+  const { toast } = useNotification();
   const existing = prod._productClosure || {};
   const saved = existing.status;
   const [selected, setSelected] = useState("");
@@ -47,9 +49,14 @@ const ProductClosurePanel = ({
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const dropdownRef = useRef(null);
 
-  // Click outside listener to close dropdown
+  // Clear errors when sub-tab switches or inputs change
+  useEffect(() => {
+    setErrors({});
+  }, [selected]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -60,38 +67,60 @@ const ProductClosurePanel = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (saved === "Closed")
-    return (
+  const badgeConfig = {
+    Resolved: {
+      bg: "bg-emerald-50 text-emerald-700 border-emerald-300",
+      icon: <CheckCircle className="w-[0.85vw] h-[0.85vw]" />,
+      label: "Resolved",
+    },
+    Pending: {
+      bg: "bg-amber-50 text-amber-700 border-amber-300",
+      icon: <Clock className="w-[0.85vw] h-[0.85vw]" />,
+      label: "Pending",
+    },
+    "Field Visit Required": {
+      bg: "bg-blue-50 text-blue-700 border-blue-300",
+      icon: <MapPin className="w-[0.85vw] h-[0.85vw]" />,
+      label: "Field Visit",
+    },
+  };
+
+  const currentBadge = badgeConfig[saved];
+
+  const savedBadge =
+    saved && currentBadge ? (
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="mt-[0.6vw] bg-gradient-to-r from-emerald-50 to-teal-50/30 border border-emerald-350 rounded-[0.5vw] px-[0.8vw] py-[0.5vw] flex items-center gap-[0.6vw] shadow-sm"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] rounded-[0.5vw] border text-[0.75vw] font-bold ${currentBadge.bg} shadow-2xs`}
       >
-        <CheckCircle className="w-[0.9vw] h-[0.9vw] text-emerald-700 flex-shrink-0" />
-        <span className="text-[0.75vw] font-bold text-emerald-800">
-          Resolved & Closed
-        </span>
+        {currentBadge.icon}
+        <span>{currentBadge.label}</span>
         {existing.remarks && (
-          <span className="text-[0.7vw] text-emerald-700 truncate opacity-95 italic font-bold">
-            · {existing.remarks}
+          <span className="text-[0.7vw] text-slate-600 truncate max-w-[12vw] font-normal">
+            - {existing.remarks}
           </span>
         )}
       </motion.div>
-    );
+    ) : null;
 
   const handleUpdate = async (status, extra = {}) => {
+    setErrors({});
     if (status === "Resolved" && !remarks.trim()) {
-      alert("Resolution details required.");
+      setErrors((p) => ({ ...p, remarks: "Resolution details are required." }));
+      toast("Resolution details are required.", "error");
       return;
     }
     if (status === "Pending" && !remarks.trim()) {
-      alert("Reason required for pending.");
+      setErrors((p) => ({ ...p, remarks: "Reason is required for marking as pending." }));
+      toast("Reason is required for marking as pending.", "error");
       return;
     }
 
     if (status === "Returned") {
       if (!remarks.trim()) {
-        alert("Please provide a reason for returning this request.");
+        setErrors((p) => ({ ...p, remarks: "Please provide a reason for returning this request." }));
+        toast("Please provide a reason for returning this request.", "error");
         return;
       }
       setIsSubmitting(true);
@@ -126,14 +155,21 @@ const ProductClosurePanel = ({
   };
 
   const handleSupport = async () => {
+    setErrors({});
+    const newErrors = {};
     if (!selectedPerson) {
-      alert("Please select a support person.");
-      return;
+      newErrors.supportPerson = "Please select a support person.";
     }
     if (!notes.trim()) {
-      alert("Please add handover notes.");
+      newErrors.notes = "Please add handover notes.";
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      const msg = newErrors.supportPerson || newErrors.notes;
+      toast(msg, "error");
       return;
     }
+
     setIsSubmitting(true);
     try {
       await onSupportRequest(prodIdx, { supportPerson: selectedPerson, notes });
@@ -158,145 +194,170 @@ const ProductClosurePanel = ({
 
   // Determine the first assigned person and the immediate previous person for reverse escalation
   const reverseTargetInfo = useMemo(() => {
-    const hist = prod._escalationHistory || entry?.escalationHistory || [];
-    if (!hist || hist.length === 0) return { canReverse: false, targetName: "", targetDept: "" };
+    const hist = prod?._history || [];
+    let firstAssigned = null;
+    let immediatePrev = null;
 
-    const firstAssignedId = hist[0]?.engineerId || hist[0]?.assignedTo;
-    const currentAssigneeId = prod._assignedEngineerId || currentUser?.userId;
-
-    // RULE: If current person is the first assigned person, they CANNOT reverse-escalate
-    if (firstAssignedId && (currentAssigneeId === firstAssignedId || currentUser?.userId === firstAssignedId)) {
-      return { canReverse: false, targetName: "", targetDept: "", isFirstAssignee: true };
-    }
-
-    // Find the immediate previous engineer in history
-    for (let i = hist.length - 1; i >= 0; i--) {
+    for (let i = 0; i < hist.length; i++) {
       const h = hist[i];
-      const hId = h.engineerId || h.assignedTo;
-      if (hId && hId !== currentAssigneeId && hId !== currentUser?.userId) {
-        return {
-          canReverse: true,
-          targetId: hId,
-          targetName: h.engineerName || h.assignedToName || hId,
-          targetDept: h.department || "",
-          targetLevel: h.level ?? 0
-        };
+      if (
+        h.status === "Assigned" ||
+        h.status === "Initial Assignment" ||
+        h.status === "Level 0" ||
+        h.assignedTo ||
+        h.metadata?.assignedTo
+      ) {
+        const uId = h.assignedTo || h.metadata?.assignedTo;
+        const uName = h.assignedToName || h.metadata?.assignedToName;
+        if (uId) {
+          firstAssigned = {
+            userId: uId,
+            name: uName || uId,
+            department: h.metadata?.department || "",
+          };
+          break;
+        }
       }
     }
 
-    return { canReverse: false, targetName: "", targetDept: "" };
-  }, [prod, entry, currentUser]);
+    if (!firstAssigned && prod?._assignedEngineerId) {
+      firstAssigned = {
+        userId: prod._assignedEngineerId,
+        name: prod._assignedEngineerName || prod._assignedEngineerId,
+      };
+    }
 
-  const hasEscalationTrail = reverseTargetInfo.canReverse;
+    for (let i = hist.length - 1; i >= 0; i--) {
+      const h = hist[i];
+      if (h.status === "Escalated" || h.status === "Escalation") {
+        const fromId = h.updatedBy || h.escalatedBy || h.metadata?.escalatedBy;
+        const fromName = h.updatedByName || h.escalatedByName || h.metadata?.escalatedByName;
+        if (fromId && fromId !== currentUser?.userId) {
+          immediatePrev = {
+            userId: fromId,
+            name: fromName || fromId,
+            department: h.metadata?.fromDepartment || "",
+          };
+          break;
+        }
+      }
+    }
+
+    const isL0 =
+      firstAssigned &&
+      (firstAssigned.userId === currentUser?.userId ||
+        firstAssigned.name === currentUser?.name);
+
+    const targetPerson = immediatePrev || firstAssigned;
+
+    return {
+      isFirstAssigned: Boolean(isL0),
+      targetName: targetPerson?.name || null,
+      targetDept: targetPerson?.department || null,
+    };
+  }, [prod, currentUser]);
 
   const tabs = [
-    (!isSupportDeskAsked || !prod._supportPersonId) &&
-      !isSupportDeskAssigned && {
-        k: "Open",
-        l: "Support",
-        icon: LifeBuoy,
-        c: "bg-blue-600 text-white shadow-xs border-blue-600",
-      },
-    !isPendingTab &&
-      !isSupportDeskAsked &&
-      !isSupportDeskAssigned && {
-        k: "Pending",
-        l: "Pending",
-        icon: PauseCircle,
-        c: "bg-amber-600 text-white shadow-xs border-amber-600",
-      },
     {
-      k: "FVRequired",
+      id: "Open",
+      l: "Support",
+      icon: <LifeBuoy className="w-[0.9vw] h-[0.9vw] text-blue-500" />,
+      activeStyle:
+        "bg-blue-600 text-white shadow-md shadow-blue-500/20 border-blue-600",
+      hoverStyle: "hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300",
+    },
+    ...(!isPendingTab
+      ? [
+          {
+            id: "Pending",
+            l: "Pending",
+            icon: <PauseCircle className="w-[0.9vw] h-[0.9vw] text-amber-500" />,
+            activeStyle:
+              "bg-amber-600 text-white shadow-md shadow-amber-500/20 border-amber-600",
+            hoverStyle:
+              "hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300",
+          },
+        ]
+      : []),
+    {
+      id: "FVRequired",
       l: "Field Visit",
-      icon: MapPin,
-      c: "bg-indigo-600 text-white shadow-xs border-indigo-600",
+      icon: <MapPin className="w-[0.9vw] h-[0.9vw] text-indigo-500" />,
+      activeStyle:
+        "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 border-indigo-600",
+      hoverStyle:
+        "hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300",
     },
     {
-      k: "Resolved",
+      id: "Resolved",
       l: "Resolve",
-      icon: CheckCircle2,
-      c: "bg-emerald-600 text-white shadow-xs border-emerald-600",
+      icon: <CheckCircle2 className="w-[0.9vw] h-[0.9vw] text-emerald-500" />,
+      activeStyle:
+        "bg-emerald-600 text-white shadow-md shadow-emerald-500/20 border-emerald-600",
+      hoverStyle:
+        "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300",
     },
-    hasEscalationTrail &&
-      !isSupportDeskAssigned && {
-        k: "ReverseEscalate",
-        l: "Reverse Escalate",
-        icon: RotateCcw,
-        c: "bg-rose-600 text-white shadow-xs border-rose-600",
-      },
-    isSupportDeskAssigned && {
-      k: "Returned",
-      l: "Return to Assigned Person",
-      icon: Undo2,
-      c: "bg-rose-600 text-white shadow-xs border-rose-600",
-    },
-    ].filter(Boolean);
-
-  const isAnyUserProductAttended = entry.products?.some(
-    (p) => p._assignedEngineerId === currentUser?.userId && p._attended,
-  );
+    ...(isSupportDeskAssigned
+      ? [
+          {
+            id: "Returned",
+            l: "Return to Assigned",
+            icon: <Undo2 className="w-[0.9vw] h-[0.9vw] text-purple-500" />,
+            activeStyle:
+              "bg-purple-600 text-white shadow-md shadow-purple-500/20 border-purple-600",
+            hoverStyle:
+              "hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300",
+          },
+        ]
+      : []),
+    ...(!reverseTargetInfo.isFirstAssigned && !isSupportDeskAssigned
+      ? [
+          {
+            id: "ReverseEscalate",
+            l: "Reverse Escalate",
+            icon: <RotateCcw className="w-[0.9vw] h-[0.9vw] text-rose-500" />,
+            activeStyle:
+              "bg-rose-600 text-white shadow-md shadow-rose-500/20 border-rose-600",
+            hoverStyle:
+              "hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300",
+          },
+        ]
+      : []),
+  ];
 
   return (
-    <div className="mt-[0.6vw] flex flex-col gap-[0.6vw]">
-      {/* Attendance Guard */}
-      {!isAnyUserProductAttended && !prod._attended ? (
-        <motion.div
-          initial={{ scale: 0.98, opacity: 0.9 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-gradient-to-br from-indigo-50/70 via-blue-50/20 to-slate-50 border border-indigo-300 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center justify-center text-center gap-[0.6vw] shadow-sm relative overflow-hidden"
-        >
-          <div className="absolute -right-[1vw] -top-[1vw] w-[4vw] h-[4vw] bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
-          <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 shadow-inner">
-            <Play className="w-[1.1vw] h-[1.1vw] fill-indigo-650 animate-pulse ml-[0.1vw]" />
+    <div className="flex flex-col gap-[0.8vw]">
+      <div className="flex flex-col gap-[0.6vw]">
+        {savedBadge ? (
+          <div className="flex items-center justify-between border-b border-slate-200 pb-[0.6vw]">
+            <span className="text-[0.75vw] font-bold text-slate-500 uppercase tracking-wider">
+              Current Status
+            </span>
+            {savedBadge}
           </div>
-          <div>
-            <div className="text-[0.85vw] font-black text-slate-800 ">
-              Attend this Service Call
-            </div>
-            <p className="text-[0.82vw] text-slate-650 mt-[0.15vw] max-w-[90%] mx-auto font-bold">
-              Acknowledge and attend to halt the auto-escalation timer.
-            </p>
-          </div>
-          <button
-            disabled={isSubmitting}
-            onClick={async () => {
-              setIsSubmitting(true);
-              try {
-                await onProductAttend(prodIdx);
-              } finally {
-                setIsSubmitting(false);
-              }
-            }}
-            className="w-full py-[0.55vw] bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 disabled:opacity-70 text-white rounded-[0.5vw] font-bold text-[0.85vw] transition-all duration-300 transform active:scale-95 shadow-md shadow-indigo-600/15 cursor-pointer flex items-center justify-center gap-[0.4vw]"
-          >
-            {isSubmitting ? (
-              <Loader2 className="w-[0.85vw] h-[0.85vw] animate-spin" />
-            ) : (
-              <CheckSquare className="w-[0.85vw] h-[0.85vw]" />
-            )}
-            Acknowledge & Attend
-          </button>
-        </motion.div>
-      ) : (
-        <>
-          <div
-            className={`grid gap-[0.4vw] ${tabs.length >= 5 ? "grid-cols-5" : tabs.length === 4 ? "grid-cols-4" : tabs.length === 3 ? "grid-cols-3" : tabs.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}
-          >
+        ) : null}
+
+        <div className="flex flex-col gap-[0.7vw]">
+          <div className="grid grid-cols-4 gap-[0.5vw]">
             {tabs.map((t) => {
-              const IconComp = t.icon;
-              const isSelected = selected === t.k;
+              const isActive = selected === t.id;
               return (
                 <button
-                  key={t.k}
+                  key={t.id}
                   type="button"
-                  onClick={() => setSelected(isSelected ? "" : t.k)}
-                  className={`py-[0.45vw] px-[0.6vw] text-[0.8vw] font-bold rounded-[0.45vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.35vw] ${
-                    isSelected
-                      ? `${t.c}`
-                      : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-400 shadow-2xs"
+                  onClick={() => {
+                    setSelected(isActive ? "" : t.id);
+                    setRemarks("");
+                    setNotes("");
+                    setErrors({});
+                  }}
+                  className={`flex items-center justify-center gap-[0.4vw] py-[0.55vw] px-[0.6vw] rounded-[0.5vw] border text-[0.78vw] font-bold transition-all cursor-pointer shadow-2xs ${
+                    isActive
+                      ? t.activeStyle
+                      : `bg-white border-slate-300 text-slate-700 ${t.hoverStyle}`
                   }`}
                 >
-                  <IconComp className={`w-[0.85vw] h-[0.85vw] ${isSelected ? "text-white" : "text-slate-500"}`} />
+                  {t.icon}
                   <span>{t.l}</span>
                 </button>
               );
@@ -311,7 +372,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-blue-50 border border-blue-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-visible shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-blue-900  ">
+                <div className="text-[0.85vw] font-black text-blue-900">
                   Request Support / Escalate
                 </div>
                 <div className="flex flex-col gap-[0.5vw]">
@@ -327,10 +388,21 @@ const ProductClosurePanel = ({
                         setSearch(e.target.value);
                         setSelectedPerson(null);
                         setShowDropdown(true);
+                        setErrors((p) => ({ ...p, supportPerson: null }));
                       }}
                       placeholder="Search person or department..."
-                      className="w-full border border-slate-400 rounded-[0.5vw] pl-[2vw] pr-[0.7vw] py-[0.5vw] text-[0.75vw] font-bold outline-none bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all shadow-sm"
+                      className={`w-full border rounded-[0.5vw] pl-[2vw] pr-[0.7vw] py-[0.5vw] text-[0.75vw] font-bold outline-none bg-white transition-all shadow-sm ${
+                        errors.supportPerson
+                          ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                          : "border-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+                      }`}
                     />
+                    {errors.supportPerson && (
+                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.2vw]">
+                        <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                        {errors.supportPerson}
+                      </div>
+                    )}
                     {showDropdown && candidates.length > 0 && (
                       <div className="absolute top-full left-0 right-0 z-20 border border-slate-400 bg-white rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto divide-y divide-slate-200 shadow-lg mt-[-0.1vw]">
                         {candidates.map((emp) => (
@@ -340,8 +412,13 @@ const ProductClosurePanel = ({
                               setSelectedPerson(emp);
                               setSearch(emp.name);
                               setShowDropdown(false);
+                              setErrors((p) => ({ ...p, supportPerson: null }));
                             }}
-                            className={`px-[0.7vw] py-[0.6vw] text-[0.72vw] font-bold cursor-pointer hover:bg-blue-50/65 flex justify-between items-center transition-colors ${selectedPerson?.userId === emp.userId ? "bg-blue-55 text-blue-950 font-black border-l-2 border-blue-600" : "text-slate-800"}`}
+                            className={`px-[0.7vw] py-[0.6vw] text-[0.72vw] font-bold cursor-pointer hover:bg-blue-50/65 flex justify-between items-center transition-colors ${
+                              selectedPerson?.userId === emp.userId
+                                ? "bg-blue-55 text-blue-950 font-black border-l-2 border-blue-600"
+                                : "text-slate-800"
+                            }`}
                           >
                             <span>
                               {emp.name} ({emp.department})
@@ -354,13 +431,28 @@ const ProductClosurePanel = ({
                       </div>
                     )}
                   </div>
-                  <textarea
-                    rows="2"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Provide handover notes..."
-                    className="w-full border border-slate-400 rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all shadow-sm resize-none"
-                  />
+                  <div>
+                    <textarea
+                      rows="2"
+                      value={notes}
+                      onChange={(e) => {
+                        setNotes(e.target.value);
+                        setErrors((p) => ({ ...p, notes: null }));
+                      }}
+                      placeholder="Provide handover notes..."
+                      className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                        errors.notes
+                          ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                          : "border-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+                      }`}
+                    />
+                    {errors.notes && (
+                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                        <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                        {errors.notes}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <button
                   disabled={isSubmitting}
@@ -382,16 +474,31 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-emerald-50 border border-emerald-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-emerald-900  ">
+                <div className="text-[0.85vw] font-black text-emerald-900">
                   Resolution Details
                 </div>
-                <textarea
-                  rows="3"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Enter details of fixed parts, logical adjustments, or resolution explanation..."
-                  className="w-full border border-slate-400 rounded-[0.5vw] p-[0.8vw] text-[0.78vw] font-semibold outline-none bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all shadow-sm resize-none"
-                />
+                <div>
+                  <textarea
+                    rows="3"
+                    value={remarks}
+                    onChange={(e) => {
+                      setRemarks(e.target.value);
+                      setErrors((p) => ({ ...p, remarks: null }));
+                    }}
+                    placeholder="Enter details of fixed parts, logical adjustments, or resolution explanation..."
+                    className={`w-full border rounded-[0.5vw] p-[0.8vw] text-[0.78vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                      errors.remarks
+                        ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                        : "border-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+                    }`}
+                  />
+                  {errors.remarks && (
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                      {errors.remarks}
+                    </div>
+                  )}
+                </div>
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Resolved")}
@@ -412,16 +519,31 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-amber-50 border border-amber-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-amber-900  ">
+                <div className="text-[0.85vw] font-black text-amber-900">
                   Pending Reason
                 </div>
-                <textarea
-                  rows="2"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Why is this call pending? (e.g., waiting for parts, client unavailable)"
-                  className="w-full border border-slate-400 rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all shadow-sm resize-none"
-                />
+                <div>
+                  <textarea
+                    rows="2"
+                    value={remarks}
+                    onChange={(e) => {
+                      setRemarks(e.target.value);
+                      setErrors((p) => ({ ...p, remarks: null }));
+                    }}
+                    placeholder="Why is this call pending? (e.g., waiting for parts, client unavailable)"
+                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                      errors.remarks
+                        ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                        : "border-slate-400 focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
+                    }`}
+                  />
+                  {errors.remarks && (
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                      {errors.remarks}
+                    </div>
+                  )}
+                </div>
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Pending")}
@@ -451,7 +573,15 @@ const ProductClosurePanel = ({
                   inlineMode
                   onClose={() => setSelected("")}
                   onSave={async (f) => {
-                    await onAssignFieldVisit(f, prodIdx);
+                    if (onAssignFieldVisit) {
+                      await onAssignFieldVisit(
+                        entry?._id || entry?.callId,
+                        "Field Visit",
+                        f,
+                        prodIdx,
+                      );
+                    }
+                    setSelected("");
                   }}
                 />
               </motion.div>
@@ -488,16 +618,36 @@ const ProductClosurePanel = ({
                     </span>
                   </div>
                 )}
-                <textarea
-                  rows="2"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Enter reason for sending this call back to the previous engineer..."
-                  className="w-full border border-slate-300 rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-100 transition-all shadow-sm resize-none"
-                />
+                <div>
+                  <textarea
+                    rows="2"
+                    value={remarks}
+                    onChange={(e) => {
+                      setRemarks(e.target.value);
+                      setErrors((p) => ({ ...p, remarks: null }));
+                    }}
+                    placeholder="Enter reason for sending this call back to the previous engineer..."
+                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                      errors.remarks
+                        ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                        : "border-slate-300 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
+                    }`}
+                  />
+                  {errors.remarks && (
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                      {errors.remarks}
+                    </div>
+                  )}
+                </div>
                 <button
-                  disabled={isSubmitting || !remarks.trim()}
+                  disabled={isSubmitting}
                   onClick={async () => {
+                    if (!remarks.trim()) {
+                      setErrors((p) => ({ ...p, remarks: "Please provide a reason for sending this call back." }));
+                      toast("Please provide a reason for sending this call back.", "error");
+                      return;
+                    }
                     setIsSubmitting(true);
                     try {
                       if (onReverseEscalate) {
@@ -526,22 +676,37 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="bg-rose-50 border border-rose-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
+                className="bg-purple-50 border border-purple-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-rose-900">
+                <div className="text-[0.85vw] font-black text-purple-900">
                   Return to Assigned Person
                 </div>
-                <textarea
-                  rows="2"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Reason for returning this to the original person..."
-                  className="w-full border border-slate-400 rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white focus:border-rose-400 focus:ring-4 focus:ring-rose-100 transition-all shadow-sm resize-none"
-                />
+                <div>
+                  <textarea
+                    rows="2"
+                    value={remarks}
+                    onChange={(e) => {
+                      setRemarks(e.target.value);
+                      setErrors((p) => ({ ...p, remarks: null }));
+                    }}
+                    placeholder="Enter reason or instructions for returning this request..."
+                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                      errors.remarks
+                        ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
+                        : "border-slate-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
+                    }`}
+                  />
+                  {errors.remarks && (
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                      {errors.remarks}
+                    </div>
+                  )}
+                </div>
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Returned")}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-rose-500 to-red-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-rose-600 hover:to-red-700 transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.6vw] bg-gradient-to-r from-purple-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md shadow-purple-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -551,8 +716,8 @@ const ProductClosurePanel = ({
               </motion.div>
             )}
           </AnimatePresence>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
