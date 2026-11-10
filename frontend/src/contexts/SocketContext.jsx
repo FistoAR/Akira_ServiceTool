@@ -137,7 +137,7 @@ export const SocketProvider = ({ children }) => {
 
             const nativeNotif = new Notification(notifTitle, {
               body: notifBody,
-              icon: '/SidePannelLogos/service.png',
+              icon: '/SidePannelLogos/call.png',
               data: notification.data || {}
             });
 
