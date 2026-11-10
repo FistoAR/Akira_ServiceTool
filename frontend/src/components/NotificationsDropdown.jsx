@@ -50,9 +50,11 @@ const getCleanNotificationContent = (n) => {
     title = 'SLA 50% Warning';
   } else if (title.includes('SLA Breached')) {
     title = 'SLA Breached';
+  } else if (title.includes('Escalation Exhausted') || title.includes('all level exhausted')) {
+    title = 'Escalation Exhausted';
   }
 
-  // Clean message: strip redundant prefixes like 'Product status updated to "Support Requested" by test. Remarks: '
+  // Clean message: strip redundant prefixes and boilerplate
   if (message.includes('Product status updated to')) {
     const parts = message.split('Remarks:');
     if (parts.length > 1 && parts[1].trim() && parts[1].trim() !== 'None') {
@@ -66,6 +68,16 @@ const getCleanNotificationContent = (n) => {
     const who = byMatch ? byMatch[1].split('.')[0].trim() : 'previous engineer';
     const reason = reasonMatch && reasonMatch[1] && reasonMatch[1] !== 'Needs review' ? ` (${reasonMatch[1].trim()})` : '';
     message = `Returned by ${who}${reason}`;
+  } else if (message.includes('will be escalated to the next person soon')) {
+    message = '50% of SLA time reached. Approaching escalation.';
+  } else if (message.includes('was breached by') && message.includes('has been escalated to you')) {
+    const byMatch = message.match(/breached by\s+([^\s]+)/);
+    const who = byMatch ? byMatch[1] : 'engineer';
+    message = `SLA breached by ${who} and escalated to you.`;
+  } else if (message.includes('all level exhausted and it assigned to')) {
+    const toMatch = message.match(/assigned to the\s+"?([^"]+)"?/);
+    const who = toMatch ? toMatch[1] : 'admin';
+    message = `All escalation levels exhausted. Assigned to ${who}.`;
   }
 
   return { title, message, callNum };
@@ -524,25 +536,22 @@ const NotificationsDropdown = () => {
 
                           {/* Content Body: Clean layout with non-wrapping title row */}
                           <div className="flex-1 min-w-0 pr-[0.2vw]">
-                            {/* Row 1: Title and Category */}
-                            <div className="flex items-center gap-[0.4vw]">
+                            {/* Row 1: Title without noisy badge tags */}
+                            <div className="flex items-center justify-between">
                               <h4 className={`text-[0.82vw] truncate ${
                                 isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-800'
                               }`}>
                                 {cleanTitle}
                               </h4>
-                              <span className={`text-[0.6vw] font-bold px-[0.35vw] py-[0.04vw] rounded-[0.25vw] border uppercase tracking-wider shrink-0 ${visuals.badgeBg}`}>
-                                {visuals.badgeText}
-                              </span>
                             </div>
 
-                            {/* Row 2: Clean Message preview */}
-                            <p className="text-[0.74vw] text-slate-650 leading-snug mt-[0.15vw] line-clamp-2 break-words">
+                            {/* Row 2: Clean, straightforward message */}
+                            <p className="text-[0.74vw] text-slate-650 leading-snug mt-[0.1vw] line-clamp-2 break-words">
                               {cleanMessage}
                             </p>
 
-                            {/* Row 3: Timestamp & Subtext meta */}
-                            <div className="flex items-center gap-[0.4vw] mt-[0.25vw] text-[0.68vw] text-slate-500 font-medium">
+                            {/* Row 3: Timestamp & Call Number */}
+                            <div className="flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.68vw] text-slate-500 font-medium">
                               <span>{formatTimeShort(n.createdAt)}</span>
                               <span>•</span>
                               <span className="text-slate-600 font-semibold font-mono text-[0.66vw]">
