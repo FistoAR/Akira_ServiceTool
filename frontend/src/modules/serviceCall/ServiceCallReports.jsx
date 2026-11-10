@@ -1513,14 +1513,16 @@ export default function ServiceCallReports() {
                                       <Info className="w-[0.8vw] h-[0.8vw]" />
                                       Info
                                     </button>
-                                    <button
-                                      onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                      title="Edit Report"
-                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
-                                    >
-                                      <Edit3 className="w-[0.8vw] h-[0.8vw]" />
-                                      Edit Report
-                                    </button>
+                                    {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
+                                      <button
+                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                        title="Edit Report"
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                      >
+                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        Edit Report
+                                      </button>
+                                    )}
                                     <button
                                       onClick={() => setHistoryModalCall(call)}
                                       className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
@@ -1868,13 +1870,15 @@ export default function ServiceCallReports() {
                                         <Info className="w-[0.8vw] h-[0.8vw]" />
                                         Info
                                       </button>
-                                      <button
-                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
-                                      >
-                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
-                                        Edit
-                                      </button>
+                                      {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
+                                        <button
+                                          onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                          className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                        >
+                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                          Edit
+                                        </button>
+                                      )}
                                       <button
                                         onClick={() => setHistoryModalCall(call)}
                                         className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
@@ -2048,13 +2052,15 @@ export default function ServiceCallReports() {
                                     </span>
                                   </td>
                                   <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                    <button
-                                      onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer mr-[0.3vw]"
-                                    >
-                                      <Edit3 className="w-[0.8vw] h-[0.8vw]" />
-                                      Edit
-                                    </button>
+                                    {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
+                                      <button
+                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer mr-[0.3vw]"
+                                      >
+                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        Edit
+                                      </button>
+                                    )}
                                     <button
                                       onClick={() => setHistoryModalCall(call)}
                                       className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"

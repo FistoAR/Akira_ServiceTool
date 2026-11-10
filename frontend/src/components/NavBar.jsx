@@ -175,49 +175,49 @@ const NavBar = ({ type }) => {
                       </div>
                     </div>
 
-                    {/* Information Grid Rows: Balanced Typography, Not overly bold */}
-                    <div className="p-[0.8vw] space-y-[0.35vw] bg-slate-50/70">
+                    {/* Information Rows: Clean list format without boxy cards */}
+                    <div className="py-[0.5vw] px-[0.9vw] divide-y divide-slate-100 bg-white">
                       {/* Employee ID */}
-                      <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200/90 rounded-[0.5vw] hover:border-slate-300 transition-colors">
-                        <div className="flex items-center gap-[0.55vw]">
-                          <IdCard className="w-[0.95vw] h-[0.95vw] text-indigo-600" />
-                          <span className="text-[0.73vw] font-normal text-slate-650">Employee ID</span>
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
+                        <div className="flex items-center gap-[0.6vw]">
+                          <IdCard className="w-[1vw] h-[1vw] text-indigo-600" />
+                          <span className="text-[0.74vw] font-normal text-slate-650">Employee ID</span>
                         </div>
-                        <span className="font-semibold text-slate-800 font-mono text-[0.78vw]">
+                        <span className="font-semibold text-slate-800 font-mono text-[0.8vw]">
                           {loggedInUser.userId || "—"}
                         </span>
                       </div>
 
                       {/* Full Name */}
-                      <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200/90 rounded-[0.5vw] hover:border-slate-300 transition-colors">
-                        <div className="flex items-center gap-[0.55vw]">
-                          <User className="w-[0.95vw] h-[0.95vw] text-emerald-600" />
-                          <span className="text-[0.73vw] font-normal text-slate-650">Full Name</span>
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
+                        <div className="flex items-center gap-[0.6vw]">
+                          <User className="w-[1vw] h-[1vw] text-emerald-600" />
+                          <span className="text-[0.74vw] font-normal text-slate-650">Full Name</span>
                         </div>
-                        <span className="font-medium text-slate-800 text-[0.78vw] truncate max-w-[11vw]">
+                        <span className="font-medium text-slate-800 text-[0.8vw] truncate max-w-[11vw]">
                           {loggedInUser.name || "—"}
                         </span>
                       </div>
 
                       {/* Department */}
-                      <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200/90 rounded-[0.5vw] hover:border-slate-300 transition-colors">
-                        <div className="flex items-center gap-[0.55vw]">
-                          <Building2 className="w-[0.95vw] h-[0.95vw] text-purple-600" />
-                          <span className="text-[0.73vw] font-normal text-slate-650">Department</span>
+                      <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
+                        <div className="flex items-center gap-[0.6vw]">
+                          <Building2 className="w-[1vw] h-[1vw] text-purple-600" />
+                          <span className="text-[0.74vw] font-normal text-slate-650">Department</span>
                         </div>
-                        <span className="font-medium text-slate-800 text-[0.78vw] truncate max-w-[11vw]">
+                        <span className="font-medium text-slate-800 text-[0.8vw] truncate max-w-[11vw]">
                           {loggedInUser.department || "—"}
                         </span>
                       </div>
 
                       {/* Email */}
                       {loggedInUser.email && (
-                        <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200/90 rounded-[0.5vw] hover:border-slate-300 transition-colors">
-                          <div className="flex items-center gap-[0.55vw]">
-                            <Mail className="w-[0.95vw] h-[0.95vw] text-amber-600" />
-                            <span className="text-[0.73vw] font-normal text-slate-650">Email</span>
+                        <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
+                          <div className="flex items-center gap-[0.6vw]">
+                            <Mail className="w-[1vw] h-[1vw] text-amber-600" />
+                            <span className="text-[0.74vw] font-normal text-slate-650">Email</span>
                           </div>
-                          <span className="font-medium text-slate-800 font-mono text-[0.74vw] truncate max-w-[11vw]" title={loggedInUser.email}>
+                          <span className="font-medium text-slate-800 font-mono text-[0.75vw] truncate max-w-[11vw]" title={loggedInUser.email}>
                             {loggedInUser.email}
                           </span>
                         </div>
@@ -225,12 +225,12 @@ const NavBar = ({ type }) => {
 
                       {/* DOB */}
                       {loggedInUser.dob && (
-                        <div className="flex items-center justify-between py-[0.55vw] px-[0.6vw] bg-white border border-slate-200/90 rounded-[0.5vw] hover:border-slate-300 transition-colors">
-                          <div className="flex items-center gap-[0.55vw]">
-                            <Gift className="w-[0.95vw] h-[0.95vw] text-rose-500" />
-                            <span className="text-[0.73vw] font-normal text-slate-650">Date of Birth</span>
+                        <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
+                          <div className="flex items-center gap-[0.6vw]">
+                            <Gift className="w-[1vw] h-[1vw] text-rose-500" />
+                            <span className="text-[0.74vw] font-normal text-slate-650">Date of Birth</span>
                           </div>
-                          <span className="font-medium text-slate-800 text-[0.78vw]">
+                          <span className="font-medium text-slate-800 text-[0.8vw]">
                             {formatDate(loggedInUser.dob)}
                           </span>
                         </div>
