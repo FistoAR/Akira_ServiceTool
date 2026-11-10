@@ -220,8 +220,6 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                       {h.remarks}
                     </div>
                   )}
-                    </div>
-                  )}
 
                   {/* Audit Diff Table if this was an edit event */}
                   {h.metadata?.diffs && h.metadata.diffs.length > 0 && (
