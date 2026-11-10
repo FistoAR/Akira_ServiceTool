@@ -274,8 +274,8 @@ exports.assignServiceCall = async (req, res) => {
     await sendNotification({
       recipient: engineerId,
       type: 'Assignment',
-      title: 'New Service Call Assigned',
-      message: `You have been assigned a new service call #${call.callNumber}.`,
+      title: `Call Assigned: ${engineerName}`,
+      message: `Call #${call.callNumber}${call.customerName ? ` for ${call.customerName}` : ''} has been assigned to ${engineerName}.`,
       data: { callId: call._id, callNumber: call.callNumber },
       priority: 'High'
     });

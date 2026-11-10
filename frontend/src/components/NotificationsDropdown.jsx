@@ -42,7 +42,7 @@ const getCleanNotificationContent = (n) => {
     title = 'Call Attended';
   } else if (title.includes('Call Resolved')) {
     title = 'Call Resolved';
-  } else if (title.includes('New Service Call Assigned')) {
+  } else if (title.includes('New Service Call Assigned') || title.includes('Call Assigned')) {
     title = 'Call Assigned';
   } else if (title.includes('Critical Service Call Alert') || title.includes('Marked Critical')) {
     title = 'Critical Alert';
