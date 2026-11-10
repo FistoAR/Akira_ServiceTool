@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import ReactDOM from "react-dom";
 import * as XLSX from "xlsx";
 import {
@@ -99,11 +100,20 @@ const ServiceCallResponse = () => {
   const [loggedInUser, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [searchParams] = useSearchParams();
+  const urlSearch = searchParams.get("search") || "";
+
   // Search & Filter State across all tabs
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [filterFromDate, setFilterFromDate] = useState("");
   const [filterToDate, setFilterToDate] = useState("");
   const [filterPriority, setFilterPriority] = useState("All");
+
+  useEffect(() => {
+    if (urlSearch) {
+      setSearchQuery(urlSearch);
+    }
+  }, [urlSearch]);
 
   // Self Assigned Table specific states
   const [selfAssignedStatus, setSelfAssignedStatus] = useState("All");
@@ -1286,7 +1296,7 @@ const ServiceCallResponse = () => {
                   selfAssignedPage={selfAssignedPage}
                   selfAssignedTotalPages={selfAssignedTotalPages}
                   selfAssignedPageSize={selfAssignedPageSize}
-                  selfAssignedFiltered={selfAssignedFiltered}
+                  selfAssignedFilteredCalls={selfAssignedFilteredCalls}
                   loggedInUser={loggedInUser}
                   employees={employees}
                   activeActionMenuId={activeActionMenuId}
@@ -1300,7 +1310,8 @@ const ServiceCallResponse = () => {
                   setEditingReportItem={setEditingReportItem}
                   setEditForm={setEditForm}
                   handleDeleteCall={handleDeleteCall}
-                  handleOpenEditCall={handleOpenEditCall}
+                  setEditingCall={setEditingCall}
+                  setView={setView}
                 />
               )}
 
@@ -1348,6 +1359,59 @@ const ServiceCallResponse = () => {
           </AnimatePresence>
         )}
       </div>
+
+      
+      {/* Respond Modal for Product */}
+      {activeModalProduct && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-[1vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[42vw] max-h-[90vh] flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] border-b border-slate-200 bg-slate-50/80 shrink-0">
+              <div>
+                <h3 className="text-[0.95vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
+                  Respond to Product
+                  <span className="text-[0.8vw] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-[0.4vw] py-[0.1vw] rounded">
+                    {activeModalProduct.entry?.callNumber}
+                  </span>
+                </h3>
+                <p className="text-[0.72vw] text-slate-500 mt-[0.1vw]">
+                  {activeModalProduct.prod?.productName || activeModalProduct.prod?.model || ('Product #' + ((activeModalProduct.pIdx ?? 0) + 1))}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveModalProduct(null)}
+                className="p-[0.35vw] text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-full transition-all cursor-pointer font-bold text-[0.9vw]"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-[1.2vw] overflow-y-auto flex-1 min-h-0 space-y-[0.8vw]">
+              <ProductClosurePanel
+                prod={activeModalProduct.prod}
+                prodIdx={activeModalProduct.pIdx}
+                entry={activeModalProduct.entry}
+                currentUser={loggedInUser}
+                employees={employees}
+                onAssignFieldVisit={handleAssignVisit}
+                onProductClose={async (idx, data) => {
+                  await handleProductClose(activeModalProduct.callId || activeModalProduct.entry?._id, idx, data);
+                  setActiveModalProduct(null);
+                }}
+                onSupportRequest={async (idx, data) => {
+                  await handleSupportRequest(activeModalProduct.callId || activeModalProduct.entry?._id, idx, data);
+                  setActiveModalProduct(null);
+                }}
+                onProductAttend={async (idx) => {
+                  await handleProductAttend(activeModalProduct.callId || activeModalProduct.entry?._id, idx);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Call Summary Modal */}
       {summaryModalRow && (

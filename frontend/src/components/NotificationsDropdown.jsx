@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell,
@@ -135,7 +136,31 @@ const getNotificationVisuals = (notification) => {
 };
 
 const NotificationsDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const handleNotificationClick = (n) => {
+    if (!n.isRead) markAsRead(n._id);
+    setSelectedNotification(n);
+  };
+
+  const handleNavigateToTarget = (n) => {
+    setIsOpen(false);
+    setSelectedNotification(null);
+
+    const callNumber = n.data?.callNumber;
+    const type = n.type;
+    const currentUser = JSON.parse(sessionStorage.getItem('loggedInUser') || '{}');
+    const isTechOnly = currentUser?.role === 'Technician' || currentUser?.role === 'Engineer';
+
+    if (callNumber) {
+      if (isTechOnly) {
+        navigate(`/serviceCallResponse?search=${encodeURIComponent(callNumber)}`);
+      } else {
+        navigate(`/serviceCall?search=${encodeURIComponent(callNumber)}`);
+      }
+    } else if (type === 'Service Material') {
+      navigate('/serviceMaterial');
+    }
+  };
   const [activeMainTab, setActiveMainTab] = useState('All');
   const [activeSubTab, setActiveSubTab] = useState('all');
   const [onlyUnread, setOnlyUnread] = useState(false);
@@ -449,7 +474,7 @@ const NotificationsDropdown = () => {
                               ? 'bg-white border-slate-200 shadow-[0_3px_12px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_-2px_rgba(0,0,0,0.12)]'
                               : 'bg-white/90 border-slate-200/80 hover:bg-white hover:border-slate-300 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:shadow-md'
                           } ${visuals.accentGlow}`}
-                          onClick={() => isUnread && markAsRead(n._id)}
+                          onClick={() => handleNotificationClick(n)}
                         >
                           {/* Circular App-Themed Icon on the Left with Contextual Status Sub-Badge */}
                           <div className="relative shrink-0">
@@ -526,6 +551,120 @@ const NotificationsDropdown = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Notification Information / Detail Popup Modal */}
+      {selectedNotification && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-xs p-[1vw] animate-in fade-in duration-200"
+          onClick={() => setSelectedNotification(null)}
+        >
+          <div 
+            className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            {(() => {
+              const visuals = getNotificationVisuals(selectedNotification);
+              const IconComp = visuals.icon;
+              return (
+                <div className="p-[1.2vw] border-b border-slate-100 flex items-start justify-between bg-gradient-to-r from-slate-50 via-white to-indigo-50/30">
+                  <div className="flex items-start gap-[0.8vw]">
+                    <div className={`w-[2.8vw] h-[2.8vw] rounded-full flex items-center justify-center border shadow-xs ${visuals.iconBg}`}>
+                      <IconComp className={`w-[1.4vw] h-[1.4vw] ${visuals.iconColor}`} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-[0.4vw]">
+                        <span className={`text-[0.65vw] font-bold px-[0.4vw] py-[0.08vw] rounded-[0.25vw] border uppercase tracking-wider ${visuals.badgeBg}`}>
+                          {visuals.badgeText}
+                        </span>
+                        <span className="text-[0.68vw] text-slate-400 font-medium">
+                          {formatTimeShort(selectedNotification.createdAt)}
+                        </span>
+                      </div>
+                      <h3 className="text-[1vw] font-bold text-slate-900 mt-[0.3vw] leading-tight">
+                        {selectedNotification.title}
+                      </h3>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedNotification(null)}
+                    className="p-[0.35vw] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                  >
+                    <X className="w-[1vw] h-[1vw]" />
+                  </button>
+                </div>
+              );
+            })()}
+
+            {/* Modal Body */}
+            <div className="p-[1.2vw] space-y-[0.9vw] text-slate-700">
+              <div className="bg-slate-50 border border-slate-200/80 rounded-[0.6vw] p-[0.9vw]">
+                <p className="text-[0.8vw] text-slate-700 leading-relaxed font-medium">
+                  {selectedNotification.message}
+                </p>
+              </div>
+
+              {/* Context Details Grid */}
+              <div className="grid grid-cols-2 gap-[0.7vw] text-[0.75vw]">
+                {selectedNotification.data?.callNumber && (
+                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
+                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Call Number</span>
+                    <span className="font-bold text-indigo-700 text-[0.82vw]">
+                      #{selectedNotification.data.callNumber}
+                    </span>
+                  </div>
+                )}
+                {selectedNotification.priority && (
+                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
+                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Priority</span>
+                    <span className="font-bold text-slate-800 text-[0.82vw]">
+                      {selectedNotification.priority}
+                    </span>
+                  </div>
+                )}
+                {selectedNotification.type && (
+                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
+                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Notification Type</span>
+                    <span className="font-bold text-slate-800 text-[0.82vw]">
+                      {selectedNotification.type}
+                    </span>
+                  </div>
+                )}
+                {selectedNotification.createdAt && (
+                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
+                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Received Time</span>
+                    <span className="font-semibold text-slate-700 text-[0.75vw]">
+                      {new Date(selectedNotification.createdAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="p-[1vw] border-t border-slate-100 flex items-center justify-end gap-[0.6vw] bg-slate-50/60">
+              <button
+                onClick={() => setSelectedNotification(null)}
+                className="px-[0.9vw] py-[0.4vw] rounded-[0.5vw] border border-slate-300 text-[0.75vw] font-semibold text-slate-700 hover:bg-white transition-all cursor-pointer"
+              >
+                Close
+              </button>
+              {(selectedNotification.data?.callNumber || selectedNotification.type === 'Service Material') && (
+                <button
+                  onClick={() => handleNavigateToTarget(selectedNotification)}
+                  className="px-[1vw] py-[0.4vw] rounded-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white text-[0.75vw] font-bold flex items-center gap-[0.35vw] shadow-sm transition-all cursor-pointer"
+                >
+                  <span>View Details</span>
+                  <ArrowUpRight className="w-[0.9vw] h-[0.9vw]" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

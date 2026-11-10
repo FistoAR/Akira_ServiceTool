@@ -119,10 +119,37 @@ export const SocketProvider = ({ children }) => {
         }
         
         if (Notification.permission === 'granted') {
-          new Notification(notification.title, {
-            body: notification.message,
-            icon: '/logo.png' 
-          });
+          try {
+            const nativeNotif = new Notification(notification.title, {
+              body: notification.message,
+              icon: '/logo.png',
+              data: notification.data || {}
+            });
+
+            nativeNotif.onclick = () => {
+              window.focus();
+              const callNumber = notification.data?.callNumber;
+              const callId = notification.data?.callId;
+              const type = notification.type;
+
+              // Check user role for target destination
+              const currentUser = JSON.parse(sessionStorage.getItem('loggedInUser') || '{}');
+              const isTechOnly = currentUser?.role === 'Technician' || currentUser?.role === 'Engineer';
+
+              if (callNumber) {
+                if (isTechOnly) {
+                  window.location.href = `/serviceCallResponse?search=${encodeURIComponent(callNumber)}`;
+                } else {
+                  window.location.href = `/serviceCall?search=${encodeURIComponent(callNumber)}`;
+                }
+              } else if (type === 'Service Material') {
+                window.location.href = `/serviceMaterial`;
+              }
+              nativeNotif.close();
+            };
+          } catch (notifErr) {
+            console.error('Error creating native notification:', notifErr);
+          }
         }
       });
 
