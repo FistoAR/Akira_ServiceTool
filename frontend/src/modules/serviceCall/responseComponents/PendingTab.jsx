@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
+import { getTypeColor } from "../ServiceCall";
 
 const PendingTab = ({
   queue,

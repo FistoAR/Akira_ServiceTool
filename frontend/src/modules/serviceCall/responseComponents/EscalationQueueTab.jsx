@@ -17,6 +17,7 @@ import {
   Loader2
 } from "lucide-react";
 import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
+import { getTypeColor } from "../ServiceCall";
 
 export const EscalationQueueTab = ({
   myEscalations,

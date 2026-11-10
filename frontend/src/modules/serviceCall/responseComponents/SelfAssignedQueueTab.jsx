@@ -12,6 +12,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
+import { getTypeColor, getStatusCfg } from "../ServiceCall";
 
 export const SelfAssignedQueueTab = ({
   selfAssignedRawCalls,
