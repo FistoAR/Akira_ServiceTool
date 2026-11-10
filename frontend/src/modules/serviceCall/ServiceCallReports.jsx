@@ -28,8 +28,12 @@ import {
   Columns,
   CheckSquare,
   Square,
+  Users,
   Check,
   RotateCcw,
+  UserPlus,
+  TrendingUp,
+  Sparkles,
 } from "lucide-react";
 import akiraLogo from "../../assets/Akira_logo.webp";
 import * as XLSX from "xlsx";
@@ -145,7 +149,7 @@ export default function ServiceCallReports() {
     );
   }, [currentUser]);
 
-  // View state: "registered" | "escalations" | "employees"
+  // View state: "registered" | "escalations" | "assignments" | "employees"
   const [activeMainView, setActiveMainView] = useState("registered");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
@@ -155,6 +159,7 @@ export default function ServiceCallReports() {
   const [toDate, setToDate] = useState("");
   const [callTypeFilter, setCallTypeFilter] = useState("All"); // "All" | "Self Assigned" | "Admin Registered"
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const [showFilterPopover, setShowFilterPopover] = useState(false);
 
   // Data
   const [calls, setCalls] = useState([]);
@@ -443,6 +448,118 @@ export default function ServiceCallReports() {
       .sort((a, b) => b.totalAssigned - a.totalAssigned);
   }, [employees, filteredCalls]);
 
+  // Assignment Report (Per User Analytics) Aggregation
+  const assignmentReportData = useMemo(() => {
+    return employees
+      .filter((emp) => emp.role?.toLowerCase() !== "admin")
+      .map((emp) => {
+        // Find calls associated with this user
+        const userCalls = filteredCalls.filter((call) =>
+          (call.products || []).some(
+            (p) =>
+              p._assignedEngineerId === emp.userId ||
+              p._assignedEngineerName === emp.name ||
+              p._supportPersonId === emp.userId ||
+              p._fieldVisit?.assignedTo === emp.userId ||
+              call.registeredBy === emp.userId ||
+              call.currentEngineerName === emp.name,
+          ),
+        );
+
+        // Product level count & details for this user
+        let assignedProducts = 0;
+        let closedProducts = 0;
+        let selfAssignedCount = 0;
+        const responseTimesMs = [];
+
+        userCalls.forEach((call) => {
+          const isCallSelfAssigned = Boolean(
+            call.noEscalation ||
+            call.callOrigin === "self_assigned" ||
+            call.registeredBy === emp.userId ||
+            call.registeredByName === emp.name
+          );
+
+          (call.products || []).forEach((p) => {
+            const isUserAssigned =
+              p._assignedEngineerId === emp.userId ||
+              p._assignedEngineerName === emp.name ||
+              p._supportPersonId === emp.userId ||
+              p._fieldVisit?.assignedTo === emp.userId ||
+              (!p._assignedEngineerId && call.currentEngineerName === emp.name);
+
+            if (isUserAssigned) {
+              assignedProducts++;
+
+              if (isCallSelfAssigned) {
+                selfAssignedCount++;
+              }
+
+              const isClosed =
+                p._resolved ||
+                p._productClosure?.status === "Closed" ||
+                p._productClosure?.status === "Resolved";
+
+              if (isClosed) {
+                closedProducts++;
+              }
+
+              // Response time calculation: from assignment time to first response/closure/action
+              const assignedTime = p._assignedAt || p.assignedAt || call.createdAt || call.dateTime;
+              const responseTime =
+                p._firstResponseAt ||
+                p._attendedAt ||
+                p._productClosure?.closedAt ||
+                p._productClosure?.date ||
+                (isClosed ? p._productClosure?.updatedAt : null);
+
+              if (assignedTime && responseTime) {
+                const diff = new Date(responseTime) - new Date(assignedTime);
+                if (diff > 0 && diff < 30 * 24 * 60 * 60 * 1000) { // filter out invalid outliers > 30 days
+                  responseTimesMs.push(diff);
+                }
+              }
+            }
+          });
+        });
+
+        // Compute open products
+        const openProducts = Math.max(0, assignedProducts - closedProducts);
+
+        // Compute average response time
+        let avgResponseTimeFormatted = "—";
+        let avgResponseMinutes = 0;
+        if (responseTimesMs.length > 0) {
+          const totalMs = responseTimesMs.reduce((acc, ms) => acc + ms, 0);
+          const avgMs = totalMs / responseTimesMs.length;
+          avgResponseMinutes = Math.round(avgMs / (1000 * 60));
+
+          const days = Math.floor(avgResponseMinutes / (60 * 24));
+          const hours = Math.floor((avgResponseMinutes % (60 * 24)) / 60);
+          const mins = avgResponseMinutes % 60;
+
+          const parts = [];
+          if (days > 0) parts.push(`${days}d`);
+          if (hours > 0 || days > 0) parts.push(`${hours}h`);
+          parts.push(`${mins}m`);
+          avgResponseTimeFormatted = parts.join(" ");
+        }
+
+        return {
+          ...emp,
+          callsPerUser: userCalls.length,
+          totalAssigned: assignedProducts,
+          closedCount: closedProducts,
+          openCount: openProducts,
+          selfAssignedCount,
+          avgResponseTime: avgResponseTimeFormatted,
+          avgResponseMinutes,
+          calls: userCalls,
+        };
+      })
+      .sort((a, b) => b.totalAssigned - a.totalAssigned);
+  }, [employees, filteredCalls]);
+
   // Selected Employee Calls
   const selectedEmployeeCalls = useMemo(() => {
     if (!selectedEmployee) return [];
@@ -450,10 +567,12 @@ export default function ServiceCallReports() {
       (call.products || []).some(
         (p) =>
           p._assignedEngineerId === selectedEmployee.userId ||
+          p._assignedEngineerName === selectedEmployee.name ||
           p._supportPersonId === selectedEmployee.userId ||
           p._fieldVisit?.assignedTo === selectedEmployee.userId ||
           p._fieldVisit?.assignedBy === selectedEmployee.userId ||
-          call.registeredBy === selectedEmployee.userId,
+          call.registeredBy === selectedEmployee.userId ||
+          call.currentEngineerName === selectedEmployee.name,
       ),
     );
   }, [selectedEmployee, filteredCalls]);
@@ -462,6 +581,9 @@ export default function ServiceCallReports() {
   const activeDataset = useMemo(() => {
     if (activeMainView === "registered") return filteredCalls;
     if (activeMainView === "escalations") return escalationItems;
+    if (activeMainView === "assignments") {
+      return selectedEmployee ? selectedEmployeeCalls : assignmentReportData;
+    }
     if (activeMainView === "employees") {
       return selectedEmployee ? selectedEmployeeCalls : employeeReportData;
     }
@@ -472,6 +594,7 @@ export default function ServiceCallReports() {
     escalationItems,
     selectedEmployee,
     selectedEmployeeCalls,
+    assignmentReportData,
     employeeReportData,
   ]);
 
@@ -700,6 +823,22 @@ export default function ServiceCallReports() {
             <span>Escalation View ({escalationItems.length})</span>
           </button>
 
+          <button
+            onClick={() => {
+              setActiveMainView("assignments");
+              setSelectedEmployee(null);
+              setCurrentPage(1);
+            }}
+            className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
+              activeMainView === "assignments"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            }`}
+          >
+            <UserCheck className="w-[0.9vw] h-[0.9vw]" />
+            <span>Assignment Report ({assignmentReportData.length})</span>
+          </button>
+
           {isAdmin && (
             <button
               onClick={() => {
@@ -713,8 +852,8 @@ export default function ServiceCallReports() {
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
-              <UserCheck className="w-[0.9vw] h-[0.9vw]" />
-              <span>Employee Reports ({employees.length})</span>
+              <Users className="w-[0.9vw] h-[0.9vw]" />
+              <span>Employee Overview ({employees.length})</span>
             </button>
           )}
         </div>
@@ -736,60 +875,141 @@ export default function ServiceCallReports() {
             />
           </div>
 
-          {/* Date Filter */}
-          <div className="flex items-center bg-white border border-slate-300 rounded-[0.5vw] p-[0.2vw] px-[0.5vw] shadow-2xs text-[0.75vw]">
-            <Calendar className="w-[0.85vw] h-[0.85vw] text-slate-400 mr-[0.3vw]" />
-            <input
-              type="date"
-              value={fromDate}
-              onChange={(e) => {
-                setFromDate(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="bg-transparent text-slate-700 font-semibold outline-none cursor-pointer"
-            />
-            <span className="text-slate-400 mx-[0.3vw]">—</span>
-            <input
-              type="date"
-              value={toDate}
-              min={fromDate}
-              onChange={(e) => {
-                setToDate(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="bg-transparent text-slate-700 font-semibold outline-none cursor-pointer"
-            />
-            {(fromDate || toDate) && (
-              <button
-                onClick={() => {
-                  setFromDate("");
-                  setToDate("");
-                  setCurrentPage(1);
-                }}
-                className="ml-[0.4vw] text-slate-400 hover:text-rose-600 cursor-pointer"
-                title="Clear Dates"
-              >
-                <X className="w-[0.8vw] h-[0.8vw]" />
-              </button>
-            )}
-          </div>
+          {/* Filter Popover Button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowFilterPopover(!showFilterPopover)}
+              className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.45vw] border rounded-[0.5vw] font-bold text-[0.78vw] transition-colors cursor-pointer shadow-2xs ${
+                showFilterPopover || fromDate || toDate || callTypeFilter !== "All" || priorityFilter !== "All"
+                  ? "bg-indigo-50 border-indigo-300 text-indigo-700"
+                  : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+              }`}
+              title="Filter reports by date, origin, and priority"
+            >
+              <Filter className="w-[0.85vw] h-[0.85vw]" />
+              <span>Filters</span>
+              {(fromDate || toDate || callTypeFilter !== "All" || priorityFilter !== "All") && (
+                <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-indigo-600" />
+              )}
+            </button>
 
-          {/* Call Type Dropdown */}
-          <div className="w-[10vw]">
-            <CustomDropdown
-              size="sm"
-              value={callTypeFilter}
-              onChange={(val) => {
-                setCallTypeFilter(val);
-                setCurrentPage(1);
-              }}
-              options={[
-                { value: "All", label: "All Origins" },
-                { value: "Self Assigned", label: "Self Assigned" },
-                { value: "Admin Registered", label: "Registered Calls" },
-              ]}
-              triggerClassName="h-[2vw] !rounded-[0.5vw] border-slate-300 bg-white font-semibold text-slate-700"
-            />
+            {/* Filter Dropdown Popover */}
+            {showFilterPopover && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowFilterPopover(false)}
+                />
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[20vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                  <div className="p-[0.7vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+                    <div className="flex items-center gap-[0.4vw]">
+                      <Filter className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
+                      <span className="text-[0.8vw] font-bold text-slate-800">Filter Records</span>
+                    </div>
+                    {(fromDate || toDate || callTypeFilter !== "All" || priorityFilter !== "All") && (
+                      <button
+                        onClick={() => {
+                          setFromDate("");
+                          setToDate("");
+                          setCallTypeFilter("All");
+                          setPriorityFilter("All");
+                          setCurrentPage(1);
+                        }}
+                        className="text-[0.7vw] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer flex items-center gap-[0.2vw]"
+                      >
+                        <RotateCcw className="w-[0.65vw] h-[0.65vw]" />
+                        Reset Filters
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="p-[0.8vw] space-y-[0.7vw]">
+                    {/* Date Range */}
+                    <div>
+                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
+                        Date Range
+                      </label>
+                      <div className="flex items-center bg-slate-50 border border-slate-300 rounded-[0.4vw] p-[0.25vw] px-[0.4vw] text-[0.75vw]">
+                        <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-400 mr-[0.3vw]" />
+                        <input
+                          type="date"
+                          value={fromDate}
+                          onChange={(e) => {
+                            setFromDate(e.target.value);
+                            setCurrentPage(1);
+                          }}
+                          className="bg-transparent text-slate-700 font-semibold outline-none cursor-pointer w-[7vw]"
+                        />
+                        <span className="text-slate-400 mx-[0.2vw]">—</span>
+                        <input
+                          type="date"
+                          value={toDate}
+                          min={fromDate}
+                          onChange={(e) => {
+                            setToDate(e.target.value);
+                            setCurrentPage(1);
+                          }}
+                          className="bg-transparent text-slate-700 font-semibold outline-none cursor-pointer w-[7vw]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Origin Type */}
+                    <div>
+                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
+                        Call Origin
+                      </label>
+                      <CustomDropdown
+                        size="sm"
+                        value={callTypeFilter}
+                        onChange={(val) => {
+                          setCallTypeFilter(val);
+                          setCurrentPage(1);
+                        }}
+                        options={[
+                          { value: "All", label: "All Origins" },
+                          { value: "Self Assigned", label: "Self Assigned" },
+                          { value: "Admin Registered", label: "Registered Calls" },
+                        ]}
+                        triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
+                      />
+                    </div>
+
+                    {/* Priority Filter */}
+                    <div>
+                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
+                        Priority
+                      </label>
+                      <CustomDropdown
+                        size="sm"
+                        value={priorityFilter}
+                        onChange={(val) => {
+                          setPriorityFilter(val);
+                          setCurrentPage(1);
+                        }}
+                        options={[
+                          { value: "All", label: "All Priorities" },
+                          ...PRIORITIES.map((p) => ({ value: p, label: p })),
+                        ]}
+                        triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                    <span className="text-[0.7vw] text-slate-500 font-medium">
+                      {filteredCalls.length} calls matching
+                    </span>
+                    <button
+                      onClick={() => setShowFilterPopover(false)}
+                      className="px-[0.7vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[0.72vw] rounded-[0.35vw] cursor-pointer shadow-2xs"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Select Columns Button & Popover */}
@@ -1249,7 +1469,231 @@ export default function ServiceCallReports() {
               </div>
             )}
 
-            {/* VIEW 3: Employee List & Specific Reports */}
+            {/* VIEW 3: Assignment Report (Per User Analytics) */}
+            {activeMainView === "assignments" && (
+              <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                {!selectedEmployee ? (
+                  <div className="flex-1 overflow-auto">
+                    <table className="w-full text-left border-collapse min-w-[70vw]">
+                      <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                        <tr>
+                          <th className="p-[0.7vw] border-r border-slate-200 w-[4vw] text-center whitespace-nowrap">S.No</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">User / Employee</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Department</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Calls Per User</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Self Assigned</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Open Calls</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Closed Calls</th>
+                          <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Avg Response Time</th>
+                          <th className="p-[0.7vw] text-center w-[10vw] whitespace-nowrap">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                        {paginatedData.length === 0 ? (
+                          <tr>
+                            <td colSpan={9} className="p-[3vw] text-center text-slate-400 font-semibold">
+                              No user assignment records found matching filter criteria.
+                            </td>
+                          </tr>
+                        ) : (
+                          paginatedData.map((emp, idx) => (
+                            <tr key={emp.userId || idx} className="hover:bg-slate-50 transition-colors">
+                              <td className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 whitespace-nowrap">
+                                {(currentPage - 1) * rowsPerPage + idx + 1}
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">
+                                <div className="flex items-center gap-[0.7vw]">
+                                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-50 border border-blue-200 text-blue-800 flex items-center justify-center font-bold text-[0.85vw]">
+                                    {emp.name.charAt(0).toUpperCase()}
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-slate-800 text-[0.85vw]">{emp.name}</div>
+                                    <div className="text-[0.7vw] text-slate-500 font-mono">{emp.userId}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 font-semibold text-slate-700 whitespace-nowrap">
+                                {emp.department || "—"}
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw]">
+                                  {emp.callsPerUser}
+                                </span>
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className="font-bold text-purple-700 bg-purple-50 border border-purple-200 px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw]">
+                                  {emp.selfAssignedCount}
+                                </span>
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className="font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw]">
+                                  {emp.openCount}
+                                </span>
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw]">
+                                  {emp.closedCount}
+                                </span>
+                              </td>
+                              <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className="inline-flex items-center gap-[0.3vw] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-[0.55vw] py-[0.15vw] rounded text-[0.74vw]">
+                                  <Clock className="w-[0.75vw] h-[0.75vw] text-slate-500" />
+                                  {emp.avgResponseTime}
+                                </span>
+                              </td>
+                              <td className="p-[0.7vw] text-center whitespace-nowrap">
+                                <button
+                                  onClick={() => {
+                                    setSelectedEmployee(emp);
+                                    setCurrentPage(1);
+                                  }}
+                                  className="inline-flex items-center gap-[0.3vw] px-[0.8vw] py-[0.38vw] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-[0.4vw] text-[0.75vw] transition-colors cursor-pointer shadow-2xs"
+                                >
+                                  <span>View Calls</span>
+                                  <ChevronRight className="w-[0.8vw] h-[0.8vw]" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  /* Drilldown view for selected employee calls */
+                  <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                    <div className="px-[1vw] py-[0.6vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
+                      <div className="flex items-center gap-[0.7vw]">
+                        <button
+                          onClick={() => {
+                            setSelectedEmployee(null);
+                            setCurrentPage(1);
+                          }}
+                          className="p-[0.4vw] bg-white border border-slate-300 rounded-[0.4vw] text-slate-600 hover:bg-slate-100 cursor-pointer"
+                        >
+                          <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
+                        </button>
+                        <div>
+                          <span className="text-[0.9vw] font-bold text-slate-800">
+                            {selectedEmployee.name}
+                          </span>
+                          <span className="text-[0.72vw] text-slate-500 ml-[0.5vw]">
+                            ({selectedEmployee.department}) • {selectedEmployeeCalls.length} Assigned Calls
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-auto">
+                      <table className="w-full text-left border-collapse min-w-[75vw]">
+                        <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                          <tr>
+                            <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Type</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Registered</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Assigned</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Closed</th>
+                            <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
+                            <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                          {paginatedData.map((call, cIdx) => {
+                            const prods = call.products && call.products.length > 0 ? call.products : [{}];
+                            const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
+                            return prods.map((prod, pIdx) => {
+                              const pStatus = getCallProductStatus(prod, call.status);
+                              const cfg = getStatusCfg(pStatus);
+                              const isClosed =
+                                prod._resolved ||
+                                prod._productClosure?.status === "Closed" ||
+                                prod._productClosure?.status === "Resolved";
+
+                              return (
+                                <tr key={`${call._id}-${pIdx}`} className="hover:bg-slate-50 transition-colors">
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 bg-white whitespace-nowrap"
+                                    >
+                                      {callSno}
+                                    </td>
+                                  )}
+                                  <td className="p-[0.7vw] border-r border-slate-200 font-mono font-bold text-indigo-700 whitespace-nowrap">
+                                    {call.callNumber}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">
+                                    <span className={`px-[0.5vw] py-[0.12vw] rounded text-[0.72vw] font-bold ${
+                                      call.noEscalation ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"
+                                    }`}>
+                                      {call.noEscalation ? "Self Assigned" : "Registered Call"}
+                                    </span>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[12vw]">
+                                    <div className="font-bold text-slate-800 truncate">{call.customerName}</div>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[14vw]">
+                                    <div className="font-semibold text-slate-800 truncate">
+                                      {prod.productModel || prod.itemCode || "—"}
+                                    </div>
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-600">
+                                    {fmtDateTime(call.createdAt)}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-indigo-700 font-semibold">
+                                    {fmtDateTime(prod._assignedAt || call.createdAt)}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-emerald-700 font-semibold">
+                                    {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
+                                  </td>
+                                  <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-bold text-slate-700">
+                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full shrink-0 ${cfg.dot}`} />
+                                      {cfg.label}
+                                    </span>
+                                  </td>
+                                  <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                    <div className="flex items-center justify-center gap-[0.35vw]">
+                                      <button
+                                        onClick={() => setSelectedInfoCall(call)}
+                                        title="View Full Call Details"
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                      >
+                                        <Info className="w-[0.8vw] h-[0.8vw]" />
+                                        Info
+                                      </button>
+                                      <button
+                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                      >
+                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        Edit
+                                      </button>
+                                      <button
+                                        onClick={() => setHistoryModalCall(call)}
+                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                      >
+                                        <History className="w-[0.8vw] h-[0.8vw]" />
+                                        History
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            });
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* VIEW 4: Employee Overview & Specific Reports */}
             {activeMainView === "employees" && (
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 {!selectedEmployee ? (
