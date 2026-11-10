@@ -1272,7 +1272,6 @@ const ServiceCallResponse = () => {
                   setEditingReportItem={setEditingReportItem}
                   setEditForm={setEditForm}
                   handleDeleteCall={handleDeleteCall}
-                  formatDate={formatDate}
                 />
               )}
               {/* ── Self Assigned Tab: Full Table View ── */}
@@ -1300,7 +1299,6 @@ const ServiceCallResponse = () => {
                   setEditForm={setEditForm}
                   handleDeleteCall={handleDeleteCall}
                   handleOpenEditCall={handleOpenEditCall}
-                  formatDate={formatDate}
                 />
               )}
 
