@@ -25,6 +25,7 @@ import {
   Activity
 } from 'lucide-react';
 import { useSocket } from '../contexts/SocketContext';
+import { getNotificationTargetUrl } from '../utils/notificationRouter';
 
 // Helper to format clean, non-repetitive notification title & preview
 const getCleanNotificationContent = (n) => {
@@ -208,20 +209,9 @@ const NotificationsDropdown = () => {
     setIsOpen(false);
     setSelectedNotification(null);
 
-    const callNumber = n.data?.callNumber;
-    const type = n.type;
     const currentUser = JSON.parse(sessionStorage.getItem('loggedInUser') || '{}');
-    const isTechOnly = currentUser?.role === 'Technician' || currentUser?.role === 'Engineer';
-
-    if (callNumber) {
-      if (isTechOnly) {
-        navigate(`/serviceCallResponse?search=${encodeURIComponent(callNumber)}`);
-      } else {
-        navigate(`/serviceCall?search=${encodeURIComponent(callNumber)}`);
-      }
-    } else if (type === 'Service Material') {
-      navigate('/serviceMaterial');
-    }
+    const targetUrl = getNotificationTargetUrl(n, currentUser);
+    navigate(targetUrl);
   };
   const [activeMainTab, setActiveMainTab] = useState('All');
   const [activeSubTab, setActiveSubTab] = useState('all');

@@ -159,6 +159,7 @@ export default function ServiceCallReports() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [callTypeFilter, setCallTypeFilter] = useState("All"); // "All" | "Self Assigned" | "Admin Registered"
+  const [statusFilter, setStatusFilter] = useState("All"); // "All" | "Registered" | "Assigned" | "Supporting" | "Field Visit" | "Pending" | "Escalating" | "Resolved" | "Critical"
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [showFilterPopover, setShowFilterPopover] = useState(false);
 
@@ -319,6 +320,23 @@ export default function ServiceCallReports() {
       // Priority filter
       if (priorityFilter !== "All" && c.priority !== priorityFilter) return false;
 
+      // Status filter
+      if (statusFilter !== "All") {
+        const derived = deriveCallStatus(c.products || [], c.status);
+        if (statusFilter === "Critical") {
+          const isCrit = derived === "Critical" || c.status === "Critical" || c.status === "Critical_Unresolved";
+          if (!isCrit) return false;
+        } else if (statusFilter === "Escalating") {
+          const isEsc = derived === "Escalating" || c.status === "Escalated";
+          if (!isEsc) return false;
+        } else if (statusFilter === "Resolved") {
+          const isRes = derived === "Resolved" || c.status === "Resolved" || c.status === "Closed";
+          if (!isRes) return false;
+        } else if (derived.toLowerCase() !== statusFilter.toLowerCase()) {
+          return false;
+        }
+      }
+
       // Text search
       if (q) {
         const matchesNo = (c.callNumber || "").toLowerCase().includes(q);
@@ -339,7 +357,7 @@ export default function ServiceCallReports() {
 
       return true;
     });
-  }, [scopedCalls, fromDate, toDate, callTypeFilter, priorityFilter, search]);
+  }, [scopedCalls, fromDate, toDate, callTypeFilter, statusFilter, priorityFilter, search]);
 
   // Escalation View Items: Calls with escalation events
   const escalationItems = useMemo(() => {
@@ -1056,15 +1074,15 @@ export default function ServiceCallReports() {
             <button
               onClick={() => setShowFilterPopover(!showFilterPopover)}
               className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.45vw] border rounded-[0.5vw] font-bold text-[0.78vw] transition-colors cursor-pointer shadow-2xs ${
-                showFilterPopover || fromDate || toDate || callTypeFilter !== "All" || priorityFilter !== "All"
+                showFilterPopover || fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All"
                   ? "bg-indigo-50 border-indigo-300 text-indigo-700"
                   : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
               }`}
-              title="Filter reports by date, origin, and priority"
+              title="Filter reports by date, origin, status, and priority"
             >
               <Filter className="w-[0.85vw] h-[0.85vw]" />
               <span>Filters</span>
-              {(fromDate || toDate || callTypeFilter !== "All" || priorityFilter !== "All") && (
+              {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
                 <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-indigo-600" />
               )}
             </button>
@@ -1076,18 +1094,19 @@ export default function ServiceCallReports() {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowFilterPopover(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[20vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[20vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col animate-in fade-in zoom-in-95 duration-100">
                   <div className="p-[0.7vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
                     <div className="flex items-center gap-[0.4vw]">
                       <Filter className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
                       <span className="text-[0.8vw] font-bold text-slate-800">Filter Records</span>
                     </div>
-                    {(fromDate || toDate || callTypeFilter !== "All" || priorityFilter !== "All") && (
+                    {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
                       <button
                         onClick={() => {
                           setFromDate("");
                           setToDate("");
                           setCallTypeFilter("All");
+                          setStatusFilter("All");
                           setPriorityFilter("All");
                           setCurrentPage(1);
                         }}
@@ -1151,6 +1170,33 @@ export default function ServiceCallReports() {
                       />
                     </div>
 
+                    {/* Status Filter */}
+                    <div>
+                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
+                        Call Status
+                      </label>
+                      <CustomDropdown
+                        size="sm"
+                        value={statusFilter}
+                        onChange={(val) => {
+                          setStatusFilter(val);
+                          setCurrentPage(1);
+                        }}
+                        options={[
+                          { value: "All", label: "All Statuses" },
+                          { value: "Registered", label: "Registered" },
+                          { value: "Assigned", label: "Assigned" },
+                          { value: "Supporting", label: "Supporting" },
+                          { value: "Field Visit", label: "Field Visit" },
+                          { value: "Pending", label: "Pending" },
+                          { value: "Escalating", label: "Escalating" },
+                          { value: "Critical", label: "Critical" },
+                          { value: "Resolved", label: "Resolved / Closed" },
+                        ]}
+                        triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
+                      />
+                    </div>
+
                     {/* Priority Filter */}
                     <div>
                       <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
@@ -1167,6 +1213,7 @@ export default function ServiceCallReports() {
                           { value: "All", label: "All Priorities" },
                           ...PRIORITIES.map((p) => ({ value: p, label: p })),
                         ]}
+                        placement="top"
                         triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
                       />
                     </div>

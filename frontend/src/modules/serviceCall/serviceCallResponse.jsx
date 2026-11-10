@@ -103,6 +103,7 @@ const ServiceCallResponse = () => {
 
   const [searchParams] = useSearchParams();
   const urlSearch = searchParams.get("search") || "";
+  const urlTab = searchParams.get("tab") || "";
 
   // Search & Filter State across all tabs
   const [searchQuery, setSearchQuery] = useState(urlSearch);
@@ -114,7 +115,10 @@ const ServiceCallResponse = () => {
     if (urlSearch) {
       setSearchQuery(urlSearch);
     }
-  }, [urlSearch]);
+    if (urlTab) {
+      setActiveTab(urlTab);
+    }
+  }, [urlSearch, urlTab]);
 
   // Self Assigned Table specific states
   const [selfAssignedStatus, setSelfAssignedStatus] = useState("All");
