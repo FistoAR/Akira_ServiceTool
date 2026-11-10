@@ -132,13 +132,7 @@ export const EscalationQueueTab = ({
                                 !prod._resolved &&
                                 prod._productClosure?.status !== "Closed";
 
-                              const [cancelModal, setCancelModal] = React.useState(null);
-  const [cancelReason, setCancelReason] = React.useState("");
-  const [newAssignee, setNewAssignee] = React.useState("");
-  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
-  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
-
-  return (
+                              return (
                                 <tr
                                   key={`${rowId}-${pIdx}`}
                                   className="transition-colors bg-white hover:bg-indigo-50/20"
@@ -267,13 +261,7 @@ export const EscalationQueueTab = ({
                                           badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                         else if (p === "Low")
                                           badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
-                                        const [cancelModal, setCancelModal] = React.useState(null);
-  const [cancelReason, setCancelReason] = React.useState("");
-  const [newAssignee, setNewAssignee] = React.useState("");
-  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
-  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
-
-  return (
+                                        return (
                                           <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
                                             {p}
                                           </span>
@@ -331,13 +319,7 @@ export const EscalationQueueTab = ({
                                   <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
                                     {(() => {
                                       const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
-                                      const [cancelModal, setCancelModal] = React.useState(null);
-  const [cancelReason, setCancelReason] = React.useState("");
-  const [newAssignee, setNewAssignee] = React.useState("");
-  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
-  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
-
-  return (
+                                      return (
                                         <div>
                                           <div className="font-semibold text-[0.78vw] text-slate-800">
                                             {prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated")}
@@ -464,13 +446,7 @@ export const EscalationQueueTab = ({
                       <div className="flex gap-[0.3vw]">
                         {[...Array(escalationTotalPages)].map((_, i) => {
                           const pNum = i + 1;
-                          const [cancelModal, setCancelModal] = React.useState(null);
-  const [cancelReason, setCancelReason] = React.useState("");
-  const [newAssignee, setNewAssignee] = React.useState("");
-  const [isSubmittingCancel, setIsSubmittingCancel] = React.useState(false);
-  const isAdmin = loggedInUser?.department === "Admin" || loggedInUser?.role === "Admin" || loggedInUser?.role === "admin";
-
-  return (
+                          return (
                             <button
                               key={pNum}
                               onClick={() => setEscalationPage(pNum)}

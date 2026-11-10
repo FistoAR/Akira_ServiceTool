@@ -1427,6 +1427,10 @@ const ServiceCallResponse = () => {
                 onProductAttend={async (idx) => {
                   await handleProductAttend(activeModalProduct.callId || activeModalProduct.entry?._id, idx);
                 }}
+                onReverseEscalate={async (idx, remarks) => {
+                  await handleReverseEscalateInline(activeModalProduct.callId || activeModalProduct.entry?._id, idx, remarks);
+                  setActiveModalProduct(null);
+                }}
               />
             </div>
           </div>

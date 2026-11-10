@@ -29,6 +29,7 @@ const ProductClosurePanel = ({
   onProductClose,
   onSupportRequest,
   onProductAttend,
+  onReverseEscalate,
   isPendingTab,
   isSupportDeskAsked,
   isSupportDeskAssigned,
@@ -151,13 +152,20 @@ const ProductClosurePanel = ({
     );
   }, [currentUser, search, propsEmployees]);
 
+  // Determine if this product has an escalation trail that can be reverse-escalated
+  const hasEscalationTrail = useMemo(() => {
+    const hist = prod._escalationHistory || entry?.escalationHistory || [];
+    // Can reverse escalate if there is at least one previous owner/assignee who is not the current user
+    return hist.some((h) => (h.engineerId || h.assignedTo) && (h.engineerId || h.assignedTo) !== currentUser?.userId);
+  }, [prod, entry, currentUser]);
+
   const tabs = [
     (!isSupportDeskAsked || !prod._supportPersonId) &&
       !isSupportDeskAssigned && {
         k: "Open",
         l: "Support",
         e: "🔄",
-        c: "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/15",
+        c: "bg-blue-600 text-white shadow-xs",
       },
     !isPendingTab &&
       !isSupportDeskAsked &&
@@ -165,25 +173,32 @@ const ProductClosurePanel = ({
         k: "Pending",
         l: "Pending",
         e: "⏸",
-        c: "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/15",
+        c: "bg-amber-600 text-white shadow-xs",
       },
     {
       k: "FVRequired",
       l: "Field Visit",
       e: "📍",
-      c: "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/15",
+      c: "bg-indigo-600 text-white shadow-xs",
     },
     {
       k: "Resolved",
       l: "Resolve",
       e: "✓",
-      c: "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/15",
+      c: "bg-emerald-600 text-white shadow-xs",
     },
+    hasEscalationTrail &&
+      !isSupportDeskAssigned && {
+        k: "ReverseEscalate",
+        l: "Reverse Escalate",
+        e: "↩️",
+        c: "bg-rose-600 text-white shadow-xs",
+      },
     isSupportDeskAssigned && {
       k: "Returned",
       l: "Return to Assigned Person",
       e: "🔙",
-      c: "bg-gradient-to-r from-rose-500 to-red-500 text-white shadow-md shadow-rose-500/15",
+      c: "bg-rose-600 text-white shadow-xs",
     },
   ].filter(Boolean);
 
@@ -235,7 +250,7 @@ const ProductClosurePanel = ({
       ) : (
         <>
           <div
-            className={`grid gap-[0.4vw] ${tabs.length === 4 ? "grid-cols-4" : tabs.length === 3 ? "grid-cols-3" : tabs.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}
+            className={`grid gap-[0.4vw] ${tabs.length >= 5 ? "grid-cols-5" : tabs.length === 4 ? "grid-cols-4" : tabs.length === 3 ? "grid-cols-3" : tabs.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}
           >
             {tabs.map((t) => (
               <button
