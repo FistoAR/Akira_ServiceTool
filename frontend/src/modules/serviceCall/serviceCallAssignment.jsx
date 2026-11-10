@@ -479,7 +479,18 @@ export default function ServiceCallAssignment() {
                                 {(() => {
                                   try {
                                     const d = new Date(g.timestamp || g.dateTime);
-                                    return isNaN(d) ? (g.dateTime || "—") : d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+                                    if (isNaN(d)) return g.dateTime || "—";
+                                    const datePart = d.toLocaleDateString("en-GB", {
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "numeric",
+                                    });
+                                    const timePart = d.toLocaleTimeString("en-US", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: true,
+                                    });
+                                    return `${datePart}, ${timePart}`;
                                   } catch {
                                     return g.dateTime || "—";
                                   }
