@@ -245,5 +245,5 @@ export const TABS = [
   { id: "units", label: "Units", icon: Activity },
   { id: "employees", label: "User Management", icon: Users },
   { id: "role-access", label: "Role Access", icon: ShieldCheck },
-  { id: "escalation", label: "Service Call SLA", icon: PhoneCall },
+  { id: "escalation", label: "Escalations", icon: PhoneCall },
 ];

@@ -35,6 +35,7 @@ const CustomDropdown = ({
   optionClassName = "",
   size = "md", // "sm" | "md" | "lg"
   align = "left", // "left" | "right"
+  placement = "auto", // "bottom" | "top" | "auto"
   maxHeight = "16vw",
   renderOption,
   renderValue,
@@ -58,6 +59,30 @@ const CustomDropdown = ({
   const triggerRef = useRef(null);
   const searchInputRef = useRef(null);
   const optionsListRef = useRef(null);
+  const [actualPlacement, setActualPlacement] = useState(placement === "top" ? "top" : "bottom");
+
+  useEffect(() => {
+    if (isOpen) {
+      if (placement === "top") {
+        setActualPlacement("top");
+      } else if (placement === "bottom") {
+        setActualPlacement("bottom");
+      } else {
+        // Auto check bounding rect
+        if (triggerRef.current) {
+          const rect = triggerRef.current.getBoundingClientRect();
+          const spaceBelow = window.innerHeight - rect.bottom;
+          const spaceAbove = rect.top;
+          // If less than 170px below and more space above, open upward
+          if (spaceBelow < 170 && spaceAbove > spaceBelow) {
+            setActualPlacement("top");
+          } else {
+            setActualPlacement("bottom");
+          }
+        }
+      }
+    }
+  }, [isOpen, placement]);
 
   // Normalize options into `{ value, label, icon, badge, description, image, disabled }`
   const normalizedOptions = useMemo(() => {
@@ -403,7 +428,7 @@ const CustomDropdown = ({
       {/* Floating Menu Dropdown */}
       {isOpen && (
         <div
-          className={`absolute z-50 top-full mt-[0.3vw] w-full min-w-[12vw] bg-white border border-gray-200 rounded-[0.45vw] shadow-xl py-[0.3vw] animate-in fade-in-50 zoom-in-95 duration-100 ${
+          className={`absolute z-50 ${actualPlacement === "top" ? "bottom-full mb-[0.3vw]" : "top-full mt-[0.3vw]"} w-full min-w-[12vw] bg-white border border-gray-200 rounded-[0.45vw] shadow-xl py-[0.3vw] animate-in fade-in-50 zoom-in-95 duration-100 ${
             align === "right" ? "right-0" : "left-0"
           } ${menuClassName}`}
         >

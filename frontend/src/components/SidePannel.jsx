@@ -177,7 +177,7 @@ export default function Sidebar() {
         { path: "/masterPage?tab=sites", label: "Site Master", show: hasAccess("sites") },
         { path: "/masterPage?tab=employees", label: "User Management", show: hasAccess("employees") },
         { path: "/masterPage?tab=role-access", label: "Role Access", show: hasAccess("roleAccess") },
-        { path: "/masterPage?tab=escalation", label: "Service Call SLA", show: hasAccess("escalation") },
+        { path: "/masterPage?tab=escalation", label: "Escalations", show: hasAccess("escalation") },
       ].filter(sub => sub.show),
     },
     {

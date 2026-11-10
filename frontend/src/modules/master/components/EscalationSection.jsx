@@ -418,7 +418,6 @@ const StepCard = ({
           )}
         </div>
       </div>
-
       {/* Duration / SLA row */}
       <div className="px-[0.8vw] py-[0.45vw] bg-slate-50/40">
         <DurationPicker
@@ -653,7 +652,8 @@ const ChainPreview = ({ steps, employees = [] }) => {
 const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments, employees, onRefresh, isRefreshing }) => {
   const { canWrite, canUpdate } = useModulePermissions("escalation");
   const { toast, confirm } = useNotification();
-  const [expandedType, setExpandedType] = useState(null);
+    const [activeSubTab, setActiveSubTab] = useState("forward"); // "forward" | "reverse"
+const [expandedType, setExpandedType] = useState(null);
   const [selectedSegment, setSelectedSegment] = useState({}); // { partyTypeId: segmentName }
   const [saved, setSaved] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -870,10 +870,10 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
       records: dbCount,
     };
   };
-
   return (
-    <div>
-      <div className="flex items-center justify-between px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50/60 to-white">
+    <div className="flex-1 flex flex-col min-h-0 h-full overflow-hidden">
+      {/* Top Header - Fixed */}
+      <div className="flex-shrink-0 flex items-center justify-between px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-blue-50/60 to-white">
         <div className="flex items-center gap-[0.8vw]">
           <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center flex-shrink-0">
             <PhoneCall className="w-[0.9vw] h-[0.9vw] text-white" />
@@ -892,42 +892,217 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-[0.6vw]">
+        <div className="flex items-center gap-[0.5vw]">
           <button
             onClick={() => onRefresh && onRefresh("escalation", true)}
             disabled={isRefreshing}
-            className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-blue-600 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
             title="Refresh latest data from server"
           >
             <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
-            {isRefreshing ? "Refreshing..." : "Refresh"}
+            <span>{isRefreshing ? "Refreshing..." : "Refresh"}</span>
           </button>
           {(canWrite || canUpdate) && (
             <>
               <button
+                type="button"
                 onClick={handleResetAll}
-                className="flex items-center gap-[0.4vw] border border-slate-400 bg-white text-slate-600 hover:bg-slate-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"
+                className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs"
               >
-                <RotateCcw className="w-[0.85vw] h-[0.85vw]" /> Reset All
+                <RotateCcw className="w-[0.75vw] h-[0.75vw] text-slate-500" />
+                <span>Reset All</span>
               </button>
               <button
+                type="button"
                 onClick={handleSave}
-                className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+                className={`inline-flex items-center gap-[0.35vw] text-[0.74vw] font-semibold rounded-[0.35vw] px-[0.95vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs ${
+                  saved
+                    ? "bg-emerald-600 text-white"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
               >
                 {saved ? (
-                  <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
+                  <CheckCircle className="w-[0.8vw] h-[0.8vw]" />
                 ) : (
-                  <Save className="w-[0.9vw] h-[0.9vw]" />
+                  <Save className="w-[0.8vw] h-[0.8vw]" />
                 )}
-                {saved ? "Saved!" : "Save Flows"}
+                <span>{saved ? "Saved!" : "Save Flows"}</span>
               </button>
             </>
           )}
         </div>
       </div>
 
-      <div className="p-[1.2vw] flex flex-col gap-[1vw]">
-        {partyTypes.length === 0 ? (
+      {/* Sub Navigation Bar for Escalation Mode - Fixed */}
+      <div className="flex-shrink-0 flex items-center justify-between px-[1.2vw] py-[0.35vw] bg-slate-50/90 border-b border-slate-200">
+        <div className="flex items-center gap-[0.2vw] bg-slate-200/70 p-[0.2vw] rounded-[0.45vw] border border-slate-200">
+          <button
+            type="button"
+            onClick={() => setActiveSubTab("forward")}
+            className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
+              activeSubTab === "forward"
+                ? "bg-white text-blue-700 shadow-2xs border border-slate-200/80"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+            }`}
+          >
+            <Clock className={`w-[0.75vw] h-[0.75vw] ${activeSubTab === "forward" ? "text-blue-600" : "text-slate-500"}`} />
+            <span>Service Call SLA & Forward Levels</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSubTab("reverse")}
+            className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
+              activeSubTab === "reverse"
+                ? "bg-white text-indigo-700 shadow-2xs border border-slate-200/80"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+            }`}
+          >
+            <RotateCcw className={`w-[0.75vw] h-[0.75vw] ${activeSubTab === "reverse" ? "text-indigo-600" : "text-slate-500"}`} />
+            <span>Reverse Escalation Rules</span>
+          </button>
+        </div>
+        <div className="text-[0.72vw] text-slate-500 font-normal">
+          {activeSubTab === "forward"
+            ? "Configure tiered departments, engineer assignment & step timeouts"
+            : "Configure return SLA timers and timeout behaviors when sending back calls"}
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto min-h-0 p-[1.2vw] flex flex-col gap-[1vw]">
+        {activeSubTab === "reverse" ? (
+          /* ── REVERSE ESCALATION DEDICATED VIEW (TABLE VIEW) ── */
+          <div className="bg-white border border-slate-300 rounded-[0.4vw] shadow-2xs flex flex-col">
+            <div className="overflow-visible">
+              <table className="w-full border-collapse border border-slate-200 text-left font-sans text-slate-800">
+                <thead>
+                  <tr className="bg-slate-100 border-b border-slate-300 text-[0.72vw] font-bold text-slate-700 tracking-wider">
+                    <th className="py-[0.65vw] px-[1vw] w-[4vw] text-center border-r border-slate-200 whitespace-nowrap">S.No</th>
+                    <th className="py-[0.65vw] px-[1.2vw] w-[14vw] border-r border-slate-200 whitespace-nowrap">Customer / Party Type</th>
+                    <th className="py-[0.65vw] px-[1vw] w-[8vw] text-center border-r border-slate-200 whitespace-nowrap">Status</th>
+                    <th className="py-[0.65vw] px-[1.2vw] w-[24vw] border-r border-slate-200 whitespace-nowrap">Return SLA Timer (Grace Period)</th>
+                    <th className="py-[0.65vw] px-[1.2vw] whitespace-nowrap">Timeout Action (If Not Attended)</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[0.78vw]">
+                  {partyTypes.map((type, tIdx) => {
+                    const color = TYPE_COLORS[tIdx % TYPE_COLORS.length];
+                    const rev = getReverseConfig(type.name, "Default");
+                    const isEnabled = rev.enabled !== false;
+
+                    return (
+                      <tr
+                        key={type.id || type.name}
+                        className={`border-b border-slate-200 transition-colors ${
+                          !isEnabled ? "bg-slate-50/60 opacity-60" : "hover:bg-slate-50/80"
+                        }`}
+                      >
+                        {/* S.No */}
+                        <td className="py-[0.75vw] px-[1vw] text-center text-slate-500 font-semibold text-[0.75vw] border-r border-slate-200">
+                          {tIdx + 1}
+                        </td>
+
+                        {/* Customer / Party Type */}
+                        <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-200">
+                          <div className="flex items-center gap-[0.4vw]">
+                            <span className="font-bold text-slate-900 text-[0.82vw]">
+                              {type.name}
+                            </span>
+                            {type.code && (
+                              <span className="text-[0.7vw] text-slate-400 font-mono font-medium">
+                                ({type.code})
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        {/* Status Toggle - Pure Clean Checkbox + Plain Text (No Pill) */}
+                        <td className="py-[0.75vw] px-[1vw] text-center border-r border-slate-200">
+                          <label className="inline-flex items-center justify-center gap-[0.4vw] cursor-pointer select-none">
+                            <input
+                              type="checkbox"
+                              checked={isEnabled}
+                              onChange={(e) =>
+                                updateReverseConfig(type.name, "Default", { enabled: e.target.checked })
+                              }
+                              className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-[0.95vw] h-[0.95vw] cursor-pointer"
+                            />
+                            <span className={`text-[0.76vw] font-semibold ${isEnabled ? "text-slate-800" : "text-slate-400"}`}>
+                              {isEnabled ? "Enabled" : "Disabled"}
+                            </span>
+                          </label>
+                        </td>
+
+                        {/* Return SLA Timer */}
+                        <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-200 whitespace-nowrap">
+                          <div className={`flex items-center gap-[0.6vw] whitespace-nowrap ${!isEnabled ? "pointer-events-none" : ""}`}>
+                            <div className="flex items-center gap-[0.25vw]">
+                              <input
+                                type="number"
+                                min="0"
+                                max="72"
+                                value={rev.durationHours ?? 2}
+                                onChange={(e) =>
+                                  updateReverseConfig(type.name, "Default", {
+                                    durationHours: parseInt(e.target.value) || 0,
+                                  })
+                                }
+                                disabled={!isEnabled}
+                                className="w-[3.6vw] border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
+                              />
+                              <span className="text-[0.72vw] text-slate-600 font-medium">hrs</span>
+                            </div>
+
+                            <div className="flex items-center gap-[0.25vw]">
+                              <input
+                                type="number"
+                                min="0"
+                                max="59"
+                                value={rev.durationMins ?? 0}
+                                onChange={(e) =>
+                                  updateReverseConfig(type.name, "Default", {
+                                    durationMins: parseInt(e.target.value) || 0,
+                                  })
+                                }
+                                disabled={!isEnabled}
+                                className="w-[3.6vw] border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
+                              />
+                              <span className="text-[0.72vw] text-slate-600 font-medium">mins</span>
+                            </div>
+
+                            <span className="text-[0.7vw] text-slate-400 italic ml-[0.4vw] whitespace-nowrap inline-block">
+                              (Halts on attend)
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Timeout Action */}
+                        <td className="py-[0.75vw] px-[1.2vw]">
+                          <div className={`max-w-[26vw] ${!isEnabled ? "pointer-events-none" : ""}`}>
+                            <CustomDropdown
+                              size="sm"
+                              value={rev.onTimeout || "same_person"}
+                              onChange={(val) =>
+                                updateReverseConfig(type.name, "Default", { onTimeout: val })
+                              }
+                              options={[
+                                { value: "same_person", label: "Extend SLA with same person (Notify again)" },
+                                { value: "next_in_chain", label: "Escalate to next level engineer in hierarchy" },
+                                { value: "critical", label: "Mark as Critical Unresolved (Trigger Admin Alert)" },
+                              ]}
+                              disabled={!isEnabled}
+                              triggerClassName="w-full !rounded-[0.3vw] text-[0.74vw] font-medium border-slate-300 text-slate-800 bg-white"
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        
+        ) : partyTypes.length === 0 ? (
           <div className="bg-slate-50 border border-slate-400 rounded-[0.6vw] p-[3vw] text-center">
             <Shield className="w-[3vw] h-[3vw] text-slate-300 mx-auto mb-[1vw]" />
             <p className="text-slate-400 text-[1vw]">
@@ -1045,89 +1220,6 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
                             onChange={(s) => updateFlow(type.name, curSeg, s)}
                           />
 
-                          {/* Reverse Escalation Rule Configuration Box */}
-                          {(() => {
-                            const rev = getReverseConfig(type.name, curSeg);
-                            return (
-                              <div className="border border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-white rounded-[0.6vw] p-[0.9vw] shadow-2xs">
-                                <div className="flex items-center justify-between pb-[0.6vw] border-b border-indigo-100">
-                                  <div className="flex items-center gap-[0.45vw]">
-                                    <RotateCcw className="w-[0.9vw] h-[0.9vw] text-indigo-600" />
-                                    <div>
-                                      <h5 className="text-[0.78vw] font-bold text-slate-800">
-                                        Reverse Escalation & SLA Rule
-                                      </h5>
-                                      <p className="text-[0.66vw] text-slate-500">
-                                        Allows technician to return the call back to the person it came from with SLA timer
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <label className="flex items-center gap-[0.35vw] cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      checked={rev.enabled !== false}
-                                      onChange={(e) => updateReverseConfig(type.name, curSeg, { enabled: e.target.checked })}
-                                      className="rounded text-indigo-600 focus:ring-indigo-500 w-[0.85vw] h-[0.85vw]"
-                                    />
-                                    <span className="text-[0.72vw] font-bold text-slate-700">Enable</span>
-                                  </label>
-                                </div>
-
-                                {rev.enabled !== false && (
-                                  <div className="grid grid-cols-2 gap-[0.9vw] mt-[0.7vw]">
-                                    {/* Reverse SLA Duration */}
-                                    <div className="flex flex-col gap-[0.3vw]">
-                                      <label className="text-[0.7vw] font-bold text-slate-700 flex items-center gap-[0.25vw]">
-                                        <Clock className="w-[0.75vw] h-[0.75vw] text-indigo-600" /> Reverse SLA Timer (Wait Time)
-                                      </label>
-                                      <div className="flex items-center gap-[0.4vw]">
-                                        <div className="flex items-center gap-[0.2vw]">
-                                          <input
-                                            type="number"
-                                            min="0"
-                                            max="72"
-                                            value={rev.durationHours ?? 2}
-                                            onChange={(e) => updateReverseConfig(type.name, curSeg, { durationHours: parseInt(e.target.value) || 0 })}
-                                            className="w-[3.5vw] border border-slate-300 rounded-[0.35vw] px-[0.4vw] py-[0.25vw] text-[0.75vw] font-mono text-center font-bold text-slate-800"
-                                          />
-                                          <span className="text-[0.68vw] text-slate-500 font-semibold">hrs</span>
-                                        </div>
-                                        <div className="flex items-center gap-[0.2vw]">
-                                          <input
-                                            type="number"
-                                            min="0"
-                                            max="59"
-                                            value={rev.durationMins ?? 0}
-                                            onChange={(e) => updateReverseConfig(type.name, curSeg, { durationMins: parseInt(e.target.value) || 0 })}
-                                            className="w-[3.5vw] border border-slate-300 rounded-[0.35vw] px-[0.4vw] py-[0.25vw] text-[0.75vw] font-mono text-center font-bold text-slate-800"
-                                          />
-                                          <span className="text-[0.68vw] text-slate-500 font-semibold">mins</span>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    {/* Timeout Action */}
-                                    <div className="flex flex-col gap-[0.3vw]">
-                                      <label className="text-[0.7vw] font-bold text-slate-700">
-                                        If user doesn't attend / SLA expires:
-                                      </label>
-                                      <CustomDropdown
-                                        size="sm"
-                                        value={rev.onTimeout || 'same_person'}
-                                        onChange={(val) => updateReverseConfig(type.name, curSeg, { onTimeout: val })}
-                                        options={[
-                                          { value: 'same_person', label: 'Keep with same person (Extend SLA)' },
-                                          { value: 'next_in_chain', label: 'Jump to next person in chain' },
-                                          { value: 'critical', label: 'Mark as Critical Unresolved' },
-                                        ]}
-                                        triggerClassName="!rounded-[0.35vw] text-[0.74vw] font-semibold border-slate-300 text-slate-800"
-                                      />
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })()}
                         </div>
                         <div className="col-span-2 flex flex-col gap-[0.8vw]">
                           <ChainPreview steps={steps} employees={employees} />
@@ -1167,7 +1259,7 @@ const EscalationSection = ({ partyTypes, segments, flows, setFlows, departments,
       </div>
 
       {hasChanges && (
-        <div className="sticky bottom-0 bg-white border-t border-amber-200 p-[0.8vw] flex items-center justify-between shadow-lg">
+        <div className="flex-shrink-0 bg-white border-t border-amber-200 p-[0.8vw] flex items-center justify-between shadow-lg">
           <span className="text-[0.78vw] text-amber-700 flex items-center gap-[0.4vw]">
             <AlertTriangle className="w-[0.9vw] h-[0.9vw]" /> Unsaved Changes — Please save to apply these updates
           </span>

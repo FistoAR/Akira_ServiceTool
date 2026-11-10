@@ -2294,10 +2294,10 @@ export default function ServiceCallReports() {
           />
         )}
 
-        {/* Full Details Call Summary Modal */}
+        {/* Full Details Call Modal */}
         {selectedInfoCall && (
-          <CallSummaryModal
-            row={selectedInfoCall}
+          <CallDetailsModal
+            call={selectedInfoCall}
             employees={employees}
             onClose={() => setSelectedInfoCall(null)}
           />
