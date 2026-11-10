@@ -534,7 +534,7 @@ export default function ServiceCallAssignment() {
 
                           {/* 4. Customer Type */}
                           <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
-                            <span className="px-[0.6vw] py-[0.18vw] rounded-md text-[0.68vw] font-bold border uppercase tracking-wider inline-block bg-purple-50 text-purple-700 border-purple-200">
+                            <span className="text-[0.74vw] font-medium text-purple-700 uppercase tracking-wider">
                               {g.customerType || "Standard"}
                             </span>
                           </td>
