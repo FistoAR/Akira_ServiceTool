@@ -938,100 +938,136 @@ const ServiceCallEscalations = () => {
       )}
 
       {/* Cancel Escalation Modal */}
-      {cancelModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-[1vw]">
-          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col font-sans">
-            <div className="px-[1.2vw] py-[0.85vw] border-b border-rose-100 bg-rose-50/80 flex items-center justify-between">
-              <div>
-                <h3 className="text-[0.95vw] font-bold text-rose-950 flex items-center gap-[0.45vw]">
-                  <Ban className="w-[1vw] h-[1vw] text-rose-600" />
-                  Cancel Escalation & Re-assign
-                </h3>
-                <div className="text-[0.72vw] text-rose-800 font-medium mt-[0.15vw]">
-                  <span className="font-bold">{cancelModal.callNumber}</span> • {cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Product'}
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setCancelModal(null)}
-                className="p-[0.35vw] text-slate-400 hover:text-slate-700 rounded-[0.4vw] hover:bg-white/80 transition-colors cursor-pointer"
-              >
-                <X className="w-[1vw] h-[1vw]" />
-              </button>
-            </div>
-
-            <form
-              onSubmit={handleCancelEscalationSubmit}
-              className="p-[1.2vw] flex flex-col gap-[0.9vw]"
+      <AnimatePresence>
+        {cancelModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-[1vw]">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              onClick={() => setCancelModal(null)}
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 12 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 12 }}
+              className="relative bg-white rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200/90 w-full max-w-[34vw] overflow-hidden flex flex-col font-sans"
             >
-              <div className="bg-slate-50 border border-slate-200/90 rounded-[0.55vw] p-[0.75vw] text-[0.76vw] text-slate-800">
-                <div className="flex items-center gap-[0.4vw] mb-[0.2vw]">
-                  <span className="font-bold text-slate-900">Current Assignee:</span>
-                  <span className="text-[#2563eb] font-bold bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded-[0.3vw]">
-                    {cancelModal.currentAssignee || "None"}
-                  </span>
+              {/* Modal Header */}
+              <div className="px-[1.4vw] py-[1vw] border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-rose-50/60 via-white to-slate-50">
+                <div className="flex items-center gap-[0.75vw]">
+                  <div className="w-[2.4vw] h-[2.4vw] rounded-[0.6vw] bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0 shadow-2xs">
+                    <Ban className="w-[1.1vw] h-[1.1vw]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[1.05vw] font-bold text-slate-800 leading-tight">
+                      Cancel Escalation & Re-assign
+                    </h3>
+                    <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.1vw] flex items-center gap-[0.35vw]">
+                      <span className="font-bold text-[#6e000a] font-mono">{cancelModal.callNumber}</span>
+                      <span>•</span>
+                      <span className="truncate max-w-[18vw]">{cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Equipment'}</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-[0.72vw] text-slate-600 leading-relaxed">
-                  Cancelling the escalation stops the timer and immediately returns the call to the <strong>Call Assignment page</strong> so Admin can reassign it.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-[0.76vw] font-bold text-slate-800 mb-[0.3vw]">
-                  Reason for Stopping Escalation <span className="text-rose-600">*</span>
-                </label>
-                <textarea
-                  rows={2}
-                  required
-                  value={cancelReason}
-                  onChange={(e) => setCancelReason(e.target.value)}
-                  placeholder="e.g. Wrongly assigned to this engineer, handled directly over phone..."
-                  className="w-full px-[0.75vw] py-[0.5vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 text-slate-900 font-medium resize-none placeholder:text-slate-400 transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[0.76vw] font-bold text-slate-800 mb-[0.3vw]">
-                  Re-assign To (Optional)
-                </label>
-                <div className="relative">
-                  <select
-                    value={newAssignee}
-                    onChange={(e) => setNewAssignee(e.target.value)}
-                    className="w-full px-[0.75vw] py-[0.5vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 text-slate-900 font-semibold bg-white cursor-pointer transition-all"
-                  >
-                    <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
-                    {(employees || []).map((emp) => (
-                      <option key={emp.userId} value={emp.userId}>
-                        {emp.name} ({emp.department || "Service"})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="pt-[0.6vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-200">
                 <button
                   type="button"
-                  disabled={isSubmittingCancel}
                   onClick={() => setCancelModal(null)}
-                  className="px-[0.95vw] py-[0.42vw] text-[0.78vw] font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-[0.4vw] transition-colors cursor-pointer"
+                  className="p-[0.35vw] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmittingCancel || !cancelReason.trim()}
-                  className="px-[1.15vw] py-[0.42vw] text-[0.78vw] font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.4vw] shadow-xs hover:shadow-sm disabled:opacity-50"
-                >
-                  <Ban className="w-[0.85vw] h-[0.85vw]" />
-                  <span>{isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}</span>
+                  <X className="w-[1.1vw] h-[1.1vw]" />
                 </button>
               </div>
-            </form>
+
+              {/* Modal Form */}
+              <form
+                onSubmit={handleCancelEscalationSubmit}
+                className="p-[1.4vw] flex flex-col gap-[1.1vw]"
+              >
+                {/* Info Callout */}
+                <div className="bg-slate-50/80 border border-slate-200/90 rounded-[0.6vw] p-[0.85vw] flex items-start gap-[0.75vw]">
+                  <div className="w-[2vw] h-[2vw] rounded-full bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-[0.1vw]">
+                    <User className="w-[0.95vw] h-[0.95vw]" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[0.7vw] font-bold text-slate-400 uppercase tracking-wider">
+                        Current Assignee
+                      </span>
+                      <span className="text-[0.74vw] font-bold text-blue-700 bg-blue-50/80 border border-blue-200/80 px-[0.5vw] py-[0.1vw] rounded-full">
+                        {cancelModal.currentAssignee || "Unassigned"}
+                      </span>
+                    </div>
+                    <p className="text-[0.72vw] text-slate-600 leading-relaxed mt-[0.3vw]">
+                      Cancelling stops the SLA countdown timer and immediately returns this call to the <span className="font-semibold text-slate-800">Call Assignment</span> queue.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Reason Textarea */}
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.76vw] font-bold text-slate-800 flex items-center justify-between">
+                    <span>Reason for Stopping Escalation <span className="text-rose-500">*</span></span>
+                    <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
+                  </label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                    placeholder="e.g. Wrongly assigned to this engineer, handled directly over phone, customer unavailable..."
+                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.78vw] border border-slate-200 rounded-[0.5vw] outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 text-slate-900 font-medium resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
+                  />
+                </div>
+
+                {/* Re-assign Target Dropdown */}
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.76vw] font-bold text-slate-800 flex items-center justify-between">
+                    <span>Re-assign To <span className="text-slate-400 font-normal">(Optional)</span></span>
+                    <span className="text-[0.68vw] text-slate-400 font-normal">Choose immediate replacement</span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={newAssignee}
+                      onChange={(e) => setNewAssignee(e.target.value)}
+                      className="w-full px-[0.85vw] py-[0.55vw] text-[0.78vw] border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 text-slate-800 font-semibold bg-white cursor-pointer transition-all hover:border-slate-300 appearance-none pr-[2.2vw]"
+                    >
+                      <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
+                      {(employees || []).map((emp) => (
+                        <option key={emp.userId} value={emp.userId}>
+                          {emp.name} ({emp.department || "Service"})
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronRight className="w-[0.9vw] h-[0.9vw] text-slate-400 absolute right-[0.8vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Footer Buttons */}
+                <div className="pt-[0.8vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
+                  <button
+                    type="button"
+                    disabled={isSubmittingCancel}
+                    onClick={() => setCancelModal(null)}
+                    className="px-[1vw] py-[0.48vw] text-[0.76vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100/80 hover:bg-slate-200/80 rounded-[0.45vw] transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingCancel || !cancelReason.trim()}
+                    className="px-[1.2vw] py-[0.48vw] text-[0.76vw] font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.45vw] transition-all cursor-pointer flex items-center gap-[0.4vw] shadow-[0_2px_8px_-1px_rgba(225,29,72,0.35)] disabled:opacity-50 active:scale-98"
+                  >
+                    <Ban className="w-[0.85vw] h-[0.85vw]" />
+                    <span>{isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}</span>
+                  </button>
+                </div>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };
