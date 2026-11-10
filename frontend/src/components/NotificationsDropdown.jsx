@@ -446,8 +446,8 @@ const NotificationsDropdown = () => {
                           exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
                           className={`group relative rounded-[0.8vw] p-[0.75vw] flex items-center gap-[0.75vw] transition-all cursor-pointer border ${
                             isUnread
-                              ? 'bg-white border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)]'
-                              : 'bg-white/80 border-slate-200/60 hover:bg-white hover:border-slate-300 shadow-2xs'
+                              ? 'bg-white border-slate-200 shadow-[0_3px_12px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_-2px_rgba(0,0,0,0.12)]'
+                              : 'bg-white/90 border-slate-200/80 hover:bg-white hover:border-slate-300 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:shadow-md'
                           } ${visuals.accentGlow}`}
                           onClick={() => isUnread && markAsRead(n._id)}
                         >
