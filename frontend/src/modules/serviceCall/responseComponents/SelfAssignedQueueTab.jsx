@@ -174,7 +174,7 @@ export const SelfAssignedQueueTab = ({
                               return (
                                 <tr
                                   key={`${rowId}-${pIdx}`}
-                                  className={`transition-colors ${bgClass}`}
+                                  className="transition-colors bg-white hover:bg-slate-50/70"
                                 >
                                   {/* S.No */}
                                   {pIdx === 0 && (
@@ -255,7 +255,7 @@ export const SelfAssignedQueueTab = ({
                                   )}
 
                                   {/* Product / Issue */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white">
                                     <div className="font-medium text-slate-800 text-[0.8vw]">
                                       {prod?.productModel || prod?.itemCode || "—"}
                                     </div>
@@ -272,7 +272,7 @@ export const SelfAssignedQueueTab = ({
                                   </td>
 
                                   {/* Error Code */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
                                     {prod?.errorCode ? (
                                       <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
                                         {prod.errorCode}
@@ -345,7 +345,7 @@ export const SelfAssignedQueueTab = ({
                                   )}
 
                                   {/* Status */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
                                     {(() => {
                                       const status = getProductStatus(prod, effectiveStatus);
                                       const cfg = getStatusCfg(status);

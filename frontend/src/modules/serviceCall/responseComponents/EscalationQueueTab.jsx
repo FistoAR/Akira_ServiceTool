@@ -125,11 +125,7 @@ export const EscalationQueueTab = ({
                               return (
                                 <tr
                                   key={`${rowId}-${pIdx}`}
-                                  className={`transition-colors ${
-                                    isAttended
-                                      ? "bg-slate-50/50 hover:bg-slate-100/60"
-                                      : "bg-white hover:bg-indigo-50/20"
-                                  }`}
+                                  className="transition-colors bg-white hover:bg-indigo-50/20"
                                 >
                                   {/* S.No */}
                                   {pIdx === 0 && (
@@ -213,7 +209,7 @@ export const EscalationQueueTab = ({
                                   )}
 
                                   {/* Product / Issue */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white">
                                     <div className="font-medium text-slate-850 text-[0.8vw]">
                                       {prod?.productModel || prod?.itemCode || "—"}
                                     </div>
@@ -230,7 +226,7 @@ export const EscalationQueueTab = ({
                                   </td>
 
                                   {/* Error Code */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
                                     {prod?.errorCode ? (
                                       <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
                                         {prod.errorCode}
@@ -265,7 +261,7 @@ export const EscalationQueueTab = ({
                                   )}
 
                                   {/* SLA Timer */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
                                     {prod._attended ? (
                                       <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-bold text-[0.74vw] bg-emerald-50 border border-emerald-200 px-[0.5vw] py-[0.15vw] rounded-full">
                                         <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
@@ -310,7 +306,7 @@ export const EscalationQueueTab = ({
                                   )}
 
                                   {/* Status / Level */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
+                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
                                     {(() => {
                                       const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
                                       return (
