@@ -35,6 +35,11 @@ import {
   UserPlus,
   TrendingUp,
   Sparkles,
+  Eye,
+  CheckCircle2,
+  PauseCircle,
+  MapPin,
+  LifeBuoy,
 } from "lucide-react";
 import akiraLogo from "../../assets/Akira_logo.webp";
 import * as XLSX from "xlsx";
@@ -47,6 +52,21 @@ import {
   PRIORITIES,
   CallSummaryModal,
 } from "./ServiceCall";
+
+const getCustomerTypeTextColor = (type) => {
+  switch (type) {
+    case "OEM":
+      return "text-blue-600";
+    case "End Customer":
+      return "text-emerald-600";
+    case "Distributor":
+      return "text-purple-600";
+    case "Dealer":
+      return "text-amber-600";
+    default:
+      return "text-slate-700";
+  }
+};
 
 const EXPORT_COLUMNS_CONFIG = [
   { key: "S.No", label: "S.No" },
@@ -427,47 +447,7 @@ export default function ServiceCallReports() {
     return list;
   }, [filteredCalls]);
 
-  // Employee Report Aggregation
-  const employeeReportData = useMemo(() => {
-    return employees
-      .filter((emp) => emp.role?.toLowerCase() !== "admin")
-      .map((emp) => {
-        const empCalls = filteredCalls.filter((call) =>
-          (call.products || []).some(
-            (p) =>
-              p._assignedEngineerId === emp.userId ||
-              p._supportPersonId === emp.userId ||
-              p._fieldVisit?.assignedTo === emp.userId ||
-              p._fieldVisit?.assignedBy === emp.userId ||
-              call.registeredBy === emp.userId,
-          ),
-        );
-
-        const closedCount = empCalls.reduce((acc, call) => {
-          const cProds = (call.products || []).filter(
-            (p) =>
-              (p._assignedEngineerId === emp.userId ||
-                p._supportPersonId === emp.userId ||
-                p._fieldVisit?.assignedTo === emp.userId) &&
-              (p._resolved ||
-                p._productClosure?.status === "Closed" ||
-                p._productClosure?.status === "Resolved"),
-          );
-          return acc + cProds.length;
-        }, 0);
-
-        return {
-          ...emp,
-          totalAssigned: empCalls.length,
-          closedCount,
-          pendingCount: Math.max(0, empCalls.length - closedCount),
-          calls: empCalls,
-        };
-      })
-      .sort((a, b) => b.totalAssigned - a.totalAssigned);
-  }, [employees, filteredCalls]);
-
-  // Assignment Report (Per User Analytics) Aggregation
+  // Assignment Report (Merged Employee Overview & Per-User Analytics)
   const assignmentReportData = useMemo(() => {
     return employees
       .filter((emp) => emp.role?.toLowerCase() !== "admin")
@@ -603,9 +583,6 @@ export default function ServiceCallReports() {
     if (activeMainView === "assignments") {
       return selectedEmployee ? selectedEmployeeCalls : assignmentReportData;
     }
-    if (activeMainView === "employees") {
-      return selectedEmployee ? selectedEmployeeCalls : employeeReportData;
-    }
     return filteredCalls;
   }, [
     activeMainView,
@@ -614,7 +591,6 @@ export default function ServiceCallReports() {
     selectedEmployee,
     selectedEmployeeCalls,
     assignmentReportData,
-    employeeReportData,
   ]);
 
   const paginatedData = useMemo(() => {
@@ -634,9 +610,9 @@ export default function ServiceCallReports() {
       product: prod,
     });
     setEditForm({
-      status: closure.status || (prod._resolved ? "Resolved" : "Open"),
+      status: closure.status || (prod._resolved ? "Resolved" : "Pending"),
       remarks: closure.remarks || "",
-      resolutionType: closure.resolutionType || "Normal Resolution",
+      resolutionType: closure.resolutionType || "Fixed",
       editReason: "",
     });
   };
@@ -983,22 +959,31 @@ export default function ServiceCallReports() {
     <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
       {/* ── Top Header Bar ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
-        {/* Main Tab Navigation */}
-        <div className="flex items-center gap-[0.4vw] bg-white/90 backdrop-blur-md border border-slate-300 rounded-[0.8vw] p-[0.3vw] shadow-sm">
+        {/* Main Tab Navigation: Sleek Segmented Capsule */}
+        <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
           <button
             onClick={() => {
               setActiveMainView("registered");
               setSelectedEmployee(null);
               setCurrentPage(1);
             }}
-            className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
+            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
               activeMainView === "registered"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "bg-blue-600 text-white shadow-xs font-semibold"
+                : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
             }`}
           >
-            <Layers className="w-[0.9vw] h-[0.9vw]" />
-            <span>All Calls ({filteredCalls.length})</span>
+            <Layers className="w-[0.85vw] h-[0.85vw]" />
+            <span>All Calls</span>
+            <span
+              className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                activeMainView === "registered"
+                  ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                  : "text-slate-400"
+              }`}
+            >
+              {filteredCalls.length}
+            </span>
           </button>
 
           <button
@@ -1007,56 +992,58 @@ export default function ServiceCallReports() {
               setSelectedEmployee(null);
               setCurrentPage(1);
             }}
-            className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
+            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
               activeMainView === "escalations"
-                ? "bg-rose-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                ? "bg-blue-600 text-white shadow-xs font-semibold"
+                : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
             }`}
           >
-            <Flame className="w-[0.9vw] h-[0.9vw]" />
-            <span>Escalation View ({escalationItems.length})</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setActiveMainView("assignments");
-              setSelectedEmployee(null);
-              setCurrentPage(1);
-            }}
-            className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
-              activeMainView === "assignments"
-                ? "bg-blue-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`}
-          >
-            <UserCheck className="w-[0.9vw] h-[0.9vw]" />
-            <span>Assignment Report ({assignmentReportData.length})</span>
+            <Flame className="w-[0.85vw] h-[0.85vw]" />
+            <span>Escalation View</span>
+            <span
+              className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                activeMainView === "escalations"
+                  ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                  : "text-slate-400"
+              }`}
+            >
+              {escalationItems.length}
+            </span>
           </button>
 
           {isAdmin && (
             <button
               onClick={() => {
-                setActiveMainView("employees");
+                setActiveMainView("assignments");
                 setSelectedEmployee(null);
                 setCurrentPage(1);
               }}
-              className={`flex items-center gap-[0.4vw] px-[1vw] py-[0.45vw] rounded-[0.5vw] font-bold text-[0.8vw] transition-all cursor-pointer ${
-                activeMainView === "employees"
-                  ? "bg-teal-600 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                activeMainView === "assignments"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
               }`}
             >
-              <Users className="w-[0.9vw] h-[0.9vw]" />
-              <span>Employee Overview ({employees.length})</span>
+              <UserCheck className="w-[0.85vw] h-[0.85vw]" />
+              <span>Employee & Assignment Report</span>
+              <span
+                className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                  activeMainView === "assignments"
+                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                    : "text-slate-400"
+                }`}
+              >
+                {assignmentReportData.length}
+              </span>
             </button>
           )}
         </div>
 
         {/* Global Controls & Filters */}
         <div className="flex items-center gap-[0.6vw]">
-          {/* Search Input */}
+          {/* Soft Pill Search Input */}
           <div className="relative">
-            <Search className="w-[0.9vw] h-[0.9vw] absolute left-[0.7vw] top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-[0.85vw] h-[0.85vw] absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               value={search}
@@ -1065,25 +1052,37 @@ export default function ServiceCallReports() {
                 setCurrentPage(1);
               }}
               placeholder="Search call, customer, item, SN..."
-              className="pl-[2.1vw] pr-[0.8vw] py-[0.4vw] w-[14vw] rounded-[0.5vw] border border-slate-300 text-[0.78vw] font-medium text-slate-800 bg-white outline-none focus:border-indigo-500 placeholder-slate-400 shadow-2xs"
+              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[15vw] rounded-full border border-slate-200/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
+            {search && (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setCurrentPage(1);
+                }}
+                className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-[0.2vw] cursor-pointer transition-colors"
+                title="Clear search"
+              >
+                <X className="w-[0.8vw] h-[0.8vw]" />
+              </button>
+            )}
           </div>
 
           {/* Filter Popover Button */}
           <div className="relative">
             <button
               onClick={() => setShowFilterPopover(!showFilterPopover)}
-              className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.45vw] border rounded-[0.5vw] font-bold text-[0.78vw] transition-colors cursor-pointer shadow-2xs ${
+              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
                 showFilterPopover || fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All"
-                  ? "bg-indigo-50 border-indigo-300 text-indigo-700"
-                  : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+                  ? "bg-blue-50 border-blue-300 text-blue-700"
+                  : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
               }`}
               title="Filter reports by date, origin, status, and priority"
             >
               <Filter className="w-[0.85vw] h-[0.85vw]" />
               <span>Filters</span>
               {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
-                <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-indigo-600" />
+                <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-blue-600" />
               )}
             </button>
 
@@ -1239,16 +1238,16 @@ export default function ServiceCallReports() {
           <div className="relative">
             <button
               onClick={() => setShowColPicker(!showColPicker)}
-              className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.45vw] border rounded-[0.5vw] font-bold text-[0.78vw] transition-colors cursor-pointer shadow-2xs ${
+              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
                 showColPicker
-                  ? "bg-indigo-50 border-indigo-300 text-indigo-700"
-                  : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+                  ? "bg-blue-50 border-blue-300 text-blue-700"
+                  : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
               }`}
               title="Select columns to export to Excel"
             >
               <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
               <span>Columns</span>
-              <span className="ml-[0.2vw] px-[0.4vw] py-[0.05vw] text-[0.65vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+              <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                 {selectedExportCols.length}/{EXPORT_COLUMNS_CONFIG.length}
               </span>
             </button>
@@ -1333,7 +1332,7 @@ export default function ServiceCallReports() {
           {/* Export Excel Button */}
           <button
             onClick={executeExportExcel}
-            className="flex items-center gap-[0.35vw] px-[0.9vw] py-[0.45vw] bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-[0.5vw] font-bold text-[0.78vw] transition-colors cursor-pointer shadow-2xs"
+            className="flex items-center gap-[0.35vw] px-[1vw] h-[2.2vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-[0.76vw] transition-all cursor-pointer shadow-sm"
             title="Export filtered reports to Excel"
           >
             <Download className="w-[0.85vw] h-[0.85vw]" />
@@ -1355,20 +1354,20 @@ export default function ServiceCallReports() {
             {activeMainView === "registered" && (
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div className="flex-1 overflow-auto">
-                  <table className="w-full text-left border-collapse min-w-[75vw]">
-                    <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
                       <tr>
-                        <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Origin Type</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product / Issue</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Registered</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Assigned</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Escalated</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Closed</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
-                        <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Actions</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Origin</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer & Contact</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Product / Model</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[9.5vw] whitespace-nowrap">Registered</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[8vw] whitespace-nowrap">Assigned</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Escalation</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                        <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-[0.8vw]">
@@ -1397,6 +1396,9 @@ export default function ServiceCallReports() {
                               (call.editHistory && call.editHistory.length > 0) ||
                               (prod._closureEdits && prod._closureEdits.length > 0);
 
+                            const isEscalated =
+                              prod._escalationLevel > 0 || call.escalationLevel > 0 || prod._isCritical;
+
                             return (
                               <tr
                                 key={`${call._id || call.callNumber}-${pIdx}`}
@@ -1406,7 +1408,7 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.7vw] border-r border-slate-200 align-middle text-center font-bold text-slate-500 bg-white whitespace-nowrap"
+                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]"
                                   >
                                     {callSno}
                                   </td>
@@ -1416,30 +1418,35 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.7vw] border-r border-slate-200 align-middle whitespace-nowrap bg-white font-semibold"
+                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap bg-white"
                                   >
                                     {isSelf ? (
-                                      <span className="inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold bg-teal-50 text-teal-700 border border-teal-200">
-                                        <UserCheck className="w-[0.75vw] h-[0.75vw]" />
+                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                                        <UserCheck className="w-[0.65vw] h-[0.65vw]" />
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                                        <Shield className="w-[0.75vw] h-[0.75vw]" />
-                                        Registered Call
+                                      <span className="text-slate-500 font-medium text-[0.72vw]">
+                                        Registered
                                       </span>
                                     )}
                                   </td>
                                 )}
 
-                                {/* 2. Call Number */}
+                                {/* 2. Call Number (Clickable directly to info modal) */}
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.7vw] border-r border-slate-200 align-middle whitespace-nowrap bg-white font-mono font-bold text-indigo-700"
+                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
-                                      <span>{call.callNumber}</span>
+                                      <button
+                                        onClick={() => setSelectedInfoCall(call)}
+                                        className="font-mono font-normal text-[0.82vw] text-[#6e000a] hover:text-[#990011] hover:underline cursor-pointer block leading-tight transition-colors"
+                                        title="Click to view full details"
+                                      >
+                                        {call.callNumber}
+                                      </button>
                                       {hasEdits && (
                                         <span
                                           className="text-[0.62vw] px-[0.3vw] py-[0.05vw] bg-amber-50 text-amber-700 border border-amber-200 rounded font-semibold"
@@ -1456,25 +1463,57 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.7vw] border-r border-slate-200 align-middle bg-white max-w-[12vw]"
+                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle bg-white max-w-[14vw]"
                                   >
-                                    <div className="font-bold text-slate-800 truncate" title={call.customerName}>
+                                    <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
                                       {call.customerName || "—"}
                                     </div>
-                                    <div className="text-[0.7vw] text-slate-500 font-mono mt-[0.1vw]">
-                                      {call.partyCode || call.contactNumber || "—"}
+                                    <div className="flex items-center gap-[0.45vw] mt-[0.15vw] flex-wrap">
+                                      {call.contactNumber && (
+                                        <a
+                                          href={`tel:${call.contactNumber}`}
+                                          className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                          title="Click to call"
+                                        >
+                                          <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                                          <span>{call.contactNumber}</span>
+                                        </a>
+                                      )}
+                                      {call.partyCode && (
+                                        <span className="text-[0.66vw] text-slate-400 font-mono shrink-0">
+                                          {call.partyCode}
+                                        </span>
+                                      )}
                                     </div>
                                   </td>
                                 )}
 
-                                {/* 4. Product / Issue */}
-                                <td className="p-[0.7vw] border-r border-slate-200 align-middle max-w-[14vw]">
-                                  <div className="font-semibold text-slate-800 truncate" title={prod.productModel || prod.itemCode}>
+                                {/* 3b. Customer Type (Dedicated Column) */}
+                                {pIdx === 0 && (
+                                  <td
+                                    rowSpan={rowCount}
+                                    className="p-[0.65vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]"
+                                  >
+                                    {call.customerType && call.customerType !== "All" ? (
+                                      <span className={getCustomerTypeTextColor(call.customerType)}>
+                                        {call.customerType}
+                                      </span>
+                                    ) : (
+                                      <span className="text-slate-300 font-normal">—</span>
+                                    )}
+                                  </td>
+                                )}
+
+                                {/* 4. Product / Model */}
+                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle max-w-[13vw]">
+                                  <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={prod.productModel || prod.itemCode}>
                                     {prod.productModel || prod.itemCode || "—"}
                                   </div>
                                   {prod.serialNumber && (
-                                    <div className="text-[0.7vw] text-slate-500 font-mono mt-[0.05vw]">
-                                      SN: {prod.serialNumber}
+                                    <div className="mt-[0.1vw]">
+                                      <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                                        SN: {prod.serialNumber}
+                                      </span>
                                     </div>
                                   )}
                                 </td>
@@ -1483,100 +1522,92 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="p-[0.7vw] border-r border-slate-200 align-middle whitespace-nowrap bg-white"
+                                    className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                   >
-                                    <div className="font-semibold text-slate-700">
-                                      {fmtDateTime(call.createdAt || call.dateTime)}
+                                    <div className="text-[0.72vw] text-gray-800 font-medium flex items-center gap-[0.25vw]">
+                                      <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
+                                      <span>{fmtDateTime(call.createdAt || call.dateTime)}</span>
                                     </div>
-                                    <div className="text-[0.7vw] text-slate-500">
-                                      By: {call.registeredByName || call.registeredBy || "System"}
-                                    </div>
+                                    {call.registeredByName && call.registeredByName !== "System" ? (
+                                      <div className="text-[0.66vw] text-slate-400 mt-[0.08vw]">
+                                        By: {call.registeredByName}
+                                      </div>
+                                    ) : null}
                                   </td>
                                 )}
 
                                 {/* 6. Assigned Info */}
-                                <td className="p-[0.7vw] border-r border-slate-200 align-middle whitespace-nowrap">
+                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
                                   {prod._assignedEngineerName || call.currentEngineerName ? (
                                     <div>
-                                      <div className="font-semibold text-indigo-700">
+                                      <div className="font-semibold text-slate-800 text-[0.75vw]">
                                         {prod._assignedEngineerName || call.currentEngineerName}
                                       </div>
-                                      <div className="text-[0.7vw] text-slate-500">
+                                      <div className="text-[0.66vw] text-slate-400 mt-[0.05vw]">
                                         {fmtDateTime(prod._assignedAt || call.createdAt)}
                                       </div>
                                     </div>
                                   ) : (
-                                    <span className="text-slate-400 font-medium">Unassigned</span>
+                                    <span className="text-slate-400 font-medium italic text-[0.72vw]">Unassigned</span>
                                   )}
                                 </td>
 
                                 {/* 7. Escalated Info */}
-                                <td className="p-[0.7vw] border-r border-slate-200 align-middle whitespace-nowrap">
-                                  {prod._escalationLevel > 0 || call.escalationLevel > 0 || prod._isCritical ? (
-                                    <div>
-                                      <span className="font-bold text-rose-600 bg-rose-50 border border-rose-200 px-[0.4vw] py-[0.1vw] rounded text-[0.7vw]">
+                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
+                                  {isEscalated ? (
+                                    <div className="inline-flex flex-col items-center">
+                                      <span className="inline-flex items-center gap-[0.2vw] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-[0.4vw] py-[0.08vw] rounded text-[0.68vw]">
+                                        <Flame className="w-[0.65vw] h-[0.65vw]" />
                                         Level {prod._escalationLevel || call.escalationLevel || 1}
                                       </span>
-                                      <div className="text-[0.7vw] text-slate-500 mt-[0.1vw]">
-                                        {formatDurationFrom(prod._assignedAt || call.createdAt)} open
+                                      <div className="text-[0.66vw] text-slate-500 mt-[0.1vw] flex items-center gap-[0.2vw]">
+                                        <Clock className="w-[0.6vw] h-[0.6vw] text-slate-400" />
+                                        <span>{formatDurationFrom(prod._assignedAt || call.createdAt)} open</span>
                                       </div>
                                     </div>
                                   ) : (
-                                    <span className="text-slate-400 font-medium">—</span>
+                                    <span className="text-slate-300 font-medium text-[0.75vw]">—</span>
                                   )}
                                 </td>
 
-                                {/* 8. Closed Info */}
-                                <td className="p-[0.7vw] border-r border-slate-200 align-middle whitespace-nowrap">
-                                  {isClosed ? (
-                                    <div>
-                                      <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.4vw] py-[0.1vw] rounded text-[0.7vw]">
-                                        Resolved
-                                      </span>
-                                      <div className="text-[0.7vw] text-slate-500 mt-[0.1vw]">
-                                        {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
-                                      </div>
+                                {/* 8. Status (Clean Status matching ServiceCall) */}
+                                <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
+                                  <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
+                                    <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isClosed ? "bg-emerald-500" : cfg.dot}`} />
+                                    <span>{isClosed ? "Resolved" : cfg.label}</span>
+                                  </div>
+                                  {isClosed && (prod._productClosure?.closedAt || prod._productClosure?.date) && (
+                                    <div className="text-[0.65vw] text-slate-400 font-medium mt-[0.08vw]">
+                                      {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
                                     </div>
-                                  ) : (
-                                    <span className="text-amber-600 font-semibold text-[0.75vw]">In Progress</span>
                                   )}
                                 </td>
 
-                                {/* 9. Status */}
-                                <td className="p-[0.7vw] border-r border-slate-200 text-center align-middle whitespace-nowrap">
-                                  <span className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-bold text-slate-700">
-                                    <span className={`w-[0.5vw] h-[0.5vw] rounded-full shrink-0 ${cfg.dot}`} />
-                                    {cfg.label}
-                                  </span>
-                                </td>
-
-                                {/* 10. Actions */}
-                                <td className="p-[0.7vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                  <div className="flex items-center justify-center gap-[0.35vw]">
+                                {/* 9. Actions Column (Sleek Icon Buttons) */}
+                                <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
-                                      title="View Full Call Details"
-                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                      title="View Call Details"
+                                      className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
                                     >
-                                      <Info className="w-[0.8vw] h-[0.8vw]" />
-                                      Info
+                                      <Eye className="w-[0.95vw] h-[0.95vw]" />
                                     </button>
                                     {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
                                       <button
                                         onClick={() => handleOpenEditReport(call, prod, pIdx)}
                                         title="Edit Report"
-                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                        className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
                                       >
-                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
-                                        Edit Report
+                                        <Edit3 className="w-[0.9vw] h-[0.9vw]" />
                                       </button>
                                     )}
                                     <button
                                       onClick={() => setHistoryModalCall(call)}
-                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                      title="View Lifecycle History"
+                                      className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                     >
-                                      <History className="w-[0.8vw] h-[0.8vw]" />
-                                      History
+                                      <History className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
                                   </div>
                                 </td>
@@ -1595,93 +1626,151 @@ export default function ServiceCallReports() {
             {activeMainView === "escalations" && (
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div className="flex-1 overflow-auto">
-                  <table className="w-full text-left border-collapse min-w-[75vw]">
-                    <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
                       <tr>
-                        <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product / SN</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Who Escalated</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">When Escalated</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Why (Reason)</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Open Duration</th>
-                        <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
-                        <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Action</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer & Contact</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Product / SN</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Escalated By</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[9.5vw] whitespace-nowrap">Escalated Date</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Reason</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Open Duration</th>
+                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                        <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-[0.8vw]">
                       {paginatedData.length === 0 ? (
                         <tr>
-                          <td colSpan={10} className="py-[10vh] text-center text-slate-400 font-bold">
+                          <td colSpan={11} className="py-[10vh] text-center text-slate-400 font-bold">
                             No escalated calls found.
                           </td>
                         </tr>
                       ) : (
                         paginatedData.map((item, idx) => (
-                          <tr key={idx} className="hover:bg-rose-50/30 transition-colors">
-                            <td className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 whitespace-nowrap">
+                          <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                            {/* 0. S.No */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]">
                               {(currentPage - 1) * rowsPerPage + idx + 1}
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 font-mono font-bold text-rose-700 whitespace-nowrap">
-                              {item.call.callNumber}
+
+                            {/* 1. Call No */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
+                              <button
+                                onClick={() => setSelectedInfoCall(item.call)}
+                                className="font-mono font-normal text-[0.82vw] text-[#6e000a] hover:text-[#990011] hover:underline cursor-pointer block leading-tight transition-colors"
+                                title="Click to view full details"
+                              >
+                                {item.call.callNumber}
+                              </button>
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 max-w-[12vw]">
-                              <div className="font-bold text-slate-800 truncate">{item.call.customerName}</div>
-                              <div className="text-[0.7vw] text-slate-500 font-mono">{item.call.partyCode || "—"}</div>
+
+                            {/* 2. Customer & Contact */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle bg-white max-w-[14vw]">
+                              <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={item.call.customerName}>
+                                {item.call.customerName || "—"}
+                              </div>
+                              <div className="flex items-center gap-[0.45vw] mt-[0.15vw] flex-wrap">
+                                {item.call.contactNumber && (
+                                  <a
+                                    href={`tel:${item.call.contactNumber}`}
+                                    className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                    title="Click to call"
+                                  >
+                                    <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                                    <span>{item.call.contactNumber}</span>
+                                  </a>
+                                )}
+                                {item.call.partyCode && (
+                                  <span className="text-[0.66vw] text-slate-400 font-mono shrink-0">
+                                    {item.call.partyCode}
+                                  </span>
+                                )}
+                              </div>
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 max-w-[14vw]">
-                              <div className="font-semibold text-slate-800 truncate">
+
+                            {/* 3. Customer Type */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]">
+                              {item.call.customerType && item.call.customerType !== "All" ? (
+                                <span className={getCustomerTypeTextColor(item.call.customerType)}>
+                                  {item.call.customerType}
+                                </span>
+                              ) : (
+                                <span className="text-slate-300 font-normal">—</span>
+                              )}
+                            </td>
+
+                            {/* 4. Product / SN */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle max-w-[13vw]">
+                              <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={item.prod.productModel || item.prod.itemCode}>
                                 {item.prod.productModel || item.prod.itemCode || "—"}
                               </div>
                               {item.prod.serialNumber && (
-                                <div className="text-[0.7vw] text-slate-500 font-mono">SN: {item.prod.serialNumber}</div>
+                                <div className="mt-[0.1vw]">
+                                  <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                                    SN: {item.prod.serialNumber}
+                                  </span>
+                                </div>
                               )}
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 font-bold text-slate-800 whitespace-nowrap">
-                              {item.escalatedBy}
+
+                            {/* 5. Who Escalated */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap align-middle">
+                              <div className="font-semibold text-slate-800 text-[0.75vw]">
+                                {item.escalatedBy}
+                              </div>
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-700 font-medium">
-                              {fmtDateTime(item.escalatedAt)}
+
+                            {/* 6. When Escalated */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap align-middle">
+                              <div className="text-[0.72vw] text-gray-800 font-medium flex items-center gap-[0.25vw]">
+                                <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
+                                <span>{fmtDateTime(item.escalatedAt)}</span>
+                              </div>
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 max-w-[16vw]">
-                              <span className="font-medium text-rose-800 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.15vw] rounded text-[0.74vw] inline-block">
+
+                            {/* 7. Why (Reason) */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 max-w-[13vw] align-middle">
+                              <span className="font-medium text-rose-700 bg-rose-50/80 border border-rose-200/80 px-[0.45vw] py-[0.15vw] rounded text-[0.72vw] inline-block leading-snug">
                                 {item.reason}
                               </span>
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap font-bold text-slate-800">
-                              <span className="flex items-center gap-[0.3vw] text-rose-700">
-                                <Clock className="w-[0.8vw] h-[0.8vw]" />
+
+                            {/* 8. Open Duration */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-center align-middle">
+                              <span className="inline-flex items-center gap-[0.25vw] text-[0.74vw] font-semibold text-slate-700">
+                                <Clock className="w-[0.7vw] h-[0.7vw] text-slate-400" />
                                 {item.openDuration}
                               </span>
                             </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                              {item.isClosed ? (
-                                <span className="px-[0.5vw] py-[0.15vw] rounded-full text-[0.7vw] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                  Resolved
-                                </span>
-                              ) : (
-                                <span className="px-[0.5vw] py-[0.15vw] rounded-full text-[0.7vw] font-bold bg-rose-50 text-rose-700 border border-rose-200 animate-pulse">
-                                  Escalated
-                                </span>
-                              )}
+
+                            {/* 9. Status */}
+                            <td className="p-[0.65vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
+                              <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
+                                <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${item.isClosed ? "bg-emerald-500" : "bg-rose-600"}`} />
+                                <span>{item.isClosed ? "Resolved" : "Escalated"}</span>
+                              </div>
                             </td>
-                            <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                              <div className="flex items-center justify-center gap-[0.35vw]">
+
+                            {/* 10. Actions Column (Sleek Icon Buttons) */}
+                            <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                              <div className="flex items-center justify-center gap-[0.3vw]">
                                 <button
                                   onClick={() => setSelectedInfoCall(item.call)}
-                                  title="View Full Call Details"
-                                  className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                  title="View Call Details"
+                                  className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
                                 >
-                                  <Info className="w-[0.8vw] h-[0.8vw]" />
-                                  Info
+                                  <Eye className="w-[0.95vw] h-[0.95vw]" />
                                 </button>
                                 <button
                                   onClick={() => setHistoryModalCall(item.call)}
-                                  className="inline-flex items-center gap-[0.25vw] px-[0.6vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                  title="View Lifecycle History"
+                                  className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                 >
-                                  <History className="w-[0.8vw] h-[0.8vw]" />
-                                  View History
+                                  <History className="w-[0.9vw] h-[0.9vw]" />
                                 </button>
                               </div>
                             </td>
@@ -1694,29 +1783,29 @@ export default function ServiceCallReports() {
               </div>
             )}
 
-            {/* VIEW 3: Assignment Report (Per User Analytics) */}
+            {/* VIEW 3: Merged Employee & Assignment Report */}
             {activeMainView === "assignments" && (
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 {!selectedEmployee ? (
                   <div className="flex-1 overflow-auto">
-                    <table className="w-full text-left border-collapse min-w-[70vw]">
-                      <thead className="sticky top-0 bg-[#f8fafc] z-10 border-b border-slate-200 text-slate-500 uppercase font-bold tracking-wider text-[0.68vw]">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
                         <tr>
-                          <th className="py-[0.7vw] px-[0.8vw] w-[3.5vw] text-center whitespace-nowrap">#</th>
-                          <th className="py-[0.7vw] px-[0.8vw] whitespace-nowrap">User</th>
-                          <th className="py-[0.7vw] px-[0.8vw] whitespace-nowrap">Department</th>
-                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Calls</th>
-                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Self Assigned</th>
-                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Open</th>
-                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Closed</th>
-                          <th className="py-[0.7vw] px-[0.8vw] text-center whitespace-nowrap">Avg Response</th>
-                          <th className="py-[0.7vw] px-[0.8vw] text-right pr-[1.2vw] w-[8vw] whitespace-nowrap">Action</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">#</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Employee</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 w-[12vw] whitespace-nowrap">Department</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Total Calls</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Self Assigned</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Open</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Closed</th>
+                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[8vw] whitespace-nowrap">Avg Response</th>
+                          <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 text-[0.78vw]">
+                      <tbody className="divide-y divide-slate-100 text-[0.8vw]">
                         {paginatedData.length === 0 ? (
                           <tr>
-                            <td colSpan={9} className="py-[4vw] text-center text-slate-400 font-medium">
+                            <td colSpan={9} className="py-[10vh] text-center text-slate-400 font-bold">
                               No assignment records found.
                             </td>
                           </tr>
@@ -1724,86 +1813,99 @@ export default function ServiceCallReports() {
                           paginatedData.map((emp, idx) => (
                             <tr
                               key={emp.userId || idx}
-                              className="hover:bg-slate-50/80 transition-colors group"
+                              className="hover:bg-slate-50/80 transition-colors"
                             >
                               {/* Index */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-center font-medium text-slate-400 whitespace-nowrap text-[0.72vw]">
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]">
                                 {(currentPage - 1) * rowsPerPage + idx + 1}
                               </td>
 
                               {/* User */}
-                              <td className="py-[0.65vw] px-[0.8vw] whitespace-nowrap">
-                                <div className="flex items-center gap-[0.6vw]">
-                                  <div className="w-[1.9vw] h-[1.9vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex items-center justify-center font-bold text-[0.75vw] shrink-0">
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap bg-white">
+                                <div className="flex items-center gap-[0.55vw]">
+                                  <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-[0.74vw] shrink-0">
                                     {emp.name.charAt(0).toUpperCase()}
                                   </div>
                                   <div>
-                                    <div className="font-semibold text-slate-800 leading-tight">{emp.name}</div>
-                                    <div className="text-[0.68vw] text-slate-400 font-mono">{emp.userId}</div>
+                                    <div className="font-semibold text-slate-900 leading-tight text-[0.8vw]">{emp.name}</div>
+                                    <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.05vw]">{emp.userId}</div>
                                   </div>
                                 </div>
                               </td>
 
                               {/* Department */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-slate-500 whitespace-nowrap font-medium text-[0.75vw]">
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-slate-700 whitespace-nowrap font-medium text-[0.76vw]">
                                 {emp.department || "—"}
                               </td>
 
-                              {/* Calls */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
-                                <span className={`font-semibold ${emp.callsPerUser > 0 ? "text-slate-800" : "text-slate-300"}`}>
+                              {/* Total Calls */}
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                <span className={`font-semibold text-[0.78vw] ${emp.callsPerUser > 0 ? "text-slate-900" : "text-slate-300"}`}>
                                   {emp.callsPerUser}
                                 </span>
                               </td>
 
                               {/* Self Assigned */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
-                                <span className={`font-semibold ${emp.selfAssignedCount > 0 ? "text-indigo-600" : "text-slate-300"}`}>
-                                  {emp.selfAssignedCount}
-                                </span>
-                              </td>
-
-                              {/* Open */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
-                                <span className={`font-semibold ${emp.openCount > 0 ? "text-amber-600 font-bold" : "text-slate-300"}`}>
-                                  {emp.openCount}
-                                </span>
-                              </td>
-
-                              {/* Closed */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
-                                <span className={`font-semibold ${emp.closedCount > 0 ? "text-emerald-600 font-bold" : "text-slate-300"}`}>
-                                  {emp.closedCount}
-                                </span>
-                              </td>
-
-                              {/* Avg Response */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-center whitespace-nowrap">
-                                {emp.avgResponseTime !== "—" ? (
-                                  <span className="font-mono text-slate-700 text-[0.72vw] font-medium">
-                                    {emp.avgResponseTime}
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                {emp.selfAssignedCount > 0 ? (
+                                  <span className="font-semibold text-[0.74vw] text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                    {emp.selfAssignedCount}
                                   </span>
                                 ) : (
                                   <span className="text-slate-300">—</span>
                                 )}
                               </td>
 
+                              {/* Open */}
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                {emp.openCount > 0 ? (
+                                  <span className="font-semibold text-[0.74vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                    {emp.openCount}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-300 font-medium">0</span>
+                                )}
+                              </td>
+
+                              {/* Closed */}
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                {emp.closedCount > 0 ? (
+                                  <span className="font-semibold text-[0.74vw] text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                    {emp.closedCount}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-300 font-medium">0</span>
+                                )}
+                              </td>
+
+                              {/* Avg Response */}
+                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                {emp.avgResponseTime !== "—" ? (
+                                  <span className="inline-flex items-center gap-[0.25vw] text-slate-700 text-[0.74vw] font-medium">
+                                    <Clock className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                                    <span>{emp.avgResponseTime}</span>
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-300 font-normal">—</span>
+                                )}
+                              </td>
+
                               {/* Action */}
-                              <td className="py-[0.65vw] px-[0.8vw] text-right pr-[1.2vw] whitespace-nowrap">
+                              <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                 <button
                                   onClick={() => {
                                     setSelectedEmployee(emp);
                                     setCurrentPage(1);
                                   }}
                                   disabled={emp.callsPerUser === 0}
-                                  className={`inline-flex items-center gap-[0.2vw] px-[0.55vw] py-[0.25vw] rounded-[0.35vw] font-semibold text-[0.72vw] transition-all cursor-pointer ${
+                                  title={emp.callsPerUser > 0 ? "View Assigned Calls" : "No Calls"}
+                                  className={`p-[0.35vw] rounded-full transition-all cursor-pointer ${
                                     emp.callsPerUser > 0
-                                      ? "text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 border border-transparent hover:border-indigo-100"
-                                      : "text-slate-300 cursor-not-allowed"
+                                      ? "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                                      : "text-slate-300 cursor-not-allowed opacity-40"
                                   }`}
                                 >
-                                  <span>View</span>
-                                  <ChevronRight className="w-[0.75vw] h-[0.75vw]" />
+                                  <Eye className="w-[0.95vw] h-[0.95vw]" />
                                 </button>
                               </td>
                             </tr>
@@ -1815,48 +1917,55 @@ export default function ServiceCallReports() {
                 ) : (
                   /* Drilldown view for selected employee calls */
                   <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                    <div className="px-[1vw] py-[0.6vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
+                    <div className="px-[1vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
                       <div className="flex items-center gap-[0.7vw]">
                         <button
                           onClick={() => {
                             setSelectedEmployee(null);
                             setCurrentPage(1);
                           }}
-                          className="p-[0.4vw] bg-white border border-slate-300 rounded-[0.4vw] text-slate-600 hover:bg-slate-100 cursor-pointer"
+                          className="flex items-center gap-[0.3vw] px-[0.65vw] h-[2vw] bg-white border border-slate-200 rounded-full text-slate-700 hover:bg-slate-100 font-semibold text-[0.72vw] cursor-pointer shadow-2xs transition-all"
                         >
-                          <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
+                          <ArrowLeft className="w-[0.8vw] h-[0.8vw]" />
+                          <span>Back to All Employees</span>
                         </button>
-                        <div>
-                          <span className="text-[0.9vw] font-bold text-slate-800">
+                        <div className="flex items-center gap-[0.4vw]">
+                          <span className="text-[0.88vw] font-bold text-slate-900">
                             {selectedEmployee.name}
                           </span>
-                          <span className="text-[0.72vw] text-slate-500 ml-[0.5vw]">
-                            ({selectedEmployee.department}) • {selectedEmployeeCalls.length} Assigned Calls
+                          <span className="text-slate-400 text-[0.75vw]">•</span>
+                          <span className="text-[0.74vw] text-slate-500 font-medium">
+                            {selectedEmployee.department}
+                          </span>
+                          <span className="ml-[0.4vw] px-[0.45vw] py-[0.05vw] rounded-full text-[0.68vw] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            {selectedEmployeeCalls.length} Assigned Calls
                           </span>
                         </div>
                       </div>
                     </div>
 
                     <div className="flex-1 overflow-auto">
-                      <table className="w-full text-left border-collapse min-w-[75vw]">
-                        <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
                           <tr>
-                            <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Type</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Registered</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Assigned</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Closed</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
-                            <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Actions</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Origin</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Product / Model</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 w-[9.5vw] whitespace-nowrap">Registered</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 w-[8vw] whitespace-nowrap">Assigned</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 w-[8vw] whitespace-nowrap">Closed</th>
+                            <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                            <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 text-[0.8vw]">
                           {paginatedData.map((call, cIdx) => {
                             const prods = call.products && call.products.length > 0 ? call.products : [{}];
                             const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
+                            const isSelf = call.noEscalation === true;
+
                             return prods.map((prod, pIdx) => {
                               const pStatus = getCallProductStatus(prod, call.status);
                               const cfg = getStatusCfg(pStatus);
@@ -1866,73 +1975,91 @@ export default function ServiceCallReports() {
                                 prod._productClosure?.status === "Resolved";
 
                               return (
-                                <tr key={`${call._id}-${pIdx}`} className="hover:bg-slate-50 transition-colors">
+                                <tr key={`${call._id || call.callNumber}-${pIdx}`} className="hover:bg-slate-50/80 transition-colors">
                                   {pIdx === 0 && (
                                     <td
                                       rowSpan={prods.length}
-                                      className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 bg-white whitespace-nowrap"
+                                      className="p-[0.65vw] border-r border-b border-slate-200 text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]"
                                     >
                                       {callSno}
                                     </td>
                                   )}
-                                  <td className="p-[0.7vw] border-r border-slate-200 font-mono font-bold text-indigo-700 whitespace-nowrap">
-                                    {call.callNumber}
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
+                                    <button
+                                      onClick={() => setSelectedInfoCall(call)}
+                                      className="font-mono font-normal text-[0.82vw] text-[#6e000a] hover:text-[#990011] hover:underline cursor-pointer block leading-tight transition-colors"
+                                      title="Click to view full details"
+                                    >
+                                      {call.callNumber}
+                                    </button>
                                   </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">
-                                    <span className={`px-[0.5vw] py-[0.12vw] rounded text-[0.72vw] font-bold ${
-                                      call.noEscalation ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"
-                                    }`}>
-                                      {call.noEscalation ? "Self Assigned" : "Registered Call"}
-                                    </span>
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                    {isSelf ? (
+                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                                        Self Assigned
+                                      </span>
+                                    ) : (
+                                      <span className="text-slate-500 font-medium text-[0.72vw]">
+                                        Registered
+                                      </span>
+                                    )}
                                   </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[12vw]">
-                                    <div className="font-bold text-slate-800 truncate">{call.customerName}</div>
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[14vw]">
-                                    <div className="font-semibold text-slate-800 truncate">
-                                      {prod.productModel || prod.itemCode || "—"}
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 max-w-[14vw]">
+                                    <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
+                                      {call.customerName || "—"}
                                     </div>
                                   </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-600">
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 max-w-[13vw]">
+                                    <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                      {prod.productModel || prod.itemCode || "—"}
+                                    </div>
+                                    {prod.serialNumber && (
+                                      <div className="mt-[0.08vw]">
+                                        <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                                          SN: {prod.serialNumber}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </td>
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-slate-600 text-[0.72vw]">
                                     {fmtDateTime(call.createdAt)}
                                   </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-indigo-700 font-semibold">
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-indigo-700 font-medium text-[0.72vw]">
                                     {fmtDateTime(prod._assignedAt || call.createdAt)}
                                   </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-emerald-700 font-semibold">
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-emerald-700 font-medium text-[0.72vw]">
                                     {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
                                   </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-bold text-slate-700">
-                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full shrink-0 ${cfg.dot}`} />
-                                      {cfg.label}
-                                    </span>
+                                  <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                    <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
+                                      <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isClosed ? "bg-emerald-500" : cfg.dot}`} />
+                                      <span>{isClosed ? "Resolved" : cfg.label}</span>
+                                    </div>
                                   </td>
-                                  <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                    <div className="flex items-center justify-center gap-[0.35vw]">
+                                  <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                    <div className="flex items-center justify-center gap-[0.3vw]">
                                       <button
                                         onClick={() => setSelectedInfoCall(call)}
-                                        title="View Full Call Details"
-                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                        title="View Call Details"
+                                        className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
                                       >
-                                        <Info className="w-[0.8vw] h-[0.8vw]" />
-                                        Info
+                                        <Eye className="w-[0.95vw] h-[0.95vw]" />
                                       </button>
                                       {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
                                         <button
                                           onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                          className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                          title="Edit Report"
+                                          className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
                                         >
-                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
-                                          Edit
+                                          <Edit3 className="w-[0.9vw] h-[0.9vw]" />
                                         </button>
                                       )}
                                       <button
                                         onClick={() => setHistoryModalCall(call)}
-                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
+                                        title="View Lifecycle History"
+                                        className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       >
-                                        <History className="w-[0.8vw] h-[0.8vw]" />
-                                        History
+                                        <History className="w-[0.9vw] h-[0.9vw]" />
                                       </button>
                                     </div>
                                   </td>
@@ -1948,210 +2075,72 @@ export default function ServiceCallReports() {
               </div>
             )}
 
-            {/* VIEW 4: Employee Overview & Specific Reports */}
-            {activeMainView === "employees" && (
-              <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                {!selectedEmployee ? (
-                  <div className="flex-1 overflow-auto">
-                    <table className="w-full text-left border-collapse min-w-[60vw]">
-                      <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
-                        <tr>
-                          <th className="p-[0.7vw] border-r border-slate-200 w-[5%] text-center">S.No</th>
-                          <th className="p-[0.7vw] border-r border-slate-200 w-[30%]">Employee</th>
-                          <th className="p-[0.7vw] border-r border-slate-200 w-[20%]">Department</th>
-                          <th className="p-[0.7vw] border-r border-slate-200 w-[15%] text-center">Total Assigned</th>
-                          <th className="p-[0.7vw] border-r border-slate-200 w-[15%] text-center">Closed Calls</th>
-                          <th className="p-[0.7vw] text-center w-[15%]">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-[0.8vw]">
-                        {paginatedData.map((emp, idx) => (
-                          <tr key={emp.userId || idx} className="hover:bg-slate-50 transition-colors">
-                            <td className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500">
-                              {(currentPage - 1) * rowsPerPage + idx + 1}
-                            </td>
-                            <td className="p-[0.7vw] border-r border-slate-200">
-                              <div className="flex items-center gap-[0.7vw]">
-                                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-teal-50 border border-teal-200 text-teal-800 flex items-center justify-center font-bold text-[0.85vw]">
-                                  {emp.name.charAt(0).toUpperCase()}
-                                </div>
-                                <div>
-                                  <div className="font-bold text-slate-800 text-[0.85vw]">{emp.name}</div>
-                                  <div className="text-[0.7vw] text-slate-500 font-mono">{emp.userId}</div>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 font-semibold text-slate-700">
-                              {emp.department || "—"}
-                            </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 text-center">
-                              <span className="font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.55vw] py-[0.15vw] rounded-full text-[0.78vw]">
-                                {emp.totalAssigned}
-                              </span>
-                            </td>
-                            <td className="p-[0.7vw] border-r border-slate-200 text-center">
-                              <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.55vw] py-[0.15vw] rounded-full text-[0.78vw]">
-                                {emp.closedCount}
-                              </span>
-                            </td>
-                            <td className="p-[0.7vw] text-center">
-                              <button
-                                onClick={() => {
-                                  setSelectedEmployee(emp);
-                                  setCurrentPage(1);
-                                }}
-                                className="inline-flex items-center gap-[0.3vw] px-[0.8vw] py-[0.38vw] bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-[0.4vw] text-[0.75vw] transition-colors cursor-pointer shadow-2xs"
-                              >
-                                <span>View Calls</span>
-                                <ChevronRight className="w-[0.8vw] h-[0.8vw]" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  /* Drilldown view for selected employee */
-                  <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                    <div className="px-[1vw] py-[0.6vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
-                      <div className="flex items-center gap-[0.7vw]">
-                        <button
-                          onClick={() => {
-                            setSelectedEmployee(null);
-                            setCurrentPage(1);
-                          }}
-                          className="p-[0.4vw] bg-white border border-slate-300 rounded-[0.4vw] text-slate-600 hover:bg-slate-100 cursor-pointer"
-                        >
-                          <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
-                        </button>
-                        <div>
-                          <span className="text-[0.9vw] font-bold text-slate-800">
-                            {selectedEmployee.name}
-                          </span>
-                          <span className="text-[0.72vw] text-slate-500 ml-[0.5vw]">
-                            ({selectedEmployee.department}) • {selectedEmployeeCalls.length} Allocated Calls
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex-1 overflow-auto">
-                      <table className="w-full text-left border-collapse min-w-[75vw]">
-                        <thead className="sticky top-0 bg-slate-100 z-10 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[0.72vw]">
-                          <tr>
-                            <th className="p-[0.7vw] border-r border-slate-200 text-center w-[3.5vw] whitespace-nowrap">S.No</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Call No</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Customer</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Product</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Registered</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Assigned</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap">Closed</th>
-                            <th className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">Status</th>
-                            <th className="p-[0.7vw] text-center sticky right-0 top-0 bg-slate-100 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 text-[0.8vw]">
-                          {paginatedData.map((call, cIdx) => {
-                            const prods = call.products && call.products.length > 0 ? call.products : [{}];
-                            const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
-                            return prods.map((prod, pIdx) => {
-                              const pStatus = getCallProductStatus(prod, call.status);
-                              const cfg = getStatusCfg(pStatus);
-                              const isClosed =
-                                prod._resolved ||
-                                prod._productClosure?.status === "Closed" ||
-                                prod._productClosure?.status === "Resolved";
-
-                              return (
-                                <tr key={`${call._id}-${pIdx}`} className="hover:bg-slate-50 transition-colors">
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={prods.length}
-                                      className="p-[0.7vw] border-r border-slate-200 text-center font-bold text-slate-500 bg-white whitespace-nowrap"
-                                    >
-                                      {callSno}
-                                    </td>
-                                  )}
-                                  <td className="p-[0.7vw] border-r border-slate-200 font-mono font-bold text-indigo-700">
-                                    {call.callNumber}
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[12vw]">
-                                    <div className="font-bold text-slate-800 truncate">{call.customerName}</div>
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 max-w-[14vw]">
-                                    <div className="font-semibold text-slate-800 truncate">
-                                      {prod.productModel || prod.itemCode || "—"}
-                                    </div>
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-600">
-                                    {fmtDateTime(call.createdAt)}
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-indigo-700 font-semibold">
-                                    {fmtDateTime(prod._assignedAt || call.createdAt)}
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 whitespace-nowrap text-emerald-700 font-semibold">
-                                    {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
-                                  </td>
-                                  <td className="p-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-bold text-slate-700">
-                                      <span className={`w-[0.5vw] h-[0.5vw] rounded-full shrink-0 ${cfg.dot}`} />
-                                      {cfg.label}
-                                    </span>
-                                  </td>
-                                  <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                    {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
-                                      <button
-                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                        className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer mr-[0.3vw]"
-                                      >
-                                        <Edit3 className="w-[0.8vw] h-[0.8vw]" />
-                                        Edit
-                                      </button>
-                                    )}
-                                    <button
-                                      onClick={() => setHistoryModalCall(call)}
-                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer"
-                                    >
-                                      <History className="w-[0.8vw] h-[0.8vw]" />
-                                      History
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            });
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
+            {/* ── Modern Pagination Footer (matching ServiceCall) ────────── */}
+            <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-t border-slate-200 bg-white shrink-0">
+              <div className="text-[0.74vw] text-slate-500 font-medium">
+                Showing{" "}
+                <span className="font-semibold text-slate-900">
+                  {activeDataset.length === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1}
+                </span>{" "}
+                to{" "}
+                <span className="font-semibold text-slate-900">
+                  {Math.min(currentPage * rowsPerPage, activeDataset.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-slate-900">
+                  {activeDataset.length}
+                </span>{" "}
+                entries
               </div>
-            )}
-
-            {/* ── Pagination Footer ────────────────────────────────────── */}
-            <div className="flex items-center justify-between px-[1vw] py-[0.6vw] border-t border-slate-200 bg-slate-50 shrink-0">
-              <div className="text-[0.75vw] font-bold text-slate-600">
-                Showing {activeDataset.length === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1} to{" "}
-                {Math.min(currentPage * rowsPerPage, activeDataset.length)} of {activeDataset.length} records
-              </div>
-              <div className="flex items-center gap-[0.4vw]">
+              <div className="flex items-center gap-[0.5vw]">
                 <button
-                  disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="px-[0.7vw] py-[0.35vw] border border-slate-300 rounded-[0.4vw] bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-bold text-[0.75vw] cursor-pointer"
+                  disabled={currentPage === 1}
+                  className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                 >
-                  Previous
+                  <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                 </button>
-                <span className="text-[0.75vw] font-bold text-slate-700 px-[0.4vw]">
-                  Page {currentPage} of {Math.max(1, totalPages)}
-                </span>
+                <div className="flex gap-[0.3vw]">
+                  {[...Array(totalPages)].map((_, i) => {
+                    const pNum = i + 1;
+                    if (
+                      totalPages > 5 &&
+                      (pNum < currentPage - 1 || pNum > currentPage + 1) &&
+                      pNum !== 1 &&
+                      pNum !== totalPages
+                    ) {
+                      if (pNum === currentPage - 2 || pNum === currentPage + 2)
+                        return (
+                          <span
+                            key={pNum}
+                            className="px-1 text-gray-400 text-[0.75vw]"
+                          >
+                            ...
+                          </span>
+                        );
+                      return null;
+                    }
+                    return (
+                      <button
+                        key={pNum}
+                        onClick={() => setCurrentPage(pNum)}
+                        className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                          currentPage === pNum
+                            ? "bg-blue-600 text-white shadow-2xs"
+                            : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                        }`}
+                      >
+                        {pNum}
+                      </button>
+                    );
+                  })}
+                </div>
                 <button
-                  disabled={currentPage >= totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="px-[0.7vw] py-[0.35vw] border border-slate-300 rounded-[0.4vw] bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-bold text-[0.75vw] cursor-pointer"
+                  disabled={currentPage === totalPages || totalPages === 0}
+                  className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                 >
-                  Next
+                  <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
                 </button>
               </div>
             </div>
@@ -2165,67 +2154,103 @@ export default function ServiceCallReports() {
         {editingReportItem && (
           <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-[9999] flex items-center justify-center p-[1vw]">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 8 }}
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 8 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.15 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[36vw] overflow-hidden flex flex-col font-sans"
+              className="bg-white rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200/90 w-full max-w-[34vw] overflow-hidden flex flex-col font-sans"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="px-[1.2vw] py-[0.85vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-                <div>
-                  <h3 className="text-[0.95vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
-                    <Edit3 className="w-[1vw] h-[1vw] text-indigo-600" />
-                    Edit Submitted Report
-                  </h3>
-                  <div className="text-[0.72vw] text-slate-500 font-mono mt-[0.1vw]">
-                    {editingReportItem.callNumber} • Product:{" "}
-                    {editingReportItem.product.productModel || editingReportItem.product.itemCode}
+              <div className="px-[1.4vw] py-[1vw] border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-indigo-50/40 via-white to-slate-50">
+                <div className="flex items-center gap-[0.75vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.55vw] bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
+                    <Edit3 className="w-[1vw] h-[1vw]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[1vw] font-semibold text-slate-800 leading-tight">
+                      Edit Submitted Report
+                    </h3>
+                    <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.15vw] flex items-center gap-[0.35vw]">
+                      <span className="font-normal text-[#6e000a] font-mono">{editingReportItem.callNumber}</span>
+                      <span className="text-slate-300">•</span>
+                      <span className="truncate max-w-[18vw] text-slate-600">
+                        {editingReportItem.product.productModel || editingReportItem.product.productDescription || editingReportItem.product.itemCode || "Equipment"}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setEditingReportItem(null)}
-                  className="p-[0.3vw] text-slate-400 hover:text-slate-600 rounded-[0.4vw] hover:bg-slate-200/60 transition-colors cursor-pointer"
+                  className="p-[0.35vw] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-[1.05vw] h-[1.05vw]" />
                 </button>
               </div>
 
-              {/* Action Tabs (Mirroring Respond Modal) */}
-              <form onSubmit={handleSaveEditReport} className="p-[1.2vw] flex flex-col gap-[0.9vw]">
-                <div>
-                  <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.35vw]">
+              {/* Form Body */}
+              <form onSubmit={handleSaveEditReport} className="p-[1.4vw] flex flex-col gap-[1.1vw]">
+                {/* Status Segmented Selection (from ProductClosurePanel / Response modal) */}
+                <div className="flex flex-col gap-[0.35vw]">
+                  <label className="text-[0.76vw] font-medium text-slate-700">
                     Report Outcome / Status
                   </label>
-                  <div className="grid grid-cols-4 gap-[0.4vw]">
+                  <div className="flex items-center gap-[0.4vw] w-full">
                     {[
-                      { k: "Resolved", l: "Resolve", e: "✓", c: "bg-emerald-600 text-white border-emerald-600" },
-                      { k: "Pending", l: "Pending", e: "⏸", c: "bg-amber-500 text-white border-amber-500" },
-                      { k: "Field Visit Required", l: "Field Visit", e: "📍", c: "bg-indigo-600 text-white border-indigo-600" },
-                      { k: "Supporting", l: "Support", e: "🔄", c: "bg-blue-600 text-white border-blue-600" },
-                    ].map((tab) => (
-                      <button
-                        type="button"
-                        key={tab.k}
-                        onClick={() => setEditForm((prev) => ({ ...prev, status: tab.k }))}
-                        className={`py-[0.4vw] text-[0.76vw] font-bold rounded-[0.45vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.25vw] ${
-                          editForm.status === tab.k
-                            ? tab.c
-                            : "bg-white border-slate-300 text-slate-650 hover:bg-slate-50"
-                        }`}
-                      >
-                        <span>{tab.e}</span>
-                        <span>{tab.l}</span>
-                      </button>
-                    ))}
+                      {
+                        k: "Resolved",
+                        l: "Resolve",
+                        icon: <CheckCircle2 className="w-[0.85vw] h-[0.85vw]" />,
+                        activeStyle: "bg-emerald-600 text-white border-emerald-600 shadow-sm",
+                        hoverStyle: "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300",
+                      },
+                      {
+                        k: "Pending",
+                        l: "Pending",
+                        icon: <PauseCircle className="w-[0.85vw] h-[0.85vw]" />,
+                        activeStyle: "bg-amber-600 text-white border-amber-600 shadow-sm",
+                        hoverStyle: "hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300",
+                      },
+                      {
+                        k: "Field Visit Required",
+                        l: "Field Visit",
+                        icon: <MapPin className="w-[0.85vw] h-[0.85vw]" />,
+                        activeStyle: "bg-indigo-600 text-white border-indigo-600 shadow-sm",
+                        hoverStyle: "hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300",
+                      },
+                      {
+                        k: "Supporting",
+                        l: "Support",
+                        icon: <LifeBuoy className="w-[0.85vw] h-[0.85vw]" />,
+                        activeStyle: "bg-blue-600 text-white border-blue-600 shadow-sm",
+                        hoverStyle: "hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300",
+                      },
+                    ].map((tab) => {
+                      const isActive = editForm.status === tab.k;
+                      return (
+                        <button
+                          type="button"
+                          key={tab.k}
+                          onClick={() => setEditForm((prev) => ({ ...prev, status: tab.k }))}
+                          className={`flex-1 min-w-0 flex items-center justify-center gap-[0.3vw] py-[0.5vw] px-[0.4vw] rounded-[0.45vw] border text-[0.74vw] font-medium transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
+                            isActive
+                              ? tab.activeStyle
+                              : `bg-white border-slate-200 text-slate-650 ${tab.hoverStyle}`
+                          }`}
+                        >
+                          {tab.icon}
+                          <span className="truncate">{tab.l}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
+                {/* Resolution Type (if Resolved) */}
                 {editForm.status === "Resolved" && (
-                  <div>
-                    <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.3vw]">
+                  <div className="flex flex-col gap-[0.35vw]">
+                    <label className="text-[0.76vw] font-medium text-slate-700">
                       Resolution Type
                     </label>
                     <div className="grid grid-cols-3 gap-[0.35vw]">
@@ -2236,41 +2261,57 @@ export default function ServiceCallReports() {
                         "Component Replaced",
                         "Client Training",
                         "Hardware Reset",
-                      ].map((rt) => (
-                        <button
-                          type="button"
-                          key={rt}
-                          onClick={() => setEditForm((prev) => ({ ...prev, resolutionType: rt }))}
-                          className={`py-[0.3vw] text-[0.7vw] font-bold rounded-[0.4vw] border transition-all cursor-pointer text-center ${
-                            editForm.resolutionType === rt
-                              ? "bg-emerald-50 border-emerald-500 text-emerald-800"
-                              : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                          }`}
-                        >
-                          {rt}
-                        </button>
-                      ))}
+                      ].map((rt) => {
+                        const isSelected = editForm.resolutionType === rt;
+                        return (
+                          <button
+                            type="button"
+                            key={rt}
+                            onClick={() => setEditForm((prev) => ({ ...prev, resolutionType: rt }))}
+                            className={`py-[0.35vw] text-[0.72vw] font-medium rounded-[0.4vw] border transition-all cursor-pointer text-center ${
+                              isSelected
+                                ? "bg-emerald-50 border-emerald-500 text-emerald-800 font-semibold"
+                                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                            }`}
+                          >
+                            {rt}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
 
-                <div>
-                  <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
-                    {editForm.status === "Resolved" ? "Resolution Details / Solution Notes" : editForm.status === "Pending" ? "Pending Reason & Details" : "Report Remarks / Findings"} *
+                {/* Resolution / Outcome Remarks */}
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                    <span>
+                      {editForm.status === "Resolved"
+                        ? "Resolution Details / Solution Notes"
+                        : editForm.status === "Pending"
+                        ? "Pending Reason & Details"
+                        : "Report Remarks / Findings"}{" "}
+                      <span className="text-rose-500">*</span>
+                    </span>
+                    <span className="text-[0.68vw] text-slate-400 font-normal">Mandatory</span>
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={editForm.remarks}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, remarks: e.target.value }))}
-                    placeholder="Enter comprehensive findings, steps taken, or pending reason..."
-                    className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 font-medium"
+                    placeholder="Enter comprehensive findings, steps taken, or reason..."
+                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
-                    Mandatory Reason for Editing Report *
+                {/* Mandatory Edit Reason */}
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                    <span>
+                      Mandatory Reason for Editing Report <span className="text-rose-500">*</span>
+                    </span>
+                    <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
                   </label>
                   <input
                     type="text"
@@ -2278,25 +2319,26 @@ export default function ServiceCallReports() {
                     value={editForm.editReason}
                     onChange={(e) => setEditForm((prev) => ({ ...prev, editReason: e.target.value }))}
                     placeholder="e.g. Corrected faulty capacitor replaced details, customer update..."
-                    className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 font-medium"
+                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
                   />
                 </div>
 
-                <div className="pt-[0.5vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
+                {/* Footer Buttons */}
+                <div className="pt-[0.8vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
                   <button
                     type="button"
                     disabled={isSubmittingEdit}
                     onClick={() => setEditingReportItem(null)}
-                    className="px-[0.9vw] py-[0.4vw] text-[0.78vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 rounded-[0.4vw] transition-colors cursor-pointer"
+                    className="px-[0.95vw] py-[0.45vw] text-[0.75vw] font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-[0.4vw] transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmittingEdit || !editForm.remarks.trim() || !editForm.editReason.trim()}
-                    className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
+                    className="px-[1.1vw] py-[0.45vw] text-[0.75vw] font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-[0_2px_8px_-1px_rgba(79,70,229,0.3)] disabled:opacity-50 active:scale-98"
                   >
-                    {isSubmittingEdit ? "Saving..." : "Save Changes"}
+                    <span>{isSubmittingEdit ? "Saving..." : "Save Changes"}</span>
                   </button>
                 </div>
               </form>
