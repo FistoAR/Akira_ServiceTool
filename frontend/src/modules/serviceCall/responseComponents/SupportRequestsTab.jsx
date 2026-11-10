@@ -4,6 +4,7 @@ import {
   Clock,
   Eye,
   History,
+  Info,
   ChevronLeft,
   ChevronRight,
   HelpCircle,
@@ -21,6 +22,7 @@ const SupportRequestsTab = ({
   onSupportRequest,
   onProductAttend,
   onOpenRespond,
+  onOpenInfo,
   onOpenHistory,
 }) => {
   const [subView, setSubView] = useState("assigned"); // "assigned" | "asked"
@@ -290,6 +292,17 @@ const SupportRequestsTab = ({
                             <Edit3 className="w-[0.72vw] h-[0.72vw]" />
                             Respond
                           </button>
+                          {onOpenInfo && (
+                            <button
+                              type="button"
+                              onClick={() => onOpenInfo(row)}
+                              className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                              title="View Full Call Details"
+                            >
+                              <Info className="w-[0.8vw] h-[0.8vw]" />
+                              Info
+                            </button>
+                          )}
                           <button
                             type="button"
                             onClick={() => onOpenHistory(row)}

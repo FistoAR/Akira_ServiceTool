@@ -84,6 +84,7 @@ import { CustomerHistoryModal } from "./responseComponents/CustomerHistoryModal"
 import { AssignVisitModal } from "./responseComponents/AssignVisitModal";
 import { IssueDetailsContainer } from "./responseComponents/IssueDetailsContainer";
 import { ProductClosurePanel } from "./responseComponents/ProductClosurePanel";
+import { CallDetailsModal } from "./responseComponents/CallDetailsModal";
 import { EscalationQueueTab } from "./responseComponents/EscalationQueueTab";
 import { SelfAssignedQueueTab } from "./responseComponents/SelfAssignedQueueTab";
 import { PendingTab } from "./responseComponents/PendingTab";
@@ -136,6 +137,7 @@ const ServiceCallResponse = () => {
   const [activeActionMenuId, setActiveActionMenuId] = useState(null);
   const [actionMenuCoords, setActionMenuCoords] = useState(null);
   const [summaryModalRow, setSummaryModalRow] = useState(null);
+  const [selectedInfoCall, setSelectedInfoCall] = useState(null);
   const [historyModalProduct, setHistoryModalProduct] = useState(null);
 
   // Form View state for User Desk "Register Call" and "Edit Call"
@@ -1306,6 +1308,7 @@ const ServiceCallResponse = () => {
                   setActionMenuCoords={setActionMenuCoords}
                   handleProductAttend={handleProductAttend}
                   onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenInfo={(call) => setSelectedInfoCall(call)}
                   setReverseModalItem={setReverseModalItem}
                   setSummaryModalRow={setSummaryModalRow}
                   setHistoryModalProduct={setHistoryModalProduct}
@@ -1355,6 +1358,7 @@ const ServiceCallResponse = () => {
                   onSupportRequest={handleSupportRequest}
                   onProductAttend={handleProductAttend}
                   onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenInfo={(call) => setSelectedInfoCall(call)}
                   onOpenHistory={(call) => setHistoryModalProduct(call)}
                 />
               )}
@@ -1369,6 +1373,7 @@ const ServiceCallResponse = () => {
                   onSupportRequest={handleSupportRequest}
                   onProductAttend={handleProductAttend}
                   onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenInfo={(call) => setSelectedInfoCall(call)}
                   onOpenHistory={(call) => setHistoryModalProduct(call)}
                 />
               )}
@@ -1382,6 +1387,7 @@ const ServiceCallResponse = () => {
                   onAssignFieldVisit={handleAssignVisit}
                   onProductClose={handleProductClose}
                   onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
+                  onOpenInfo={(call) => setSelectedInfoCall(call)}
                   onOpenHistory={(call) => setHistoryModalProduct(call)}
                 />
               )}
@@ -1453,6 +1459,15 @@ const ServiceCallResponse = () => {
           row={summaryModalRow}
           employees={employees}
           onClose={() => setSummaryModalRow(null)}
+        />
+      )}
+
+      {/* Full Details Call Modal (Overview, Products, Timeline) */}
+      {selectedInfoCall && (
+        <CallDetailsModal
+          call={selectedInfoCall}
+          employees={employees}
+          onClose={() => setSelectedInfoCall(null)}
         />
       )}
 

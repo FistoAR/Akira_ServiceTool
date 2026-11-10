@@ -199,51 +199,83 @@ const ProductClosurePanel = ({
 
   // Determine the first assigned person and the immediate previous person for reverse escalation
   const reverseTargetInfo = useMemo(() => {
-    const hist = prod?._history || [];
+    const escHist = prod?._escalationHistory || entry?.escalationHistory || [];
     let firstAssigned = null;
     let immediatePrev = null;
 
-    for (let i = 0; i < hist.length; i++) {
-      const h = hist[i];
-      if (
-        h.status === "Assigned" ||
-        h.status === "Initial Assignment" ||
-        h.status === "Level 0" ||
-        h.assignedTo ||
-        h.metadata?.assignedTo
-      ) {
-        const uId = h.assignedTo || h.metadata?.assignedTo;
-        const uName = h.assignedToName || h.metadata?.assignedToName;
-        if (uId) {
-          firstAssigned = {
-            userId: uId,
-            name: uName || uId,
-            department: h.metadata?.department || "",
-          };
-          break;
+    // 1. First assigned engineer from escalation history or product initial fields
+    if (escHist.length > 0) {
+      const first = escHist[0];
+      firstAssigned = {
+        userId: first.engineerId || first.assignedTo,
+        name: first.engineerName || first.assignedToName || first.name,
+        department: first.department || "",
+      };
+    } else if (prod?._initialEngineerId || prod?._initialEngineerName) {
+      firstAssigned = {
+        userId: prod._initialEngineerId,
+        name: prod._initialEngineerName,
+        department: prod._currentDepartment || "",
+      };
+    } else {
+      const hist = prod?._history || [];
+      for (let i = 0; i < hist.length; i++) {
+        const h = hist[i];
+        if (
+          h.status === "Assigned" ||
+          h.status === "Initial Assignment" ||
+          h.status === "Level 0" ||
+          h.assignedTo ||
+          h.metadata?.assignedTo
+        ) {
+          const uId = h.assignedTo || h.metadata?.assignedTo;
+          const uName = h.assignedToName || h.metadata?.assignedToName;
+          if (uId) {
+            firstAssigned = {
+              userId: uId,
+              name: uName || uId,
+              department: h.metadata?.department || "",
+            };
+            break;
+          }
         }
       }
     }
 
-    if (!firstAssigned && prod?._assignedEngineerId) {
-      firstAssigned = {
-        userId: prod._assignedEngineerId,
-        name: prod._assignedEngineerName || prod._assignedEngineerId,
-      };
+    // 2. Immediate previous engineer in the escalation chain before currentUser
+    for (let i = escHist.length - 1; i >= 0; i--) {
+      const h = escHist[i];
+      const engId = h.engineerId || h.assignedTo;
+      const engName = h.engineerName || h.assignedToName || h.name;
+      if (
+        (engId && engId !== currentUser?.userId) ||
+        (engName && engName !== currentUser?.name)
+      ) {
+        immediatePrev = {
+          userId: engId,
+          name: engName || engId,
+          department: h.department || "",
+        };
+        break;
+      }
     }
 
-    for (let i = hist.length - 1; i >= 0; i--) {
-      const h = hist[i];
-      if (h.status === "Escalated" || h.status === "Escalation") {
-        const fromId = h.updatedBy || h.escalatedBy || h.metadata?.escalatedBy;
-        const fromName = h.updatedByName || h.escalatedByName || h.metadata?.escalatedByName;
-        if (fromId && fromId !== currentUser?.userId) {
-          immediatePrev = {
-            userId: fromId,
-            name: fromName || fromId,
-            department: h.metadata?.fromDepartment || "",
-          };
-          break;
+    // Fallback to _history if escalationHistory didn't yield an immediate previous
+    if (!immediatePrev) {
+      const hist = prod?._history || [];
+      for (let i = hist.length - 1; i >= 0; i--) {
+        const h = hist[i];
+        if (h.status === "Escalated" || h.status === "Escalation") {
+          const fromId = h.updatedBy || h.escalatedBy || h.metadata?.escalatedBy;
+          const fromName = h.updatedByName || h.escalatedByName || h.metadata?.escalatedByName;
+          if (fromId && fromId !== currentUser?.userId) {
+            immediatePrev = {
+              userId: fromId,
+              name: fromName || fromId,
+              department: h.metadata?.fromDepartment || "",
+            };
+            break;
+          }
         }
       }
     }
@@ -257,14 +289,25 @@ const ProductClosurePanel = ({
 
     return {
       isFirstAssigned: Boolean(isL0),
+      hasPreviousEngineer: Boolean(immediatePrev),
       targetName: targetPerson?.name || null,
       targetDept: targetPerson?.department || null,
     };
-  }, [prod, currentUser]);
+  }, [prod, entry, currentUser]);
 
-  // Reverse escalate is ONLY available after the product has been attended AND no report/status record has been submitted by the current user
+  // Reverse escalate is ONLY available for escalated calls after product attended and no user report yet
   const canReverseEscalate = useMemo(() => {
-    if (reverseTargetInfo.isFirstAssigned || isSupportDeskAssigned) return false;
+    // Self assigned calls or calls with no escalation cannot be reverse-escalated
+    const isSelfAssigned = Boolean(
+      entry?.noEscalation ||
+      entry?.isSelfAssigned ||
+      (entry?.registeredBy === currentUser?.userId && entry?.currentEngineerId === currentUser?.userId) ||
+      (entry?.registeredByName === currentUser?.name && entry?.currentEngineerName === currentUser?.name)
+    );
+    if (isSelfAssigned) return false;
+
+    // Must have a valid previous engineer in the escalation chain to return to
+    if (!reverseTargetInfo.hasPreviousEngineer || reverseTargetInfo.isFirstAssigned || isSupportDeskAssigned) return false;
 
     // Must be attended
     const isAttended = Boolean(prod?._attended || prod?._attendedAt);
