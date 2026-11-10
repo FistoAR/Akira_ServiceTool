@@ -258,8 +258,11 @@ const NotificationsDropdown = () => {
       const matchesUnread = !onlyUnread || !n.isRead;
       return matchesMain && matchesUnread;
     }).sort((a, b) => {
-      if (sortOrder === 'Desc') return new Date(b.createdAt) - new Date(a.createdAt);
-      return new Date(a.createdAt) - new Date(b.createdAt);
+      const timeA = new Date(a.createdAt || a.timestamp || 0).getTime();
+      const timeB = new Date(b.createdAt || b.timestamp || 0).getTime();
+      // Latest notification always comes first (Desc) by default
+      if (sortOrder === 'Asc') return timeA - timeB;
+      return timeB - timeA;
     });
   }, [notifications, activeMainTab, activeSubTab, onlyUnread, sortOrder]);
 
