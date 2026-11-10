@@ -1838,23 +1838,14 @@ export default function ServiceCall() {
                           </button>
                         </th>
                       )}
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
-                        Date & Time
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                        Call No & Date
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
-                        Call No
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                        Customer & Contact
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
-                        Customer
-                      </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
-                        Product / Issue
-                      </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
-                        Error Code
-                      </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
-                        Caller Details
+                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                        Product / System
                       </th>
                       <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
                         Priority
@@ -1870,7 +1861,7 @@ export default function ServiceCall() {
                   <tbody>
                     {isLoading ? (
                       <tr>
-                        <td colSpan={10} className="py-[10vh] text-center border-b border-slate-200">
+                        <td colSpan={7} className="py-[10vh] text-center border-b border-slate-200">
                           <div className="flex flex-col items-center justify-center gap-[1vw]">
                             <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
                             <span className="text-[1vw] font-medium text-blue-600">
@@ -1960,38 +1951,7 @@ export default function ServiceCall() {
                                 </>
                               )}
 
-                              {/* 1. Date & Time */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
-                                >
-                                  {(() => {
-                                    try {
-                                      const d = new Date(
-                                        row.timestamp || row.dateTime,
-                                      );
-                                      if (isNaN(d))
-                                        return row.dateTime || "—";
-                                      const datePart = d.toLocaleDateString("en-GB", {
-                                        day: "2-digit",
-                                        month: "2-digit",
-                                        year: "numeric",
-                                      });
-                                      const timePart = d.toLocaleTimeString("en-US", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        hour12: true,
-                                      });
-                                      return `${datePart}, ${timePart}`;
-                                    } catch {
-                                      return row.dateTime || "—";
-                                    }
-                                  })()}
-                                </td>
-                              )}
-
-                              {/* 2. Call No */}
+                              {/* 1. Call No & Date */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
@@ -1999,33 +1959,64 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.82vw] font-medium text-blue-600 hover:text-blue-800 hover:underline block"
+                                    className="font-mono text-left text-[0.84vw] font-bold text-blue-600 hover:text-blue-800 hover:underline block leading-tight"
                                   >
                                     {row.callNumber}
                                   </button>
+                                  <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.2vw] flex items-center gap-[0.25vw]">
+                                    {(() => {
+                                      try {
+                                        const d = new Date(row.timestamp || row.dateTime);
+                                        if (isNaN(d)) return row.dateTime || "—";
+                                        const datePart = d.toLocaleDateString("en-GB", {
+                                          day: "2-digit",
+                                          month: "2-digit",
+                                          year: "numeric",
+                                        });
+                                        const timePart = d.toLocaleTimeString("en-US", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                          hour12: true,
+                                        });
+                                        return `${datePart}, ${timePart}`;
+                                      } catch {
+                                        return row.dateTime || "—";
+                                      }
+                                    })()}
+                                  </div>
                                 </td>
                               )}
 
-                              {/* 3. Customer */}
+                              {/* 2. Customer & Contact */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
                                   className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
                                 >
                                   <div
-                                    className="font-medium text-slate-800 text-[0.82vw] truncate max-w-[14vw]"
+                                    className="font-semibold text-slate-900 text-[0.82vw] truncate max-w-[15vw]"
                                     title={row.customerName}
                                   >
                                     {row.customerName || "—"}
                                   </div>
-                                  <div className="flex items-center gap-[0.35vw] mt-[0.15vw]">
+                                  <div className="flex items-center gap-[0.4vw] mt-[0.25vw] flex-wrap">
+                                    {row.contactNumber && (
+                                      <a
+                                        href={`tel:${row.contactNumber}`}
+                                        className="inline-flex items-center gap-[0.25vw] text-[0.72vw] font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                        title="Click to call"
+                                      >
+                                        <Phone className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
+                                        <span>{row.contactNumber}</span>
+                                      </a>
+                                    )}
                                     {row.partyCode && (
-                                      <span className="text-[0.7vw] text-slate-500 font-mono">
+                                      <span className="text-[0.68vw] text-slate-500 font-mono">
                                         {row.partyCode}
                                       </span>
                                     )}
                                     {row.customerType && row.customerType !== "All" && (
-                                      <span className={`text-[0.66vw] px-[0.4vw] py-[0.08vw] rounded font-medium border ${getTypeColor(row.customerType)}`}>
+                                      <span className={`text-[0.64vw] px-[0.35vw] py-[0.05vw] rounded font-medium border ${getTypeColor(row.customerType)}`}>
                                         {row.customerType}
                                       </span>
                                     )}
@@ -2033,50 +2024,31 @@ export default function ServiceCall() {
                                 </td>
                               )}
 
-                              {/* 4. Product / Issue */}
+                              {/* 3. Product / System */}
                               <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
-                                <div className="text-[0.8vw] font-medium text-slate-800 truncate max-w-[15vw]" title={prod?.productModel || prod?.itemCode || "—"}>
+                                <div className="text-[0.8vw] font-medium text-slate-900 truncate max-w-[15vw]" title={prod?.productModel || prod?.itemCode || "—"}>
                                   {prod?.productModel || prod?.itemCode || "—"}
                                 </div>
-                                {prod?.serialNumber && (
-                                  <div className="text-[0.7vw] text-slate-500 font-mono mt-[0.1vw]">
-                                    SN: {prod.serialNumber}
-                                  </div>
-                                )}
+                                <div className="flex items-center gap-[0.3vw] mt-[0.2vw] flex-wrap">
+                                  {prod?.serialNumber && (
+                                    <span className="text-[0.68vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                                      SN: {prod.serialNumber}
+                                    </span>
+                                  )}
+                                  {prod?.errorCode && (
+                                    <span className="text-[0.68vw] text-red-600 font-mono bg-red-50 border border-red-200 px-[0.35vw] py-[0.05vw] rounded font-semibold">
+                                      Err: {prod.errorCode}
+                                    </span>
+                                  )}
+                                  {allProducts.length > 1 && (
+                                    <span className="text-[0.66vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                                      +{allProducts.length - 1} more
+                                    </span>
+                                  )}
+                                </div>
                               </td>
 
-                              {/* 5. Error Code */}
-                              <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
-                                {prod?.errorCode ? (
-                                  <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
-                                    {prod.errorCode}
-                                  </span>
-                                ) : (
-                                  <span className="text-slate-400 text-[0.76vw]">-</span>
-                                )}
-                              </td>
-
-                              {/* 6. Caller Details */}
-                              {pIdx === 0 && (
-                                <td
-                                  rowSpan={rowCount}
-                                  className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
-                                >
-                                  <div className="flex items-center gap-[0.4vw]">
-                                    <Phone className="w-[0.9vw] h-[0.9vw] text-slate-400 shrink-0" />
-                                    <div>
-                                      <div className="text-[0.8vw] font-medium text-slate-700">
-                                        {row.contactNumber || "+91 —"}
-                                      </div>
-                                      <div className="text-[0.68vw] text-slate-500 capitalize">
-                                        {row.mode || "Phone"}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </td>
-                              )}
-
-                              {/* 7. Priority */}
+                              {/* 4. Priority */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
@@ -2089,7 +2061,7 @@ export default function ServiceCall() {
                                     else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                     else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                                     return (
-                                      <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
+                                      <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-semibold ${badgeStyle}`}>
                                         {p}
                                       </span>
                                     );
@@ -2097,13 +2069,13 @@ export default function ServiceCall() {
                                 </td>
                               )}
 
-                              {/* 8. Status */}
+                              {/* 5. Status */}
                               <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
                                 {(() => {
                                   const status = getProductStatus(prod, effectiveStatus);
                                   const cfg = getStatusCfg(status);
                                   return (
-                                    <span className="inline-flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-700">
+                                    <span className="inline-flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-800">
                                       <span className={`w-[0.5vw] h-[0.5vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
                                       {cfg.label}
                                     </span>
