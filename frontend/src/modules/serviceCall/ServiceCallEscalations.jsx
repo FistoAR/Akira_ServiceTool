@@ -220,7 +220,6 @@ const ServiceCallEscalations = () => {
     if (workerReady) setIsWorkerReady(true);
   }, [workerReady]);
 
-  useEffect(() => {
   const fetchCalls = async () => {
     try {
       const { data } = await axios.get(`${API_URL}/service-calls/active`);
