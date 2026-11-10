@@ -25,6 +25,11 @@ import {
   Search,
   Filter,
   Flame,
+  Columns,
+  CheckSquare,
+  Square,
+  Check,
+  RotateCcw,
 } from "lucide-react";
 import akiraLogo from "../../assets/Akira_logo.webp";
 import * as XLSX from "xlsx";
@@ -35,7 +40,34 @@ import {
   deriveCallStatus,
   getTypeColor,
   PRIORITIES,
+  CallSummaryModal,
 } from "./ServiceCall";
+
+const EXPORT_COLUMNS_CONFIG = [
+  { key: "S.No", label: "S.No" },
+  { key: "Call Number", label: "Call Number" },
+  { key: "Type", label: "Origin Type" },
+  { key: "Date & Time", label: "Date & Time" },
+  { key: "Customer Name", label: "Customer Name" },
+  { key: "Party Code", label: "Party Code" },
+  { key: "Customer Type", label: "Customer Type" },
+  { key: "Priority", label: "Priority" },
+  { key: "Product Model", label: "Product Model" },
+  { key: "Serial Number", label: "Serial Number" },
+  { key: "Error Code", label: "Error Code" },
+  { key: "Registered By", label: "Registered By" },
+  { key: "Assigned Engineer", label: "Assigned Engineer" },
+  { key: "Escalated Status", label: "Escalated Status" },
+  { key: "Escalated Level", label: "Escalated Level" },
+  { key: "Escalated To (Person/Dept)", label: "Escalated To" },
+  { key: "Escalation Flow History", label: "Escalation Flow History" },
+  { key: "Status", label: "Status" },
+  { key: "Closed Date", label: "Closed Date" },
+  { key: "Contact Number", label: "Contact Number" },
+  { key: "Last Edited", label: "Last Edited" },
+];
+
+const LOCAL_STORAGE_EXPORT_COLS_KEY = "service_call_reports_export_columns";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -135,7 +167,62 @@ export default function ServiceCallReports() {
 
   // Modals
   const [historyModalCall, setHistoryModalCall] = useState(null);
+  const [selectedInfoCall, setSelectedInfoCall] = useState(null);
   const [editingReportItem, setEditingReportItem] = useState(null);
+
+  // Column export selection state (stored in localStorage)
+  const [selectedExportCols, setSelectedExportCols] = useState(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_EXPORT_COLS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("Failed to read export column preferences:", e);
+    }
+    return EXPORT_COLUMNS_CONFIG.map((c) => c.key);
+  });
+  const [showColPicker, setShowColPicker] = useState(false);
+
+  const toggleExportCol = (key) => {
+    setSelectedExportCols((prev) => {
+      let updated;
+      if (prev.includes(key)) {
+        if (prev.length === 1) {
+          toast("At least one column must be selected for export", "warning");
+          return prev;
+        }
+        updated = prev.filter((k) => k !== key);
+      } else {
+        updated = [...prev, key];
+      }
+      try {
+        localStorage.setItem(LOCAL_STORAGE_EXPORT_COLS_KEY, JSON.stringify(updated));
+      } catch (err) {
+        console.error("Failed to save export columns:", err);
+      }
+      return updated;
+    });
+  };
+
+  const selectAllExportCols = () => {
+    const all = EXPORT_COLUMNS_CONFIG.map((c) => c.key);
+    setSelectedExportCols(all);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_EXPORT_COLS_KEY, JSON.stringify(all));
+    } catch (err) {}
+  };
+
+  const resetDefaultExportCols = () => {
+    const all = EXPORT_COLUMNS_CONFIG.map((c) => c.key);
+    setSelectedExportCols(all);
+    try {
+      localStorage.removeItem(LOCAL_STORAGE_EXPORT_COLS_KEY);
+    } catch (err) {}
+  };
   const [editForm, setEditForm] = useState({
     status: "",
     remarks: "",
@@ -510,7 +597,7 @@ export default function ServiceCallReports() {
             p._productClosure?.date ||
             (isClosed ? p._productClosure?.updatedAt : null);
 
-          rows.push({
+          const fullRow = {
             "S.No": sNo++,
             "Call Number": c.callNumber,
             "Type": c.noEscalation ? "Self Assigned" : "Registered Call",
@@ -534,7 +621,17 @@ export default function ServiceCallReports() {
             "Last Edited": c.editHistory?.length
               ? `${c.editHistory.length} edit(s) by ${c.editHistory[c.editHistory.length - 1].editedByName}`
               : "No edits",
+          };
+
+          // Filter row based on user's selected export columns
+          const filteredRow = {};
+          EXPORT_COLUMNS_CONFIG.forEach((colCfg) => {
+            if (selectedExportCols.includes(colCfg.key)) {
+              filteredRow[colCfg.key] = fullRow[colCfg.key];
+            }
           });
+
+          rows.push(filteredRow);
         });
       });
 
@@ -693,6 +790,101 @@ export default function ServiceCallReports() {
               ]}
               triggerClassName="h-[2vw] !rounded-[0.5vw] border-slate-300 bg-white font-semibold text-slate-700"
             />
+          </div>
+
+          {/* Select Columns Button & Popover */}
+          <div className="relative">
+            <button
+              onClick={() => setShowColPicker(!showColPicker)}
+              className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.45vw] border rounded-[0.5vw] font-bold text-[0.78vw] transition-colors cursor-pointer shadow-2xs ${
+                showColPicker
+                  ? "bg-indigo-50 border-indigo-300 text-indigo-700"
+                  : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
+              }`}
+              title="Select columns to export to Excel"
+            >
+              <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
+              <span>Columns</span>
+              <span className="ml-[0.2vw] px-[0.4vw] py-[0.05vw] text-[0.65vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                {selectedExportCols.length}/{EXPORT_COLUMNS_CONFIG.length}
+              </span>
+            </button>
+
+            {/* Columns Dropdown Popover */}
+            {showColPicker && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowColPicker(false)}
+                />
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[18vw] max-h-[24vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                  <div className="p-[0.7vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+                    <div>
+                      <div className="text-[0.78vw] font-bold text-slate-800">
+                        Export Columns
+                      </div>
+                      <div className="text-[0.68vw] text-slate-500">
+                        Saved in browser preferences
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-[0.4vw]">
+                      <button
+                        onClick={selectAllExportCols}
+                        className="text-[0.7vw] font-semibold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                      >
+                        All
+                      </button>
+                      <span className="text-slate-300 text-[0.7vw]">|</span>
+                      <button
+                        onClick={resetDefaultExportCols}
+                        className="flex items-center gap-[0.2vw] text-[0.7vw] font-semibold text-slate-500 hover:text-slate-700 cursor-pointer"
+                        title="Reset to default"
+                      >
+                        <RotateCcw className="w-[0.65vw] h-[0.65vw]" />
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto p-[0.5vw] space-y-[0.25vw] max-h-[17vw]">
+                    {EXPORT_COLUMNS_CONFIG.map((col) => {
+                      const isChecked = selectedExportCols.includes(col.key);
+                      return (
+                        <label
+                          key={col.key}
+                          onClick={() => toggleExportCol(col.key)}
+                          className={`flex items-center gap-[0.5vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] cursor-pointer text-[0.75vw] transition-colors ${
+                            isChecked
+                              ? "bg-indigo-50/60 text-slate-900 font-semibold"
+                              : "text-slate-600 hover:bg-slate-50 font-normal"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {}} // Handled by label click
+                            className="w-[0.85vw] h-[0.85vw] rounded text-indigo-600 border-slate-300 focus:ring-0 cursor-pointer"
+                          />
+                          <span className="truncate">{col.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                    <span className="text-[0.7vw] text-slate-500">
+                      {selectedExportCols.length} of {EXPORT_COLUMNS_CONFIG.length} selected
+                    </span>
+                    <button
+                      onClick={() => setShowColPicker(false)}
+                      className="px-[0.6vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[0.72vw] rounded-[0.35vw] cursor-pointer shadow-2xs"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Export Excel Button */}
@@ -919,6 +1111,14 @@ export default function ServiceCallReports() {
                                 <td className="p-[0.7vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                   <div className="flex items-center justify-center gap-[0.35vw]">
                                     <button
+                                      onClick={() => setSelectedInfoCall(call)}
+                                      title="View Full Call Details"
+                                      className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                    >
+                                      <Info className="w-[0.8vw] h-[0.8vw]" />
+                                      Info
+                                    </button>
+                                    <button
                                       onClick={() => handleOpenEditReport(call, prod, pIdx)}
                                       title="Edit Report"
                                       className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-indigo-50 border border-indigo-200 rounded-[0.4vw] hover:bg-indigo-100 text-indigo-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
@@ -1022,13 +1222,23 @@ export default function ServiceCallReports() {
                               )}
                             </td>
                             <td className="p-[0.7vw] text-center whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                              <button
-                                onClick={() => setHistoryModalCall(item.call)}
-                                className="inline-flex items-center gap-[0.25vw] px-[0.6vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
-                              >
-                                <History className="w-[0.8vw] h-[0.8vw]" />
-                                View History
-                              </button>
+                              <div className="flex items-center justify-center gap-[0.35vw]">
+                                <button
+                                  onClick={() => setSelectedInfoCall(item.call)}
+                                  title="View Full Call Details"
+                                  className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.3vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                >
+                                  <Info className="w-[0.8vw] h-[0.8vw]" />
+                                  Info
+                                </button>
+                                <button
+                                  onClick={() => setHistoryModalCall(item.call)}
+                                  className="inline-flex items-center gap-[0.25vw] px-[0.6vw] py-[0.3vw] bg-white border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 text-slate-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
+                                >
+                                  <History className="w-[0.8vw] h-[0.8vw]" />
+                                  View History
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))
@@ -1405,6 +1615,15 @@ export default function ServiceCallReports() {
             employees={employees}
             currentUser={currentUser}
             onClose={() => setHistoryModalCall(null)}
+          />
+        )}
+
+        {/* Full Details Call Summary Modal */}
+        {selectedInfoCall && (
+          <CallSummaryModal
+            row={selectedInfoCall}
+            employees={employees}
+            onClose={() => setSelectedInfoCall(null)}
           />
         )}
       </AnimatePresence>
