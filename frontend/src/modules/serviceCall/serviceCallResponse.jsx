@@ -1253,7 +1253,7 @@ const ServiceCallResponse = () => {
               {activeTab === "escalation" && (
                 <EscalationQueueTab
                   myEscalations={myEscalations}
-                  paginatedEscalations={escalationPaginatedCalls}
+                  escalationPaginatedCalls={escalationPaginatedCalls}
                   escalationPage={escalationPage}
                   setEscalationPage={setEscalationPage}
                   escalationTotalPages={escalationTotalPages}
@@ -1265,6 +1265,7 @@ const ServiceCallResponse = () => {
                   setActiveActionMenuId={setActiveActionMenuId}
                   actionMenuCoords={actionMenuCoords}
                   setActionMenuCoords={setActionMenuCoords}
+                  handleProductAttend={handleProductAttend}
                   onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
                   setReverseModalItem={setReverseModalItem}
                   setSummaryModalRow={setSummaryModalRow}
@@ -1281,7 +1282,7 @@ const ServiceCallResponse = () => {
                   selfAssignedStatus={selfAssignedStatus}
                   setSelfAssignedStatus={setSelfAssignedStatus}
                   setSelfAssignedPage={setSelfAssignedPage}
-                  paginatedSelfAssigned={paginatedSelfAssigned}
+                  selfAssignedPaginatedCalls={selfAssignedPaginatedCalls}
                   selfAssignedPage={selfAssignedPage}
                   selfAssignedTotalPages={selfAssignedTotalPages}
                   selfAssignedPageSize={selfAssignedPageSize}
@@ -1292,6 +1293,7 @@ const ServiceCallResponse = () => {
                   setActiveActionMenuId={setActiveActionMenuId}
                   actionMenuCoords={actionMenuCoords}
                   setActionMenuCoords={setActionMenuCoords}
+                  handleProductAttend={handleProductAttend}
                   onOpenRespond={(modalData) => setActiveModalProduct(modalData)}
                   setSummaryModalRow={setSummaryModalRow}
                   setHistoryModalProduct={setHistoryModalProduct}

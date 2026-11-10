@@ -18,7 +18,7 @@ export const SelfAssignedQueueTab = ({
   selfAssignedStatus,
   setSelfAssignedStatus,
   setSelfAssignedPage,
-  paginatedSelfAssigned,
+  selfAssignedPaginatedCalls,
   selfAssignedPage,
   selfAssignedTotalPages,
   selfAssignedPageSize,

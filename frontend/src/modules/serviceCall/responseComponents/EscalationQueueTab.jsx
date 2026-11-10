@@ -20,7 +20,7 @@ import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
 
 export const EscalationQueueTab = ({
   myEscalations,
-  paginatedEscalations,
+  escalationPaginatedCalls,
   escalationPage,
   setEscalationPage,
   escalationTotalPages,
@@ -32,6 +32,7 @@ export const EscalationQueueTab = ({
   setActiveActionMenuId,
   actionMenuCoords,
   setActionMenuCoords,
+  handleProductAttend,
   onOpenRespond,
   setReverseModalItem,
   setSummaryModalRow,
@@ -310,7 +311,7 @@ export const EscalationQueueTab = ({
                                       <button
                                         type="button"
                                         onClick={() => {
-                                          setActiveModalProduct({
+                                          onOpenRespond({
                                             entry: row,
                                             callId: row.callId || row._id,
                                             prod,
