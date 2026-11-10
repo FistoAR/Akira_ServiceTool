@@ -464,13 +464,14 @@ async function check50PercentAlerts(io) {
 
         if (now.getTime() >= fiftyPercentTime) {
           // Send 50% alert notification
+          const engName = prod._assignedEngineerName || call.currentEngineerName || 'Engineer';
           const { sendNotification } = require('../notification/notification.controller');
           await sendNotification({
             recipient: prod._assignedEngineerId,
             sender: 'System',
             type: 'Escalation',
-            title: `SLA Deadline 50% Warning`,
-            message: `Your call #${call.callNumber} will be escalated to the next person soon. You have reached 50% of the scheduled time.`,
+            title: `SLA 50% Warning: ${engName}`,
+            message: `Call #${call.callNumber} assigned to ${engName} has reached 50% SLA time and will be escalated soon.`,
             data: { callId: call._id, callNumber: call.callNumber, productIdx: pIdx },
             priority: 'High'
           });

@@ -46,7 +46,7 @@ const getCleanNotificationContent = (n) => {
     title = 'Call Assigned';
   } else if (title.includes('Critical Service Call Alert') || title.includes('Marked Critical')) {
     title = 'Critical Alert';
-  } else if (title.includes('SLA Deadline 50%')) {
+  } else if (title.includes('SLA Deadline 50%') || title.includes('SLA 50% Warning')) {
     title = 'SLA 50% Warning';
   } else if (title.includes('SLA Breached')) {
     title = 'SLA Breached';
@@ -70,7 +70,7 @@ const getCleanNotificationContent = (n) => {
     const toName = toMatch ? toMatch[1].trim() : '';
     const reason = reasonMatch && reasonMatch[1] && reasonMatch[1] !== 'Needs review' ? ` (${reasonMatch[1].trim()})` : '';
     message = `Returned by ${who}${toName && toName !== 'you' ? ` to ${toName}` : ''}${reason}`;
-  } else if (message.includes('will be escalated to the next person soon')) {
+  } else if (message.includes('will be escalated') || message.includes('50% SLA time')) {
     message = '50% of SLA time reached. Approaching escalation.';
   } else if (message.includes('was breached by') && (message.includes('has been escalated to') || message.includes('escalated to'))) {
     const byMatch = message.match(/breached by\s+([^\s]+)/);
