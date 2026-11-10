@@ -364,30 +364,31 @@ export default function ServiceCallAssignment() {
     <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
 
       {/* ── FILTER & SEARCH TOOLBAR ── */}
-      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.5vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
-        {/* Left Side: Search Box */}
-        <div className="relative flex-1 max-w-[24vw]">
-          <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
+      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+        {/* Left side: Soft Pill Search Box */}
+        <div className="relative w-[18vw]">
+          <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
           <input
             type="text"
-            placeholder="Search customer, call no, product, model..."
+            placeholder="Search customer, call no, engineer..."
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.2vw] pr-[2vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-slate-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all font-normal"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm("")} 
-              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
             >
-              <X className="w-[0.8vw] h-[0.8vw]" />
+              <X className="w-[0.7vw] h-[0.7vw]" />
             </button>
           )}
         </div>
 
-        {/* Middle: Crisp Compact Date Range Filter */}
-        <div className="flex items-center gap-[0.5vw]">
-          <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-[0.5vw] h-[2.1vw] px-[0.65vw] bg-slate-50/70 hover:bg-white focus-within:bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/15 transition-all text-[0.74vw]">
+        {/* Right cluster: Date Range, Clear, Count & Priority */}
+        <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+          {/* Unified Date Range Capsule */}
+          <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
             <button
               type="button"
               onClick={() => {
@@ -398,25 +399,25 @@ export default function ServiceCallAssignment() {
               className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center"
               title="Choose from date"
             >
-              <Calendar className="w-[0.8vw] h-[0.8vw] shrink-0 text-slate-400" />
+              <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
             </button>
-            <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">From</span>
+            <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
             <input
               ref={fromDateRef}
               type="date"
               value={filterFromDate || ""}
               onChange={(e) => setFilterFromDate(e.target.value)}
-              className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
-            <span className="text-slate-300 mx-[0.1vw]">—</span>
-            <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">To</span>
+            <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
+            <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
             <input
               ref={toDateRef}
               type="date"
               value={filterToDate || ""}
               min={filterFromDate || undefined}
               onChange={(e) => setFilterToDate(e.target.value)}
-              className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -428,34 +429,26 @@ export default function ServiceCallAssignment() {
               className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
               title="Choose to date"
             >
-              <Calendar className="w-[0.8vw] h-[0.8vw] shrink-0 text-slate-400" />
+              <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
             </button>
           </div>
 
+          {/* Reset / Clear Button */}
           {(filterFromDate || filterToDate) && (
             <button
               onClick={() => {
                 setFilterFromDate("");
                 setFilterToDate("");
               }}
-              className="flex items-center gap-[0.25vw] h-[2.1vw] px-[0.6vw] rounded-[0.5vw] text-[0.72vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer"
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
-              <RotateCcw className="w-[0.7vw] h-[0.7vw]" />
+              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
               <span>Clear</span>
             </button>
           )}
-        </div>
 
-        {/* Right Side: Priority Filter & Active Count Pill */}
-        <div className="flex items-center gap-[0.8vw]">
-          <div className="flex items-center gap-[0.35vw]">
-            <span className="text-[0.74vw] font-medium text-slate-500">Showing:</span>
-            <span className="text-[0.72vw] font-bold text-slate-700 bg-slate-100 px-[0.5vw] py-[0.1vw] rounded-full border border-slate-200">
-              {filteredGroups.length} Calls
-            </span>
-          </div>
-
+          {/* Priority Dropdown (Pill shaped) */}
           <div className="w-[9.5vw]">
             <CustomDropdown
               size="sm"
@@ -468,12 +461,11 @@ export default function ServiceCallAssignment() {
                 { value: "Medium", label: "Medium Priority" },
                 { value: "Low", label: "Low Priority" },
               ]}
-              triggerClassName="h-[2.1vw] !rounded-[0.5vw] border-gray-200/90 text-gray-700 font-medium"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
             />
           </div>
         </div>
       </div>
-
       {/* ── TABLE CARD ── */}
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
