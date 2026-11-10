@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
-  Search, X, User, CheckCircle, Clock,
+  Search, X, RotateCcw, User, CheckCircle, Clock,
   ArrowRight, Activity, Shield, Package,
   Layers, ChevronDown, ChevronUp, Users,
   AlertCircle, Tag, CheckSquare, AlertTriangle,
@@ -101,6 +101,10 @@ export default function ServiceCallAssignment() {
   const [resHours, setResHours] = useState(0);
   const [resMins, setResMins] = useState(0);
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const [filterFromDate, setFilterFromDate] = useState("");
+  const [filterToDate, setFilterToDate] = useState("");
+  const fromDateRef = useRef(null);
+  const toDateRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [allFlows, setAllFlows] = useState({});
   const [slaConfig, setSlaConfig]   = useState(null);
@@ -181,6 +185,24 @@ export default function ServiceCallAssignment() {
     let res = groups;
     
     if (priorityFilter !== "All") res = res.filter(g => g.priority === priorityFilter);
+
+    if (filterFromDate || filterToDate) {
+      res = res.filter(g => {
+        const rowDate = new Date(g.timestamp || g.dateTime || 0);
+        if (isNaN(rowDate.getTime())) return true;
+        if (filterFromDate) {
+          const from = new Date(filterFromDate);
+          from.setHours(0, 0, 0, 0);
+          if (rowDate < from) return false;
+        }
+        if (filterToDate) {
+          const to = new Date(filterToDate);
+          to.setHours(23, 59, 59, 999);
+          if (rowDate > to) return false;
+        }
+        return true;
+      });
+    }
     
     if (!s) return res;
     return res.filter(g =>
@@ -195,7 +217,7 @@ export default function ServiceCallAssignment() {
         (p.serialNumber || "").toLowerCase().includes(s)
       )
     );
-  }, [groups, searchTerm, priorityFilter]);
+  }, [groups, searchTerm, priorityFilter, filterFromDate, filterToDate]);
 
   const totalPages = Math.ceil(filteredGroups.length / ITEMS_PER_PAGE);
   const paginatedGroups = useMemo(() => {
@@ -203,7 +225,7 @@ export default function ServiceCallAssignment() {
     return filteredGroups.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredGroups, currentPage]);
 
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, priorityFilter]);
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, priorityFilter, filterFromDate, filterToDate]);
 
   const selectedFlow = useMemo(() => {
     if (!selectedGroup) return null;
@@ -342,16 +364,16 @@ export default function ServiceCallAssignment() {
     <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
 
       {/* ── FILTER & SEARCH TOOLBAR ── */}
-      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.5vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-200/80 gap-[0.8vw] shrink-0">
         {/* Left Side: Search Box */}
-        <div className="relative flex-1 max-w-[28vw]">
+        <div className="relative flex-1 max-w-[24vw]">
           <Search className="absolute left-[0.75vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.9vw] h-[0.9vw]" />
           <input
             type="text"
-            placeholder="Search by customer, party code, call no, product, model..."
+            placeholder="Search customer, call no, product, model..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.2vw] pr-[0.8vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-slate-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all font-normal"
+            className="w-full pl-[2.2vw] pr-[2vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-slate-50/50 hover:bg-white text-gray-800 placeholder-gray-400 transition-all font-normal"
           />
           {searchTerm && (
             <button 
@@ -363,20 +385,78 @@ export default function ServiceCallAssignment() {
           )}
         </div>
 
+        {/* Middle: Crisp Compact Date Range Filter */}
+        <div className="flex items-center gap-[0.5vw]">
+          <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-[0.5vw] h-[2.1vw] px-[0.65vw] bg-slate-50/70 hover:bg-white focus-within:bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/15 transition-all text-[0.74vw]">
+            <button
+              type="button"
+              onClick={() => {
+                if (fromDateRef.current) {
+                  try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
+                }
+              }}
+              className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center"
+              title="Choose from date"
+            >
+              <Calendar className="w-[0.8vw] h-[0.8vw] shrink-0 text-slate-400" />
+            </button>
+            <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">From</span>
+            <input
+              ref={fromDateRef}
+              type="date"
+              value={filterFromDate || ""}
+              onChange={(e) => setFilterFromDate(e.target.value)}
+              className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
+            />
+            <span className="text-slate-300 mx-[0.1vw]">—</span>
+            <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider">To</span>
+            <input
+              ref={toDateRef}
+              type="date"
+              value={filterToDate || ""}
+              min={filterFromDate || undefined}
+              onChange={(e) => setFilterToDate(e.target.value)}
+              className="text-[0.74vw] text-slate-800 bg-transparent outline-none font-semibold cursor-pointer"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (toDateRef.current) {
+                  try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
+                }
+              }}
+              className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+              title="Choose to date"
+            >
+              <Calendar className="w-[0.8vw] h-[0.8vw] shrink-0 text-slate-400" />
+            </button>
+          </div>
+
+          {(filterFromDate || filterToDate) && (
+            <button
+              onClick={() => {
+                setFilterFromDate("");
+                setFilterToDate("");
+              }}
+              className="flex items-center gap-[0.25vw] h-[2.1vw] px-[0.6vw] rounded-[0.5vw] text-[0.72vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer"
+              title="Clear date filter"
+            >
+              <RotateCcw className="w-[0.7vw] h-[0.7vw]" />
+              <span>Clear</span>
+            </button>
+          )}
+        </div>
+
         {/* Right Side: Priority Filter & Active Count Pill */}
         <div className="flex items-center gap-[0.8vw]">
-          {/* Subtle Dynamic Count indicator consistent with customers.jsx */}
-          <div className="flex items-center gap-[0.4vw]">
+          <div className="flex items-center gap-[0.35vw]">
             <span className="text-[0.74vw] font-medium text-slate-500">Showing:</span>
             <span className="text-[0.72vw] font-bold text-slate-700 bg-slate-100 px-[0.5vw] py-[0.1vw] rounded-full border border-slate-200">
               {filteredGroups.length} Calls
             </span>
-            {priorityFilter !== "All" && (
-              <span className="text-[0.68vw] text-slate-400">({priorityFilter})</span>
-            )}
           </div>
 
-          <div className="w-[10vw]">
+          <div className="w-[9.5vw]">
             <CustomDropdown
               size="sm"
               value={priorityFilter}
