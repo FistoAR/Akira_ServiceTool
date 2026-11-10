@@ -108,7 +108,7 @@ async function runEscalationCheck() {
         // Skip products that don't need action
         if (!prod._assigned)          continue;
         if (prod._resolved)            continue;
-        if (prod._isCritical)          continue;
+        if (prod._isCritical && !prod._isReverseEscalated) continue;
         if (!prod._deadline)           continue;
         if (prod._deadline > now)      continue;
         if (prod._productClosure?.status === 'Closed') continue;

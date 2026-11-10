@@ -108,31 +108,17 @@ export const AssignVisitModal = ({
           </div>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-[0.8vw]">
-        <div className="flex flex-col gap-[0.3vw]">
-          <label className="text-[0.85vw] font-semibold text-slate-800">
-            Assignment Date
-          </label>
-          <input
-            type="datetime-local"
-            value={form.assignmentDate}
-            min={new Date().toISOString().slice(0, 16)}
-            onChange={(e) => sf("assignmentDate", e.target.value)}
-            className="border border-slate-400 rounded-[0.5vw] p-[0.6vw] text-[0.85vw] outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all bg-white"
-          />
-        </div>
-        <div className="flex flex-col gap-[0.3vw]">
-          <label className="text-[0.85vw] font-semibold text-slate-800">
-            {isFV ? "Visit Date" : "Received Date"}
-          </label>
-          <input
-            type="date"
-            value={form.visitDate}
-            min={new Date().toISOString().split("T")[0]}
-            onChange={(e) => sf("visitDate", e.target.value)}
-            className="border border-slate-400 rounded-[0.5vw] p-[0.6vw] text-[0.85vw] outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all bg-white"
-          />
-        </div>
+      <div className="flex flex-col gap-[0.3vw]">
+        <label className="text-[0.85vw] font-semibold text-slate-800">
+          {isFV ? "Scheduled Visit Date *" : "Received Date *"}
+        </label>
+        <input
+          type="date"
+          value={form.visitDate}
+          min={new Date().toISOString().split("T")[0]}
+          onChange={(e) => sf("visitDate", e.target.value)}
+          className="border border-slate-300 rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-semibold outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all bg-white shadow-2xs text-slate-800"
+        />
       </div>
       <div className="flex flex-col gap-[0.3vw]">
         <label className="text-[0.85vw] font-semibold text-slate-800">

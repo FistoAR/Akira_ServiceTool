@@ -288,6 +288,26 @@ export const EscalationQueueTab = ({
                                         <Clock className="w-[0.75vw] h-[0.75vw]" />
                                         {callTimer.remainingFormatted}
                                       </span>
+                                    ) : (prod._isReverseEscalated && prod._deadline && !prod._attended) ? (
+                                      (() => {
+                                        const remainingMs = Math.max(0, new Date(prod._deadline) - new Date());
+                                        const hours = Math.floor(remainingMs / 3600000);
+                                        const minutes = Math.floor((remainingMs % 3600000) / 60000);
+                                        const seconds = Math.floor((remainingMs % 60000) / 1000);
+                                        const formatted = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                                        const isExpired = remainingMs === 0;
+
+                                        return isExpired ? (
+                                          <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
+                                            <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
+                                          </span>
+                                        ) : (
+                                          <span className="inline-flex items-center gap-[0.25vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs bg-amber-100 text-amber-900 border-amber-300">
+                                            <Clock className="w-[0.75vw] h-[0.75vw]" />
+                                            {formatted}
+                                          </span>
+                                        );
+                                      })()
                                     ) : row.status === "Critical" ? (
                                       <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
                                         <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired

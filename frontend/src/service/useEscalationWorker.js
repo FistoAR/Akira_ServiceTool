@@ -60,7 +60,9 @@ export default function useEscalationWorker() {
       const newTimers = [];
 
       activeCalls.forEach(call => {
-        if (!call.products || call.status === "Resolved" || call.status === "Critical_Unresolved" || call.status === "Closed" || call.status === "Critical") return;
+        if (!call.products || call.status === "Resolved" || call.status === "Closed") return;
+        // If call is Critical, only skip if there is NO active reverse-escalated product with a deadline
+        if ((call.status === "Critical" || call.status === "Critical_Unresolved") && !call.products.some(p => p._isReverseEscalated && p._deadline && !p._attended)) return;
         
         // Find the earliest deadline among active products
         let earliestProduct = null;

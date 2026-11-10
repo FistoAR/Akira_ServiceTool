@@ -13,7 +13,11 @@ import {
   Loader2,
   Calendar,
   X,
-  FileText
+  FileText,
+  LifeBuoy,
+  PauseCircle,
+  CheckCircle2,
+  Undo2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AssignVisitModal } from "./AssignVisitModal";
@@ -37,7 +41,7 @@ const ProductClosurePanel = ({
   const existing = prod._productClosure || {};
   const saved = existing.status;
   const [selected, setSelected] = useState("");
-  const [remarks, setRemarks] = useState(existing.remarks || "");
+  const [remarks, setRemarks] = useState("");
   const [notes, setNotes] = useState(""); // For Support Request
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [search, setSearch] = useState("");
@@ -152,55 +156,81 @@ const ProductClosurePanel = ({
     );
   }, [currentUser, search, propsEmployees]);
 
-  // Determine if this product has an escalation trail that can be reverse-escalated
-  const hasEscalationTrail = useMemo(() => {
+  // Determine the first assigned person and the immediate previous person for reverse escalation
+  const reverseTargetInfo = useMemo(() => {
     const hist = prod._escalationHistory || entry?.escalationHistory || [];
-    // Can reverse escalate if there is at least one previous owner/assignee who is not the current user
-    return hist.some((h) => (h.engineerId || h.assignedTo) && (h.engineerId || h.assignedTo) !== currentUser?.userId);
+    if (!hist || hist.length === 0) return { canReverse: false, targetName: "", targetDept: "" };
+
+    const firstAssignedId = hist[0]?.engineerId || hist[0]?.assignedTo;
+    const currentAssigneeId = prod._assignedEngineerId || currentUser?.userId;
+
+    // RULE: If current person is the first assigned person, they CANNOT reverse-escalate
+    if (firstAssignedId && (currentAssigneeId === firstAssignedId || currentUser?.userId === firstAssignedId)) {
+      return { canReverse: false, targetName: "", targetDept: "", isFirstAssignee: true };
+    }
+
+    // Find the immediate previous engineer in history
+    for (let i = hist.length - 1; i >= 0; i--) {
+      const h = hist[i];
+      const hId = h.engineerId || h.assignedTo;
+      if (hId && hId !== currentAssigneeId && hId !== currentUser?.userId) {
+        return {
+          canReverse: true,
+          targetId: hId,
+          targetName: h.engineerName || h.assignedToName || hId,
+          targetDept: h.department || "",
+          targetLevel: h.level ?? 0
+        };
+      }
+    }
+
+    return { canReverse: false, targetName: "", targetDept: "" };
   }, [prod, entry, currentUser]);
+
+  const hasEscalationTrail = reverseTargetInfo.canReverse;
 
   const tabs = [
     (!isSupportDeskAsked || !prod._supportPersonId) &&
       !isSupportDeskAssigned && {
         k: "Open",
         l: "Support",
-        e: "🔄",
-        c: "bg-blue-600 text-white shadow-xs",
+        icon: LifeBuoy,
+        c: "bg-blue-600 text-white shadow-xs border-blue-600",
       },
     !isPendingTab &&
       !isSupportDeskAsked &&
       !isSupportDeskAssigned && {
         k: "Pending",
         l: "Pending",
-        e: "⏸",
-        c: "bg-amber-600 text-white shadow-xs",
+        icon: PauseCircle,
+        c: "bg-amber-600 text-white shadow-xs border-amber-600",
       },
     {
       k: "FVRequired",
       l: "Field Visit",
-      e: "📍",
-      c: "bg-indigo-600 text-white shadow-xs",
+      icon: MapPin,
+      c: "bg-indigo-600 text-white shadow-xs border-indigo-600",
     },
     {
       k: "Resolved",
       l: "Resolve",
-      e: "✓",
-      c: "bg-emerald-600 text-white shadow-xs",
+      icon: CheckCircle2,
+      c: "bg-emerald-600 text-white shadow-xs border-emerald-600",
     },
     hasEscalationTrail &&
       !isSupportDeskAssigned && {
         k: "ReverseEscalate",
         l: "Reverse Escalate",
-        e: "↩️",
-        c: "bg-rose-600 text-white shadow-xs",
+        icon: RotateCcw,
+        c: "bg-rose-600 text-white shadow-xs border-rose-600",
       },
     isSupportDeskAssigned && {
       k: "Returned",
       l: "Return to Assigned Person",
-      e: "🔙",
-      c: "bg-rose-600 text-white shadow-xs",
+      icon: Undo2,
+      c: "bg-rose-600 text-white shadow-xs border-rose-600",
     },
-  ].filter(Boolean);
+    ].filter(Boolean);
 
   const isAnyUserProductAttended = entry.products?.some(
     (p) => p._assignedEngineerId === currentUser?.userId && p._attended,
@@ -252,16 +282,25 @@ const ProductClosurePanel = ({
           <div
             className={`grid gap-[0.4vw] ${tabs.length >= 5 ? "grid-cols-5" : tabs.length === 4 ? "grid-cols-4" : tabs.length === 3 ? "grid-cols-3" : tabs.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}
           >
-            {tabs.map((t) => (
-              <button
-                key={t.k}
-                onClick={() => setSelected(selected === t.k ? "" : t.k)}
-                className={`py-[0.5vw] text-[0.85vw] font-bold rounded-[0.5vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.3vw] ${selected === t.k ? `${t.c}` : "bg-white border-slate-400 text-slate-600 hover:bg-slate-50 hover:text-slate-800 hover:border-slate-400"}`}
-              >
-                <span className="text-[0.78vw]">{t.e}</span>
-                <span>{t.l}</span>
-              </button>
-            ))}
+            {tabs.map((t) => {
+              const IconComp = t.icon;
+              const isSelected = selected === t.k;
+              return (
+                <button
+                  key={t.k}
+                  type="button"
+                  onClick={() => setSelected(isSelected ? "" : t.k)}
+                  className={`py-[0.45vw] px-[0.6vw] text-[0.8vw] font-bold rounded-[0.45vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.35vw] ${
+                    isSelected
+                      ? `${t.c}`
+                      : "bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-400 shadow-2xs"
+                  }`}
+                >
+                  <IconComp className={`w-[0.85vw] h-[0.85vw] ${isSelected ? "text-white" : "text-slate-500"}`} />
+                  <span>{t.l}</span>
+                </button>
+              );
+            })}
           </div>
 
           <AnimatePresence>
@@ -430,9 +469,25 @@ const ProductClosurePanel = ({
                     <RotateCcw className="w-[0.9vw] h-[0.9vw]" /> Reverse Escalate (Send Back)
                   </div>
                   <span className="text-[0.68vw] bg-rose-100 text-rose-800 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-rose-200">
-                    Returns to Sender with SLA
+                    Returns with SLA
                   </span>
                 </div>
+                {reverseTargetInfo.targetName && (
+                  <div className="bg-white/95 border border-rose-200 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] flex items-center justify-between shadow-2xs">
+                    <span className="text-[0.72vw] text-slate-600 font-medium">
+                      Will be returned back to:
+                    </span>
+                    <span className="text-[0.76vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
+                      <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-rose-600 inline-block"></span>
+                      {reverseTargetInfo.targetName}
+                      {reverseTargetInfo.targetDept && (
+                        <span className="text-[0.66vw] font-medium text-slate-500 font-mono">
+                          ({reverseTargetInfo.targetDept})
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                )}
                 <textarea
                   rows="2"
                   value={remarks}

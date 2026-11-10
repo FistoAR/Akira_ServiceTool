@@ -6,7 +6,8 @@ import {
   History,
   ChevronLeft,
   ChevronRight,
-  HelpCircle
+  HelpCircle,
+  Edit3
 } from "lucide-react";
 import { getTypeColor } from "../ServiceCall";
 
@@ -32,6 +33,7 @@ const SupportRequestsTab = ({
         (p) =>
           p._assignedEngineerId === currentUser?.userId &&
           p._supportRequested === true &&
+          p._productClosure?.status !== "Pending" &&
           p._productClosure?.status !== "Field Visit Required" &&
           p._productClosure?.status !== "Closed"
       )
@@ -45,6 +47,7 @@ const SupportRequestsTab = ({
           p._supportPersonId === currentUser?.userId &&
           p._supportRequested === true &&
           !p._resolved &&
+          p._productClosure?.status !== "Pending" &&
           p._productClosure?.status !== "Closed" &&
           p._productClosure?.status !== "Field Visit Required"
       )

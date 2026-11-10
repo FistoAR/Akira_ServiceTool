@@ -332,6 +332,12 @@ exports.closeProduct = async (req, res) => {
     if (closureData.returnToAssigned) {
       call.products[pIdx]._supportPersonId = null;
       call.products[pIdx]._supportPersonName = null;
+      call.products[pIdx]._supportRequested = false;
+    }
+
+    // When product is marked Pending, Resolved, or Closed, clear active support request flag
+    if (closureData.status === 'Pending' || closureData.status === 'Resolved' || closureData.status === 'Closed') {
+      call.products[pIdx]._supportRequested = false;
     }
 
     if (closureData.status === 'Resolved' || closureData.status === 'Closed') {
@@ -705,7 +711,18 @@ exports.reverseEscalateProduct = async (req, res) => {
     const prod = call.products[pIdx];
     const escHistory = prod._escalationHistory || [];
 
-    // Identify target person (who escalated it to this user)
+    // 1. Identify the first assigned person (Level 0 / Original Assignee)
+    const firstAssignedEntry = escHistory.length > 0 ? escHistory[0] : null;
+    const firstAssignedId = firstAssignedEntry?.engineerId;
+
+    // RULE: The first assigned person cannot reverse-escalate (there is no one before them)
+    if (firstAssignedId && (prod._assignedEngineerId === firstAssignedId || userId === firstAssignedId)) {
+      return res.status(400).json({
+        message: 'Reverse escalation is not allowed for the first assigned engineer. You are the initial point of contact for this call.'
+      });
+    }
+
+    // 2. Identify the target person to return to (the immediate previous assignee in history)
     let targetEngineerId = null;
     let targetEngineerName = null;
     let targetDepartment = null;
@@ -722,23 +739,8 @@ exports.reverseEscalateProduct = async (req, res) => {
       }
     }
 
-    // Fallback: If not found in escalation history, check registeredBy or previous engineer
     if (!targetEngineerId) {
-      if (call.registeredBy && call.registeredBy !== userId && call.registeredBy !== prod._assignedEngineerId) {
-        targetEngineerId = call.registeredBy;
-        const regUser = await User.findOne({ userId: call.registeredBy }).lean();
-        targetEngineerName = regUser?.name || 'Original Registrar';
-        targetDepartment = regUser?.department || 'Support Desk';
-      } else if (escHistory.length > 0) {
-        targetEngineerId = escHistory[0].engineerId;
-        targetEngineerName = escHistory[0].engineerName;
-        targetDepartment = escHistory[0].department;
-        targetLevel = escHistory[0].level ?? 0;
-      }
-    }
-
-    if (!targetEngineerId) {
-      return res.status(400).json({ message: 'No previous engineer or registrar found to reverse-escalate to.' });
+      return res.status(400).json({ message: 'No previous engineer found to reverse-escalate to.' });
     }
 
     // Resolve reverse escalation SLA configuration
@@ -766,6 +768,7 @@ exports.reverseEscalateProduct = async (req, res) => {
     prod._attendedAt = null;
     prod._deadline = newDeadline;
     prod._isReverseEscalated = true;
+    prod._isCritical = false;
     prod._reverseEscalatedFrom = previousEngId;
     prod._reverseEscalatedFromName = previousEngName;
     prod._reverseEscalationReason = reason || 'Sent back to previous engineer';
@@ -805,6 +808,9 @@ exports.reverseEscalateProduct = async (req, res) => {
       call.currentEngineerName = targetEngineerName;
       call.currentDepartment = targetDepartment || call.currentDepartment;
       call.escalationHistory = [...(call.escalationHistory || []), histEntry];
+    }
+    if (call.status === 'Critical' || call.status === 'Critical_Unresolved') {
+      call.status = 'Escalated';
     }
 
     call.markModified('products');

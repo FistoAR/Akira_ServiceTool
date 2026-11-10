@@ -26,7 +26,50 @@ import {
 } from 'lucide-react';
 import { useSocket } from '../contexts/SocketContext';
 
-// Helper to determine contextual notification styling & icons based on the application domain
+// Helper to format clean, non-repetitive notification title & preview
+const getCleanNotificationContent = (n) => {
+  let title = n.title || 'Notification';
+  let message = n.message || '';
+  const callNum = n.data?.callNumber;
+
+  // Clean title: remove repetitive call numbers if already in footer or badge
+  // e.g. "Call Returned (Reverse Escalation): #SC-20261110-9936" -> "Call Returned (Reverse Escalation)"
+  if (title.includes('Call Returned') || title.includes('Reverse Escalation')) {
+    title = 'Call Returned';
+  } else if (title.includes('Support Requested')) {
+    title = 'Support Requested';
+  } else if (title.includes('Call Attended')) {
+    title = 'Call Attended';
+  } else if (title.includes('Call Resolved')) {
+    title = 'Call Resolved';
+  } else if (title.includes('New Service Call Assigned')) {
+    title = 'Call Assigned';
+  } else if (title.includes('Critical Service Call Alert') || title.includes('Marked Critical')) {
+    title = 'Critical Alert';
+  } else if (title.includes('SLA Deadline 50%')) {
+    title = 'SLA 50% Warning';
+  } else if (title.includes('SLA Breached')) {
+    title = 'SLA Breached';
+  }
+
+  // Clean message: strip redundant prefixes like 'Product status updated to "Support Requested" by test. Remarks: '
+  if (message.includes('Product status updated to')) {
+    const parts = message.split('Remarks:');
+    if (parts.length > 1 && parts[1].trim() && parts[1].trim() !== 'None') {
+      message = parts[1].trim();
+    } else {
+      message = parts[0].replace(/Product status updated to "[^"]*" by /, 'Updated by ');
+    }
+  } else if (message.includes('was reverse-escalated back to you by')) {
+    const reasonMatch = message.match(/Reason:\s*(.*?)(\.|$)/);
+    const byMatch = message.match(/by\s+([^.]+)/);
+    const who = byMatch ? byMatch[1].split('.')[0].trim() : 'previous engineer';
+    const reason = reasonMatch && reasonMatch[1] && reasonMatch[1] !== 'Needs review' ? ` (${reasonMatch[1].trim()})` : '';
+    message = `Returned by ${who}${reason}`;
+  }
+
+  return { title, message, callNum };
+};
 const getNotificationVisuals = (notification) => {
   const title = (notification.title || '').toLowerCase();
   const type = notification.type || '';
@@ -454,6 +497,7 @@ const NotificationsDropdown = () => {
                   <AnimatePresence initial={false}>
                     {filteredNotifications.map((n) => {
                       const visuals = getNotificationVisuals(n);
+                      const { title: cleanTitle, message: cleanMessage } = getCleanNotificationContent(n);
                       const IconComp = visuals.icon;
                       const isUnread = !n.isRead;
 
@@ -471,48 +515,46 @@ const NotificationsDropdown = () => {
                           } ${visuals.accentGlow}`}
                           onClick={() => handleNotificationClick(n)}
                         >
-                          {/* Circular App-Themed Icon on the Left with Contextual Status Sub-Badge */}
+                          {/* Circular App-Themed Icon on the Left without extra distracting dot */}
                           <div className="relative shrink-0">
-                            <div className={`w-[2.4vw] h-[2.4vw] rounded-full flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
-                              <IconComp className={`w-[1.2vw] h-[1.2vw] ${visuals.iconColor}`} />
+                            <div className={`w-[2.3vw] h-[2.3vw] rounded-full flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
+                              <IconComp className={`w-[1.15vw] h-[1.15vw] ${visuals.iconColor}`} />
                             </div>
-                            {/* Small status indicator pip on bottom-right of circle */}
-                            <span className={`absolute -bottom-[0.05vw] -right-[0.05vw] w-[0.65vw] h-[0.65vw] rounded-full border-[0.12vw] border-white shadow-xs ${visuals.statusDot}`} />
                           </div>
 
-                          {/* Content Body: Clean Avatar-style typography layout */}
-                          <div className="flex-1 min-w-0 pr-[0.3vw]">
+                          {/* Content Body: Clean layout with non-wrapping title row */}
+                          <div className="flex-1 min-w-0 pr-[0.2vw]">
                             {/* Row 1: Title and Category */}
-                            <div className="flex items-baseline gap-[0.4vw] flex-wrap">
-                              <h4 className={`text-[0.82vw] leading-snug ${
+                            <div className="flex items-center gap-[0.4vw]">
+                              <h4 className={`text-[0.82vw] truncate ${
                                 isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-800'
                               }`}>
-                                {n.title}
+                                {cleanTitle}
                               </h4>
-                              <span className={`text-[0.62vw] font-bold px-[0.35vw] py-[0.04vw] rounded-[0.25vw] border uppercase tracking-wider ${visuals.badgeBg}`}>
+                              <span className={`text-[0.6vw] font-bold px-[0.35vw] py-[0.04vw] rounded-[0.25vw] border uppercase tracking-wider shrink-0 ${visuals.badgeBg}`}>
                                 {visuals.badgeText}
                               </span>
                             </div>
 
-                            {/* Row 2: Message preview */}
-                            <p className="text-[0.73vw] text-slate-600 leading-snug mt-[0.15vw] line-clamp-2 break-words">
-                              {n.message}
+                            {/* Row 2: Clean Message preview */}
+                            <p className="text-[0.74vw] text-slate-650 leading-snug mt-[0.15vw] line-clamp-2 break-words">
+                              {cleanMessage}
                             </p>
 
                             {/* Row 3: Timestamp & Subtext meta */}
-                            <div className="flex items-center gap-[0.4vw] mt-[0.25vw] text-[0.68vw] text-slate-400 font-medium">
+                            <div className="flex items-center gap-[0.4vw] mt-[0.25vw] text-[0.68vw] text-slate-500 font-medium">
                               <span>{formatTimeShort(n.createdAt)}</span>
                               <span>•</span>
-                              <span className="text-slate-500 font-medium">
+                              <span className="text-slate-600 font-semibold font-mono text-[0.66vw]">
                                 {n.data?.callNumber || (n.type === 'Service Material' ? 'Material Dispatch' : 'Akira Service')}
                               </span>
                             </div>
                           </div>
 
-                          {/* Right Side: Unread Dot indicator & Dismiss button */}
-                          <div className="flex items-center gap-[0.35vw] shrink-0 self-center">
+                          {/* Right Side: Unread indicator & absolute-pinned dismiss button so it never causes title wrapping */}
+                          <div className="relative w-[1.4vw] flex items-center justify-end shrink-0 self-center">
                             {isUnread && (
-                              <span className="w-[0.55vw] h-[0.55vw] rounded-full bg-blue-600 shadow-xs group-hover:hidden" />
+                              <span className="w-[0.5vw] h-[0.5vw] rounded-full bg-blue-600 shadow-xs group-hover:opacity-0 transition-opacity" />
                             )}
                             <button
                               onClick={(e) => {
@@ -520,7 +562,7 @@ const NotificationsDropdown = () => {
                                 deleteNotification(n._id);
                               }}
                               title="Dismiss notification"
-                              className={`${isUnread ? 'hidden group-hover:flex' : 'opacity-0 group-hover:opacity-100'} p-[0.3vw] text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-[0.4vw] transition-all cursor-pointer`}
+                              className="absolute right-0 opacity-0 group-hover:opacity-100 p-[0.3vw] text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-[0.4vw] transition-all cursor-pointer"
                             >
                               <X className="w-[0.85vw] h-[0.85vw]" />
                             </button>

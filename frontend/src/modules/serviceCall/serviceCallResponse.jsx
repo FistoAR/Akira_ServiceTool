@@ -542,12 +542,13 @@ const ServiceCallResponse = () => {
     // Self Assigned tab count
     const selfCount = selfAssignedRawCalls.length;
 
-    // Support Tab Logic
+    // Support Tab Logic (exclude items that have already been put on Pending)
     const askedSupport = queue.filter((e) =>
       (e.products || []).some(
         (p) =>
           p._assignedEngineerId === uid &&
           p._supportRequested === true &&
+          p._productClosure?.status !== "Pending" &&
           p._productClosure?.status !== "Field Visit Required" &&
           p._productClosure?.status !== "Closed",
       ),
@@ -558,6 +559,7 @@ const ServiceCallResponse = () => {
           p._supportPersonId === uid &&
           p._supportRequested === true &&
           !p._resolved &&
+          p._productClosure?.status !== "Pending" &&
           p._productClosure?.status !== "Closed" &&
           p._productClosure?.status !== "Field Visit Required",
       ),
@@ -618,16 +620,21 @@ const ServiceCallResponse = () => {
     // Optimistic Update for instant UI feedback
     setQueue((prev) =>
       prev.map((call) => {
-        if (call.callId === callId) {
+        if (call.callId === callId || call._id === callId || call.id === callId) {
           const updatedProducts = [...call.products];
+          const shouldClearSupport = Boolean(
+            d.returnToAssigned ||
+            d.status === "Pending" ||
+            d.status === "Resolved" ||
+            d.status === "Closed"
+          );
+
           updatedProducts[pIdx] = {
             ...updatedProducts[pIdx],
             _productClosure: { ...updatedProducts[pIdx]._productClosure, ...d },
+            ...(shouldClearSupport ? { _supportRequested: false, _supportPersonId: null, _supportPersonName: null } : {}),
           };
-          if (d.returnToAssigned) {
-            updatedProducts[pIdx]._supportPersonId = null;
-            updatedProducts[pIdx]._supportPersonName = null;
-          }
+
           return { ...call, products: updatedProducts };
         }
         return call;
