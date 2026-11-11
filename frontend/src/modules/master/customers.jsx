@@ -1224,49 +1224,61 @@ const CustomerDatabase = () => {
 
   return (
     <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
-      {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel ── */}
-      <div className="flex items-center justify-between bg-white px-[0.9vw] py-[0.55vw] rounded-[0.7vw] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] border border-gray-100 gap-[0.8vw] shrink-0">
-        {/* Search */}
-        <div className="relative flex-1 max-w-[32vw]">
-          <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[0.95vw] h-[0.95vw]" />
+      {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel (Matching Service Call Entry page) ── */}
+      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+        {/* Soft Pill Search Box */}
+        <div className="relative w-[22vw]">
+          <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
           <input
             type="text"
             placeholder="Search by party code, description or item code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.4vw] pr-[0.9vw] h-[2.1vw] border border-gray-200/90 rounded-[0.5vw] text-[0.76vw] focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-gray-50/40 hover:bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+            >
+              <X className="w-[0.7vw] h-[0.7vw]" />
+            </button>
+          )}
         </div>
 
         {/* Right Action Controls */}
-        <div className="flex items-center gap-[0.6vw]">
-          <CustomDropdown
-            options={[
-              { value: "All", label: "All Types" },
-              ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
-            ]}
-            value={filterType}
-            onChange={(val) => setFilterType(val)}
-            className="w-[10.5vw]"
-            size="md"
-          />
+        <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+          <div className="w-[10.5vw]">
+            <CustomDropdown
+              size="sm"
+              value={filterType}
+              onChange={(val) => setFilterType(val)}
+              options={[
+                { value: "All", label: "All Types" },
+                ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
+              ]}
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+            />
+          </div>
 
           {!isSupervisor && (
             <>
               {canWrite && (
                 <button
                   onClick={openAddModal}
-                  className="cursor-pointer flex items-center gap-[0.4vw] bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 px-[0.95vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-2xs"
+                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-2xs"
                 >
-                  <Plus className="w-[0.9vw] h-[0.9vw] text-gray-500" /> Add Party
+                  <Plus className="w-[0.85vw] h-[0.85vw] text-slate-600" />
+                  <span>Add Party</span>
                 </button>
               )}
               {canWrite && (
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="cursor-pointer flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white px-[1vw] h-[2.1vw] rounded-[0.5vw] font-semibold text-[0.76vw] transition-all shadow-xs"
+                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-[#1a73e8] hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(26,115,232,0.5)]"
                 >
-                  <UploadCloud className="w-[0.95vw] h-[0.95vw]" /> Upload Excel
+                  <UploadCloud className="w-[0.9vw] h-[0.9vw]" />
+                  <span>Upload Excel</span>
                 </button>
               )}
             </>
@@ -1329,7 +1341,7 @@ const CustomerDatabase = () => {
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="appearance-none bg-white font-medium text-gray-700 border border-gray-200/90 hover:border-gray-300 pl-[0.8vw] pr-[2vw] rounded-[0.5vw] outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+              className="appearance-none bg-white font-medium text-slate-700 border border-slate-200 hover:border-slate-300 pl-[0.8vw] pr-[2vw] rounded-full outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
             >
               <option value="latest">Sort by: Latest First</option>
               <option value="oldest">Sort by: Oldest First</option>

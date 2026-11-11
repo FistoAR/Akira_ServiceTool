@@ -525,18 +525,6 @@ const ServiceCallEscalations = () => {
 
             {/* Unified Date Range Capsule */}
             <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-              <button
-                type="button"
-                onClick={() => {
-                  if (fromDateRef.current) {
-                    try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
-                  }
-                }}
-                className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center"
-                title="Choose from date"
-              >
-                <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
-              </button>
               <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
               <input
                 ref={fromDateRef}
@@ -545,6 +533,18 @@ const ServiceCallEscalations = () => {
                 onChange={(e) => setFilterFromDate(e.target.value)}
                 className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
+              <button
+                type="button"
+                onClick={() => {
+                  if (fromDateRef.current) {
+                    try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
+                  }
+                }}
+                className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+                title="Choose from date"
+              >
+                <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+              </button>
               <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
               <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
               <input
