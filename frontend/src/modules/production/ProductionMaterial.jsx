@@ -1410,32 +1410,12 @@ export default function ProductionMaterial() {
 
   const fetchData = async () => {
     try {
-      const [matRes, empRes, settingsRes] = await Promise.all([
+      const [matRes, empRes] = await Promise.all([
         axios.get(`${API_URL}/production-material`),
-        axios.get(`${API_URL}/auth/employees`),
-        axios.get(`${API_URL}/master/settings/production_master_data`).catch(() => ({ data: null }))
+        axios.get(`${API_URL}/auth/employees`)
       ]);
       setData(matRes.data.map(e => ({ ...e, id: e._id })));
       setEmployees(empRes.data);
-      if (settingsRes?.data) {
-        const { stages, dispositions, problemTypes, productTypes } = settingsRes.data;
-        if (stages && Array.isArray(stages)) {
-          setStageOptions(stages);
-          lsSave(STAGE_MASTER_KEY, stages);
-        }
-        if (dispositions && Array.isArray(dispositions)) {
-          setDispositionOptions(dispositions);
-          lsSave(DISPOSITION_MASTER_KEY, dispositions);
-        }
-        if (problemTypes && Array.isArray(problemTypes)) {
-          setProblemTypeOptions(problemTypes);
-          lsSave(PROBLEM_TYPE_MASTER_KEY, problemTypes);
-        }
-        if (productTypes && Array.isArray(productTypes)) {
-          setProductTypeOptions(productTypes);
-          lsSave(PRODUCT_TYPE_MASTER_KEY, productTypes);
-        }
-      }
     } catch (err) {
       console.error("Fetch failed:", err);
     } finally {
@@ -1451,7 +1431,7 @@ export default function ProductionMaterial() {
     return () => clearInterval(interval);
   }, []);
 
-  const saveMasterData = async (newStages, newDispositions, newProblemTypes, newProductTypes) => {
+  const saveMasterData = (newStages, newDispositions, newProblemTypes, newProductTypes) => {
     setStageOptions(newStages);
     setDispositionOptions(newDispositions);
     setProblemTypeOptions(newProblemTypes);
@@ -1460,22 +1440,8 @@ export default function ProductionMaterial() {
     lsSave(DISPOSITION_MASTER_KEY, newDispositions);
     lsSave(PROBLEM_TYPE_MASTER_KEY, newProblemTypes);
     lsSave(PRODUCT_TYPE_MASTER_KEY, newProductTypes);
-    try {
-      await axios.post(`${API_URL}/master/settings`, {
-        key: "production_master_data",
-        value: {
-          stages: newStages,
-          dispositions: newDispositions,
-          problemTypes: newProblemTypes,
-          productTypes: newProductTypes,
-        }
-      });
-      toast("Master Data Saved to Database", "success");
-    } catch (err) {
-      console.error("Failed to save master settings to DB:", err);
-      toast("Saved locally (DB sync failed)", "warning");
-    }
     setShowMasterData(false);
+    toast("Master Data Updated", "success");
   };
 
   const handleSave = async (formData) => {
@@ -1864,14 +1830,14 @@ export default function ProductionMaterial() {
                         <th key={h} rowSpan={2} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.5vw] font-bold text-slate-700 text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle bg-[#E9EDF7] sticky top-0 z-20">{h}</th>
                       );
                     })}
-                    <th colSpan={12} className="px-[0.6vw] py-[0.4vw] font-bold text-slate-700 border-b border-r border-slate-300 text-center text-[0.74vw] bg-[#dfe6f5] sticky top-0 z-20">Product Manifest Details</th>
-                    <th rowSpan={2} style={{ right: 0 }} className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 text-center border-b border-l border-slate-300 whitespace-nowrap text-[0.74vw] align-middle bg-[#E9EDF7] sticky right-0 top-0 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">Actions</th>
+                    <th colSpan={12} className="px-[0.6vw] py-[0.4vw] font-bold text-slate-700 border-b border-r border-slate-300 text-center text-[0.74vw] bg-[#dfe6f5] sticky top-0 z-40">Product Manifest Details</th>
+                    <th rowSpan={2} className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 text-center border-b border-l border-slate-300 whitespace-nowrap text-[0.74vw] align-middle bg-[#E9EDF7] sticky right-0 top-0 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">Actions</th>
                   </tr>
                   <tr>
                     {["Item Code", "Description", "NC Type", "Stage", "Qty", "Serial/Batch", "Assigned To", "Verified By", "Verified Date", "CAE", "Final Status", "Final Remarks"].map((h) => {
                       const minW = h === "Description" ? "13vw" : (h === "Final Remarks" ? "10vw" : (h === "Qty" ? "4.5vw" : (h === "Verified By" ? "8vw" : (h === "Verified Date" ? "6.5vw" : (h === "CAE" ? "9vw" : "6.5vw")))));
                       return (
-                        <th key={h} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.4vw] font-semibold text-slate-600 border-b border-r border-slate-300 whitespace-nowrap text-[0.7vw] bg-[#E9EDF7] text-center sticky top-[1.8vw] z-20">{h}</th>
+                        <th key={h} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.4vw] font-semibold text-slate-600 border-b border-r border-slate-300 whitespace-nowrap text-[0.7vw] bg-[#E9EDF7] text-center">{h}</th>
                       );
                     })}
                   </tr>

@@ -133,8 +133,8 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
   }, [searchTerm]);
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-white overflow-y-auto lg:overflow-hidden">
-      <div className="p-3 lg:p-[1.4vw] grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-[1.8vw] items-start">
+    <div className="flex-1 flex flex-col min-h-0 bg-white">
+      <div className="p-[1.4vw] grid grid-cols-1 lg:grid-cols-12 gap-[1.8vw] items-start">
         {/* Left Column: Categories List */}
         <div className="lg:col-span-7 flex flex-col">
           <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100 gap-[1vw]">
@@ -143,13 +143,13 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
               <p className="text-[0.72vw] text-gray-500">Manage client classification groups</p>
             </div>
             <div className="relative">
-              <Search className="absolute left-2 lg:left-[0.6vw] top-1/2 -translate-y-1/2 w-3.5 h-3.5 lg:w-[0.8vw] lg:h-[0.8vw] text-gray-400" />
+              <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
               <input
                 type="text"
                 placeholder="Search categories..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-36 lg:w-[12vw] pl-6 lg:pl-[1.8vw] pr-2 py-1 lg:py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-xs lg:text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
@@ -168,13 +168,14 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                   return (
                     <div
                       key={type.id || type._id}
-                      className={`flex items-center justify-between px-3 py-2.5 lg:px-[1vw] lg:py-[0.75vw] transition-colors group ${isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"}`}
+                      className={`flex items-center justify-between px-[1vw] py-[0.75vw] transition-colors group ${isEditingThis ? "bg-blue-50/70" : "hover:bg-gray-50/70"
+                        }`}
                     >
                       <div className="flex items-center gap-[0.7vw]">
-                        <span className="w-5 h-5 lg:w-[1.6vw] lg:h-[1.6vw] rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-xs lg:text-[0.72vw] font-bold">
+                        <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-[0.72vw] font-bold">
                           {globalIdx + 1}
                         </span>
-                        <span className={`text-xs lg:text-[0.76vw] font-semibold px-2 py-0.5 lg:px-[0.6vw] lg:py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
+                        <span className={`text-[0.76vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
                           {type.name}
                         </span>
                       </div>
@@ -264,7 +265,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
         </div>
 
         {/* Right Column: Clean Form Workspace */}
-        <div className="lg:col-span-5 bg-gray-50/60 border border-gray-200 rounded-[0.6vw] p-3.5 lg:p-[1.2vw]">
+        <div className="lg:col-span-5 bg-gray-50/60 border border-gray-200 rounded-[0.6vw] p-[1.2vw]">
           {editingType ? (
             canUpdate ? (
               <div className="space-y-[1vw]">
@@ -333,7 +334,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                   value={newType.name}
                   onChange={(e) => setNewType({ ...newType, name: e.target.value })}
                   placeholder="e.g. OEM, Tier 1, Direct Customer..."
-                  className="w-full bg-white border border-gray-300 rounded-[0.4vw] px-3 py-2 lg:px-[0.75vw] lg:py-[0.5vw] text-xs lg:text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
+                  className="w-full bg-white border border-gray-300 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
                 />
               </div>
 
@@ -341,7 +342,7 @@ const PartyTypesSection = ({ partyTypes = [], setPartyTypes }) => {
                 type="button"
                 onClick={handleAdd}
                 disabled={!newType.name.trim()}
-                className="w-full flex items-center justify-center gap-1.5 lg:gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-2 lg:py-[0.5vw] rounded-[0.4vw] text-xs lg:text-[0.82vw] font-semibold transition-all cursor-pointer shadow-sm"
+                className="w-full flex items-center justify-center gap-[0.4vw] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer shadow-sm"
               >
                 <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Category
               </button>

@@ -210,27 +210,27 @@ const SystemSettingsPage = () => {
   );
 
   return (
-    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-sm lg:text-[0.85vw] pr-[0.4vw] pb-[0.3vw] overflow-y-auto lg:overflow-hidden">
+    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
        
         <div className="flex-1 bg-white border border-slate-400 rounded-[0.6vw] shadow-sm mb-[1vw] overflow-hidden flex flex-col">
           {/* ── Tab: Categories ── */}
           {activeTab === "categories" && (
             <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex flex-wrap items-center gap-2 lg:gap-[0.8vw] px-3 py-2.5 lg:px-[1.2vw] lg:py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-slate-50 to-white">
-                <div className="w-7 h-7 lg:w-[1.8vw] lg:h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center flex-shrink-0">
-                  <Icon icon="solar:tag-bold-duotone" className="w-4 h-4 lg:w-[1.1vw] lg:h-[1.1vw] text-white" />
+              <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.7vw] border-b border-slate-400 bg-gradient-to-r from-slate-50 to-white">
+                <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center flex-shrink-0">
+                  <Icon icon="solar:tag-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-sm lg:text-[0.9vw] font-bold text-slate-900">
+                  <h2 className="text-[0.9vw] font-bold text-slate-900">
                     Party Type Categories
                   </h2>
-                  <p className="text-xs lg:text-[0.7vw] text-gray-600">
+                  <p className="text-[0.7vw] text-gray-800">
                     Manage customer categories used across the system
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-xs lg:text-[0.72vw] text-gray-700 bg-blue-100 px-2 py-0.5 lg:px-[0.6vw] lg:py-[0.25vw] rounded-full">
+                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
                     {partyTypes.length} categories
                   </span>
                 </div>
