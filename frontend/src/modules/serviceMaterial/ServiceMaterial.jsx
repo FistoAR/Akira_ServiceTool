@@ -3058,12 +3058,12 @@ const AdminTableView = ({
       <div className="overflow-auto max-h-[65vh] min-h-[65vh] w-full rounded-t-[0.6vw]">
         <table className="w-full text-left border-collapse">
           {/* ── THEAD ─────────────────────────────────────────────────────── */}
-          <thead className="sticky top-0 z-30 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
+          <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
             <tr className="bg-[#E9EDF7]">
               {canDelete && !isSupervisor && (
                 <th
                   rowSpan={2}
-                  className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-40 bg-[#E9EDF7]"
+                  className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-50 bg-[#E9EDF7]"
                 >
                   <button
                     type="button"
@@ -3089,7 +3089,7 @@ const AdminTableView = ({
 
               <th
                 rowSpan={2}
-                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3%] sticky top-0 z-40 bg-[#E9EDF7]"
+                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3%] sticky top-0 z-50 bg-[#E9EDF7]"
               >
                 S. No
               </th>
@@ -3097,7 +3097,7 @@ const AdminTableView = ({
               {/* Products super-header */}
               <th
                 colSpan={productCols.length}
-                className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-40 bg-[#E9EDF7]"
+                className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-50 bg-[#E9EDF7]"
               >
                 Products
               </th>
@@ -3114,7 +3114,7 @@ const AdminTableView = ({
                           ? "5vw"
                           : "6.5vw",
                   }}
-                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-50 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
@@ -3135,7 +3135,7 @@ const AdminTableView = ({
                             ? "6.5vw"
                             : "8vw",
                   }}
-                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-50 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>

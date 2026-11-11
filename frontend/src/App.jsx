@@ -57,7 +57,9 @@ function MainLayout() {
             path="dashboard"
             element={
               <ProtectedRoute requiredModules={["dashboardAdmin", "dashboardUser"]}>
-                <Dashboard />
+                <div className="responsive-viewport-canvas flex-1 min-h-0 flex flex-col">
+                  <Dashboard />
+                </div>
               </ProtectedRoute>
             }
           />
@@ -69,7 +71,9 @@ function MainLayout() {
                   "partyTypes", "warrantyRules", "segments", "fourM", "units", "sites", "employees", "roleAccess", "escalation"
                 ]}
               >
-                <MasterPage />
+                <div className="responsive-viewport-canvas flex-1 min-h-0 flex flex-col">
+                  <MasterPage />
+                </div>
               </ProtectedRoute>
             }
           />
@@ -77,7 +81,9 @@ function MainLayout() {
             path="customers"
             element={
               <ProtectedRoute requiredModules={["customers"]}>
-                <Customers />
+                <div className="responsive-viewport-canvas flex-1 min-h-0 flex flex-col">
+                  <Customers />
+                </div>
               </ProtectedRoute>
             }
           />
