@@ -44,7 +44,7 @@ import {
   LifeBuoy,
 } from "lucide-react";
 import akiraLogo from "../../assets/Akira_logo.webp";
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   getStatusCfg,
@@ -90,9 +90,11 @@ const EXPORT_CONFIGS = {
     { key: "Error Code", label: "Error Code" },
     { key: "Warranty Status", label: "Warranty Status" },
     { key: "Registered By", label: "Registered By" },
-    { key: "Assigned Engineer", label: "Assigned Engineer" },
+    { key: "Assigned To", label: "Assigned To" },
     { key: "Assigned Department", label: "Assigned Department" },
+    { key: "Escalation History", label: "Escalation History" },
     { key: "Status", label: "Status" },
+    { key: "Closed By", label: "Closed By" },
     { key: "Closed Date", label: "Closed Date" },
     { key: "Turnaround Time (TAT)", label: "Turnaround Time (TAT)" },
     { key: "Last Edited", label: "Last Edited" },
@@ -106,13 +108,17 @@ const EXPORT_CONFIGS = {
     { key: "Product Model", label: "Product Model" },
     { key: "Serial Number", label: "Serial Number" },
     { key: "Error Code", label: "Error Code" },
+    { key: "Registered By", label: "Registered By" },
+    { key: "Assigned To", label: "Initial Assignee" },
     { key: "Escalated Level", label: "Escalated Level" },
     { key: "Escalated At", label: "Escalated Date & Time" },
     { key: "Escalated By", label: "Escalated By" },
     { key: "Current Assignee", label: "Current Assignee" },
     { key: "Reason", label: "Reason for Escalation" },
+    { key: "Escalation History", label: "Full Escalation Chain" },
     { key: "Open Duration", label: "Open Duration" },
     { key: "Status", label: "Status" },
+    { key: "Closed By", label: "Closed By" },
     { key: "Closed Date", label: "Closed Date" },
   ],
   assignments_overview: [
@@ -120,10 +126,11 @@ const EXPORT_CONFIGS = {
     { key: "Employee Name", label: "Employee Name" },
     { key: "User ID", label: "User ID" },
     { key: "Department", label: "Department" },
-    { key: "Total Calls", label: "Total Calls" },
+    { key: "Total Calls", label: "Total Assigned Calls" },
     { key: "Self Assigned Calls", label: "Self Assigned Calls" },
+    { key: "Escalated Calls", label: "Escalated Calls" },
     { key: "Open Calls", label: "Open Calls" },
-    { key: "Closed Calls", label: "Closed Calls" },
+    { key: "Closed Calls", label: "Calls Closed By Employee" },
     { key: "Completion Rate (%)", label: "Completion Rate (%)" },
     { key: "Average Response Time", label: "Average Response Time" },
   ],
@@ -139,9 +146,13 @@ const EXPORT_CONFIGS = {
     { key: "Product Model", label: "Product Model" },
     { key: "Serial Number", label: "Serial Number" },
     { key: "Error Code", label: "Error Code" },
+    { key: "Registered By", label: "Registered By" },
+    { key: "Assigned To", label: "Assigned To" },
     { key: "Assigned Date", label: "Assigned Date" },
-    { key: "Closed Date", label: "Closed Date" },
+    { key: "Escalation History", label: "Escalation History" },
     { key: "Status", label: "Status" },
+    { key: "Closed By", label: "Closed By" },
+    { key: "Closed Date", label: "Closed Date" },
     { key: "Turnaround Time (TAT)", label: "Turnaround Time (TAT)" },
   ],
 };
@@ -493,9 +504,13 @@ export default function ServiceCallReports() {
     setSelectedExportColsForCurrentMode(all);
   };
 
-  const resetDefaultExportCols = () => {
-    const all = activeExportConfig.map((c) => c.key);
-    setSelectedExportColsForCurrentMode(all);
+  const unselectAllExportCols = () => {
+    // Keep at least the first column selected to avoid empty export issues
+    if (activeExportConfig.length > 0) {
+      setSelectedExportColsForCurrentMode([activeExportConfig[0].key]);
+    } else {
+      setSelectedExportColsForCurrentMode([]);
+    }
   };
   const [editForm, setEditForm] = useState({
     status: "",
@@ -929,6 +944,40 @@ export default function ServiceCallReports() {
     }
   };
 
+
+// Helper to build chronological escalation history chain string for Excel exports
+const buildEscalationHistoryString = (call, prod) => {
+  const callEsc = call.escalationHistory || call._escalationHistory || [];
+  const prodEsc = prod?._escalationHistory || [];
+  const combined = [...callEsc, ...prodEsc];
+
+  if (combined.length === 0) {
+    // Check if call or prod marked critical without history array
+    if (prod?._isCritical || call.priority === "Critical" || (prod?._escalationLevel || 0) > 0) {
+      return `Level ${prod?._escalationLevel || call.escalationLevel || 1} (Critical / SLA Breach)`;
+    }
+    return "None";
+  }
+
+  const steps = [];
+  combined.forEach((h, idx) => {
+    const toTarget =
+      h.escalatedToName ||
+      h.engineerName ||
+      h.assignedToName ||
+      h.assignedEngineerName ||
+      (h.department ? `Dept: ${h.department}` : null) ||
+      "Escalation Queue";
+    const byName = h.updatedByName || h.escalatedByName || h.by || "System Automation";
+    const lvl = h.level !== undefined ? `L${h.level}` : `Esc #${idx + 1}`;
+    const rsn = h.reason || h.remarks || "";
+
+    steps.push(`[${lvl}] To: ${toTarget} (By: ${byName}${rsn ? ` - Reason: ${rsn}` : ""})`);
+  });
+
+  return steps.join(" → ");
+};
+
   // Direct Excel Export Implementation for all 4 views
   const executeExportExcel = () => {
     try {
@@ -952,9 +1001,13 @@ export default function ServiceCallReports() {
               p._productClosure?.closedAt ||
               p._productClosure?.date ||
               (isClosed ? p._productClosure?.updatedAt : null);
+            const closedByName = isClosed
+              ? (p._productClosure?.closedByName || p._productClosure?.userName || c.closedByName || "Engineer")
+              : "Not Closed";
 
             const regTime = c.createdAt || c.timestamp || c.dateTime;
             const tat = formatDurationFrom(regTime, isClosed ? closedAt : null);
+            const escHistoryStr = buildEscalationHistoryString(c, p);
 
             const fullRow = {
               "S.No": sNo++,
@@ -974,9 +1027,11 @@ export default function ServiceCallReports() {
               "Error Code": p.errorCode || "—",
               "Warranty Status": p.warrantyStatus || "—",
               "Registered By": c.registeredByName || c.registeredBy || "System",
-              "Assigned Engineer": p._assignedEngineerName || c.currentEngineerName || "Unassigned",
+              "Assigned To": p._assignedEngineerName || c.currentEngineerName || "Unassigned",
               "Assigned Department": p._assignedDepartment || c.department || "—",
+              "Escalation History": escHistoryStr,
               "Status": getStatusCfg(pStatus).label,
+              "Closed By": closedByName,
               "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
               "Turnaround Time (TAT)": tat,
               "Last Edited": c.editHistory?.length
@@ -1000,6 +1055,10 @@ export default function ServiceCallReports() {
         escalationItems.forEach((item) => {
           const { call, prod, escalatedBy, escalatedAt, reason, isClosed, closedAt, openDuration } = item;
           const pStatus = getCallProductStatus(prod, call.status);
+          const closedByName = isClosed
+            ? (prod._productClosure?.closedByName || prod._productClosure?.userName || call.closedByName || "Engineer")
+            : "Not Closed";
+          const escHistoryStr = buildEscalationHistoryString(call, prod);
 
           const fullRow = {
             "S.No": sNo++,
@@ -1010,13 +1069,17 @@ export default function ServiceCallReports() {
             "Product Model": prod.productModel || prod.itemCode || "—",
             "Serial Number": prod.serialNumber || "—",
             "Error Code": prod.errorCode || "—",
+            "Registered By": call.registeredByName || call.registeredBy || "System",
+            "Assigned To": prod._assignedEngineerName || call.currentEngineerName || "Unassigned",
             "Escalated Level": prod._escalationLevel || call.escalationLevel || 1,
             "Escalated At": fmtDateTime(escalatedAt),
             "Escalated By": escalatedBy || "System Automation",
             "Current Assignee": prod._assignedEngineerName || call.currentEngineerName || "Escalation Queue",
             "Reason": reason || "SLA Escalation",
+            "Escalation History": escHistoryStr,
             "Open Duration": openDuration || "—",
             "Status": getStatusCfg(pStatus).label,
+            "Closed By": closedByName,
             "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
           };
 
@@ -1037,6 +1100,14 @@ export default function ServiceCallReports() {
             ? Math.round((emp.closedCount / emp.totalAssigned) * 100)
             : 0;
 
+          // Count escalated calls associated with this employee
+          const escalatedCount = (emp.calls || []).filter((call) => {
+            const callEsc = call.escalationHistory || call._escalationHistory || [];
+            return (call.products || []).some(
+              (p) => callEsc.length > 0 || (p._escalationHistory || []).length > 0 || p._isCritical || call.priority === "Critical"
+            );
+          }).length;
+
           const fullRow = {
             "S.No": sNo++,
             "Employee Name": emp.name || "—",
@@ -1044,6 +1115,7 @@ export default function ServiceCallReports() {
             "Department": emp.department || "—",
             "Total Calls": emp.totalAssigned || 0,
             "Self Assigned Calls": emp.selfAssignedCount || 0,
+            "Escalated Calls": escalatedCount,
             "Open Calls": emp.openCount || 0,
             "Closed Calls": emp.closedCount || 0,
             "Completion Rate (%)": `${completionRate}%`,
@@ -1087,10 +1159,14 @@ export default function ServiceCallReports() {
               p._productClosure?.closedAt ||
               p._productClosure?.date ||
               (isClosed ? p._productClosure?.updatedAt : null);
+            const closedByName = isClosed
+              ? (p._productClosure?.closedByName || p._productClosure?.userName || call.closedByName || "Engineer")
+              : "Not Closed";
 
             const regTime = call.createdAt || call.timestamp || call.dateTime;
             const assignTime = p._assignedAt || call.assignedAt || call.assignmentDate || regTime;
             const tat = formatDurationFrom(regTime, isClosed ? closedAt : null);
+            const escHistoryStr = buildEscalationHistoryString(call, p);
 
             const isSelf = Boolean(
               call.noEscalation ||
@@ -1110,9 +1186,13 @@ export default function ServiceCallReports() {
               "Product Model": p.productModel || p.itemCode || "—",
               "Serial Number": p.serialNumber || "—",
               "Error Code": p.errorCode || "—",
+              "Registered By": call.registeredByName || call.registeredBy || "System",
+              "Assigned To": p._assignedEngineerName || call.currentEngineerName || "Unassigned",
               "Assigned Date": fmtDateTime(assignTime),
-              "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
+              "Escalation History": escHistoryStr,
               "Status": getStatusCfg(pStatus).label,
+              "Closed By": closedByName,
+              "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
               "Turnaround Time (TAT)": tat,
             };
 
@@ -1134,15 +1214,70 @@ export default function ServiceCallReports() {
 
       const ws = XLSX.utils.json_to_sheet(rows);
 
-      // Auto-fit column widths
+      // ── Apply Professional Styling: Borders, Header Colors, Left Alignment & Text Wrapping ──
+      const thinBorder = {
+        top: { style: "thin", color: { rgb: "CBD5E1" } }, // slate-300
+        bottom: { style: "thin", color: { rgb: "CBD5E1" } },
+        left: { style: "thin", color: { rgb: "CBD5E1" } },
+        right: { style: "thin", color: { rgb: "CBD5E1" } },
+      };
+
+      const headerStyle = {
+        fill: { fgColor: { rgb: "1E40AF" } }, // Rich royal blue (#1E40AF)
+        font: { name: "Segoe UI", sz: 10, bold: true, color: { rgb: "FFFFFF" } },
+        alignment: { horizontal: "left", vertical: "center", wrapText: true },
+        border: {
+          top: { style: "medium", color: { rgb: "1E3A8A" } },
+          bottom: { style: "medium", color: { rgb: "1E3A8A" } },
+          left: { style: "thin", color: { rgb: "3B82F6" } },
+          right: { style: "thin", color: { rgb: "3B82F6" } },
+        },
+      };
+
+      const cellStyle = {
+        font: { name: "Segoe UI", sz: 9.5, color: { rgb: "1E293B" } }, // slate-800
+        alignment: { horizontal: "left", vertical: "center", wrapText: true },
+        border: thinBorder,
+      };
+
+      const alternateCellStyle = {
+        fill: { fgColor: { rgb: "F8FAFC" } }, // subtle slate-50
+        font: { name: "Segoe UI", sz: 9.5, color: { rgb: "1E293B" } },
+        alignment: { horizontal: "left", vertical: "center", wrapText: true },
+        border: thinBorder,
+      };
+
+      const range = XLSX.utils.decode_range(ws["!ref"] || "A1");
+
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+          if (!ws[cellRef]) {
+            ws[cellRef] = { t: "s", v: "" };
+          }
+
+          if (R === 0) {
+            // Header row
+            ws[cellRef].s = headerStyle;
+          } else {
+            // Alternating data rows
+            ws[cellRef].s = R % 2 === 0 ? alternateCellStyle : cellStyle;
+          }
+        }
+      }
+
+      // Auto-fit column widths with padding and wrap allowances
       const colWidths = Object.keys(rows[0] || {}).map((key) => {
         const maxLen = Math.max(
           key.length,
           ...rows.map((r) => (r[key] ? String(r[key]).length : 0))
         );
-        return { wch: Math.min(Math.max(maxLen + 2, 10), 45) };
+        return { wch: Math.min(Math.max(maxLen + 3, 12), 40) };
       });
       ws["!cols"] = colWidths;
+
+      // Set header row height
+      ws["!rows"] = [{ hpt: 28 }];
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, sheetName);
@@ -1447,53 +1582,45 @@ export default function ServiceCallReports() {
                 <div className="absolute right-0 top-full mt-[0.4vw] w-[18vw] max-h-[24vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
                   <div className="p-[0.7vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
                     <div>
-                      <div className="text-[0.78vw] font-bold text-slate-800">
+                      <div className="text-[0.78vw] font-medium text-slate-800">
                         Export Columns
-                      </div>
-                      <div className="text-[0.68vw] text-slate-500">
-                        Saved in browser preferences
                       </div>
                     </div>
                     <div className="flex items-center gap-[0.4vw]">
                       <button
                         onClick={selectAllExportCols}
-                        className="text-[0.7vw] font-semibold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                        className="text-[0.7vw] font-normal text-indigo-600 hover:text-indigo-800 cursor-pointer"
                       >
-                        All
+                        Select All
                       </button>
                       <span className="text-slate-300 text-[0.7vw]">|</span>
                       <button
-                        onClick={resetDefaultExportCols}
-                        className="flex items-center gap-[0.2vw] text-[0.7vw] font-semibold text-slate-500 hover:text-slate-700 cursor-pointer"
-                        title="Reset to default"
+                        onClick={unselectAllExportCols}
+                        className="text-[0.7vw] font-normal text-slate-500 hover:text-slate-700 cursor-pointer"
                       >
-                        <RotateCcw className="w-[0.65vw] h-[0.65vw]" />
-                        Reset
+                        Unselect All
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-[0.5vw] space-y-[0.25vw] max-h-[17vw]">
+                  <div className="flex-1 overflow-y-auto p-[0.4vw] space-y-[0.15vw] max-h-[17vw]">
                     {activeExportConfig.map((col) => {
                       const isChecked = selectedExportCols.includes(col.key);
                       return (
-                        <label
+                        <div
                           key={col.key}
                           onClick={() => toggleExportCol(col.key)}
-                          className={`flex items-center gap-[0.5vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] cursor-pointer text-[0.75vw] transition-colors ${
-                            isChecked
-                              ? "bg-indigo-50/60 text-slate-900 font-semibold"
-                              : "text-slate-600 hover:bg-slate-50 font-normal"
-                          }`}
+                          className="flex items-center gap-[0.5vw] px-[0.6vw] py-[0.3vw] rounded-[0.35vw] cursor-pointer text-[0.75vw] font-normal text-slate-700 hover:bg-slate-50 transition-colors select-none"
                         >
                           <input
                             type="checkbox"
                             checked={isChecked}
-                            onChange={() => {}} // Handled by label click
+                            onChange={() => toggleExportCol(col.key)}
+                            onClick={(e) => e.stopPropagation()}
                             className="w-[0.85vw] h-[0.85vw] rounded text-indigo-600 border-slate-300 focus:ring-0 cursor-pointer"
                           />
                           <span className="truncate">{col.label}</span>
-                        </label>
+                        </div>
                       );
                     })}
                   </div>

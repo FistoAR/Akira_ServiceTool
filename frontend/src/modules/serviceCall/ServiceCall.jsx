@@ -57,6 +57,7 @@ import ServiceCallForm from "./ServiceCallForm";
 import useModulePermissions from "../../components/useModulePermissions";
 import CustomDropdown from "../../components/CustomDropdown";
 import { useSocket } from "../../contexts/SocketContext";
+import { CustomTooltip, CustomerInfoCell } from "./responseComponents/CommonUI";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const CUSTOMER_DB_KEY = "customer_db_grouped_v5";
@@ -1930,45 +1931,45 @@ export default function ServiceCall() {
               </div>
 
               <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
-                <table className="w-full text-left border-separate border-spacing-0">
-                  <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
-                    <tr className="bg-[#e9edf4]">
+                <table className="w-full text-left border-collapse">
+                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+                    <tr>
                       {canDelete && !isSupervisor && (
-                        <th className="p-[0.7vw] border-b-2 border-r border-slate-300 w-[3%] text-center bg-[#e9edf4]">
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[3%] text-center">
                           <button
                             onClick={toggleSelectPage}
                             className="flex items-center justify-center w-full cursor-pointer"
                           >
                             {isPageSelected ? (
-                              <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
+                              <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
                             ) : (
                               <Square className="w-[1vw] h-[1vw] text-slate-400 hover:text-slate-500" />
                             )}
                           </button>
                         </th>
                       )}
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap w-[3.5vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap w-[3.5vw]">
                         S.No
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
                         Call No & Date
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
-                        Customer & Contact
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                        Customer
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[7vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[7vw]">
                         Customer Type
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
                         Product / System
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
                         Priority
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[8vw]">
                         Status
                       </th>
-                      <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[6vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[6vw]">
                         Actions
                       </th>
                     </tr>
@@ -2074,14 +2075,14 @@ export default function ServiceCall() {
                                   {canDelete && !isSupervisor && (
                                     <td
                                       rowSpan={rowCount}
-                                      className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle ${cellBg}`}
+                                      className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle ${cellBg}`}
                                     >
                                       <button
                                         onClick={() => toggleSelect(rowId)}
                                         className="flex items-center justify-center w-full cursor-pointer"
                                       >
                                         {isSelected ? (
-                                          <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
+                                          <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
                                         ) : (
                                           <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
                                         )}
@@ -2095,7 +2096,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap font-semibold text-slate-600 text-[0.74vw] ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap font-normal text-slate-700 text-[0.76vw] ${cellBg}`}
                                 >
                                   {(currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1}
                                 </td>
@@ -2105,20 +2106,19 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.84vw] font-normal text-[#6e000a] hover:text-[#990011] hover:underline block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="text-[0.72vw] text-gray-800 font-medium mt-[0.2vw] flex items-center gap-[0.28vw]">
-                                    <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
+                                  <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal mt-[0.14vw]">
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
-                                        if (isNaN(d)) return row.dateTime || "—";
+                                        if (isNaN(d)) return <span>{row.dateTime || "—"}</span>;
                                         const datePart = d.toLocaleDateString("en-GB", {
                                           day: "2-digit",
                                           month: "2-digit",
@@ -2129,55 +2129,54 @@ export default function ServiceCall() {
                                           minute: "2-digit",
                                           hour12: true,
                                         });
-                                        return `${datePart}, ${timePart}`;
+                                        return (
+                                          <>
+                                            <span>{datePart}</span>
+                                            <span className="text-[0.68vw] text-slate-500 mt-[0.05vw]">{timePart}</span>
+                                          </>
+                                        );
                                       } catch {
-                                        return row.dateTime || "—";
+                                        return <span>{row.dateTime || "—"}</span>;
                                       }
                                     })()}
                                   </div>
                                 </td>
                               )}
 
-                              {/* 2. Customer & Contact */}
+                              {/* 2. Customer */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[15vw] ${cellBg}`}
                                 >
-                                  <div
-                                    className="font-semibold text-slate-900 text-[0.82vw] truncate max-w-[15vw]"
-                                    title={row.customerName}
-                                  >
-                                    {row.customerName || "—"}
-                                  </div>
-                                  <div className="flex items-center gap-[0.45vw] mt-[0.25vw] flex-wrap">
-                                    {row.contactNumber && (
-                                      <a
-                                        href={`tel:${row.contactNumber}`}
-                                        className="inline-flex items-center gap-[0.25vw] text-[0.72vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
-                                        title="Click to call"
-                                      >
-                                        <Phone className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
-                                        <span>{row.contactNumber}</span>
-                                      </a>
-                                    )}
-                                    {row.partyCode && (
-                                      <span className="text-[0.68vw] text-slate-500 font-mono shrink-0">
-                                        {row.partyCode}
-                                      </span>
-                                    )}
-                                  </div>
+                                  <CustomerInfoCell
+                                    customerName={row.customerName}
+                                    contactNumber={row.contactNumber}
+                                    partyCode={row.partyCode}
+                                  />
                                 </td>
                               )}
 
-                              {/* 2b. Customer Type (Dedicated Column) */}
+                              {/* 2b. Customer Type */}
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap font-bold text-[0.78vw] ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap text-[0.78vw] font-normal ${cellBg}`}
                                 >
                                   {row.customerType && row.customerType !== "All" ? (
-                                    <span className={getCustomerTypeTextColor(row.customerType)}>
+                                    <span
+                                      className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                        row.customerType === "OEM"
+                                          ? "bg-blue-50 text-blue-700 border-blue-200"
+                                          : row.customerType === "End Customer"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          : row.customerType === "Distributor"
+                                          ? "bg-purple-50 text-purple-700 border-purple-200"
+                                          : row.customerType === "Dealer"
+                                          ? "bg-amber-50 text-amber-700 border-amber-200"
+                                          : "bg-slate-50 text-slate-700 border-slate-200"
+                                      }`}
+                                    >
                                       {row.customerType}
                                     </span>
                                   ) : (
@@ -2187,23 +2186,46 @@ export default function ServiceCall() {
                               )}
 
                               {/* 3. Product / System */}
-                              <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
-                                <div className="text-[0.8vw] font-medium text-slate-900 truncate max-w-[15vw]" title={prod?.productModel || prod?.itemCode || "—"}>
-                                  {prod?.productModel || prod?.itemCode || "—"}
-                                </div>
-                                <div className="flex items-center gap-[0.3vw] mt-[0.2vw] flex-wrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[15vw]">
+                                <CustomTooltip
+                                  position="top-start"
+                                  className="max-w-full"
+                                  content={
+                                    <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                                      <div className="font-normal text-slate-200">
+                                        {prod?.productModel || prod?.itemCode || "—"}
+                                      </div>
+                                      {prod?.serialNumber && (
+                                        <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                          <span className="text-slate-400 font-sans">SN: </span>
+                                          <span>{prod.serialNumber}</span>
+                                        </div>
+                                      )}
+                                      {prod?.callDescription && (
+                                        <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                          {prod.callDescription}
+                                        </div>
+                                      )}
+                                    </div>
+                                  }
+                                >
+                                  <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                                    {prod?.productModel || prod?.itemCode || "—"}
+                                  </div>
+                                </CustomTooltip>
+                                <div className="flex items-center gap-[0.3vw] mt-[0.1vw] flex-wrap">
                                   {prod?.serialNumber && (
-                                    <span className="text-[0.68vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                                    <span className="text-[0.66vw] text-slate-400 font-mono">
                                       SN: {prod.serialNumber}
                                     </span>
                                   )}
                                   {prod?.errorCode && (
-                                    <span className="text-[0.68vw] text-red-600 font-mono bg-red-50 border border-red-200 px-[0.35vw] py-[0.05vw] rounded font-semibold">
+                                    <span className="text-[0.66vw] text-rose-600 font-mono">
                                       Err: {prod.errorCode}
                                     </span>
                                   )}
                                   {allProducts.length > 1 && (
-                                    <span className="text-[0.66vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                                    <span className="text-[0.64vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
                                       +{allProducts.length - 1} more
                                     </span>
                                   )}
@@ -2214,16 +2236,16 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   {(() => {
                                     const p = row.priority || "Medium";
                                     let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
-                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200 shadow-2xs font-bold";
+                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
                                     else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                     else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                                     return (
-                                      <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-semibold ${badgeStyle}`}>
+                                      <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                         {p}
                                       </span>
                                     );
@@ -2232,7 +2254,7 @@ export default function ServiceCall() {
                               )}
 
                               {/* 5. Status & Assignee */}
-                              <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
                                 {(() => {
                                   const status = getProductStatus(prod, effectiveStatus);
                                   const cfg = getStatusCfg(status);
@@ -2246,15 +2268,15 @@ export default function ServiceCall() {
                                     (row.assignedTo ? employees?.find(e => e.userId === row.assignedTo || e._id === row.assignedTo)?.name : null);
                                   return (
                                     <div>
-                                      <div className="inline-flex items-center gap-[0.4vw] text-[0.8vw] font-semibold text-slate-800">
-                                        <span className={`w-[0.5vw] h-[0.5vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
+                                      <div className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-normal text-slate-800">
+                                        <span className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
                                         <span>{cfg.label}</span>
                                       </div>
-                                      <div className="mt-[0.15vw] text-[0.68vw] text-slate-500 font-medium">
+                                      <div className="mt-[0.1vw] text-[0.66vw] text-slate-400 font-normal">
                                         {engineerName ? (
-                                          <span className="text-slate-600">to: <span className="text-indigo-600 font-semibold">{engineerName}</span></span>
+                                          <span>to: <span className="text-slate-600">{engineerName}</span></span>
                                         ) : (
-                                          <span className="text-slate-400 italic">Unassigned</span>
+                                          <span className="italic">Unassigned</span>
                                         )}
                                       </div>
                                     </div>
@@ -2266,7 +2288,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : "bg-white"}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : "bg-white"}`}
                                 >
                                   <div className="flex items-center justify-center gap-[0.3vw] action-menu-container">
                                     {/* Direct 1-click Info modal */}
@@ -2275,10 +2297,10 @@ export default function ServiceCall() {
                                         e.stopPropagation();
                                         setSelectedInfoCall(row);
                                       }}
-                                      className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                                      className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       title="View Call Details"
                                     >
-                                      <Eye className="w-[1vw] h-[1vw]" />
+                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
 
                                     {/* 3-Dot Menu */}
@@ -2297,14 +2319,14 @@ export default function ServiceCall() {
                                           setActiveActionMenuId(rowId);
                                         }
                                       }}
-                                      className="p-[0.35vw] text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                      className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       title="More Actions"
                                     >
-                                      <MoreVertical className="w-[1vw] h-[1vw]" />
+                                      <MoreVertical className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
                                   </div>
 
-                                    {/* Action Dropdown Menu via Portal to avoid table overflow clipping */}
+                                  {/* Action Dropdown Menu via Portal to avoid table overflow clipping */}
                                     {activeActionMenuId === rowId && actionMenuCoords && ReactDOM.createPortal(
                                       <div
                                         className="action-menu-portal fixed z-[9999]"
@@ -2407,23 +2429,23 @@ export default function ServiceCall() {
               </div>
 
               {/* Pagination */}
-              <div className="border-t border-gray-200 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
-                <div className="text-[0.74vw] text-gray-500 font-medium">
+              <div className="border-t border-slate-300 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
+                <div className="text-[0.75vw] text-slate-600 font-medium">
                   Showing{" "}
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-slate-800">
                     {paginatedData.length > 0
                       ? (currentPage - 1) * ITEMS_PER_PAGE + 1
                       : 0}
                   </span>{" "}
                   to{" "}
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-slate-800">
                     {Math.min(
                       currentPage * ITEMS_PER_PAGE,
                       filteredData.length,
                     )}
                   </span>{" "}
                   of{" "}
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-slate-800">
                     {filteredData.length}
                   </span>{" "}
                   entries
@@ -2432,7 +2454,7 @@ export default function ServiceCall() {
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
                   >
                     <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                   </button>
@@ -2440,17 +2462,17 @@ export default function ServiceCall() {
                     {[...Array(totalPages)].map((_, i) => {
                       const pNum = i + 1;
                       if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-slate-400 text-[0.75vw]">...</span>;
                         return null;
                       }
                       return (
                         <button
                           key={pNum}
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                          className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
                             currentPage === pNum
-                              ? "bg-blue-600 text-white shadow-2xs"
-                              : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                              ? "bg-[#1a73e8] text-white shadow-2xs"
+                              : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                           }`}
                         >
                           {pNum}
@@ -2463,7 +2485,7 @@ export default function ServiceCall() {
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
                     }
                     disabled={currentPage === totalPages || totalPages === 0}
-                    className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
                   >
                     <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
                   </button>

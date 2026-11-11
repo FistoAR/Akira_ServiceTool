@@ -9,6 +9,7 @@ import useEscalationWorker from "../../service/useEscalationWorker";
 import { useNotification } from "../../components/NotificationContext";
 import CustomDropdown from "../../components/CustomDropdown";
 import { CallDetailsModal } from "./responseComponents/CallDetailsModal";
+import { CustomTooltip, CustomerInfoCell } from "./responseComponents/CommonUI";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -607,52 +608,52 @@ const ServiceCallEscalations = () => {
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
-              <tr className="bg-[#e9edf4]">
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center w-[4%]">
+            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+              <tr>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
                   Call Ref & Started
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[18vw]">
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[18vw] whitespace-nowrap">
                   Customer & Site
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center whitespace-nowrap min-w-[8vw]">
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap min-w-[8vw]">
                   Customer Type
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[18vw]">
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[18vw] whitespace-nowrap">
                   Escalated Equipment
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 text-center whitespace-nowrap min-w-[9vw]">
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap min-w-[9vw]">
                   SLA Status
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 min-w-[12vw]">
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[12vw] whitespace-nowrap">
                   Escalated To
                 </th>
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[9vw]">
+                <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[9vw]">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="text-[0.8vw]">
               {loading || !isWorkerReady ? (
                 <tr>
-                  <td colSpan={8} className="py-[12vh] text-center">
+                  <td colSpan={8} className="py-[12vh] text-center border-b border-slate-300">
                     <div className="flex flex-col items-center justify-center gap-[0.8vw]">
-                      <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-blue-600" />
-                      <span className="text-[0.85vw] font-semibold text-slate-700">Loading Escalations Queue...</span>
+                      <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-[#1a73e8]" />
+                      <span className="text-[0.85vw] font-normal text-slate-700">Loading Escalations Queue...</span>
                     </div>
                   </td>
                 </tr>
               ) : escalatingCalls.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-[12vh] text-center">
+                  <td colSpan={8} className="py-[12vh] text-center border-b border-slate-300">
                     <div className="flex flex-col items-center justify-center gap-[0.6vw]">
                       <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                         <Shield className="w-[1.8vw] h-[1.8vw] text-emerald-600" />
                       </div>
-                      <div className="text-[0.95vw] font-semibold text-slate-800">All Clear! No Escalations</div>
+                      <div className="text-[0.95vw] font-medium text-slate-800">All Clear! No Escalations</div>
                       <div className="text-[0.74vw] text-slate-400 max-w-[20vw]">
                         There are no critical or active SLA escalations requiring attention right now.
                       </div>
@@ -677,117 +678,149 @@ const ServiceCallEscalations = () => {
                   return (activeProducts.length > 0 ? activeProducts : [{}]).map((p, pIdx) => (
                     <tr
                       key={`${call.callId}-${pIdx}`}
-                      className={`hover:bg-slate-50/70 transition-colors ${
+                      className={`hover:bg-slate-50 transition-colors bg-white ${
                         isCritical ? "bg-rose-50/20" : ""
                       }`}
                     >
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle text-slate-600 font-medium text-[0.74vw] border-r border-b border-slate-200 bg-white">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-700 font-normal text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
                           {/* 2. Call Ref & Started */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             <div className="flex items-center gap-[0.4vw]">
                               <button
                                 onClick={() => setSelectedInfoCall(call)}
-                                className="font-mono text-left text-[0.84vw] font-normal text-[#6e000a] hover:text-[#990011] hover:underline block leading-tight cursor-pointer"
+                                className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
                                 title="View Call Details"
                               >
                                 {call.callNumber}
                               </button>
-                              <span className={`inline-flex items-center px-[0.4vw] py-[0.1vw] rounded text-[0.62vw] font-bold ${
+                              <span className={`inline-flex items-center justify-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-normal border shadow-2xs whitespace-nowrap ${
                                 call.priority === 'Critical'
-                                  ? 'bg-rose-100 text-rose-700'
+                                  ? 'bg-rose-50 text-rose-700 border-rose-200'
                                   : call.priority === 'High'
-                                  ? 'bg-orange-100 text-orange-700'
-                                  : 'bg-amber-100 text-amber-800'
+                                  ? 'bg-orange-50 text-orange-700 border-orange-200'
+                                  : 'bg-amber-50 text-amber-700 border-amber-200'
                               }`}>
                                 {call.priority || 'Normal'}
                               </span>
                             </div>
-                            <div className="text-[0.72vw] text-slate-800 font-medium mt-[0.25vw] flex items-center gap-[0.28vw]">
-                              <Clock className="w-[0.7vw] h-[0.7vw] text-slate-600 shrink-0" />
-                              <span>
-                                {escalationStartTime ? (
-                                  new Date(escalationStartTime).toLocaleString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })
-                                ) : (
-                                  call.dateTime ? new Date(call.dateTime).toLocaleDateString('en-GB') : "—"
-                                )}
-                              </span>
+                            <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal mt-[0.14vw]">
+                              {(() => {
+                                try {
+                                  const dateVal = escalationStartTime || call.dateTime;
+                                  if (!dateVal) return <span>—</span>;
+                                  const d = new Date(dateVal);
+                                  if (isNaN(d)) return <span>{dateVal}</span>;
+                                  const datePart = d.toLocaleDateString("en-GB", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                  });
+                                  const timePart = d.toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  });
+                                  return (
+                                    <>
+                                      <span>{datePart}</span>
+                                      <span className="text-[0.68vw] text-slate-500 mt-[0.05vw]">{timePart}</span>
+                                    </>
+                                  );
+                                } catch {
+                                  return <span>—</span>;
+                                }
+                              })()}
                             </div>
                           </td>
 
                           {/* 3. Customer & Site */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] align-middle border-r border-b border-slate-200 bg-white">
-                            <div className="font-semibold text-slate-900 text-[0.82vw] truncate max-w-[17vw]" title={call.customerName}>
-                              {call.customerName}
-                            </div>
-                            <div className="flex flex-wrap items-center gap-[0.35vw] mt-[0.25vw]">
-                              {call.contactNumber && (
-                                <a
-                                  href={`tel:${call.contactNumber}`}
-                                  className="inline-flex items-center gap-[0.25vw] text-[0.72vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
-                                  title="Click to call"
-                                >
-                                  <Phone className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
-                                  <span>{call.contactNumber}</span>
-                                </a>
-                              )}
-                              {call.site && (
-                                <span className="text-[0.68vw] text-slate-500 font-medium bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200 shrink-0">
-                                  {call.site}
-                                </span>
-                              )}
-                            </div>
-                            {call.location && (
-                              <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.2vw] truncate max-w-[17vw]" title={call.location}>
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white max-w-[18vw]">
+                            <CustomerInfoCell
+                              customerName={call.customerName}
+                              contactNumber={call.contactNumber}
+                              partyCode={call.partyCode}
+                            />
+                            {(call.location || call.site) && (
+                              <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
                                 <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
-                                <span className="truncate">{call.location}</span>
+                                <span className="truncate font-normal">{call.site ? `${call.site} • ` : ""}{call.location}</span>
                               </div>
                             )}
                           </td>
 
                           {/* 4. Customer Type */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
-                            <span className="text-[0.74vw] font-medium text-purple-700 uppercase tracking-wider">
-                              {call.customerType || "Standard"}
-                            </span>
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-normal">
+                            {call.customerType && call.customerType !== "All" ? (
+                              <span
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                  call.customerType === "OEM"
+                                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                                    : call.customerType === "End Customer"
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                    : call.customerType === "Distributor"
+                                    ? "bg-purple-50 text-purple-700 border-purple-200"
+                                    : call.customerType === "Dealer"
+                                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                                    : "bg-slate-50 text-slate-700 border-slate-200"
+                                }`}
+                              >
+                                {call.customerType}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 font-normal">—</span>
+                            )}
                           </td>
                         </>
                       )}
 
                       {/* 5. Product & Segment */}
-                      <td className="p-[0.7vw] align-middle border-r border-b border-slate-200 whitespace-nowrap">
-                        <div className="flex items-center gap-[0.35vw]">
-                          <span className="text-[0.8vw] text-slate-900 font-semibold">{p.productModel || p.productDescription || p.itemCode || "Equipment"}</span>
+                      <td className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 max-w-[18vw]">
+                        <CustomTooltip
+                          position="top-start"
+                          className="max-w-full"
+                          content={
+                            <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                              <div className="font-normal text-slate-200">
+                                {p.productModel || p.productDescription || p.itemCode || "Equipment"}
+                              </div>
+                              {p.serialNumber && (
+                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                  <span className="text-slate-400 font-sans">SN: </span>
+                                  <span>{p.serialNumber}</span>
+                                </div>
+                              )}
+                              {p.productCode && (
+                                <div className="text-[0.64vw] text-slate-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                  <span>Code: {p.productCode}</span>
+                                </div>
+                              )}
+                            </div>
+                          }
+                        >
+                          <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                            {p.productModel || p.productDescription || p.itemCode || "Equipment"}
+                          </div>
+                        </CustomTooltip>
+                        <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
                           {p.productSegment && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.4vw] py-[0.05vw] rounded text-[0.64vw] font-semibold">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-normal">
                               {p.productSegment}
                             </span>
                           )}
-                        </div>
-                        <div className="flex items-center gap-[0.3vw] mt-[0.2vw] flex-wrap">
-                          {p.productCode && (
-                            <span className="text-[0.66vw] text-slate-500 font-mono">
-                              Code: {p.productCode}
-                            </span>
-                          )}
                           {p.serialNumber && (
-                            <span className="text-[0.68vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
+                            <span className="text-[0.66vw] text-slate-400 font-mono">
                               SN: {p.serialNumber}
                             </span>
                           )}
                           {(p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName) && (
-                            <span className="text-[0.66vw] text-slate-600 bg-slate-50 px-[0.3vw] py-[0.05vw] rounded border border-slate-200">
-                              Initial: <span className="font-semibold text-slate-800">{p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName}</span>
+                            <span className="text-[0.64vw] text-slate-500 font-normal">
+                              Init: {p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName}
                             </span>
                           )}
                         </div>
@@ -796,44 +829,44 @@ const ServiceCallEscalations = () => {
                       {pIdx === 0 && (
                         <>
                           {/* 6. SLA Status */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle border-r border-b border-slate-200 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {timer ? (
-                              <div className={`inline-flex items-center gap-[0.3vw] px-[0.65vw] py-[0.3vw] rounded-[0.4vw] font-mono text-[0.76vw] font-bold border shadow-2xs ${
+                              <div className={`inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.7vw] font-normal border shadow-2xs ${
                                 timer.isExpired
-                                  ? "bg-rose-50 text-rose-700 border-rose-300"
-                                  : "bg-amber-50 text-amber-800 border-amber-300"
+                                  ? "bg-rose-50 text-rose-700 border-rose-200"
+                                  : "bg-amber-50 text-amber-800 border-amber-200"
                               }`}>
-                                <Clock className={`w-[0.75vw] h-[0.75vw] ${timer.isExpired ? "text-rose-600" : "text-amber-600"}`} />
+                                <Clock className={`w-[0.7vw] h-[0.7vw] ${timer.isExpired ? "text-rose-600" : "text-amber-600"}`} />
                                 <span>{timer.remainingFormatted}</span>
                               </div>
                             ) : (call.status === "Critical_Unresolved" || call.status === "Critical") ? (
-                              <span className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.25vw] rounded-[0.4vw] font-mono text-[0.68vw] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-300">
-                                <AlertTriangle className="w-[0.7vw] h-[0.7vw] text-rose-600" />
+                              <span className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.66vw] font-normal uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                                <AlertTriangle className="w-[0.65vw] h-[0.65vw] text-rose-600" />
                                 No SLA
                               </span>
                             ) : (
-                              <span className="text-[0.72vw] text-slate-500 font-medium">—</span>
+                              <span className="text-[0.72vw] text-slate-400 font-normal">—</span>
                             )}
                           </td>
 
                           {/* 7. Escalated To */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] align-middle border-r border-b border-slate-200 bg-white">
-                            <div className="font-bold text-[0.82vw] text-indigo-700 truncate max-w-[12vw]">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white">
+                            <div className="font-normal text-[0.78vw] text-indigo-700 truncate max-w-[12vw]">
                               {timer?.currentEngineerName || call.currentEngineerName || 'Unassigned'}
                             </div>
-                            <div className="text-slate-500 text-[0.68vw] font-medium truncate mt-[0.1vw]">
+                            <div className="text-slate-400 text-[0.66vw] font-normal truncate mt-[0.05vw]">
                               {timer?.currentDepartment || call.currentDepartment || 'Support Engineers'}
                             </div>
                           </td>
 
                           {/* 8. Action */}
-                          <td rowSpan={rowCount} className="p-[0.7vw] text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-200 whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-300 whitespace-nowrap">
                             <div className="flex items-center justify-center gap-[0.35vw]">
                               {/* 1-Click Details Modal */}
                               <button
                                 type="button"
                                 onClick={() => setSelectedInfoCall(call)}
-                                className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer border border-blue-200/60"
+                                className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                 title="View Call Details"
                               >
                                 <Eye className="w-[0.9vw] h-[0.9vw]" />
@@ -843,7 +876,7 @@ const ServiceCallEscalations = () => {
                               <button
                                 type="button"
                                 onClick={() => setTrackingEntry(call)}
-                                className="inline-flex items-center gap-[0.2vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[0.65vw] py-[0.35vw] rounded-[0.4vw] font-semibold text-[0.72vw] shadow-2xs transition-all cursor-pointer"
+                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full text-[0.68vw] font-normal border border-slate-300 hover:bg-slate-50 text-slate-700 transition-all cursor-pointer"
                                 title="View Escalation History"
                               >
                                 <History className="w-[0.7vw] h-[0.7vw]" />
@@ -867,7 +900,7 @@ const ServiceCallEscalations = () => {
                                   setCancelReason("");
                                   setNewAssignee("");
                                 }}
-                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-semibold text-[0.72vw] shadow-2xs transition-all cursor-pointer"
+                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-normal text-[0.68vw] transition-all cursor-pointer"
                                 title="Cancel Escalation"
                               >
                                 <Ban className="w-[0.7vw] h-[0.7vw] text-rose-600" />
@@ -886,39 +919,39 @@ const ServiceCallEscalations = () => {
         </div>
 
         {/* ── PAGINATION CONTROLS ── */}
-        <div className="py-[0.6vw] px-[1vw] border-t border-gray-200 bg-slate-50/60 flex items-center justify-between shrink-0">
-          <p className="text-[0.74vw] text-gray-500 font-medium">
-            Showing <span className="font-semibold text-slate-700">{escalatingCalls.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-700">{Math.min(currentPage * ITEMS_PER_PAGE, escalatingCalls.length)}</span> of <span className="font-semibold text-slate-700">{escalatingCalls.length}</span> records
+        <div className="py-[0.6vw] px-[1vw] border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
+          <p className="text-[0.75vw] text-slate-600 font-medium">
+            Showing <span className="font-semibold text-slate-800">{escalatingCalls.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, escalatingCalls.length)}</span> of <span className="font-semibold text-slate-800">{escalatingCalls.length}</span> records
           </p>
-          <div className="flex items-center gap-[0.4vw]">
+          <div className="flex items-center gap-[0.5vw]">
             <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-[0.6vw] h-[1.8vw] rounded-[0.4vw] border border-gray-300 hover:bg-white disabled:opacity-40 cursor-pointer text-gray-600 transition-colors flex items-center gap-[0.2vw] text-[0.72vw]"
+              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronLeft className="w-[0.8vw] h-[0.8vw]" />
-              <span>Prev</span>
+              <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
             </button>
-            {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map(p => (
-              <button
-                key={p}
-                onClick={() => setCurrentPage(p)}
-                className={`w-[1.8vw] h-[1.8vw] rounded-[0.4vw] border font-bold text-[0.72vw] transition-all cursor-pointer ${
-                  currentPage === p
-                    ? "bg-blue-600 border-blue-600 text-white shadow-sm"
-                    : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+            <div className="flex gap-[0.3vw]">
+              {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map(p => (
+                <button
+                  key={p}
+                  onClick={() => setCurrentPage(p)}
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                    currentPage === p
+                      ? "bg-[#1a73e8] text-white shadow-2xs"
+                      : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage >= totalPages || totalPages === 0}
-              className="px-[0.6vw] h-[1.8vw] rounded-[0.4vw] border border-gray-300 hover:bg-white disabled:opacity-40 cursor-pointer text-gray-600 transition-colors flex items-center gap-[0.2vw] text-[0.72vw]"
+              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <span>Next</span>
-              <ChevronRight className="w-[0.8vw] h-[0.8vw]" />
+              <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
             </button>
           </div>
         </div>
