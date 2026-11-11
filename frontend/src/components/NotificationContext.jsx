@@ -172,7 +172,7 @@ export const NotificationProvider = ({ children }) => {
       {children}
       
       {/* Toast Container */}
-      <div className="fixed top-[0.8vw] right-[0.8vw] z-[9999] flex flex-col gap-[0.8vw] pointer-events-none">
+      <div className="fixed top-[0.8vw] right-[0.8vw] z-[9999] flex flex-col items-end gap-[0.6vw] pointer-events-none">
         <AnimatePresence>
           {toasts.map((t) => (
             <ToastItem
