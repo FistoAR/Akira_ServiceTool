@@ -357,6 +357,9 @@ const ServiceCallForm = ({
     if (!formData.partyCode || !formData.customerName) {
       newErrors.customerName = "Please select a Customer Name from the search list or create a new customer.";
     }
+    if (!formData.contactPerson || !formData.contactPerson.trim()) {
+      newErrors.contactPerson = "Please enter Contact Person.";
+    }
     if (!formData.contactNumber || !formData.contactNumber.trim()) {
       newErrors.contactNumber = "Please enter Contact Number.";
     }
@@ -790,15 +793,19 @@ const ServiceCallForm = ({
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-[0.35vw]">
+            <div className="flex flex-col gap-[0.35vw]" data-error-field="contactPerson">
               <label className="text-[0.76vw] font-semibold text-slate-700">
-                Contact Person
+                Contact Person <span className="text-rose-500">*</span>
               </label>
               <input
                 value={formData.contactPerson}
                 onChange={(e) => set("contactPerson", e.target.value)}
                 placeholder="e.g. John Doe"
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                  errors.contactPerson
+                    ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
+                    : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                }`}
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="contactNumber">
