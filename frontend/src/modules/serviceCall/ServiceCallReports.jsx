@@ -145,6 +145,42 @@ const formatDurationFrom = (startDateStr, endDateStr = null) => {
   }
 };
 
+const CustomTooltip = ({ children, text, position = "top", className = "" }) => {
+  if (!text) return children;
+
+  const positionClasses = {
+    top: "bottom-[calc(100%+0.35vw)] left-1/2 -translate-x-1/2",
+    bottom: "top-[calc(100%+0.35vw)] left-1/2 -translate-x-1/2",
+    left: "right-[calc(100%+0.35vw)] top-1/2 -translate-y-1/2",
+    right: "left-[calc(100%+0.35vw)] top-1/2 -translate-y-1/2",
+    "top-start": "bottom-[calc(100%+0.35vw)] left-0",
+    "top-end": "bottom-[calc(100%+0.35vw)] right-0",
+  };
+
+  const arrowClasses = {
+    top: "top-full left-1/2 -translate-x-1/2 border-x-[0.25vw] border-x-transparent border-t-[0.25vw] border-t-slate-900",
+    bottom: "bottom-full left-1/2 -translate-x-1/2 border-x-[0.25vw] border-x-transparent border-b-[0.25vw] border-b-slate-900",
+    left: "left-full top-1/2 -translate-y-1/2 border-y-[0.25vw] border-y-transparent border-l-[0.25vw] border-l-slate-900",
+    right: "right-full top-1/2 -translate-y-1/2 border-y-[0.25vw] border-y-transparent border-r-[0.25vw] border-r-slate-900",
+    "top-start": "top-full left-[0.6vw] border-x-[0.25vw] border-x-transparent border-t-[0.25vw] border-t-slate-900",
+    "top-end": "top-full right-[0.6vw] border-x-[0.25vw] border-x-transparent border-t-[0.25vw] border-t-slate-900",
+  };
+
+  return (
+    <div className={`relative group/tip inline-flex items-center ${className}`}>
+      {children}
+      <div
+        className={`hidden group-hover/tip:flex items-center absolute z-50 bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-md pointer-events-none whitespace-nowrap border border-slate-700 ${
+          positionClasses[position] || positionClasses.top
+        }`}
+      >
+        <span>{text}</span>
+        <div className={`absolute w-0 h-0 ${arrowClasses[position] || arrowClasses.top}`} />
+      </div>
+    </div>
+  );
+};
+
 export default function ServiceCallReports() {
   const { toast } = useNotification();
 
@@ -1576,17 +1612,22 @@ export default function ServiceCallReports() {
                                 {/* 7. Assigned Info */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
                                   {prod._assignedEngineerName || call.currentEngineerName ? (
-                                    <div className="flex items-center gap-[0.45vw]">
+                                    <div className="relative group inline-flex items-center gap-[0.45vw] cursor-default">
                                       <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.68vw] shrink-0">
                                         {(prod._assignedEngineerName || call.currentEngineerName || "U").charAt(0).toUpperCase()}
                                       </div>
-                                      <div>
-                                        <div className="font-semibold text-slate-800 text-[0.75vw]">
-                                          {prod._assignedEngineerName || call.currentEngineerName}
+                                      <div className="font-semibold text-slate-800 text-[0.75vw]">
+                                        {prod._assignedEngineerName || call.currentEngineerName}
+                                      </div>
+
+                                      {/* Custom Tooltip */}
+                                      <div className="hidden group-hover:flex flex-col gap-[0.1vw] absolute left-0 bottom-[calc(100%+0.35vw)] z-50 bg-slate-900 text-white rounded-md px-[0.6vw] py-[0.35vw] text-[0.68vw] shadow-lg pointer-events-none whitespace-nowrap border border-slate-700">
+                                        <div className="text-slate-300 text-[0.62vw] uppercase tracking-wider font-semibold">Assigned On</div>
+                                        <div className="font-medium text-white flex items-center gap-[0.25vw]">
+                                          <Calendar className="w-[0.6vw] h-[0.6vw] text-indigo-400" />
+                                          <span>{fmtDateTime(prod._assignedAt || call.createdAt)}</span>
                                         </div>
-                                        <div className="text-[0.66vw] text-slate-400 mt-[0.05vw]">
-                                          {fmtDateTime(prod._assignedAt || call.createdAt)}
-                                        </div>
+                                        <div className="absolute left-[0.8vw] top-full w-0 h-0 border-x-[0.3vw] border-x-transparent border-t-[0.3vw] border-t-slate-900" />
                                       </div>
                                     </div>
                                   ) : (
@@ -1597,18 +1638,23 @@ export default function ServiceCallReports() {
                                 {/* 8. Escalation Info */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap">
                                   {isEscalated ? (
-                                    <div className="inline-flex flex-col items-center">
-                                      <span className="inline-flex items-center gap-[0.2vw] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-[0.4vw] py-[0.08vw] rounded text-[0.68vw]">
-                                        <Flame className="w-[0.65vw] h-[0.65vw]" />
+                                    <div className="relative group inline-flex items-center justify-center cursor-default">
+                                      <span className="text-[0.75vw] text-slate-800 font-normal hover:text-slate-900 transition-colors">
                                         Level {prod._escalationLevel || call.escalationLevel || 1}
                                       </span>
-                                      <div className="text-[0.66vw] text-slate-500 mt-[0.1vw] flex items-center gap-[0.2vw]">
-                                        <Clock className="w-[0.6vw] h-[0.6vw] text-slate-400" />
-                                        <span>{formatDurationFrom(prod._assignedAt || call.createdAt)} open</span>
+
+                                      {/* Custom Tooltip */}
+                                      <div className="hidden group-hover:flex flex-col gap-[0.1vw] absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+0.35vw)] z-50 bg-slate-900 text-white rounded-md px-[0.6vw] py-[0.35vw] text-[0.68vw] shadow-lg pointer-events-none whitespace-nowrap border border-slate-700">
+                                        <div className="text-slate-300 text-[0.62vw] uppercase tracking-wider font-semibold">Open Duration</div>
+                                        <div className="font-normal text-rose-300 flex items-center gap-[0.25vw] justify-center">
+                                          <Clock className="w-[0.6vw] h-[0.6vw]" />
+                                          <span>{formatDurationFrom(prod._assignedAt || call.createdAt)} open</span>
+                                        </div>
+                                        <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-[0.3vw] border-x-transparent border-t-[0.3vw] border-t-slate-900" />
                                       </div>
                                     </div>
                                   ) : (
-                                    <span className="text-slate-300 font-medium text-[0.75vw]">—</span>
+                                    <span className="text-slate-300 font-normal text-[0.75vw]">—</span>
                                   )}
                                 </td>
 

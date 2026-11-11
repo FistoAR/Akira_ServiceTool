@@ -549,23 +549,34 @@ export default function Sidebar() {
 
       {/* Divider */}
       <div className="mx-[1vw]">
-        <div className="h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+        <div className="h-[1px] bg-slate-200" />
       </div>
 
-      {/* Footer */}
+      {/* Footer: Toggle Collapse / Expand */}
       <div
-        className={`py-[1.2vh] transition-all duration-500 ease-out ${
+        className={`py-[1vh] transition-all duration-300 ease-out ${
           isCollapsed ? "px-[0.4vw]" : "px-[0.8vw]"
         }`}
       >
-        {isCollapsed ? (
-          <button
-            onClick={() => setIsCollapsed(false)}
-            className="w-full flex items-center justify-center py-[1vh] rounded-xl hover:bg-blue-50 transition-all duration-300 cursor-pointer group bg-blue-100"
-            title="Expand sidebar"
-          >
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className={`w-full flex items-center rounded-xl transition-all duration-200 cursor-pointer group hover:bg-slate-100 ${
+            isCollapsed
+              ? "justify-center py-[0.8vh] bg-slate-50 text-slate-500 hover:text-blue-600"
+              : "px-[0.8vw] py-[0.8vh] justify-between text-slate-600 hover:text-slate-900 bg-slate-50/70 border border-slate-200/80"
+          }`}
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {!isCollapsed && (
+            <span className="text-[0.72vw] font-medium text-slate-500 group-hover:text-slate-800 transition-colors">
+              Collapse menu
+            </span>
+          )}
+          <div className="w-[1.6vw] h-[1.6vw] rounded-lg bg-white border border-slate-200 shadow-2xs flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:border-blue-200 transition-all">
             <svg
-              className="w-[1.2vw] h-[1.2vw] text-blue-400 group-hover:text-blue-600 transition-colors duration-200"
+              className={`w-[0.9vw] h-[0.9vw] transition-transform duration-300 ${
+                isCollapsed ? "" : "rotate-180"
+              }`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -577,58 +588,8 @@ export default function Sidebar() {
                 d="M9 5l7 7-7 7"
               />
             </svg>
-          </button>
-        ) : (
-          loggedInUser && (
-            <div
-              className="flex items-center rounded-xl p-[0.5vw] bg-slate-50/80 hover:bg-slate-100/80 transition-all duration-200 cursor-pointer gap-[0.7vw] border border-slate-200/60"
-              onClick={() => setIsCollapsed(true)}
-              title="Collapse sidebar"
-            >
-              <div className="relative flex-shrink-0 rounded-full bg-blue-600 flex items-center justify-center shadow-xs overflow-hidden w-[2.2vw] h-[2.2vw]">
-                {loggedInUser.profilePicture || loggedInUser.image || loggedInUser.avatar ? (
-                  <img
-                    src={loggedInUser.profilePicture || loggedInUser.image || loggedInUser.avatar}
-                    alt={loggedInUser.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-white font-bold text-[0.65vw]">
-                    {loggedInUser.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .slice(0, 2)}
-                  </span>
-                )}
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="text-[0.78vw] font-semibold text-gray-800 truncate leading-tight">
-                  {loggedInUser.name}
-                </p>
-                <p className="text-[0.6vw] text-gray-400 truncate leading-tight mt-[0.1vh]">
-                  {loggedInUser.department}
-                </p>
-              </div>
-              <div className="p-[0.3vw] bg-blue-100 rounded-lg flex items-center justify-center hover:bg-blue-200 transition-colors duration-200">
-                <svg
-                  className="w-[0.9vw] h-[0.9vw] text-blue-500 flex-shrink-0 rotate-180"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-            </div>
-          )
-        )}
+          </div>
+        </button>
       </div>
 
       <style>{`
