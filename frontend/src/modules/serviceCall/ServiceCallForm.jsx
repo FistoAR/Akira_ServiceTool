@@ -699,12 +699,31 @@ const ServiceCallForm = ({
                     }}
                     onFocus={() => setShowCustSearch(true)}
                     placeholder="Search & select customer…"
-                    className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                    className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                       errors.customerName
                         ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                         : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                     }`}
                   />
+                  {formData.customerName && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData((p) => ({
+                          ...p,
+                          customerName: "",
+                          partyCode: "",
+                          products: [emptyProduct()],
+                          location: p.locationType === "Site" ? "" : p.location,
+                        }));
+                        setShowCustSearch(false);
+                      }}
+                      className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                      title="Clear Customer"
+                    >
+                      <X className="w-[0.85vw] h-[0.85vw]" />
+                    </button>
+                  )}
                 </div>
                 <button
                   type="button"
