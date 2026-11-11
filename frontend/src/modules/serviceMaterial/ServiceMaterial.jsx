@@ -4273,7 +4273,7 @@ export default function App() {
             </div>
 
             {/* Sleek Connected Segmented Track for Status Tabs */}
-            <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] mb-[0.8vw] max-w-full overflow-x-auto">
+            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] mb-[0.8vw] max-w-full overflow-x-auto">
               {STATUS_CHIPS.map(({ label, dot }) => {
                 const isActive = activeFilter === label;
                 const count = counts[label] ?? 0;
@@ -4282,7 +4282,7 @@ export default function App() {
                     key={label}
                     type="button"
                     onClick={() => setActiveFilter(label)}
-                    className={`flex items-center gap-[0.4vw] px-[0.72vw] py-[0.28vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                    className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                       isActive
                         ? "bg-blue-600 text-white shadow-xs font-semibold"
                         : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
