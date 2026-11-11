@@ -137,89 +137,106 @@ const TrackingModal = ({ entry, onClose }) => {
   pastEvents.reverse();
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-[2vw]">
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-[2vw]">
       <motion.div 
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[42vw] rounded-[1vw] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border border-slate-400"
+        initial={{ scale: 0.96, opacity: 0, y: 10 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.96, opacity: 0, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white w-[42vw] rounded-[0.8vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[85vh] flex flex-col border border-slate-200"
       >
-        <div className="bg-white px-[1.4vw] py-[1vw] flex justify-between items-center border-b border-slate-200">
-          <div className="flex items-center gap-[0.6vw]">
-            <div className="p-[0.4vw] bg-indigo-50 rounded-[0.4vw] border border-indigo-100">
-              <History className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
+        <div className="bg-white px-[1.2vw] py-[0.85vw] flex justify-between items-center border-b border-slate-200">
+          <div className="flex items-center gap-[0.55vw]">
+            <div className="w-[2vw] h-[2vw] rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a73e8]">
+              <History className="w-[1vw] h-[1vw]" />
             </div>
-            <h3 className="text-[1.1vw] font-black text-slate-800 tracking-tight">Escalation History</h3>
+            <h3 className="text-[0.95vw] font-semibold text-slate-800 tracking-tight">Escalation History</h3>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-red-600 cursor-pointer transition-colors p-[0.3vw] hover:bg-red-50 rounded-full">
-             <X className="w-[1.2vw] h-[1.2vw]" />
+          <button 
+            onClick={onClose} 
+            className="text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-[0.3vw] hover:bg-slate-100 rounded-full"
+            title="Close"
+          >
+             <X className="w-[1.1vw] h-[1.1vw]" />
           </button>
         </div>
         
-        <div className="p-[1.4vw] overflow-y-auto flex-1 bg-white">
-           <div className="text-[0.85vw] font-black text-slate-800 mb-[1.2vw] flex justify-between items-center border-b border-slate-100 pb-[1vw]">
-             <span>{entry.callNumber} - {entry.customerName}</span>
-             <Badge label={`Current Status: ${entry.status}`} color="indigo" />
+        <div className="p-[1.2vw] overflow-y-auto flex-1 bg-white">
+           <div className="flex items-center justify-between pb-[0.8vw] mb-[1.1vw] border-b border-slate-100">
+             <div className="flex items-center gap-[0.45vw] text-[0.8vw]">
+               <span className="font-semibold text-[#1a73e8] font-mono">{entry.callNumber}</span>
+               <span className="text-slate-300">•</span>
+               <span className="font-medium text-slate-700 truncate max-w-[22vw]" title={entry.customerName}>
+                 {entry.customerName}
+               </span>
+             </div>
+             <span className={`inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.68vw] font-medium border shadow-2xs ${
+               entry.status === "Critical"
+                 ? "bg-rose-50 text-rose-700 border-rose-200"
+                 : entry.status === "Resolved" || entry.status === "Closed"
+                 ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                 : "bg-blue-50 text-[#1a73e8] border-blue-200"
+             }`}>
+               Current Status: {entry.status}
+             </span>
            </div>
            
            {events.length === 0 ? (
-             <div className="text-center text-slate-500 font-bold text-[0.8vw] py-[2vw]">No escalation history found.</div>
+             <div className="text-center text-slate-400 font-normal text-[0.76vw] py-[3vw]">No escalation history found for this call.</div>
            ) : (
-             <div className="space-y-[0.8vw] pl-[0.5vw]">
+             <div className="space-y-[0.75vw] pl-[0.4vw]">
                {pastEvents.map((ev, i) => {
                  const isCancelled = ev.status === "Escalation Cancelled";
                  const isHighlightedEvent = ev.status === "SLA Breached" || ev.status === "Critical Escalation";
                  
+                 let dotColor = "bg-[#1a73e8]";
+                 let cardClasses = "bg-white border-slate-200 hover:border-slate-300";
+                 let titleColor = "text-slate-800";
+
+                 if (isCancelled) {
+                   dotColor = "bg-amber-500";
+                   cardClasses = "bg-amber-50/40 border-amber-200/80";
+                   titleColor = "text-amber-800";
+                 } else if (isHighlightedEvent) {
+                   dotColor = "bg-rose-500";
+                   cardClasses = "bg-rose-50/40 border-rose-200/90";
+                   titleColor = "text-rose-700";
+                 }
+                 
                  return (
-                   <div key={i} className="flex gap-[0.8vw] relative">
+                   <div key={i} className="flex gap-[0.8vw] relative group">
                      <div className="flex flex-col items-center">
-                       <div className={`w-[0.6vw] h-[0.6vw] rounded-full mt-[0.2vw] z-10 ${
-                         isCancelled 
-                           ? 'bg-amber-500 ring-2 ring-amber-200' 
-                           : isHighlightedEvent 
-                             ? 'bg-rose-500 ring-2 ring-rose-200' 
-                             : 'bg-indigo-500'
-                       }`} />
+                       <div className={`w-[0.55vw] h-[0.55vw] rounded-full mt-[0.35vw] z-10 ${dotColor} ring-4 ring-white shadow-2xs`} />
                        {i !== pastEvents.length - 1 && (
-                         <div className="w-[1px] h-full bg-slate-300 absolute top-[0.6vw] bottom-[-0.8vw] left-[0.27vw]" />
+                         <div className="w-[1.5px] h-full bg-slate-200 absolute top-[0.6vw] bottom-[-0.75vw] left-[0.24vw]" />
                        )}
                      </div>
-                     <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-sm ${
-                       isCancelled
-                         ? 'bg-amber-50/70 border border-amber-200'
-                         : isHighlightedEvent 
-                           ? 'bg-rose-50 border-[2px] border-rose-300' 
-                           : 'bg-slate-50 border border-slate-200'
-                     }`}>
-                       <div className="flex justify-between items-start mb-[0.2vw]">
-                         <span className={`text-[1vw] font-bold flex items-center gap-[0.4vw] ${
-                           isCancelled 
-                             ? 'text-amber-900' 
-                             : isHighlightedEvent 
-                               ? 'text-rose-900' 
-                               : 'text-slate-900'
-                         }`}>
-                           {isCancelled ? (
-                             <span className="inline-flex items-center gap-[0.3vw]">
-                               <Ban className="w-[0.9vw] h-[0.9vw] text-amber-600 inline" />
-                               Escalation Cancelled
-                             </span>
-                           ) : (
-                             ev.status
-                           )}
+                     <div className={`flex-1 rounded-[0.5vw] p-[0.65vw] border shadow-2xs transition-colors ${cardClasses}`}>
+                       <div className="flex justify-between items-center mb-[0.2vw]">
+                         <div className="flex items-center gap-[0.35vw]">
+                           <span className={`text-[0.82vw] font-medium flex items-center gap-[0.35vw] ${titleColor}`}>
+                             {isCancelled ? (
+                               <span className="inline-flex items-center gap-[0.25vw]">
+                                 <Ban className="w-[0.85vw] h-[0.85vw] text-amber-600 inline" />
+                                 Escalation Cancelled
+                               </span>
+                             ) : (
+                               ev.status
+                             )}
+                           </span>
                            {ev.scope && (
-                             <span className={`px-[0.4vw] py-[0.1vw] rounded-[0.2vw] text-[0.65vw] ml-[0.2vw] font-black tracking-wide border ${
+                             <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-normal border ${
                                isCancelled
-                                 ? 'bg-amber-100 border-amber-300 text-amber-800'
+                                 ? 'bg-amber-100/70 border-amber-200 text-amber-800'
                                  : isHighlightedEvent 
-                                   ? 'bg-rose-100 border-rose-300 text-rose-700' 
-                                   : 'bg-slate-100 border-slate-300 text-slate-600'
+                                   ? 'bg-rose-100/70 border-rose-200 text-rose-700' 
+                                   : 'bg-slate-100 border-slate-200 text-slate-600'
                              }`}>
                                {ev.scope}
                              </span>
                            )}
-                         </span>
-                         <span className="text-[0.8vw] text-slate-500 font-medium">
+                         </div>
+                         <span className="text-[0.7vw] text-slate-400 font-mono font-normal">
                            {new Date(ev.time).toLocaleString('en-US', {
                              month: '2-digit', day: '2-digit', year: 'numeric',
                              hour: '2-digit', minute: '2-digit', hour12: true
@@ -227,40 +244,43 @@ const TrackingModal = ({ entry, onClose }) => {
                          </span>
                        </div>
 
-                       <div className="text-[0.85vw] text-slate-600 mb-[0.2vw]">
+                       <div className="text-[0.74vw] text-slate-500 font-normal mb-[0.2vw]">
                          {isCancelled ? (
                            <>
-                             Assigned to: <span className="font-semibold text-slate-800">{ev.person || "N/A"}</span>
+                             Assigned to: <span className="font-medium text-slate-700">{ev.person || "N/A"}</span>
                              {ev.cancelledBy && (
-                               <span className="text-amber-800 font-semibold ml-[0.5vw]">
+                               <span className="text-amber-700 font-normal ml-[0.4vw]">
                                  (Cancelled by: {ev.cancelledBy})
                                </span>
                              )}
                            </>
                          ) : (
                            <>
-                             By: <span className="font-semibold text-slate-800">{ev.person || "System / Auto"}</span> 
-                             <span className="text-slate-500 ml-[0.4vw]">({ev.dept || "N/A"}) - Level {ev.level + 1}</span>
+                             By: <span className="font-medium text-slate-700">{ev.person || "System / Auto"}</span> 
+                             <span className="text-slate-400 ml-[0.3vw]">({ev.dept || "N/A"}) • Level {ev.level + 1}</span>
                            </>
                          )}
                        </div>
                        
                        {ev.deadline && (
-                         <div className="text-[0.75vw] text-slate-600 font-semibold mb-[0.2vw] flex items-center gap-[0.3vw]">
-                           <Clock className="w-[0.8vw] h-[0.8vw]" />
-                           Deadline: {new Date(ev.deadline).toLocaleString('en-US', {
-                             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-                           })}
+                         <div className="text-[0.72vw] text-slate-500 font-normal mb-[0.2vw] flex items-center gap-[0.25vw]">
+                           <Clock className="w-[0.75vw] h-[0.75vw] text-slate-400" />
+                           <span>Deadline:</span>
+                           <span className="font-medium text-slate-700">
+                             {new Date(ev.deadline).toLocaleString('en-US', {
+                               month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                             })}
+                           </span>
                          </div>
                        )}
                        
                        {ev.remarks && (
-                         <div className={`text-[0.85vw] border rounded-[0.4vw] p-[0.6vw] mt-[0.4vw] font-semibold ${
+                         <div className={`text-[0.74vw] font-normal leading-relaxed border rounded-[0.4vw] p-[0.5vw] px-[0.6vw] mt-[0.35vw] ${
                            isCancelled
-                             ? 'bg-white text-amber-900 border-amber-200'
+                             ? 'bg-white/80 text-amber-800/90 border-amber-200/70'
                              : isHighlightedEvent 
-                               ? 'bg-white text-rose-800 border-rose-200' 
-                               : 'bg-white text-slate-700 border-slate-200'
+                               ? 'bg-white/90 text-rose-700 border-rose-200/80' 
+                               : 'bg-white text-slate-600 border-slate-200/90'
                          }`}>
                            {ev.remarks}
                          </div>
