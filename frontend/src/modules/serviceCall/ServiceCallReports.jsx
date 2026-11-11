@@ -1688,22 +1688,22 @@ export default function ServiceCallReports() {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div className="flex-1 overflow-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
+                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                       <tr>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer & Contact</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Product / SN</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Escalated By</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[9.5vw] whitespace-nowrap">Escalated Date</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Reason</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Open Duration</th>
-                        <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
-                        <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Call No</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Customer & Contact</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[13vw] whitespace-nowrap">Product / SN</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Escalated By</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9.5vw] whitespace-nowrap">Escalated Date</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[13vw] whitespace-nowrap">Reason</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Open Duration</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                        <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                    <tbody className="text-[0.8vw]">
                       {paginatedData.length === 0 ? (
                         <tr>
                           <td colSpan={11} className="py-[10vh] text-center text-slate-400 font-bold">
@@ -1712,17 +1712,17 @@ export default function ServiceCallReports() {
                         </tr>
                       ) : (
                         paginatedData.map((item, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                          <tr key={idx} className="hover:bg-slate-50 transition-colors">
                             {/* 0. S.No */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]">
                               {(currentPage - 1) * rowsPerPage + idx + 1}
                             </td>
 
                             {/* 1. Call No */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
                               <button
                                 onClick={() => setSelectedInfoCall(item.call)}
-                                className="font-mono font-normal text-[0.82vw] text-[#6e000a] hover:text-[#990011] hover:underline cursor-pointer block leading-tight transition-colors"
+                                className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
                                 title="Click to view full details"
                               >
                                 {item.call.callNumber}
@@ -1730,7 +1730,7 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 2. Customer & Contact */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle bg-white max-w-[14vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]">
                               <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={item.call.customerName}>
                                 {item.call.customerName || "—"}
                               </div>
@@ -1754,7 +1754,7 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 3. Customer Type */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]">
                               {item.call.customerType && item.call.customerType !== "All" ? (
                                 <span className={getCustomerTypeTextColor(item.call.customerType)}>
                                   {item.call.customerType}
@@ -1765,7 +1765,7 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 4. Product / SN */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle max-w-[13vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[13vw]">
                               <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={item.prod.productModel || item.prod.itemCode}>
                                 {item.prod.productModel || item.prod.itemCode || "—"}
                               </div>
@@ -1779,14 +1779,19 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 5. Who Escalated */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap align-middle">
-                              <div className="font-semibold text-slate-800 text-[0.75vw]">
-                                {item.escalatedBy}
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap align-middle">
+                              <div className="flex items-center gap-[0.45vw]">
+                                <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.68vw] shrink-0">
+                                  {(item.escalatedBy || "E").charAt(0).toUpperCase()}
+                                </div>
+                                <div className="font-semibold text-slate-800 text-[0.75vw]">
+                                  {item.escalatedBy}
+                                </div>
                               </div>
                             </td>
 
                             {/* 6. When Escalated */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap align-middle">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap align-middle">
                               <div className="text-[0.72vw] text-gray-800 font-medium flex items-center gap-[0.25vw]">
                                 <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
                                 <span>{fmtDateTime(item.escalatedAt)}</span>
@@ -1794,14 +1799,14 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 7. Why (Reason) */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 max-w-[13vw] align-middle">
-                              <span className="font-medium text-rose-700 bg-rose-50/80 border border-rose-200/80 px-[0.45vw] py-[0.15vw] rounded text-[0.72vw] inline-block leading-snug">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw] align-middle">
+                              <span className="font-medium text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.15vw] rounded text-[0.72vw] inline-block leading-snug">
                                 {item.reason}
                               </span>
                             </td>
 
                             {/* 8. Open Duration */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-center align-middle">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-center align-middle">
                               <span className="inline-flex items-center gap-[0.25vw] text-[0.74vw] font-semibold text-slate-700">
                                 <Clock className="w-[0.7vw] h-[0.7vw] text-slate-400" />
                                 {item.openDuration}
@@ -1809,22 +1814,23 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 9. Status */}
-                            <td className="p-[0.65vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap">
-                              <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
-                                <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${item.isClosed ? "bg-emerald-500" : "bg-rose-600"}`} />
-                                <span>{item.isClosed ? "Resolved" : "Escalated"}</span>
-                              </div>
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap">
+                              <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-bold min-w-[6.2vw] shadow-xs tracking-wide ${
+                                item.isClosed ? "bg-[#05a854] text-white" : "bg-[#e53935] text-white"
+                              }`}>
+                                {item.isClosed ? "Completed" : "Overdue"}
+                              </span>
                             </td>
 
                             {/* 10. Actions Column (Sleek Icon Buttons) */}
-                            <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                               <div className="flex items-center justify-center gap-[0.3vw]">
                                 <button
                                   onClick={() => setSelectedInfoCall(item.call)}
                                   title="View Call Details"
-                                  className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                                  className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                 >
-                                  <Eye className="w-[0.95vw] h-[0.95vw]" />
+                                  View Reports
                                 </button>
                                 <button
                                   onClick={() => setHistoryModalCall(item.call)}
@@ -1850,20 +1856,20 @@ export default function ServiceCallReports() {
                 {!selectedEmployee ? (
                   <div className="flex-1 overflow-auto">
                     <table className="w-full text-left border-collapse">
-                      <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
+                      <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                         <tr>
-                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">#</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Employee</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 w-[12vw] whitespace-nowrap">Department</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Total Calls</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Self Assigned</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Open</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Closed</th>
-                          <th className="p-[0.65vw] border-r border-slate-200 text-center w-[8vw] whitespace-nowrap">Avg Response</th>
-                          <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Action</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">#</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Employee</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Department</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">Total Calls</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Self Assigned</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6vw] whitespace-nowrap">Open</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6vw] whitespace-nowrap">Closed</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[8vw] whitespace-nowrap">Avg Response</th>
+                          <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                      <tbody className="text-[0.8vw]">
                         {paginatedData.length === 0 ? (
                           <tr>
                             <td colSpan={9} className="py-[10vh] text-center text-slate-400 font-bold">
@@ -1874,17 +1880,17 @@ export default function ServiceCallReports() {
                           paginatedData.map((emp, idx) => (
                             <tr
                               key={emp.userId || idx}
-                              className="hover:bg-slate-50/80 transition-colors"
+                              className="hover:bg-slate-50 transition-colors"
                             >
                               {/* Index */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]">
                                 {(currentPage - 1) * rowsPerPage + idx + 1}
                               </td>
 
                               {/* User */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap bg-white">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white">
                                 <div className="flex items-center gap-[0.55vw]">
-                                  <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center font-bold text-[0.74vw] shrink-0">
+                                  <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.74vw] shrink-0">
                                     {emp.name.charAt(0).toUpperCase()}
                                   </div>
                                   <div>
@@ -1895,19 +1901,19 @@ export default function ServiceCallReports() {
                               </td>
 
                               {/* Department */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-slate-700 whitespace-nowrap font-medium text-[0.76vw]">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-slate-700 whitespace-nowrap font-medium text-[0.76vw]">
                                 {emp.department || "—"}
                               </td>
 
                               {/* Total Calls */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 <span className={`font-semibold text-[0.78vw] ${emp.callsPerUser > 0 ? "text-slate-900" : "text-slate-300"}`}>
                                   {emp.callsPerUser}
                                 </span>
                               </td>
 
                               {/* Self Assigned */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.selfAssignedCount > 0 ? (
                                   <span className="font-semibold text-[0.74vw] text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.selfAssignedCount}
@@ -1918,7 +1924,7 @@ export default function ServiceCallReports() {
                               </td>
 
                               {/* Open */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.openCount > 0 ? (
                                   <span className="font-semibold text-[0.74vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.openCount}
@@ -1929,7 +1935,7 @@ export default function ServiceCallReports() {
                               </td>
 
                               {/* Closed */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.closedCount > 0 ? (
                                   <span className="font-semibold text-[0.74vw] text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.closedCount}
@@ -1940,7 +1946,7 @@ export default function ServiceCallReports() {
                               </td>
 
                               {/* Avg Response */}
-                              <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.avgResponseTime !== "—" ? (
                                   <span className="inline-flex items-center gap-[0.25vw] text-slate-700 text-[0.74vw] font-medium">
                                     <Clock className="w-[0.65vw] h-[0.65vw] text-slate-400" />
@@ -1952,7 +1958,7 @@ export default function ServiceCallReports() {
                               </td>
 
                               {/* Action */}
-                              <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                              <td className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                 <button
                                   onClick={() => {
                                     setSelectedEmployee(emp);
@@ -1960,13 +1966,13 @@ export default function ServiceCallReports() {
                                   }}
                                   disabled={emp.callsPerUser === 0}
                                   title={emp.callsPerUser > 0 ? "View Assigned Calls" : "No Calls"}
-                                  className={`p-[0.35vw] rounded-full transition-all cursor-pointer ${
+                                  className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap ${
                                     emp.callsPerUser > 0
-                                      ? "text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                                      : "text-slate-300 cursor-not-allowed opacity-40"
+                                      ? "bg-[#1a73e8] hover:bg-[#1557b0] text-white"
+                                      : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
                                   }`}
                                 >
-                                  <Eye className="w-[0.95vw] h-[0.95vw]" />
+                                  View Reports
                                 </button>
                               </td>
                             </tr>
@@ -1978,14 +1984,14 @@ export default function ServiceCallReports() {
                 ) : (
                   /* Drilldown view for selected employee calls */
                   <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                    <div className="px-[1vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
+                    <div className="px-[1vw] py-[0.55vw] border-b border-slate-300 bg-[#E9EDF7]/60 flex items-center justify-between shrink-0">
                       <div className="flex items-center gap-[0.7vw]">
                         <button
                           onClick={() => {
                             setSelectedEmployee(null);
                             setCurrentPage(1);
                           }}
-                          className="flex items-center gap-[0.3vw] px-[0.65vw] h-[2vw] bg-white border border-slate-200 rounded-full text-slate-700 hover:bg-slate-100 font-semibold text-[0.72vw] cursor-pointer shadow-2xs transition-all"
+                          className="flex items-center gap-[0.3vw] px-[0.65vw] h-[2vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:bg-slate-100 font-semibold text-[0.72vw] cursor-pointer shadow-xs transition-all"
                         >
                           <ArrowLeft className="w-[0.8vw] h-[0.8vw]" />
                           <span>Back to All Employees</span>
@@ -2007,21 +2013,21 @@ export default function ServiceCallReports() {
 
                     <div className="flex-1 overflow-auto">
                       <table className="w-full text-left border-collapse">
-                        <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
+                        <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                           <tr>
-                            <th className="p-[0.65vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 text-center w-[6vw] whitespace-nowrap">Origin</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 w-[13vw] whitespace-nowrap">Product / Model</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 w-[9.5vw] whitespace-nowrap">Registered</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 w-[8vw] whitespace-nowrap">Assigned</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 w-[8vw] whitespace-nowrap">Closed</th>
-                            <th className="p-[0.65vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
-                            <th className="p-[0.65vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Call No</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6vw] whitespace-nowrap">Origin</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Customer</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[13vw] whitespace-nowrap">Product / Model</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9.5vw] whitespace-nowrap">Registered</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8vw] whitespace-nowrap">Assigned</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8vw] whitespace-nowrap">Closed</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                            <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                        <tbody className="text-[0.8vw]">
                           {paginatedData.map((call, cIdx) => {
                             const prods = call.products && call.products.length > 0 ? call.products : [{}];
                             const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
@@ -2036,25 +2042,25 @@ export default function ServiceCallReports() {
                                 prod._productClosure?.status === "Resolved";
 
                               return (
-                                <tr key={`${call._id || call.callNumber}-${pIdx}`} className="hover:bg-slate-50/80 transition-colors">
+                                <tr key={`${call._id || call.callNumber}-${pIdx}`} className="hover:bg-slate-50 transition-colors">
                                   {pIdx === 0 && (
                                     <td
                                       rowSpan={prods.length}
-                                      className="p-[0.65vw] border-r border-b border-slate-200 text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]"
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]"
                                     >
                                       {callSno}
                                     </td>
                                   )}
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
-                                      className="font-mono font-normal text-[0.82vw] text-[#6e000a] hover:text-[#990011] hover:underline cursor-pointer block leading-tight transition-colors"
+                                      className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
                                       title="Click to view full details"
                                     >
                                       {call.callNumber}
                                     </button>
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                     {isSelf ? (
                                       <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
                                         Self Assigned
@@ -2065,12 +2071,12 @@ export default function ServiceCallReports() {
                                       </span>
                                     )}
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 max-w-[14vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[14vw]">
                                     <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
                                       {call.customerName || "—"}
                                     </div>
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 max-w-[13vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw]">
                                     <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
                                       {prod.productModel || prod.itemCode || "—"}
                                     </div>
@@ -2082,29 +2088,45 @@ export default function ServiceCallReports() {
                                       </div>
                                     )}
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-slate-600 text-[0.72vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-600 text-[0.72vw]">
                                     {fmtDateTime(call.createdAt)}
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-indigo-700 font-medium text-[0.72vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-indigo-700 font-medium text-[0.72vw]">
                                     {fmtDateTime(prod._assignedAt || call.createdAt)}
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 whitespace-nowrap text-emerald-700 font-medium text-[0.72vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-emerald-700 font-medium text-[0.72vw]">
                                     {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
                                   </td>
-                                  <td className="p-[0.65vw] border-r border-b border-slate-200 text-center whitespace-nowrap">
-                                    <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
-                                      <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isClosed ? "bg-emerald-500" : cfg.dot}`} />
-                                      <span>{isClosed ? "Resolved" : cfg.label}</span>
-                                    </div>
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
+                                    {(() => {
+                                      const displayStatus = isClosed ? "Completed" : (cfg.label || "In Progress");
+                                      let badgeStyle = "bg-[#6366f1] text-white";
+                                      if (displayStatus === "Completed" || displayStatus === "Resolved") {
+                                        badgeStyle = "bg-[#05a854] text-white";
+                                      } else if (displayStatus === "Overdue" || displayStatus === "Critical") {
+                                        badgeStyle = "bg-[#e53935] text-white";
+                                      } else if (displayStatus === "Delayed" || displayStatus === "Pending") {
+                                        badgeStyle = "bg-[#e69b00] text-white";
+                                      } else if (displayStatus === "Under Review") {
+                                        badgeStyle = "bg-[#111927] text-white";
+                                      } else if (displayStatus === "In Progress" || displayStatus === "Assigned") {
+                                        badgeStyle = "bg-[#5551f3] text-white";
+                                      }
+                                      return (
+                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-bold min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
+                                          {displayStatus}
+                                        </span>
+                                      );
+                                    })()}
                                   </td>
-                                  <td className="p-[0.65vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                     <div className="flex items-center justify-center gap-[0.3vw]">
                                       <button
                                         onClick={() => setSelectedInfoCall(call)}
                                         title="View Call Details"
-                                        className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                                        className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                       >
-                                        <Eye className="w-[0.95vw] h-[0.95vw]" />
+                                        View Reports
                                       </button>
                                       {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
                                         <button
@@ -2137,7 +2159,7 @@ export default function ServiceCallReports() {
             )}
 
             {/* ── Modern Pagination Footer (matching ServiceCall) ────────── */}
-            <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-t border-slate-200 bg-white shrink-0">
+            <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-t border-slate-300 bg-white shrink-0">
               <div className="text-[0.74vw] text-slate-500 font-medium">
                 Showing{" "}
                 <span className="font-semibold text-slate-900">
@@ -2157,7 +2179,7 @@ export default function ServiceCallReports() {
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                  className="p-[0.35vw] border border-gray-300 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                 >
                   <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                 </button>
@@ -2187,8 +2209,8 @@ export default function ServiceCallReports() {
                         onClick={() => setCurrentPage(pNum)}
                         className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
                           currentPage === pNum
-                            ? "bg-blue-600 text-white shadow-2xs"
-                            : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                            ? "bg-[#1a73e8] text-white shadow-2xs"
+                            : "bg-white border border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600"
                         }`}
                       >
                         {pNum}
@@ -2199,7 +2221,7 @@ export default function ServiceCallReports() {
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages || totalPages === 0}
-                  className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                  className="p-[0.35vw] border border-gray-300 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                 >
                   <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
                 </button>
