@@ -197,7 +197,7 @@ const SystemSettingsPage = () => {
     fetchActiveTabData(activeTab, false);
   }, [activeTab]);
 
-  const RefreshButton = () => (
+  const renderRefreshButton = () => (
     <button
       onClick={() => fetchActiveTabData(activeTab, true)}
       disabled={isRefreshing}
@@ -229,7 +229,7 @@ const SystemSettingsPage = () => {
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
                     {partyTypes.length} categories
                   </span>
@@ -260,7 +260,7 @@ const SystemSettingsPage = () => {
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
                     {warrantyRules.length} rules
                   </span>
@@ -288,7 +288,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Define product lines for auto-completion</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-teal-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {segments.length} segments
                   </span>
@@ -312,7 +312,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Manage Man, Machine, Material, Method categories for Service Materials</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-cyan-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {fourMCategories.length} categories
                   </span>
@@ -336,7 +336,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Manage Unit values for Service Materials</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-emerald-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {units.length} units
                   </span>
@@ -360,7 +360,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Manage plant and warehouse site locations</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {sites.length} sites
                   </span>
@@ -415,7 +415,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Register and manage employee profiles and departments</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-purple-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {employees.length} employees
                   </span>
@@ -444,7 +444,7 @@ const SystemSettingsPage = () => {
                   <p className="text-[0.7vw] text-gray-800">Manage employee permissions for read, write, and delete operations</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                   <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {employees.length} users
                   </span>
@@ -475,7 +475,7 @@ const SystemSettingsPage = () => {
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
-                  <RefreshButton />
+                  {renderRefreshButton()}
                 </div>
               </div>
               {isLoading ? <TabContentLoader /> : (

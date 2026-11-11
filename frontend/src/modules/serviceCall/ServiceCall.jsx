@@ -1700,6 +1700,7 @@ export default function ServiceCall() {
             key="form"
             initialData={editingRow || defaultFormData()}
             customerDb={customerDb}
+            setCustomerDb={setCustomerDb}
             serviceCalls={serviceCalls}
             partyTypes={partyTypes}
             sites={sites}
@@ -2110,11 +2111,11 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-[0.82vw] font-semibold text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal mt-[0.14vw]">
+                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-600 font-normal leading-normal mt-[0.2vw]">
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
@@ -2132,7 +2133,8 @@ export default function ServiceCall() {
                                         return (
                                           <>
                                             <span>{datePart}</span>
-                                            <span className="text-[0.68vw] text-slate-500 mt-[0.05vw]">{timePart}</span>
+                                            <span className="text-slate-300 font-normal">|</span>
+                                            <span className="text-slate-500">{timePart}</span>
                                           </>
                                         );
                                       } catch {

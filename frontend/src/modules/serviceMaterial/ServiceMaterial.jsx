@@ -508,7 +508,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-[0.8vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] border border-slate-200 w-[38vw] max-h-[85vh] flex flex-col overflow-hidden"
+        className="bg-white rounded-[0.8vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] border border-slate-200 w-[38vw] max-h-[68vh] flex flex-col overflow-hidden"
       >
         {/* Clean Header matching Service Call Modals */}
         <div className="bg-white px-[1.2vw] py-[0.85vw] flex justify-between items-center border-b border-slate-200">

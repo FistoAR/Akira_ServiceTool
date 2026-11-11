@@ -305,7 +305,7 @@ const DurationPicker = ({ hours = 0, mins = 0, onChange }) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // StepCard — now with duration
 // ─────────────────────────────────────────────────────────────────────────────
-const StepCard = ({
+export const StepCard = ({
   step,
   index,
   total,

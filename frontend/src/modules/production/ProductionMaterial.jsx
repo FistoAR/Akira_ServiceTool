@@ -836,13 +836,6 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
       </div>
     </div>
   );
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
 };
 
 // --- Inward Form Page ---

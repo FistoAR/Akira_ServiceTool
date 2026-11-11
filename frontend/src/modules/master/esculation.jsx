@@ -17,6 +17,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const ESCALATION_KEY       = "escalation_queue_v1";
 const SUPPORT_REQ_KEY      = "support_requests_v1";
 const FIELD_VISIT_KEY      = "field_visits_v1";
+const INHOUSE_REPAIR_KEY   = "inhouse_repairs_v1";
 const RECEIVED_PRODS_KEY   = "received_products_v1";
 const EMPLOYEES_KEY        = "employees";
 const ESCALATION_FLOWS_KEY = "escalation_flows_v2";
