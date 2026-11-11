@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
@@ -1647,8 +1648,8 @@ export default function ServiceCallReports() {
                                       </CustomTooltip>
                                       {hasEdits && (
                                         <CustomTooltip text="This call has edited records" position="top">
-                                          <span className="text-[0.62vw] px-[0.3vw] py-[0.05vw] bg-amber-50 text-amber-700 border border-amber-200 rounded font-normal cursor-default">
-                                            Edited
+                                          <span className="inline-flex items-center justify-center text-amber-600 hover:text-amber-700 cursor-default p-[0.1vw] transition-colors">
+                                            <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
                                           </span>
                                         </CustomTooltip>
                                       )}
@@ -2204,6 +2205,13 @@ export default function ServiceCallReports() {
                                         {call.callNumber}
                                       </button>
                                     </CustomTooltip>
+                                    {(call.editHistory?.length > 0 || call.isEdited) && (
+                                      <CustomTooltip text="This call has edited records" position="top">
+                                        <span className="inline-flex items-center justify-center text-amber-600 hover:text-amber-700 cursor-default p-[0.1vw] transition-colors">
+                                          <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                        </span>
+                                      </CustomTooltip>
+                                    )}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                     {isSelf ? (

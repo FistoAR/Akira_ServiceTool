@@ -12,82 +12,69 @@ import {
 
 const typeStyles = {
   success: {
-    bg: "bg-white/95 backdrop-blur-md",
+    bg: "bg-white",
     border: "border-slate-200/90",
-    badgeBg: "bg-emerald-50 border border-emerald-200",
-    iconColor: "text-emerald-600",
-    progressBg: "bg-emerald-500",
+    badgeBg: "bg-emerald-50 text-emerald-600",
+    accentBorder: "border-l-[3px] border-l-emerald-500",
     icon: CheckCircle2,
-    title: "Success"
+    title: "Success",
   },
   warning: {
-    bg: "bg-white/95 backdrop-blur-md",
+    bg: "bg-white",
     border: "border-slate-200/90",
-    badgeBg: "bg-amber-50 border border-amber-200",
-    iconColor: "text-amber-600",
-    progressBg: "bg-amber-500",
+    badgeBg: "bg-amber-50 text-amber-600",
+    accentBorder: "border-l-[3px] border-l-amber-500",
     icon: AlertTriangle,
-    title: "Warning"
+    title: "Warning",
   },
   error: {
-    bg: "bg-white/95 backdrop-blur-md",
+    bg: "bg-white",
     border: "border-slate-200/90",
-    badgeBg: "bg-rose-50 border border-rose-200",
-    iconColor: "text-rose-600",
-    progressBg: "bg-rose-500",
+    badgeBg: "bg-rose-50 text-rose-600",
+    accentBorder: "border-l-[3px] border-l-rose-500",
     icon: AlertCircle,
-    title: "Error"
+    title: "Error",
   },
   critical: {
-    bg: "bg-white/95 backdrop-blur-md",
+    bg: "bg-white",
     border: "border-rose-200",
-    badgeBg: "bg-rose-100 border border-rose-300",
-    iconColor: "text-rose-700",
-    progressBg: "bg-rose-600",
+    badgeBg: "bg-rose-100 text-rose-700",
+    accentBorder: "border-l-[3px] border-l-rose-600",
     icon: AlertCircle,
-    title: "Critical"
+    title: "Critical",
   },
   delete: {
-    bg: "bg-white/95 backdrop-blur-md",
+    bg: "bg-white",
     border: "border-slate-200/90",
-    badgeBg: "bg-orange-50 border border-orange-200",
-    iconColor: "text-orange-600",
-    progressBg: "bg-orange-500",
+    badgeBg: "bg-orange-50 text-orange-600",
+    accentBorder: "border-l-[3px] border-l-orange-500",
     icon: Trash2,
-    title: "Deleted"
+    title: "Deleted",
   },
   info: {
-    bg: "bg-white/95 backdrop-blur-md",
+    bg: "bg-white",
     border: "border-slate-200/90",
-    badgeBg: "bg-blue-50 border border-blue-200",
-    iconColor: "text-blue-600",
-    progressBg: "bg-blue-500",
+    badgeBg: "bg-blue-50 text-blue-600",
+    accentBorder: "border-l-[3px] border-l-blue-500",
     icon: Info,
-    title: "Info"
+    title: "Info",
   },
 };
 
 const ToastItem = ({ toast, onRemove }) => {
-  const [progress, setProgress] = useState(100);
   const [isHovered, setIsHovered] = useState(false);
   const duration = toast.duration || 5000;
 
   useEffect(() => {
     if (duration === Infinity) return;
     if (isHovered) return;
-    
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        const newProgress = prev - 100 / (duration / 100);
-        return newProgress <= 0 ? 0 : newProgress;
-      });
-    }, 100);
-    return () => clearInterval(interval);
-  }, [duration, isHovered]);
 
-  useEffect(() => {
-    if (progress <= 0) onRemove();
-  }, [progress, onRemove]);
+    const timer = setTimeout(() => {
+      onRemove();
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [duration, isHovered, onRemove]);
 
   const tType = (toast.type || "success").toLowerCase();
   const styles = typeStyles[tType] || typeStyles.success;
@@ -95,53 +82,46 @@ const ToastItem = ({ toast, onRemove }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10, scale: 0.96 }}
+      layout
+      initial={{ opacity: 0, y: -12, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -8, scale: 0.96 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`pointer-events-auto flex items-start gap-[0.7vw] p-[0.75vw] rounded-[0.7vw] shadow-[0_8px_30px_rgb(0,0,0,0.08)] max-w-[32vw] w-fit min-w-[18vw] relative border ${styles.bg} ${styles.border}`}
+      className={`pointer-events-auto flex items-start gap-[0.7vw] px-[0.85vw] py-[0.7vw] rounded-[0.6vw] shadow-[0_10px_25px_-5px_rgba(15,23,42,0.12),0_4px_10px_-3px_rgba(15,23,42,0.06)] max-w-[28vw] w-fit min-w-[20vw] border ${styles.bg} ${styles.border} ${styles.accentBorder}`}
     >
       {/* Icon Badge */}
-      <div className={`flex items-center justify-center w-[1.8vw] h-[1.8vw] rounded-[0.45vw] flex-shrink-0 mt-[0.05vw] ${styles.badgeBg} ${styles.iconColor}`}>
-        <IconComponent className="w-[1vw] h-[1vw]" strokeWidth={2.2} />
+      <div
+        className={`flex items-center justify-center w-[1.7vw] h-[1.7vw] rounded-full flex-shrink-0 mt-[0.05vw] ${styles.badgeBg}`}
+      >
+        <IconComponent className="w-[0.95vw] h-[0.95vw]" strokeWidth={2.2} />
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 pr-[0.4vw]">
-        <p className="font-semibold text-slate-900 text-[0.78vw] leading-tight">
+      <div className="flex-1 min-w-0 pr-[0.3vw]">
+        <p className="font-semibold text-slate-800 text-[0.78vw] leading-tight">
           {styles.title}
         </p>
         {React.isValidElement(toast.message) ? (
-          <div className="text-[0.72vw] text-slate-600 mt-[0.2vw] leading-relaxed font-normal">
+          <div className="text-[0.72vw] text-slate-600 mt-[0.2vw] leading-snug font-normal">
             {toast.message}
           </div>
         ) : (
-          <p className="text-[0.72vw] text-slate-600 mt-[0.2vw] whitespace-pre-line leading-relaxed font-normal">
+          <p className="text-[0.72vw] text-slate-600 mt-[0.2vw] whitespace-pre-line leading-snug font-normal">
             {toast.message}
           </p>
         )}
       </div>
 
       {/* Close button */}
-      <button 
-        className="w-[1.4vw] h-[1.4vw] rounded-[0.35vw] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors mt-[0.05vw] flex-shrink-0" 
+      <button
+        className="w-[1.3vw] h-[1.3vw] rounded-[0.3vw] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors mt-[0.05vw] flex-shrink-0"
         onClick={onRemove}
         title="Dismiss"
       >
-        <X className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
+        <X className="w-[0.8vw] h-[0.8vw]" strokeWidth={2.2} />
       </button>
-
-      {/* Thin Micro-Progress Bar */}
-      {duration !== Infinity && (
-        <div className="absolute bottom-0 left-0 h-[2px] bg-slate-100 rounded-b-[0.7vw] overflow-hidden w-full pointer-events-none">
-          <div 
-            className={`h-full ${styles.progressBg} transition-all duration-100 ease-linear opacity-70`}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      )}
     </motion.div>
   );
 };
@@ -161,9 +141,19 @@ export const NotificationProvider = ({ children }) => {
   const [confirmData, setConfirmData] = useState(null);
   const [confirmInput, setConfirmInput] = useState("");
 
-  const addToast = useCallback((message, type = "success", duration = 5000) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type, duration }]);
+  const addToast = useCallback((message, type = "success", duration = 4000) => {
+    setToasts((prev) => {
+      // Prevent spamming identical toasts
+      const isDuplicate = prev.some(
+        (t) => t.message === message && t.type === type
+      );
+      if (isDuplicate) return prev;
+
+      // Keep maximum 3 toasts on screen at once
+      const id = Date.now();
+      const updated = [...prev, { id, message, type, duration }];
+      return updated.slice(-3);
+    });
   }, []);
 
   const removeToast = useCallback((id) => {
