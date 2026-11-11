@@ -61,7 +61,7 @@ export const AssignVisitModal = ({
   const formBody = (
     <div className="flex flex-col gap-[0.9vw]">
       <div className="flex flex-col gap-[0.3vw] relative" ref={dropdownRef}>
-        <label className="text-[0.85vw] font-semibold text-slate-800">
+        <label className="text-[0.85vw] font-normal text-slate-800">
           Assign To *
         </label>
         <div className="relative flex items-center">
@@ -137,7 +137,7 @@ export const AssignVisitModal = ({
       </div>
 
       <div className="flex flex-col gap-[0.3vw]">
-        <label className="text-[0.85vw] font-semibold text-slate-800">
+        <label className="text-[0.85vw] font-normal text-slate-800">
           {isFV ? "Scheduled Visit Date *" : "Received Date *"}
         </label>
         <input
@@ -145,7 +145,7 @@ export const AssignVisitModal = ({
           value={form.visitDate}
           min={new Date().toISOString().split("T")[0]}
           onChange={(e) => sf("visitDate", e.target.value)}
-          className={`border rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-semibold outline-none transition-all bg-white shadow-2xs text-slate-800 ${
+          className={`border rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-normal outline-none transition-all bg-white shadow-2xs text-slate-800 ${
             errors.visitDate
               ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
               : "border-slate-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
@@ -160,7 +160,7 @@ export const AssignVisitModal = ({
       </div>
 
       <div className="flex flex-col gap-[0.3vw]">
-        <label className="text-[0.85vw] font-semibold text-slate-800">
+        <label className="text-[0.85vw] font-normal text-slate-800">
           Diagnosis Summary
         </label>
         <textarea

@@ -456,7 +456,7 @@ const ProductClosurePanel = ({
                 <div className="flex flex-col gap-[0.5vw]">
                   <div className="relative" ref={dropdownRef}>
                     <div className="absolute inset-y-0 left-0 pl-[0.8vw] flex items-center pointer-events-none">
-                      <Search className="h-[0.9vw] w-[0.9vw] text-slate-400" />
+                      <Search className="h-[0.85vw] w-[0.85vw] text-slate-400" />
                     </div>
                     <input
                       type="text"
@@ -469,20 +469,20 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, supportPerson: null }));
                       }}
                       placeholder="Search person or department..."
-                      className={`w-full border rounded-[0.5vw] pl-[2vw] pr-[0.7vw] py-[0.5vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm ${
+                      className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.7vw] py-[0.55vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm ${
                         errors.supportPerson
-                          ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
-                          : "border-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+                          ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
+                          : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.supportPerson && (
-                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.2vw]">
-                        <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.7vw] font-normal mt-[0.15vw]">
+                        <AlertCircle className="w-[0.7vw] h-[0.7vw]" />
                         {errors.supportPerson}
                       </div>
                     )}
                     {showDropdown && candidates.length > 0 && (
-                      <div className="absolute top-full left-0 right-0 z-20 border border-slate-400 bg-white rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto divide-y divide-slate-200 shadow-lg mt-[-0.1vw]">
+                      <div className="absolute top-full left-0 right-0 z-20 border border-slate-300 bg-white rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto divide-y divide-slate-100 shadow-lg mt-[-0.1vw]">
                         {candidates.map((emp) => (
                           <div
                             key={emp.userId}
@@ -492,17 +492,17 @@ const ProductClosurePanel = ({
                               setShowDropdown(false);
                               setErrors((p) => ({ ...p, supportPerson: null }));
                             }}
-                            className={`px-[0.7vw] py-[0.6vw] text-[0.72vw] font-bold cursor-pointer hover:bg-blue-50/65 flex justify-between items-center transition-colors ${
+                            className={`px-[0.7vw] py-[0.5vw] text-[0.72vw] font-normal cursor-pointer hover:bg-blue-50/60 flex justify-between items-center transition-colors ${
                               selectedPerson?.userId === emp.userId
-                                ? "bg-blue-55 text-blue-950 font-bold border-l-2 border-blue-600"
-                                : "text-slate-800"
+                                ? "bg-blue-50 text-blue-900 font-medium border-l-2 border-blue-600"
+                                : "text-slate-700"
                             }`}
                           >
                             <span>
                               {emp.name} ({emp.department})
                             </span>
                             {selectedPerson?.userId === emp.userId && (
-                              <CheckCircle className="w-[0.75vw] h-[0.75vw] text-blue-750" />
+                              <CheckCircle className="w-[0.75vw] h-[0.75vw] text-blue-600" />
                             )}
                           </div>
                         ))}
@@ -518,15 +518,15 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, notes: null }));
                       }}
                       placeholder="Provide handover notes..."
-                      className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
+                      className={`w-full border rounded-[0.5vw] p-[0.6vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
                         errors.notes
-                          ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
-                          : "border-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+                          ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
+                          : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.notes && (
-                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
-                        <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.7vw] font-normal mt-[0.15vw]">
+                        <AlertCircle className="w-[0.7vw] h-[0.7vw]" />
                         {errors.notes}
                       </div>
                     )}
@@ -552,7 +552,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-emerald-50 border border-emerald-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-bold text-emerald-900">
+                <div className="text-[0.85vw] font-semibold text-emerald-900">
                   Resolution Details
                 </div>
                 <div>
@@ -597,7 +597,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-amber-50 border border-amber-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-bold text-amber-900">
+                <div className="text-[0.85vw] font-semibold text-amber-900">
                   Pending Reason
                 </div>
                 <div>

@@ -207,6 +207,12 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
     { id: "timeline", label: "Audit Timeline", icon: Activity, count: null },
   ];
 
+  const isSelfAssigned = Boolean(
+    call.noEscalation === true ||
+    call.callOrigin === "self_assigned" ||
+    call.isSelfAssigned
+  );
+
   const statusCfg = getStatusBadge(call.status || "Assigned");
   const priorityCfg = getPriorityBadge(call.priority || "Medium");
 
@@ -246,11 +252,13 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                   )}
                 </button>
 
-                {/* Status Pill */}
-                <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${statusCfg.pill}`}>
-                  <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${statusCfg.dot}`} />
-                  {statusCfg.label}
-                </span>
+                {/* Status Pill (hidden if 'Assigned' when call is already Self Assigned) */}
+                {(!isSelfAssigned || (statusCfg.label !== "Assigned" && statusCfg.label !== "Registered")) && (
+                  <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${statusCfg.pill}`}>
+                    <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${statusCfg.dot}`} />
+                    {statusCfg.label}
+                  </span>
+                )}
 
                 {/* Priority Pill */}
                 <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${priorityCfg.pill}`}>
@@ -258,7 +266,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                   {priorityCfg.label}
                 </span>
 
-                {call.noEscalation === true && (
+                {isSelfAssigned && (
                   <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
                     <UserCheck className="w-[0.6vw] h-[0.6vw]" />
                     Self Assigned
@@ -659,20 +667,63 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                   })),
                   // Product-level histories
                   ...products.flatMap((prod, pIdx) => [
-                    ...(prod._escalationHistory || []).map((eh) => ({
-                      title: `P#${pIdx + 1} - ${eh.status || "Escalated"}`,
-                      time: eh.assignedAt || eh.timestamp,
-                      person: eh.engineerName || eh.assignedToName || eh.updatedByName || "System",
-                      details: eh.reason || eh.remarks || `Level ${eh.level ?? 1}`,
-                      type: "escalate",
-                    })),
-                    ...(prod._history || []).map((h) => ({
-                      title: `P#${pIdx + 1} - ${h.status || "Activity"}`,
-                      time: h.timestamp || h.date,
-                      person: h.updatedByName || h.updatedBy || "System",
-                      details: h.remarks || h.reason || "Action performed",
-                      type: "activity",
-                    })),
+                    ...(prod._escalationHistory || []).map((eh) => {
+                      const toTarget =
+                        eh.escalatedToName ||
+                        eh.engineerName ||
+                        eh.assignedToName ||
+                        (eh.department ? `Dept: ${eh.department}` : null);
+                      const byUser = eh.updatedByName || eh.escalatedByName || eh.by || "System Automation";
+
+                      let titleStr = `P#${pIdx + 1} - ${eh.status || "Escalated"}`;
+                      if (toTarget) {
+                        titleStr = `P#${pIdx + 1} - ${eh.status || "Escalated"} to ${toTarget}`;
+                      }
+
+                      return {
+                        title: titleStr,
+                        time: eh.assignedAt || eh.timestamp,
+                        person: byUser,
+                        target: toTarget,
+                        details: eh.reason || eh.remarks || (eh.level !== undefined ? `Level ${eh.level}` : ""),
+                        type: "escalate",
+                      };
+                    }),
+                    ...(prod._history || []).map((h) => {
+                      const meta = h.metadata || {};
+                      const targetPerson =
+                        meta.supportPerson?.name ||
+                        meta.supportPersonName ||
+                        meta.assignedToName ||
+                        meta.assignedTo ||
+                        meta.previousAssigneeName ||
+                        prod._supportPersonName ||
+                        null;
+
+                      const statusName = h.status || "Activity";
+                      let titleStr = `P#${pIdx + 1} - ${statusName}`;
+
+                      if (statusName === "Support Requested" && targetPerson) {
+                        titleStr = `P#${pIdx + 1} - Support Requested to ${targetPerson}`;
+                      } else if (statusName === "Field Visit Assigned" && targetPerson) {
+                        titleStr = `P#${pIdx + 1} - Field Visit Assigned to ${targetPerson}`;
+                      } else if (statusName === "Auto Escalated" && targetPerson) {
+                        titleStr = `P#${pIdx + 1} - Auto Escalated to ${targetPerson}`;
+                      } else if (statusName === "Critical Escalation" && targetPerson) {
+                        titleStr = `P#${pIdx + 1} - Critical Escalation to ${targetPerson}`;
+                      } else if (statusName.includes("Reverse Escalate") && targetPerson) {
+                        titleStr = `P#${pIdx + 1} - Reverse Escalated to ${targetPerson}`;
+                      }
+
+                      return {
+                        title: titleStr,
+                        time: h.timestamp || h.date,
+                        person: h.updatedByName || h.updatedBy || "System",
+                        target: targetPerson,
+                        details: h.remarks || h.reason || "",
+                        type: "activity",
+                      };
+                    }),
                   ]),
                 ].sort((a, b) => {
                   const tA = parseTimestamp(a.time);
@@ -689,9 +740,9 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                 }
 
                 return (
-                  <div className="relative pl-[1.6vw] space-y-[0.65vw]">
-                    {/* Vertical timeline line positioned at left: 0.55vw */}
-                    <div className="absolute left-[0.55vw] top-[0.6vw] bottom-[0.6vw] w-[2px] bg-slate-200 pointer-events-none" />
+                  <div className="relative pl-[2vw] space-y-[0.65vw]">
+                    {/* Vertical timeline line precisely running through the dot column */}
+                    <div className="absolute left-[0.7vw] -translate-x-1/2 top-[0.6vw] bottom-[0.6vw] w-[2px] bg-slate-200 pointer-events-none" />
 
                     {timelineEvents.map((ev, i) => {
                       const isCritical = ev.title.includes("Critical");
@@ -714,10 +765,9 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                       return (
                         <div key={i} className="relative group">
-                          {/* Dot positioned on the line outside the card */}
+                          {/* Dot positioned cleanly in the gutter at -left-[1.3vw], exactly centered on the line at left-[0.7vw] */}
                           <div
-                            style={{ left: "calc(0.55vw + 1px)" }}
-                            className={`absolute -translate-x-1/2 top-[0.7vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
+                            className={`absolute -left-[1.3vw] -translate-x-1/2 top-[0.7vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
                           />
 
                           <div className={`border rounded-[0.5vw] p-[0.65vw] transition-colors ${cardBorder} hover:bg-white`}>
@@ -727,8 +777,24 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                                 {fmtDate(ev.time)}
                               </span>
                             </div>
-                            <div className="text-[0.72vw] text-slate-600 mt-[0.15vw] leading-relaxed font-normal">
-                              By <span className="font-normal text-slate-800">{ev.person}</span> • {ev.details}
+                            <div className="text-[0.72vw] text-slate-600 mt-[0.15vw] leading-relaxed font-normal flex items-center flex-wrap gap-x-[0.35vw]">
+                              <span>
+                                By <span className="text-slate-800">{ev.person}</span>
+                              </span>
+                              {ev.target && (
+                                <>
+                                  <span className="text-slate-300">•</span>
+                                  <span>
+                                    To: <span className="text-slate-800">{ev.target}</span>
+                                  </span>
+                                </>
+                              )}
+                              {ev.details && (
+                                <>
+                                  <span className="text-slate-300">•</span>
+                                  <span>{ev.details}</span>
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>

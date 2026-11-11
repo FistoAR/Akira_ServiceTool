@@ -411,10 +411,10 @@ export default function Sidebar() {
                     {hasSubItems && !isCollapsed && (
                       <div className="flex items-center gap-[0.3vw] flex-shrink-0">
                         <span
-                          className={`text-[0.6vw] font-medium rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
+                          className={`text-[0.6vw] rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
                             active
                               ? "bg-blue-200/80 text-blue-800 font-medium"
-                              : "bg-slate-100 text-slate-400"
+                              : "bg-slate-100 text-slate-400 font-normal"
                           }`}
                         >
                           {item.subItems.length}
@@ -480,8 +480,8 @@ export default function Sidebar() {
                                       transition-all duration-200 ease-out
                                       ${
                                         isSubActive
-                                          ? "bg-white text-blue-600 font-medium shadow-xs border border-blue-200"
-                                          : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-medium"
+                                          ? "bg-white text-blue-600 font-normal shadow-xs border border-blue-200"
+                                          : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-normal"
                                       }
                                     `}
                                   >
