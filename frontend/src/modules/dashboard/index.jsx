@@ -5,6 +5,7 @@ import { Calendar, RefreshCw } from "lucide-react";
 import useEscalationWorker from "../../service/useEscalationWorker";
 import AdminDashboard from "./AdminDashboard";
 import UserDashboard from "./UserDashboard";
+import { deriveCallStatus } from "../serviceCall/ServiceCall";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -77,16 +78,32 @@ export default function Dashboard() {
   const stats = useMemo(() => {
     const userId = loggedInUser?.userId || loggedInUser?.id;
 
+    // Enrich calls with derived status matching ServiceCallEntry & Escalations logic
+    const enrichedCalls = calls.map((c) => {
+      let products = c.products || [];
+      const attendedProd = products.find((p) => p._attended);
+      if (attendedProd) {
+        products = products.map((p) => ({
+          ...p,
+          _assigned: attendedProd._assigned,
+          _assignedEngineerId: attendedProd._assignedEngineerId,
+          _assignedEngineerName: attendedProd._assignedEngineerName,
+          _attended: attendedProd._attended,
+          _attendedAt: attendedProd._attendedAt || p._attendedAt,
+        }));
+      }
+      const derived = deriveCallStatus(products, c.status);
+      return { ...c, _products: products, derivedStatus: derived };
+    });
+
     const callStatus = {
-      Registered: calls.filter((c) => c.status === "Registered").length,
-      Assigned: calls.filter((c) => c.status === "Assigned").length,
-      Open: calls.filter((c) => c.status === "Open").length,
-      Pending: calls.filter((c) => c.status === "Pending").length,
-      Resolved: calls.filter((c) => c.status === "Resolved").length,
-      Critical: calls.filter(
-        (c) => c.status === "Critical" || c.status === "Critical_Unresolved"
-      ).length,
-      Escalated: calls.filter((c) => c.status === "Escalated").length,
+      Registered: enrichedCalls.filter((c) => c.derivedStatus === "Registered").length,
+      Assigned: enrichedCalls.filter((c) => c.derivedStatus === "Assigned").length,
+      Open: enrichedCalls.filter((c) => c.derivedStatus === "Open").length,
+      Pending: enrichedCalls.filter((c) => c.derivedStatus === "Pending" || c.derivedStatus === "Field Visit" || c.derivedStatus === "Supporting").length,
+      Resolved: enrichedCalls.filter((c) => c.derivedStatus === "Resolved").length,
+      Critical: enrichedCalls.filter((c) => c.derivedStatus === "Critical").length,
+      Escalated: enrichedCalls.filter((c) => c.derivedStatus === "Escalating" || c.derivedStatus === "Escalated").length,
     };
 
     let unclaimedMaterials = 0;
@@ -120,24 +137,36 @@ export default function Dashboard() {
       });
     });
 
-    const criticalCalls = calls.filter((c) => {
-      if (c.status === "Resolved" || c.status === "Closed") return false;
+    // Escalations & SLA Breaches matching ServiceCallEscalations.jsx exactly
+    const activeEscalated = [];
+    const criticalCalls = [];
+
+    calls.forEach((c) => {
+      if (c.status === "Resolved" || c.status === "Closed") return;
       const hasActiveUnattended = (c.products || []).some(
         (p) => !p._resolved && p._productClosure?.status !== "Closed" && !p._attended
       );
-      if (!hasActiveUnattended) return false;
-      const timer = timers.find((t) => t.callId === c._id || t.callId === c.callId);
-      return (
-        c.status === "Critical" ||
-        c.status === "Critical_Unresolved" ||
-        c.priority === "Critical" ||
-        timer?.isExpired
-      );
-    });
+      if (!hasActiveUnattended) return;
 
-    const activeEscalated = calls.filter(
-      (c) => c.status === "Escalated" && c.status !== "Resolved"
-    );
+      const timer = timers.find((t) => t.callId === c._id || t.callId === c.callId);
+      const isExhausted =
+        c._queueEntry?.status === "Critical_Unresolved" ||
+        c.status === "Critical_Unresolved" ||
+        c.status === "Critical";
+
+      if (!(timer != null || isExhausted)) return;
+
+      const isCritical =
+        isExhausted ||
+        c.priority === "Critical" ||
+        timer?.isExpired;
+
+      if (isCritical) {
+        criticalCalls.push(c);
+      } else {
+        activeEscalated.push(c);
+      }
+    });
 
     const myCalls = calls.filter(
       (c) =>
@@ -210,13 +239,7 @@ export default function Dashboard() {
     );
   }
 
-  const totalRegisteredCalls =
-    stats.callStatus.Registered +
-    stats.callStatus.Assigned +
-    stats.callStatus.Open +
-    stats.callStatus.Pending +
-    stats.callStatus.Escalated +
-    stats.callStatus.Critical;
+  const totalRegisteredCalls = stats.totalCalls || calls.length;
 
   return (
     <div className="w-full h-full flex-1 min-h-0 flex flex-col overflow-hidden px-[0.8vw] pt-[0.5vw] pb-[0.5vw] font-sans text-slate-800">
