@@ -1379,7 +1379,7 @@ export default function ServiceCallReports() {
       </div>
 
       {/* ── Main Report Display Container ────────────────────────────── */}
-      <div className="flex-1 min-h-0 bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 bg-white rounded-lg shadow-sm border border-slate-300 flex flex-col overflow-hidden">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-[0.8vw] text-slate-500">
             <div className="w-[2.5vw] h-[2.5vw] border-[3px] border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
@@ -1392,22 +1392,22 @@ export default function ServiceCallReports() {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div className="flex-1 overflow-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#f8fafd] z-10 border-b border-slate-200 text-slate-700 uppercase font-bold tracking-wider text-[0.72vw]">
+                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                       <tr>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[3vw] whitespace-nowrap">S.No</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[10.5vw] whitespace-nowrap">Registered Date</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Call No</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[6.5vw] whitespace-nowrap">Origin</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Customer & Contact</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[14vw] whitespace-nowrap">Product / Model</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 w-[9vw] whitespace-nowrap">Assigned</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[7vw] whitespace-nowrap">Escalation</th>
-                        <th className="py-[0.8vw] px-[0.7vw] border-r border-slate-200 text-center w-[7.5vw] whitespace-nowrap">Status</th>
-                        <th className="py-[0.8vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#f8fafd] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5.5vw]">Actions</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10.5vw] whitespace-nowrap">Registered Date</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Call No</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6.5vw] whitespace-nowrap">Origin</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Customer & Contact</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">Customer Type</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Product / Model</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Assigned</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">Escalation</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Status</th>
+                        <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5.5vw]">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 text-[0.8vw]">
+                    <tbody className="text-[0.8vw]">
                       {paginatedData.length === 0 ? (
                         <tr>
                           <td colSpan={11} className="py-[10vh] text-center text-slate-400 font-bold">
@@ -1439,13 +1439,13 @@ export default function ServiceCallReports() {
                             return (
                               <tr
                                 key={`${call._id || call.callNumber}-${pIdx}`}
-                                className="hover:bg-slate-50/80 transition-colors"
+                                className="hover:bg-slate-50 transition-colors"
                               >
                                 {/* 0. S.No */}
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center font-semibold text-slate-600 bg-white whitespace-nowrap text-[0.74vw]"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]"
                                   >
                                     {callSno}
                                   </td>
@@ -1455,7 +1455,7 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="text-[0.74vw] text-slate-800 font-medium flex items-center gap-[0.3vw]">
                                       <Calendar className="w-[0.75vw] h-[0.75vw] text-slate-400 shrink-0" />
@@ -1473,12 +1473,12 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
                                       <button
                                         onClick={() => setSelectedInfoCall(call)}
-                                        className="font-mono font-normal text-[0.82vw] text-[#6e000a] hover:text-[#990011] hover:underline cursor-pointer block leading-tight transition-colors"
+                                        className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
                                         title="Click to view full details"
                                       >
                                         {call.callNumber}
@@ -1499,7 +1499,7 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap bg-white"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap bg-white"
                                   >
                                     {isSelf ? (
                                       <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
@@ -1518,7 +1518,7 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle bg-white max-w-[14vw]"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
                                   >
                                     <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
                                       {call.customerName || "—"}
@@ -1547,7 +1547,7 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]"
                                   >
                                     {call.customerType && call.customerType !== "All" ? (
                                       <span className={getCustomerTypeTextColor(call.customerType)}>
@@ -1560,7 +1560,7 @@ export default function ServiceCallReports() {
                                 )}
 
                                 {/* 6. Product / Model */}
-                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle max-w-[14vw]">
+                                <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
                                   <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={prod.productModel || prod.itemCode}>
                                     {prod.productModel || prod.itemCode || "—"}
                                   </div>
@@ -1574,14 +1574,19 @@ export default function ServiceCallReports() {
                                 </td>
 
                                 {/* 7. Assigned Info */}
-                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap">
+                                <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
                                   {prod._assignedEngineerName || call.currentEngineerName ? (
-                                    <div>
-                                      <div className="font-semibold text-slate-800 text-[0.75vw]">
-                                        {prod._assignedEngineerName || call.currentEngineerName}
+                                    <div className="flex items-center gap-[0.45vw]">
+                                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.68vw] shrink-0">
+                                        {(prod._assignedEngineerName || call.currentEngineerName || "U").charAt(0).toUpperCase()}
                                       </div>
-                                      <div className="text-[0.66vw] text-slate-400 mt-[0.05vw]">
-                                        {fmtDateTime(prod._assignedAt || call.createdAt)}
+                                      <div>
+                                        <div className="font-semibold text-slate-800 text-[0.75vw]">
+                                          {prod._assignedEngineerName || call.currentEngineerName}
+                                        </div>
+                                        <div className="text-[0.66vw] text-slate-400 mt-[0.05vw]">
+                                          {fmtDateTime(prod._assignedAt || call.createdAt)}
+                                        </div>
                                       </div>
                                     </div>
                                   ) : (
@@ -1590,7 +1595,7 @@ export default function ServiceCallReports() {
                                 </td>
 
                                 {/* 8. Escalation Info */}
-                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
+                                <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap">
                                   {isEscalated ? (
                                     <div className="inline-flex flex-col items-center">
                                       <span className="inline-flex items-center gap-[0.2vw] font-bold text-rose-600 bg-rose-50 border border-rose-200 px-[0.4vw] py-[0.08vw] rounded text-[0.68vw]">
@@ -1608,27 +1613,46 @@ export default function ServiceCallReports() {
                                 </td>
 
                                 {/* 9. Status */}
-                                <td className="py-[0.8vw] px-[0.7vw] border-r border-b border-slate-200 align-middle text-center whitespace-nowrap">
-                                  <div className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-slate-800">
-                                    <span className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${isClosed ? "bg-emerald-500" : cfg.dot}`} />
-                                    <span>{isClosed ? "Resolved" : cfg.label}</span>
-                                  </div>
-                                  {isClosed && (prod._productClosure?.closedAt || prod._productClosure?.date) && (
-                                    <div className="text-[0.65vw] text-slate-400 font-medium mt-[0.08vw]">
-                                      {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
-                                    </div>
-                                  )}
+                                <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap">
+                                  {(() => {
+                                    const displayStatus = isClosed ? "Completed" : (cfg.label || "In Progress");
+                                    let badgeStyle = "bg-[#6366f1] text-white"; // default purple/indigo
+                                    if (displayStatus === "Completed" || displayStatus === "Resolved") {
+                                      badgeStyle = "bg-[#05a854] text-white"; // solid vibrant green
+                                    } else if (displayStatus === "Overdue" || displayStatus === "Critical") {
+                                      badgeStyle = "bg-[#e53935] text-white"; // solid vibrant red
+                                    } else if (displayStatus === "Delayed" || displayStatus === "Pending") {
+                                      badgeStyle = "bg-[#e69b00] text-white"; // solid warm amber/orange
+                                    } else if (displayStatus === "Under Review") {
+                                      badgeStyle = "bg-[#111927] text-white"; // solid deep navy/black
+                                    } else if (displayStatus === "In Progress" || displayStatus === "Assigned" || displayStatus === "Attended") {
+                                      badgeStyle = "bg-[#5551f3] text-white"; // vibrant blue-purple
+                                    }
+
+                                    return (
+                                      <div className="flex flex-col items-center justify-center">
+                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-bold min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
+                                          {displayStatus}
+                                        </span>
+                                        {isClosed && (prod._productClosure?.closedAt || prod._productClosure?.date) && (
+                                          <div className="text-[0.65vw] text-slate-400 font-medium mt-[0.15vw]">
+                                            {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })()}
                                 </td>
 
                                 {/* 10. Actions Column (Sleek Icon Buttons) */}
-                                <td className="py-[0.8vw] px-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                <td className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                   <div className="flex items-center justify-center gap-[0.3vw]">
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
                                       title="View Call Details"
-                                      className="p-[0.35vw] text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                                      className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                     >
-                                      <Eye className="w-[0.95vw] h-[0.95vw]" />
+                                      View Reports
                                     </button>
                                     {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
                                       <button

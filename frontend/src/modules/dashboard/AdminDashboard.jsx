@@ -216,8 +216,8 @@ function formatBreachTime(call) {
 /**
  * Clean SVG Donut Chart with center label
  */
-function DonutChart({ segments, total, label = "Total Calls", size = 140 }) {
-  const strokeWidth = 24;
+function DonutChart({ segments, total, label = "Total Calls", size = 160 }) {
+  const strokeWidth = 22;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -226,7 +226,7 @@ function DonutChart({ segments, total, label = "Total Calls", size = 140 }) {
 
   return (
     <div
-      className="relative flex items-center justify-center shrink-0 w-[8vw] h-[8vw]"
+      className="relative flex items-center justify-center shrink-0 w-[9.8vw] h-[9.8vw]"
     >
       <svg
         viewBox={`0 0 ${size} ${size}`}
@@ -279,10 +279,10 @@ function DonutChart({ segments, total, label = "Total Calls", size = 140 }) {
 
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-        <span className="text-[1.35vw] font-bold leading-none text-slate-800">
+        <span className="text-[1.8vw] font-bold leading-none text-slate-800">
           {total}
         </span>
-        <span className="text-[0.62vw] font-medium text-slate-400 mt-[0.25vw]">
+        <span className="text-[0.72vw] font-medium text-slate-400 mt-[0.3vw]">
           {label}
         </span>
       </div>
@@ -417,16 +417,17 @@ export default function AdminDashboard({
             <span>Service Calls Breakdown</span>
           </div>
 
-          <div className="flex items-center justify-between gap-[1.2vw] my-auto px-[0.4vw] flex-1 min-h-0">
+          <div className="flex items-center justify-between gap-[1.5vw] my-auto px-[0.6vw] flex-1 min-h-0">
             {/* Donut Chart */}
             <DonutChart
               segments={callSegments}
               total={totalCallsCount}
               label="Total Calls"
+              size={160}
             />
 
             {/* Legend & Stats Table */}
-            <div className="flex-1 space-y-[0.3vw]">
+            <div className="flex-1 space-y-[0.55vw]">
               {callSegments.map((item, idx) => {
                 const pct =
                   totalCallsCount > 0
@@ -435,22 +436,22 @@ export default function AdminDashboard({
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between text-[0.68vw]"
+                    className="flex items-center justify-between text-[0.8vw]"
                   >
-                    <div className="flex items-center gap-[0.4vw]">
+                    <div className="flex items-center gap-[0.55vw]">
                       <span
-                        className="w-[0.5vw] h-[0.5vw] rounded-full shrink-0"
+                        className="w-[0.6vw] h-[0.6vw] rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="text-slate-600 font-normal">
+                      <span className="text-slate-600 font-medium">
                         {item.label}
                       </span>
                     </div>
-                    <div className="flex items-center gap-[0.6vw]">
-                      <span className="font-semibold text-slate-800 font-mono text-[0.68vw]">
+                    <div className="flex items-center gap-[0.8vw]">
+                      <span className="font-semibold text-slate-800 font-mono text-[0.82vw]">
                         {item.value}
                       </span>
-                      <span className="text-slate-400 font-mono text-[0.68vw] w-[1.8vw] text-right">
+                      <span className="text-slate-400 font-mono text-[0.8vw] w-[2.2vw] text-right">
                         {pct}%
                       </span>
                     </div>
@@ -463,7 +464,7 @@ export default function AdminDashboard({
           <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
             <button
               onClick={() => navigate("/serviceCall")}
-              className="text-[0.68vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
+              className="text-[0.75vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
             >
               <span>View all service calls</span>
               <span className="group-hover:translate-x-0.5 transition-transform">
@@ -480,16 +481,17 @@ export default function AdminDashboard({
             <span>Service Materials Breakdown</span>
           </div>
 
-          <div className="flex items-center justify-between gap-[1.2vw] my-auto px-[0.4vw] flex-1 min-h-0">
+          <div className="flex items-center justify-between gap-[1.5vw] my-auto px-[0.6vw] flex-1 min-h-0">
             {/* Donut Chart */}
             <DonutChart
               segments={materialSegments}
               total={totalMaterialsCount}
               label="Total Items"
+              size={160}
             />
 
             {/* Legend & Stats Table */}
-            <div className="flex-1 space-y-[0.3vw]">
+            <div className="flex-1 space-y-[0.55vw]">
               {materialSegments.map((item, idx) => {
                 const pct =
                   totalMaterialsCount > 0
@@ -498,22 +500,22 @@ export default function AdminDashboard({
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between text-[0.68vw]"
+                    className="flex items-center justify-between text-[0.8vw]"
                   >
-                    <div className="flex items-center gap-[0.4vw]">
+                    <div className="flex items-center gap-[0.55vw]">
                       <span
-                        className="w-[0.5vw] h-[0.5vw] rounded-full shrink-0"
+                        className="w-[0.6vw] h-[0.6vw] rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="text-slate-600 font-normal">
+                      <span className="text-slate-600 font-medium">
                         {item.label}
                       </span>
                     </div>
-                    <div className="flex items-center gap-[0.6vw]">
-                      <span className="font-semibold text-slate-800 font-mono text-[0.68vw]">
+                    <div className="flex items-center gap-[0.8vw]">
+                      <span className="font-semibold text-slate-800 font-mono text-[0.82vw]">
                         {item.value}
                       </span>
-                      <span className="text-slate-400 font-mono text-[0.68vw] w-[1.8vw] text-right">
+                      <span className="text-slate-400 font-mono text-[0.8vw] w-[2.2vw] text-right">
                         {pct}%
                       </span>
                     </div>
@@ -526,7 +528,7 @@ export default function AdminDashboard({
           <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
             <button
               onClick={() => navigate("/serviceMaterial")}
-              className="text-[0.68vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
+              className="text-[0.75vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
             >
               <span>View materials</span>
               <span className="group-hover:translate-x-0.5 transition-transform">
