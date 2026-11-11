@@ -219,18 +219,18 @@ export default function Dashboard() {
     stats.callStatus.Critical;
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 flex flex-col overflow-hidden px-3 pt-2 pb-2 font-sans text-slate-800">
+    <div className="w-full h-full flex-1 min-h-0 flex flex-col overflow-hidden px-[0.8vw] pt-[0.5vw] pb-[0.5vw] font-sans text-slate-800">
       {/* Header */}
-      <header className="flex items-center justify-between mb-3 flex-shrink-0">
+      <header className="flex items-center justify-between mb-[0.6vw] flex-shrink-0">
         <div>
-          <h1 className="text-xl font-bold tracking-tight leading-tight text-slate-900">
+          <h1 className="text-[1.1vw] font-bold tracking-tight leading-tight text-slate-900">
             {getGreeting()},{" "}
             <span className="text-indigo-600 font-bold">
               {loggedInUser?.name || "User"}
             </span>
           </h1>
-          <p className="text-xs font-medium text-slate-500 mt-0.5 flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+          <p className="text-[0.68vw] font-medium text-slate-500 mt-[0.1vw] flex items-center gap-[0.35vw]">
+            <Calendar className="w-[0.75vw] h-[0.75vw] text-slate-400" />
             {new Date().toLocaleDateString(undefined, {
               weekday: "long",
               month: "long",
@@ -243,11 +243,11 @@ export default function Dashboard() {
 
         <button
           onClick={fetchData}
-          className="group flex items-center gap-1.5 text-xs font-semibold text-slate-700
+          className="group flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-700
             bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-600
-            rounded-full px-3 py-1 transition-all cursor-pointer shadow-xs"
+            rounded-full px-[0.7vw] py-[0.25vw] transition-all cursor-pointer shadow-xs"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-emerald-500 animate-pulse" />
           <span>Live • {lastSync.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
         </button>
       </header>
