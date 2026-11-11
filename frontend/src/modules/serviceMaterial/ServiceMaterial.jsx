@@ -504,38 +504,42 @@ const BoardTypeMasterModal = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-400 w-[40vw] max-h-[85vh] flex flex-col overflow-hidden"
+        initial={{ scale: 0.96, opacity: 0, y: 10 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.96, opacity: 0, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white rounded-[0.8vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] border border-slate-200 w-[38vw] max-h-[85vh] flex flex-col overflow-hidden"
       >
-        <div className="bg-[#1a73e8] px-[1.5vw] py-[1.2vw] flex justify-between items-center">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="bg-white/20 p-[0.4vw] rounded-[0.4vw]">
-              <Wrench className="w-[1.2vw] h-[1.2vw] text-slate-800" />
+        {/* Clean Header matching Service Call Modals */}
+        <div className="bg-white px-[1.2vw] py-[0.85vw] flex justify-between items-center border-b border-slate-200">
+          <div className="flex items-center gap-[0.55vw]">
+            <div className="w-[2vw] h-[2vw] rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a73e8]">
+              <Wrench className="w-[1vw] h-[1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.1vw] font-bold text-slate-800 tracking-wider">
+              <h3 className="text-[0.95vw] font-semibold text-slate-800 tracking-tight">
                 Manage Board Types
               </h3>
-              <p className="text-[0.75vw] text-slate-800/80">
+              <p className="text-[0.7vw] text-slate-500">
                 Add, edit or delete board types master data
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-[0.4vw] hover:bg-white/20 rounded-full transition-colors cursor-pointer"
+            className="text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-[0.3vw] hover:bg-slate-100 rounded-full"
+            title="Close"
           >
-            <X className="w-[1.2vw] h-[1.2vw] text-slate-800" />
+            <X className="w-[1.1vw] h-[1.1vw]" />
           </button>
         </div>
 
-        <div className="p-[1.5vw] bg-gray-50 border-b border-slate-300">
-          <form onSubmit={handleAdd} className="flex gap-[0.8vw] items-end">
+        {/* Input Form with modern pill styling */}
+        <div className="p-[1.2vw] bg-slate-50/60 border-b border-slate-200">
+          <form onSubmit={handleAdd} className="flex gap-[0.7vw] items-end">
             <div className="flex-1 space-y-[0.3vw]">
-              <label className="text-[0.75vw] font-bold text-gray-700">
-                Board Type Name *
+              <label className="text-[0.72vw] font-semibold text-slate-700">
+                Board Type Name <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -544,101 +548,112 @@ const BoardTypeMasterModal = ({ onClose }) => {
                 onChange={(e) =>
                   setNewItem({ ...newItem, name: e.target.value })
                 }
-                className="w-full border border-gray-400 rounded-[0.4vw] p-[0.55vw] text-[0.8vw] outline-none focus:border-blue-500"
+                className="w-full border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-800 bg-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
                 placeholder="e.g. Main Board"
               />
             </div>
             <button
               type="submit"
-              className="px-[1vw] py-[0.55vw] h-[2.2vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.4vw] text-[0.8vw] font-bold cursor-pointer transition-all flex items-center gap-[0.4vw]"
+              className="px-[1vw] h-[2.2vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-semibold cursor-pointer transition-all shadow-2xs flex items-center gap-[0.35vw] active:scale-95"
             >
-              <Plus className="w-[0.9vw] h-[0.9vw]" /> Add
+              <Plus className="w-[0.85vw] h-[0.85vw]" /> Add
             </button>
           </form>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-[1.5vw] bg-white">
+        {/* Master Table List */}
+        <div className="flex-1 overflow-y-auto p-[1.2vw] bg-white">
           {loading ? (
-            <div className="text-center text-[0.85vw] text-gray-500 py-[2vw]">
+            <div className="text-center text-[0.8vw] text-slate-500 py-[2vw]">
               Loading...
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center text-[0.85vw] text-gray-500 py-[2vw]">
+            <div className="text-center text-[0.8vw] text-slate-400 py-[2vw]">
               No board types found.
             </div>
           ) : (
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-100 border-b border-slate-300">
-                  <th className="text-left py-[0.6vw] px-[0.8vw] text-[0.75vw] font-bold text-gray-700">
-                    Name
-                  </th>
-                  <th className="text-right py-[0.6vw] px-[0.8vw] text-[0.75vw] font-bold text-gray-700 w-[20%]">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr
-                    key={item._id}
-                    className="border-b border-slate-300 hover:bg-gray-50"
-                  >
-                    {editingId === item._id ? (
-                      <>
-                        <td className="py-[0.5vw] px-[0.8vw]">
-                          <input
-                            type="text"
-                            value={editItem.name}
-                            onChange={(e) =>
-                              setEditItem({ ...editItem, name: e.target.value })
-                            }
-                            className="w-full border border-gray-400 rounded-[0.3vw] p-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500"
-                          />
-                        </td>
-                        <td className="py-[0.5vw] px-[0.8vw] text-right">
-                          <button
-                            onClick={() => handleUpdate(item._id)}
-                            className="text-green-600 hover:text-green-800 p-[0.3vw] cursor-pointer"
-                          >
-                            <Save className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="text-gray-500 hover:text-gray-700 p-[0.3vw] ml-[0.3vw] cursor-pointer"
-                          >
-                            <X className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                        </td>
-                      </>
-                    ) : (
-                      <>
-                        <td className="py-[0.6vw] px-[0.8vw] text-[0.8vw] font-semibold text-gray-800">
-                          {item.name}
-                        </td>
-                        <td className="py-[0.6vw] px-[0.8vw] text-right flex items-center justify-end gap-[0.4vw]">
-                          <button
-                            onClick={() => {
-                              setEditingId(item._id);
-                              setEditItem({ name: item.name });
-                            }}
-                            className="text-blue-500 hover:text-blue-700 p-[0.3vw] cursor-pointer"
-                          >
-                            <Edit3 className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(item._id)}
-                            className="text-red-500 hover:text-red-700 p-[0.3vw] cursor-pointer"
-                          >
-                            <Trash2 className="w-[0.9vw] h-[0.9vw]" />
-                          </button>
-                        </td>
-                      </>
-                    )}
+            <div className="border border-slate-300 rounded-[0.6vw] overflow-hidden">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-[#E9EDF7] border-b border-slate-300">
+                    <th className="text-left py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider w-[20%]">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr
+                      key={item._id}
+                      className="border-b border-slate-200 last:border-b-0 hover:bg-slate-50/70 transition-colors"
+                    >
+                      {editingId === item._id ? (
+                        <>
+                          <td className="py-[0.45vw] px-[0.8vw]">
+                            <input
+                              type="text"
+                              value={editItem.name}
+                              onChange={(e) =>
+                                setEditItem({ ...editItem, name: e.target.value })
+                              }
+                              className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.78vw] font-medium outline-none focus:ring-1 focus:ring-blue-400"
+                            />
+                          </td>
+                          <td className="py-[0.45vw] px-[0.8vw] text-right">
+                            <div className="flex items-center justify-end gap-[0.3vw]">
+                              <button
+                                onClick={() => handleUpdate(item._id)}
+                                className="text-emerald-600 hover:text-emerald-700 p-[0.3vw] hover:bg-emerald-50 rounded cursor-pointer transition-colors"
+                                title="Save"
+                              >
+                                <Save className="w-[0.85vw] h-[0.85vw]" />
+                              </button>
+                              <button
+                                onClick={() => setEditingId(null)}
+                                className="text-slate-400 hover:text-slate-600 p-[0.3vw] hover:bg-slate-100 rounded cursor-pointer transition-colors"
+                                title="Cancel"
+                              >
+                                <X className="w-[0.85vw] h-[0.85vw]" />
+                              </button>
+                            </div>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="py-[0.55vw] px-[0.8vw] text-[0.78vw] font-normal text-slate-800">
+                            {item.name}
+                          </td>
+                          <td className="py-[0.55vw] px-[0.8vw] text-right">
+                            <div className="flex items-center justify-end gap-[0.3vw]">
+                              <button
+                                onClick={() => {
+                                  setEditingId(item._id);
+                                  setEditItem({ name: item.name });
+                                }}
+                                className="text-slate-500 hover:text-[#1a73e8] p-[0.3vw] hover:bg-blue-50 rounded-full cursor-pointer transition-colors"
+                                title="Edit"
+                              >
+                                <Edit3 className="w-[0.85vw] h-[0.85vw]" />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(item._id)}
+                                className="text-slate-400 hover:text-rose-600 p-[0.3vw] hover:bg-rose-50 rounded-full cursor-pointer transition-colors"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                              </button>
+                            </div>
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </motion.div>
