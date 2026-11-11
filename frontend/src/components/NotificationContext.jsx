@@ -77,23 +77,23 @@ const ToastItem = ({ toast, onRemove }) => {
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`pointer-events-auto flex items-center gap-[0.6vw] px-[0.7vw] py-[0.45vw] rounded-full bg-white shadow-[0_4px_16px_-2px_rgba(0,0,0,0.08)] max-w-[30vw] w-fit min-w-[15vw] border ${styles.border}`}
+      className={`pointer-events-auto flex items-center gap-[0.8vw] px-[1vw] py-[0.6vw] rounded-full bg-white shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] max-w-[34vw] w-fit min-w-[18vw] border ${styles.border}`}
     >
       {/* Solid Filled Circular Icon Badge */}
       <div
-        className={`flex items-center justify-center w-[1.4vw] h-[1.4vw] rounded-full flex-shrink-0 shadow-2xs ${styles.badgeBg}`}
+        className={`flex items-center justify-center w-[1.7vw] h-[1.7vw] rounded-full flex-shrink-0 shadow-2xs ${styles.badgeBg}`}
       >
-        <IconComponent className="w-[0.9vw] h-[0.9vw]" strokeWidth={2.6} />
+        <IconComponent className="w-[1.05vw] h-[1.05vw]" strokeWidth={2.6} />
       </div>
 
       {/* Message Text */}
-      <div className="flex-1 min-w-0 pr-[0.2vw]">
+      <div className="flex-1 min-w-0 pr-[0.3vw]">
         {React.isValidElement(toast.message) ? (
-          <div className={`text-[0.74vw] leading-tight font-medium truncate ${styles.text}`}>
+          <div className={`text-[0.85vw] leading-normal font-medium truncate ${styles.text}`}>
             {toast.message}
           </div>
         ) : (
-          <p className={`text-[0.74vw] leading-tight font-medium ${styles.text}`}>
+          <p className={`text-[0.85vw] leading-normal font-medium ${styles.text}`}>
             {toast.message}
           </p>
         )}
@@ -101,11 +101,11 @@ const ToastItem = ({ toast, onRemove }) => {
 
       {/* Minimal Close 'X' Button */}
       <button
-        className="w-[1.1vw] h-[1.1vw] rounded-full flex items-center justify-center text-slate-400 hover:text-slate-650 hover:bg-slate-100 cursor-pointer transition-colors flex-shrink-0"
+        className="w-[1.3vw] h-[1.3vw] rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors flex-shrink-0"
         onClick={onRemove}
         title="Dismiss"
       >
-        <X className="w-[0.75vw] h-[0.75vw]" strokeWidth={2.2} />
+        <X className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
       </button>
     </motion.div>
   );

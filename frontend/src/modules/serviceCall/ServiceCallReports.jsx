@@ -2210,11 +2210,11 @@ export default function ServiceCallReports() {
                         <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                           <tr>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9.5vw] whitespace-nowrap">Registered Date</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Call No</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6vw] whitespace-nowrap">Origin</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Customer</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[13vw] whitespace-nowrap">Product / Model</th>
-                            <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9.5vw] whitespace-nowrap">Registered</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8vw] whitespace-nowrap">Assigned</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8vw] whitespace-nowrap">Closed</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Status</th>
@@ -2245,36 +2245,69 @@ export default function ServiceCallReports() {
                                       {callSno}
                                     </td>
                                   )}
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
-                                    <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
-                                        {call.callNumber}
-                                      </span>
-                                    {(call.editHistory?.length > 0 || call.isEdited) && (
-                                      <CustomTooltip text="This call has edited records" position="top">
-                                        <span className="inline-flex items-center justify-center text-amber-600 hover:text-amber-700 cursor-default p-[0.1vw] transition-colors">
-                                          <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white text-slate-700 text-[0.72vw] font-normal leading-normal align-middle"
+                                    >
+                                      {(() => {
+                                        const { date, time } = fmtDateParts(call.createdAt || call.dateTime);
+                                        return (
+                                          <div className="flex flex-col">
+                                            <span>{date}</span>
+                                            {time && <span className="text-[0.66vw] text-slate-500 mt-[0.14vw]">{time}</span>}
+                                          </div>
+                                        );
+                                      })()}
+                                    </td>
+                                  )}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
+                                    >
+                                      <div className="flex items-center gap-[0.35vw]">
+                                        <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
+                                          {call.callNumber}
                                         </span>
-                                      </CustomTooltip>
-                                    )}
-                                  </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
-                                    {isSelf ? (
-                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
-                                        Self Assigned
-                                      </span>
-                                    ) : (
-                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
-                                        Registered
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[14vw]">
-                                    <CustomerInfoCell
-                                      customerName={call.customerName}
-                                      contactNumber={call.contactNumber}
-                                      partyCode={call.partyCode}
-                                    />
-                                  </td>
+                                        {(call.editHistory?.length > 0 || call.isEdited) && (
+                                          <CustomTooltip text="This call has edited records" position="top">
+                                            <span className="inline-flex items-center justify-center text-amber-600 hover:text-amber-700 cursor-default p-[0.1vw] transition-colors">
+                                              <Icon icon="solar:pen-new-square-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                            </span>
+                                          </CustomTooltip>
+                                        )}
+                                      </div>
+                                    </td>
+                                  )}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap bg-white align-middle"
+                                    >
+                                      {isSelf ? (
+                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
+                                          Self Assigned
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
+                                          Registered
+                                        </span>
+                                      )}
+                                    </td>
+                                  )}
+                                  {pIdx === 0 && (
+                                    <td
+                                      rowSpan={prods.length}
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[14vw] bg-white align-middle"
+                                    >
+                                      <CustomerInfoCell
+                                        customerName={call.customerName}
+                                        contactNumber={call.contactNumber}
+                                        partyCode={call.partyCode}
+                                      />
+                                    </td>
+                                  )}
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw]">
                                     <CustomTooltip
                                       position="top-start"
@@ -2297,17 +2330,6 @@ export default function ServiceCallReports() {
                                         {prod.productModel || prod.itemCode || "—"}
                                       </div>
                                     </CustomTooltip>
-                                  </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-snug">
-                                    {(() => {
-                                      const { date, time } = fmtDateParts(call.createdAt);
-                                      return (
-                                        <div className="flex flex-col leading-normal">
-                                          <span>{date}</span>
-                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.25vw]">{time}</span>}
-                                        </div>
-                                      );
-                                    })()}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-normal">
                                     {(() => {
