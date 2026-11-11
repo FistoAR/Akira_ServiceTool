@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 // Added Loader2 for the spinner
 import { Shield, Eye, EyeOff, User, Loader2 } from "lucide-react";
 import logo from "../../../public/Akira_logo.webp";
+import loginBg from "../../../public/login_bg.webp";
 
 // ... (defaultEmployees array remains the same)
 
@@ -125,27 +126,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative overflow-hidden text-gray-700">
-      {/* Background elements code... (Unchanged) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
-        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 opacity-80"></div>
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className={`absolute w-[0.5vw] h-[0.5vw] bg-white bg-opacity-20 rounded-full transition-all duration-[6000ms] ${
-                mounted ? "animate-pulse" : ""
-              }`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${3 + Math.random() * 2}s`,
-              }}
-            ></div>
-          ))}
-        </div>
-      </div>
+    <div className="w-full h-screen flex items-center justify-center relative overflow-hidden text-gray-700 bg-slate-100">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${loginBg})` }}
+      />
 
       <div className="relative z-10 w-full max-w-[28%]">
         <div className={`transition-all duration-1000 ${mounted ? "transform translate-y-0 opacity-100" : "transform translate-y-8 opacity-0"}`}>
