@@ -3059,7 +3059,7 @@ const AdminTableView = ({
               {canDelete && !isSupervisor && (
                 <th
                   rowSpan={2}
-                  className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-30 bg-[#E9EDF7]"
+                  className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-40 bg-[#E9EDF7]"
                 >
                   <button
                     type="button"
@@ -3085,7 +3085,7 @@ const AdminTableView = ({
 
               <th
                 rowSpan={2}
-                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3%] sticky top-0 z-30 bg-[#E9EDF7]"
+                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3%] sticky top-0 z-40 bg-[#E9EDF7]"
               >
                 S. No
               </th>
@@ -3093,7 +3093,7 @@ const AdminTableView = ({
               {/* Products super-header */}
               <th
                 colSpan={productCols.length}
-                className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-30 bg-[#E9EDF7]"
+                className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-40 bg-[#E9EDF7]"
               >
                 Products
               </th>
@@ -3110,7 +3110,7 @@ const AdminTableView = ({
                           ? "80px"
                           : "100px",
                   }}
-                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-30 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
@@ -3131,7 +3131,7 @@ const AdminTableView = ({
                             ? "100px"
                             : "125px",
                   }}
-                  className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-30 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
@@ -3177,7 +3177,7 @@ const AdminTableView = ({
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.9vw] py-[0.6vw] border-l-[4px] border-[#1a73e8] bg-slate-50/90 shadow-2xs border-b border-slate-300 sticky top-[3.75vw] z-20"
+                      className="px-[0.9vw] py-[0.55vw] h-[2.5vw] border-l-[4px] border-[#1a73e8] bg-slate-50 shadow-xs border-b border-slate-300 sticky top-[3.6vw] z-30"
                     >
                       <div className="flex items-center gap-[0.7vw]">
                         {isCustomerCollapsed ? (
@@ -3300,7 +3300,7 @@ const AdminTableView = ({
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center align-middle"
+                                className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center align-middle sticky top-[6.1vw] z-20 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -3329,7 +3329,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle"
+                              className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle sticky top-[6.1vw] z-20 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -3338,7 +3338,7 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className="px-[0.8vw] py-[0.5vw] align-middle"
+                              className={`px-[0.8vw] py-[0.45vw] h-[2.4vw] align-middle border-b border-slate-300 sticky top-[6.1vw] z-20 shadow-xs ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               <div className="flex items-center gap-[0.75vw] flex-wrap">
