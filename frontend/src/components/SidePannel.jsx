@@ -305,7 +305,7 @@ export default function Sidebar() {
         flex flex-col bg-white relative
         transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         border-r border-slate-300 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.08)]
-        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[18vw] max-w-[18vw]"}
+        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[16vw] max-w-[16vw]"}
       `}
       style={{ height: "100vh" }}
     >
@@ -357,7 +357,7 @@ export default function Sidebar() {
                       }
                       ${
                         active
-                          ? "bg-blue-100/75 text-blue-700 font-semibold shadow-xs"
+                          ? "bg-blue-100/75 text-blue-700 font-medium shadow-xs"
                           : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
                       }
                     `}
@@ -411,9 +411,9 @@ export default function Sidebar() {
                     {hasSubItems && !isCollapsed && (
                       <div className="flex items-center gap-[0.3vw] flex-shrink-0">
                         <span
-                          className={`text-[0.6vw] font-bold rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
+                          className={`text-[0.6vw] font-medium rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
                             active
-                              ? "bg-blue-200/80 text-blue-800 font-semibold"
+                              ? "bg-blue-200/80 text-blue-800 font-medium"
                               : "bg-slate-100 text-slate-400"
                           }`}
                         >
@@ -480,14 +480,14 @@ export default function Sidebar() {
                                       transition-all duration-200 ease-out
                                       ${
                                         isSubActive
-                                          ? "bg-white text-blue-600 font-semibold shadow-xs border border-blue-200"
+                                          ? "bg-white text-blue-600 font-medium shadow-xs border border-blue-200"
                                           : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-medium"
                                       }
                                     `}
                                   >
                                     <div
                                       className={`
-                                        flex-shrink-0 rounded-md flex items-center justify-center text-[0.6vw] font-bold
+                                        flex-shrink-0 rounded-md flex items-center justify-center text-[0.6vw] font-medium
                                         transition-all duration-200 w-[1.4vw] h-[1.4vw]
                                         ${
                                           isSubActive

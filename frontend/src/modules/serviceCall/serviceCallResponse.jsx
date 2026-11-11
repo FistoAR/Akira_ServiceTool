@@ -1433,6 +1433,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                   setDeleteModalState={setDeleteModalState}
                   setEditingCall={setEditingCall}
                   setView={setView}
+                  onOpenInfo={(call) => setSelectedInfoCall(call)}
                 />
               )}
 

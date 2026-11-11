@@ -70,29 +70,81 @@ const getCustomerTypeBadgeStyle = (type) => {
   }
 };
 
-const EXPORT_COLUMNS_CONFIG = [
-  { key: "S.No", label: "S.No" },
-  { key: "Call Number", label: "Call Number" },
-  { key: "Type", label: "Origin Type" },
-  { key: "Date & Time", label: "Date & Time" },
-  { key: "Customer Name", label: "Customer Name" },
-  { key: "Party Code", label: "Party Code" },
-  { key: "Customer Type", label: "Customer Type" },
-  { key: "Priority", label: "Priority" },
-  { key: "Product Model", label: "Product Model" },
-  { key: "Serial Number", label: "Serial Number" },
-  { key: "Error Code", label: "Error Code" },
-  { key: "Registered By", label: "Registered By" },
-  { key: "Assigned Engineer", label: "Assigned Engineer" },
-  { key: "Escalated Status", label: "Escalated Status" },
-  { key: "Escalated Level", label: "Escalated Level" },
-  { key: "Escalated To (Person/Dept)", label: "Escalated To" },
-  { key: "Escalation Flow History", label: "Escalation Flow History" },
-  { key: "Status", label: "Status" },
-  { key: "Closed Date", label: "Closed Date" },
-  { key: "Contact Number", label: "Contact Number" },
-  { key: "Last Edited", label: "Last Edited" },
-];
+// ── Dedicated Export Column Configurations for each view ─────────────────────
+const EXPORT_CONFIGS = {
+  registered: [
+    { key: "S.No", label: "S.No" },
+    { key: "Call Number", label: "Call Number" },
+    { key: "Type", label: "Origin Type" },
+    { key: "Registered Date", label: "Registered Date" },
+    { key: "Priority", label: "Priority" },
+    { key: "Customer Name", label: "Customer Name" },
+    { key: "Party Code", label: "Party Code" },
+    { key: "Customer Type", label: "Customer Type" },
+    { key: "Contact Person", label: "Contact Person" },
+    { key: "Contact Number", label: "Contact Number" },
+    { key: "Location", label: "Location / Site" },
+    { key: "Product Model", label: "Product Model" },
+    { key: "Serial Number", label: "Serial Number" },
+    { key: "Segment", label: "Segment" },
+    { key: "Error Code", label: "Error Code" },
+    { key: "Warranty Status", label: "Warranty Status" },
+    { key: "Registered By", label: "Registered By" },
+    { key: "Assigned Engineer", label: "Assigned Engineer" },
+    { key: "Assigned Department", label: "Assigned Department" },
+    { key: "Status", label: "Status" },
+    { key: "Closed Date", label: "Closed Date" },
+    { key: "Turnaround Time (TAT)", label: "Turnaround Time (TAT)" },
+    { key: "Last Edited", label: "Last Edited" },
+  ],
+  escalations: [
+    { key: "S.No", label: "S.No" },
+    { key: "Call Number", label: "Call Number" },
+    { key: "Priority", label: "Priority" },
+    { key: "Customer Name", label: "Customer Name" },
+    { key: "Customer Type", label: "Customer Type" },
+    { key: "Product Model", label: "Product Model" },
+    { key: "Serial Number", label: "Serial Number" },
+    { key: "Error Code", label: "Error Code" },
+    { key: "Escalated Level", label: "Escalated Level" },
+    { key: "Escalated At", label: "Escalated Date & Time" },
+    { key: "Escalated By", label: "Escalated By" },
+    { key: "Current Assignee", label: "Current Assignee" },
+    { key: "Reason", label: "Reason for Escalation" },
+    { key: "Open Duration", label: "Open Duration" },
+    { key: "Status", label: "Status" },
+    { key: "Closed Date", label: "Closed Date" },
+  ],
+  assignments_overview: [
+    { key: "S.No", label: "S.No" },
+    { key: "Employee Name", label: "Employee Name" },
+    { key: "User ID", label: "User ID" },
+    { key: "Department", label: "Department" },
+    { key: "Total Calls", label: "Total Calls" },
+    { key: "Self Assigned Calls", label: "Self Assigned Calls" },
+    { key: "Open Calls", label: "Open Calls" },
+    { key: "Closed Calls", label: "Closed Calls" },
+    { key: "Completion Rate (%)", label: "Completion Rate (%)" },
+    { key: "Average Response Time", label: "Average Response Time" },
+  ],
+  assignments_drilldown: [
+    { key: "S.No", label: "S.No" },
+    { key: "Registered Date", label: "Registered Date" },
+    { key: "Call Number", label: "Call Number" },
+    { key: "Origin", label: "Origin" },
+    { key: "Customer Name", label: "Customer Name" },
+    { key: "Customer Type", label: "Customer Type" },
+    { key: "Contact Number", label: "Contact Number" },
+    { key: "Location", label: "Location / Site" },
+    { key: "Product Model", label: "Product Model" },
+    { key: "Serial Number", label: "Serial Number" },
+    { key: "Error Code", label: "Error Code" },
+    { key: "Assigned Date", label: "Assigned Date" },
+    { key: "Closed Date", label: "Closed Date" },
+    { key: "Status", label: "Status" },
+    { key: "Turnaround Time (TAT)", label: "Turnaround Time (TAT)" },
+  ],
+};
 
 const LOCAL_STORAGE_EXPORT_COLS_KEY = "service_call_reports_export_columns";
 
@@ -382,58 +434,68 @@ export default function ServiceCallReports() {
   const [selectedInfoCall, setSelectedInfoCall] = useState(null);
   const [editingReportItem, setEditingReportItem] = useState(null);
 
-  // Column export selection state (stored in localStorage)
-  const [selectedExportCols, setSelectedExportCols] = useState(() => {
+  // Determine current active export mode
+  const currentExportMode = useMemo(() => {
+    if (activeMainView === "registered") return "registered";
+    if (activeMainView === "escalations") return "escalations";
+    if (activeMainView === "assignments") {
+      return selectedEmployee ? "assignments_drilldown" : "assignments_overview";
+    }
+    return "registered";
+  }, [activeMainView, selectedEmployee]);
+
+  const activeExportConfig = useMemo(() => {
+    return EXPORT_CONFIGS[currentExportMode] || EXPORT_CONFIGS.registered;
+  }, [currentExportMode]);
+
+  // Per-tab selected export columns map
+  const [viewExportColsMap, setViewExportColsMap] = useState(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_EXPORT_COLS_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.error("Failed to read export column preferences:", e);
-    }
-    return EXPORT_COLUMNS_CONFIG.map((c) => c.key);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {};
   });
   const [showColPicker, setShowColPicker] = useState(false);
 
-  const toggleExportCol = (key) => {
-    setSelectedExportCols((prev) => {
-      let updated;
-      if (prev.includes(key)) {
-        if (prev.length === 1) {
-          toast("At least one column must be selected for export", "warning");
-          return prev;
-        }
-        updated = prev.filter((k) => k !== key);
-      } else {
-        updated = [...prev, key];
-      }
+  const selectedExportCols = useMemo(() => {
+    const custom = viewExportColsMap[currentExportMode];
+    if (Array.isArray(custom) && custom.length > 0) return custom;
+    return activeExportConfig.map((c) => c.key);
+  }, [viewExportColsMap, currentExportMode, activeExportConfig]);
+
+  const setSelectedExportColsForCurrentMode = (cols) => {
+    setViewExportColsMap((prev) => {
+      const updated = { ...prev, [currentExportMode]: cols };
       try {
         localStorage.setItem(LOCAL_STORAGE_EXPORT_COLS_KEY, JSON.stringify(updated));
-      } catch (err) {
-        console.error("Failed to save export columns:", err);
-      }
+      } catch (err) {}
       return updated;
     });
   };
 
+  const toggleExportCol = (key) => {
+    let updated;
+    if (selectedExportCols.includes(key)) {
+      if (selectedExportCols.length === 1) {
+        toast("At least one column must be selected for export", "warning");
+        return;
+      }
+      updated = selectedExportCols.filter((k) => k !== key);
+    } else {
+      updated = [...selectedExportCols, key];
+    }
+    setSelectedExportColsForCurrentMode(updated);
+  };
+
   const selectAllExportCols = () => {
-    const all = EXPORT_COLUMNS_CONFIG.map((c) => c.key);
-    setSelectedExportCols(all);
-    try {
-      localStorage.setItem(LOCAL_STORAGE_EXPORT_COLS_KEY, JSON.stringify(all));
-    } catch (err) {}
+    const all = activeExportConfig.map((c) => c.key);
+    setSelectedExportColsForCurrentMode(all);
   };
 
   const resetDefaultExportCols = () => {
-    const all = EXPORT_COLUMNS_CONFIG.map((c) => c.key);
-    setSelectedExportCols(all);
-    try {
-      localStorage.removeItem(LOCAL_STORAGE_EXPORT_COLS_KEY);
-    } catch (err) {}
+    const all = activeExportConfig.map((c) => c.key);
+    setSelectedExportColsForCurrentMode(all);
   };
   const [editForm, setEditForm] = useState({
     status: "",
@@ -867,122 +929,212 @@ export default function ServiceCallReports() {
     }
   };
 
-  // Direct Excel Export Implementation
+  // Direct Excel Export Implementation for all 4 views
   const executeExportExcel = () => {
     try {
       const rows = [];
-      let sNo = 1;
-      filteredCalls.forEach((c) => {
-        const prods = c.products && c.products.length > 0 ? c.products : [{}];
-        const callEscHistory = c.escalationHistory || c._escalationHistory || [];
+      let sheetName = "Report";
+      let fileName = `Report_${getTodayStr()}.xlsx`;
 
-        prods.forEach((p) => {
-          const pStatus = getCallProductStatus(p, c.status);
-          const prodEscHistory = p._escalationHistory || [];
-          const combinedEsc = [...callEscHistory, ...prodEscHistory];
+      if (currentExportMode === "registered") {
+        sheetName = "All Service Calls";
+        fileName = `Service_Calls_Master_${getTodayStr()}.xlsx`;
+        let sNo = 1;
+        filteredCalls.forEach((c) => {
+          const prods = c.products && c.products.length > 0 ? c.products : [{}];
+          prods.forEach((p) => {
+            const pStatus = getCallProductStatus(p, c.status);
+            const isClosed =
+              p._resolved ||
+              p._productClosure?.status === "Closed" ||
+              p._productClosure?.status === "Resolved";
+            const closedAt =
+              p._productClosure?.closedAt ||
+              p._productClosure?.date ||
+              (isClosed ? p._productClosure?.updatedAt : null);
 
-          // Extract to whom all the call was escalated
-          const escalatedToNames = [];
-          const escalationDetails = [];
+            const regTime = c.createdAt || c.timestamp || c.dateTime;
+            const tat = formatDurationFrom(regTime, isClosed ? closedAt : null);
 
-          combinedEsc.forEach((esc, eIdx) => {
-            const targetName =
-              esc.escalatedToName ||
-              esc.escalatedTo ||
-              esc.engineerName ||
-              esc.assignedEngineerName ||
-              esc.to ||
-              (esc.department ? `Dept: ${esc.department}` : null);
+            const fullRow = {
+              "S.No": sNo++,
+              "Call Number": c.callNumber,
+              "Type": c.noEscalation ? "Self Assigned" : "Registered Call",
+              "Registered Date": fmtDateTime(regTime),
+              "Priority": c.priority || "Medium",
+              "Customer Name": c.customerName || "—",
+              "Party Code": c.partyCode || "—",
+              "Customer Type": c.customerType || "—",
+              "Contact Person": c.contactPerson || "—",
+              "Contact Number": c.contactNumber || "—",
+              "Location": c.location || c.siteLocation || c.address || "—",
+              "Product Model": p.productModel || p.itemCode || "—",
+              "Serial Number": p.serialNumber || "—",
+              "Segment": p.segment || c.segment || "—",
+              "Error Code": p.errorCode || "—",
+              "Warranty Status": p.warrantyStatus || "—",
+              "Registered By": c.registeredByName || c.registeredBy || "System",
+              "Assigned Engineer": p._assignedEngineerName || c.currentEngineerName || "Unassigned",
+              "Assigned Department": p._assignedDepartment || c.department || "—",
+              "Status": getStatusCfg(pStatus).label,
+              "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
+              "Turnaround Time (TAT)": tat,
+              "Last Edited": c.editHistory?.length
+                ? `${c.editHistory.length} edit(s) by ${c.editHistory[c.editHistory.length - 1].editedByName}`
+                : "No edits",
+            };
 
-            const byName = esc.escalatedByName || esc.escalatedBy || "System";
-            const lvl = esc.level !== undefined ? `L${esc.level}` : `Esc #${eIdx + 1}`;
-            const rsn = esc.reason || esc.remarks || "";
-
-            if (targetName && !escalatedToNames.includes(targetName)) {
-              escalatedToNames.push(targetName);
-            }
-
-            escalationDetails.push(
-              `[${lvl}] To: ${targetName || "N/A"}${byName ? ` (By: ${byName})` : ""}${rsn ? ` - Reason: ${rsn}` : ""}`
-            );
+            const filteredRow = {};
+            activeExportConfig.forEach((colCfg) => {
+              if (selectedExportCols.includes(colCfg.key)) {
+                filteredRow[colCfg.key] = fullRow[colCfg.key] !== undefined ? fullRow[colCfg.key] : "—";
+              }
+            });
+            rows.push(filteredRow);
           });
-
-          // Check if current product has higher escalation level or is critical
-          const isEscalated =
-            combinedEsc.length > 0 ||
-            p._escalationLevel > 0 ||
-            c.escalationLevel > 0 ||
-            p._isCritical ||
-            c.priority === "Critical";
-
-          const escalatedToSummary = escalatedToNames.length > 0
-            ? escalatedToNames.join(", ")
-            : isEscalated
-            ? (p._assignedEngineerName || c.currentEngineerName || "Escalation Queue")
-            : "Not Escalated";
-
-          const escalationHistorySummary = escalationDetails.length > 0
-            ? escalationDetails.join(" | ")
-            : isEscalated
-            ? `Level ${p._escalationLevel || c.escalationLevel || 1} (Critical/SLA)`
-            : "None";
-
-          const isClosed =
-            p._resolved ||
-            p._productClosure?.status === "Closed" ||
-            p._productClosure?.status === "Resolved";
-
-          const closedAt =
-            p._productClosure?.closedAt ||
-            p._productClosure?.date ||
-            (isClosed ? p._productClosure?.updatedAt : null);
+        });
+      } else if (currentExportMode === "escalations") {
+        sheetName = "Escalations Audit";
+        fileName = `SLA_Escalation_Audit_${getTodayStr()}.xlsx`;
+        let sNo = 1;
+        escalationItems.forEach((item) => {
+          const { call, prod, escalatedBy, escalatedAt, reason, isClosed, closedAt, openDuration } = item;
+          const pStatus = getCallProductStatus(prod, call.status);
 
           const fullRow = {
             "S.No": sNo++,
-            "Call Number": c.callNumber,
-            "Type": c.noEscalation ? "Self Assigned" : "Registered Call",
-            "Date & Time": fmtDateTime(c.createdAt || c.dateTime),
-            "Customer Name": c.customerName || "—",
-            "Party Code": c.partyCode || "—",
-            "Customer Type": c.customerType || "—",
-            "Priority": c.priority || "Medium",
-            "Product Model": p.productModel || p.itemCode || "—",
-            "Serial Number": p.serialNumber || "—",
-            "Error Code": p.errorCode || "—",
-            "Registered By": c.registeredByName || c.registeredBy || "System",
-            "Assigned Engineer": p._assignedEngineerName || c.currentEngineerName || "Unassigned",
-            "Escalated Status": isEscalated ? "Escalated" : "Normal",
-            "Escalated Level": p._escalationLevel || c.escalationLevel || (isEscalated ? 1 : 0),
-            "Escalated To (Person/Dept)": escalatedToSummary,
-            "Escalation Flow History": escalationHistorySummary,
+            "Call Number": call.callNumber,
+            "Priority": call.priority || "Critical",
+            "Customer Name": call.customerName || "—",
+            "Customer Type": call.customerType || "—",
+            "Product Model": prod.productModel || prod.itemCode || "—",
+            "Serial Number": prod.serialNumber || "—",
+            "Error Code": prod.errorCode || "—",
+            "Escalated Level": prod._escalationLevel || call.escalationLevel || 1,
+            "Escalated At": fmtDateTime(escalatedAt),
+            "Escalated By": escalatedBy || "System Automation",
+            "Current Assignee": prod._assignedEngineerName || call.currentEngineerName || "Escalation Queue",
+            "Reason": reason || "SLA Escalation",
+            "Open Duration": openDuration || "—",
             "Status": getStatusCfg(pStatus).label,
             "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
-            "Contact Number": c.contactNumber || "—",
-            "Last Edited": c.editHistory?.length
-              ? `${c.editHistory.length} edit(s) by ${c.editHistory[c.editHistory.length - 1].editedByName}`
-              : "No edits",
           };
 
-          // Filter row based on user's selected export columns
           const filteredRow = {};
-          EXPORT_COLUMNS_CONFIG.forEach((colCfg) => {
+          activeExportConfig.forEach((colCfg) => {
             if (selectedExportCols.includes(colCfg.key)) {
-              filteredRow[colCfg.key] = fullRow[colCfg.key];
+              filteredRow[colCfg.key] = fullRow[colCfg.key] !== undefined ? fullRow[colCfg.key] : "—";
             }
           });
-
           rows.push(filteredRow);
         });
-      });
+      } else if (currentExportMode === "assignments_overview") {
+        sheetName = "Employee Performance";
+        fileName = `Team_Workload_Report_${getTodayStr()}.xlsx`;
+        let sNo = 1;
+        assignmentReportData.forEach((emp) => {
+          const completionRate = emp.totalAssigned > 0
+            ? Math.round((emp.closedCount / emp.totalAssigned) * 100)
+            : 0;
+
+          const fullRow = {
+            "S.No": sNo++,
+            "Employee Name": emp.name || "—",
+            "User ID": emp.userId || "—",
+            "Department": emp.department || "—",
+            "Total Calls": emp.totalAssigned || 0,
+            "Self Assigned Calls": emp.selfAssignedCount || 0,
+            "Open Calls": emp.openCount || 0,
+            "Closed Calls": emp.closedCount || 0,
+            "Completion Rate (%)": `${completionRate}%`,
+            "Average Response Time": emp.avgResponseTime || "—",
+          };
+
+          const filteredRow = {};
+          activeExportConfig.forEach((colCfg) => {
+            if (selectedExportCols.includes(colCfg.key)) {
+              filteredRow[colCfg.key] = fullRow[colCfg.key] !== undefined ? fullRow[colCfg.key] : "—";
+            }
+          });
+          rows.push(filteredRow);
+        });
+      } else if (currentExportMode === "assignments_drilldown") {
+        const empNameClean = (selectedEmployee?.name || "Employee").replace(/[^a-zA-Z0-9_-]/g, "_");
+        sheetName = `${selectedEmployee?.name || "Employee"} Calls`.slice(0, 31);
+        fileName = `Assigned_Calls_${empNameClean}_${getTodayStr()}.xlsx`;
+        let sNo = 1;
+        selectedEmployeeCalls.forEach((call) => {
+          const prods = (call.products && call.products.length > 0 ? call.products : [{}]).filter((p) => {
+            if (!selectedEmployee) return true;
+            return (
+              p._assignedEngineerId === selectedEmployee.userId ||
+              p._assignedEngineerName === selectedEmployee.name ||
+              p._supportPersonId === selectedEmployee.userId ||
+              p._fieldVisit?.assignedTo === selectedEmployee.userId ||
+              p._fieldVisit?.assignedBy === selectedEmployee.userId ||
+              call.registeredBy === selectedEmployee.userId ||
+              call.currentEngineerName === selectedEmployee.name
+            );
+          });
+
+          prods.forEach((p) => {
+            const pStatus = getCallProductStatus(p, call.status);
+            const isClosed =
+              p._resolved ||
+              p._productClosure?.status === "Closed" ||
+              p._productClosure?.status === "Resolved";
+            const closedAt =
+              p._productClosure?.closedAt ||
+              p._productClosure?.date ||
+              (isClosed ? p._productClosure?.updatedAt : null);
+
+            const regTime = call.createdAt || call.timestamp || call.dateTime;
+            const assignTime = p._assignedAt || call.assignedAt || call.assignmentDate || regTime;
+            const tat = formatDurationFrom(regTime, isClosed ? closedAt : null);
+
+            const isSelf = Boolean(
+              call.noEscalation ||
+              call.callOrigin === "self_assigned" ||
+              call.registeredBy === selectedEmployee?.userId
+            );
+
+            const fullRow = {
+              "S.No": sNo++,
+              "Registered Date": fmtDateTime(regTime),
+              "Call Number": call.callNumber,
+              "Origin": isSelf ? "Self Assigned" : "Registered",
+              "Customer Name": call.customerName || "—",
+              "Customer Type": call.customerType || "—",
+              "Contact Number": call.contactNumber || "—",
+              "Location": call.location || call.siteLocation || call.address || "—",
+              "Product Model": p.productModel || p.itemCode || "—",
+              "Serial Number": p.serialNumber || "—",
+              "Error Code": p.errorCode || "—",
+              "Assigned Date": fmtDateTime(assignTime),
+              "Closed Date": isClosed ? fmtDateTime(closedAt) : "—",
+              "Status": getStatusCfg(pStatus).label,
+              "Turnaround Time (TAT)": tat,
+            };
+
+            const filteredRow = {};
+            activeExportConfig.forEach((colCfg) => {
+              if (selectedExportCols.includes(colCfg.key)) {
+                filteredRow[colCfg.key] = fullRow[colCfg.key] !== undefined ? fullRow[colCfg.key] : "—";
+              }
+            });
+            rows.push(filteredRow);
+          });
+        });
+      }
 
       if (rows.length === 0) {
-        toast("No records available to export", "info");
+        toast("No records available to export for this view", "info");
         return;
       }
 
       const ws = XLSX.utils.json_to_sheet(rows);
 
-      // Auto-fit column widths for clear readability
+      // Auto-fit column widths
       const colWidths = Object.keys(rows[0] || {}).map((key) => {
         const maxLen = Math.max(
           key.length,
@@ -992,185 +1144,10 @@ export default function ServiceCallReports() {
       });
       ws["!cols"] = colWidths;
 
-      // ── Build Summary Report (Registered, Assigned, Escalated, Closed by Day, Week, Month) ──
-      const parseDateSafe = (dStr) => {
-        if (!dStr) return null;
-        const d = new Date(dStr);
-        return isNaN(d.getTime()) ? null : d;
-      };
-
-      const getDayKey = (d) => {
-        const pad = (n) => String(n).padStart(2, "0");
-        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-      };
-
-      const getWeekKey = (d) => {
-        const temp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-        const dayNum = temp.getUTCDay() || 7;
-        temp.setUTCDate(temp.getUTCDate() + 4 - dayNum);
-        const yearStart = new Date(Date.UTC(temp.getUTCFullYear(), 0, 1));
-        const weekNo = Math.ceil(((temp - yearStart) / 86400000 + 1) / 7);
-        return `${temp.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
-      };
-
-      const getMonthKey = (d) => {
-        const pad = (n) => String(n).padStart(2, "0");
-        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
-      };
-
-      const daySummary = {};
-      const weekSummary = {};
-      const monthSummary = {};
-
-      const initBucket = () => ({ registered: 0, assigned: 0, escalated: 0, closed: 0 });
-
-      filteredCalls.forEach((c) => {
-        const cDate = parseDateSafe(c.createdAt || c.dateTime);
-        const prods = c.products && c.products.length > 0 ? c.products : [{}];
-        const callEscHistory = c.escalationHistory || c._escalationHistory || [];
-
-        prods.forEach((p) => {
-          // Dates
-          const regDate = cDate || new Date();
-          const pAttendedOrAssigned = p._assigned || p._attended || p._assignedEngineerName || c.currentEngineerName;
-          const assignDate = parseDateSafe(p._assignedAt || c.assignedAt || c.assignmentDate || regDate);
-
-          const combinedEsc = [...callEscHistory, ...(p._escalationHistory || [])];
-          const isEscalated =
-            combinedEsc.length > 0 ||
-            p._escalationLevel > 0 ||
-            c.escalationLevel > 0 ||
-            p._isCritical ||
-            c.priority === "Critical";
-          const escDate = combinedEsc.length > 0
-            ? parseDateSafe(combinedEsc[0].assignedAt || combinedEsc[0].timestamp || regDate)
-            : regDate;
-
-          const isClosed =
-            p._resolved ||
-            p._productClosure?.status === "Closed" ||
-            p._productClosure?.status === "Resolved";
-          const closeDate = parseDateSafe(
-            p._productClosure?.closedAt || p._productClosure?.date || p._productClosure?.updatedAt
-          );
-
-          // 1. Registered
-          const dKey = getDayKey(regDate);
-          const wKey = getWeekKey(regDate);
-          const mKey = getMonthKey(regDate);
-
-          if (!daySummary[dKey]) daySummary[dKey] = initBucket();
-          if (!weekSummary[wKey]) weekSummary[wKey] = initBucket();
-          if (!monthSummary[mKey]) monthSummary[mKey] = initBucket();
-
-          daySummary[dKey].registered += 1;
-          weekSummary[wKey].registered += 1;
-          monthSummary[mKey].registered += 1;
-
-          // 2. Assigned
-          if (pAttendedOrAssigned && assignDate) {
-            const adKey = getDayKey(assignDate);
-            const awKey = getWeekKey(assignDate);
-            const amKey = getMonthKey(assignDate);
-            if (!daySummary[adKey]) daySummary[adKey] = initBucket();
-            if (!weekSummary[awKey]) weekSummary[awKey] = initBucket();
-            if (!monthSummary[amKey]) monthSummary[amKey] = initBucket();
-            daySummary[adKey].assigned += 1;
-            weekSummary[awKey].assigned += 1;
-            monthSummary[amKey].assigned += 1;
-          }
-
-          // 3. Escalated
-          if (isEscalated && escDate) {
-            const edKey = getDayKey(escDate);
-            const ewKey = getWeekKey(escDate);
-            const emKey = getMonthKey(escDate);
-            if (!daySummary[edKey]) daySummary[edKey] = initBucket();
-            if (!weekSummary[ewKey]) weekSummary[ewKey] = initBucket();
-            if (!monthSummary[emKey]) monthSummary[emKey] = initBucket();
-            daySummary[edKey].escalated += 1;
-            weekSummary[ewKey].escalated += 1;
-            monthSummary[emKey].escalated += 1;
-          }
-
-          // 4. Closed
-          if (isClosed && closeDate) {
-            const cdKey = getDayKey(closeDate);
-            const cwKey = getWeekKey(closeDate);
-            const cmKey = getMonthKey(closeDate);
-            if (!daySummary[cdKey]) daySummary[cdKey] = initBucket();
-            if (!weekSummary[cwKey]) weekSummary[cwKey] = initBucket();
-            if (!monthSummary[cmKey]) monthSummary[cmKey] = initBucket();
-            daySummary[cdKey].closed += 1;
-            weekSummary[cwKey].closed += 1;
-            monthSummary[cmKey].closed += 1;
-          }
-        });
-      });
-
-      // Format Summary Sheet rows
-      const summaryRows = [];
-
-      // Section 1: Daily Summary
-      summaryRows.push({ "Period Type": "DAILY SUMMARY", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
-      Object.keys(daySummary).sort().reverse().forEach((k) => {
-        summaryRows.push({
-          "Period Type": "Day",
-          "Period": k,
-          "Registered": daySummary[k].registered,
-          "Assigned": daySummary[k].assigned,
-          "Escalated": daySummary[k].escalated,
-          "Closed": daySummary[k].closed,
-        });
-      });
-
-      // Space
-      summaryRows.push({ "Period Type": "", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
-
-      // Section 2: Weekly Summary
-      summaryRows.push({ "Period Type": "WEEKLY SUMMARY", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
-      Object.keys(weekSummary).sort().reverse().forEach((k) => {
-        summaryRows.push({
-          "Period Type": "Week",
-          "Period": k,
-          "Registered": weekSummary[k].registered,
-          "Assigned": weekSummary[k].assigned,
-          "Escalated": weekSummary[k].escalated,
-          "Closed": weekSummary[k].closed,
-        });
-      });
-
-      // Space
-      summaryRows.push({ "Period Type": "", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
-
-      // Section 3: Monthly Summary
-      summaryRows.push({ "Period Type": "MONTHLY SUMMARY", "Period": "", "Registered": "", "Assigned": "", "Escalated": "", "Closed": "" });
-      Object.keys(monthSummary).sort().reverse().forEach((k) => {
-        summaryRows.push({
-          "Period Type": "Month",
-          "Period": k,
-          "Registered": monthSummary[k].registered,
-          "Assigned": monthSummary[k].assigned,
-          "Escalated": monthSummary[k].escalated,
-          "Closed": monthSummary[k].closed,
-        });
-      });
-
-      const summaryWs = XLSX.utils.json_to_sheet(summaryRows);
-      summaryWs["!cols"] = [
-        { wch: 22 },
-        { wch: 18 },
-        { wch: 14 },
-        { wch: 14 },
-        { wch: 14 },
-        { wch: 14 },
-      ];
-
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, summaryWs, "Summary Report");
-      XLSX.utils.book_append_sheet(wb, ws, "Service Calls Report");
-      XLSX.writeFile(wb, `Service_Call_Reports_${getTodayStr()}.xlsx`);
-      toast("Excel report downloaded successfully", "success");
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      XLSX.writeFile(wb, fileName);
+      toast(`${sheetName} exported successfully`, "success");
     } catch (err) {
       console.error("Export failed:", err);
       toast("Failed to export Excel report", "error");
@@ -1456,7 +1433,7 @@ export default function ServiceCallReports() {
               <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
               <span>Columns</span>
               <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                {selectedExportCols.length}/{EXPORT_COLUMNS_CONFIG.length}
+                {selectedExportCols.length}/{activeExportConfig.length}
               </span>
             </button>
 
@@ -1497,7 +1474,7 @@ export default function ServiceCallReports() {
                   </div>
 
                   <div className="flex-1 overflow-y-auto p-[0.5vw] space-y-[0.25vw] max-h-[17vw]">
-                    {EXPORT_COLUMNS_CONFIG.map((col) => {
+                    {activeExportConfig.map((col) => {
                       const isChecked = selectedExportCols.includes(col.key);
                       return (
                         <label
@@ -1523,7 +1500,7 @@ export default function ServiceCallReports() {
 
                   <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
                     <span className="text-[0.7vw] text-slate-500">
-                      {selectedExportCols.length} of {EXPORT_COLUMNS_CONFIG.length} selected
+                      {selectedExportCols.length} of {activeExportConfig.length} selected
                     </span>
                     <button
                       onClick={() => setShowColPicker(false)}
