@@ -1120,7 +1120,7 @@ const CustomerDatabase = () => {
   const renderHeaderCell = (col) => (
     <th
       key={col.key}
-      className={`p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300 whitespace-nowrap ${
+      className={`py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-r border-slate-300 whitespace-nowrap ${
         col.key === "state" ? "min-w-[8vw] w-[8vw]" : ""
       }`}
     >
@@ -1133,22 +1133,32 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `p-[0.7vw] border-r border-b border-slate-200 text-[0.76vw] ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-[0.78vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
         return (
-          <td key={col.key} {...spanProps} className={baseClass}>
-            <span className={`px-[0.55vw] py-[0.15vw] inline-block min-w-[5vw] text-center rounded-[0.35vw] text-[0.68vw] font-medium border ${getTypeColor(row.partyType)}`}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-center"}>
+            <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+              row.partyType === "OEM"
+                ? "bg-blue-50 text-blue-700 border-blue-200"
+                : row.partyType === "End Customer"
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                : row.partyType === "Distributor"
+                ? "bg-purple-50 text-purple-700 border-purple-200"
+                : row.partyType === "Dealer"
+                ? "bg-amber-50 text-amber-700 border-amber-200"
+                : "bg-slate-50 text-slate-700 border-slate-200"
+            }`}>
               {row.partyType}
             </span>
           </td>
         );
       case "productSegment":
         return (
-          <td key={col.key} className={baseClass + " text-gray-700 font-medium"}>
+          <td key={col.key} className={baseClass}>
             {row.productSegment ? (
-              <span className="inline-block bg-slate-50 text-slate-700 px-[0.45vw] py-[0.1vw] rounded text-[0.7vw] border border-slate-200/60 font-medium">
+              <span className="inline-block bg-indigo-50 text-indigo-700 px-[0.45vw] py-[0.08vw] rounded text-[0.68vw] border border-indigo-200/80 font-normal">
                 {row.productSegment}
               </span>
             ) : "—"}
@@ -1156,39 +1166,39 @@ const CustomerDatabase = () => {
         );
       case "partyCode":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-mono font-medium"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-600 font-mono"}>
             {row.partyCode}
           </td>
         );
       case "partyDescription":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-800 font-medium truncate max-w-[14vw]"} title={row.partyDescription}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-normal truncate max-w-[14vw]"} title={row.partyDescription}>
             {row.partyDescription}
           </td>
         );
       case "itemCode":
-        return <td key={col.key} className={baseClass + " text-gray-700 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
+        return <td key={col.key} className={baseClass + " text-slate-700 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
-          <td key={col.key} className={baseClass + " text-gray-700 truncate max-w-[16vw] text-[0.74vw]"} title={row.itemDescription}>
+          <td key={col.key} className={baseClass + " text-slate-700 truncate max-w-[16vw] text-[0.74vw]"} title={row.itemDescription}>
             {row.itemDescription}
           </td>
         );
       case "warrantyPeriodDays":
         return (
-          <td key={col.key} className={baseClass + " text-gray-700 text-center font-medium"}>
+          <td key={col.key} className={baseClass + " text-slate-700 text-center font-normal"}>
             {row.warrantyPeriodDays}
           </td>
         );
       case "state":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-700 min-w-[8vw] w-[8vw] whitespace-nowrap"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700 min-w-[8vw] w-[8vw] whitespace-nowrap"}>
             {row.state || "—"}
           </td>
         );
       case "districtCity":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-gray-700"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700"}>
             {row.districtCity || "—"}
           </td>
         );
@@ -1332,43 +1342,43 @@ const CustomerDatabase = () => {
       </div>
 
       {/* ── Table Card ── */}
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 overflow-hidden min-h-0">
+      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 overflow-hidden min-h-0">
         <div className="overflow-x-auto overflow-y-auto flex-1 w-full min-h-0">
-          <table className="w-full text-left border-separate border-spacing-0">
-            <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
-              <tr className="bg-[#e9edf4]">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] tracking-wider uppercase">
+              <tr className="bg-[#E9EDF7]">
                 {!isSupervisor && (
-                  <th className="p-[0.7vw] border-b-2 border-r border-slate-300 w-[3%] text-center bg-[#e9edf4]">
+                  <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[3%] text-center bg-[#E9EDF7]">
                     <button
                       onClick={() => handleSelectAllPage(paginatedData)}
                       className="flex items-center justify-center w-full cursor-pointer"
                     >
                       {isPageSelected ? (
-                        <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
+                        <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
                       ) : (
                         <Square className="w-[1vw] h-[1vw] text-slate-400 hover:text-slate-500" />
                       )}
                     </button>
                   </th>
                 )}
-                <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-r border-slate-300 w-[3.5%] text-center bg-[#e9edf4]">
+                <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-r border-slate-300 w-[3.5%] text-center bg-[#E9EDF7]">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.68vw] border-b-2 border-slate-300 w-[4.5%] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                  <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-slate-300 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
                     Actions
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-200">
               {isLoading ? (
                 <tr>
                   <td colSpan={totalCols} className="py-[10vw]">
                     <div className="flex flex-col items-center justify-center gap-[1vw] text-gray-500">
-                      <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
-                      <p className="text-[1vw] font-medium text-blue-600">Loading customer data...</p>
+                      <Loader2 className="w-[3vw] h-[3vw] animate-spin text-[#1a73e8]" />
+                      <p className="text-[1vw] font-medium text-[#1a73e8]">Loading customer data...</p>
                     </div>
                   </td>
                 </tr>
@@ -1388,23 +1398,23 @@ const CustomerDatabase = () => {
                   return (
                     <tr
                       key={i}
-                      className={`transition-colors border-b border-slate-200 ${isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/70"}`}
+                      className={`transition-colors border-b border-slate-300 ${isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/70"}`}
                     >
                       {!isSupervisor && (
-                        <td className="p-[0.7vw] border-r border-b border-slate-200 text-center">
+                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center">
                           <button
                             onClick={() => handleSelectItem(row)}
                             className="flex items-center justify-center w-full cursor-pointer"
                           >
                             {isSelected ? (
-                              <CheckSquare className="w-[1vw] h-[1vw] text-blue-600" />
+                              <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
                             ) : (
                               <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
                             )}
                           </button>
                         </td>
                       )}
-                      <td className="p-[0.7vw] text-gray-500 font-medium border-r border-b border-slate-200 text-center text-[0.74vw]">
+                      <td className="py-[0.7vw] px-[0.7vw] text-slate-700 font-normal border-r border-b border-slate-300 text-center text-[0.76vw]">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
@@ -1414,14 +1424,14 @@ const CustomerDatabase = () => {
                       {!isSameParty && !isSupervisor ? (
                         <td
                           rowSpan={rowSpan}
-                          className="border-b border-r border-slate-200 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
+                          className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
                         >
                           {(canUpdate || canDelete) ? (
                             <div className="flex items-center justify-center gap-[0.4vw] px-[0.4vw]">
                               {canUpdate && (
                                 <button
                                   onClick={() => openEditModal(row.partyCode)}
-                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-blue-50 text-slate-500 hover:text-[#1a73e8] transition-colors cursor-pointer"
                                   title="Edit Customer"
                                 >
                                   <Edit2 className="w-[0.9vw] h-[0.9vw]" />
@@ -1430,7 +1440,7 @@ const CustomerDatabase = () => {
                               {canDelete && (
                                 <button
                                   onClick={() => handleDeleteParty(row.partyCode)}
-                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-rose-50 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
+                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer"
                                   title="Delete Customer"
                                 >
                                   <Trash2 className="w-[0.9vw] h-[0.9vw]" />
@@ -1447,7 +1457,7 @@ const CustomerDatabase = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={totalCols} className="py-[5vw] text-center text-gray-400 font-medium">
+                  <td colSpan={totalCols} className="py-[5vw] text-center text-slate-400 font-normal">
                     No customer data found.
                   </td>
                 </tr>
@@ -1457,25 +1467,15 @@ const CustomerDatabase = () => {
         </div>
 
         {/* Pagination */}
-        <div className="border-t border-gray-200/80 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
-          <div className="text-[0.74vw] text-gray-500 font-medium">
-            Showing{" "}
-            <span className="font-semibold text-gray-900">
-              {paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}
-            </span>{" "}
-            to{" "}
-            <span className="font-semibold text-gray-900">
-              {Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-900">{filteredData.length}</span>{" "}
-            entries
+        <div className="border-t border-slate-300 px-[1vw] py-[0.7vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
+          <div className="text-[0.74vw] text-slate-500 font-medium">
+            Showing <span className="font-semibold text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</span> of <span className="font-semibold text-slate-800">{filteredData.length}</span> entries
           </div>
           <div className="flex items-center gap-[0.5vw]">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
               <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
             </button>
@@ -1488,7 +1488,9 @@ const CustomerDatabase = () => {
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`min-w-[1.7vw] h-[1.7vw] px-[0.4vw] flex items-center justify-center rounded-[0.4vw] text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"}`}
+                    className={`min-w-[1.6vw] h-[1.6vw] px-[0.35vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold cursor-pointer transition-all ${
+                      currentPage === pNum ? "bg-[#1a73e8] text-white shadow-2xs" : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                    }`}
                   >
                     {pNum}
                   </button>
@@ -1498,7 +1500,7 @@ const CustomerDatabase = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
               <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
             </button>
