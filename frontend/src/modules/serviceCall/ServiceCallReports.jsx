@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import CustomDropdown from "../../components/CustomDropdown";
@@ -104,6 +105,27 @@ const getTodayStr = () => {
   return `${year}-${month}-${day}`;
 };
 
+const fmtDateParts = (dStr) => {
+  if (!dStr) return { date: "—", time: "" };
+  try {
+    const d = new Date(dStr);
+    if (isNaN(d.getTime())) return { date: dStr, time: "" };
+    const datePart = d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    const timePart = d.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return { date: datePart, time: timePart };
+  } catch {
+    return { date: dStr, time: "" };
+  }
+};
+
 const fmtDateTime = (dStr) => {
   if (!dStr) return "—";
   try {
@@ -146,37 +168,87 @@ const formatDurationFrom = (startDateStr, endDateStr = null) => {
 };
 
 const CustomTooltip = ({ children, text, position = "top", className = "" }) => {
+  const [coords, setCoords] = useState(null);
+  const targetRef = useRef(null);
+
   if (!text) return children;
 
-  const positionClasses = {
-    top: "bottom-[calc(100%+0.35vw)] left-1/2 -translate-x-1/2",
-    bottom: "top-[calc(100%+0.35vw)] left-1/2 -translate-x-1/2",
-    left: "right-[calc(100%+0.35vw)] top-1/2 -translate-y-1/2",
-    right: "left-[calc(100%+0.35vw)] top-1/2 -translate-y-1/2",
-    "top-start": "bottom-[calc(100%+0.35vw)] left-0",
-    "top-end": "bottom-[calc(100%+0.35vw)] right-0",
+  const handleMouseEnter = () => {
+    if (!targetRef.current) return;
+    const rect = targetRef.current.getBoundingClientRect();
+    const gap = 6;
+
+    let x = rect.left + rect.width / 2;
+    let y = rect.top - gap;
+    let side = "top";
+
+    // Auto flip to bottom if too close to viewport top or table header
+    if (rect.top < 120 || position === "bottom") {
+      y = rect.bottom + gap;
+      side = "bottom";
+    }
+
+    if (position === "top-start") {
+      x = rect.left;
+    } else if (position === "top-end") {
+      x = rect.right;
+    }
+
+    setCoords({ x, y, side, align: position });
   };
 
-  const arrowClasses = {
-    top: "top-full left-1/2 -translate-x-1/2 border-x-[0.25vw] border-x-transparent border-t-[0.25vw] border-t-slate-900",
-    bottom: "bottom-full left-1/2 -translate-x-1/2 border-x-[0.25vw] border-x-transparent border-b-[0.25vw] border-b-slate-900",
-    left: "left-full top-1/2 -translate-y-1/2 border-y-[0.25vw] border-y-transparent border-l-[0.25vw] border-l-slate-900",
-    right: "right-full top-1/2 -translate-y-1/2 border-y-[0.25vw] border-y-transparent border-r-[0.25vw] border-r-slate-900",
-    "top-start": "top-full left-[0.6vw] border-x-[0.25vw] border-x-transparent border-t-[0.25vw] border-t-slate-900",
-    "top-end": "top-full right-[0.6vw] border-x-[0.25vw] border-x-transparent border-t-[0.25vw] border-t-slate-900",
+  const handleMouseLeave = () => {
+    setCoords(null);
   };
 
   return (
-    <div className={`relative group/tip inline-flex items-center ${className}`}>
+    <div
+      ref={targetRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`inline-flex items-center ${className}`}
+    >
       {children}
-      <div
-        className={`hidden group-hover/tip:flex items-center absolute z-50 bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-md pointer-events-none whitespace-nowrap border border-slate-700 ${
-          positionClasses[position] || positionClasses.top
-        }`}
-      >
-        <span>{text}</span>
-        <div className={`absolute w-0 h-0 ${arrowClasses[position] || arrowClasses.top}`} />
-      </div>
+      {coords &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: `${coords.y}px`,
+              left: `${coords.x}px`,
+              transform:
+                coords.align === "top-start"
+                  ? coords.side === "bottom"
+                    ? "translate(0, 0)"
+                    : "translate(0, -100%)"
+                  : coords.align === "top-end"
+                  ? coords.side === "bottom"
+                    ? "translate(-100%, 0)"
+                    : "translate(-100%, -100%)"
+                  : coords.side === "bottom"
+                  ? "translate(-50%, 0)"
+                  : "translate(-50%, -100%)",
+              zIndex: 99999,
+            }}
+            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+          >
+            <span>{text}</span>
+            <div
+              className={`absolute w-0 h-0 border-[0.25vw] ${
+                coords.side === "bottom"
+                  ? "bottom-full border-transparent border-b-slate-900"
+                  : "top-full border-transparent border-t-slate-900"
+              } ${
+                coords.align === "top-start"
+                  ? "left-[0.6vw]"
+                  : coords.align === "top-end"
+                  ? "right-[0.6vw]"
+                  : "left-1/2 -translate-x-1/2"
+              }`}
+            />
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
@@ -1493,10 +1565,15 @@ export default function ServiceCallReports() {
                                     rowSpan={rowCount}
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
-                                    <div className="text-[0.74vw] text-slate-800 font-medium flex items-center gap-[0.3vw]">
-                                      <Calendar className="w-[0.75vw] h-[0.75vw] text-slate-400 shrink-0" />
-                                      <span>{fmtDateTime(call.createdAt || call.dateTime)}</span>
-                                    </div>
+                                    {(() => {
+                                      const { date, time } = fmtDateParts(call.createdAt || call.dateTime);
+                                      return (
+                                        <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-snug">
+                                          <span>{date}</span>
+                                          {time && <span className="text-[0.68vw] text-slate-500 mt-[0.05vw]">{time}</span>}
+                                        </div>
+                                      );
+                                    })()}
                                     {call.registeredByName && call.registeredByName !== "System" ? (
                                       <div className="text-[0.66vw] text-slate-400 mt-[0.1vw]">
                                         By: {call.registeredByName}
@@ -1522,7 +1599,7 @@ export default function ServiceCallReports() {
                                       </CustomTooltip>
                                       {hasEdits && (
                                         <CustomTooltip text="This call has edited records" position="top">
-                                          <span className="text-[0.62vw] px-[0.3vw] py-[0.05vw] bg-amber-50 text-amber-700 border border-amber-200 rounded font-semibold cursor-default">
+                                          <span className="text-[0.62vw] px-[0.3vw] py-[0.05vw] bg-amber-50 text-amber-700 border border-amber-200 rounded font-normal cursor-default">
                                             Edited
                                           </span>
                                         </CustomTooltip>
@@ -1538,12 +1615,12 @@ export default function ServiceCallReports() {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap bg-white"
                                   >
                                     {isSelf ? (
-                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
                                         <UserCheck className="w-[0.65vw] h-[0.65vw]" />
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="text-slate-500 font-medium text-[0.72vw]">
+                                      <span className="text-slate-600 font-normal text-[0.72vw]">
                                         Registered
                                       </span>
                                     )}
@@ -1557,7 +1634,7 @@ export default function ServiceCallReports() {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
                                   >
                                     <CustomTooltip text={call.customerName} position="top-start" className="max-w-full">
-                                      <div className="font-semibold text-slate-900 text-[0.82vw] truncate">
+                                      <div className="font-normal text-slate-900 text-[0.82vw] truncate">
                                         {call.customerName || "—"}
                                       </div>
                                     </CustomTooltip>
@@ -1566,7 +1643,7 @@ export default function ServiceCallReports() {
                                         <CustomTooltip text="Click to call" position="bottom">
                                           <a
                                             href={`tel:${call.contactNumber}`}
-                                            className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                            className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-normal text-blue-600 hover:text-blue-800 hover:underline shrink-0"
                                           >
                                             <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
                                             <span>{call.contactNumber}</span>
@@ -1586,7 +1663,7 @@ export default function ServiceCallReports() {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-normal text-[0.78vw]"
                                   >
                                     {call.customerType && call.customerType !== "All" ? (
                                       <span className={getCustomerTypeTextColor(call.customerType)}>
@@ -1601,7 +1678,7 @@ export default function ServiceCallReports() {
                                 {/* 6. Product / Model */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
                                   <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">
-                                    <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                    <div className="font-normal text-slate-800 text-[0.8vw] truncate">
                                       {prod.productModel || prod.itemCode || "—"}
                                     </div>
                                   </CustomTooltip>
@@ -1617,47 +1694,35 @@ export default function ServiceCallReports() {
                                 {/* 7. Assigned Info */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
                                   {prod._assignedEngineerName || call.currentEngineerName ? (
-                                    <div className="relative group inline-flex items-center gap-[0.45vw] cursor-default">
-                                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.68vw] shrink-0">
-                                        {(prod._assignedEngineerName || call.currentEngineerName || "U").charAt(0).toUpperCase()}
-                                      </div>
-                                      <div className="font-semibold text-slate-800 text-[0.75vw]">
-                                        {prod._assignedEngineerName || call.currentEngineerName}
-                                      </div>
-
-                                      {/* Custom Tooltip */}
-                                      <div className="hidden group-hover:flex flex-col gap-[0.1vw] absolute left-0 bottom-[calc(100%+0.35vw)] z-50 bg-slate-900 text-white rounded-md px-[0.6vw] py-[0.35vw] text-[0.68vw] shadow-lg pointer-events-none whitespace-nowrap border border-slate-700">
-                                        <div className="text-slate-300 text-[0.62vw] uppercase tracking-wider font-semibold">Assigned On</div>
-                                        <div className="font-medium text-white flex items-center gap-[0.25vw]">
-                                          <Calendar className="w-[0.6vw] h-[0.6vw] text-indigo-400" />
-                                          <span>{fmtDateTime(prod._assignedAt || call.createdAt)}</span>
+                                    <CustomTooltip
+                                      text={`Assigned: ${fmtDateTime(prod._assignedAt || call.createdAt)}`}
+                                      position="top-start"
+                                    >
+                                      <div className="flex items-center gap-[0.45vw] cursor-default">
+                                        <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal text-[0.68vw] shrink-0">
+                                          {(prod._assignedEngineerName || call.currentEngineerName || "U").charAt(0).toUpperCase()}
                                         </div>
-                                        <div className="absolute left-[0.8vw] top-full w-0 h-0 border-x-[0.3vw] border-x-transparent border-t-[0.3vw] border-t-slate-900" />
+                                        <div className="font-normal text-slate-800 text-[0.75vw]">
+                                          {prod._assignedEngineerName || call.currentEngineerName}
+                                        </div>
                                       </div>
-                                    </div>
+                                    </CustomTooltip>
                                   ) : (
-                                    <span className="text-slate-400 font-medium italic text-[0.72vw]">Unassigned</span>
+                                    <span className="text-slate-400 font-normal italic text-[0.72vw]">Unassigned</span>
                                   )}
                                 </td>
 
                                 {/* 8. Escalation Info */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap">
                                   {isEscalated ? (
-                                    <div className="relative group inline-flex items-center justify-center cursor-default">
-                                      <span className="text-[0.75vw] text-slate-800 font-normal hover:text-slate-900 transition-colors">
+                                    <CustomTooltip
+                                      text={`Open duration: ${formatDurationFrom(prod._assignedAt || call.createdAt)}`}
+                                      position="top"
+                                    >
+                                      <span className="text-[0.75vw] text-slate-800 font-normal hover:text-slate-900 transition-colors cursor-default">
                                         Level {prod._escalationLevel || call.escalationLevel || 1}
                                       </span>
-
-                                      {/* Custom Tooltip */}
-                                      <div className="hidden group-hover:flex flex-col gap-[0.1vw] absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+0.35vw)] z-50 bg-slate-900 text-white rounded-md px-[0.6vw] py-[0.35vw] text-[0.68vw] shadow-lg pointer-events-none whitespace-nowrap border border-slate-700">
-                                        <div className="text-slate-300 text-[0.62vw] uppercase tracking-wider font-semibold">Open Duration</div>
-                                        <div className="font-normal text-rose-300 flex items-center gap-[0.25vw] justify-center">
-                                          <Clock className="w-[0.6vw] h-[0.6vw]" />
-                                          <span>{formatDurationFrom(prod._assignedAt || call.createdAt)} open</span>
-                                        </div>
-                                        <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-[0.3vw] border-x-transparent border-t-[0.3vw] border-t-slate-900" />
-                                      </div>
-                                    </div>
+                                    </CustomTooltip>
                                   ) : (
                                     <span className="text-slate-300 font-normal text-[0.75vw]">—</span>
                                   )}
@@ -1785,7 +1850,7 @@ export default function ServiceCallReports() {
                             {/* 2. Customer & Contact */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]">
                               <CustomTooltip text={item.call.customerName} position="top-start" className="max-w-full">
-                                <div className="font-semibold text-slate-900 text-[0.82vw] truncate">
+                                <div className="font-normal text-slate-900 text-[0.82vw] truncate">
                                   {item.call.customerName || "—"}
                                 </div>
                               </CustomTooltip>
@@ -1794,7 +1859,7 @@ export default function ServiceCallReports() {
                                   <CustomTooltip text="Click to call" position="bottom">
                                     <a
                                       href={`tel:${item.call.contactNumber}`}
-                                      className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                      className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-normal text-blue-600 hover:text-blue-800 hover:underline shrink-0"
                                     >
                                       <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
                                       <span>{item.call.contactNumber}</span>
@@ -1810,7 +1875,7 @@ export default function ServiceCallReports() {
                             </td>
 
                             {/* 3. Customer Type */}
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-bold text-[0.78vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-normal text-[0.78vw]">
                               {item.call.customerType && item.call.customerType !== "All" ? (
                                 <span className={getCustomerTypeTextColor(item.call.customerType)}>
                                   {item.call.customerType}
@@ -1823,7 +1888,7 @@ export default function ServiceCallReports() {
                             {/* 4. Product / SN */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[13vw]">
                               <CustomTooltip text={item.prod.productModel || item.prod.itemCode} position="top-start" className="max-w-full">
-                                <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                <div className="font-normal text-slate-800 text-[0.8vw] truncate">
                                   {item.prod.productModel || item.prod.itemCode || "—"}
                                 </div>
                               </CustomTooltip>
@@ -1839,10 +1904,10 @@ export default function ServiceCallReports() {
                             {/* 5. Who Escalated */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap align-middle">
                               <div className="flex items-center gap-[0.45vw]">
-                                <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.68vw] shrink-0">
+                                <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal text-[0.68vw] shrink-0">
                                   {(item.escalatedBy || "E").charAt(0).toUpperCase()}
                                 </div>
-                                <div className="font-semibold text-slate-800 text-[0.75vw]">
+                                <div className="font-normal text-slate-800 text-[0.75vw]">
                                   {item.escalatedBy}
                                 </div>
                               </div>
@@ -1850,22 +1915,27 @@ export default function ServiceCallReports() {
 
                             {/* 6. When Escalated */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap align-middle">
-                              <div className="text-[0.72vw] text-gray-800 font-medium flex items-center gap-[0.25vw]">
-                                <Calendar className="w-[0.7vw] h-[0.7vw] text-gray-500 shrink-0" />
-                                <span>{fmtDateTime(item.escalatedAt)}</span>
-                              </div>
+                              {(() => {
+                                const { date, time } = fmtDateParts(item.escalatedAt);
+                                return (
+                                  <div className="flex flex-col text-[0.72vw] text-gray-800 font-normal leading-snug">
+                                    <span>{date}</span>
+                                    {time && <span className="text-[0.66vw] text-slate-500 mt-[0.05vw]">{time}</span>}
+                                  </div>
+                                );
+                              })()}
                             </td>
 
                             {/* 7. Why (Reason) */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw] align-middle">
-                              <span className="font-medium text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.15vw] rounded text-[0.72vw] inline-block leading-snug">
+                              <span className="font-normal text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.15vw] rounded text-[0.72vw] inline-block leading-snug">
                                 {item.reason}
                               </span>
                             </td>
 
                             {/* 8. Open Duration */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-center align-middle">
-                              <span className="inline-flex items-center gap-[0.25vw] text-[0.74vw] font-semibold text-slate-700">
+                              <span className="inline-flex items-center gap-[0.25vw] text-[0.74vw] font-normal text-slate-700">
                                 <Clock className="w-[0.7vw] h-[0.7vw] text-slate-400" />
                                 {item.openDuration}
                               </span>
@@ -1948,24 +2018,24 @@ export default function ServiceCallReports() {
                               {/* User */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white">
                                 <div className="flex items-center gap-[0.55vw]">
-                                  <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-bold text-[0.74vw] shrink-0">
+                                  <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal text-[0.74vw] shrink-0">
                                     {emp.name.charAt(0).toUpperCase()}
                                   </div>
                                   <div>
-                                    <div className="font-semibold text-slate-900 leading-tight text-[0.8vw]">{emp.name}</div>
+                                    <div className="font-normal text-slate-900 leading-tight text-[0.8vw]">{emp.name}</div>
                                     <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.05vw]">{emp.userId}</div>
                                   </div>
                                 </div>
                               </td>
 
                               {/* Department */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-slate-700 whitespace-nowrap font-medium text-[0.76vw]">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-slate-700 whitespace-nowrap font-normal text-[0.76vw]">
                                 {emp.department || "—"}
                               </td>
 
                               {/* Total Calls */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
-                                <span className={`font-semibold text-[0.78vw] ${emp.callsPerUser > 0 ? "text-slate-900" : "text-slate-300"}`}>
+                                <span className={`font-normal text-[0.78vw] ${emp.callsPerUser > 0 ? "text-slate-900" : "text-slate-300"}`}>
                                   {emp.callsPerUser}
                                 </span>
                               </td>
@@ -1973,7 +2043,7 @@ export default function ServiceCallReports() {
                               {/* Self Assigned */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.selfAssignedCount > 0 ? (
-                                  <span className="font-semibold text-[0.74vw] text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                  <span className="font-normal text-[0.74vw] text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.selfAssignedCount}
                                   </span>
                                 ) : (
@@ -1984,29 +2054,29 @@ export default function ServiceCallReports() {
                               {/* Open */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.openCount > 0 ? (
-                                  <span className="font-semibold text-[0.74vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                  <span className="font-normal text-[0.74vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.openCount}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300 font-medium">0</span>
+                                  <span className="text-slate-300 font-normal">0</span>
                                 )}
                               </td>
 
                               {/* Closed */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.closedCount > 0 ? (
-                                  <span className="font-semibold text-[0.74vw] text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                  <span className="font-normal text-[0.74vw] text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.closedCount}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300 font-medium">0</span>
+                                  <span className="text-slate-300 font-normal">0</span>
                                 )}
                               </td>
 
                               {/* Avg Response */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.avgResponseTime !== "—" ? (
-                                  <span className="inline-flex items-center gap-[0.25vw] text-slate-700 text-[0.74vw] font-medium">
+                                  <span className="inline-flex items-center gap-[0.25vw] text-slate-700 text-[0.74vw] font-normal">
                                     <Clock className="w-[0.65vw] h-[0.65vw] text-slate-400" />
                                     <span>{emp.avgResponseTime}</span>
                                   </span>
@@ -2125,25 +2195,25 @@ export default function ServiceCallReports() {
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                     {isSelf ? (
-                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="text-slate-500 font-medium text-[0.72vw]">
+                                      <span className="text-slate-500 font-normal text-[0.72vw]">
                                         Registered
                                       </span>
                                     )}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[14vw]">
                                     <CustomTooltip text={call.customerName} position="top-start" className="max-w-full">
-                                      <div className="font-semibold text-slate-900 text-[0.82vw] truncate">
+                                      <div className="font-normal text-slate-900 text-[0.82vw] truncate">
                                         {call.customerName || "—"}
                                       </div>
                                     </CustomTooltip>
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw]">
                                     <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">
-                                      <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                      <div className="font-normal text-slate-800 text-[0.8vw] truncate">
                                         {prod.productModel || prod.itemCode || "—"}
                                       </div>
                                     </CustomTooltip>
@@ -2155,13 +2225,21 @@ export default function ServiceCallReports() {
                                       </div>
                                     )}
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-600 text-[0.72vw]">
-                                    {fmtDateTime(call.createdAt)}
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-snug">
+                                    {(() => {
+                                      const { date, time } = fmtDateParts(call.createdAt);
+                                      return (
+                                        <div className="flex flex-col">
+                                          <span>{date}</span>
+                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.05vw]">{time}</span>}
+                                        </div>
+                                      );
+                                    })()}
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-indigo-700 font-medium text-[0.72vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-indigo-700 font-normal text-[0.72vw]">
                                     {fmtDateTime(prod._assignedAt || call.createdAt)}
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-emerald-700 font-medium text-[0.72vw]">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-emerald-700 font-normal text-[0.72vw]">
                                     {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">

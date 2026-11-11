@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { useNotification } from "../../components/NotificationContext";
 import ProductHistoryModal from "./ProductHistoryModal";
 import CustomDropdown from "../../components/CustomDropdown";
 import {
@@ -52,7 +53,9 @@ const ServiceCallForm = ({
   canUpdate = true,
   allowEditDate = false,
 }) => {
+  const { toast } = useNotification();
   const [formData, setFormData] = useState(initialData || {});
+  const [errors, setErrors] = useState({});
   const [previewImage, setPreviewImage] = useState(null);
   const [filesToDelete, setFilesToDelete] = useState([]);
   const [uploadingMedia, setUploadingMedia] = useState({});
@@ -221,7 +224,16 @@ const ServiceCallForm = ({
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   };
 
-  const set = (field, value) => setFormData((p) => ({ ...p, [field]: value }));
+  const set = (field, value) => {
+    setFormData((p) => ({ ...p, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  };
 
   const selectCustomer = (code, name, type) => {
     const rows = customerDb.filter((i) => i.partyCode === code);
@@ -236,6 +248,12 @@ const ServiceCallForm = ({
       location: p.locationType === "Site" ? "" : loc || p.location,
       products: [emptyProduct()],
     }));
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next.customerName;
+      delete next.partyCode;
+      return next;
+    });
     setShowCustSearch(false);
   };
   const selectEngineer = (eng) => {
@@ -272,6 +290,11 @@ const ServiceCallForm = ({
         return updated;
       });
       return { ...p, products: updatedProds };
+    });
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next[`product_${idx}_productModel`];
+      return next;
     });
     setShowProdSearch((p) => ({ ...p, [idx]: false }));
   };
@@ -311,52 +334,62 @@ const ServiceCallForm = ({
       });
       return { ...p, products: updatedProds };
     });
+    const errKey = `product_${idx}_${field}`;
+    if (errors[errKey]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[errKey];
+        return next;
+      });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
+
     if (!formData.mode) {
-      alert("Please select Mode of Call.");
-      return;
+      newErrors.mode = "Please select Mode of Call.";
     }
     if (!formData.priority) {
-      alert("Please select Priority.");
-      return;
+      newErrors.priority = "Please select Priority.";
     }
     if (!formData.partyCode || !formData.customerName) {
-      alert("Please select a Customer Name from the search list or create a new customer.");
-      return;
+      newErrors.customerName = "Please select a Customer Name from the search list or create a new customer.";
     }
     if (!formData.contactNumber || !formData.contactNumber.trim()) {
-      alert("Please enter Contact Number.");
-      return;
+      newErrors.contactNumber = "Please enter Contact Number.";
     }
     if (!formData.site || !formData.site.trim()) {
-      alert("Please select Site.");
-      return;
+      newErrors.site = "Please select Site.";
     }
     if (formData.locationType === "Site" && (!formData.location || !formData.location.trim())) {
-      alert("Please enter Site Address for location type 'Site'.");
-      return;
+      newErrors.location = "Please enter Site Address for location type 'Site'.";
     }
 
     // Validate products
     if (!formData.products || formData.products.length === 0) {
-      alert("Please add at least one product.");
+      newErrors.products = "Please add at least one product.";
+    } else {
+      for (let i = 0; i < formData.products.length; i++) {
+        const p = formData.products[i];
+        if (!p.productModel || !p.productModel.trim()) {
+          newErrors[`product_${i}_productModel`] = `Please select Product Model for Product #${i + 1}.`;
+        }
+        if (!p.callDescription || !p.callDescription.trim()) {
+          newErrors[`product_${i}_callDescription`] = `Please enter Call Description / Fault for Product #${i + 1}.`;
+        }
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      const firstErrorMessage = Object.values(newErrors)[0];
+      toast?.error ? toast.error(firstErrorMessage) : alert(firstErrorMessage);
       return;
     }
 
-    for (let i = 0; i < formData.products.length; i++) {
-      const p = formData.products[i];
-      if (!p.productModel || !p.productModel.trim()) {
-        alert(`Please select or enter Product Model for Product #${i + 1}.`);
-        return;
-      }
-      if (!p.callDescription || !p.callDescription.trim()) {
-        alert(`Please enter Call Description / Fault for Product #${i + 1}.`);
-        return;
-      }
-    }
+    setErrors({});
 
     // In edit mode, preserve original values if they exist, otherwise use defaults
     const saved = isEdit
@@ -557,8 +590,13 @@ const ServiceCallForm = ({
                 value={formData.mode}
                 onChange={(val) => set("mode", val)}
                 options={modes.map((m) => ({ value: m, label: m }))}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
+                  errors.mode ? "border-rose-400 ring-2 ring-rose-500/15" : "border-slate-200"
+                }`}
               />
+              {errors.mode && (
+                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.mode}</p>
+              )}
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
@@ -568,7 +606,9 @@ const ServiceCallForm = ({
                 value={formData.priority}
                 onChange={(val) => set("priority", val)}
                 options={PRIORITIES.map((p) => ({ value: p, label: p }))}
-                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] font-medium ${
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] font-medium ${
+                  errors.priority ? "border-rose-400 ring-2 ring-rose-500/15" : "border-slate-200"
+                } ${
                   formData.priority === "Critical"
                     ? "!text-rose-600 !font-semibold"
                     : formData.priority === "High"
@@ -576,6 +616,9 @@ const ServiceCallForm = ({
                       : "text-slate-800"
                 }`}
               />
+              {errors.priority && (
+                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.priority}</p>
+              )}
             </div>
           </div>
         </div>
@@ -624,7 +667,7 @@ const ServiceCallForm = ({
               </label>
               <div className="flex gap-[0.5vw]">
                 <div className="relative flex-1">
-                  <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.95vw] h-[0.95vw] text-slate-400" />
+                  <Search className={`absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.95vw] h-[0.95vw] ${errors.customerName ? "text-rose-400" : "text-slate-400"}`} />
                   <input
                     type="text"
                     value={formData.customerName}
@@ -634,7 +677,11 @@ const ServiceCallForm = ({
                     }}
                     onFocus={() => setShowCustSearch(true)}
                     placeholder="Search & select customer…"
-                    className="w-full border border-slate-200 rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 outline-none transition-all"
+                    className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                      errors.customerName
+                        ? "border-rose-400 ring-2 ring-rose-500/15"
+                        : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    }`}
                   />
                 </div>
                 <button
@@ -661,6 +708,9 @@ const ServiceCallForm = ({
                   <span>New</span>
                 </button>
               </div>
+              {errors.customerName && (
+                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.customerName}</p>
+              )}
               {showCustSearch && (
                 <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[15vw] overflow-y-auto z-20">
                   {filteredCustomers
@@ -721,8 +771,15 @@ const ServiceCallForm = ({
                 value={formData.contactNumber}
                 onChange={(e) => set("contactNumber", e.target.value)}
                 placeholder="e.g. +91 9876543210"
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                  errors.contactNumber
+                    ? "border-rose-400 ring-2 ring-rose-500/15"
+                    : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                }`}
               />
+              {errors.contactNumber && (
+                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.contactNumber}</p>
+              )}
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">Email ID</label>
@@ -776,8 +833,15 @@ const ServiceCallForm = ({
                 value={formData.location}
                 onChange={(e) => set("location", e.target.value)}
                 placeholder={formData.locationType === "Site" ? "Enter site address" : "City, State"}
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                  errors.location
+                    ? "border-rose-400 ring-2 ring-rose-500/15"
+                    : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                }`}
               />
+              {errors.location && (
+                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.location}</p>
+              )}
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">
@@ -794,8 +858,13 @@ const ServiceCallForm = ({
                     label: s.name,
                   })),
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
+                  errors.site ? "border-rose-400 ring-2 ring-rose-500/15" : "border-slate-200"
+                }`}
               />
+              {errors.site && (
+                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.site}</p>
+              )}
             </div>
             {formData.partyCode && (
               <div className="col-span-5 flex flex-col gap-[0.35vw] mt-[0.3vw]">
@@ -965,7 +1034,9 @@ const ServiceCallForm = ({
                       Product Model <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.95vw] h-[0.95vw] text-slate-400 z-10" />
+                      <Search className={`absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.95vw] h-[0.95vw] z-10 ${
+                        errors[`product_${idx}_productModel`] ? "text-rose-400" : "text-slate-400"
+                      }`} />
                       <input
                         type="text"
                         value={product.productModel}
@@ -982,8 +1053,17 @@ const ServiceCallForm = ({
                             ? "Select customer first"
                             : "Search product…"
                         }
-                        className="w-full border border-slate-200 rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all"
+                        className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
+                          errors[`product_${idx}_productModel`]
+                            ? "border-rose-400 ring-2 ring-rose-500/15"
+                            : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                        }`}
                       />
+                      {errors[`product_${idx}_productModel`] && (
+                        <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">
+                          {errors[`product_${idx}_productModel`]}
+                        </p>
+                      )}
                       {showProdSearch[idx] && formData.partyCode && (
                         <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[12vw] overflow-y-auto z-20">
                           {(() => {
@@ -1139,9 +1219,18 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "callDescription", e.target.value)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all h-full"
+                      className={`border rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
+                        errors[`product_${idx}_callDescription`]
+                          ? "border-rose-400 ring-2 ring-rose-500/15"
+                          : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                      }`}
                       placeholder="Describe the issue…"
                     />
+                    {errors[`product_${idx}_callDescription`] && (
+                      <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">
+                        {errors[`product_${idx}_callDescription`]}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2">
