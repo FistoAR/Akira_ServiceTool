@@ -1184,7 +1184,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                   });
                 }
               }}
-              className={`flex-1 flex items-center justify-center gap-[0.4vw] py-[0.45vw] px-[0.8vw] rounded-full text-[0.78vw] font-bold transition-all duration-200 relative cursor-pointer whitespace-nowrap ${
+              className={`flex-1 flex items-center justify-center gap-[0.4vw] py-[0.45vw] px-[0.8vw] rounded-full text-[0.78vw] font-semibold transition-all duration-200 relative cursor-pointer whitespace-nowrap ${
                 activeTab === t.id
                   ? "bg-indigo-600 text-white shadow-sm"
                   : newActivityTabs[t.id]

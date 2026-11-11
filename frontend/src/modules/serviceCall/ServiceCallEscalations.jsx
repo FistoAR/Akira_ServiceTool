@@ -505,7 +505,7 @@ const ServiceCallEscalations = () => {
                   <button
                     key={label}
                     onClick={() => setStatusFilter(label)}
-                    className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.8vw] rounded-full text-[0.72vw] font-bold cursor-pointer transition-all ${
+                    className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.8vw] rounded-full text-[0.72vw] font-medium cursor-pointer transition-all ${
                       isActive
                         ? (label === "Critical" ? "bg-rose-600 text-white shadow-xs" : "bg-blue-600 text-white shadow-xs")
                         : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
