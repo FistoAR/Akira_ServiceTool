@@ -2582,7 +2582,7 @@ const HistoryCellButton = ({ prod }) => {
           setShowHistory((s) => !s);
         }}
         title="View History"
-        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-300 hover:border-blue-400 rounded-[0.3vw] transition-all cursor-pointer shadow-sm"
+        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-medium text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs"
       >
         View
       </button>
@@ -3038,16 +3038,12 @@ const AdminTableView = ({
       <div className="overflow-auto max-h-[65vh] min-h-[65vh] w-full rounded-t-[0.6vw]">
         <table className="w-full text-left border-collapse">
           {/* ── THEAD ─────────────────────────────────────────────────────── */}
-          <thead
-            className="sticky top-0 z-30 shadow-xs"
-            style={{ background: "#1a73e8" }}
-          >
-            <tr>
+          <thead className="sticky top-0 z-30 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
+            <tr className="bg-[#E9EDF7]">
               {canDelete && !isSupervisor && (
                 <th
                   rowSpan={2}
-                  className="p-[0.6vw] border-b border-r border-blue-400/30 text-center align-middle w-[2.5%] sticky top-0 z-30"
-                  style={{ background: "#1a73e8" }}
+                  className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-30 bg-[#E9EDF7]"
                 >
                   <button
                     type="button"
@@ -3055,14 +3051,14 @@ const AdminTableView = ({
                     className="flex items-center justify-center w-full cursor-pointer"
                   >
                     <div
-                      className={`w-[1.1vw] h-[1.1vw] rounded-[0.2vw] border border-white flex items-center justify-center transition-all ${
+                      className={`w-[1.1vw] h-[1.1vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
                         isPageSelected
-                          ? "bg-white text-[#1a73e8] border-white"
-                          : "bg-transparent border-white"
+                          ? "bg-[#1a73e8] border-[#1a73e8] text-white"
+                          : "bg-white border-slate-400 text-transparent"
                       }`}
                     >
                       {isPageSelected && (
-                        <span className="text-[0.75vw] leading-none font-bold text-[#1a73e8]">
+                        <span className="text-[0.75vw] leading-none font-bold text-white">
                           ✓
                         </span>
                       )}
@@ -3073,8 +3069,7 @@ const AdminTableView = ({
 
               <th
                 rowSpan={2}
-                className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b border-r border-blue-400/30 whitespace-nowrap text-[0.8vw] align-middle w-[3%] sticky top-0 z-30"
-                style={{ background: "#1a73e8" }}
+                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3%] sticky top-0 z-30 bg-[#E9EDF7]"
               >
                 S. No
               </th>
@@ -3082,8 +3077,7 @@ const AdminTableView = ({
               {/* Products super-header */}
               <th
                 colSpan={productCols.length}
-                className="px-[0.6vw] py-[0.45vw] font-semibold text-white border-b border-r border-blue-400/30 text-center text-[0.8vw] tracking-wide sticky top-0 z-30"
-                style={{ background: "#1a73e8" }}
+                className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-30 bg-[#E9EDF7]"
               >
                 Products
               </th>
@@ -3099,16 +3093,15 @@ const AdminTableView = ({
                         : h === "History"
                           ? "80px"
                           : "100px",
-                    background: "#1a73e8",
                   }}
-                  className="px-[0.6vw] py-[0.55vw] font-semibold text-white text-center border-b border-r border-blue-400/30 last:border-r-0 whitespace-nowrap text-[0.8vw] align-middle sticky top-0 z-30"
+                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-30 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
               ))}
             </tr>
 
-            <tr style={{ background: "#1a73e8" }}>
+            <tr className="bg-[#E9EDF7]">
               {productCols.map((h) => (
                 <th
                   key={h}
@@ -3121,16 +3114,14 @@ const AdminTableView = ({
                           : h === "Segment"
                             ? "100px"
                             : "125px",
-                    background: "#1a73e8",
                   }}
-                  className="px-[0.6vw] py-[0.45vw] font-semibold text-white/90 text-center border-b border-r border-blue-400/30 whitespace-nowrap text-[0.76vw] sticky top-[1.8vw] z-30"
+                  className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-30 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-
           {/* ── TBODY ─────────────────────────────────────────────────────── */}
           <tbody>
             {loading ? (
@@ -3511,10 +3502,10 @@ const AdminTableView = ({
                                     {/* Type badge */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <span
-                                        className={`whitespace-nowrap text-[0.7vw] font-bold px-[0.6vw] py-[0.15vw] rounded-[0.3vw] border ${
+                                        className={`whitespace-nowrap text-[0.7vw] font-bold px-[0.6vw] py-[0.15vw] rounded-full border shadow-2xs font-normal ${
                                           prod.type === "W"
-                                            ? "bg-green-50 text-green-600 border-green-200"
-                                            : "bg-blue-50 text-blue-600 border-blue-200"
+                                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                            : "bg-sky-50 text-sky-700 border-sky-200"
                                         }`}
                                       >
                                         {TYPE_LABELS[prod.type] ||
@@ -3529,7 +3520,7 @@ const AdminTableView = ({
                                         <button
                                           type="button"
                                           onClick={() => onViewReport(prod)}
-                                          className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-bold text-emerald-600 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 hover:border-emerald-400 rounded-[0.3vw] transition-all cursor-pointer shadow-sm"
+                                          className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs"
                                         >
                                           View Report
                                         </button>
@@ -3544,7 +3535,7 @@ const AdminTableView = ({
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <div className="flex flex-col items-center gap-[0.2vw]">
                                         <span
-                                          className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-[0.3vw] border text-[0.7vw] font-semibold whitespace-nowrap ${employeeStatusCfg.bg} ${employeeStatusCfg.border} ${employeeStatusCfg.text}`}
+                                          className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.2vw] rounded-full border text-[0.7vw] font-normal whitespace-nowrap shadow-2xs ${employeeStatusCfg.bg} ${employeeStatusCfg.border} ${employeeStatusCfg.text}`}
                                         >
                                           <EmployeeStatusIcon className="w-[0.75vw] h-[0.75vw]" />
                                           {employeeStatus === "Completed"
