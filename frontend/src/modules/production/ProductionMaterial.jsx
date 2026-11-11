@@ -27,7 +27,7 @@ const DEFAULT_PRODUCT_TYPE_OPTIONS = ["Inverter", "Stabilizer", "Battery", "Sola
 const FINAL_STATUS_OPTIONS = ["Pending", "Rejected", "Completed"];
 const FINAL_STATUS_COLORS = {
   Pending: "bg-orange-100 text-orange-700 border-orange-300",
-  "Rejected": "bg-gray-200 text-gray-700 border-gray-400",
+  "Rejected": "bg-gray-200 text-gray-700 border-slate-300",
   Completed: "bg-green-100 text-green-700 border-green-300",
 };
 
@@ -160,7 +160,7 @@ const ReportsModal = ({ row, onClose }) => {
                         <div className="flex gap-[1.5vw] mb-[1vw]">
                           <div className="flex-1">
                             <div className="text-[0.65vw] text-blue-600 font-bold uppercase mb-[0.4vw]">Initial Problem Description</div>
-                            <div className="text-[0.8vw] text-black font-regular leading-relaxed bg-gray-50/50 p-[1vw] rounded-[0.5vw] border border-slate-400">{prod.problem || "No description provided."}</div>
+                            <div className="text-[0.8vw] text-black font-regular leading-relaxed bg-gray-50/50 p-[1vw] rounded-[0.5vw] border border-slate-300">{prod.problem || "No description provided."}</div>
                           </div>
                           {prod.boardImage && (
                             <div className="w-[10vw]">
@@ -304,7 +304,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-[2vw]">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[35vw] rounded-[1vw] flex flex-col border border-gray-400 shadow-xl overflow-visible">
+      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[35vw] rounded-[1vw] flex flex-col border border-slate-300 shadow-xl overflow-visible">
         <div className="bg-blue-600 px-[1.5vw] py-[1vw] flex justify-between items-center rounded-t-[1vw]">
           <div className="flex items-center gap-[0.8vw]">
             <CheckCircle className="w-[1.2vw] h-[1.2vw] text-white" />
@@ -314,7 +314,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
         </div>
 
         <div className="p-[1.5vw] space-y-[1.2vw] bg-white">
-          <div className="bg-white p-[1vw] rounded-[0.6vw] border border-gray-400">
+          <div className="bg-white p-[1vw] rounded-[0.6vw] border border-slate-300">
             <div className="text-[0.7vw] font-bold text-blue-700 uppercase mb-[0.6vw]">Product Context</div>
             <div className="text-[0.85vw] font-bold text-black">{prod.productDescription}</div>
             <div className="text-[0.72vw] text-black font-regular mt-[.15vw]"><span className='font-semibold'>S/N:</span> {prod.serialNumber || "—"} · <span className='font-semibold'>JO:</span> {row.jobOrderNo}</div>
@@ -329,7 +329,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                   const emp = employees.find(emp => emp.userId === e.target.value);
                   setFormData(p => ({ ...p, verifiedBy: e.target.value, verifiedByName: emp?.name || "" }));
                 }}
-                className="w-full border border-gray-400 rounded-[0.5vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-medium text-black outline-none focus:border-blue-500 bg-white"
+                className="w-full border border-slate-300 rounded-[0.5vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-medium text-black outline-none focus:border-blue-500 bg-white"
               >
                 <option value="">Select Employee</option>
                 {employees.map(e => <option key={e.userId} value={e.userId}>{e.name}</option>)}
@@ -342,7 +342,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                 type="date"
                 value={formData.verifiedDate}
                 onChange={e => setFormData(p => ({ ...p, verifiedDate: e.target.value }))}
-                className="w-full border border-gray-400 rounded-[0.5vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-medium text-black outline-none focus:border-blue-500 bg-white"
+                className="w-full border border-slate-300 rounded-[0.5vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-medium text-black outline-none focus:border-blue-500 bg-white"
               />
             </div>
 
@@ -356,7 +356,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                   onBlur={() => setTimeout(() => setShowCaeSuggestions(false), 200)}
                   onKeyDown={onKeyDown}
                   placeholder="Enter or select CAE..."
-                  className="w-full border border-gray-400 rounded-[0.5vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-medium text-black outline-none focus:border-blue-500 bg-white"
+                  className="w-full border border-slate-300 rounded-[0.5vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-medium text-black outline-none focus:border-blue-500 bg-white"
                 />
                 <AnimatePresence>
                   {showCaeSuggestions && filteredCaeSuggestions.length > 0 && (
@@ -364,13 +364,13 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                       initial={{ opacity: 0, y: -5 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       exit={{ opacity: 0, y: -5 }} 
-                      className="absolute z-50 w-full mt-[0.2vw] bg-white border border-gray-400 rounded-[0.5vw] shadow-xl max-h-[12vw] overflow-y-auto overflow-x-hidden custom-scrollbar"
+                      className="absolute z-50 w-full mt-[0.2vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-xl max-h-[12vw] overflow-y-auto overflow-x-hidden custom-scrollbar"
                     >
                       {filteredCaeSuggestions.map((opt, i) => (
                         <div 
                           key={i} 
                           onClick={() => { setFormData(p => ({ ...p, cae: opt })); setShowCaeSuggestions(false); }} 
-                          className={`px-[1vw] py-[0.6vw] text-[0.8vw] font-bold transition-colors border-b border-slate-400 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-black hover:bg-blue-50"}`}
+                          className={`px-[1vw] py-[0.6vw] text-[0.8vw] font-bold transition-colors border-b border-slate-300 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-black hover:bg-blue-50"}`}
                         >
                           {opt}
                         </div>
@@ -383,8 +383,8 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
           </div>
         </div>
 
-        <div className="p-[1vw] border-t border-slate-400 bg-gray-50/50 flex justify-end gap-[0.8vw]">
-          <button onClick={onClose} className="px-[1.2vw] py-[0.6vw] border border-gray-400 bg-white text-black font-bold rounded-[0.4vw] text-[0.8vw] hover:bg-gray-100 cursor-pointer transition-all">Cancel</button>
+        <div className="p-[1vw] border-t border-slate-300 bg-gray-50/50 flex justify-end gap-[0.8vw]">
+          <button onClick={onClose} className="px-[1.2vw] py-[0.6vw] border border-slate-300 bg-white text-black font-bold rounded-[0.4vw] text-[0.8vw] hover:bg-gray-100 cursor-pointer transition-all">Cancel</button>
           <button onClick={handleSave} className="px-[1.5vw] py-[0.6vw] bg-blue-600 text-white font-bold rounded-[0.4vw] text-[0.8vw] hover:bg-blue-700 active:scale-95 transition-all shadow-md">Save Verification</button>
         </div>
       </motion.div>
@@ -432,7 +432,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
   return (
     <div className="fixed inset-0 z-[120] bg-black/50 backdrop-blur-sm flex items-center justify-center p-[1.5vw]">
-      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-[1.2vw] w-[55vw] max-h-[85vh] overflow-hidden shadow-2xl border border-gray-400 flex flex-col">
+      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-[1.2vw] w-[55vw] max-h-[85vh] overflow-hidden shadow-2xl border border-slate-300 flex flex-col">
         <div className="bg-blue-600 px-[1.5vw] py-[1.2vw] flex justify-between items-center shrink-0">
           <div>
             <h3 className="text-[1.1vw] font-bold text-white uppercase ">Master Data Configuration</h3>
@@ -443,12 +443,12 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
         <div className="flex-1 overflow-hidden flex bg-white min-h-[40vh]">
           {/* Sidebar */}
-          <div className="w-[15vw] border-r border-slate-400 flex flex-col bg-gray-50/50">
+          <div className="w-[15vw] border-r border-slate-300 flex flex-col bg-gray-50/50">
             {TABS.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-[0.8vw] px-[1.2vw] py-[1.2vw] text-[0.85vw] font-bold border-b border-slate-400 transition-all text-left ${activeTab === tab.id ? "bg-white text-blue-600 border-r-4 border-r-blue-600 shadow-sm" : "text-gray-500 hover:bg-gray-100"}`}
+                className={`flex items-center gap-[0.8vw] px-[1.2vw] py-[1.2vw] text-[0.85vw] font-bold border-b border-slate-300 transition-all text-left ${activeTab === tab.id ? "bg-white text-blue-600 border-r-4 border-r-blue-600 shadow-sm" : "text-gray-500 hover:bg-gray-100"}`}
               >
                 <tab.icon className={`w-[1.1vw] h-[1.1vw] ${activeTab === tab.id ? "text-blue-600" : "text-gray-400"}`} />
                 {tab.label}
@@ -463,48 +463,48 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                 <motion.div key="stages" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-[1.5vw]">
                   <h4 className="text-[1vw] font-bold text-gray-900">Work Stages</h4>
                   <div className="flex gap-[0.8vw] bg-blue-50/50 p-[1vw] rounded-[1vw] border border-blue-100">
-                    <input value={newStage} onChange={e => setNewStage(e.target.value)} onKeyPress={e => e.key === 'Enter' && addStage()} placeholder="Add new stage..." className="flex-1 border border-gray-400 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-blue-500 bg-white shadow-sm" />
+                    <input value={newStage} onChange={e => setNewStage(e.target.value)} onKeyPress={e => e.key === 'Enter' && addStage()} placeholder="Add new stage..." className="flex-1 border border-slate-300 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-blue-500 bg-white shadow-sm" />
                     <button onClick={addStage} className="bg-blue-600 text-white px-[1.5vw] rounded-[0.6vw] text-[0.85vw] font-bold hover:bg-blue-700 shadow-md active:scale-95 transition-all"><Plus className="w-[1.1vw] h-[1.1vw]" /></button>
                   </div>
-                  <div className="flex flex-wrap gap-[0.8vw]">{stages.map(s => <span key={s} className="flex items-center gap-[0.4vw] px-[1vw] py-[0.6vw] bg-white border border-slate-400 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-blue-300 transition-all">{s}<button onClick={() => removeStage(s)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
+                  <div className="flex flex-wrap gap-[0.8vw]">{stages.map(s => <span key={s} className="flex items-center gap-[0.4vw] px-[1vw] py-[0.6vw] bg-white border border-slate-300 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-blue-300 transition-all">{s}<button onClick={() => removeStage(s)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
                 </motion.div>
               )}
               {activeTab === "dispositions" && (
                 <motion.div key="dispositions" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-[1.5vw]">
                   <h4 className="text-[1vw] font-bold text-gray-900">Disposition Outcomes</h4>
                   <div className="flex gap-[0.8vw] bg-emerald-50/50 p-[1vw] rounded-[1vw] border border-emerald-100">
-                    <input value={newDisposition} onChange={e => setNewDisposition(e.target.value)} onKeyPress={e => e.key === 'Enter' && addDisposition()} placeholder="Add new disposition..." className="flex-1 border border-gray-400 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-emerald-500 bg-white shadow-sm" />
+                    <input value={newDisposition} onChange={e => setNewDisposition(e.target.value)} onKeyPress={e => e.key === 'Enter' && addDisposition()} placeholder="Add new disposition..." className="flex-1 border border-slate-300 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-emerald-500 bg-white shadow-sm" />
                     <button onClick={addDisposition} className="bg-emerald-600 text-white px-[1.5vw] rounded-[0.6vw] text-[0.85vw] font-bold hover:bg-emerald-700 shadow-md active:scale-95 transition-all"><Plus className="w-[1.1vw] h-[1.1vw]" /></button>
                   </div>
-                  <div className="flex flex-wrap gap-[0.8vw]">{dispositions.map(d => <span key={d} className="flex items-center gap-[0.6vw] px-[1vw] py-[0.6vw] bg-white border border-slate-400 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-emerald-300 transition-all">{d}<button onClick={() => removeDisposition(d)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
+                  <div className="flex flex-wrap gap-[0.8vw]">{dispositions.map(d => <span key={d} className="flex items-center gap-[0.6vw] px-[1vw] py-[0.6vw] bg-white border border-slate-300 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-emerald-300 transition-all">{d}<button onClick={() => removeDisposition(d)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
                 </motion.div>
               )}
               {activeTab === "problems" && (
                 <motion.div key="problems" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-[1.5vw]">
                   <h4 className="text-[1vw] font-bold text-gray-900">Problem Types</h4>
                   <div className="flex gap-[0.8vw] bg-orange-50/50 p-[1vw] rounded-[1vw] border border-orange-100">
-                    <input value={newProblemType} onChange={e => setNewProblemType(e.target.value)} onKeyPress={e => e.key === 'Enter' && addProblemType()} placeholder="Add new problem type..." className="flex-1 border border-gray-400 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-orange-500 bg-white shadow-sm" />
+                    <input value={newProblemType} onChange={e => setNewProblemType(e.target.value)} onKeyPress={e => e.key === 'Enter' && addProblemType()} placeholder="Add new problem type..." className="flex-1 border border-slate-300 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-orange-500 bg-white shadow-sm" />
                     <button onClick={addProblemType} className="bg-orange-600 text-white px-[1.5vw] rounded-[0.6vw] text-[0.85vw] font-bold hover:bg-orange-700 shadow-md active:scale-95 transition-all"><Plus className="w-[1.1vw] h-[1.1vw]" /></button>
                   </div>
-                  <div className="flex flex-wrap gap-[0.8vw]">{problemTypes.map(p => <span key={p} className="flex items-center gap-[0.6vw] px-[1vw] py-[0.6vw] bg-white border border-slate-400 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-orange-300 transition-all">{p}<button onClick={() => removeProblemType(p)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
+                  <div className="flex flex-wrap gap-[0.8vw]">{problemTypes.map(p => <span key={p} className="flex items-center gap-[0.6vw] px-[1vw] py-[0.6vw] bg-white border border-slate-300 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-orange-300 transition-all">{p}<button onClick={() => removeProblemType(p)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
                 </motion.div>
               )}
               {activeTab === "products" && (
                 <motion.div key="products" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-[1.5vw]">
                   <h4 className="text-[1vw] font-bold text-gray-900">Product Types</h4>
                   <div className="flex gap-[0.8vw] bg-purple-50/50 p-[1vw] rounded-[1vw] border border-purple-100">
-                    <input value={newProductType} onChange={e => setNewProductType(e.target.value)} onKeyPress={e => e.key === 'Enter' && addProductType()} placeholder="Add new product type..." className="flex-1 border border-gray-400 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-purple-500 bg-white shadow-sm" />
+                    <input value={newProductType} onChange={e => setNewProductType(e.target.value)} onKeyPress={e => e.key === 'Enter' && addProductType()} placeholder="Add new product type..." className="flex-1 border border-slate-300 rounded-[0.6vw] py-[0.7vw] px-[1vw] text-[0.85vw] outline-none focus:border-purple-500 bg-white shadow-sm" />
                     <button onClick={addProductType} className="bg-purple-600 text-white px-[1.5vw] rounded-[0.6vw] text-[0.85vw] font-bold hover:bg-purple-700 shadow-md active:scale-95 transition-all"><Plus className="w-[1.1vw] h-[1.1vw]" /></button>
                   </div>
-                  <div className="flex flex-wrap gap-[0.8vw]">{productTypes.map(p => <span key={p} className="flex items-center gap-[0.6vw] px-[1vw] py-[0.6vw] bg-white border border-slate-400 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-purple-300 transition-all">{p}<button onClick={() => removeProductType(p)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
+                  <div className="flex flex-wrap gap-[0.8vw]">{productTypes.map(p => <span key={p} className="flex items-center gap-[0.6vw] px-[1vw] py-[0.6vw] bg-white border border-slate-300 rounded-[0.8vw] text-[0.85vw] text-gray-800 font-bold shadow-sm group hover:border-purple-300 transition-all">{p}<button onClick={() => removeProductType(p)} className="w-[1.1vw] h-[1.1vw] rounded-full bg-gray-100 group-hover:bg-red-500 text-gray-400 group-hover:text-white flex items-center justify-center transition-all cursor-pointer"><X className="w-[0.7vw] h-[0.7vw]" /></button></span>)}</div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
         </div>
 
-        <div className="flex justify-end gap-[0.8vw] p-[1.1vw] border-t border-slate-400 bg-gray-50 shrink-0">
-          <button onClick={onClose} className="px-[1.2vw] py-[0.6vw] rounded-[0.4vw] border border-gray-400 text-[0.82vw] text-black font-bold hover:bg-gray-100 cursor-pointer">Cancel</button>
+        <div className="flex justify-end gap-[0.8vw] p-[1.1vw] border-t border-slate-300 bg-gray-50 shrink-0">
+          <button onClick={onClose} className="px-[1.2vw] py-[0.6vw] rounded-[0.4vw] border border-slate-300 text-[0.82vw] text-black font-bold hover:bg-gray-100 cursor-pointer">Cancel</button>
           <button onClick={() => onSave(stages, dispositions, problemTypes, productTypes)} className="px-[1.4vw] py-[0.6vw] rounded-[0.4vw] bg-blue-600 text-white text-[0.82vw] font-bold hover:bg-blue-700 shadow-md transition-all active:scale-95">Save Master Data</button>
         </div>
       </motion.div>
@@ -519,12 +519,12 @@ const EmpSelectCell = ({ val, employees, onSelect }) => {
   useEffect(() => { const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); }; document.addEventListener("mousedown", handler); return () => document.removeEventListener("mousedown", handler); }, []);
   return (
     <div className="relative" ref={ref}>
-      <div onClick={() => setOpen(!open)} className={`flex items-center justify-center gap-[0.4vw] bg-white border rounded-[0.3vw] px-[0.5vw] py-[0.25vw] transition-all cursor-pointer hover:border-blue-400 mx-auto w-max ${val ? "border-gray-400" : "border-dashed border-gray-400"}`}>
+      <div onClick={() => setOpen(!open)} className={`flex items-center justify-center gap-[0.4vw] bg-white border rounded-[0.3vw] px-[0.5vw] py-[0.25vw] transition-all cursor-pointer hover:border-blue-400 mx-auto w-max ${val ? "border-slate-300" : "border-dashed border-slate-300"}`}>
         <span className={`text-[0.7vw] font-bold truncate max-w-[6vw] ${val ? "text-black" : "text-gray-400"}`}>{selected ? selected.name : "Assign"}</span>
       </div>
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-[0.2vw] bg-white border border-gray-400 shadow-xl rounded-[0.4vw] w-[14vw] max-h-[12vw] overflow-y-auto z-[200] py-[0.2vw]">
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-[0.2vw] bg-white border border-slate-300 shadow-xl rounded-[0.4vw] w-[14vw] max-h-[12vw] overflow-y-auto z-[200] py-[0.2vw]">
             {employees.map(u => (
               <div key={u.userId} onClick={() => { onSelect(u); setOpen(false); }} className="px-[0.6vw] py-[0.4vw] flex items-center gap-[0.5vw] hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0">
                 <div className="flex-1 min-w-0"><div className="text-[0.7vw] font-bold text-black truncate">{u.name}</div><div className="text-[0.55vw] text-gray-400 font-bold truncate">{u.department}</div></div>
@@ -568,7 +568,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
     setOpen(false);
   };
 
-  const cls = FINAL_STATUS_COLORS[status] || "bg-gray-100 text-black/80 border-gray-400";
+  const cls = FINAL_STATUS_COLORS[status] || "bg-gray-100 text-black/80 border-slate-300";
 
   return (
     <div className="flex items-center justify-center gap-[0.4vw]">
@@ -581,18 +581,18 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
         </button>
         <AnimatePresence>
           {open && (
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-gray-400 shadow-xl rounded-[0.5vw] z-40 w-[17vw] p-[0.8vw]">
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-300 shadow-xl rounded-[0.5vw] z-40 w-[17vw] p-[0.8vw]">
               <div className="text-[0.72vw] font-bold text-gray-900 mb-[0.5vw]">Update Final Status</div>
               <div className="grid grid-cols-2 gap-[0.35vw] mb-[0.7vw]">
                 {FINAL_STATUS_OPTIONS.map((opt) => (
-                  <button key={opt} onClick={() => setStatus(opt)} className={`py-[0.3vw] rounded-[0.3vw] border text-[0.66vw] font-bold cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300" : "bg-gray-50 text-gray-600 border-gray-400 hover:bg-gray-100"}`}>
+                  <button key={opt} onClick={() => setStatus(opt)} className={`py-[0.3vw] rounded-[0.3vw] border text-[0.66vw] font-bold cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300" : "bg-gray-50 text-gray-600 border-slate-300 hover:bg-gray-100"}`}>
                     {opt}
                   </button>
                 ))}
               </div>
-              <div className="mb-[0.6vw]"><label className="text-[0.65vw] font-bold text-gray-700 block mb-[0.25vw]">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-gray-400 rounded-[0.3vw] px-[0.4vw] py-[0.35vw] text-[0.72vw] outline-none focus:border-blue-400" /></div>
-              <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-gray-400 rounded-[0.3vw] p-[0.4vw] text-[0.72vw] outline-none focus:border-blue-400 resize-none mb-[0.6vw]" />
-              <div className="flex justify-end gap-[0.4vw]"><button onClick={() => setOpen(false)} className="px-[0.8vw] py-[0.3vw] text-[0.68vw] border border-gray-400 rounded-[0.3vw] text-gray-700 hover:bg-gray-50 font-bold">Cancel</button><button onClick={handleSave} className="px-[0.8vw] py-[0.3vw] text-[0.68vw] bg-blue-600 text-white rounded-[0.3vw] hover:bg-blue-700 font-bold flex items-center gap-[0.3vw]"><Save className="w-[0.7vw] h-[0.7vw]" />Save</button></div>
+              <div className="mb-[0.6vw]"><label className="text-[0.65vw] font-bold text-gray-700 block mb-[0.25vw]">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.35vw] text-[0.72vw] outline-none focus:border-blue-400" /></div>
+              <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-slate-300 rounded-[0.3vw] p-[0.4vw] text-[0.72vw] outline-none focus:border-blue-400 resize-none mb-[0.6vw]" />
+              <div className="flex justify-end gap-[0.4vw]"><button onClick={() => setOpen(false)} className="px-[0.8vw] py-[0.3vw] text-[0.68vw] border border-slate-300 rounded-[0.3vw] text-gray-700 hover:bg-gray-50 font-bold">Cancel</button><button onClick={handleSave} className="px-[0.8vw] py-[0.3vw] text-[0.68vw] bg-blue-600 text-white rounded-[0.3vw] hover:bg-blue-700 font-bold flex items-center gap-[0.3vw]"><Save className="w-[0.7vw] h-[0.7vw]" />Save</button></div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -601,11 +601,11 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
         <button onClick={() => setShowHistory(!showHistory)} title="Status History" className="p-[0.3vw] text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-[0.3vw] transition-colors cursor-pointer"><Clock className="w-[0.9vw] h-[0.9vw]" /></button>
         <AnimatePresence>
           {showHistory && (
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-gray-400 shadow-2xl rounded-[0.5vw] z-40 w-[22vw] p-[1vw]">
-              <div className="flex items-center justify-between mb-[0.8vw] pb-[0.4vw] border-b border-gray-400"><div className="text-[0.8vw] font-bold text-gray-900 flex items-center gap-[0.4vw]"><Clock className="w-[0.9vw] h-[0.9vw] text-blue-500" />Status History</div><button onClick={() => setShowHistory(false)} className="text-gray-400 hover:text-gray-900"><X className="w-[0.8vw] h-[0.8vw]" /></button></div>
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-300 shadow-2xl rounded-[0.5vw] z-40 w-[22vw] p-[1vw]">
+              <div className="flex items-center justify-between mb-[0.8vw] pb-[0.4vw] border-b border-slate-300"><div className="text-[0.8vw] font-bold text-gray-900 flex items-center gap-[0.4vw]"><Clock className="w-[0.9vw] h-[0.9vw] text-blue-500" />Status History</div><button onClick={() => setShowHistory(false)} className="text-gray-400 hover:text-gray-900"><X className="w-[0.8vw] h-[0.8vw]" /></button></div>
               <div className="max-h-[15vw] overflow-y-auto space-y-[0.6vw] pr-[0.3vw]">
                 {(prod.finalStatusHistory || []).length > 0 ? [...(prod.finalStatusHistory || [])].reverse().map((h, i) => (
-                  <div key={i} className="bg-gray-50/50 rounded-[0.4vw] p-[0.6vw] border border-slate-400"><div className="flex items-center justify-between mb-[0.2vw]"><span className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded-full font-bold border ${FINAL_STATUS_COLORS[h.status] || "bg-gray-100 text-black/80"}`}>{h.status}</span><div className="text-right">{h.date && <div className="text-[0.62vw] font-bold text-blue-600">{fmtDate(h.date)}</div>}<div className="text-[0.6vw] text-black/50">{fmtDate(h.timestamp)}</div></div></div><div className="text-[0.72vw] text-black/90 italic leading-tight">"{h.remarks || <span className="text-black/30">No remarks</span>}"</div></div>
+                  <div key={i} className="bg-gray-50/50 rounded-[0.4vw] p-[0.6vw] border border-slate-300"><div className="flex items-center justify-between mb-[0.2vw]"><span className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded-full font-bold border ${FINAL_STATUS_COLORS[h.status] || "bg-gray-100 text-black/80"}`}>{h.status}</span><div className="text-right">{h.date && <div className="text-[0.62vw] font-bold text-blue-600">{fmtDate(h.date)}</div>}<div className="text-[0.6vw] text-black/50">{fmtDate(h.timestamp)}</div></div></div><div className="text-[0.72vw] text-black/90 italic leading-tight">"{h.remarks || <span className="text-black/30">No remarks</span>}"</div></div>
                 )) : <div className="py-[2vw] text-center text-[0.72vw] text-black/40">No history available yet.</div>}
               </div>
             </motion.div>
@@ -752,9 +752,9 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
 
   return (
     <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="w-full font-sans text-[0.85vw] max-h-[90vh] overflow-y-auto pr-[0.4vw]">
-      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.8vw] rounded-[0.6vw] shadow-sm border border-gray-400 mb-[1vw] sticky top-0 z-[60]">
+      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.8vw] rounded-[0.6vw] shadow-sm border border-slate-300 mb-[1vw] sticky top-0 z-[60]">
         <div className="flex items-center gap-[1vw]">
-          <button onClick={onBack} className="flex items-center gap-[0.4vw] text-gray-700 hover:text-black border border-gray-400 bg-gray-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer shadow-sm transition-all hover:shadow font-bold">
+          <button onClick={onBack} className="flex items-center gap-[0.4vw] text-gray-700 hover:text-black border border-slate-300 bg-gray-50 px-[0.8vw] py-[0.4vw] rounded-[0.4vw] cursor-pointer shadow-sm transition-all hover:shadow font-bold">
             <ArrowLeft className="w-[1vw] h-[1vw]" /> Back
           </button>
           <div>
@@ -766,18 +766,18 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-[1.2vw] pb-[2vw]">
         {/* Base Info Section */}
-        <div className="bg-white rounded-[0.6vw] shadow-sm border border-gray-400 p-[1.5vw]">
-          <h3 className="text-[0.85vw] font-bold text-gray-900 uppercase mb-[1.2vw] pb-[0.6vw] border-b border-slate-400 flex items-center gap-[0.5vw]">
+        <div className="bg-white rounded-[0.6vw] shadow-sm border border-slate-300 p-[1.5vw]">
+          <h3 className="text-[0.85vw] font-bold text-gray-900 uppercase mb-[1.2vw] pb-[0.6vw] border-b border-slate-300 flex items-center gap-[0.5vw]">
             <ClipboardList className="w-[1.1vw] h-[1.1vw] text-blue-500" /> Primary Order Details
           </h3>
           <div className="grid grid-cols-5 gap-[1vw]">
             <div className="flex flex-col gap-[0.4vw]">
               <label className="font-bold text-gray-700 text-[0.72vw] uppercase tracking-wider">Registration Date</label>
-              <input type="date" value={base.date} onChange={e => setBase({ ...base, date: e.target.value })} disabled={isReadOnly} className="border border-gray-400 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none focus:border-blue-500 shadow-sm transition-all text-gray-800" />
+              <input type="date" value={base.date} onChange={e => setBase({ ...base, date: e.target.value })} disabled={isReadOnly} className="border border-slate-300 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none focus:border-blue-500 shadow-sm transition-all text-gray-800" />
             </div>
             <div className="flex flex-col gap-[0.4vw]">
               <label className="font-bold text-gray-700 text-[0.72vw] uppercase tracking-wider">Job Order Number <span className="text-red-500">*</span></label>
-              <input value={base.jobOrderNo} onChange={e => setBase({ ...base, jobOrderNo: e.target.value })} placeholder="Enter Job Order..." disabled={isReadOnly} className="border border-gray-400 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none focus:border-blue-500 shadow-sm transition-all text-gray-800" />
+              <input value={base.jobOrderNo} onChange={e => setBase({ ...base, jobOrderNo: e.target.value })} placeholder="Enter Job Order..." disabled={isReadOnly} className="border border-slate-300 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none focus:border-blue-500 shadow-sm transition-all text-gray-800" />
             </div>
             <div className="flex flex-col gap-[0.4vw] relative" ref={custRef}>
               <label className="font-bold text-gray-700 text-[0.72vw] uppercase tracking-wider">Customer Name</label>
@@ -789,13 +789,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   onKeyDown={onCustKeyDown}
                   placeholder="Type to search..."
                   disabled={isReadOnly}
-                  className="w-full border border-gray-400 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] pr-[2vw] text-[0.8vw] font-regular outline-none focus:border-blue-500 shadow-sm transition-all text-gray-800"
+                  className="w-full border border-slate-300 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] pr-[2vw] text-[0.8vw] font-regular outline-none focus:border-blue-500 shadow-sm transition-all text-gray-800"
                 />
                 <Search className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-gray-400 group-focus-within:text-blue-500" />
               </div>
               <AnimatePresence>
                 {showCustDrop && filteredCustomers.length > 0 && (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute z-[100] w-[25vw] left-0 top-full mt-[0.4vw] bg-white border border-gray-400 rounded-[0.6vw] shadow-2xl max-h-[15vw] overflow-y-auto py-[0.4vw]">
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute z-[100] w-[25vw] left-0 top-full mt-[0.4vw] bg-white border border-slate-300 rounded-[0.6vw] shadow-2xl max-h-[15vw] overflow-y-auto py-[0.4vw]">
                     {filteredCustomers.map((c, i) => (
                       <div 
                         key={c.code} 
@@ -815,11 +815,11 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
             </div>
             <div className="flex flex-col gap-[0.4vw]">
               <label className="font-bold text-gray-700 text-[0.72vw] uppercase tracking-wider">Customer Code</label>
-              <input value={base.customerCode} readOnly className="border border-gray-400 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none bg-gray-50 text-gray-900 cursor-not-allowed shadow-none" />
+              <input value={base.customerCode} readOnly className="border border-slate-300 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none bg-gray-50 text-gray-900 cursor-not-allowed shadow-none" />
             </div>
             <div className="flex flex-col gap-[0.4vw]">
               <label className="font-bold text-gray-700 text-[0.72vw] uppercase tracking-wider">Category</label>
-              <input value={base.category} readOnly className="border border-gray-400 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none bg-gray-50 text-gray-900 cursor-not-allowed shadow-none" />
+              <input value={base.category} readOnly className="border border-slate-300 rounded-[0.4vw] py-[0.6vw] px-[0.8vw] text-[0.8vw] font-regular outline-none bg-gray-50 text-gray-900 cursor-not-allowed shadow-none" />
             </div>
           </div>
         </div>
@@ -855,8 +855,8 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-[1vw] pt-[1vw] border-t border-slate-400 mt-[0.5vw]">
-          <button type="button" onClick={onBack} className="px-[1.8vw] py-[0.75vw] border border-gray-400 bg-white hover:bg-gray-50 text-gray-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.5vw] font-bold shadow-sm transition-all">
+        <div className="flex justify-end gap-[1vw] pt-[1vw] border-t border-slate-300 mt-[0.5vw]">
+          <button type="button" onClick={onBack} className="px-[1.8vw] py-[0.75vw] border border-slate-300 bg-white hover:bg-gray-50 text-gray-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.5vw] font-bold shadow-sm transition-all">
             <X className="w-[1vw] h-[1vw]" /> Cancel
           </button>
           {((initialData._id ? canUpdate : canWrite) && !isReadOnly) && (
@@ -1101,8 +1101,8 @@ export default function ProductionMaterial() {
       <div className="w-full h-full font-sans text-[0.85vw]">
         <AnimatePresence>{reportsRow && <ReportsModal row={reportsRow} onClose={() => setReportsRow(null)} />}</AnimatePresence>
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <div className="flex items-center justify-between bg-white p-[0.7vw] rounded-[0.6vw] shadow-sm border border-gray-400 mb-[0.9vw]">
-            <div className="relative w-[30vw]"><Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-black/50 w-[1vw] h-[1vw]" /><input type="text" placeholder="Search by ref, JO, customer, product…" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-[2.5vw] pr-[1vw] h-[2.5vw] border border-gray-400 rounded-[0.8vw] focus:outline-none focus:border-blue-500 font-bold" /></div>
+          <div className="flex items-center justify-between bg-white p-[0.7vw] rounded-[0.6vw] shadow-sm border border-slate-300 mb-[0.9vw]">
+            <div className="relative w-[30vw]"><Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-black/50 w-[1vw] h-[1vw]" /><input type="text" placeholder="Search by ref, JO, customer, product…" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-[2.5vw] pr-[1vw] h-[2.5vw] border border-slate-300 rounded-[0.8vw] focus:outline-none focus:border-blue-500 font-bold" /></div>
             <div className="flex gap-[0.8vw] items-center">
               {canWrite && !isSupervisor && (
                 <button onClick={() => setShowMasterData(true)} className="flex items-center gap-[0.4vw] text-[0.85vw] font-bold border border-blue-200 bg-blue-50 text-blue-700 px-[1vw] h-[2.4vw] rounded-[0.4vw] hover:bg-blue-100 transition-all cursor-pointer">Master Data</button>
@@ -1117,7 +1117,7 @@ export default function ProductionMaterial() {
             {[{ label: "All", color: "bg-gray-400" }, { label: "Pending", color: "bg-orange-500" }, { label: "Rejected", color: "bg-gray-600" }, { label: "Completed", color: "bg-green-600" }].map(({ label, color }) => {
               const isActive = activeFilter === label;
               return (
-                <button key={label} onClick={() => setActiveFilter(label)} className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.55vw] rounded-[0.5vw] border font-bold text-[0.8vw] cursor-pointer transition-all duration-150 select-none ${isActive ? "bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-offset-1 ring-blue-300" : "bg-white text-gray-600 border-gray-400 hover:bg-gray-100"}`}>
+                <button key={label} onClick={() => setActiveFilter(label)} className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.55vw] rounded-[0.5vw] border font-bold text-[0.8vw] cursor-pointer transition-all duration-150 select-none ${isActive ? "bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-offset-1 ring-blue-300" : "bg-white text-gray-600 border-slate-300 hover:bg-gray-100"}`}>
                   <span className={`w-[0.6vw] h-[0.6vw] rounded-full ${isActive ? "bg-white" : color}`} />
                   {label} <span className={`px-[0.4vw] py-[0.05vw] rounded-full text-[0.7vw] ${isActive ? "bg-white/20" : "bg-gray-100"}`}>{counts[label] ?? 0}</span>
                 </button>
@@ -1125,32 +1125,32 @@ export default function ProductionMaterial() {
             })}
           </div>
 
-          <div className="bg-white rounded-[0.6vw] shadow-sm border border-gray-400 flex flex-col overflow-hidden">
+          <div className="bg-white rounded-[0.6vw] shadow-sm border border-slate-300 flex flex-col overflow-hidden">
             <div className="overflow-auto max-h-[65vh] min-h-[65vh]">
               <table className="w-full text-left border-collapse">
                 <thead className="bg-blue-50 sticky top-0 z-40">
                   <tr>
                     {canDelete && !isSupervisor && (
-                      <th rowSpan={2} className="p-[0.6vw] border-b-2 border-r border-gray-400 text-center align-middle w-[3%] bg-blue-50 sticky top-0 left-0 z-50">
+                      <th rowSpan={2} className="p-[0.6vw] border-b-2 border-r border-slate-300 text-center align-middle w-[3%] bg-blue-50 sticky top-0 left-0 z-50">
                         <button onClick={toggleSelectPage} className="flex items-center justify-center w-full cursor-pointer">
-                          {isPageSelected ? <CheckCircle className="w-[1.2vw] h-[1.2vw] text-blue-600" /> : <div className="w-[1.1vw] h-[1.1vw] border-2 border-gray-400 rounded"></div>}
+                          {isPageSelected ? <CheckCircle className="w-[1.2vw] h-[1.2vw] text-blue-600" /> : <div className="w-[1.1vw] h-[1.1vw] border-2 border-slate-300 rounded"></div>}
                         </button>
                       </th>
                     )}
                     {["S.No", "Date", "Job Order No", "Customer", "Cus Code", "Category"].map(h => {
                       const minW = h === "Customer" ? "180px" : (h === "Job Order No" ? "140px" : "80px");
                       return (
-                        <th key={h} rowSpan={2} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.5vw] font-bold text-black text-center border-b-2 border-r border-gray-400 whitespace-nowrap text-[0.78vw] align-middle bg-blue-50 sticky top-0 z-20">{h}</th>
+                        <th key={h} rowSpan={2} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.5vw] font-bold text-black text-center border-b-2 border-r border-slate-300 whitespace-nowrap text-[0.78vw] align-middle bg-blue-50 sticky top-0 z-20">{h}</th>
                       );
                     })}
-                    <th colSpan={12} className="px-[0.6vw] py-[0.4vw] font-semibold text-black border-b border-r border-gray-400 text-center text-[0.78vw] bg-blue-100 sticky top-0 z-40">Product Manifest Details</th>
-                    <th rowSpan={2} className="px-[0.8vw] py-[0.5vw] font-semibold text-black text-center border-b-2 border-l border-gray-400 whitespace-nowrap text-[0.78vw] align-middle bg-blue-50 sticky right-0 top-0 z-50 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">Actions</th>
+                    <th colSpan={12} className="px-[0.6vw] py-[0.4vw] font-semibold text-black border-b border-r border-slate-300 text-center text-[0.78vw] bg-blue-100 sticky top-0 z-40">Product Manifest Details</th>
+                    <th rowSpan={2} className="px-[0.8vw] py-[0.5vw] font-semibold text-black text-center border-b-2 border-l border-slate-300 whitespace-nowrap text-[0.78vw] align-middle bg-blue-50 sticky right-0 top-0 z-50 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">Actions</th>
                   </tr>
                   <tr>
                     {["Item Code", "Description", "NC Type", "Stage", "Qty", "Serial/Batch", "Assigned To", "Verified By", "Verified Date", "CAE", "Final Status", "Final Remarks"].map((h, i) => {
                       const minW = h === "Description" ? "220px" : (h === "Final Remarks" ? "180px" : (h === "Qty" ? "120px" : (h === "Verified By" ? "130px" : (h === "Verified Date" ? "100px" : (h === "CAE" ? "150px" : "110px")))));
                       return (
-                        <th key={h} style={{ minWidth: minW }} className={`px-[0.6vw] py-[0.4vw] font-bold text-black border-b-2 border-r border-gray-400 whitespace-nowrap text-[0.72vw] bg-blue-50 text-center`}>{h}</th>
+                        <th key={h} style={{ minWidth: minW }} className={`px-[0.6vw] py-[0.4vw] font-bold text-black border-b-2 border-r border-slate-300 whitespace-nowrap text-[0.72vw] bg-blue-50 text-center`}>{h}</th>
                       );
                     })}
                   </tr>
@@ -1174,43 +1174,43 @@ export default function ProductionMaterial() {
                           {pi === 0 && (
                             <>
                               {canDelete && !isSupervisor && (
-                                <td rowSpan={span} className="p-[0.7vw] border-r border-slate-400 text-center align-middle">
+                                <td rowSpan={span} className="p-[0.7vw] border-r border-slate-300 text-center align-middle">
                                   <button onClick={() => toggleSelect(row.id)} className="flex items-center justify-center w-full cursor-pointer">
-                                    {isSelected ? <CheckCircle className="w-[1.1vw] h-[1.1vw] text-blue-600" /> : <div className="w-[1.1vw] h-[1.1vw] border border-gray-400 rounded hover:border-blue-400"></div>}
+                                    {isSelected ? <CheckCircle className="w-[1.1vw] h-[1.1vw] text-blue-600" /> : <div className="w-[1.1vw] h-[1.1vw] border border-slate-300 rounded hover:border-blue-400"></div>}
                                   </button>
                                 </td>
                               )}
-                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-bold text-gray-900 text-[0.78vw]">{(currentPage - 1) * ITEMS_PER_PAGE + i + 1}</td>
-                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-gray-700 text-[0.78vw] whitespace-pre">{fmtDate(row.date)}</td>
-                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center text-[0.78vw] font-semibold text-blue-700">{row.jobOrderNo || "—"}</td>
-                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-gray-900 text-[0.75vw]">{row.customerName || "—"}</td>
-                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 text-center align-middle font-semibold text-gray-600 text-[0.72vw]">{row.customerCode || "—"}</td>
-                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 text-center align-middle"><span className="text-[0.68vw] font-semibold bg-blue-100 text-blue-700 px-[0.4vw] py-[0.1vw] rounded whitespace-pre">{row.category || "—"}</span></td>
+                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-bold text-gray-900 text-[0.78vw]">{(currentPage - 1) * ITEMS_PER_PAGE + i + 1}</td>
+                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-semibold text-gray-700 text-[0.78vw] whitespace-pre">{fmtDate(row.date)}</td>
+                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center text-[0.78vw] font-semibold text-blue-700">{row.jobOrderNo || "—"}</td>
+                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-semibold text-gray-900 text-[0.75vw]">{row.customerName || "—"}</td>
+                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 text-center align-middle font-semibold text-gray-600 text-[0.72vw]">{row.customerCode || "—"}</td>
+                              <td rowSpan={span} className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 text-center align-middle"><span className="text-[0.68vw] font-semibold bg-blue-100 text-blue-700 px-[0.4vw] py-[0.1vw] rounded whitespace-pre">{row.category || "—"}</span></td>
                             </>
                           )}
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 text-center align-middle">
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 text-center align-middle">
                             {showReadyHighlight && (
                               <div className="flex items-center justify-center gap-[0.3vw] mb-[0.3vw]">
                                 <div className="h-[0.5vw] w-[0.5vw] rounded-full bg-emerald-500 shadow-sm" />
                                 <span className="text-[0.6vw] font-normal text-emerald-700 whitespace-nowrap">Employee completed</span>
                               </div>
                             )}
-                            <div className="font-semibold text-black text-[0.72vw]">{prod.productCode || "—"}</div>
+                            <div className="font-normal text-slate-700 text-[0.72vw]">{prod.productCode || "—"}</div>
                           </td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-black text-[0.72vw] truncate max-w-[10vw]" title={prod.productDescription}>{prod.productDescription || "—"}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 text-center align-middle"><span className={`text-[0.68vw] font-medium px-[0.4vw] py-[0.1vw] rounded border ${prod.ncType === "External" ? "bg-orange-50 text-orange-700 border-orange-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}>{prod.ncType || "Internal"}</span></td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 text-center align-middle"><span className="text-[0.72vw] font-normal text-black">{prod.stage || "Assembly"}</span></td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 text-center align-middle font-normal text-black text-[0.75vw]">{prod.qty || "1"}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-normal text-black text-[0.72vw]">{prod.serialNumber || "—"}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-black text-[0.75vw]">{prod.assignedToName || "Unassigned"}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-emerald-700 text-[0.75vw]">{prod.report?.verifiedByName || "—"}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-normal text-black text-[0.72vw]">{fmtDate(prod.report?.verifiedDate)}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-blue-700 text-[0.75vw] truncate max-w-[10vw]" title={prod.report?.cae}>{prod.report?.cae || "—"}</td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center">
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.72vw] truncate max-w-[10vw]" title={prod.productDescription}>{prod.productDescription || "—"}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 text-center align-middle"><span className={`text-[0.68vw] font-medium px-[0.4vw] py-[0.1vw] rounded border ${prod.ncType === "External" ? "bg-orange-50 text-orange-700 border-orange-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}>{prod.ncType || "Internal"}</span></td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 text-center align-middle"><span className="text-[0.72vw] font-normal text-black">{prod.stage || "Assembly"}</span></td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 text-center align-middle font-normal text-black text-[0.75vw]">{prod.qty || "1"}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-normal text-black text-[0.72vw]">{prod.serialNumber || "—"}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.75vw]">{prod.assignedToName || "Unassigned"}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-semibold text-emerald-700 text-[0.75vw]">{prod.report?.verifiedByName || "—"}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-normal text-black text-[0.72vw]">{fmtDate(prod.report?.verifiedDate)}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-semibold text-blue-700 text-[0.75vw] truncate max-w-[10vw]" title={prod.report?.cae}>{prod.report?.cae || "—"}</td>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center">
                             <FinalStatusCell row={row} prod={prod} onUpdateProduct={onUpdateProduct} isSupervisor={isSupervisor} />
                           </td>
-                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-400 align-middle text-center font-semibold text-black text-[0.72vw] truncate max-w-[10vw]" title={prod.finalStatusRemarks}>{prod.finalStatusRemarks || "—"}</td>
-                          <td className={`px-[0.8vw] py-[0.7vw] text-center align-middle border-l border-slate-400 sticky right-0 z-30 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)] ${isSelected ? "bg-blue-50/50" : "bg-white"}`}>
+                          <td className="px-[0.8vw] py-[0.7vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.72vw] truncate max-w-[10vw]" title={prod.finalStatusRemarks}>{prod.finalStatusRemarks || "—"}</td>
+                          <td className={`px-[0.8vw] py-[0.7vw] text-center align-middle border-l border-slate-300 sticky right-0 z-30 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)] ${isSelected ? "bg-blue-50/50" : "bg-white"}`}>
                             <div className="flex items-center justify-start gap-[0.5vw]">
                               <button onClick={() => setReportsRow(row)} className="w-[2vw] h-[2vw] flex items-center justify-center bg-blue-50 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all cursor-pointer border border-blue-100 shadow-sm" title="View Report"><Eye className="w-[1vw] h-[1vw]" /></button>
                               
@@ -1225,7 +1225,7 @@ export default function ProductionMaterial() {
                               {canUpdate && !isSupervisor && (
                                 <>
                                   {pi === 0 && (
-                                    <button onClick={() => { setSelectedRow(row); setView("form"); }} className="w-[2vw] h-[2vw] flex items-center justify-center bg-white border border-gray-400 text-gray-400 hover:text-blue-600 hover:border-blue-300 rounded-full transition-all cursor-pointer shadow-sm" title="Edit Registration"><Edit3 className="w-[1vw] h-[1vw]" /></button>
+                                    <button onClick={() => { setSelectedRow(row); setView("form"); }} className="w-[2vw] h-[2vw] flex items-center justify-center bg-white border border-slate-300 text-gray-400 hover:text-blue-600 hover:border-blue-300 rounded-full transition-all cursor-pointer shadow-sm" title="Edit Registration"><Edit3 className="w-[1vw] h-[1vw]" /></button>
                                   )}
                                 </>
                               )}
@@ -1241,12 +1241,12 @@ export default function ProductionMaterial() {
                 </tbody>
               </table>
             </div>
-            <div className="border-t border-slate-400 p-[0.6vw] bg-gray-50 flex justify-between items-center rounded-b-[0.6vw]">
+            <div className="border-t border-slate-300 p-[0.6vw] bg-gray-50 flex justify-between items-center rounded-b-[0.6vw]">
               <div className="text-[0.8vw] font-bold text-gray-500">Showing <strong>{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</strong> to <strong>{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</strong> of <strong>{filteredData.length}</strong> entries</div>
               <div className="flex items-center gap-[1.2vw]">
-                <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-[0.4vw] border border-gray-400 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"><ChevronDown className="w-[1vw] h-[1vw] rotate-90" /></button>
-                <div className="flex gap-[0.7vw]">{Array.from({ length: totalPages }, (_, i) => i + 1).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2)).map(pNum => (<button key={pNum} onClick={() => setCurrentPage(pNum)} className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-[0.3vw] text-[0.8vw] font-bold cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white" : "bg-white border border-gray-400 text-gray-600 hover:bg-gray-100"}`}>{pNum}</button>))}</div>
-                <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-[0.4vw] border border-gray-400 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"><ChevronUp className="w-[1vw] h-[1vw] rotate-90" /></button>
+                <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-[0.4vw] border border-slate-300 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"><ChevronDown className="w-[1vw] h-[1vw] rotate-90" /></button>
+                <div className="flex gap-[0.7vw]">{Array.from({ length: totalPages }, (_, i) => i + 1).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2)).map(pNum => (<button key={pNum} onClick={() => setCurrentPage(pNum)} className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-[0.3vw] text-[0.8vw] font-bold cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white" : "bg-white border border-slate-300 text-gray-600 hover:bg-gray-100"}`}>{pNum}</button>))}</div>
+                <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages || totalPages === 0} className="p-[0.4vw] border border-slate-300 rounded-[0.3vw] hover:bg-white disabled:opacity-50 bg-white shadow-sm cursor-pointer"><ChevronUp className="w-[1vw] h-[1vw] rotate-90" /></button>
               </div>
             </div>
           </div>

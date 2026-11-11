@@ -1798,7 +1798,7 @@ export default function ServiceCall() {
                       setFilterFromDate("");
                       setFilterToDate("");
                     }}
-                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-bold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
                     title="Clear date filter"
                   >
                     <RotateCcw className="w-[0.75vw] h-[0.75vw]" />

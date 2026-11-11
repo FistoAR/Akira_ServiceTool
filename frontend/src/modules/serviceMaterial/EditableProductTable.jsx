@@ -373,13 +373,13 @@ const EditableProductTable = ({
   }, [isFilling, selection, products.length]);
 
   const getCellClass = (rowIndex, colIndex) => {
-    if (!selection) return "border border-gray-600";
+    if (!selection) return "border-r border-b border-slate-300";
     const { startRow, startCol, endRow, endCol } = selection;
     const minR = Math.min(startRow, endRow);
     const maxR = Math.max(startRow, endRow);
     const minC = Math.min(startCol, endCol);
     const maxC = Math.max(startCol, endCol);
-    if (rowIndex < minR || rowIndex > maxR || colIndex < minC || colIndex > maxC) return "border border-gray-600";
+    if (rowIndex < minR || rowIndex > maxR || colIndex < minC || colIndex > maxC) return "border-r border-b border-slate-300";
     let cls = "border border-blue-500 bg-blue-50/20 z-10";
     if (rowIndex === minR) cls += " border-t-2";
     if (rowIndex === maxR) cls += " border-b-2";
@@ -416,21 +416,21 @@ const EditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className="w-full overflow-x-auto border border-gray-600 rounded-[0.6vw] bg-white mb-[15vw]"
+      className="w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[15vw]"
     >
       <table className="w-full border-collapse text-[0.8vw]">
-        <thead className="bg-blue-50/80 border-b border-gray-600 sticky top-0 z-20 shadow-sm">
+        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
           <tr>
-            {!isReadOnly && <th className="w-[4vw] min-w-[60px] py-[0.8vw] px-[0.5vw] border border-gray-600"></th>}
-            <th className="w-[4vw] min-w-[60px] py-[0.8vw] px-[0.5vw] text-center text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">S. No</th>
-            <th className="min-w-[30vw] py-[0.8vw] px-[0.8vw] text-left text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Product Description</th>
-            <th className="w-[12vw] min-w-[150px] py-[0.8vw] px-[0.8vw] text-left text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Product Code</th>
-            <th className="w-[12vw] min-w-[160px] py-[0.8vw] px-[0.8vw] text-left text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Board Type</th>
-            <th className="w-[15vw] min-w-[200px] py-[0.8vw] px-[0.8vw] text-left text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Serial Number</th>
-            <th className="w-[7vw] min-w-[120px] py-[0.8vw] px-[0.8vw] text-center text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Qty</th>
-            <th className="w-[12vw] min-w-[150px] py-[0.8vw] px-[0.8vw] text-left text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Type</th>
-            <th className="w-[15vw] min-w-[180px] py-[0.8vw] px-[0.8vw] text-left text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Exp. Delivery</th>
-            {!isReadOnly && <th className="w-[10vw] min-w-[120px] py-[0.8vw] px-[0.8vw] text-center text-black font-semibold tracking-wider whitespace-nowrap border border-gray-600">Actions</th>}
+            {!isReadOnly && <th className="w-[4vw] min-w-[60px] py-[0.8vw] px-[0.5vw] border-r border-b border-slate-300"></th>}
+            <th className="w-[4vw] min-w-[60px] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
+            <th className="min-w-[30vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="w-[12vw] min-w-[150px] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
+            <th className="w-[12vw] min-w-[160px] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[15vw] min-w-[200px] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
+            <th className="w-[7vw] min-w-[120px] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
+            <th className="w-[12vw] min-w-[150px] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
+            <th className="w-[15vw] min-w-[180px] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
+            {!isReadOnly && <th className="w-[10vw] min-w-[120px] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -448,14 +448,14 @@ const EditableProductTable = ({
                       <tr
                         ref={provided.innerRef}
                         {...provided.draggableProps}
-                        className={`border-b border-gray-600 last:border-0 hover:bg-blue-50/30 transition-colors ${snapshot.isDragging ? "bg-white shadow-lg ring-1 ring-blue-200 z-50 table" : ""}`}
+                        className={`border-b border-slate-300 last:border-0 hover:bg-blue-50/30 transition-colors ${snapshot.isDragging ? "bg-white shadow-lg ring-1 ring-blue-200 z-50 table" : ""}`}
                       >
                         {!isReadOnly && (
                           <td className="py-[0.6vw] px-[0.5vw] text-center align-middle" {...provided.dragHandleProps}>
                             <GripVertical className="w-[1vw] h-[1vw] text-gray-700 cursor-grab active:cursor-grabbing" />
                           </td>
                         )}
-                        <td className="py-[0.6vw] px-[0.5vw] text-center align-middle font-semibold text-black border border-gray-600">
+                        <td className="py-[0.6vw] px-[0.5vw] text-center align-middle font-semibold text-black border-r border-b border-slate-300">
                           {index + 1}
                         </td>
                         
@@ -483,7 +483,7 @@ const EditableProductTable = ({
                               onClick={(e) => openDropdown(prod._pid, e.currentTarget.parentElement.parentElement)}
                               placeholder={customerCode ? "Search or enter description..." : "Select customer first"}
                               disabled={!customerCode || isReadOnly}
-                              className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-semibold disabled:bg-transparent cursor-text description-input`}
+                              className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent cursor-text description-input`}
                             />
                             {!isReadOnly && customerCode && (
                               <Search className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none group-focus-within:text-blue-500" />
@@ -506,11 +506,11 @@ const EditableProductTable = ({
                                             e.stopPropagation();
                                             selectProduct(prod._pid, p);
                                         }}
-                                        className={`p-[0.6vw] cursor-pointer border-b border-gray-600 last:border-0 ${i === prodActiveIndex ? "bg-blue-100" : "hover:bg-blue-50"}`}
+                                        className={`p-[0.6vw] cursor-pointer border-b border-slate-300 last:border-0 ${i === prodActiveIndex ? "bg-blue-100" : "hover:bg-blue-50"}`}
                                       >
                                         <div className="font-semibold text-gray-900 text-[0.8vw]">{p.itemDescription || p.productDescription}</div>
                                         <div className="text-[0.7vw] text-gray-700 flex items-center gap-[0.4vw] mt-[0.1vw]">
-                                          <span className="bg-gray-100 px-[0.3vw] rounded font-mono border border-gray-600">{p.itemCode || p.productCode}</span>
+                                          <span className="bg-gray-100 px-[0.3vw] rounded font-mono border-r border-b border-slate-300">{p.itemCode || p.productCode}</span>
                                           {(p.productSegment || p.segment) && <span className="font-medium">· {p.productSegment || p.segment}</span>}
                                         </div>
                                       </div>
@@ -534,7 +534,7 @@ const EditableProductTable = ({
                             value={prod.boardType || ""}
                             onChange={(e) => handleUpdate(prod._pid, "boardType", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-semibold disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent"
                           >
                             <option value="">Select</option>
                             {boardTypes.map(bt => (
@@ -546,19 +546,19 @@ const EditableProductTable = ({
 
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
                           <div className="relative flex items-center group">
-                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-semibold disabled:bg-transparent" />
+                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent" />
                             {!isReadOnly && <button type="button" className="absolute right-[0.4vw] p-[0.3vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-[1vw] h-[1vw]" /></button>}
                           </div>
                           {renderFillHandle(index, 3)}
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <input type="number" min="1" value={prod.qty} onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-semibold text-center disabled:bg-transparent" />
+                          <input type="number" min="1" value={prod.qty} onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-800 font-normal text-center disabled:bg-transparent" />
                           {renderFillHandle(index, 4)}
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
-                          <div className="flex bg-gray-100 p-[0.2vw] rounded-[0.4vw] w-full border border-gray-600">
+                          <div className="flex bg-gray-100 p-[0.2vw] rounded-[0.4vw] w-full border-r border-b border-slate-300">
                             {typeOptions.map(opt => (
                               <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly} className={`flex-1 py-[0.3vw] text-[0.7vw] font-semibold rounded-[0.3vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
                             ))}
@@ -573,7 +573,7 @@ const EditableProductTable = ({
                               value={prod.expectedDeliveryDate} 
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
                               disabled={isReadOnly && !allowPartialEdit} 
-                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.5vw] outline-none transition-all appearance-none text-black font-semibold disabled:bg-transparent disabled:border-transparent cursor-pointer disabled:cursor-not-allowed" 
+                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.5vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-transparent disabled:border-transparent cursor-pointer disabled:cursor-not-allowed" 
                             />
                             <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none" />
                           </div>
@@ -581,7 +581,7 @@ const EditableProductTable = ({
                         </td>
 
                         {!isReadOnly && (
-                          <td className="py-[0.6vw] px-[0.8vw] border border-gray-600">
+                          <td className="py-[0.6vw] px-[0.8vw] border-r border-b border-slate-300">
                             <div className="flex items-center justify-center gap-[0.5vw]">
                               <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.4vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors"><Copy className="w-[1vw] h-[1vw]" /></button>
                               <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.4vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors"><Trash2 className="w-[1vw] h-[1vw]" /></button>

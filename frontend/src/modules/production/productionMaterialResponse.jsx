@@ -25,8 +25,8 @@ const Badge = ({ label, color = "gray", size = "sm" }) => {
   const colorMap = {
     green:  "bg-emerald-50 text-emerald-700 border-emerald-200",
     blue:   "bg-blue-50 text-blue-700 border-blue-200",
-    slate:  "bg-slate-100 text-slate-600 border-slate-400",
-    gray:   "bg-gray-100 text-gray-600 border-slate-400",
+    slate:  "bg-slate-100 text-slate-600 border-slate-300",
+    gray:   "bg-gray-100 text-gray-600 border-slate-300",
     black:  "bg-gray-900 text-white border-gray-900",
     red:    "bg-red-50 text-red-700 border-red-200",
     orange: "bg-orange-50 text-orange-700 border-orange-200",
@@ -46,10 +46,10 @@ const Badge = ({ label, color = "gray", size = "sm" }) => {
 
 // ── Status Configuration ──────────────────────────────────────────────────────
 const STATUS_CONFIG = {
-  "Open":               { color: "gray",   icon: AlertCircle,    bg: "bg-gray-100",   border: "border-gray-400",   text: "text-gray-700" },
+  "Open":               { color: "gray",   icon: AlertCircle,    bg: "bg-gray-100",   border: "border-slate-300",   text: "text-gray-700" },
   "Under Testing":      { color: "blue",   icon: Wrench,         bg: "bg-blue-100",   border: "border-blue-300",   text: "text-blue-800" },
   "Repair in Progress": { color: "orange", icon: Wrench,         bg: "bg-orange-100", border: "border-orange-300", text: "text-orange-800" },
-  "Pending":            { color: "slate",  icon: Clock,          bg: "bg-slate-100",  border: "border-slate-400",  text: "text-slate-800" },
+  "Pending":            { color: "slate",  icon: Clock,          bg: "bg-slate-100",  border: "border-slate-300",  text: "text-slate-800" },
   "Completed":          { color: "green",  icon: CheckCircle,    bg: "bg-green-100",  border: "border-green-300",  text: "text-green-800" },
   "Not Repairable":     { color: "red",    icon: AlertTriangle,  bg: "bg-red-100",    border: "border-red-300",    text: "text-red-800" },
 };
@@ -60,7 +60,7 @@ const RefInput = ({ label, value, span = 1 }) => (
     <label className="text-[0.75vw] font-semibold text-black flex items-start gap-[0.25vw]">
       {label}
     </label>
-    <div className="bg-white border border-gray-400 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden min-h-[2.4vw]">
+    <div className="bg-white border border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden min-h-[2.4vw]">
       {value || "—"}
     </div>
   </div>
@@ -97,7 +97,7 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-full border border-gray-400 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] text-left flex items-center justify-between transition-all cursor-pointer shadow-sm ${isOpen ? "border-blue-500 ring-1 ring-blue-500" : ""}`}
+          className={`w-full border border-slate-300 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] text-left flex items-center justify-between transition-all cursor-pointer shadow-sm ${isOpen ? "border-blue-500 ring-1 ring-blue-500" : ""}`}
         >
           <span className={selectedOption ? "text-black font-regular" : "text-gray-400"}>
             {selectedOption ? selectedOption.label : placeholder}
@@ -111,9 +111,9 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute z-[100] w-full mt-[0.2vw] bg-white border border-gray-400 rounded-[0.4vw] shadow-xl overflow-hidden flex flex-col"
+              className="absolute z-[100] w-full mt-[0.2vw] bg-white border border-slate-300 rounded-[0.4vw] shadow-xl overflow-hidden flex flex-col"
             >
-              <div className="p-[0.4vw] border-b border-slate-400 bg-gray-50">
+              <div className="p-[0.4vw] border-b border-slate-300 bg-gray-50">
                 <div className="relative">
                   <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
                   <input
@@ -122,7 +122,7 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search..."
-                    className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.4vw] text-[0.75vw] border border-slate-400 rounded-[0.3vw] outline-none focus:border-blue-400 bg-white"
+                    className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.4vw] text-[0.75vw] border border-slate-300 rounded-[0.3vw] outline-none focus:border-blue-400 bg-white"
                   />
                 </div>
               </div>
@@ -211,7 +211,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
         initial={{ scale: 0.95, opacity: 0, y: 10 }} 
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[60vw] max-h-[95vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-gray-400"
+        className="bg-white w-[60vw] max-h-[95vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-300"
       >
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-700 to-blue-600 px-[1.5vw] py-[1vw] flex justify-between items-center shadow-md">
@@ -233,8 +233,8 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
         <div className="flex-1 overflow-y-auto p-[1.5vw] pb-[6vw] space-y-[1.5vw] bg-gray-50/30">
           
           {/* Reference Info */}
-          <div className="bg-white rounded-[0.6vw] border border-gray-400 shadow-sm">
-            <div className="bg-blue-50/50 px-[1vw] py-[0.6vw] border-b border-slate-400 flex items-center gap-[0.5vw]">
+          <div className="bg-white rounded-[0.6vw] border border-slate-300 shadow-sm">
+            <div className="bg-blue-50/50 px-[1vw] py-[0.6vw] border-b border-slate-300 flex items-center gap-[0.5vw]">
               <Info className="w-[0.9vw] h-[0.9vw] text-blue-600" />
               <span className="text-[0.75vw] font-bold text-blue-700 uppercase tracking-wider">Inward Details</span>
             </div>
@@ -261,7 +261,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                   <img 
                     src={`${API_URL}${product.boardImage}`} 
                     alt="Board" 
-                    className="w-full h-[4vw] object-cover rounded-[0.4vw] border border-gray-400 cursor-pointer hover:scale-105 transition-transform"
+                    className="w-full h-[4vw] object-cover rounded-[0.4vw] border border-slate-300 cursor-pointer hover:scale-105 transition-transform"
                     onClick={() => window.open(`${API_URL}${product.boardImage}`, '_blank')}
                   />
                 </div>
@@ -270,8 +270,8 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
           </div>
 
           {/* Technical Resolution Form */}
-          <div className="bg-white rounded-[0.6vw] border border-gray-400 shadow-sm">
-            <div className="bg-emerald-50/50 px-[1vw] py-[0.6vw] border-b border-slate-400 flex items-center gap-[0.5vw]">
+          <div className="bg-white rounded-[0.6vw] border border-slate-300 shadow-sm">
+            <div className="bg-emerald-50/50 px-[1vw] py-[0.6vw] border-b border-slate-300 flex items-center gap-[0.5vw]">
               <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" />
               <span className="text-[0.75vw] font-bold text-emerald-700 uppercase tracking-wider">Resolution Report</span>
             </div>
@@ -279,11 +279,11 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-4 gap-[1vw]">
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.8vw] font-semibold text-black">Start Date <span className="text-red-500">*</span></label>
-                  <input type="date" value={formData.startDate} onChange={e => sp("startDate", e.target.value)} className="border border-gray-400 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 shadow-sm" />
+                  <input type="date" value={formData.startDate} onChange={e => sp("startDate", e.target.value)} className="border border-slate-300 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 shadow-sm" />
                 </div>
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.8vw] font-semibold text-black">4M Category <span className="text-red-500">*</span></label>
-                  <select value={formData.fourMCategory} onChange={e => sp("fourMCategory", e.target.value)} className="border border-gray-400 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 shadow-sm cursor-pointer">
+                  <select value={formData.fourMCategory} onChange={e => sp("fourMCategory", e.target.value)} className="border border-slate-300 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 shadow-sm cursor-pointer">
                     <option value="">Select Category</option>
                     {fourMCategories?.map(c => <option key={c._id || c.id} value={c.name || c}>{c.name || c}</option>)}
                   </select>
@@ -293,17 +293,17 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.8vw] font-semibold text-black">Root Cause(s) <span className="text-red-500">*</span></label>
-                  <textarea rows="3" value={formData.rootCause} onChange={e => sp("rootCause", e.target.value)} placeholder="Analyze the problem source..." className="border border-gray-400 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 resize-none shadow-sm" />
+                  <textarea rows="3" value={formData.rootCause} onChange={e => sp("rootCause", e.target.value)} placeholder="Analyze the problem source..." className="border border-slate-300 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 resize-none shadow-sm" />
                 </div>
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.8vw] font-semibold text-black">Corrective Action <span className="text-red-500">*</span></label>
-                  <textarea rows="3" value={formData.correctiveAction} onChange={e => sp("correctiveAction", e.target.value)} placeholder="Action taken to prevent recurrence..." className="border border-gray-400 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 resize-none shadow-sm" />
+                  <textarea rows="3" value={formData.correctiveAction} onChange={e => sp("correctiveAction", e.target.value)} placeholder="Action taken to prevent recurrence..." className="border border-slate-300 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 resize-none shadow-sm" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-[0.3vw]">
                 <label className="text-[0.8vw] font-semibold text-black">Parts replacement details</label>
-                <textarea rows="2" value={formData.partsReplacement} onChange={e => sp("partsReplacement", e.target.value)} placeholder="Enter parts replaced (comma separated)..." className="border border-gray-400 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 resize-none shadow-sm w-full" />
+                <textarea rows="2" value={formData.partsReplacement} onChange={e => sp("partsReplacement", e.target.value)} placeholder="Enter parts replaced (comma separated)..." className="border border-slate-300 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 resize-none shadow-sm w-full" />
               </div>
 
               <div className="grid grid-cols-4 gap-[1vw]">
@@ -315,7 +315,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-4 gap-[1vw]">
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.8vw] font-semibold text-black">Closed Date {formData.status === "Completed" && <span className="text-red-500">*</span>}</label>
-                  <input type="date" value={formData.closedDate} onChange={e => sp("closedDate", e.target.value)} className="border border-gray-400 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 shadow-sm" />
+                  <input type="date" value={formData.closedDate} onChange={e => sp("closedDate", e.target.value)} className="border border-slate-300 rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] outline-none focus:border-blue-500 shadow-sm" />
                 </div>
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.8vw] font-semibold text-black">Current Status <span className="text-red-500">*</span></label>
@@ -333,12 +333,12 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
         </div>
 
         {/* Footer */}
-        <div className="px-[1.5vw] py-[1vw] border-t border-slate-400 bg-gray-50 flex justify-between items-center">
+        <div className="px-[1.5vw] py-[1vw] border-t border-slate-300 bg-gray-50 flex justify-between items-center">
           <p className="text-[0.7vw] text-gray-500 font-medium uppercase tracking-wider">
             Ensuring high-quality production standards
           </p>
           <div className="flex gap-[0.8vw]">
-            <button onClick={onClose} className="px-[1.5vw] py-[0.6vw] border border-gray-400 bg-white hover:bg-gray-100 text-gray-700 font-bold rounded-[0.4vw] text-[0.8vw] cursor-pointer transition-all">Cancel</button>
+            <button onClick={onClose} className="px-[1.5vw] py-[0.6vw] border border-slate-300 bg-white hover:bg-gray-100 text-gray-700 font-bold rounded-[0.4vw] text-[0.8vw] cursor-pointer transition-all">Cancel</button>
             <button onClick={handleSave} className="px-[1.8vw] py-[0.6vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.4vw] text-[0.8vw] font-bold cursor-pointer shadow-lg shadow-blue-900/20 flex items-center gap-[0.5vw] transition-all active:scale-95">
               <Send className="w-[1vw] h-[1vw]" />
               Submit Report
@@ -358,7 +358,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }} 
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[50vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-gray-400"
+        className="bg-white w-[50vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-slate-300"
       >
         <div className="bg-gray-900 px-[1.5vw] py-[1vw] flex justify-between items-center">
           <div className="flex items-center gap-[0.8vw]">
@@ -395,8 +395,8 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
           </div>
 
           {product.report && (
-            <div className="space-y-[1vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-400 shadow-sm">
-               <h4 className="text-[0.85vw] font-bold text-gray-800 border-b border-slate-400 pb-[0.3vw]">Technical Report</h4>
+            <div className="space-y-[1vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300 shadow-sm">
+               <h4 className="text-[0.85vw] font-bold text-gray-800 border-b border-slate-300 pb-[0.3vw]">Technical Report</h4>
                <div className="grid grid-cols-2 gap-[1vw]">
                  <RefInput label="Root Cause" value={product.report.rootCause} span={2} />
                  <RefInput label="Corrective Action" value={product.report.correctiveAction} span={2} />
@@ -409,13 +409,13 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
 
           {/* Update History */}
           {product.report?.history && product.report.history.length > 0 && (
-            <div className="space-y-[0.8vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-400 shadow-sm">
+            <div className="space-y-[0.8vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300 shadow-sm">
                <h4 className="text-[0.85vw] font-bold text-blue-700 border-b border-blue-500/10 pb-[0.3vw] flex items-center gap-[0.5vw]">
                  <Clock className="w-[0.9vw] h-[0.9vw]" /> Update History Log
                </h4>
                <div className="space-y-[0.6vw] max-h-[15vw] overflow-y-auto pr-[0.5vw] custom-scrollbar">
                  {product.report.history.slice().reverse().map((h, i) => (
-                   <div key={i} className="flex flex-col gap-[0.2vw] p-[0.6vw] rounded-[0.4vw] bg-gray-50/50 border border-slate-400 hover:bg-blue-50/30 transition-colors">
+                   <div key={i} className="flex flex-col gap-[0.2vw] p-[0.6vw] rounded-[0.4vw] bg-gray-50/50 border border-slate-300 hover:bg-blue-50/30 transition-colors">
                      <div className="flex justify-between items-center">
                        <Badge label={h.status} color={STATUS_CONFIG[h.status]?.color || "gray"} size="xs" />
                        <span className="text-[0.65vw] text-gray-500 font-bold uppercase tracking-tighter">
@@ -435,7 +435,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
             </div>
           )}
         </div>
-        <div className="p-[1vw] border-t border-slate-400 bg-gray-50 text-right">
+        <div className="p-[1vw] border-t border-slate-300 bg-gray-50 text-right">
           <button onClick={onClose} className="px-[1.5vw] py-[0.5vw] bg-gray-800 text-white rounded-[0.4vw] font-bold text-[0.8vw] cursor-pointer">Close View</button>
         </div>
       </motion.div>
@@ -570,7 +570,7 @@ export default function ProductionMaterialResponse() {
   return (
     <div className="w-full font-sans p-[1vw]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-[1.5vw] bg-white p-[1vw] rounded-[0.8vw] shadow-sm border border-slate-400">
+      <div className="flex items-center justify-between mb-[1.5vw] bg-white p-[1vw] rounded-[0.8vw] shadow-sm border border-slate-300">
         <div className="flex items-center gap-[0.8vw]">
           <div className="w-[2.8vw] h-[2.8vw] rounded-[0.7vw] bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
             <Package className="w-[1.4vw] h-[1.4vw] text-white" />
@@ -619,7 +619,7 @@ export default function ProductionMaterialResponse() {
                 <button
                   key={label}
                   onClick={() => setFilterStatus(label)}
-                  className={`px-[0.8vw] py-[0.4vw] rounded-full text-[0.72vw] font-bold flex items-center gap-[0.4vw] transition-all border-2 cursor-pointer shadow-sm ${active ? "bg-blue-600 border-blue-600 text-white" : "bg-white border-slate-400 text-gray-600 hover:border-blue-400"}`}
+                  className={`px-[0.8vw] py-[0.4vw] rounded-full text-[0.72vw] font-bold flex items-center gap-[0.4vw] transition-all border-2 cursor-pointer shadow-sm ${active ? "bg-blue-600 border-blue-600 text-white" : "bg-white border-slate-300 text-gray-600 hover:border-blue-400"}`}
                 >
                   <span>{label}</span>
                   <span className={`px-[0.4vw] py-[0.05vw] rounded-full text-[0.65vw] ${active ? "bg-white/20" : "bg-gray-100"}`}>{count}</span>
@@ -632,12 +632,12 @@ export default function ProductionMaterialResponse() {
 
       {/* Main Table */}
       {allProducts.length === 0 ? (
-        <div className="bg-white rounded-[1vw] border-2 border-dashed border-gray-400 py-[6vw] flex flex-col items-center justify-center">
+        <div className="bg-white rounded-[1vw] border-2 border-dashed border-slate-300 py-[6vw] flex flex-col items-center justify-center">
           <AlertCircle className="w-[3vw] h-[3vw] text-gray-300 mb-[1vw]" />
           <p className="text-[1.1vw] font-bold text-gray-500">No records found for the selected filter.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-[0.8vw] border border-gray-400 shadow-md overflow-hidden flex flex-col max-h-[70vh]">
+        <div className="bg-white rounded-[0.8vw] border border-slate-300 shadow-md overflow-hidden flex flex-col max-h-[70vh]">
           <div className="overflow-auto flex-1">
             <table className="w-full border-separate border-spacing-0">
               <thead className="sticky top-0 z-20 shadow-sm">
@@ -668,7 +668,7 @@ export default function ProductionMaterialResponse() {
                       <React.Fragment key={`${entry.id}-${product._pid}`}>
                         {isNewCustomer && (
                           <tr className="bg-blue-50/40 border-y border-blue-100 sticky top-[2.4vw] z-10 backdrop-blur-sm">
-                            <td colSpan={9} className="px-[1vw] py-[0.5vw] border-b border-blue-100 border-r border-gray-400">
+                            <td colSpan={9} className="px-[1vw] py-[0.5vw] border-b border-blue-100 border-r border-slate-300">
                               <div className="flex items-center gap-[0.6vw]">
                                 <div className="w-[0.35vw] h-[1.1vw] bg-blue-600 rounded-full" />
                                 <span className="text-[0.82vw] font-bold text-blue-800 uppercase tracking-wide">
@@ -683,14 +683,14 @@ export default function ProductionMaterialResponse() {
                         )}
                         <tr className="hover:bg-blue-50/20 transition-colors group">
                           {/* SNo */}
-                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-300">
                             <span className="w-[1.8vw] h-[1.8vw] rounded-full bg-gray-100 flex items-center justify-center text-[0.75vw] font-bold text-gray-600 mx-auto group-hover:bg-blue-100 group-hover:text-blue-700 transition-all">
                               {((currentPage - 1) * itemsPerPage) + idx + 1}
                             </span>
                           </td>
 
                           {/* Date */}
-                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-300">
                             <div className="text-[0.75vw] font-semibold text-gray-800 flex items-center gap-[0.3vw]">
                               <Calendar className="w-[0.75vw] h-[0.75vw] text-blue-600" />
                               {fmtDate(entry.date)}
@@ -698,32 +698,32 @@ export default function ProductionMaterialResponse() {
                           </td>
 
                           {/* Registration */}
-                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-300">
                             <div className="flex flex-col gap-[0.2vw]">
-                              <div className="text-[0.8vw] font-semibold text-gray-900 flex items-center gap-[0.3vw]"><Hash className="w-[0.7vw] h-[0.7vw] text-blue-600" />{entry.refNoInternal}</div>
+                              <div className="text-[0.78vw] font-normal text-slate-800 flex items-center gap-[0.3vw]"><Hash className="w-[0.7vw] h-[0.7vw] text-blue-600" />{entry.refNoInternal}</div>
                               <div className="text-[0.7vw] font-semibold text-blue-600 mt-[0.1vw]">JO: {entry.jobOrderNo}</div>
                             </div>
                           </td>
 
                           {/* Customer */}
-                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-400">
-                            <div className="text-[0.8vw] font-semibold text-gray-900 truncate max-w-[12vw]">{entry.customerName}</div>
+                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-300">
+                            <div className="text-[0.78vw] font-normal text-slate-800 truncate max-w-[12vw]">{entry.customerName}</div>
                             <div className="text-[0.7vw] font-medium text-gray-500 mt-[0.1vw]">Code: {entry.customerCode}</div>
                           </td>
 
                           {/* Product */}
-                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-400">
-                            <div className="text-[0.8vw] font-semibold text-blue-700 leading-tight">{product.productDescription}</div>
+                          <td className="px-[0.8vw] py-[1vw] border-r border-b border-slate-300">
+                            <div className="text-[0.78vw] font-normal text-blue-700 leading-tight">{product.productDescription}</div>
                             <div className="text-[0.68vw] text-gray-500 font-semibold mt-[0.3vw]">S/N: {product.serialNumber || "—"}</div>
                           </td>
 
                           {/* Qty */}
-                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-300">
                             <span className="text-[0.8vw] font-medium text-gray-800">{product.qty || "1"}</span>
                           </td>
 
                           {/* Status */}
-                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-300">
                             <span className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-full border text-[0.7vw] font-semibold ${cfg.bg} ${cfg.border} ${cfg.text}`}>
                               <cfg.icon className="w-[0.8vw] h-[0.8vw]" />
                               {status}
@@ -731,7 +731,7 @@ export default function ProductionMaterialResponse() {
                           </td>
 
                           {/* Info */}
-                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] text-center border-r border-b border-slate-300">
                             <button 
                               onClick={() => setInfoSelected({ entry, product })}
                               className="w-[2vw] h-[2vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all cursor-pointer shadow-sm border border-blue-100"
@@ -742,7 +742,7 @@ export default function ProductionMaterialResponse() {
                           </td>
 
                           {/* Action */}
-                          <td className="px-[0.8vw] py-[1vw] text-center border-b border-slate-400">
+                          <td className="px-[0.8vw] py-[1vw] text-center border-b border-slate-300">
                             <button onClick={() => setSelected({ entry, product })} className="bg-blue-600 hover:bg-blue-700 text-white px-[1vw] py-[0.5vw] rounded-[0.4vw] text-[0.75vw] font-bold shadow-md shadow-blue-100 transition-all active:scale-95 flex items-center gap-[0.4vw] mx-auto cursor-pointer">
                               <Edit3 className="w-[0.9vw] h-[0.9vw]" /> Update Report
                             </button>
@@ -757,13 +757,13 @@ export default function ProductionMaterialResponse() {
           </div>
 
           {/* Table Footer */}
-          <div className="bg-gray-50 border-t border-slate-400 px-[1.2vw] py-[0.6vw] flex items-center justify-between">
+          <div className="bg-gray-50 border-t border-slate-300 px-[1.2vw] py-[0.6vw] flex items-center justify-between">
             <div className="flex items-center gap-[1.5vw]">
               <span className="text-[0.72vw] text-gray-500 font-medium">
                 Showing <strong className="text-gray-700">{paginatedProducts.length}</strong> of <strong className="text-gray-700">{allProducts.length}</strong> assigned products
               </span>
               
-              <div className="flex items-center gap-[1vw] border-l border-gray-400 pl-[1.5vw]">
+              <div className="flex items-center gap-[1vw] border-l border-slate-300 pl-[1.5vw]">
                 <div className="flex items-center gap-[0.5vw]">
                   <span className="text-[0.68vw] text-gray-500 font-bold uppercase tracking-wider">Rows per page:</span>
                   <select 
@@ -772,7 +772,7 @@ export default function ProductionMaterialResponse() {
                       setItemsPerPage(Number(e.target.value));
                       setCurrentPage(1);
                     }}
-                    className="bg-white border border-gray-400 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-bold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
+                    className="bg-white border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-bold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
                   >
                     {[10, 20, 50, 100].map(v => <option key={v} value={v}>{v}</option>)}
                   </select>
@@ -782,7 +782,7 @@ export default function ProductionMaterialResponse() {
                   <button 
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    className="p-[0.3vw] rounded-[0.4vw] bg-white border border-gray-400 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group"
+                    className="p-[0.3vw] rounded-[0.4vw] bg-white border border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group"
                   >
                     <ChevronLeft className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />
                   </button>
@@ -796,7 +796,7 @@ export default function ProductionMaterialResponse() {
                   <button 
                     disabled={currentPage >= totalPages}
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    className="p-[0.3vw] rounded-[0.4vw] bg-white border border-gray-400 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group"
+                    className="p-[0.3vw] rounded-[0.4vw] bg-white border border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group"
                   >
                     <ChevronRight className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />
                   </button>

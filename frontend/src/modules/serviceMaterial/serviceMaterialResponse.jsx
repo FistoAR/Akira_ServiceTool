@@ -73,8 +73,8 @@ const Badge = ({ label, color = "gray", size = "sm" }) => {
   const colorMap = {
     green: "bg-emerald-50 text-emerald-700 border-emerald-200",
     blue: "bg-blue-50 text-blue-700 border-blue-200",
-    slate: "bg-slate-100 text-slate-600 border-slate-400",
-    gray: "bg-gray-100 text-gray-600 border-slate-400",
+    slate: "bg-slate-100 text-slate-600 border-slate-300",
+    gray: "bg-gray-100 text-gray-600 border-slate-300",
     black: "bg-gray-900 text-white border-gray-900",
     red: "bg-red-50 text-red-700 border-red-200",
     orange: "bg-orange-50 text-orange-700 border-orange-200",
@@ -121,7 +121,7 @@ const STATUS_CONFIG = {
     color: "slate",
     icon: Clock,
     bg: "bg-slate-100",
-    border: "border-slate-400",
+    border: "border-slate-300",
     text: "text-slate-800",
   },
   Completed: {
@@ -149,7 +149,7 @@ const RefInput = ({ label, value, icon: Icon, span = 1 }) => (
       {/* {Icon && <Icon className="w-[0.8vw] h-[0.8vw]" />} */}
       {label}
     </label>
-    <div className="bg-white border border-gray-400 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden">
+    <div className="bg-white border-r border-b border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden">
       {value || "—"}
     </div>
   </div>
@@ -224,7 +224,7 @@ const StatsBar = ({
             onChange={(e) => {
               setItemsPerPage(Number(e.target.value));
             }}
-            className="bg-white border border-gray-400 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-semibold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
+            className="bg-white border-r border-b border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-semibold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
           >
             {[10, 20, 50, 100].map((v) => (
               <option key={v} value={v}>
@@ -246,7 +246,7 @@ const EmptyState = () => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
     animate={{ opacity: 1, scale: 1 }}
-    className="flex flex-col items-center justify-center py-[6vw] bg-white rounded-[0.6vw] border border-gray-400"
+    className="flex flex-col items-center justify-center py-[6vw] bg-white rounded-[0.6vw] border-r border-b border-slate-300"
   >
     <div className="w-[4vw] h-[4vw] rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-[1vw]">
       <Package className="w-[2vw] h-[2vw] text-gray-800" />
@@ -278,7 +278,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[55vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-gray-400"
+        className="bg-white w-[55vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border-r border-b border-slate-300"
       >
         <div className="bg-gray-100 px-[1.5vw] py-[1vw] flex justify-between items-center">
           <div className="flex items-center gap-[0.8vw]">
@@ -297,7 +297,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
 
         <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-gray-50/50">
           {/* Inward Information Card */}
-          <div className="space-y-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-400">
+          <div className="space-y-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300">
             <h4 className="text-[0.85vw] font-semibold text-blue-700 border-b border-blue-100 pb-[0.3vw]">
               Inward Information
             </h4>
@@ -323,7 +323,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
           </div>
 
           {/* Product Details Card */}
-          <div className="space-y-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-400">
+          <div className="space-y-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300">
             <h4 className="text-[0.85vw] font-semibold text-emerald-700 border-b border-emerald-100 pb-[0.3vw]">
               Product Details
             </h4>
@@ -360,8 +360,8 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
           </div>
 
           {product.report && (
-            <div className="space-y-[1vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-400">
-              <h4 className="text-[0.85vw] font-semibold text-gray-800 border-b border-slate-400 pb-[0.3vw]">
+            <div className="space-y-[1vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300">
+              <h4 className="text-[0.85vw] font-semibold text-gray-800 border-b border-slate-300 pb-[0.3vw]">
                 Technical Report
               </h4>
               <div className="grid grid-cols-2 gap-[1vw]">
@@ -450,7 +450,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                               : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                           }
                           alt="Report"
-                          className="max-w-[15vw] rounded-[0.4vw] border border-gray-400 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                          className="max-w-[15vw] rounded-[0.4vw] border-r border-b border-slate-300 shadow-sm cursor-pointer hover:scale-105 transition-transform"
                           onClick={() => {
                             const url =
                               product.report.image.startsWith("data:") ||
@@ -476,7 +476,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
             </div>
           )}
         </div>
-        <div className="p-[1vw] border-t border-slate-400 bg-gray-50 text-right">
+        <div className="p-[1vw] border-t border-slate-300 bg-gray-50 text-right">
           <button
             onClick={onClose}
             className="px-[1.5vw] py-[0.5vw] bg-gray-800 text-white rounded-[0.4vw] font-semibold text-[0.8vw] cursor-pointer"
@@ -1840,7 +1840,7 @@ export default function ServiceMaterialInwardResponse({
   }, [isFilling, selection, paginatedItems, drafts]);
 
   const getCellClass = (rowIndex, colKey) => {
-    let cls = "px-[0.8vw] py-[0.7vw] border border-gray-400 relative ";
+    let cls = "py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 relative ";
     if (!selection || selection.colKey !== colKey) return cls;
     const { startRow, endRow } = selection;
     const minR = Math.min(startRow, endRow);
@@ -1883,24 +1883,24 @@ export default function ServiceMaterialInwardResponse({
         ))}
       </datalist>
       {/* ── Search & Filter Controls Toolbar ────────────────────────────────────── */}
-      <div className="bg-white rounded-[0.7vw] border border-slate-200 shadow-sm mb-[0.6vw] px-[0.8vw] py-[0.45vw] flex-shrink-0 transition-all">
+      <div className="bg-white rounded-full border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] mb-[0.6vw] px-[0.7vw] py-[0.4vw] flex-shrink-0 transition-all">
         <div className="flex items-center justify-between gap-[0.6vw] flex-nowrap w-full text-[0.7vw]">
           {/* Left Controls: Search, Serials & More Filters Toggle */}
           <div className="flex items-center gap-[0.5vw] flex-1 min-w-0">
             {/* Search Input */}
             <div className="relative w-[18vw] min-w-[200px] flex-shrink-0">
-              <Search className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.78vw] h-[0.78vw] text-gray-400" />
+              <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
               <input
                 type="text"
                 placeholder="Search product, customer, ref no…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[1.8vw] pr-[1.6vw] py-[0.38vw] border border-gray-300 rounded-[0.4vw] text-[0.72vw] font-medium text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all shadow-sm"
+                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-[0.4vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 cursor-pointer"
+                  className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
                 >
                   <X className="w-[0.65vw] h-[0.65vw]" />
                 </button>
@@ -2191,15 +2191,15 @@ export default function ServiceMaterialInwardResponse({
 
       {/* Content */}
       {initialLoading ? (
-        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
+        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
-            <table className="w-full min-w-max border-separate border-spacing-0">
-              <thead className="sticky top-0 z-30 shadow-sm">
-                <tr className="bg-[#e9edf4]">
+            <table className="w-full min-w-max border-collapse">
+              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+                <tr className="bg-[#E9EDF7]">
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-bold text-slate-800 whitespace-nowrap border-b-2 border-r border-slate-300 last:border-r-0 sticky top-0 z-30 bg-[#e9edf4]`}
+                      className={`${col.width} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky top-0 z-30 bg-[#E9EDF7]`}
                     >
                       {col.label}
                     </th>
@@ -2224,17 +2224,17 @@ export default function ServiceMaterialInwardResponse({
       ) : myItems.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col flex-1 min-h-0">
+        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
           {/* Table Container with Internal Scroll */}
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
-            <table className="w-full min-w-max border-separate border-spacing-0">
+            <table className="w-full min-w-max border-collapse">
               {/* Table Header */}
-              <thead className="sticky top-0 z-30 shadow-sm">
-                <tr className="bg-[#e9edf4]">
+              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+                <tr className="bg-[#E9EDF7]">
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-bold text-slate-800 whitespace-nowrap border-b-2 border-r border-slate-300 last:border-r-0 sticky top-0 z-30 bg-[#e9edf4]`}
+                      className={`${col.width} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky top-0 z-30 bg-[#E9EDF7]`}
                     >
                       {col.label}
                     </th>
@@ -2302,14 +2302,14 @@ export default function ServiceMaterialInwardResponse({
                     return (
                       <React.Fragment key={`${entry.id}-${product._pid}`}>
                         {isNewCustomer && (
-                          <tr className="bg-slate-50 border-y border-slate-200">
+                          <tr className="bg-slate-50/80 border-y border-slate-300">
                             <td
                               colSpan={columns.length}
-                              className="p-0 border-b border-slate-200 bg-slate-50 sticky top-[2.4vw] z-20 shadow-xs"
+                              className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[2.4vw] z-20 shadow-2xs"
                             >
                               <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
                                 <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
-                                <span className="font-bold text-slate-800 text-[0.88vw] tracking-wide">
+                                <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
                                   {entry.customerName}
                                 </span>
 
@@ -2336,7 +2336,7 @@ export default function ServiceMaterialInwardResponse({
 
                                 {/* Category (Cus Type) */}
                                 {entry.category && (
-                                  <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-gray-600 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                                  <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                                     Type: {entry.category}
                                   </span>
                                 )}
@@ -2370,7 +2370,7 @@ export default function ServiceMaterialInwardResponse({
                                           ? "bg-rose-100 text-rose-800 border-rose-300"
                                           : product.finalStatus ===
                                               "Not Repairable"
-                                            ? "bg-slate-200 text-slate-800 border-gray-600"
+                                            ? "bg-slate-200 text-slate-800 border-slate-300"
                                             : "bg-amber-100 text-amber-800 border-amber-300"
                                       }`}
                                     >
@@ -2418,33 +2418,33 @@ export default function ServiceMaterialInwardResponse({
                           className={`transition-all duration-150 ${isHovered ? "bg-blue-50/30" : "bg-white"}`}
                         >
                           {/* S.No */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                             <span className="inline-flex items-center justify-center w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 text-[0.68vw] font-semibold text-gray-600">
                               {(currentPage - 1) * itemsPerPage + idx + 1}
                             </span>
                           </td>
 
                           {/* Date */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
                             <div className="flex items-center gap-[0.3vw]">
-                              <span className="text-[0.75vw] text-gray-700 font-medium whitespace-nowrap">
+                              <span className="text-[0.78vw] font-normal text-slate-700 whitespace-nowrap">
                                 {entry.date ? fmtDate(entry.date) : "—"}
                               </span>
                             </div>
                           </td>
 
                           {/* Ref No */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
-                            <span className="text-[0.75vw] font-semibold text-gray-800 whitespace-nowrap">
+                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
+                            <span className="text-[0.78vw] font-normal text-slate-800 whitespace-nowrap">
                               {entry.refNoCustomer || entry.refNo || "—"}
                             </span>
                           </td>
 
                           {/* Product */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
                             <div className="min-w-[10vw]">
                               <div
-                                className="text-[0.75vw] font-semibold text-gray-800 break-words whitespace-normal"
+                                className="text-[0.78vw] font-normal text-slate-800 break-words whitespace-normal"
                                 title={product.productDescription}
                               >
                                 {product.productDescription}
@@ -2456,15 +2456,15 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* Board Type */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
-                            <span className="text-[0.75vw] font-semibold text-gray-700 whitespace-nowrap">
+                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
+                            <span className="text-[0.78vw] font-normal text-slate-700 whitespace-nowrap">
                               {product.boardType || "—"}
                             </span>
                           </td>
 
                           {/* Serial No */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
-                            <span className="text-[0.75vw] font-semibold text-gray-700 whitespace-nowrap">
+                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
+                            <span className="text-[0.78vw] font-normal text-slate-700 whitespace-nowrap">
                               {product.serialNumber || "—"}
                             </span>
                           </td>
@@ -2479,7 +2479,7 @@ export default function ServiceMaterialInwardResponse({
                               <select
                                 value={draft.testedBy}
                                 onChange={(e) => hc("testedBy", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {employees
@@ -2509,7 +2509,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.fqaBy || ""}
                                 onChange={(e) => hc("fqaBy", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                                 placeholder="FQA By..."
                               />
                             ) : (
@@ -2532,7 +2532,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("fourMCategory", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {fourMCategories?.map((opt) => (
@@ -2566,7 +2566,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
                                 placeholder="Code..."
                               />
                             ) : (
@@ -2591,7 +2591,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw]"
                                 placeholder="Problem..."
                               />
                             ) : (
@@ -2613,7 +2613,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
                                 onChange={(e) => hc("pv", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
                                 placeholder="PV..."
                               />
                             ) : (
@@ -2635,7 +2635,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
                                 onChange={(e) => hc("cv", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
                                 placeholder="CV..."
                               />
                             ) : (
@@ -2659,7 +2659,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                                 placeholder="Designator..."
                               />
                             ) : (
@@ -2683,7 +2683,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
@@ -2705,7 +2705,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.faultParts || ""}
                                 onChange={(e) => hc("faultParts", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[9vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[9vw]"
                                 placeholder="Fault Parts..."
                               />
                             ) : (
@@ -2729,7 +2729,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Parts..."
                               />
                             ) : (
@@ -2753,7 +2753,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Action..."
                               />
                             ) : (
@@ -2775,7 +2775,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.timeInHours || ""}
                                 onChange={(e) => hc("timeInHours", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 text-center min-w-[5vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 text-center min-w-[5vw]"
                                 placeholder="Hrs e.g. 2.5"
                               />
                             ) : (
@@ -2797,7 +2797,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.materialCost || ""}
                                 onChange={(e) => hc("materialCost", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 text-right min-w-[6vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 text-right min-w-[6vw]"
                                 placeholder="Cost e.g. 1500"
                               />
                             ) : (
@@ -2809,7 +2809,7 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* Man Power Cost */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-right border border-gray-400">
+                          <td className="py-[0.65vw] px-[0.7vw] text-right border-r border-b border-slate-300">
                             <span className="text-[0.75vw] font-semibold text-emerald-700 whitespace-nowrap">
                               {draft && draft.manpowerCost != null && draft.manpowerCost !== ""
                                 ? `₹${Number(draft.manpowerCost).toFixed(2)}`
@@ -2831,7 +2831,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("disposition", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {DISPOSITION_OPTIONS.map((opt) => (
@@ -2861,7 +2861,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("completedDate", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               />
                             ) : (
                               <span className="text-[0.75vw] whitespace-nowrap">
@@ -2883,7 +2883,7 @@ export default function ServiceMaterialInwardResponse({
                               <select
                                 value={draft.status}
                                 onChange={(e) => hc("status", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 font-semibold min-w-[9vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 font-semibold min-w-[9vw]"
                               >
                                 <option value="">Select</option>
                                 {STATUS_OPTIONS.map((opt) => (
@@ -2916,7 +2916,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                                 placeholder="Remark..."
                               />
                             ) : (
@@ -2927,7 +2927,7 @@ export default function ServiceMaterialInwardResponse({
                             {renderFillHandle(idx, "remarks")}
                           </td>
 
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400 text-center min-w-[8vw]">
+                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 text-center min-w-[8vw]">
                             {draft ? (
                               <div className="flex items-center justify-center gap-[0.5vw]">
                                 <input
@@ -2948,7 +2948,7 @@ export default function ServiceMaterialInwardResponse({
                                   <span>Upload</span>
                                 </label>
                                 {(draft.imagePreview || draft.imageFile || draft.image) && (
-                                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-400 flex-shrink-0 relative group shadow-sm flex items-center justify-center bg-white overflow-hidden">
+                                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-300 flex-shrink-0 relative group shadow-sm flex items-center justify-center bg-white overflow-hidden">
                                     {draft.isPdf || (draft.image && draft.image.toLowerCase().endsWith(".pdf")) ? (
                                       <button
                                         type="button"
@@ -3013,7 +3013,7 @@ export default function ServiceMaterialInwardResponse({
                                 )}
                               </div>
                             ) : product.report?.image ? (
-                              <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-400 relative group shadow-sm mx-auto flex items-center justify-center bg-white overflow-hidden">
+                              <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-300 relative group shadow-sm mx-auto flex items-center justify-center bg-white overflow-hidden">
                                 {product.report.image.toLowerCase().endsWith(".pdf") ? (
                                   <button
                                     type="button"
@@ -3078,7 +3078,7 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* Info */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400">
+                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
                             <button
                               onClick={() =>
                                 setInfoSelected({ entry, product })
@@ -3091,7 +3091,7 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* History */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400">
+                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
                             {filterStatus !== "All" ? (
                               <button
                                 onClick={() =>
@@ -3110,7 +3110,7 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* Action — Save button per record */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                             {isResubmitting ? (
                               <button
                                 onClick={async () => {
@@ -3232,7 +3232,7 @@ export default function ServiceMaterialInwardResponse({
           </div>
 
           {/* Table Footer */}
-          <div className="bg-gray-50 border-t border-slate-400 px-[1.2vw] py-[0.6vw] flex items-center justify-between flex-shrink-0">
+          <div className="bg-gray-50 border-t border-slate-300 px-[1.2vw] py-[0.6vw] flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-[1.5vw]">
               <span className="text-[0.72vw] text-gray-500 font-medium">
                 Showing{" "}
@@ -3248,7 +3248,7 @@ export default function ServiceMaterialInwardResponse({
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="p-[0.3vw] rounded-[0.4vw] bg-white border border-gray-400 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
+                  className="p-[0.3vw] rounded-[0.4vw] bg-white border-r border-b border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
                   title="Previous Page"
                 >
                   <ChevronLeft className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />
@@ -3271,7 +3271,7 @@ export default function ServiceMaterialInwardResponse({
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages, p + 1))
                   }
-                  className="p-[0.3vw] rounded-[0.4vw] bg-white border border-gray-400 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
+                  className="p-[0.3vw] rounded-[0.4vw] bg-white border-r border-b border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
                   title="Next Page"
                 >
                   <ChevronRight className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />

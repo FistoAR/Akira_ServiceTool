@@ -62,7 +62,7 @@ const FINAL_STATUS_COLORS = {
   Pending: "bg-amber-100 text-amber-800 border-amber-300",
   Completed: "bg-emerald-100 text-emerald-800 border-emerald-300",
   Hold: "bg-rose-100 text-rose-800 border-rose-300",
-  "Not Repairable": "bg-slate-200 text-slate-800 border-gray-600",
+  "Not Repairable": "bg-slate-200 text-slate-800 border-slate-300",
   "Admin Returned": "bg-rose-100 text-rose-800 border-rose-300",
 };
 
@@ -72,7 +72,7 @@ const STATUS_CONFIG = {
   Open: {
     icon: AlertCircle,
     bg: "bg-slate-100",
-    border: "border-gray-600",
+    border: "border-slate-300",
     text: "text-slate-700",
   },
   Assigned: {
@@ -96,7 +96,7 @@ const STATUS_CONFIG = {
   Pending: {
     icon: Clock,
     bg: "bg-slate-100",
-    border: "border-gray-600",
+    border: "border-slate-300",
     text: "text-slate-700",
   },
   Completed: {
@@ -530,7 +530,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
           </button>
         </div>
 
-        <div className="p-[1.5vw] bg-gray-50 border-b border-gray-600">
+        <div className="p-[1.5vw] bg-gray-50 border-b border-slate-300">
           <form onSubmit={handleAdd} className="flex gap-[0.8vw] items-end">
             <div className="flex-1 space-y-[0.3vw]">
               <label className="text-[0.75vw] font-bold text-gray-700">
@@ -568,7 +568,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
           ) : (
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-100 border-b border-gray-600">
+                <tr className="bg-gray-100 border-b border-slate-300">
                   <th className="text-left py-[0.6vw] px-[0.8vw] text-[0.75vw] font-bold text-gray-700">
                     Name
                   </th>
@@ -581,7 +581,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                 {items.map((item) => (
                   <tr
                     key={item._id}
-                    className="border-b border-gray-600 hover:bg-gray-50"
+                    className="border-b border-slate-300 hover:bg-gray-50"
                   >
                     {editingId === item._id ? (
                       <>
@@ -998,7 +998,7 @@ const ReportsModal = ({ row, onClose }) => {
                               value={r.correctiveAction}
                             />
                             {r.partsReplacement && (
-                              <div className="bg-white border border-gray-600 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
+                              <div className="bg-white border border-slate-300 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
                                 <span className="text-[0.62vw] font-bold text-blue-500 uppercase block mb-[0.6vw]">
                                   Parts Replacement
                                 </span>
@@ -1010,7 +1010,7 @@ const ReportsModal = ({ row, onClose }) => {
                                     .map((part, i) => (
                                       <div
                                         key={i}
-                                        className="flex items-center gap-[0.6vw] text-[0.8vw] font-bold text-slate-800 bg-slate-50 border border-gray-600 px-[0.6vw] py-[0.4vw] rounded-[0.4vw]"
+                                        className="flex items-center gap-[0.6vw] text-[0.8vw] font-bold text-slate-800 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.4vw] rounded-[0.4vw]"
                                       >
                                         <div className="w-[0.4vw] h-[0.4vw] rounded-full bg-blue-500" />
                                         {part}
@@ -1029,14 +1029,14 @@ const ReportsModal = ({ row, onClose }) => {
                               </div>
                             )}
                             {r.image && (
-                              <div className="bg-white border border-gray-600 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
+                              <div className="bg-white border border-slate-300 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
                                 <span className="text-[0.62vw] font-bold text-blue-500 uppercase block mb-[0.6vw]">
                                   Technical Image
                                 </span>
                                 <img
                                   src={`${API_URL}${r.image}`}
                                   alt="Technical"
-                                  className="max-w-full h-auto rounded-[0.4vw] border border-gray-600 cursor-pointer hover:scale-[1.02] transition-transform"
+                                  className="max-w-full h-auto rounded-[0.4vw] border border-slate-300 cursor-pointer hover:scale-[1.02] transition-transform"
                                   onClick={() =>
                                     window.open(
                                       `${API_URL}${r.image}`,
@@ -1116,7 +1116,7 @@ const ReportsModal = ({ row, onClose }) => {
 };
 
 const DetailItem = ({ label, value }) => (
-  <div className="bg-slate-50 p-[0.6vw] rounded-[0.4vw] border border-gray-600 shadow-sm">
+  <div className="bg-slate-50 p-[0.6vw] rounded-[0.4vw] border border-slate-300 shadow-sm">
     <span className="text-[0.62vw] font-bold text-blue-500 uppercase block leading-none mb-[0.3vw]">
       {label}
     </span>
@@ -1127,7 +1127,7 @@ const DetailItem = ({ label, value }) => (
 );
 
 const DetailSection = ({ label, value }) => (
-  <div className="bg-white border border-gray-600 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
+  <div className="bg-white border border-slate-300 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
     <span className="text-[0.62vw] font-bold text-blue-500 uppercase block mb-[0.4vw]">
       {label}
     </span>
@@ -2167,7 +2167,7 @@ const AssignCell = ({
             className="absolute top-full left-0 mt-[0.3vw] bg-white border border-gray-400 shadow-xl rounded-[0.5vw] z-40 w-[20vw]"
           >
             {hasGroupCandidates && (
-              <div className="flex border-b border-gray-600">
+              <div className="flex border-b border-slate-300">
                 <button
                   type="button"
                   onClick={() => setTab("single")}
@@ -2204,7 +2204,7 @@ const AssignCell = ({
               </div>
             )}
 
-            <div className="p-[0.55vw] border-b border-gray-600">
+            <div className="p-[0.55vw] border-b border-slate-300">
               <div className="relative">
                 <Search className="absolute left-[0.5vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-black/50" />
                 <input
@@ -3034,7 +3034,7 @@ const AdminTableView = ({
   let animDelay = 0;
 
   return (
-    <div className="bg-white rounded-[0.6vw] shadow-sm border border-gray-600 flex flex-col">
+    <div className="bg-white rounded-[0.6vw] shadow-sm border border-slate-300 flex flex-col">
       <div className="overflow-auto max-h-[65vh] min-h-[65vh] w-full rounded-t-[0.6vw]">
         <table className="w-full text-left border-collapse">
           {/* ── THEAD ─────────────────────────────────────────────────────── */}
@@ -3165,12 +3165,12 @@ const AdminTableView = ({
                   <AnimatedTr
                     key={`cust-${customerName}`}
                     delay={custDelay}
-                    className="cursor-pointer select-none border-b border-gray-600 bg-white hover:bg-slate-50 transition-colors"
+                    className="cursor-pointer select-none border-b border-slate-300 bg-slate-50/70 hover:bg-slate-100/70 transition-colors"
                     onClick={() => toggleCustomer(customerName)}
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.9vw] py-[0.65vw] border-l-[4px] border-[#1a73e8] bg-white shadow-sm border-b border-gray-600 sticky top-[3.75vw] z-20"
+                      className="px-[0.9vw] py-[0.6vw] border-l-[4px] border-[#1a73e8] bg-slate-50/90 shadow-2xs border-b border-slate-300 sticky top-[3.75vw] z-20"
                     >
                       <div className="flex items-center gap-[0.7vw]">
                         {isCustomerCollapsed ? (
@@ -3179,7 +3179,7 @@ const AdminTableView = ({
                           <ChevronDown className="w-[1.1vw] h-[1.1vw] text-slate-500 flex-shrink-0" />
                         )}
 
-                        <span className="font-bold text-slate-800 text-[0.88vw] tracking-wide">
+                        <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
                           {customerName}
                         </span>
 
@@ -3206,7 +3206,7 @@ const AdminTableView = ({
 
                         {/* Category (Cus Type) */}
                         {rows[0]?.category && (
-                          <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-gray-600 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                          <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                             Type: {rows[0].category}
                           </span>
                         )}
@@ -3285,7 +3285,7 @@ const AdminTableView = ({
                           <AnimatedTr
                             key={`entry-hdr-${row.id}`}
                             delay={entryDelay}
-                            className={`border-t border-b border-gray-600 cursor-pointer select-none transition-colors duration-150 ${
+                            className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 ${
                               isSelected
                                 ? "bg-blue-50/60"
                                 : "bg-white hover:bg-slate-50"
@@ -3293,7 +3293,7 @@ const AdminTableView = ({
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className="p-[0.5vw] border-r border-gray-600 text-center align-middle"
+                                className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center align-middle"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -3307,7 +3307,7 @@ const AdminTableView = ({
                                     className={`w-[1.1vw] h-[1.1vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
                                       isSelected
                                         ? "bg-blue-600 border-blue-600 text-white"
-                                        : "border-gray-600 hover:border-gray-600 bg-white"
+                                        : "border-slate-300 hover:border-slate-300 bg-white"
                                     }`}
                                   >
                                     {isSelected && (
@@ -3322,7 +3322,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className="px-[0.5vw] py-[0.5vw] border-r border-gray-600 text-center text-[0.78vw] font-bold text-slate-600 align-middle"
+                              className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle"
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -3372,7 +3372,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onView(row)}
                                       title="View"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Eye className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
@@ -3383,7 +3383,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onView(row)}
                                       title="View (assigned)"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Eye className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
@@ -3392,7 +3392,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onEdit(row)}
                                       title="Edit"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-gray-600 hover:border-blue-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Edit3 className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
@@ -3403,7 +3403,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onDelete(row.id)}
                                       title="Delete"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-gray-600 hover:border-rose-400 rounded-[0.4vw] shadow-sm cursor-pointer transition-colors"
+                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Trash2 className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
@@ -3438,28 +3438,28 @@ const AdminTableView = ({
                                         : pi % 2 === 0
                                           ? "bg-white hover:bg-slate-50/80"
                                           : "bg-slate-50/40 hover:bg-slate-100/50"
-                                    } border-b border-gray-600`}
+                                    } border-b border-slate-300`}
                                   >
                                     {/* Checkbox placeholder */}
                                     {canDelete && !isSupervisor && (
                                       <td
-                                        className="border-r border-gray-600"
+                                        className="border-r border-slate-300"
                                         style={{ background: "transparent" }}
                                       />
                                     )}
 
                                     {/* S.No sub-number */}
-                                    <td className="border-r border-gray-600 text-center align-middle px-[0.3vw] py-[0.45vw]">
+                                    <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
                                       <span className="text-[0.72vw] font-semibold text-slate-400">
                                         {globalSn}.{pi + 1}
                                       </span>
                                     </td>
 
                                     {/* Product Description */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-gray-600 align-middle">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle">
                                       <div className="flex flex-col gap-[0.2vw]">
                                         <div
-                                          className="font-bold text-slate-800 text-[0.8vw] max-w-[15vw] break-words leading-snug"
+                                          className="font-normal text-slate-800 text-[0.78vw] max-w-[15vw] break-words leading-snug"
                                           title={prod.productDescription}
                                         >
                                           {prod.productDescription || "—"}
@@ -3468,7 +3468,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Product Code */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-gray-600 text-[0.8vw] text-slate-700 font-semibold align-middle text-center">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal align-middle text-center">
                                       {prod.productCode || (
                                         <span className="text-slate-400">
                                           —
@@ -3477,7 +3477,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Segment */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-gray-600 text-[0.8vw] text-blue-600 font-bold align-middle text-center uppercase">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal align-middle text-center">
                                       {prod.productSegment || (
                                         <span className="text-slate-400">
                                           —
@@ -3486,7 +3486,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Serial No */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 text-[0.8vw] text-slate-800 font-bold align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal font-mono align-middle text-center">
                                       {prod.serialNumber || (
                                         <span className="text-slate-400">
                                           —
@@ -3495,7 +3495,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Board Type */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 text-[0.8vw] text-slate-700 font-semibold align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal align-middle text-center">
                                       {prod.boardType || (
                                         <span className="text-slate-400">
                                           —
@@ -3504,12 +3504,12 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Exp. Delivery */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 text-[0.8vw] text-slate-700 font-semibold whitespace-nowrap align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal whitespace-nowrap align-middle text-center">
                                       {fmtDate(prod.expectedDeliveryDate)}
                                     </td>
 
                                     {/* Type badge */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <span
                                         className={`whitespace-nowrap text-[0.7vw] font-bold px-[0.6vw] py-[0.15vw] rounded-[0.3vw] border ${
                                           prod.type === "W"
@@ -3524,7 +3524,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Emp Report */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       {prod.report ? (
                                         <button
                                           type="button"
@@ -3541,7 +3541,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Emp Status */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <div className="flex flex-col items-center gap-[0.2vw]">
                                         <span
                                           className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-[0.3vw] border text-[0.7vw] font-semibold whitespace-nowrap ${employeeStatusCfg.bg} ${employeeStatusCfg.border} ${employeeStatusCfg.text}`}
@@ -3569,7 +3569,7 @@ const AdminTableView = ({
 
                                     {/* Final Status */}
                                     {activeFilter === "Review Required" && (
-                                      <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
+                                      <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                         <FinalStatusCell
                                           row={row}
                                           prod={prod}
@@ -3579,7 +3579,7 @@ const AdminTableView = ({
                                     )}
 
                                     {/* History */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-gray-600 align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <HistoryCellButton prod={prod} />
                                     </td>
 
@@ -3615,7 +3615,7 @@ const AdminTableView = ({
       </div>
 
       {/* ── PAGINATION ──────────────────────────────────────────────────── */}
-      <div className="border-t border-gray-600 px-[1.2vw] py-[0.85vw] bg-white flex justify-between items-center rounded-b-[0.6vw]">
+      <div className="border-t border-slate-300 px-[1.2vw] py-[0.85vw] bg-white flex justify-between items-center rounded-b-[0.6vw]">
         <div className="text-[0.78vw] font-medium text-slate-600">
           Showing{" "}
           <strong className="text-slate-800">
@@ -3637,7 +3637,7 @@ const AdminTableView = ({
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="w-[2vw] h-[2vw] flex items-center justify-center border border-gray-600 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-30 bg-white cursor-pointer transition-colors"
+            className="w-[2vw] h-[2vw] flex items-center justify-center border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-30 bg-white cursor-pointer transition-colors"
           >
             <ChevronLeft className="w-[1vw] h-[1vw] text-slate-600 font-bold" />
           </button>
@@ -3655,7 +3655,7 @@ const AdminTableView = ({
                   className={`w-[2vw] h-[2vw] flex items-center justify-center rounded-[0.4vw] text-[0.78vw] font-bold cursor-pointer transition-colors ${
                     currentPage === pNum
                       ? "bg-[#1a73e8] text-white border border-[#1a73e8]"
-                      : "bg-white border border-gray-600 text-slate-700 hover:bg-slate-50"
+                      : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-50"
                   }`}
                 >
                   {pNum}
@@ -3668,7 +3668,7 @@ const AdminTableView = ({
             type="button"
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages || totalPages === 0}
-            className="w-[2vw] h-[2vw] flex items-center justify-center border border-gray-600 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-30 bg-white cursor-pointer transition-colors"
+            className="w-[2vw] h-[2vw] flex items-center justify-center border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-30 bg-white cursor-pointer transition-colors"
           >
             <ChevronRight className="w-[1vw] h-[1vw] text-slate-600 font-bold" />
           </button>
@@ -4241,7 +4241,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setIsBoardTypeMasterOpen(true)}
-                      className="cursor-pointer flex items-center gap-[0.5vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-gray-600 hover:border-blue-400 font-bold px-[1vw] h-[2.4vw] rounded-[0.4vw] transition-all shadow-sm"
+                      className="cursor-pointer flex items-center gap-[0.5vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-400 font-bold px-[1vw] h-[2.4vw] rounded-[0.4vw] transition-all shadow-sm"
                     >
                       <Wrench className="w-[1vw] h-[1vw] text-slate-500" />{" "}
                       Board Types Master
@@ -4260,7 +4260,7 @@ export default function App() {
             </div>
 
             {/* Modern Sleek Segment Tab Bar */}
-            <div className="flex bg-slate-100 p-[0.25vw] rounded-[0.5vw] border border-slate-200 mb-[0.9vw] w-fit max-w-full gap-[0.25vw]">
+            <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] mb-[0.9vw] max-w-full overflow-x-auto">
               {STATUS_CHIPS.map(({ label }) => {
                 const isActive = activeFilter === label;
                 return (

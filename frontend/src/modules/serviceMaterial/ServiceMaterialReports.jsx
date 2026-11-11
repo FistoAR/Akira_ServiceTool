@@ -66,7 +66,7 @@ const fmtDate = (d) => {
 const Badge = ({ label, color = "gray", size = "sm" }) => {
   const colorMap = {
     green: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    blue: "bg-blue-50 text-blue-700 border-blue-200",
+    blue: "bg-blue-50 text-blue-700 border-slate-300",
     slate: "bg-slate-100 text-slate-600 border-slate-400",
     gray: "bg-gray-100 text-gray-600 border-slate-400",
     black: "bg-gray-900 text-white border-gray-900",
@@ -94,7 +94,7 @@ const STATUS_CONFIG = {
     color: "gray",
     icon: AlertCircle,
     bg: "bg-gray-100",
-    border: "border-gray-400",
+    border: "border-slate-300",
     text: "text-gray-700",
   },
   "Under Testing": {
@@ -139,11 +139,11 @@ const RefInput = ({ label, value, icon: Icon, span = 1 }) => (
   <div
     className={`flex flex-col gap-[0.25vw] ${span === 2 ? "col-span-2" : span === 3 ? "col-span-3" : span === 4 ? "col-span-4" : ""}`}
   >
-    <label className="text-[0.75vw] font-semibold text-black flex items-start gap-[0.25vw] text-black">
+    <label className="text-[0.75vw] font-normal text-slate-800 flex items-start gap-[0.25vw] text-black">
       {/* {Icon && <Icon className="w-[0.8vw] h-[0.8vw]" />} */}
       {label}
     </label>
-    <div className="bg-white border border-gray-400 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden">
+    <div className="bg-white border border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden">
       {value || "—"}
     </div>
   </div>
@@ -220,7 +220,7 @@ const StatsBar = ({
             onChange={(e) => {
               setItemsPerPage(Number(e.target.value));
             }}
-            className="bg-white border border-gray-400 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-semibold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
+            className="bg-white border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-semibold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
           >
             {[10, 20, 50, 100].map((v) => (
               <option key={v} value={v}>
@@ -229,7 +229,7 @@ const StatsBar = ({
             ))}
           </select>
         </div>
-        <div className="text-[0.72vw] text-blue-700 font-semibold bg-blue-50 border border-blue-200 px-[0.8vw] py-[0.38vw] rounded-full shadow-sm">
+        <div className="text-[0.72vw] text-blue-700 font-semibold bg-blue-50 border border-slate-300 px-[0.8vw] py-[0.38vw] rounded-full shadow-sm">
           Total Claimed: {totalClaimed}
         </div>
       </div>
@@ -242,7 +242,7 @@ const EmptyState = () => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
     animate={{ opacity: 1, scale: 1 }}
-    className="flex flex-col items-center justify-center py-[6vw] bg-white rounded-[0.6vw] border border-gray-400"
+    className="flex flex-col items-center justify-center py-[6vw] bg-white rounded-[0.6vw] border border-slate-300"
   >
     <div className="w-[4vw] h-[4vw] rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-[1vw]">
       <Package className="w-[2vw] h-[2vw] text-gray-800" />
@@ -274,12 +274,12 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[55vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-gray-400"
+        className="bg-white w-[55vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-slate-300"
       >
         <div className="bg-gray-100 px-[1.5vw] py-[1vw] flex justify-between items-center">
           <div className="flex items-center gap-[0.8vw]">
             <Info className="w-[1.2vw] h-[1.2vw] text-gray-700" />
-            <h3 className="text-[1.1vw] font-semibold text-gray-800  tracking-tight">
+            <h3 className="text-[1.1vw] font-normal text-slate-700  tracking-tight">
               Service Record Details
             </h3>
           </div>
@@ -357,7 +357,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
 
           {product.report && (
             <div className="space-y-[1vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-400">
-              <h4 className="text-[0.85vw] font-semibold text-gray-800 border-b border-slate-400 pb-[0.3vw]">
+              <h4 className="text-[0.85vw] font-normal text-slate-700 border-b border-slate-400 pb-[0.3vw]">
                 Technical Report
               </h4>
               <div className="grid grid-cols-2 gap-[1vw]">
@@ -397,7 +397,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                   value={product.report.disposition}
                 />
                 <div className="col-span-2">
-                  <label className="text-[0.75vw] font-semibold text-black mb-[0.25vw] block">
+                  <label className="text-[0.75vw] font-normal text-slate-800 mb-[0.25vw] block">
                     Technical Image
                   </label>
                   {product.report.image ? (
@@ -410,7 +410,7 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                             : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                         }
                         alt="Report"
-                        className="max-w-[15vw] rounded-[0.4vw] border border-gray-400 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                        className="max-w-[15vw] rounded-[0.4vw] border border-slate-300 shadow-sm cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => {
                           const url =
                             product.report.image.startsWith("data:") ||
@@ -1542,7 +1542,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
       {/* Content */}
       {initialLoading ? (
-        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col h-fit max-h-[72vh]">
+        <div className="bg-white rounded-[0.8vw] border border-slate-300 overflow-hidden shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] flex flex-col h-fit max-h-[72vh]">
           <div className="overflow-auto flex-1">
             <table className="w-full min-w-max border-separate border-spacing-0">
               <thead className="sticky top-0 z-20 shadow-sm">
@@ -1550,7 +1550,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-semibold text-black whitespace-nowrap border-b border-r border-blue-200 last:border-r-0`}
+                      className={`${col.width} ${col.align} px-[0.7vw] py-[0.7vw] text-[0.74vw] font-bold text-slate-700 uppercase tracking-wider whitespace-nowrap border-r border-slate-300 bg-[#E9EDF7] last:border-r-0`}
                     >
                       {col.label}
                     </th>
@@ -1575,7 +1575,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       ) : myItems.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="bg-white rounded-[0.6vw] border border-gray-400 overflow-hidden shadow-sm flex flex-col h-fit max-h-[65vh] min-h-[65vh]">
+        <div className="bg-white rounded-[0.6vw] border border-slate-300 overflow-hidden shadow-sm flex flex-col h-fit max-h-[65vh] min-h-[65vh]">
           {/* Table Container with Internal Scroll */}
           <div className="overflow-auto flex-1 ">
             <table className="w-full min-w-max border-separate border-spacing-0">
@@ -1585,7 +1585,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-semibold text-black whitespace-nowrap border-b border-r border-blue-200 last:border-r-0`}
+                      className={`${col.width} ${col.align} px-[0.8vw] py-[0.8vw] text-[0.82vw] font-normal text-slate-800 whitespace-nowrap border-b border-r border-slate-300 last:border-r-0`}
                     >
                       {col.label}
                     </th>
@@ -1666,7 +1666,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                                 {/* Ref No (Internal) */}
                                 {entry.refNoInternal && (
-                                  <span className="text-[0.7vw] font-bold bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                                  <span className="text-[0.7vw] font-bold bg-blue-50 text-blue-600 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                                     Int Ref: {entry.refNoInternal}
                                   </span>
                                 )}
@@ -1755,14 +1755,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           className={`transition-all duration-150 ${isHovered ? "bg-blue-50/30" : "bg-white"}`}
                         >
                           {/* S.No */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-slate-300 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                             <span className="inline-flex items-center justify-center w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 text-[0.68vw] font-semibold text-gray-600">
                               {(currentPage - 1) * itemsPerPage + idx + 1}
                             </span>
                           </td>
 
                           {/* Date */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             <div className="flex items-center gap-[0.3vw]">
                               <span className="text-[0.75vw] text-gray-700 font-medium whitespace-nowrap">
                                 {entry.date ? fmtDate(entry.date) : "—"}
@@ -1771,17 +1771,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Ref No */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
-                            <span className="text-[0.75vw] font-semibold text-gray-800 whitespace-nowrap">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
+                            <span className="text-[0.75vw] font-normal text-slate-700 whitespace-nowrap">
                               {entry.refNoCustomer || entry.refNo || "—"}
                             </span>
                           </td>
 
                           {/* Product */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             <div className="min-w-[10vw]">
                               <div
-                                className="text-[0.75vw] font-semibold text-gray-800 break-words whitespace-normal"
+                                className="text-[0.75vw] font-normal text-slate-700 break-words whitespace-normal"
                                 title={product.productDescription}
                               >
                                 {product.productDescription}
@@ -1793,21 +1793,21 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Board Type */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             <span className="text-[0.75vw] font-semibold text-gray-700 whitespace-nowrap">
                               {product.boardType || "—"}
                             </span>
                           </td>
 
                           {/* Serial No */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             <span className="text-[0.75vw] font-semibold text-gray-700 whitespace-nowrap">
                               {product.serialNumber || "—"}
                             </span>
                           </td>
 
                           {/* Assigned Employee */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             <div className="flex flex-col">
                               <span className="text-[0.75vw] font-bold text-gray-800 whitespace-nowrap">
                                 {product.assignedToName || "—"}
@@ -1825,12 +1825,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Tested By */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <select
                                 value={draft.testedBy}
                                 onChange={(e) => hc("testedBy", e.target.value)}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {employees
@@ -1849,14 +1849,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* 4M Category */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <select
                                 value={draft.fourMCategory}
                                 onChange={(e) =>
                                   hc("fourMCategory", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {fourMCategories?.map((opt) => (
@@ -1876,7 +1876,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Error Code */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <input
                                 type="text"
@@ -1885,7 +1885,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
                                 placeholder="Code..."
                               />
                             ) : (
@@ -1896,7 +1896,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Problem Description */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <input
                                 type="text"
@@ -1905,7 +1905,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw]"
                                 placeholder="Problem..."
                               />
                             ) : (
@@ -1916,14 +1916,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Designators */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <select
                                 value={draft.designators}
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {employees
@@ -1942,7 +1942,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Root Cause */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <textarea
                                 value={draft.rootCause}
@@ -1950,7 +1950,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
@@ -1961,7 +1961,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Parts Replaced */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <textarea
                                 value={draft.partsReplacement}
@@ -1969,7 +1969,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Parts..."
                               />
                             ) : (
@@ -1980,7 +1980,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Corrective Action */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <textarea
                                 value={draft.correctiveAction}
@@ -1988,7 +1988,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Action..."
                               />
                             ) : (
@@ -1999,14 +1999,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Disposition */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <select
                                 value={draft.disposition}
                                 onChange={(e) =>
                                   hc("disposition", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               >
                                 <option value="">Select</option>
                                 {DISPOSITION_OPTIONS.map((opt) => (
@@ -2023,7 +2023,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Completion Date */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <input
                                 type="date"
@@ -2031,7 +2031,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 onChange={(e) =>
                                   hc("completedDate", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                               />
                             ) : (
                               <span className="text-[0.75vw] whitespace-nowrap">
@@ -2043,7 +2043,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Remarks */}
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300">
                             {draft ? (
                               <input
                                 type="text"
@@ -2051,7 +2051,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border border-gray-400 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] border border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
                                 placeholder="Remark..."
                               />
                             ) : (
@@ -2061,7 +2061,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             )}
                           </td>
 
-                          <td className="px-[0.8vw] py-[0.7vw] border border-gray-400 text-center min-w-[8vw]">
+                          <td className="px-[0.8vw] py-[0.7vw] border border-slate-300 text-center min-w-[8vw]">
                             {draft ? (
                               <div className="flex items-center justify-center gap-[0.5vw]">
                                 <input
@@ -2075,7 +2075,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 />
                                 <label
                                   htmlFor={`file-${product._pid}`}
-                                  className="flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] bg-blue-50 border border-blue-200 text-blue-600 rounded-[0.4vw] cursor-pointer hover:bg-blue-600 hover:text-white transition-all shadow-sm text-[0.7vw] font-semibold"
+                                  className="flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] bg-blue-50 border border-slate-300 text-blue-600 rounded-[0.4vw] cursor-pointer hover:bg-blue-600 hover:text-white transition-all shadow-sm text-[0.7vw] font-semibold"
                                   title="Upload Image"
                                 >
                                   <Upload className="w-[0.8vw] h-[0.8vw]" />
@@ -2143,7 +2143,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Info */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-slate-300">
                             <button
                               onClick={() =>
                                 setInfoSelected({ entry, product })
@@ -2156,7 +2156,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* History */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400">
+                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-slate-300">
                             <button
                               onClick={() =>
                                 setHistorySelected({ entry, product })
@@ -2169,7 +2169,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </td>
 
                           {/* Status */}
-                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-gray-400 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                          <td className="px-[0.8vw] py-[0.7vw] text-center border border-slate-300 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                             <span
                               className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-full border text-[0.68vw] font-semibold whitespace-nowrap ${statusCfg.bg} ${statusCfg.border} ${statusCfg.text}`}
                             >
@@ -2199,11 +2199,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
               </span>
 
               {/* Pagination Controls */}
-              <div className="flex items-center gap-[0.6vw] border-l border-gray-400 pl-[1.5vw]">
+              <div className="flex items-center gap-[0.6vw] border-l border-slate-300 pl-[1.5vw]">
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="p-[0.3vw] rounded-[0.4vw] bg-white border border-gray-400 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
+                  className="p-[0.3vw] rounded-[0.4vw] bg-white border border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
                   title="Previous Page"
                 >
                   <ChevronLeft className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />
@@ -2226,7 +2226,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages, p + 1))
                   }
-                  className="p-[0.3vw] rounded-[0.4vw] bg-white border border-gray-400 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
+                  className="p-[0.3vw] rounded-[0.4vw] bg-white border border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
                   title="Next Page"
                 >
                   <ChevronRight className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />

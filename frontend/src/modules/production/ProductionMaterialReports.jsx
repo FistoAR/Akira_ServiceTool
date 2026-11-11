@@ -52,8 +52,8 @@ const diffDays = (a, b) => {
 
 // ── NEW DATE FILTER COMPONENT ───────────────────────────────
 const DateRangeFilter = ({ from, setFrom, to, setTo }) => (
-  <div className="flex items-center gap-[0.4vw] bg-white p-[0.1vw] rounded-[0.5vw] border border-slate-400 shadow-sm">
-    <div className="flex items-center gap-[0.3vw] px-[0.6vw] border-r border-slate-400">
+  <div className="flex items-center gap-[0.4vw] bg-white p-[0.1vw] rounded-[0.5vw] border border-slate-300 shadow-sm">
+    <div className="flex items-center gap-[0.3vw] px-[0.6vw] border-r border-slate-300">
       <Calendar className="w-[0.8vw] h-[0.8vw] text-black/40" />
       <input type="date" value={from} onChange={(e) => setFrom(e.target.value)}
         className="text-[0.72vw] font-semibold outline-none bg-transparent h-[1.8vw] w-[6.5vw] cursor-pointer text-black" />
@@ -137,10 +137,10 @@ const TABS = [
 ];
 
 const TAB_COLORS = {
-  blue: { active: "bg-blue-700 text-white border-blue-700 shadow-md", inactive: "bg-white text-black border-slate-400 hover:bg-blue-50 hover:border-blue-400" },
-  green: { active: "bg-emerald-700 text-white border-emerald-700 shadow-md", inactive: "bg-white text-black border-slate-400 hover:bg-emerald-50 hover:border-emerald-400" },
-  amber: { active: "bg-amber-600 text-white border-amber-600 shadow-md", inactive: "bg-white text-black border-slate-400 hover:bg-amber-50 hover:border-amber-400" },
-  teal: { active: "bg-teal-700 text-white border-teal-700 shadow-md", inactive: "bg-white text-black border-slate-400 hover:bg-teal-50 hover:border-teal-400" },
+  blue: { active: "bg-blue-700 text-white border-blue-700 shadow-md", inactive: "bg-white text-black border-slate-300 hover:bg-blue-50 hover:border-blue-400" },
+  green: { active: "bg-emerald-700 text-white border-emerald-700 shadow-md", inactive: "bg-white text-black border-slate-300 hover:bg-emerald-50 hover:border-emerald-400" },
+  amber: { active: "bg-amber-600 text-white border-amber-600 shadow-md", inactive: "bg-white text-black border-slate-300 hover:bg-amber-50 hover:border-amber-400" },
+  teal: { active: "bg-teal-700 text-white border-teal-700 shadow-md", inactive: "bg-white text-black border-slate-300 hover:bg-teal-50 hover:border-teal-400" },
 };
 
 const StatusBadge = ({ status }) => {
@@ -157,12 +157,12 @@ const StatusBadge = ({ status }) => {
 };
 
 const Th = ({ children, cls = "" }) => (
-  <th className={`px-[0.8vw] py-[0.7vw] text-[0.85vw] text-black font-semibold whitespace-nowrap border-b-2 border-r border-slate-400 last:border-r-0 bg-blue-50/50 ${cls}`}>
+  <th className={`px-[0.7vw] py-[0.7vw] text-[0.74vw] text-slate-700 font-bold uppercase tracking-wider whitespace-nowrap border-b border-r border-slate-300 last:border-r-0 bg-[#E9EDF7] ${cls}`}>
     {children}
   </th>
 );
 const Td = ({ children, cls = "" }) => (
-  <td className={`px-[1vw] py-[1vw] text-[0.8vw] text-black border-r border-b border-slate-400 last:border-r-0 align-middle ${cls}`}>
+  <td className={`px-[0.7vw] py-[0.65vw] text-[0.78vw] text-slate-700 font-normal border-r border-b border-slate-300 last:border-r-0 align-middle ${cls}`}>
     {children}
   </td>
 );
@@ -210,7 +210,7 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between mt-3 md:mt-[1vw] gap-3 px-1 bg-slate-50/50 p-2 rounded-lg border border-slate-400">
+    <div className="flex flex-col sm:flex-row items-center justify-between mt-3 md:mt-[1vw] gap-3 px-1 bg-slate-50/50 p-2 rounded-lg border border-slate-300">
       <div className="text-[12px] md:text-[0.7vw] text-slate-500 font-medium">
         Showing <span className="font-bold text-slate-700">{totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-bold text-slate-700">{Math.min(currentPage * itemsPerPage, totalItems)}</span> of <span className="font-bold text-slate-700">{totalItems}</span> records
       </div>
@@ -220,19 +220,19 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
           <button
             onClick={() => onPageChange(1)}
             disabled={currentPage === 1}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-400 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
           >
             <ChevronsLeft className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
           </button>
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-400 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
           >
             <ChevronLeft className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
           </button>
 
-          <div className="flex items-center mx-1 bg-white p-1 md:p-[0.15vw] rounded-lg md:rounded-[0.5vw] border border-slate-400 shadow-sm">
+          <div className="flex items-center mx-1 bg-white p-1 md:p-[0.15vw] rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm">
             {pages.map((page, i) => (
               page === "..." ? (
                 <span key={`dots-${i}`} className="px-1.5 text-slate-400 text-[11px] md:text-[0.65vw]">...</span>
@@ -252,14 +252,14 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-400 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
           >
             <ChevronRight className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
           </button>
           <button
             onClick={() => onPageChange(totalPages)}
             disabled={currentPage === totalPages}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-400 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
           >
             <ChevronsRight className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
           </button>
@@ -321,7 +321,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search reports..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-blue-400 transition-all text-black font-medium"
+              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-blue-400 transition-all text-black font-medium"
             />
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
@@ -369,7 +369,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-400 shadow-sm relative">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead className="sticky top-0 z-20 bg-blue-50">
             <tr>
@@ -495,7 +495,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search analytics..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-emerald-400 transition-all text-black font-medium"
+              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-emerald-400 transition-all text-black font-medium"
             />
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
@@ -537,7 +537,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-400 shadow-sm relative">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead className="sticky top-0 z-20 bg-emerald-50">
             <tr>
@@ -648,7 +648,7 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search RCA details..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-amber-400 transition-all text-black"
+              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-amber-400 transition-all text-black"
             />
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
@@ -685,7 +685,7 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-400 shadow-sm relative">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead className="sticky top-0 z-20 bg-amber-50">
             <tr>
@@ -785,7 +785,7 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search CAE..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-teal-400 transition-all text-black"
+              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-teal-400 transition-all text-black"
             />
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
@@ -818,7 +818,7 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-400 shadow-sm relative">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead className="sticky top-0 z-20 bg-teal-50">
             <tr>
@@ -892,7 +892,7 @@ export default function ProductionMaterialReports() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-[1.2vw] rounded-[1vw] border border-slate-400">
+      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-[1.2vw] rounded-[1vw] border border-slate-300">
         <div className="w-[3vw] h-[3vw] border-[0.3vw] border-black/10 border-t-blue-600 rounded-full animate-spin mb-[1vw]" />
         <span className="text-[1vw] font-bold text-slate-800">Fetching records...</span>
       </div>
@@ -902,7 +902,7 @@ export default function ProductionMaterialReports() {
   return (
     <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[14px] md:text-[0.85vw] bg-blue-50/30 p-2 md:p-[0.6vw] rounded-xl md:rounded-[1vw] overflow-hidden">
       {/* Header Panel */}
-      <div className="flex-shrink-0 bg-white border border-slate-400 rounded-xl md:rounded-[0.8vw] shadow-sm mb-3 md:mb-[0.8vw] overflow-hidden">
+      <div className="flex-shrink-0 bg-white border border-slate-300 rounded-xl md:rounded-[0.8vw] shadow-sm mb-3 md:mb-[0.8vw] overflow-hidden">
         <div className="bg-[#1e40af] px-4 md:px-[1.5vw] py-3 md:py-[1vw] flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-[0.8vw] relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-transparent pointer-events-none" />
           <div className="bg-white/15 p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.6vw] z-10 shadow-inner">
@@ -915,7 +915,7 @@ export default function ProductionMaterialReports() {
         </div>
 
         {/* Tab Buttons */}
-        <div className="px-4 md:px-[1.2vw] py-2 md:py-[0.6vw] flex items-center gap-2 md:gap-[0.6vw] flex-wrap bg-blue-50/20 border-t border-slate-400">
+        <div className="px-4 md:px-[1.2vw] py-2 md:py-[0.6vw] flex items-center gap-2 md:gap-[0.6vw] flex-wrap bg-blue-50/20 border-t border-slate-300">
           {TABS.map(t => (
             <button
               key={t.id}
@@ -930,7 +930,7 @@ export default function ProductionMaterialReports() {
       </div>
 
       {/* Main Tab Content */}
-      <div className="flex-1 bg-white border border-slate-400 rounded-xl md:rounded-[0.8vw] shadow-sm p-3 md:p-[1vw] overflow-hidden">
+      <div className="flex-1 bg-white border border-slate-300 rounded-xl md:rounded-[0.8vw] shadow-sm p-3 md:p-[1vw] overflow-hidden">
         {activeTab === "technical" && (
           <TechnicalReport 
             entries={entries} 
