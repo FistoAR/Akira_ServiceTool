@@ -14,7 +14,7 @@ import AkiraLogo from "../assets/Akira_logo.webp";
 export const SidebarContext = createContext();
 
 export function SidebarProvider({ children }) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(() => (typeof window !== "undefined" ? window.innerWidth < 1200 : true));
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   // Sync state if user exits or enters fullscreen via Esc or browser shortcut (e.g. F11)
@@ -305,7 +305,7 @@ export default function Sidebar() {
         flex flex-col bg-white relative
         transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         border-r border-slate-300 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.08)]
-        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[16vw] max-w-[16vw]"}
+        ${isCollapsed ? "w-[60px] min-w-[60px] lg:w-[4vw] lg:min-w-[4vw] lg:max-w-[4vw]" : "w-[240px] min-w-[240px] lg:w-[16vw] lg:min-w-[16vw] lg:max-w-[16vw]"}
       `}
       style={{ height: "100vh" }}
     >

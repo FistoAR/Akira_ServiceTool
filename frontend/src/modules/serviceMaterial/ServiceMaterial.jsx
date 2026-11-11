@@ -3181,7 +3181,7 @@ const AdminTableView = ({
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.9vw] py-[0.55vw] h-[2.5vw] border-l-[4px] border-[#1a73e8] bg-slate-50 shadow-xs border-b border-slate-300 sticky top-[3.6vw] z-30"
+                      className="px-[0.9vw] py-[0.55vw] h-[2.5vw] border-l-[4px] border-[#1a73e8] bg-slate-50 shadow-xs border-b border-slate-300"
                     >
                       <div className="flex items-center gap-[0.7vw]">
                         {isCustomerCollapsed ? (
@@ -3304,7 +3304,7 @@ const AdminTableView = ({
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center align-middle sticky top-[6.1vw] z-20 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
+                                className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -3333,7 +3333,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle sticky top-[6.1vw] z-20 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
+                              className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -3342,7 +3342,7 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className={`px-[0.8vw] py-[0.45vw] h-[2.4vw] align-middle border-b border-slate-300 sticky top-[6.1vw] z-20 shadow-xs ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
+                              className={`px-[0.8vw] py-[0.45vw] h-[2.4vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               <div className="flex items-center gap-[0.75vw] flex-wrap">
