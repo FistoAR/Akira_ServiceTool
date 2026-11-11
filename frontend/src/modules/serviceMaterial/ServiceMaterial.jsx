@@ -1768,6 +1768,7 @@ const AnimatedTr = ({ delay = 0, className = "", children, ...rest }) => (
     style={{
       animation: `smReveal 0.22s ease-out both`,
       animationDelay: `${delay}ms`,
+      ...rest.style,
     }}
   >
     {children}
@@ -1775,6 +1776,7 @@ const AnimatedTr = ({ delay = 0, className = "", children, ...rest }) => (
 );
 
 // Inject keyframe once (idempotent)
+// Note: Use opacity-only to prevent CSS transform from creating stacking context that breaks sticky z-index
 if (
   typeof document !== "undefined" &&
   !document.getElementById("sm-keyframes")
@@ -1783,12 +1785,12 @@ if (
   style.id = "sm-keyframes";
   style.textContent = `
     @keyframes smReveal {
-      from { opacity: 0; transform: translateY(-5px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
     @keyframes smSlideIn {
-      from { opacity: 0; transform: translateX(-8px); }
-      to   { opacity: 1; transform: translateX(0); }
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
   `;
   document.head.appendChild(style);
@@ -1995,7 +1997,7 @@ const AdminTableView = ({
                             ? "6.5vw"
                             : "8vw",
                   }}
-                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.5vw] z-99 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
@@ -2036,12 +2038,12 @@ const AdminTableView = ({
                   <AnimatedTr
                     key={`cust-${customerName}`}
                     delay={custDelay}
-                    className="cursor-pointer select-none border-b border-slate-300 bg-slate-50/70 hover:bg-slate-100/70 transition-colors"
+                    className="cursor-pointer select-none border-b border-slate-300 bg-slate-100 hover:bg-slate-200 transition-colors"
                     onClick={() => toggleCustomer(customerName)}
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.9vw] py-[0.55vw] h-[2.5vw] border-l-[4px] border-[#1a73e8] bg-slate-50 shadow-xs border-b border-slate-300 sticky top-[3.6vw] z-30"
+                      className="px-[0.9vw] py-[0.55vw] h-[2.5vw] border-l-[4px] border-[#1a73e8] bg-slate-100 border-b border-slate-300 sticky top-[3.6vw] z-20 shadow-xs"
                     >
                       <div className="flex items-center gap-[0.7vw]">
                         {isCustomerCollapsed ? (
@@ -2158,13 +2160,13 @@ const AdminTableView = ({
                             delay={entryDelay}
                             className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 ${
                               isSelected
-                                ? "bg-blue-50/60"
+                                ? "bg-blue-50"
                                 : "bg-white hover:bg-slate-50"
                             }`}
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center align-middle sticky top-[6.1vw] z-20 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
+                                className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center align-middle sticky top-[6.1vw] z-10 shadow-xs ${isSelected ? "bg-blue-50" : "bg-white"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -2193,7 +2195,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle sticky top-[6.1vw] z-20 ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
+                              className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle sticky top-[6.1vw] z-10 shadow-xs ${isSelected ? "bg-blue-50" : "bg-white"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -2202,7 +2204,7 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className={`px-[0.8vw] py-[0.45vw] h-[2.4vw] align-middle border-b border-slate-300 sticky top-[6.1vw] z-20 shadow-xs ${isSelected ? "bg-[#f0f6ff]" : "bg-white"}`}
+                              className={`px-[0.8vw] py-[0.45vw] h-[2.4vw] align-middle border-b border-slate-300 sticky top-[6.1vw] z-10 shadow-xs ${isSelected ? "bg-blue-50" : "bg-white"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               <div className="flex items-center gap-[0.75vw] flex-wrap">

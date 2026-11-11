@@ -400,8 +400,6 @@ const ServiceMaterialForm = ({
   const [isDirty, setIsDirty] = useState(false);
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   const [showAddRowsModal, setShowAddRowsModal] = useState(false);
-  const [showRefCustDrop, setShowRefCustDrop] = useState(false);
-  const [showRefIntDrop, setShowRefIntDrop] = useState(false);
 
   // New Customer Modal State (like ServiceCallForm)
   const [showAddCustModal, setShowAddCustModal] = useState(false);
@@ -422,12 +420,8 @@ const ServiceMaterialForm = ({
   });
 
   const custRef = useRef(null);
-  const refCustRef = useRef(null);
-  const refIntRef = useRef(null);
 
   const [custActiveIndex, setCustActiveIndex] = useState(-1);
-  const [refCustActiveIndex, setRefCustActiveIndex] = useState(-1);
-  const [refIntActiveIndex, setRefIntActiveIndex] = useState(-1);
 
   const customerRefsList = useMemo(
     () =>
@@ -460,10 +454,6 @@ const ServiceMaterialForm = ({
     const handler = (e) => {
       if (custRef.current && !custRef.current.contains(e.target))
         setShowCustDrop(false);
-      if (refCustRef.current && !refCustRef.current.contains(e.target))
-        setShowRefCustDrop(false);
-      if (refIntRef.current && !refIntRef.current.contains(e.target))
-        setShowRefIntDrop(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -528,18 +518,6 @@ const ServiceMaterialForm = ({
     });
   }, [uniqueCustomers, custSearch, base.category]);
 
-  const filteredRefCust = useMemo(() => {
-    return customerRefsList.filter((r) =>
-      r.toLowerCase().includes((base.refNoCustomer || "").toLowerCase()),
-    );
-  }, [customerRefsList, base.refNoCustomer]);
-
-  const filteredRefInt = useMemo(() => {
-    return internalRefsList.filter((r) =>
-      r.toLowerCase().includes((base.refNoInternal || "").toLowerCase()),
-    );
-  }, [internalRefsList, base.refNoInternal]);
-
   const handleCustKeyDown = (e) => {
     if (!showCustDrop) return;
     if (e.key === "ArrowDown") {
@@ -560,79 +538,6 @@ const ServiceMaterialForm = ({
       setCustActiveIndex(-1);
     }
   };
-
-  const handleRefCustKeyDown = (e) => {
-    if (!showRefCustDrop) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setRefCustActiveIndex((prev) =>
-        prev < filteredRefCust.length - 1 ? prev + 1 : prev,
-      );
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setRefCustActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (
-        refCustActiveIndex >= 0 &&
-        refCustActiveIndex < filteredRefCust.length
-      ) {
-        sb("refNoCustomer", filteredRefCust[refCustActiveIndex]);
-        setShowRefCustDrop(false);
-        setRefCustActiveIndex(-1);
-      }
-    } else if (e.key === "Escape") {
-      setShowRefCustDrop(false);
-      setRefCustActiveIndex(-1);
-    }
-  };
-
-  const handleRefIntKeyDown = (e) => {
-    if (!showRefIntDrop) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setRefIntActiveIndex((prev) =>
-        prev < filteredRefInt.length - 1 ? prev + 1 : prev,
-      );
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setRefIntActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (refIntActiveIndex >= 0 && refIntActiveIndex < filteredRefInt.length) {
-        sb("refNoInternal", filteredRefInt[refIntActiveIndex]);
-        setShowRefIntDrop(false);
-        setRefIntActiveIndex(-1);
-      }
-    } else if (e.key === "Escape") {
-      setShowRefIntDrop(false);
-      setRefIntActiveIndex(-1);
-    }
-  };
-
-  useEffect(() => {
-    if (showCustDrop && custActiveIndex >= 0) {
-      const container = document.querySelector(".cust-drop-container");
-      const activeItem = container?.children[custActiveIndex];
-      if (activeItem) activeItem.scrollIntoView({ block: "nearest" });
-    }
-  }, [custActiveIndex, showCustDrop]);
-
-  useEffect(() => {
-    if (showRefCustDrop && refCustActiveIndex >= 0) {
-      const container = document.querySelector(".ref-cust-drop-container");
-      const activeItem = container?.children[refCustActiveIndex];
-      if (activeItem) activeItem.scrollIntoView({ block: "nearest" });
-    }
-  }, [refCustActiveIndex, showRefCustDrop]);
-
-  useEffect(() => {
-    if (showRefIntDrop && refIntActiveIndex >= 0) {
-      const container = document.querySelector(".ref-int-drop-container");
-      const activeItem = container?.children[refIntActiveIndex];
-      if (activeItem) activeItem.scrollIntoView({ block: "nearest" });
-    }
-  }, [refIntActiveIndex, showRefIntDrop]);
 
   const selectCustomer = (c) => {
     if (isReadOnly) return;
@@ -939,7 +844,7 @@ const ServiceMaterialForm = ({
             <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
             <span>Back</span>
           </button>
-          <h2 className="text-[1.05vw] font-bold text-slate-800">
+          <h2 className="text-[1.05vw] font-semibold text-slate-800">
             {isReadOnly
               ? initialData.products?.some((p) => p.expectedDeliveryDate === "")
                 ? "Update Inward Entry"
@@ -963,13 +868,7 @@ const ServiceMaterialForm = ({
           )}
         </div>
 
-        {/* Ref / Identifier Pill */}
-        <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.8vw] flex items-center gap-[0.4vw]">
-          <span className="text-slate-500 font-medium">Ref No:</span>
-          <span className="font-mono font-bold text-blue-600">
-            {initialData.refNo || "Auto Generated"}
-          </span>
-        </div>
+
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -981,7 +880,7 @@ const ServiceMaterialForm = ({
             <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
               <User className="w-[1vw] h-[1vw] text-blue-600" />
-              <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-[0.82vw] font-semibold text-slate-800 uppercase tracking-wider">
                 Customer Information
               </h3>
             </div>
@@ -989,7 +888,7 @@ const ServiceMaterialForm = ({
             <div className="grid grid-cols-4 gap-[1.2vw]">
               {/* Date */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Date
                 </label>
                 <input
@@ -1000,119 +899,39 @@ const ServiceMaterialForm = ({
                 />
               </div>
 
-              {/* Reference No (Customer) */}
-              <div className="flex flex-col gap-[0.35vw] relative" ref={refCustRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                            {/* Reference No (Customer) */}
+              <div className="flex flex-col gap-[0.35vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Reference No <span className="text-slate-400 font-normal ml-1">(Customer)</span>
                 </label>
-                <div className="relative">
-                  <input
-                    value={base.refNoCustomer}
-                    onChange={(e) => {
-                      sb("refNoCustomer", e.target.value);
-                      if (!isReadOnly) {
-                        setShowRefCustDrop(true);
-                        setRefCustActiveIndex(-1);
-                      }
-                    }}
-                    onKeyDown={handleRefCustKeyDown}
-                    onFocus={() => {
-                      if (!isReadOnly) {
-                        setShowRefCustDrop(true);
-                        setRefCustActiveIndex(-1);
-                      }
-                    }}
-                    disabled={isReadOnly}
-                    placeholder="Enter customer ref no…"
-                    className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
-                  />
-                  {showRefCustDrop && !isReadOnly && (
-                    <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[12vw] overflow-y-auto z-30">
-                      <div className="ref-cust-drop-container">
-                        {filteredRefCust.map((r, i) => (
-                          <div
-                            key={i}
-                            onClick={() => {
-                              sb("refNoCustomer", r);
-                              setShowRefCustDrop(false);
-                              setRefCustActiveIndex(-1);
-                            }}
-                            className={`p-[0.6vw] cursor-pointer border-b border-slate-100 last:border-0 font-medium text-[0.78vw] text-slate-800 ${
-                              i === refCustActiveIndex ? "bg-blue-100 text-blue-800" : "hover:bg-blue-50"
-                            }`}
-                          >
-                            {r}
-                          </div>
-                        ))}
-                      </div>
-                      {filteredRefCust.length === 0 && (
-                        <div className="p-[0.7vw] text-center text-slate-400 text-[0.76vw]">
-                          No matching references
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                <input
+                  type="text"
+                  value={base.refNoCustomer}
+                  onChange={(e) => sb("refNoCustomer", e.target.value)}
+                  disabled={isReadOnly}
+                  placeholder="Enter customer ref no…"
+                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                />
               </div>
 
               {/* Reference No (Internal) */}
-              <div className="flex flex-col gap-[0.35vw] relative" ref={refIntRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+              <div className="flex flex-col gap-[0.35vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Reference No <span className="text-slate-400 font-normal ml-1">(Internal)</span>
                 </label>
-                <div className="relative">
-                  <input
-                    value={base.refNoInternal}
-                    onChange={(e) => {
-                      sb("refNoInternal", e.target.value);
-                      if (!isReadOnly) {
-                        setShowRefIntDrop(true);
-                        setRefIntActiveIndex(-1);
-                      }
-                    }}
-                    onKeyDown={handleRefIntKeyDown}
-                    onFocus={() => {
-                      if (!isReadOnly) {
-                        setShowRefIntDrop(true);
-                        setRefIntActiveIndex(-1);
-                      }
-                    }}
-                    disabled={isReadOnly}
-                    placeholder="Enter internal ref no…"
-                    className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
-                  />
-                  {showRefIntDrop && !isReadOnly && (
-                    <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[12vw] overflow-y-auto z-30">
-                      <div className="ref-int-drop-container">
-                        {filteredRefInt.map((r, i) => (
-                          <div
-                            key={i}
-                            onClick={() => {
-                              sb("refNoInternal", r);
-                              setShowRefIntDrop(false);
-                              setRefIntActiveIndex(-1);
-                            }}
-                            className={`p-[0.6vw] cursor-pointer border-b border-slate-100 last:border-0 font-medium text-[0.78vw] text-slate-800 ${
-                              i === refIntActiveIndex ? "bg-blue-100 text-blue-800" : "hover:bg-blue-50"
-                            }`}
-                          >
-                            {r}
-                          </div>
-                        ))}
-                      </div>
-                      {filteredRefInt.length === 0 && (
-                        <div className="p-[0.7vw] text-center text-slate-400 text-[0.76vw]">
-                          No matching references
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                <input
+                  type="text"
+                  value={base.refNoInternal}
+                  onChange={(e) => sb("refNoInternal", e.target.value)}
+                  disabled={isReadOnly}
+                  placeholder="Enter internal ref no…"
+                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                />
               </div>
 
               {/* Category */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Category
                 </label>
                 <CustomDropdown
@@ -1138,7 +957,7 @@ const ServiceMaterialForm = ({
 
               {/* Row 2: Customer Name (col-span-2) */}
               <div className="col-span-2 flex flex-col gap-[0.35vw] relative" ref={custRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex justify-between items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex justify-between items-center h-[1.3vw]">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                   </span>
@@ -1256,7 +1075,7 @@ const ServiceMaterialForm = ({
 
               {/* Customer Code */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Customer Code
                 </label>
                 <input
@@ -1268,7 +1087,7 @@ const ServiceMaterialForm = ({
 
               {/* Site */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Site
                 </label>
                 <CustomDropdown
@@ -1289,7 +1108,7 @@ const ServiceMaterialForm = ({
 
               {/* Row 3: Unit */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Unit
                 </label>
                 <CustomDropdown
@@ -1685,3 +1504,4 @@ const ServiceMaterialForm = ({
 };
 
 export default ServiceMaterialForm;
+
