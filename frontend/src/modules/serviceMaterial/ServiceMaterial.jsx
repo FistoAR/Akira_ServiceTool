@@ -29,6 +29,7 @@ import {
   Wrench,
   Calendar,
   RefreshCw,
+  RotateCcw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -3705,6 +3706,8 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const fromDateRef = useRef(null);
+  const toDateRef = useRef(null);
   const [activeFilter, setActiveFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState(new Set());
@@ -4142,76 +4145,94 @@ export default function App() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
           >
-            {/* Top bar */}
-            <div className="flex items-center gap-[0.8vw] bg-white p-[0.7vw] rounded-[0.6vw] shadow-sm border border-gray-400 mb-[0.9vw] flex-wrap">
-              {/* Search */}
-              <div className="relative flex-1 min-w-[18vw]">
-                <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 w-[1vw] h-[1vw]" />
+                        {/* Top bar - Standard Service Call Pill Toolbar */}
+            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] mb-[0.8vw] shrink-0">
+              {/* Left side: Soft Pill Search Box */}
+              <div className="relative w-[18vw]">
+                <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
                 <input
                   type="text"
-                  placeholder="Search by ref, customer, product…"
+                  placeholder="Search by ref, customer, product..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-[30vw] pl-[2.5vw] pr-[2.2vw] h-[2.5vw] border border-gray-300 rounded-[0.5vw] focus:outline-none focus:border-blue-500 text-gray-800 text-[0.78vw] font-semibold"
+                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
                 {searchTerm && (
                   <button
+                    type="button"
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-[0.8vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 cursor-pointer border-0 bg-transparent"
+                    className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
                   >
-                    <X className="w-[0.9vw] h-[0.9vw]" />
+                    <X className="w-[0.7vw] h-[0.7vw]" />
                   </button>
                 )}
               </div>
 
-              {/* Date From */}
-              <div className="flex items-center gap-[0.4vw]">
-                <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">
-                  From
-                </span>
-                <div className="relative">
-                  <Calendar className="absolute left-[0.4vw] top-1/2 -translate-y-1/2 w-[0.7vw] h-[0.7vw] text-gray-400 pointer-events-none" />
+              {/* Right cluster: Date Range, Clear, Board Types Master & Add */}
+              <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+                {/* Unified Date Range Capsule */}
+                <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+                  <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
                   <input
+                    ref={fromDateRef}
                     type="date"
-                    value={dateFrom}
+                    value={dateFrom || ""}
                     onChange={(e) => setDateFrom(e.target.value)}
-                    className="pl-[1.5vw] pr-[0.4vw] py-[0.35vw] border border-gray-300 rounded-[0.4vw] text-[0.7vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all h-[2.05vw]"
+                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
-                </div>
-              </div>
-
-              {/* Date To */}
-              <div className="flex items-center gap-[0.4vw]">
-                <span className="text-[0.72vw] font-semibold text-gray-500 whitespace-nowrap">
-                  To
-                </span>
-                <div className="relative">
-                  <Calendar className="absolute left-[0.4vw] top-1/2 -translate-y-1/2 w-[0.7vw] h-[0.7vw] text-gray-400 pointer-events-none" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (fromDateRef.current) {
+                        try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
+                      }
+                    }}
+                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+                    title="Choose from date"
+                  >
+                    <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                  </button>
+                  <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
+                  <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
                   <input
+                    ref={toDateRef}
                     type="date"
-                    value={dateTo}
-                    min={dateFrom}
+                    value={dateTo || ""}
+                    min={dateFrom || undefined}
                     onChange={(e) => setDateTo(e.target.value)}
-                    className="pl-[1.5vw] pr-[0.4vw] py-[0.35vw] border border-gray-300 rounded-[0.4vw] text-[0.7vw] font-medium text-gray-700 outline-none focus:border-blue-500 transition-all h-[2.05vw]"
+                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (toDateRef.current) {
+                        try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
+                      }
+                    }}
+                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+                    title="Choose to date"
+                  >
+                    <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                  </button>
                 </div>
-              </div>
 
-              {/* Clear filters button */}
-              {(dateFrom || dateTo) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDateFrom("");
-                    setDateTo("");
-                  }}
-                  className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.4vw] rounded-[0.4vw] border border-red-200 text-red-500 bg-red-50 hover:bg-red-100 text-[0.68vw] font-semibold transition-all cursor-pointer h-[2.05vw] self-center"
-                >
-                  <X className="w-[0.65vw] h-[0.65vw]" /> Clear
-                </button>
-              )}
+                {/* Reset / Clear Button */}
+                {(dateFrom || dateTo) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDateFrom("");
+                      setDateTo("");
+                    }}
+                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                    title="Clear date filter"
+                  >
+                    <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                    <span>Clear</span>
+                  </button>
+                )}
 
-              <div className="ml-auto flex gap-[0.8vw] items-center">
+                {/* Bulk Delete */}
                 <AnimatePresence>
                   {selectedItems.size > 0 && canDelete && !isSupervisor && (
                     <motion.button
@@ -4220,29 +4241,30 @@ export default function App() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.5vw] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-[1vw] h-[2.4vw] rounded-[0.4vw] font-semibold"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-[0.85vw] h-[2.2vw] rounded-full font-semibold text-[0.74vw] transition-all cursor-pointer shadow-2xs"
                     >
-                      <Trash2 className="w-[1vw] h-[1vw]" />
+                      <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                       Delete ({selectedItems.size})
                     </motion.button>
                   )}
                 </AnimatePresence>
+
                 {canWrite && !isSupervisor && (
                   <>
                     <button
                       type="button"
                       onClick={() => setIsBoardTypeMasterOpen(true)}
-                      className="cursor-pointer flex items-center gap-[0.5vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-400 font-bold px-[1vw] h-[2.4vw] rounded-[0.4vw] transition-all shadow-sm"
+                      className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs"
                     >
-                      <Wrench className="w-[1vw] h-[1vw] text-slate-500" />{" "}
+                      <Wrench className="w-[0.8vw] h-[0.8vw] text-slate-500" />{" "}
                       Board Types Master
                     </button>
                     <button
                       type="button"
                       onClick={goToForm}
-                      className="cursor-pointer flex items-center gap-[0.5vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold px-[1vw] h-[2.4vw] border border-[#1a73e8] rounded-[0.4vw] transition-all shadow-sm"
+                      className="cursor-pointer flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-[1vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs active:scale-95"
                     >
-                      <Plus className="w-[1.2vw] h-[1.2vw] text-white" />
+                      <Plus className="w-[0.9vw] h-[0.9vw] text-white" />
                       Add
                     </button>
                   </>
