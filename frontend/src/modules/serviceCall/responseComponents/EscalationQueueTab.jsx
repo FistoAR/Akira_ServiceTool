@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useRef } from "react";
+import ReactDOM from "react-dom";
 import {
   Shield,
   Clock,
@@ -22,6 +23,138 @@ import {
 } from "lucide-react";
 import { getProductStatus, PROD_STATUS_CFG } from "./ResponseConstants";
 import { getTypeColor } from "../ServiceCall";
+
+const CustomTooltip = ({ children, text, content: tooltipContent, position = "top", className = "" }) => {
+  const [coords, setCoords] = useState(null);
+  const targetRef = useRef(null);
+
+  if (!text && !tooltipContent) return children;
+
+  const handleMouseEnter = () => {
+    if (!targetRef.current) return;
+    const rect = targetRef.current.getBoundingClientRect();
+    const gap = 6;
+
+    let x = rect.left + rect.width / 2;
+    let y = rect.top - gap;
+    let side = "top";
+
+    if (rect.top < 120 || position === "bottom") {
+      y = rect.bottom + gap;
+      side = "bottom";
+    }
+
+    if (position === "top-start") {
+      x = rect.left;
+    } else if (position === "top-end") {
+      x = rect.right;
+    }
+
+    setCoords({ x, y, side, align: position });
+  };
+
+  const handleMouseLeave = () => {
+    setCoords(null);
+  };
+
+  return (
+    <div
+      ref={targetRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`inline-flex items-center ${className}`}
+    >
+      {children}
+      {coords &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: `${coords.y}px`,
+              left: `${coords.x}px`,
+              transform:
+                coords.align === "top-start"
+                  ? coords.side === "bottom"
+                    ? "translate(0, 0)"
+                    : "translate(0, -100%)"
+                  : coords.align === "top-end"
+                  ? coords.side === "bottom"
+                    ? "translate(-100%, 0)"
+                    : "translate(-100%, -100%)"
+                  : coords.side === "bottom"
+                  ? "translate(-50%, 0)"
+                  : "translate(-50%, -100%)",
+              zIndex: 99999,
+            }}
+            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+          >
+            {tooltipContent ? tooltipContent : <span>{text}</span>}
+            <div
+              className={`absolute w-0 h-0 border-[0.25vw] ${
+                coords.side === "bottom"
+                  ? "bottom-full border-transparent border-b-slate-900"
+                  : "top-full border-transparent border-t-slate-900"
+              } ${
+                coords.align === "top-start"
+                  ? "left-[0.6vw]"
+                  : coords.align === "top-end"
+                  ? "right-[0.6vw]"
+                  : "left-1/2 -translate-x-1/2"
+              }`}
+            />
+          </div>,
+          document.body
+        )}
+    </div>
+  );
+};
+
+const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => {
+  const hasExtra = Boolean(contactNumber || partyCode);
+
+  return (
+    <div className="flex items-center gap-[0.35vw] max-w-full">
+      <CustomTooltip text={customerName} position="top-start" className="min-w-0 flex-1">
+        <span className="font-normal text-slate-900 text-[0.82vw] truncate block">
+          {customerName || "—"}
+        </span>
+      </CustomTooltip>
+
+      {hasExtra && (
+        <CustomTooltip
+          position="top-start"
+          content={
+            <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
+              <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+                {customerName || "Customer Details"}
+              </div>
+              {contactNumber && (
+                <div className="flex items-center gap-[0.3vw] text-sky-300">
+                  <Phone className="w-[0.65vw] h-[0.65vw] text-sky-400 shrink-0" />
+                  <span>{contactNumber}</span>
+                </div>
+              )}
+              {partyCode && (
+                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.64vw]">
+                  <span className="text-slate-500 font-sans">ID:</span>
+                  <span>{partyCode}</span>
+                </div>
+              )}
+            </div>
+          }
+        >
+          <button
+            type="button"
+            tabIndex={-1}
+            className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+          >
+            <Info className="w-[0.78vw] h-[0.78vw]" />
+          </button>
+        </CustomTooltip>
+      )}
+    </div>
+  );
+};
 
 export const EscalationQueueTab = ({
   myEscalations,
@@ -56,492 +189,523 @@ export const EscalationQueueTab = ({
 
   return (
     <>
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
-                  {/* Top Bar for Escalations */}
-                  <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-                    <div className="flex items-center gap-[0.5vw]">
-                      <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-bold text-slate-800">
-                        <Shield className="w-[0.95vw] h-[0.95vw] text-indigo-600" />
-                        Escalated & Assigned Queue
-                      </span>
-                      <span className="text-[0.68vw] bg-indigo-50 border border-indigo-200 text-indigo-700 px-[0.45vw] py-[0.1vw] rounded-full font-bold">
-                        {myEscalations.length} Active Calls
-                      </span>
-                    </div>
+      <div className="bg-white rounded-lg shadow-sm border border-slate-300 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+        {/* Top Bar for Escalations */}
+        <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
+          <div className="flex items-center gap-[0.5vw]">
+            <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-bold text-slate-800">
+              <Shield className="w-[0.95vw] h-[0.95vw] text-indigo-600" />
+              Escalated & Assigned Queue
+            </span>
+            <span className="text-[0.68vw] bg-indigo-50 border border-indigo-200 text-indigo-700 px-[0.45vw] py-[0.1vw] rounded-full font-bold">
+              {myEscalations.length} Active Calls
+            </span>
+          </div>
 
-                    <div className="text-[0.76vw] text-slate-500 font-medium">
-                      Showing <span className="font-bold text-slate-800">{myEscalations.length}</span> calls
-                    </div>
-                  </div>
+          <div className="text-[0.76vw] text-slate-500 font-medium">
+            Showing <span className="font-bold text-slate-800">{myEscalations.length}</span> calls
+          </div>
+        </div>
 
-                  {/* Table area */}
-                  <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
-                    <table className="w-full text-left border-separate border-spacing-0">
-                      <thead className="bg-[#e9edf4] sticky top-0 z-20 border-b-2 border-slate-300 shadow-xs">
-                        <tr className="bg-[#e9edf4]">
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[3.5vw]">
-                            S.No
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
-                            Date & Time
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
-                            Call No
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
-                            Customer
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[14vw]">
-                            Product / Issue
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
-                            Error Code
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
-                            Priority
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[8.5vw]">
-                            SLA Timer
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[7.5vw]">
-                            Origin
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] border-b-2 border-r border-slate-300 whitespace-nowrap min-w-[6.5vw] text-center">
-                            Status
-                          </th>
-                          <th className="p-[0.7vw] font-bold text-slate-800 uppercase tracking-wider text-[0.72vw] text-center sticky top-0 right-0 bg-[#e9edf4] z-30 border-b-2 border-slate-300 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[10vw]">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {escalationPaginatedCalls.length > 0 ? (
-                          escalationPaginatedCalls.map((row, rIdx) => {
-                            const allProducts =
-                              row._products?.length > 0
-                                ? row._products
-                                : row.products?.length > 0
-                                  ? row.products
-                                  : [{}];
+        {/* Table area */}
+        <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+              <tr>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">
+                  S.No
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10.5vw] whitespace-nowrap">
+                  Date & Time
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">
+                  Call No
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">
+                  Customer
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">
+                  Product / Issue
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6.5vw] whitespace-nowrap">
+                  Error Code
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[6.5vw] whitespace-nowrap">
+                  Priority
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[8.5vw] whitespace-nowrap">
+                  SLA Timer
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">
+                  Origin
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">
+                  Status
+                </th>
+                <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[9.5vw]">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-[0.8vw]">
+              {escalationPaginatedCalls.length > 0 ? (
+                escalationPaginatedCalls.map((row, rIdx) => {
+                  const allProducts =
+                    row._products?.length > 0
+                      ? row._products
+                      : row.products?.length > 0
+                        ? row.products
+                        : [{}];
 
-                            const rowCount = allProducts.length;
-                            const rowId = row.id || row._id || row.callId;
-                            const callTimer = timers.find((t) => t.callNumber === row.callNumber);
+                  const rowCount = allProducts.length;
+                  const rowId = row.id || row._id || row.callId;
+                  const callTimer = timers.find((t) => t.callNumber === row.callNumber);
 
-                            return allProducts.map((prod, pIdx) => {
-                              const isAttended = prod._attended || row.status === "Resolved";
-                              const isActionable =
-                                (loggedInUser?.department === "Admin" || prod._assignedEngineerId === loggedInUser?.userId) &&
-                                !prod._resolved &&
-                                prod._productClosure?.status !== "Closed";
+                  return allProducts.map((prod, pIdx) => {
+                    const isAttended = prod._attended || row.status === "Resolved";
+                    const isActionable =
+                      (loggedInUser?.department === "Admin" || prod._assignedEngineerId === loggedInUser?.userId) &&
+                      !prod._resolved &&
+                      prod._productClosure?.status !== "Closed";
 
-                              return (
-                                <tr
-                                  key={`${rowId}-${pIdx}`}
-                                  className="transition-colors bg-white hover:bg-indigo-50/20"
-                                >
-                                  {/* S.No */}
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap text-[0.75vw] font-bold text-slate-600 bg-white"
-                                    >
-                                      {(escalationPage - 1) * escalationPageSize + rIdx + 1}
-                                    </td>
-                                  )}
-
-                                  {/* Date & Time */}
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
-                                    >
-                                      {(() => {
-                                        try {
-                                          const d = new Date(row.dateTime || row.timestamp || row.createdAt);
-                                          if (isNaN(d.getTime())) return row.dateTime || "—";
-                                          const datePart = d.toLocaleDateString("en-GB", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric",
-                                          });
-                                          const timePart = d.toLocaleTimeString("en-US", {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                            hour12: true,
-                                          });
-                                          return `${datePart}, ${timePart}`;
-                                        } catch {
-                                          return row.dateTime || "—";
-                                        }
-                                      })()}
-                                    </td>
-                                  )}
-
-                                  {/* Call No */}
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white"
-                                    >
-                                      <button type="button" onClick={() => onOpenInfo && onOpenInfo(row)} title="View Call Details" className="font-mono text-[0.8vw] font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer text-left">
-                                        {row.callNumber || row.callNo}
-                                      </button>
-                                      <div className="text-[0.65vw] text-slate-500 font-semibold mt-[0.1vw]">
-                                        {rowCount} Product{rowCount > 1 ? "s" : ""}
-                                      </div>
-                                    </td>
-                                  )}
-
-                                  {/* Customer */}
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white"
-                                    >
-                                      <div className="font-semibold text-slate-900 text-[0.82vw]">
-                                        {row.customerName || row.partyDescription}
-                                      </div>
-                                      <div className="flex items-center gap-[0.4vw] mt-[0.1vw] flex-wrap">
-                                        {row.partyCode && (
-                                          <span className="text-[0.68vw] text-slate-500 font-mono">
-                                            {row.partyCode}
-                                          </span>
-                                        )}
-                                        {row.customerType && (
-                                          <span
-                                            className={`text-[0.65vw] px-[0.4vw] py-[0.05vw] rounded font-semibold border ${getTypeColor(
-                                              row.customerType,
-                                            )}`}
-                                          >
-                                            {row.customerType}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </td>
-                                  )}
-
-                                  {/* Product / Issue */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle bg-white">
-                                    <div className="font-medium text-slate-850 text-[0.8vw]">
-                                      {prod?.productModel || prod?.itemCode || "—"}
-                                    </div>
-                                    {prod?.serialNumber && (
-                                      <div className="text-[0.68vw] text-slate-500 font-mono">
-                                        SN: {prod.serialNumber}
-                                      </div>
-                                    )}
-                                    {prod?.callDescription && (
-                                      <div className="text-[0.72vw] text-slate-600 line-clamp-1 italic mt-[0.1vw]">
-                                        {prod.callDescription}
-                                      </div>
-                                    )}
-                                  </td>
-
-                                  {/* Error Code */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
-                                    {prod?.errorCode ? (
-                                      <span className="bg-red-50 text-red-600 border border-red-200 px-[0.5vw] py-[0.12vw] rounded text-[0.74vw] font-mono font-medium">
-                                        {prod.errorCode}
-                                      </span>
-                                    ) : (
-                                      <span className="text-slate-400 text-[0.76vw]">-</span>
-                                    )}
-                                  </td>
-
-                                  {/* Priority */}
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
-                                    >
-                                      {(() => {
-                                        const p = row.priority || "Medium";
-                                        let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
-                                        if (p === "Urgent" || p === "Critical")
-                                          badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
-                                        else if (p === "High")
-                                          badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
-                                        else if (p === "Low")
-                                          badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
-                                        return (
-                                          <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
-                                            {p}
-                                          </span>
-                                        );
-                                      })()}
-                                    </td>
-                                  )}
-
-                                  {/* SLA Timer */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white">
-                                    <div className="inline-flex items-center justify-center gap-[0.35vw]">
-                                      {prod._attended ? (
-                                        <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-bold text-[0.74vw] bg-emerald-50 border border-emerald-200 px-[0.5vw] py-[0.15vw] rounded-full">
-                                          <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
-                                          Attended
-                                        </span>
-                                      ) : callTimer ? (
-                                        <span
-                                          className={`inline-flex items-center gap-[0.3vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs ${
-                                            prod._isReverseEscalated
-                                              ? callTimer.isExpired
-                                                ? "bg-rose-100 text-rose-800 border-rose-400 animate-pulse"
-                                                : "bg-rose-50 text-rose-800 border-rose-200 shadow-2xs"
-                                              : callTimer.isExpired
-                                                ? "bg-rose-100 text-rose-800 border-rose-300 animate-pulse"
-                                                : "bg-amber-100 text-amber-900 border-amber-300"
-                                          }`}
-                                        >
-                                          {prod._isReverseEscalated && (
-                                            <span
-                                              title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                              className="inline-flex items-center justify-center w-[1.05vw] h-[1.05vw] rounded bg-rose-200/80 text-rose-800 font-black text-[0.62vw] border border-rose-300/80 select-none cursor-help mr-[0.1vw]"
-                                            >
-                                              R
-                                            </span>
-                                          )}
-                                          <Clock className="w-[0.75vw] h-[0.75vw]" />
-                                          {callTimer.remainingFormatted}
-                                        </span>
-                                      ) : (prod._isReverseEscalated && prod._deadline && !prod._attended) ? (
-                                        (() => {
-                                          const remainingMs = Math.max(0, new Date(prod._deadline) - new Date());
-                                          const hours = Math.floor(remainingMs / 3600000);
-                                          const minutes = Math.floor((remainingMs % 3600000) / 60000);
-                                          const seconds = Math.floor((remainingMs % 60000) / 1000);
-                                          const formatted = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-                                          const isExpired = remainingMs === 0;
-
-                                          return isExpired ? (
-                                            <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
-                                              <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
-                                            </span>
-                                          ) : (
-                                            <span className="inline-flex items-center gap-[0.3vw] font-mono text-[0.76vw] font-bold px-[0.55vw] py-[0.18vw] rounded-[0.4vw] border shadow-2xs bg-rose-50 text-rose-800 border-rose-200">
-                                              <span
-                                                title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                                className="inline-flex items-center justify-center w-[1.05vw] h-[1.05vw] rounded bg-rose-200/80 text-rose-800 font-black text-[0.62vw] border border-rose-300/80 select-none cursor-help mr-[0.1vw]"
-                                              >
-                                                R
-                                              </span>
-                                              <Clock className="w-[0.75vw] h-[0.75vw]" />
-                                              {formatted}
-                                            </span>
-                                          );
-                                        })()
-                                      ) : row.status === "Critical" ? (
-                                        <span className="inline-flex items-center gap-[0.25vw] text-rose-800 font-bold text-[0.72vw] bg-rose-100 border border-rose-300 px-[0.5vw] py-[0.15vw] rounded-[0.4vw] animate-pulse">
-                                          <AlertTriangle className="w-[0.75vw] h-[0.75vw]" /> SLA Expired
-                                        </span>
-                                      ) : (
-                                        <span className="text-slate-400 text-[0.74vw]">—</span>
-                                      )}
-                                    </div>
-                                  </td>
-
-                                  {/* Origin Type */}
-                                  {pIdx === 0 && (
-                                    <td
-                                      rowSpan={rowCount}
-                                      className="p-[0.7vw] border-r border-b border-slate-200 text-center align-middle whitespace-nowrap bg-white"
-                                    >
-                                      {row.isSelfAssigned || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name ? (
-                                        <span className="inline-flex items-center px-[0.45vw] py-[0.12vw] rounded-full text-[0.66vw] font-bold bg-amber-50 text-amber-700 border border-amber-250">
-                                          Self Assigned
-                                        </span>
-                                      ) : (
-                                        <span className="inline-flex items-center px-[0.45vw] py-[0.12vw] rounded-full text-[0.66vw] font-bold bg-indigo-50 text-indigo-700 border border-indigo-250">
-                                          Assigned
-                                        </span>
-                                      )}
-                                    </td>
-                                  )}
-
-                                  {/* Status / Level */}
-                                  <td className="p-[0.7vw] border-r border-b border-slate-200 align-middle whitespace-nowrap bg-white">
-                                    {(() => {
-                                      const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
-                                      return (
-                                        <div>
-                                          <div className="flex items-center gap-[0.35vw]">
-                                            <span className="font-semibold text-[0.78vw] text-slate-800">
-                                              {prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated")}
-                                            </span>
-                                            {prod._isReverseEscalated && (
-                                              <span
-                                                title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` from ${prod._reverseEscalatedFromName}` : ""}`}
-                                                className="inline-flex items-center gap-[0.15vw] px-[0.35vw] py-[0.05vw] rounded text-[0.62vw] font-bold bg-rose-50 text-rose-700 border border-rose-200"
-                                              >
-                                                <RotateCcw className="w-[0.6vw] h-[0.6vw]" />
-                                                Rev Esc
-                                              </span>
-                                            )}
-                                          </div>
-                                          <div className="text-[0.68vw] text-slate-500 font-medium mt-[0.1vw]">
-                                            {prod._assignedEngineerName || row.currentEngineerName || "Assigned"}
-                                          </div>
-                                        </div>
-                                      );
-                                    })()}
-                                  </td>
-
-                                  {/* Action Buttons */}
-                                  <td className="p-[0.7vw] border-b border-r border-slate-200 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
-                                    <div className="flex items-center justify-center gap-[0.4vw]">
-                                      {/* Primary Attend/Action Button */}
-                                      {isActionable && !prod._attended && (
-                                        <button
-                                          type="button"
-                                          onClick={() => handleProductAttend(row.callId || row._id, pIdx)}
-                                          className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.28vw] rounded-[0.4vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.74vw] shadow-xs active:scale-95 transition-all cursor-pointer"
-                                          title="Attend to halt auto-escalation timer"
-                                        >
-                                          <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
-                                          Attend
-                                        </button>
-                                      )}
-
-                                      {/* Admin Stop Escalation Button */}
-                                      {isAdmin && (
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            setCancelModal({
-                                              callId: row.callId || row._id,
-                                              callNumber: row.callNumber,
-                                              prod,
-                                              pIdx,
-                                              currentAssignee: prod._assignedEngineerName || row.currentEngineerName,
-                                            });
-                                            setCancelReason("");
-                                            setNewAssignee("");
-                                          }}
-                                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] rounded-[0.4vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-[0.72vw] transition-all cursor-pointer"
-                                          title="Stop Escalation & Re-assign"
-                                        >
-                                          <Slash className="w-[0.7vw] h-[0.7vw]" />
-                                          Stop Esc.
-                                        </button>
-                                      )}
-
-                                      {/* Respond / Modal Action: Shown directly for self-assigned, or only after attended for regular assigned/escalated calls */}
-                                      {((row.isSelfAssigned || row.noEscalation || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name) || prod._attended || row.status === "Resolved" || isAdmin) && (
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            onOpenRespond({
-                                              entry: row,
-                                              callId: row.callId || row._id,
-                                              prod,
-                                              pIdx,
-                                            });
-                                          }}
-                                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] rounded-[0.4vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold text-[0.74vw] transition-all cursor-pointer"
-                                          title="Respond or Close Product"
-                                        >
-                                          <Edit3 className="w-[0.72vw] h-[0.72vw]" />
-                                          Respond
-                                        </button>
-                                      )}
-
-                                      {/* Info button */}
-                                      {onOpenInfo && (
-                                        <button
-                                          type="button"
-                                          onClick={() => onOpenInfo(row)}
-                                          className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.28vw] bg-blue-50 border border-blue-200 rounded-[0.4vw] hover:bg-blue-100 text-blue-700 font-bold text-[0.72vw] transition-colors cursor-pointer shadow-2xs"
-                                          title="View Full Call Details"
-                                        >
-                                          <Info className="w-[0.8vw] h-[0.8vw]" />
-                                          Info
-                                        </button>
-                                      )}
-
-                                      {/* History button */}
-                                      <button
-                                        type="button"
-                                        onClick={() => setHistoryModalProduct(row)}
-                                        className="p-[0.32vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer"
-                                        title="View Call History"
-                                      >
-                                        <History className="w-[0.95vw] h-[0.95vw]" />
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            });
-                          })
-                        ) : (
-                          <tr>
-                            <td colSpan="11" className="text-center py-[3vw] text-slate-500">
-                              <p className="text-[0.9vw] font-bold text-slate-700">No active calls in your escalation queue</p>
-                              <p className="text-[0.75vw] text-slate-400 mt-[0.2vw]">
-                                All assigned escalation tasks have been attended or resolved.
-                              </p>
-                            </td>
-                          </tr>
+                    return (
+                      <tr
+                        key={`${rowId}-${pIdx}`}
+                        className="hover:bg-slate-50 transition-colors"
+                      >
+                        {/* S.No */}
+                        {pIdx === 0 && (
+                          <td
+                            rowSpan={rowCount}
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]"
+                          >
+                            {(escalationPage - 1) * escalationPageSize + rIdx + 1}
+                          </td>
                         )}
-                      </tbody>
-                    </table>
-                  </div>
 
-                  {/* Pagination Footer */}
-                  <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-200 bg-slate-50/50 shrink-0">
-                    <div className="text-[0.75vw] text-slate-600 font-medium">
-                      Showing{" "}
-                      <span className="font-bold text-slate-800">
-                        {myEscalations.length > 0 ? (escalationPage - 1) * escalationPageSize + 1 : 0}
-                      </span>{" "}
-                      to{" "}
-                      <span className="font-bold text-slate-800">
-                        {Math.min(escalationPage * escalationPageSize, myEscalations.length)}
-                      </span>{" "}
-                      of{" "}
-                      <span className="font-bold text-slate-800">
-                        {myEscalations.length}
-                      </span>{" "}
-                      entries
-                    </div>
-                    <div className="flex items-center gap-[0.5vw]">
-                      <button
-                        onClick={() => setEscalationPage((p) => Math.max(1, p - 1))}
-                        disabled={escalationPage === 1}
-                        className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
-                      >
-                        <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
-                      </button>
-                      <div className="flex gap-[0.3vw]">
-                        {[...Array(escalationTotalPages)].map((_, i) => {
-                          const pNum = i + 1;
-                          return (
+                        {/* Date & Time */}
+                        {pIdx === 0 && (
+                          <td
+                            rowSpan={rowCount}
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
+                          >
+                            {(() => {
+                              try {
+                                const d = new Date(row.dateTime || row.timestamp || row.createdAt);
+                                if (isNaN(d.getTime())) return <span className="text-[0.74vw] text-slate-800 font-normal">{row.dateTime || "—"}</span>;
+                                const datePart = d.toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                });
+                                const timePart = d.toLocaleTimeString("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                });
+                                return (
+                                  <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
+                                    <span>{datePart}</span>
+                                    <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">{timePart}</span>
+                                  </div>
+                                );
+                              } catch {
+                                return <span className="text-[0.74vw] text-slate-800 font-normal">{row.dateTime || "—"}</span>;
+                              }
+                            })()}
+                          </td>
+                        )}
+
+                        {/* Call No */}
+                        {pIdx === 0 && (
+                          <td
+                            rowSpan={rowCount}
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
+                          >
                             <button
-                              key={pNum}
-                              onClick={() => setEscalationPage(pNum)}
-                              className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
-                                escalationPage === pNum
-                                  ? "bg-indigo-600 text-white shadow-2xs"
-                                  : "bg-white border border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600"
-                              }`}
+                              type="button"
+                              onClick={() => onOpenInfo && onOpenInfo(row)}
+                              title="View Call Details"
+                              className="font-mono text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
                             >
-                              {pNum}
+                              {row.callNumber || row.callNo}
                             </button>
-                          );
-                        })}
-                      </div>
-                      <button
-                        onClick={() =>
-                          setEscalationPage((p) => Math.min(escalationTotalPages, p + 1))
-                        }
-                        disabled={escalationPage === escalationTotalPages || escalationTotalPages === 0}
-                        className="p-[0.35vw] border border-slate-200 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
-                      >
-                        <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                            <div className="text-[0.66vw] text-slate-400 mt-[0.14vw]">
+                              {rowCount} Product{rowCount > 1 ? "s" : ""}
+                            </div>
+                          </td>
+                        )}
+
+                        {/* Customer */}
+                        {pIdx === 0 && (
+                          <td
+                            rowSpan={rowCount}
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
+                          >
+                            <CustomerInfoCell
+                              customerName={row.customerName || row.partyDescription}
+                              contactNumber={row.contactNumber}
+                              partyCode={row.partyCode}
+                            />
+                            {row.customerType && (
+                              <div className="mt-[0.2vw]">
+                                <span
+                                  className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border shadow-2xs whitespace-nowrap ${getTypeColor(
+                                    row.customerType,
+                                  )}`}
+                                >
+                                  {row.customerType}
+                                </span>
+                              </div>
+                            )}
+                          </td>
+                        )}
+
+                        {/* Product / Issue */}
+                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
+                          <CustomTooltip
+                            position="top-start"
+                            className="max-w-full"
+                            content={
+                              <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                                <div className="font-normal text-slate-200">
+                                  {prod?.productModel || prod?.itemCode || "—"}
+                                </div>
+                                {prod?.serialNumber && (
+                                  <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                    <span className="text-slate-400 font-sans">SN: </span>
+                                    <span>{prod.serialNumber}</span>
+                                  </div>
+                                )}
+                                {prod?.callDescription && (
+                                  <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                    {prod.callDescription}
+                                  </div>
+                                )}
+                              </div>
+                            }
+                          >
+                            <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                              {prod?.productModel || prod?.itemCode || "—"}
+                            </div>
+                          </CustomTooltip>
+                          {prod?.serialNumber && (
+                            <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.1vw]">
+                              SN: {prod.serialNumber}
+                            </div>
+                          )}
+                          {prod?.callDescription && (
+                            <div className="text-[0.7vw] text-slate-500 line-clamp-1 italic mt-[0.1vw]">
+                              {prod.callDescription}
+                            </div>
+                          )}
+                        </td>
+
+                        {/* Error Code */}
+                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white">
+                          {prod?.errorCode ? (
+                            <span className="bg-rose-50 text-rose-700 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.72vw] font-mono font-normal">
+                              {prod.errorCode}
+                            </span>
+                          ) : (
+                            <span className="text-slate-300 font-normal">—</span>
+                          )}
+                        </td>
+
+                        {/* Priority */}
+                        {pIdx === 0 && (
+                          <td
+                            rowSpan={rowCount}
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white"
+                          >
+                            {(() => {
+                              const p = row.priority || "Medium";
+                              let badgeStyle = "bg-amber-50 text-amber-700 border-amber-200";
+                              if (p === "Urgent" || p === "Critical")
+                                badgeStyle = "bg-rose-50 text-rose-700 border-rose-200";
+                              else if (p === "High")
+                                badgeStyle = "bg-orange-50 text-orange-700 border-orange-200";
+                              else if (p === "Low")
+                                badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-200";
+                              return (
+                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                  {p}
+                                </span>
+                              );
+                            })()}
+                          </td>
+                        )}
+
+                        {/* SLA Timer */}
+                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white">
+                          <div className="inline-flex items-center justify-center gap-[0.35vw]">
+                            {prod._attended ? (
+                              <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-normal text-[0.7vw] bg-emerald-50 border border-emerald-200 px-[0.55vw] py-[0.12vw] rounded-full shadow-2xs">
+                                <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                Attended
+                              </span>
+                            ) : callTimer ? (
+                              <span
+                                className={`inline-flex items-center gap-[0.3vw] font-mono text-[0.72vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs ${
+                                  prod._isReverseEscalated
+                                    ? callTimer.isExpired
+                                      ? "bg-rose-100 text-rose-800 border-rose-400 animate-pulse"
+                                      : "bg-rose-50 text-rose-800 border-rose-200 shadow-2xs"
+                                    : callTimer.isExpired
+                                      ? "bg-rose-50 text-rose-700 border-rose-200 animate-pulse"
+                                      : "bg-amber-50 text-amber-800 border-amber-200"
+                                }`}
+                              >
+                                {prod._isReverseEscalated && (
+                                  <span
+                                    title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
+                                    className="inline-flex items-center justify-center w-[1vw] h-[1vw] rounded bg-rose-200/80 text-rose-800 font-bold text-[0.6vw] border border-rose-300 select-none cursor-help mr-[0.1vw]"
+                                  >
+                                    R
+                                  </span>
+                                )}
+                                <Clock className="w-[0.7vw] h-[0.7vw]" />
+                                {callTimer.remainingFormatted}
+                              </span>
+                            ) : (prod._isReverseEscalated && prod._deadline && !prod._attended) ? (
+                              (() => {
+                                const remainingMs = Math.max(0, new Date(prod._deadline) - new Date());
+                                const hours = Math.floor(remainingMs / 3600000);
+                                const minutes = Math.floor((remainingMs % 3600000) / 60000);
+                                const seconds = Math.floor((remainingMs % 60000) / 1000);
+                                const formatted = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                                const isExpired = remainingMs === 0;
+
+                                return isExpired ? (
+                                  <span className="inline-flex items-center gap-[0.25vw] text-rose-700 font-normal text-[0.7vw] bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.12vw] rounded-full animate-pulse shadow-2xs">
+                                    <AlertTriangle className="w-[0.7vw] h-[0.7vw]" /> SLA Expired
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-[0.3vw] font-mono text-[0.72vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs bg-rose-50 text-rose-800 border-rose-200">
+                                    <span
+                                      title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
+                                      className="inline-flex items-center justify-center w-[1vw] h-[1vw] rounded bg-rose-200/80 text-rose-800 font-bold text-[0.6vw] border border-rose-300 select-none cursor-help mr-[0.1vw]"
+                                    >
+                                      R
+                                    </span>
+                                    <Clock className="w-[0.7vw] h-[0.7vw]" />
+                                    {formatted}
+                                  </span>
+                                );
+                              })()
+                            ) : row.status === "Critical" ? (
+                              <span className="inline-flex items-center gap-[0.25vw] text-rose-700 font-normal text-[0.7vw] bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.12vw] rounded-full animate-pulse shadow-2xs">
+                                <AlertTriangle className="w-[0.7vw] h-[0.7vw]" /> SLA Expired
+                              </span>
+                            ) : (
+                              <span className="text-slate-300 font-normal text-[0.75vw]">—</span>
+                            )}
+                          </div>
+                        </td>
+
+                        {/* Origin Type */}
+                        {pIdx === 0 && (
+                          <td
+                            rowSpan={rowCount}
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white"
+                          >
+                            {row.isSelfAssigned || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name ? (
+                              <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
+                                Self Assigned
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
+                                Assigned
+                              </span>
+                            )}
+                          </td>
+                        )}
+
+                        {/* Status / Level */}
+                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white">
+                          {(() => {
+                            const lastEsc = prod._escalationHistory?.[prod._escalationHistory.length - 1];
+                            const statusText = prod._productClosure?.status || (lastEsc ? `Level ${lastEsc.level || 1}` : "Escalated");
+                            return (
+                              <div className="flex flex-col items-center justify-center">
+                                <div className="flex items-center gap-[0.3vw]">
+                                  <span className="text-[0.75vw] text-slate-800 font-normal">
+                                    {statusText}
+                                  </span>
+                                  {prod._isReverseEscalated && (
+                                    <span
+                                      title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` from ${prod._reverseEscalatedFromName}` : ""}`}
+                                      className="inline-flex items-center gap-[0.15vw] px-[0.35vw] py-[0.05vw] rounded text-[0.62vw] font-normal bg-rose-50 text-rose-700 border border-rose-200"
+                                    >
+                                      <RotateCcw className="w-[0.6vw] h-[0.6vw]" />
+                                      Rev
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[0.66vw] text-slate-400 font-normal mt-[0.1vw]">
+                                  {prod._assignedEngineerName || row.currentEngineerName || "Assigned"}
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </td>
+
+                        {/* Action Buttons */}
+                        <td className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                          <div className="flex items-center justify-center gap-[0.3vw]">
+                            {/* Primary Attend/Action Button */}
+                            {isActionable && !prod._attended && (
+                              <button
+                                type="button"
+                                onClick={() => handleProductAttend(row.callId || row._id, pIdx)}
+                                className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
+                                title="Attend to halt auto-escalation timer"
+                              >
+                                <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                Attend
+                              </button>
+                            )}
+
+                            {/* Admin Stop Escalation Button */}
+                            {isAdmin && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCancelModal({
+                                    callId: row.callId || row._id,
+                                    callNumber: row.callNumber,
+                                    prod,
+                                    pIdx,
+                                    currentAssignee: prod._assignedEngineerName || row.currentEngineerName,
+                                  });
+                                  setCancelReason("");
+                                  setNewAssignee("");
+                                }}
+                                className="px-[0.6vw] py-[0.25vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-[0.68vw] font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap flex items-center gap-[0.2vw]"
+                                title="Stop Escalation & Re-assign"
+                              >
+                                <Slash className="w-[0.65vw] h-[0.65vw]" />
+                                Stop Esc.
+                              </button>
+                            )}
+
+                            {/* Respond / Modal Action */}
+                            {((row.isSelfAssigned || row.noEscalation || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name) || prod._attended || row.status === "Resolved" || isAdmin) && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  onOpenRespond({
+                                    entry: row,
+                                    callId: row.callId || row._id,
+                                    prod,
+                                    pIdx,
+                                  });
+                                }}
+                                className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
+                                title="Respond or Close Product"
+                              >
+                                <Edit3 className="w-[0.7vw] h-[0.7vw]" />
+                                Respond
+                              </button>
+                            )}
+
+                            {/* Info button */}
+                            {onOpenInfo && (
+                              <CustomTooltip text="View Call Details" position="top">
+                                <button
+                                  type="button"
+                                  onClick={() => onOpenInfo(row)}
+                                  className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                                  title="View Full Call Details"
+                                >
+                                  <Info className="w-[0.9vw] h-[0.9vw]" />
+                                </button>
+                              </CustomTooltip>
+                            )}
+
+                            {/* History button */}
+                            <CustomTooltip text="View Lifecycle History" position="top-end">
+                              <button
+                                type="button"
+                                onClick={() => setHistoryModalProduct(row)}
+                                className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                title="View Call History"
+                              >
+                                <History className="w-[0.9vw] h-[0.9vw]" />
+                              </button>
+                            </CustomTooltip>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  });
+                })
+              ) : (
+                <tr>
+                  <td colSpan="11" className="py-[10vh] text-center text-slate-400 font-bold">
+                    No active calls in your escalation queue. All assigned tasks have been attended or resolved.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Footer */}
+        <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-300 bg-white shrink-0">
+          <div className="text-[0.75vw] text-slate-600 font-medium">
+            Showing{" "}
+            <span className="font-bold text-slate-800">
+              {myEscalations.length > 0 ? (escalationPage - 1) * escalationPageSize + 1 : 0}
+            </span>{" "}
+            to{" "}
+            <span className="font-bold text-slate-800">
+              {Math.min(escalationPage * escalationPageSize, myEscalations.length)}
+            </span>{" "}
+            of{" "}
+            <span className="font-bold text-slate-800">
+              {myEscalations.length}
+            </span>{" "}
+            entries
+          </div>
+          <div className="flex items-center gap-[0.5vw]">
+            <button
+              onClick={() => setEscalationPage((p) => Math.max(1, p - 1))}
+              disabled={escalationPage === 1}
+              className="p-[0.35vw] border border-gray-300 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+            >
+              <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+            </button>
+            <div className="flex gap-[0.3vw]">
+              {[...Array(escalationTotalPages)].map((_, i) => {
+                const pNum = i + 1;
+                return (
+                  <button
+                    key={pNum}
+                    onClick={() => setEscalationPage(pNum)}
+                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                      escalationPage === pNum
+                        ? "bg-[#1a73e8] text-white shadow-2xs"
+                        : "bg-white border border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                    }`}
+                  >
+                    {pNum}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              onClick={() =>
+                setEscalationPage((p) => Math.min(escalationTotalPages, p + 1))
+              }
+              disabled={escalationPage === escalationTotalPages || escalationTotalPages === 0}
+              className="p-[0.35vw] border border-gray-300 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+            >
+              <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Admin Cancel / Stop Escalation Modal */}
       {cancelModal && (

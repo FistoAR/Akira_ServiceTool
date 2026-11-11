@@ -1315,13 +1315,112 @@ export default function ServiceCallReports() {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowFilterPopover(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[20vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col animate-in fade-in zoom-in-95 duration-100">
-                  <div className="p-[0.7vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
-                    <div className="flex items-center gap-[0.4vw]">
-                      <Filter className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
-                      <span className="text-[0.8vw] font-bold text-slate-800">Filter Records</span>
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[16.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-lg z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                  {/* Date Range */}
+                  <div>
+                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
+                      Date Range
+                    </label>
+                    <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[1.9vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
+                      <input
+                        type="date"
+                        value={fromDate}
+                        onChange={(e) => {
+                          setFromDate(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                      />
+                      <span className="text-slate-400 mx-[0.25vw] shrink-0">—</span>
+                      <input
+                        type="date"
+                        value={toDate}
+                        min={fromDate}
+                        onChange={(e) => {
+                          setToDate(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                      />
                     </div>
-                    {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
+                  </div>
+
+                  {/* Call Origin */}
+                  <div>
+                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
+                      Call Origin
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={callTypeFilter}
+                        onChange={(e) => {
+                          setCallTypeFilter(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
+                      >
+                        <option value="All">All Origins</option>
+                        <option value="Self Assigned">Self Assigned</option>
+                        <option value="Admin Registered">Registered Calls</option>
+                      </select>
+                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  <div>
+                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
+                      Status
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => {
+                          setStatusFilter(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
+                      >
+                        <option value="All">All Status</option>
+                        <option value="Registered">Registered</option>
+                        <option value="Assigned">Assigned</option>
+                        <option value="Supporting">Supporting</option>
+                        <option value="Field Visit">Field Visit</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Escalating">Escalating</option>
+                        <option value="Critical">Critical</option>
+                        <option value="Resolved">Resolved / Closed</option>
+                      </select>
+                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Priority */}
+                  <div>
+                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
+                      Priority
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={priorityFilter}
+                        onChange={(e) => {
+                          setPriorityFilter(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
+                      >
+                        <option value="All">All Priorities</option>
+                        {PRIORITIES.map((p) => (
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Clear All Filters */}
+                  {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
+                    <div className="pt-[0.3vw] border-t border-slate-200 mt-[0.1vw]">
                       <button
                         onClick={() => {
                           setFromDate("");
@@ -1331,126 +1430,13 @@ export default function ServiceCallReports() {
                           setPriorityFilter("All");
                           setCurrentPage(1);
                         }}
-                        className="text-[0.7vw] font-semibold text-rose-600 hover:text-rose-700 cursor-pointer flex items-center gap-[0.2vw]"
+                        className="inline-flex items-center gap-[0.3vw] text-[0.7vw] font-normal text-slate-800 hover:text-rose-600 transition-colors cursor-pointer py-[0.1vw]"
                       >
-                        <RotateCcw className="w-[0.65vw] h-[0.65vw]" />
-                        Reset Filters
+                        <Filter className="w-[0.75vw] h-[0.75vw] text-slate-800" />
+                        <span>Clear All Filters</span>
                       </button>
-                    )}
-                  </div>
-
-                  <div className="p-[0.8vw] space-y-[0.7vw]">
-                    {/* Date Range */}
-                    <div>
-                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
-                        Date Range
-                      </label>
-                      <div className="flex items-center bg-slate-50 border border-slate-300 rounded-[0.4vw] p-[0.25vw] px-[0.4vw] text-[0.75vw]">
-                        <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-400 mr-[0.3vw]" />
-                        <input
-                          type="date"
-                          value={fromDate}
-                          onChange={(e) => {
-                            setFromDate(e.target.value);
-                            setCurrentPage(1);
-                          }}
-                          className="bg-transparent text-slate-700 font-semibold outline-none cursor-pointer w-[7vw]"
-                        />
-                        <span className="text-slate-400 mx-[0.2vw]">—</span>
-                        <input
-                          type="date"
-                          value={toDate}
-                          min={fromDate}
-                          onChange={(e) => {
-                            setToDate(e.target.value);
-                            setCurrentPage(1);
-                          }}
-                          className="bg-transparent text-slate-700 font-semibold outline-none cursor-pointer w-[7vw]"
-                        />
-                      </div>
                     </div>
-
-                    {/* Origin Type */}
-                    <div>
-                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
-                        Call Origin
-                      </label>
-                      <CustomDropdown
-                        size="sm"
-                        value={callTypeFilter}
-                        onChange={(val) => {
-                          setCallTypeFilter(val);
-                          setCurrentPage(1);
-                        }}
-                        options={[
-                          { value: "All", label: "All Origins" },
-                          { value: "Self Assigned", label: "Self Assigned" },
-                          { value: "Admin Registered", label: "Registered Calls" },
-                        ]}
-                        triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
-                      />
-                    </div>
-
-                    {/* Status Filter */}
-                    <div>
-                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
-                        Call Status
-                      </label>
-                      <CustomDropdown
-                        size="sm"
-                        value={statusFilter}
-                        onChange={(val) => {
-                          setStatusFilter(val);
-                          setCurrentPage(1);
-                        }}
-                        options={[
-                          { value: "All", label: "All Statuses" },
-                          { value: "Registered", label: "Registered" },
-                          { value: "Assigned", label: "Assigned" },
-                          { value: "Supporting", label: "Supporting" },
-                          { value: "Field Visit", label: "Field Visit" },
-                          { value: "Pending", label: "Pending" },
-                          { value: "Escalating", label: "Escalating" },
-                          { value: "Critical", label: "Critical" },
-                          { value: "Resolved", label: "Resolved / Closed" },
-                        ]}
-                        triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
-                      />
-                    </div>
-
-                    {/* Priority Filter */}
-                    <div>
-                      <label className="block text-[0.7vw] font-bold text-slate-600 uppercase tracking-wider mb-[0.25vw]">
-                        Priority
-                      </label>
-                      <CustomDropdown
-                        size="sm"
-                        value={priorityFilter}
-                        onChange={(val) => {
-                          setPriorityFilter(val);
-                          setCurrentPage(1);
-                        }}
-                        options={[
-                          { value: "All", label: "All Priorities" },
-                          ...PRIORITIES.map((p) => ({ value: p, label: p })),
-                        ]}
-                        placement="top"
-                        triggerClassName="h-[2vw] !rounded-[0.4vw] border-slate-300 bg-white font-semibold text-slate-700 w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
-                    <span className="text-[0.7vw] text-slate-500 font-medium">
-                      {filteredCalls.length} calls matching
-                    </span>
-                    <button
-                      onClick={() => setShowFilterPopover(false)}
-                      className="px-[0.7vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[0.72vw] rounded-[0.35vw] cursor-pointer shadow-2xs"
-                    >
-                      Apply
-                    </button>
-                  </div>
+                  )}
                 </div>
               </>
             )}
@@ -2050,7 +2036,7 @@ export default function ServiceCallReports() {
                     <table className="w-full text-left border-collapse">
                       <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                         <tr>
-                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">#</th>
+                          <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No.</th>
                           <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Employee</th>
                           <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Department</th>
                           <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">Total Calls</th>
