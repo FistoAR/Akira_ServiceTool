@@ -1631,11 +1631,11 @@ export default function ServiceCallReports() {
 
                                     return (
                                       <div className="flex flex-col items-center justify-center">
-                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-bold min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
+                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
                                           {displayStatus}
                                         </span>
                                         {isClosed && (prod._productClosure?.closedAt || prod._productClosure?.date) && (
-                                          <div className="text-[0.65vw] text-slate-400 font-medium mt-[0.15vw]">
+                                          <div className="text-[0.65vw] text-slate-400 font-normal mt-[0.15vw]">
                                             {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
                                           </div>
                                         )}
@@ -1650,7 +1650,7 @@ export default function ServiceCallReports() {
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
                                       title="View Call Details"
-                                      className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                      className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                     >
                                       View Reports
                                     </button>
@@ -1815,7 +1815,7 @@ export default function ServiceCallReports() {
 
                             {/* 9. Status */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap">
-                              <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-bold min-w-[6.2vw] shadow-xs tracking-wide ${
+                              <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${
                                 item.isClosed ? "bg-[#05a854] text-white" : "bg-[#e53935] text-white"
                               }`}>
                                 {item.isClosed ? "Completed" : "Overdue"}
@@ -1828,7 +1828,7 @@ export default function ServiceCallReports() {
                                 <button
                                   onClick={() => setSelectedInfoCall(item.call)}
                                   title="View Call Details"
-                                  className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                  className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                 >
                                   View Reports
                                 </button>
@@ -1966,7 +1966,7 @@ export default function ServiceCallReports() {
                                   }}
                                   disabled={emp.callsPerUser === 0}
                                   title={emp.callsPerUser > 0 ? "View Assigned Calls" : "No Calls"}
-                                  className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                                  className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap ${
                                     emp.callsPerUser > 0
                                       ? "bg-[#1a73e8] hover:bg-[#1557b0] text-white"
                                       : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
@@ -2113,7 +2113,7 @@ export default function ServiceCallReports() {
                                         badgeStyle = "bg-[#5551f3] text-white";
                                       }
                                       return (
-                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-bold min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
+                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
                                           {displayStatus}
                                         </span>
                                       );
@@ -2124,7 +2124,7 @@ export default function ServiceCallReports() {
                                       <button
                                         onClick={() => setSelectedInfoCall(call)}
                                         title="View Call Details"
-                                        className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-bold transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                        className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                       >
                                         View Reports
                                       </button>

@@ -349,7 +349,7 @@ export default function Sidebar() {
                     onClick={(e) => handleMenuClick(item, e)}
                     className={`
                       relative flex items-center rounded-xl
-                      transition-all duration-300 ease-out overflow-hidden
+                      transition-all duration-200 ease-out overflow-hidden
                       ${
                         isCollapsed
                           ? "justify-center px-[0.6vw] py-[1.2vh]"
@@ -357,17 +357,17 @@ export default function Sidebar() {
                       }
                       ${
                         active
-                          ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                          ? "bg-blue-50/80 text-blue-600 font-semibold"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
                       }
                     `}
                   >
                     {!active && hoveredItem === item.path && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-transparent rounded-xl" />
+                      <div className="absolute inset-0 bg-blue-50/40 rounded-xl pointer-events-none" />
                     )}
 
                     <div
-                      className={`relative flex-shrink-0 flex items-center justify-center transition-all duration-300 ${
+                      className={`relative flex-shrink-0 flex items-center justify-center transition-all duration-200 ${
                         isCollapsed
                           ? "w-[1.8vw] h-[1.8vw]"
                           : "w-[1.4vw] h-[1.4vw]"
@@ -376,32 +376,30 @@ export default function Sidebar() {
                       {item.iconify ? (
                         <Icon
                           icon={item.iconify}
-                          className={`w-full h-full transition-all duration-300 ${
+                          className={`w-full h-full transition-all duration-200 ${
                             active
-                              ? "text-white"
+                              ? "text-blue-600"
                               : hoveredItem === item.path
                                 ? "text-blue-600"
-                                : "text-gray-500"
+                                : "text-slate-500"
                           }`}
                         />
                       ) : (
                         <img
                           src={item.icon}
                           alt={item.label}
-                          className="w-full h-full object-contain transition-all duration-300"
+                          className="w-full h-full object-contain transition-all duration-200"
                           style={{
-                            filter: active
-                              ? "brightness(0) invert(1)"
-                              : hoveredItem === item.path
-                                ? activeFilter
-                                : "none",
+                            filter: active || hoveredItem === item.path
+                              ? activeFilter
+                              : "none",
                           }}
                         />
                       )}
                     </div>
 
                     <span
-                      className={`whitespace-nowrap flex-1 font-medium text-[0.85vw] transition-all duration-500 ease-out ${
+                      className={`whitespace-nowrap flex-1 text-[0.85vw] transition-all duration-500 ease-out ${
                         isCollapsed
                           ? "w-0 opacity-0 translate-x-[-1vw] pointer-events-none"
                           : "w-auto opacity-100 translate-x-0"
@@ -413,10 +411,10 @@ export default function Sidebar() {
                     {hasSubItems && !isCollapsed && (
                       <div className="flex items-center gap-[0.3vw] flex-shrink-0">
                         <span
-                          className={`text-[0.6vw] font-bold rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-300 ${
+                          className={`text-[0.6vw] font-bold rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
                             active
-                              ? "bg-white/20 text-white"
-                              : "bg-gray-100 text-gray-400"
+                              ? "bg-blue-100 text-blue-700 font-semibold"
+                              : "bg-slate-100 text-slate-400"
                           }`}
                         >
                           {item.subItems.length}
@@ -424,7 +422,7 @@ export default function Sidebar() {
                         <svg
                           className={`w-[0.8vw] h-[0.8vw] transition-transform duration-300 ${
                             isSubMenuOpen ? "rotate-180" : ""
-                          } ${active ? "text-white" : "text-gray-400"}`}
+                          } ${active ? "text-blue-600" : "text-slate-400"}`}
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -440,7 +438,7 @@ export default function Sidebar() {
                     )}
 
                     {active && (
-                      <div className="absolute left-0 top-[15%] bottom-[15%] w-[0.25vw] bg-white rounded-r-full" />
+                      <div className="absolute left-0 top-[18%] bottom-[18%] w-[0.25vw] bg-blue-600 rounded-r-full" />
                     )}
                   </Link>
 
@@ -454,7 +452,7 @@ export default function Sidebar() {
                       }`}
                     >
                       <div className="mx-[0.5vw] mt-[0.6vh] mb-[0.3vh]">
-                        <div className="bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-xl border border-slate-300/80 p-[0.5vw] shadow-inner">
+                        <div className="bg-slate-50/70 rounded-xl border border-slate-200/80 p-[0.5vw]">
                           <ul className="flex flex-col gap-[0.4vh]">
                             {item.subItems.map((subItem, subIndex) => {
                               const isSubActive = (location.pathname + location.search) === subItem.path || (location.pathname === subItem.path);
@@ -479,24 +477,24 @@ export default function Sidebar() {
                                     to={subItem.path}
                                     className={`
                                       relative flex items-center gap-[0.6vw] px-[0.7vw] py-[0.8vh] rounded-lg text-[0.76vw]
-                                      transition-all duration-250 ease-out
+                                      transition-all duration-200 ease-out
                                       ${
                                         isSubActive
-                                          ? "bg-white text-blue-600 font-semibold shadow-md border border-blue-100 scale-[1.02]"
-                                          : "text-gray-500 hover:bg-white/80 hover:text-gray-800 hover:shadow-sm"
+                                          ? "bg-white text-blue-600 font-semibold shadow-xs border border-blue-200"
+                                          : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-medium"
                                       }
                                     `}
                                   >
                                     <div
                                       className={`
                                         flex-shrink-0 rounded-md flex items-center justify-center text-[0.6vw] font-bold
-                                        transition-all duration-300 w-[1.4vw] h-[1.4vw]
+                                        transition-all duration-200 w-[1.4vw] h-[1.4vw]
                                         ${
                                           isSubActive
-                                            ? "bg-blue-500 text-white shadow-sm shadow-blue-400/30"
+                                            ? "bg-blue-600 text-white"
                                             : isSubHovered
-                                              ? "bg-blue-100 text-blue-500"
-                                              : "bg-gray-100 text-gray-400"
+                                              ? "bg-blue-100 text-blue-600"
+                                              : "bg-slate-100 text-slate-400"
                                         }
                                       `}
                                     >
@@ -510,9 +508,9 @@ export default function Sidebar() {
                                     <svg
                                       className={`w-[0.6vw] h-[0.6vw] flex-shrink-0 transition-all duration-200 ${
                                         isSubActive
-                                          ? "opacity-100 text-blue-500 translate-x-0"
+                                          ? "opacity-100 text-blue-600 translate-x-0"
                                           : isSubHovered
-                                            ? "opacity-100 text-gray-400 translate-x-0"
+                                            ? "opacity-100 text-slate-400 translate-x-0"
                                             : "opacity-0 -translate-x-[0.3vw]"
                                       }`}
                                       fill="none"
