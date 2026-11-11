@@ -2111,7 +2111,7 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.82vw] font-semibold text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>

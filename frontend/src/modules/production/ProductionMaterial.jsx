@@ -475,7 +475,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
           {/* Sidebar with distinctive background & active pill styling */}
           <div className="w-[15vw] border-r border-slate-200 flex flex-col bg-[#F3F6FA] p-[0.7vw] gap-[0.35vw]">
             <div className="px-[0.6vw] py-[0.3vw] mb-[0.2vw]">
-              <span className="text-[0.68vw] font-bold uppercase tracking-wider text-slate-400">Categories</span>
+              <span className="text-[0.68vw] font-medium uppercase tracking-wider text-slate-400">Categories</span>
             </div>
             {TABS.map(tab => {
               const isSelected = activeTab === tab.id;
@@ -488,15 +488,15 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center justify-between px-[0.85vw] py-[0.65vw] text-[0.78vw] rounded-[0.55vw] transition-all text-left cursor-pointer ${
                     isSelected
-                      ? "bg-white text-blue-700 shadow-sm border border-slate-200/90 font-bold"
+                      ? "bg-white text-blue-700 shadow-sm border border-slate-200/90 font-medium"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium"
                   }`}
                 >
                   <div className="flex items-center gap-[0.6vw]">
                     <tab.icon className={`w-[1vw] h-[1vw] ${isSelected ? "text-blue-600" : "text-slate-400"}`} />
-                    <span>{tab.label}</span>
+                    <span className="font-medium">{tab.label}</span>
                   </div>
-                  <span className={`text-[0.68vw] px-[0.45vw] py-[0.05vw] rounded-full font-semibold ${
+                  <span className={`text-[0.68vw] px-[0.45vw] py-[0.05vw] rounded-full font-medium ${
                     isSelected ? "bg-blue-50 text-blue-600 border border-blue-100" : "bg-slate-200/70 text-slate-500"
                   }`}>
                     {count}
@@ -512,8 +512,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "stages" && (
                 <motion.div key="stages" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
                   <div>
-                    <h4 className="text-[0.95vw] font-bold text-slate-800">Work Stages</h4>
-                    <p className="text-[0.72vw] text-slate-500">Configure workflow stages available during production and inspection</p>
+                    <h4 className="text-[0.95vw] font-medium text-slate-800">Work Stages</h4>
+                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure workflow stages available during production and inspection</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
@@ -522,42 +522,47 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewStage(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addStage()} 
                       placeholder="Enter new work stage name..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addStage} 
-                      className="bg-blue-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-bold hover:bg-blue-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-blue-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-blue-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Stage
                     </button>
                   </div>
 
-                  <div className="flex-1">
-                    <div className="text-[0.72vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.6vw]">
-                      Configured Stages ({stages.length})
-                    </div>
-                    <div className="grid grid-cols-3 gap-[0.6vw]">
-                      {stages.map((s, idx) => (
-                        <div 
-                          key={s} 
-                          className="flex items-center justify-between px-[0.85vw] py-[0.55vw] bg-slate-50/70 hover:bg-blue-50/40 border border-slate-200/90 hover:border-blue-200 rounded-[0.6vw] transition-all group shadow-2xs"
-                        >
-                          <div className="flex items-center gap-[0.5vw] min-w-0">
-                            <span className="w-[1.2vw] h-[1.2vw] rounded-full bg-white border border-slate-200 text-slate-500 font-mono text-[0.65vw] font-bold flex items-center justify-center shrink-0">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Stage Name</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {stages.map((s, idx) => (
+                          <tr key={s} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
                               {idx + 1}
-                            </span>
-                            <span className="text-[0.76vw] text-slate-800 font-semibold truncate" title={s}>{s}</span>
-                          </div>
-                          <button 
-                            onClick={() => removeStage(s)} 
-                            className="w-[1.2vw] h-[1.2vw] rounded-full text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
-                            title="Delete"
-                          >
-                            <X className="w-[0.7vw] h-[0.7vw]" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                            </td>
+                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                              {s}
+                            </td>
+                            <td className="py-[0.5vw] px-[0.8vw] text-center">
+                              <button 
+                                onClick={() => removeStage(s)} 
+                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </motion.div>
               )}
@@ -565,8 +570,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "dispositions" && (
                 <motion.div key="dispositions" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
                   <div>
-                    <h4 className="text-[0.95vw] font-bold text-slate-800">Disposition Outcomes</h4>
-                    <p className="text-[0.72vw] text-slate-500">Configure disposition resolution statuses for rejected or verified items</p>
+                    <h4 className="text-[0.95vw] font-medium text-slate-800">Disposition Outcomes</h4>
+                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure disposition resolution statuses for rejected or verified items</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
@@ -575,42 +580,47 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewDisposition(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addDisposition()} 
                       placeholder="Enter new disposition outcome..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addDisposition} 
-                      className="bg-emerald-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-bold hover:bg-emerald-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-emerald-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-emerald-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Outcome
                     </button>
                   </div>
 
-                  <div className="flex-1">
-                    <div className="text-[0.72vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.6vw]">
-                      Configured Outcomes ({dispositions.length})
-                    </div>
-                    <div className="grid grid-cols-2 gap-[0.6vw]">
-                      {dispositions.map((d, idx) => (
-                        <div 
-                          key={d} 
-                          className="flex items-center justify-between px-[0.85vw] py-[0.55vw] bg-emerald-50/30 hover:bg-emerald-50/70 border border-emerald-100 hover:border-emerald-300 rounded-[0.6vw] transition-all group shadow-2xs"
-                        >
-                          <div className="flex items-center gap-[0.5vw] min-w-0">
-                            <span className="w-[1.2vw] h-[1.2vw] rounded-full bg-white border border-emerald-200 text-emerald-700 font-mono text-[0.65vw] font-bold flex items-center justify-center shrink-0">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Outcome Description</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {dispositions.map((d, idx) => (
+                          <tr key={d} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
                               {idx + 1}
-                            </span>
-                            <span className="text-[0.76vw] text-slate-800 font-semibold truncate" title={d}>{d}</span>
-                          </div>
-                          <button 
-                            onClick={() => removeDisposition(d)} 
-                            className="w-[1.2vw] h-[1.2vw] rounded-full text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
-                            title="Delete"
-                          >
-                            <X className="w-[0.7vw] h-[0.7vw]" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                            </td>
+                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                              {d}
+                            </td>
+                            <td className="py-[0.5vw] px-[0.8vw] text-center">
+                              <button 
+                                onClick={() => removeDisposition(d)} 
+                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </motion.div>
               )}
@@ -618,8 +628,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "problems" && (
                 <motion.div key="problems" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
                   <div>
-                    <h4 className="text-[0.95vw] font-bold text-slate-800">Problem Types</h4>
-                    <p className="text-[0.72vw] text-slate-500">Categorize issue classifications identified on production boards</p>
+                    <h4 className="text-[0.95vw] font-medium text-slate-800">Problem Types</h4>
+                    <p className="text-[0.72vw] text-slate-500 font-normal">Categorize issue classifications identified on production boards</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
@@ -628,42 +638,47 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewProblemType(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addProblemType()} 
                       placeholder="Enter new problem classification..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addProblemType} 
-                      className="bg-orange-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-bold hover:bg-orange-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-orange-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-orange-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Type
                     </button>
                   </div>
 
-                  <div className="flex-1">
-                    <div className="text-[0.72vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.6vw]">
-                      Configured Problem Types ({problemTypes.length})
-                    </div>
-                    <div className="grid grid-cols-2 gap-[0.6vw]">
-                      {problemTypes.map((p, idx) => (
-                        <div 
-                          key={p} 
-                          className="flex items-center justify-between px-[0.85vw] py-[0.55vw] bg-amber-50/30 hover:bg-amber-50/70 border border-amber-100 hover:border-amber-300 rounded-[0.6vw] transition-all group shadow-2xs"
-                        >
-                          <div className="flex items-center gap-[0.5vw] min-w-0">
-                            <span className="w-[1.2vw] h-[1.2vw] rounded-full bg-white border border-amber-200 text-amber-700 font-mono text-[0.65vw] font-bold flex items-center justify-center shrink-0">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Problem Classification</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {problemTypes.map((p, idx) => (
+                          <tr key={p} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
                               {idx + 1}
-                            </span>
-                            <span className="text-[0.76vw] text-slate-800 font-semibold truncate" title={p}>{p}</span>
-                          </div>
-                          <button 
-                            onClick={() => removeProblemType(p)} 
-                            className="w-[1.2vw] h-[1.2vw] rounded-full text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
-                            title="Delete"
-                          >
-                            <X className="w-[0.7vw] h-[0.7vw]" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                            </td>
+                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                              {p}
+                            </td>
+                            <td className="py-[0.5vw] px-[0.8vw] text-center">
+                              <button 
+                                onClick={() => removeProblemType(p)} 
+                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </motion.div>
               )}
@@ -671,8 +686,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "products" && (
                 <motion.div key="products" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
                   <div>
-                    <h4 className="text-[0.95vw] font-bold text-slate-800">Product Types</h4>
-                    <p className="text-[0.72vw] text-slate-500">Configure manufacturing assembly and board types</p>
+                    <h4 className="text-[0.95vw] font-medium text-slate-800">Product Types</h4>
+                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure manufacturing assembly and board types</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
@@ -681,42 +696,47 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewProductType(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addProductType()} 
                       placeholder="Enter new product type..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addProductType} 
-                      className="bg-purple-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-bold hover:bg-purple-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-purple-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-purple-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Product Type
                     </button>
                   </div>
 
-                  <div className="flex-1">
-                    <div className="text-[0.72vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.6vw]">
-                      Configured Product Types ({productTypes.length})
-                    </div>
-                    <div className="grid grid-cols-2 gap-[0.6vw]">
-                      {productTypes.map((p, idx) => (
-                        <div 
-                          key={p} 
-                          className="flex items-center justify-between px-[0.85vw] py-[0.55vw] bg-purple-50/30 hover:bg-purple-50/70 border border-purple-100 hover:border-purple-300 rounded-[0.6vw] transition-all group shadow-2xs"
-                        >
-                          <div className="flex items-center gap-[0.5vw] min-w-0">
-                            <span className="w-[1.2vw] h-[1.2vw] rounded-full bg-white border border-purple-200 text-purple-700 font-mono text-[0.65vw] font-bold flex items-center justify-center shrink-0">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Product Type</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {productTypes.map((p, idx) => (
+                          <tr key={p} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
                               {idx + 1}
-                            </span>
-                            <span className="text-[0.76vw] text-slate-800 font-semibold truncate" title={p}>{p}</span>
-                          </div>
-                          <button 
-                            onClick={() => removeProductType(p)} 
-                            className="w-[1.2vw] h-[1.2vw] rounded-full text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer opacity-70 group-hover:opacity-100"
-                            title="Delete"
-                          >
-                            <X className="w-[0.7vw] h-[0.7vw]" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                            </td>
+                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                              {p}
+                            </td>
+                            <td className="py-[0.5vw] px-[0.8vw] text-center">
+                              <button 
+                                onClick={() => removeProductType(p)} 
+                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </motion.div>
               )}
