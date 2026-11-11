@@ -331,6 +331,10 @@ const ServiceCallForm = ({
       alert("Please enter Contact Number.");
       return;
     }
+    if (!formData.site || !formData.site.trim()) {
+      alert("Please select Site.");
+      return;
+    }
     if (formData.locationType === "Site" && (!formData.location || !formData.location.trim())) {
       alert("Please enter Site Address for location type 'Site'.");
       return;
@@ -776,7 +780,9 @@ const ServiceCallForm = ({
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">Site</label>
+              <label className="text-[0.76vw] font-semibold text-slate-700">
+                Site <span className="text-rose-500">*</span>
+              </label>
               <CustomDropdown
                 value={formData.site || ""}
                 onChange={(val) => set("site", val)}

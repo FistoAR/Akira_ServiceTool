@@ -1512,20 +1512,20 @@ export default function ServiceCallReports() {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
-                                      <button
-                                        onClick={() => setSelectedInfoCall(call)}
-                                        className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
-                                        title="Click to view full details"
-                                      >
-                                        {call.callNumber}
-                                      </button>
-                                      {hasEdits && (
-                                        <span
-                                          className="text-[0.62vw] px-[0.3vw] py-[0.05vw] bg-amber-50 text-amber-700 border border-amber-200 rounded font-semibold"
-                                          title="This call has edited records"
+                                      <CustomTooltip text="Click to view full details" position="top-start">
+                                        <button
+                                          onClick={() => setSelectedInfoCall(call)}
+                                          className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
                                         >
-                                          Edited
-                                        </span>
+                                          {call.callNumber}
+                                        </button>
+                                      </CustomTooltip>
+                                      {hasEdits && (
+                                        <CustomTooltip text="This call has edited records" position="top">
+                                          <span className="text-[0.62vw] px-[0.3vw] py-[0.05vw] bg-amber-50 text-amber-700 border border-amber-200 rounded font-semibold cursor-default">
+                                            Edited
+                                          </span>
+                                        </CustomTooltip>
                                       )}
                                     </div>
                                   </td>
@@ -1556,19 +1556,22 @@ export default function ServiceCallReports() {
                                     rowSpan={rowCount}
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
                                   >
-                                    <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
-                                      {call.customerName || "—"}
-                                    </div>
+                                    <CustomTooltip text={call.customerName} position="top-start" className="max-w-full">
+                                      <div className="font-semibold text-slate-900 text-[0.82vw] truncate">
+                                        {call.customerName || "—"}
+                                      </div>
+                                    </CustomTooltip>
                                     <div className="flex items-center gap-[0.45vw] mt-[0.15vw] flex-wrap">
                                       {call.contactNumber && (
-                                        <a
-                                          href={`tel:${call.contactNumber}`}
-                                          className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
-                                          title="Click to call"
-                                        >
-                                          <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
-                                          <span>{call.contactNumber}</span>
-                                        </a>
+                                        <CustomTooltip text="Click to call" position="bottom">
+                                          <a
+                                            href={`tel:${call.contactNumber}`}
+                                            className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                          >
+                                            <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                                            <span>{call.contactNumber}</span>
+                                          </a>
+                                        </CustomTooltip>
                                       )}
                                       {call.partyCode && (
                                         <span className="text-[0.66vw] text-slate-400 font-mono shrink-0">
@@ -1597,9 +1600,11 @@ export default function ServiceCallReports() {
 
                                 {/* 6. Product / Model */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
-                                  <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={prod.productModel || prod.itemCode}>
-                                    {prod.productModel || prod.itemCode || "—"}
-                                  </div>
+                                  <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">
+                                    <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                      {prod.productModel || prod.itemCode || "—"}
+                                    </div>
+                                  </CustomTooltip>
                                   {prod.serialNumber && (
                                     <div className="mt-[0.1vw]">
                                       <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
@@ -1695,27 +1700,28 @@ export default function ServiceCallReports() {
                                   <div className="flex items-center justify-center gap-[0.3vw]">
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
-                                      title="View Call Details"
                                       className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                     >
                                       View Reports
                                     </button>
                                     {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
-                                      <button
-                                        onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                        title="Edit Report"
-                                        className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
-                                      >
-                                        <Edit3 className="w-[0.9vw] h-[0.9vw]" />
-                                      </button>
+                                      <CustomTooltip text="Edit Report" position="top">
+                                        <button
+                                          onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                          className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
+                                        >
+                                          <Edit3 className="w-[0.9vw] h-[0.9vw]" />
+                                        </button>
+                                      </CustomTooltip>
                                     )}
-                                    <button
-                                      onClick={() => setHistoryModalCall(call)}
-                                      title="View Lifecycle History"
-                                      className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
-                                    >
-                                      <History className="w-[0.9vw] h-[0.9vw]" />
-                                    </button>
+                                    <CustomTooltip text="View Lifecycle History" position="top-end">
+                                      <button
+                                        onClick={() => setHistoryModalCall(call)}
+                                        className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                      >
+                                        <History className="w-[0.9vw] h-[0.9vw]" />
+                                      </button>
+                                    </CustomTooltip>
                                   </div>
                                 </td>
                               </tr>
@@ -1766,30 +1772,34 @@ export default function ServiceCallReports() {
 
                             {/* 1. Call No */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
-                              <button
-                                onClick={() => setSelectedInfoCall(item.call)}
-                                className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
-                                title="Click to view full details"
-                              >
-                                {item.call.callNumber}
-                              </button>
+                              <CustomTooltip text="Click to view full details" position="top-start">
+                                <button
+                                  onClick={() => setSelectedInfoCall(item.call)}
+                                  className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
+                                >
+                                  {item.call.callNumber}
+                                </button>
+                              </CustomTooltip>
                             </td>
 
                             {/* 2. Customer & Contact */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]">
-                              <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={item.call.customerName}>
-                                {item.call.customerName || "—"}
-                              </div>
+                              <CustomTooltip text={item.call.customerName} position="top-start" className="max-w-full">
+                                <div className="font-semibold text-slate-900 text-[0.82vw] truncate">
+                                  {item.call.customerName || "—"}
+                                </div>
+                              </CustomTooltip>
                               <div className="flex items-center gap-[0.45vw] mt-[0.15vw] flex-wrap">
                                 {item.call.contactNumber && (
-                                  <a
-                                    href={`tel:${item.call.contactNumber}`}
-                                    className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
-                                    title="Click to call"
-                                  >
-                                    <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
-                                    <span>{item.call.contactNumber}</span>
-                                  </a>
+                                  <CustomTooltip text="Click to call" position="bottom">
+                                    <a
+                                      href={`tel:${item.call.contactNumber}`}
+                                      className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 hover:underline shrink-0"
+                                    >
+                                      <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                                      <span>{item.call.contactNumber}</span>
+                                    </a>
+                                  </CustomTooltip>
                                 )}
                                 {item.call.partyCode && (
                                   <span className="text-[0.66vw] text-slate-400 font-mono shrink-0">
@@ -1812,9 +1822,11 @@ export default function ServiceCallReports() {
 
                             {/* 4. Product / SN */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[13vw]">
-                              <div className="font-semibold text-slate-800 text-[0.8vw] truncate" title={item.prod.productModel || item.prod.itemCode}>
-                                {item.prod.productModel || item.prod.itemCode || "—"}
-                              </div>
+                              <CustomTooltip text={item.prod.productModel || item.prod.itemCode} position="top-start" className="max-w-full">
+                                <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                  {item.prod.productModel || item.prod.itemCode || "—"}
+                                </div>
+                              </CustomTooltip>
                               {item.prod.serialNumber && (
                                 <div className="mt-[0.1vw]">
                                   <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
@@ -1873,18 +1885,18 @@ export default function ServiceCallReports() {
                               <div className="flex items-center justify-center gap-[0.3vw]">
                                 <button
                                   onClick={() => setSelectedInfoCall(item.call)}
-                                  title="View Call Details"
                                   className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                 >
                                   View Reports
                                 </button>
-                                <button
-                                  onClick={() => setHistoryModalCall(item.call)}
-                                  title="View Lifecycle History"
-                                  className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
-                                >
-                                  <History className="w-[0.9vw] h-[0.9vw]" />
-                                </button>
+                                <CustomTooltip text="View Lifecycle History" position="top-end">
+                                  <button
+                                    onClick={() => setHistoryModalCall(item.call)}
+                                    className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                  >
+                                    <History className="w-[0.9vw] h-[0.9vw]" />
+                                  </button>
+                                </CustomTooltip>
                               </div>
                             </td>
                           </tr>
@@ -2005,21 +2017,25 @@ export default function ServiceCallReports() {
 
                               {/* Action */}
                               <td className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                <button
-                                  onClick={() => {
-                                    setSelectedEmployee(emp);
-                                    setCurrentPage(1);
-                                  }}
-                                  disabled={emp.callsPerUser === 0}
-                                  title={emp.callsPerUser > 0 ? "View Assigned Calls" : "No Calls"}
-                                  className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap ${
-                                    emp.callsPerUser > 0
-                                      ? "bg-[#1a73e8] hover:bg-[#1557b0] text-white"
-                                      : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
-                                  }`}
+                                <CustomTooltip
+                                  text={emp.callsPerUser > 0 ? "View Assigned Calls" : "No Calls"}
+                                  position="top-end"
                                 >
-                                  View Reports
-                                </button>
+                                  <button
+                                    onClick={() => {
+                                      setSelectedEmployee(emp);
+                                      setCurrentPage(1);
+                                    }}
+                                    disabled={emp.callsPerUser === 0}
+                                    className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                                      emp.callsPerUser > 0
+                                        ? "bg-[#1a73e8] hover:bg-[#1557b0] text-white"
+                                        : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
+                                    }`}
+                                  >
+                                    View Reports
+                                  </button>
+                                </CustomTooltip>
                               </td>
                             </tr>
                           ))
@@ -2098,13 +2114,14 @@ export default function ServiceCallReports() {
                                     </td>
                                   )}
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
-                                    <button
-                                      onClick={() => setSelectedInfoCall(call)}
-                                      className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
-                                      title="Click to view full details"
-                                    >
-                                      {call.callNumber}
-                                    </button>
+                                    <CustomTooltip text="Click to view full details" position="top-start">
+                                      <button
+                                        onClick={() => setSelectedInfoCall(call)}
+                                        className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
+                                      >
+                                        {call.callNumber}
+                                      </button>
+                                    </CustomTooltip>
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                     {isSelf ? (
@@ -2118,14 +2135,18 @@ export default function ServiceCallReports() {
                                     )}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[14vw]">
-                                    <div className="font-semibold text-slate-900 text-[0.82vw] truncate" title={call.customerName}>
-                                      {call.customerName || "—"}
-                                    </div>
+                                    <CustomTooltip text={call.customerName} position="top-start" className="max-w-full">
+                                      <div className="font-semibold text-slate-900 text-[0.82vw] truncate">
+                                        {call.customerName || "—"}
+                                      </div>
+                                    </CustomTooltip>
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw]">
-                                    <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
-                                      {prod.productModel || prod.itemCode || "—"}
-                                    </div>
+                                    <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">
+                                      <div className="font-semibold text-slate-800 text-[0.8vw] truncate">
+                                        {prod.productModel || prod.itemCode || "—"}
+                                      </div>
+                                    </CustomTooltip>
                                     {prod.serialNumber && (
                                       <div className="mt-[0.08vw]">
                                         <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
@@ -2169,27 +2190,28 @@ export default function ServiceCallReports() {
                                     <div className="flex items-center justify-center gap-[0.3vw]">
                                       <button
                                         onClick={() => setSelectedInfoCall(call)}
-                                        title="View Call Details"
                                         className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                       >
                                         View Reports
                                       </button>
                                       {(!isAdmin || prod._productClosure?.closedBy === currentUser?.userId || prod._productClosure?.userId === currentUser?.userId) && (
-                                        <button
-                                          onClick={() => handleOpenEditReport(call, prod, pIdx)}
-                                          title="Edit Report"
-                                          className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
-                                        >
-                                          <Edit3 className="w-[0.9vw] h-[0.9vw]" />
-                                        </button>
+                                        <CustomTooltip text="Edit Report" position="top">
+                                          <button
+                                            onClick={() => handleOpenEditReport(call, prod, pIdx)}
+                                            className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
+                                          >
+                                            <Edit3 className="w-[0.9vw] h-[0.9vw]" />
+                                          </button>
+                                        </CustomTooltip>
                                       )}
-                                      <button
-                                        onClick={() => setHistoryModalCall(call)}
-                                        title="View Lifecycle History"
-                                        className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
-                                      >
-                                        <History className="w-[0.9vw] h-[0.9vw]" />
-                                      </button>
+                                      <CustomTooltip text="View Lifecycle History" position="top-end">
+                                        <button
+                                          onClick={() => setHistoryModalCall(call)}
+                                          className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                        >
+                                          <History className="w-[0.9vw] h-[0.9vw]" />
+                                        </button>
+                                      </CustomTooltip>
                                     </div>
                                   </td>
                                 </tr>
