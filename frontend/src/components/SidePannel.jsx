@@ -563,7 +563,7 @@ export default function Sidebar() {
           className={`w-full flex items-center rounded-xl transition-all duration-200 cursor-pointer group ${
             isCollapsed
               ? "justify-center py-[0.4vh] bg-transparent"
-              : "px-[0.85vw] py-[0.8vh] justify-between text-slate-700 hover:text-blue-700 bg-white hover:bg-blue-50/70 border border-slate-300 hover:border-blue-300 shadow-2xs hover:shadow-xs"
+              : "px-[0.85vw] py-[0.8vh] justify-between text-slate-700 hover:text-blue-700 bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 shadow-2xs hover:shadow-xs"
           }`}
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
@@ -575,15 +575,15 @@ export default function Sidebar() {
           <div
             className={`rounded-xl flex items-center justify-center transition-all duration-200 ${
               isCollapsed
-                ? "w-[2.4vw] h-[2.4vw] bg-white border border-slate-300 hover:border-[#1a73e8] hover:bg-blue-50/80 text-slate-700 hover:text-[#1a73e8] shadow-xs hover:shadow-md"
-                : "w-[1.8vw] h-[1.8vw] bg-slate-100 group-hover:bg-blue-100/80 border border-slate-200 group-hover:border-blue-200 text-slate-600 group-hover:text-blue-700 shadow-2xs"
+                ? "w-[2.4vw] h-[2.4vw] bg-blue-50 hover:bg-blue-600 border border-blue-200 hover:border-blue-600 text-[#1a73e8] hover:text-white shadow-2xs hover:shadow-md"
+                : "w-[1.8vw] h-[1.8vw] bg-blue-50 group-hover:bg-blue-600 border border-blue-200 group-hover:border-blue-600 text-[#1a73e8] group-hover:text-white shadow-2xs"
             }`}
           >
             <svg
               className={`transition-all duration-300 ${
                 isCollapsed
-                  ? "w-[1.15vw] h-[1.15vw] text-slate-700 group-hover:text-[#1a73e8] group-hover:translate-x-[0.08vw]"
-                  : "w-[0.9vw] h-[0.9vw] rotate-180 text-slate-600 group-hover:text-blue-700"
+                  ? "w-[1.15vw] h-[1.15vw] text-[#1a73e8] group-hover:text-white group-hover:translate-x-[0.08vw]"
+                  : "w-[0.9vw] h-[0.9vw] rotate-180 text-[#1a73e8] group-hover:text-white"
               }`}
               fill="none"
               viewBox="0 0 24 24"
