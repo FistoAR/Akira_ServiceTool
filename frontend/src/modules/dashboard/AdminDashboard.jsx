@@ -184,10 +184,40 @@ export function EmptyState({ icon: Icon, title }) {
 }
 
 /**
+ * Relative time formatter for breach alerts (e.g., "Breached just now", "5 days ago")
+ */
+function formatBreachTime(call) {
+  try {
+    const timeVal =
+      call.breachedAt ||
+      call.escalatedAt ||
+      call.updatedAt ||
+      call.dateTime ||
+      call.createdAt;
+    if (!timeVal) return "Immediate action";
+
+    const diffMs = Date.now() - new Date(timeVal).getTime();
+    if (isNaN(diffMs) || diffMs < 0) return "Immediate action";
+
+    const diffMinutes = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMinutes < 5) return "Breached just now";
+    if (diffMinutes < 60) return `${diffMinutes}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays === 1) return "1 day ago";
+    return `${diffDays} days ago`;
+  } catch {
+    return "Immediate action";
+  }
+}
+
+/**
  * Clean SVG Donut Chart with center label
  */
-function DonutChart({ segments, total, label = "Total Calls", size = 130 }) {
-  const strokeWidth = 22;
+function DonutChart({ segments, total, label = "Total Calls", size = 140 }) {
+  const strokeWidth = 24;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -196,7 +226,7 @@ function DonutChart({ segments, total, label = "Total Calls", size = 130 }) {
 
   return (
     <div
-      className="relative flex items-center justify-center shrink-0 w-[7.5vw] h-[7.5vw]"
+      className="relative flex items-center justify-center shrink-0 w-[8vw] h-[8vw]"
     >
       <svg
         viewBox={`0 0 ${size} ${size}`}
@@ -249,10 +279,10 @@ function DonutChart({ segments, total, label = "Total Calls", size = 130 }) {
 
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-        <span className="text-[1.25vw] font-bold leading-none text-slate-800">
+        <span className="text-[1.35vw] font-bold leading-none text-slate-800">
           {total}
         </span>
-        <span className="text-[0.6vw] font-medium text-slate-400 mt-[0.2vw]">
+        <span className="text-[0.62vw] font-medium text-slate-400 mt-[0.25vw]">
           {label}
         </span>
       </div>
@@ -621,7 +651,7 @@ export default function AdminDashboard({
                         BREACH
                       </span>
                       <div className="text-[0.62vw] text-slate-400 mt-[0.05vw]">
-                        Immediate action
+                        {formatBreachTime(call)}
                       </div>
                     </div>
                   </div>

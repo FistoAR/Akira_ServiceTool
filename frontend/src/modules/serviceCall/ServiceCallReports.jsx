@@ -190,7 +190,7 @@ export default function ServiceCallReports() {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 12;
+  const rowsPerPage = 8;
 
   // Modals
   const [historyModalCall, setHistoryModalCall] = useState(null);
