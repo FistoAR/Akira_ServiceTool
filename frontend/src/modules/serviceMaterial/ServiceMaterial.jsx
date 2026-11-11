@@ -3672,16 +3672,16 @@ const AdminTableView = ({
 
 // Status chip config
 const STATUS_CHIPS = [
-  { label: "All" },
-  { label: "Open" },
-  { label: "Assigned" },
-  { label: "Repair in Progress" },
-  { label: "Pending" },
-  { label: "Under Testing" },
-  { label: "Hold" },
-  { label: "Not Repairable" },
-  { label: "Review Required" },
-  { label: "Completed" },
+  { label: "All", dot: "bg-blue-600" },
+  { label: "Open", dot: "bg-slate-400" },
+  { label: "Assigned", dot: "bg-indigo-600" },
+  { label: "Repair in Progress", dot: "bg-amber-500" },
+  { label: "Pending", dot: "bg-orange-500" },
+  { label: "Under Testing", dot: "bg-sky-500" },
+  { label: "Hold", dot: "bg-rose-500" },
+  { label: "Not Repairable", dot: "bg-red-600" },
+  { label: "Review Required", dot: "bg-purple-600" },
+  { label: "Completed", dot: "bg-emerald-600" },
 ];
 
 // Main Export
@@ -4272,30 +4272,40 @@ export default function App() {
               </div>
             </div>
 
-            {/* Modern Sleek Segment Tab Bar */}
-            <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] mb-[0.9vw] max-w-full overflow-x-auto">
-              {STATUS_CHIPS.map(({ label }) => {
+            {/* Sleek Connected Segmented Track for Status Tabs */}
+            <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] mb-[0.8vw] max-w-full overflow-x-auto">
+              {STATUS_CHIPS.map(({ label, dot }) => {
                 const isActive = activeFilter === label;
+                const count = counts[label] ?? 0;
                 return (
                   <button
                     key={label}
                     type="button"
                     onClick={() => setActiveFilter(label)}
-                    className={`flex items-center gap-[0.6vw] px-[0.9vw] py-[0.4vw] rounded-[0.4vw] text-[0.78vw] font-bold cursor-pointer transition-all duration-150 select-none border-0 ${
+                    className={`flex items-center gap-[0.4vw] px-[0.72vw] py-[0.28vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                       isActive
-                        ? "bg-white text-[#1a73e8] shadow-sm"
-                        : "text-slate-600 hover:text-[#1a73e8] hover:bg-white/40"
+                        ? "bg-blue-600 text-white shadow-xs font-semibold"
+                        : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                     }`}
                   >
-                    <span>{label}</span>
+                    {label !== "All" && (
+                      <span
+                        className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
+                          isActive ? "bg-white" : dot
+                        }`}
+                      />
+                    )}
+                    <span className={isActive ? "text-white" : "text-slate-700"}>
+                      {label}
+                    </span>
                     <span
-                      className={`px-[0.35vw] py-[0.03vw] rounded-full text-[0.66vw] font-extrabold ${
+                      className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
                         isActive
-                          ? "bg-blue-100 text-[#1a73e8]"
-                          : "bg-slate-200 text-slate-600"
+                          ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                          : "text-slate-400"
                       }`}
                     >
-                      {counts[label] ?? 0}
+                      {count}
                     </span>
                   </button>
                 );
