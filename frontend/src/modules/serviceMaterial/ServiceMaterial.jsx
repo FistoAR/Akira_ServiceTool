@@ -2042,57 +2042,57 @@ const AdminTableView = ({
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.9vw] py-[0.55vw] h-[2.5vw] border-l-[0.18vw] border-[#1a73e8] bg-[#e2e8f0] border-b border-slate-300"
+                      className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.18vw] border-[#1a73e8] bg-[#e2e8f0] border-b border-slate-300"
                     >
-                      <div className="flex items-center gap-[0.7vw]">
+                      <div className="flex items-center gap-[0.5vw]">
                         {isCustomerCollapsed ? (
-                          <ChevronRight className="w-[1.1vw] h-[1.1vw] text-slate-500 flex-shrink-0" />
+                          <ChevronRight className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0" />
                         ) : (
-                          <ChevronDown className="w-[1.1vw] h-[1.1vw] text-slate-500 flex-shrink-0" />
+                          <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0" />
                         )}
 
-                        <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
+                        <span className="font-semibold text-slate-800 text-[0.76vw] tracking-wide">
                           {customerName}
                         </span>
 
                         {/* Customer Code if available on the first row */}
                         {rows[0]?.customerCode && (
-                          <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.5vw]">
+                          <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.3vw]">
                             Code: {rows[0].customerCode}
                           </span>
                         )}
 
                         {/* Ref No (Customer) */}
                         {rows[0]?.refNoCustomer && (
-                          <span className="text-[0.7vw] font-bold bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                          <span className="text-[0.65vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
                             Cust Ref: {rows[0].refNoCustomer}
                           </span>
                         )}
 
                         {/* Ref No (Internal) */}
                         {rows[0]?.refNoInternal && (
-                          <span className="text-[0.7vw] font-bold bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                          <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
                             Int Ref: {rows[0].refNoInternal}
                           </span>
                         )}
 
                         {/* Category (Cus Type) */}
                         {rows[0]?.category && (
-                          <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                          <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
                             Type: {rows[0].category}
                           </span>
                         )}
 
                         {/* Unit */}
                         {rows[0]?.unit && (
-                          <span className="text-[0.7vw] font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                          <span className="text-[0.65vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
                             Unit: {rows[0].unit}
                           </span>
                         )}
 
                         {/* Site */}
                         {rows[0]?.site && (
-                          <span className="text-[0.7vw] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                          <span className="text-[0.65vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
                             Site: {rows[0].site}
                           </span>
                         )}
@@ -2156,7 +2156,7 @@ const AdminTableView = ({
                           // ── ENTRY SUB-HEADER ────────────────────────────
                           <tr
                             key={`entry-hdr-${row.id}`}
-                            className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[6.1vw] z-20 shadow-xs ${
+                            className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
                               isSelected
                                 ? "bg-[#e0f2fe]"
                                 : "bg-[#f8fafc] hover:bg-[#f1f5f9]"
@@ -2164,7 +2164,7 @@ const AdminTableView = ({
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
+                                className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -2175,14 +2175,14 @@ const AdminTableView = ({
                                   className="flex items-center justify-center w-full cursor-pointer"
                                 >
                                   <div
-                                    className={`w-[1.1vw] h-[1.1vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
+                                    className={`w-[0.95vw] h-[0.95vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
                                       isSelected
                                         ? "bg-blue-600 border-blue-600 text-white"
                                         : "border-slate-300 hover:border-slate-300 bg-white"
                                     }`}
                                   >
                                     {isSelected && (
-                                      <span className="text-[0.75vw] leading-none font-bold">
+                                      <span className="text-[0.65vw] leading-none font-bold">
                                         ✓
                                       </span>
                                     )}
@@ -2193,7 +2193,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className={`py-[0.55vw] px-[0.5vw] border-r border-b border-slate-300 text-center text-[0.76vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
+                              className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -2202,10 +2202,10 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className={`px-[0.8vw] py-[0.45vw] h-[2.4vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
+                              className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
-                              <div className="flex items-center gap-[0.75vw] flex-wrap">
+                              <div className="flex items-center gap-[0.6vw] flex-wrap">
                                 {/* Chevron */}
                                 <span
                                   className="text-slate-400 flex-shrink-0 transition-transform duration-200"
@@ -2216,26 +2216,26 @@ const AdminTableView = ({
                                       : "rotate(0deg)",
                                   }}
                                 >
-                                  <ChevronDown className="w-[0.82vw] h-[0.82vw]" />
+                                  <ChevronDown className="w-[0.75vw] h-[0.75vw]" />
                                 </span>
 
                                 {/* Date */}
-                                <div className="flex items-center gap-[0.4vw] ml-[1vw]">
-                                  <Calendar className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0" />
-                                  <span className="text-[0.78vw] font-bold text-slate-700 whitespace-nowrap">
+                                <div className="flex items-center gap-[0.35vw] ml-[0.6vw]">
+                                  <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-500 flex-shrink-0" />
+                                  <span className="text-[0.72vw] font-medium text-slate-700 whitespace-nowrap">
                                     {fmtDate(row.date || row.timestamp)}
                                   </span>
                                 </div>
 
                                 {/* Product count badge */}
-                                <span className="text-[0.72vw] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-[0.55vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap">
+                                <span className="text-[0.68vw] font-normal text-blue-700 bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap">
                                   {prods.length}{" "}
                                   {prods.length === 1 ? "Product" : "Products"}
                                 </span>
 
                                 {/* Actions — right side */}
                                 <div
-                                  className="ml-auto flex items-center gap-[0.5vw]"
+                                  className="ml-auto flex items-center gap-[0.4vw]"
                                   onClick={(e) => e.stopPropagation()}
                                 >
                                   {!canUpdate || isSupervisor ? (
@@ -2243,9 +2243,9 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onView(row)}
                                       title="View"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
-                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                      <Eye className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
                                   ) : row.products?.some(
                                       (p) => !!p.assignedTo,
@@ -2254,18 +2254,18 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onView(row)}
                                       title="View (assigned)"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
-                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                      <Eye className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
                                   ) : (
                                     <button
                                       type="button"
                                       onClick={() => onEdit(row)}
                                       title="Edit"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
-                                      <Edit3 className="w-[0.9vw] h-[0.9vw]" />
+                                      <Edit3 className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
                                   )}
 
@@ -2274,9 +2274,9 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onDelete(row.id)}
                                       title="Delete"
-                                      className="w-[2vw] h-[2vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
-                                      <Trash2 className="w-[0.9vw] h-[0.9vw]" />
+                                      <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
                                   )}
                                 </div>
