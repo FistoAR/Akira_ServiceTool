@@ -3109,10 +3109,10 @@ const AdminTableView = ({
                   style={{
                     minWidth:
                       h === "Final Status" || h === "Emp Status"
-                        ? "148px"
+                        ? "9.5vw"
                         : h === "History"
-                          ? "80px"
-                          : "100px",
+                          ? "5vw"
+                          : "6.5vw",
                   }}
                   className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
                 >
@@ -3128,12 +3128,12 @@ const AdminTableView = ({
                   style={{
                     minWidth:
                       h === "Product"
-                        ? "210px"
+                        ? "14vw"
                         : h === "Product Code"
-                          ? "140px"
+                          ? "9vw"
                           : h === "Segment"
-                            ? "100px"
-                            : "125px",
+                            ? "6.5vw"
+                            : "8vw",
                   }}
                   className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
                 >

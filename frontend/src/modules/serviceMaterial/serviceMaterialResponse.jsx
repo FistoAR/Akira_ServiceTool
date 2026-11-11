@@ -1888,7 +1888,7 @@ export default function ServiceMaterialInwardResponse({
           {/* Left Controls: Search, Serials & More Filters Toggle */}
           <div className="flex items-center gap-[0.5vw] flex-1 min-w-0">
             {/* Search Input */}
-            <div className="relative w-[18vw] min-w-[200px] flex-shrink-0">
+            <div className="relative w-[18vw] min-w-[13vw] flex-shrink-0">
               <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
               <input
                 type="text"

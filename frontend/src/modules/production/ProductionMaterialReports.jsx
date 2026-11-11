@@ -433,7 +433,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
         </div>
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
+        <table className="w-full text-left border-collapse min-w-[70vw]">
           <thead className="sticky top-0 z-20 bg-blue-50">
             <tr>
               <Th>S.No</Th>
@@ -624,7 +624,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
         </div>
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
+        <table className="w-full text-left border-collapse min-w-[70vw]">
           <thead className="sticky top-0 z-20 bg-emerald-50">
             <tr>
               <Th>S.No</Th>
@@ -787,7 +787,7 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
         </div>
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
+        <table className="w-full text-left border-collapse min-w-[70vw]">
           <thead className="sticky top-0 z-20 bg-amber-50">
             <tr>
               <Th>S.No</Th>
@@ -935,7 +935,7 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
         </div>
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
+        <table className="w-full text-left border-collapse min-w-[70vw]">
           <thead className="sticky top-0 z-20 bg-teal-50">
             <tr>
               <Th>S.No</Th>
@@ -1015,7 +1015,7 @@ export default function ProductionMaterialReports() {
   }
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 flex flex-col font-sans text-[14px] md:text-[0.85vw] overflow-hidden gap-[0.55vw]">
+    <div className="w-full h-full flex-1 min-h-0 flex flex-col font-sans text-[0.85vw] overflow-hidden gap-[0.55vw]">
       {/* Header Panel */}
       <div className="flex-shrink-0 bg-white border border-slate-200/90 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] px-[0.8vw] py-[0.4vw] flex items-center justify-between gap-[0.8vw]">
         {/* Tab Buttons as Segment Track */}

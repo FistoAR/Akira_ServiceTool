@@ -1825,7 +1825,7 @@ export default function ProductionMaterial() {
                       </th>
                     )}
                     {["S.No", "Date", "Job Order No", "Customer", "Cus Code", "Category"].map(h => {
-                      const minW = h === "Customer" ? "170px" : (h === "Job Order No" ? "130px" : "75px");
+                      const minW = h === "Customer" ? "11vw" : (h === "Job Order No" ? "8.5vw" : "5vw");
                       return (
                         <th key={h} rowSpan={2} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.5vw] font-bold text-slate-700 text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle bg-[#E9EDF7] sticky top-0 z-20">{h}</th>
                       );
@@ -1835,7 +1835,7 @@ export default function ProductionMaterial() {
                   </tr>
                   <tr>
                     {["Item Code", "Description", "NC Type", "Stage", "Qty", "Serial/Batch", "Assigned To", "Verified By", "Verified Date", "CAE", "Final Status", "Final Remarks"].map((h) => {
-                      const minW = h === "Description" ? "200px" : (h === "Final Remarks" ? "160px" : (h === "Qty" ? "70px" : (h === "Verified By" ? "120px" : (h === "Verified Date" ? "100px" : (h === "CAE" ? "140px" : "100px")))));
+                      const minW = h === "Description" ? "13vw" : (h === "Final Remarks" ? "10vw" : (h === "Qty" ? "4.5vw" : (h === "Verified By" ? "8vw" : (h === "Verified Date" ? "6.5vw" : (h === "CAE" ? "9vw" : "6.5vw")))));
                       return (
                         <th key={h} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.4vw] font-semibold text-slate-600 border-b border-r border-slate-300 whitespace-nowrap text-[0.7vw] bg-[#E9EDF7] text-center">{h}</th>
                       );
