@@ -2,66 +2,67 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, 
-  CheckCircle, 
+  CheckCircle2, 
   AlertTriangle, 
   Info, 
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  Trash2
 } from "lucide-react";
 
 const typeStyles = {
   success: {
-    border: "border-green-300 border-[2px]",
-    bg: "bg-green-50",
-    text: "text-green-800",
-    circle: "bg-[#4edd64]",
-    progressBg: "bg-[#4edd64]",
-    icon: "✔",
+    bg: "bg-white/95 backdrop-blur-md",
+    border: "border-slate-200/90",
+    badgeBg: "bg-emerald-50 border border-emerald-200",
+    iconColor: "text-emerald-600",
+    progressBg: "bg-emerald-500",
+    icon: CheckCircle2,
     title: "Success"
   },
   warning: {
-    border: "border-yellow-400 border-[2px]",
-    bg: "bg-yellow-50",
-    text: "text-yellow-800",
-    circle: "bg-yellow-500",
-    progressBg: "bg-yellow-500",
-    icon: "!",
+    bg: "bg-white/95 backdrop-blur-md",
+    border: "border-slate-200/90",
+    badgeBg: "bg-amber-50 border border-amber-200",
+    iconColor: "text-amber-600",
+    progressBg: "bg-amber-500",
+    icon: AlertTriangle,
     title: "Warning"
   },
   error: {
-    border: "border-red-400 border-[2px]",
-    bg: "bg-red-50",
-    text: "text-red-800",
-    circle: "bg-red-500",
-    progressBg: "bg-red-500",
-    icon: "✖",
+    bg: "bg-white/95 backdrop-blur-md",
+    border: "border-slate-200/90",
+    badgeBg: "bg-rose-50 border border-rose-200",
+    iconColor: "text-rose-600",
+    progressBg: "bg-rose-500",
+    icon: AlertCircle,
     title: "Error"
   },
   critical: {
-    border: "border-red-500 border-[2px]",
-    bg: "bg-red-50",
-    text: "text-red-900",
-    circle: "bg-red-650",
-    progressBg: "bg-red-650",
-    icon: "⚠",
+    bg: "bg-white/95 backdrop-blur-md",
+    border: "border-rose-200",
+    badgeBg: "bg-rose-100 border border-rose-300",
+    iconColor: "text-rose-700",
+    progressBg: "bg-rose-600",
+    icon: AlertCircle,
     title: "Critical"
   },
   delete: {
-    border: "border-orange-400 border-[2px]",
-    bg: "bg-orange-50",
-    text: "text-orange-800",
-    circle: "bg-orange-500",
+    bg: "bg-white/95 backdrop-blur-md",
+    border: "border-slate-200/90",
+    badgeBg: "bg-orange-50 border border-orange-200",
+    iconColor: "text-orange-600",
     progressBg: "bg-orange-500",
-    icon: "✔",
-    title: "Delete"
+    icon: Trash2,
+    title: "Deleted"
   },
   info: {
-    border: "border-blue-400 border-[2px]",
-    bg: "bg-blue-50",
-    text: "text-blue-800",
-    circle: "bg-blue-500",
+    bg: "bg-white/95 backdrop-blur-md",
+    border: "border-slate-200/90",
+    badgeBg: "bg-blue-50 border border-blue-200",
+    iconColor: "text-blue-600",
     progressBg: "bg-blue-500",
-    icon: "ℹ",
+    icon: Info,
     title: "Info"
   },
 };
@@ -90,40 +91,53 @@ const ToastItem = ({ toast, onRemove }) => {
 
   const tType = (toast.type || "success").toLowerCase();
   const styles = typeStyles[tType] || typeStyles.success;
+  const IconComponent = styles.icon;
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 50, scale: 0.9 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: 20, scale: 0.95 }}
+      initial={{ opacity: 0, y: -10, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.96 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`pointer-events-auto flex overflow-hidden items-center gap-[0.7vw] p-[0.7vw] rounded-[0.8vw] shadow-md max-w-[40vw] w-fit min-w-[14vw] relative border ${styles.bg} ${styles.border} ${styles.text}`}
+      className={`pointer-events-auto flex items-start gap-[0.7vw] p-[0.75vw] rounded-[0.7vw] shadow-[0_8px_30px_rgb(0,0,0,0.08)] max-w-[32vw] w-fit min-w-[18vw] relative border ${styles.bg} ${styles.border}`}
     >
-      <div className={`flex items-center justify-center w-[2vw] h-[2vw] rounded-full flex-shrink-0 ${styles.circle}`}>
-        <span className="text-white text-[0.8vw] font-bold">{styles.icon}</span>
+      {/* Icon Badge */}
+      <div className={`flex items-center justify-center w-[1.8vw] h-[1.8vw] rounded-[0.45vw] flex-shrink-0 mt-[0.05vw] ${styles.badgeBg} ${styles.iconColor}`}>
+        <IconComponent className="w-[1vw] h-[1vw]" strokeWidth={2.2} />
       </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold text-black text-[0.9vw]">{styles.title}</p>
+      {/* Content */}
+      <div className="flex-1 min-w-0 pr-[0.4vw]">
+        <p className="font-semibold text-slate-900 text-[0.78vw] leading-tight">
+          {styles.title}
+        </p>
         {React.isValidElement(toast.message) ? (
-          <div className="text-[0.8vw] opacity-90 text-gray-650 leading-relaxed font-semibold">{toast.message}</div>
+          <div className="text-[0.72vw] text-slate-600 mt-[0.2vw] leading-relaxed font-normal">
+            {toast.message}
+          </div>
         ) : (
-          <p className="text-[0.8vw] opacity-90 text-gray-650 whitespace-pre-line leading-relaxed font-semibold">{toast.message}</p>
+          <p className="text-[0.72vw] text-slate-600 mt-[0.2vw] whitespace-pre-line leading-relaxed font-normal">
+            {toast.message}
+          </p>
         )}
       </div>
 
+      {/* Close button */}
       <button 
-        className="text-[0.95vw] font-bold px-[0.4vw] text-gray-600 hover:text-black cursor-pointer transition-colors" 
+        className="w-[1.4vw] h-[1.4vw] rounded-[0.35vw] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors mt-[0.05vw] flex-shrink-0" 
         onClick={onRemove}
+        title="Dismiss"
       >
-        ✕
+        <X className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
       </button>
 
+      {/* Thin Micro-Progress Bar */}
       {duration !== Infinity && (
-        <div className="absolute bottom-0 left-0 h-[0.2vw] bg-black/5 rounded-b-[0.8vw] overflow-hidden w-full pointer-events-none">
+        <div className="absolute bottom-0 left-0 h-[2px] bg-slate-100 rounded-b-[0.7vw] overflow-hidden w-full pointer-events-none">
           <div 
-            className={`h-full ${styles.progressBg} transition-all duration-100 ease-linear`}
+            className={`h-full ${styles.progressBg} transition-all duration-100 ease-linear opacity-70`}
             style={{ width: `${progress}%` }}
           />
         </div>
