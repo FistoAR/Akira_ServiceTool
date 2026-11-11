@@ -714,6 +714,10 @@ const ServiceMaterialForm = ({
       toast("Please select a customer before submitting.", "error");
       return;
     }
+    if (!base.site) {
+      toast("Please select a site before submitting.", "error");
+      return;
+    }
     if (products.length === 0 || !products[0].productCode) {
       toast("At least one valid product must be added.", "error");
       return;
@@ -886,7 +890,7 @@ const ServiceMaterialForm = ({
             </div>
 
             <div className="grid grid-cols-4 gap-[1.2vw]">
-              {/* Date */}
+              {/* Row 1, Col 1: Date */}
               <div className="flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Date
@@ -899,7 +903,7 @@ const ServiceMaterialForm = ({
                 />
               </div>
 
-                            {/* Reference No (Customer) */}
+              {/* Row 1, Col 2: Reference No (Customer) */}
               <div className="flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Reference No <span className="text-slate-400 font-normal ml-1">(Customer)</span>
@@ -914,7 +918,7 @@ const ServiceMaterialForm = ({
                 />
               </div>
 
-              {/* Reference No (Internal) */}
+              {/* Row 1, Col 3: Reference No (Internal) */}
               <div className="flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Reference No <span className="text-slate-400 font-normal ml-1">(Internal)</span>
@@ -929,7 +933,7 @@ const ServiceMaterialForm = ({
                 />
               </div>
 
-              {/* Category */}
+              {/* Row 1, Col 4: Category */}
               <div className="flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Category
@@ -955,11 +959,16 @@ const ServiceMaterialForm = ({
                 />
               </div>
 
-              {/* Row 2: Customer Name (col-span-2) */}
+              {/* Row 2, Col 1-2: Customer Name (col-span-2) */}
               <div className="col-span-2 flex flex-col gap-[0.35vw] relative" ref={custRef}>
                 <label className="text-[0.76vw] font-medium text-slate-700 flex justify-between items-center h-[1.3vw]">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
+                    {base.customerCode && (
+                      <span className="ml-[0.5vw] text-[0.7vw] font-mono text-slate-400 font-normal">
+                        ({base.customerCode})
+                      </span>
+                    )}
                   </span>
                   <span className="text-[0.72vw] text-slate-400 font-normal">
                     ({filteredCustomers.length} available)
@@ -1073,40 +1082,7 @@ const ServiceMaterialForm = ({
                 )}
               </div>
 
-              {/* Customer Code */}
-              <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
-                  Customer Code
-                </label>
-                <input
-                  readOnly
-                  value={base.customerCode}
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 font-mono font-medium outline-none cursor-not-allowed"
-                />
-              </div>
-
-              {/* Site */}
-              <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
-                  Site
-                </label>
-                <CustomDropdown
-                  value={base.site || ""}
-                  onChange={(val) => sb("site", val)}
-                  disabled={isReadOnly}
-                  placeholder="Select Site"
-                  options={[
-                    { value: "", label: "Select Site" },
-                    ...sites.map((s) => ({
-                      value: s.name,
-                      label: s.name,
-                    })),
-                  ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
-                />
-              </div>
-
-              {/* Row 3: Unit */}
+              {/* Row 2, Col 3: Unit (comes before site) */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
                   Unit
@@ -1121,6 +1097,27 @@ const ServiceMaterialForm = ({
                     ...(units || []).map((u) => ({
                       value: u.name,
                       label: u.name,
+                    })),
+                  ]}
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                />
+              </div>
+
+              {/* Row 2, Col 4: Site (mandatory with *) */}
+              <div className="col-span-1 flex flex-col gap-[0.35vw]">
+                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                  Site <span className="text-rose-500">*</span>
+                </label>
+                <CustomDropdown
+                  value={base.site || ""}
+                  onChange={(val) => sb("site", val)}
+                  disabled={isReadOnly}
+                  placeholder="Select Site"
+                  options={[
+                    { value: "", label: "Select Site" },
+                    ...sites.map((s) => ({
+                      value: s.name,
+                      label: s.name,
                     })),
                   ]}
                   triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"

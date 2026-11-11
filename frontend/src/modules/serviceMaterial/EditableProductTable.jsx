@@ -18,7 +18,6 @@ const COLUMN_FIELDS = [
   "productCode",
   "boardType",
   "serialNumber",
-  "qty",
   "type",
   "expectedDeliveryDate"
 ];
@@ -427,7 +426,6 @@ const EditableProductTable = ({
             <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
             <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
             <th className="w-[15vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
-            <th className="w-[7vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
             <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
             <th className="w-[15vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
             {!isReadOnly && <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
@@ -553,20 +551,15 @@ const EditableProductTable = ({
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <input type="number" min="1" value={prod.qty} onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-800 font-normal text-center disabled:bg-transparent" />
-                          {renderFillHandle(index, 4)}
-                        </td>
-
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <div className="flex bg-gray-100 p-[0.2vw] rounded-[0.4vw] w-full border-r border-b border-slate-300">
                             {typeOptions.map(opt => (
                               <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly} className={`flex-1 py-[0.3vw] text-[0.7vw] font-semibold rounded-[0.3vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
                             ))}
                           </div>
-                          {renderFillHandle(index, 5)}
+                          {renderFillHandle(index, 4)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 6)}`} onMouseDown={(e) => handleCellMouseDown(index, 6, e)} onMouseEnter={() => handleCellMouseEnter(index, 6)}>
+                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <div className="relative flex items-center">
                             <input 
                               type="date" 
@@ -577,7 +570,7 @@ const EditableProductTable = ({
                             />
                             <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none" />
                           </div>
-                          {renderFillHandle(index, 6)}
+                          {renderFillHandle(index, 5)}
                         </td>
 
                         {!isReadOnly && (
@@ -596,7 +589,7 @@ const EditableProductTable = ({
                 {/* RESTORED: Dragging indicator */}
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={10} className="py-[1vw] text-center text-blue-700 font-semibold italic text-[0.8vw] bg-blue-100/50">
+                     <td colSpan={9} className="py-[1vw] text-center text-blue-700 font-semibold italic text-[0.8vw] bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>
