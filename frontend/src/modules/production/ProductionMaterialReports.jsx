@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   FileText,
@@ -28,7 +28,9 @@ import {
   Layers,
   SearchCode,
   Activity,
-  ClipboardList
+  ClipboardList,
+  RotateCcw,
+  X
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -51,20 +53,57 @@ const diffDays = (a, b) => {
 };
 
 // ── NEW DATE FILTER COMPONENT ───────────────────────────────
-const DateRangeFilter = ({ from, setFrom, to, setTo }) => (
-  <div className="flex items-center gap-[0.4vw] bg-white p-[0.1vw] rounded-[0.5vw] border border-slate-300 shadow-sm">
-    <div className="flex items-center gap-[0.3vw] px-[0.6vw] border-r border-slate-300">
-      <Calendar className="w-[0.8vw] h-[0.8vw] text-black/40" />
-      <input type="date" value={from} onChange={(e) => setFrom(e.target.value)}
-        className="text-[0.72vw] font-semibold outline-none bg-transparent h-[1.8vw] w-[6.5vw] cursor-pointer text-black" />
+const DateRangeFilter = ({ from, setFrom, to, setTo }) => {
+  const fromRef = useRef(null);
+  const toRef = useRef(null);
+
+  return (
+    <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+      <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+      <input
+        ref={fromRef}
+        type="date"
+        value={from || ""}
+        onChange={(e) => setFrom(e.target.value)}
+        className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+      />
+      <button
+        type="button"
+        onClick={() => {
+          if (fromRef.current) {
+            try { fromRef.current.showPicker(); } catch { fromRef.current.focus(); }
+          }
+        }}
+        className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+        title="Choose from date"
+      >
+        <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+      </button>
+      <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
+      <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+      <input
+        ref={toRef}
+        type="date"
+        value={to || ""}
+        min={from || undefined}
+        onChange={(e) => setTo(e.target.value)}
+        className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+      />
+      <button
+        type="button"
+        onClick={() => {
+          if (toRef.current) {
+            try { toRef.current.showPicker(); } catch { toRef.current.focus(); }
+          }
+        }}
+        className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+        title="Choose to date"
+      >
+        <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+      </button>
     </div>
-    <div className="flex items-center gap-[0.3vw] px-[0.6vw]">
-      <span className="text-[0.6vw] font-semibold text-black/90 uppercase">to</span>
-      <input type="date" value={to} onChange={(e) => setTo(e.target.value)}
-        className="text-[0.72vw] font-semibold outline-none bg-transparent h-[1.8vw] w-[6.5vw] cursor-pointer text-black" />
-    </div>
-  </div>
-);
+  );
+};
 
 const exportToPDF = (title, headers, data, filename, dateRange = "") => {
   const doc = new jsPDF("landscape");
@@ -179,19 +218,19 @@ const SummaryBar = ({ items }) => (
 );
 
 const ExportButtons = ({ onCsv, onPdf, color = "blue" }) => {
-  const colors = {
-    blue: "border-blue-200 text-blue-800 hover:bg-blue-50",
-    green: "border-emerald-200 text-emerald-800 hover:bg-emerald-50",
-    amber: "border-amber-200 text-amber-800 hover:bg-amber-50",
-    teal: "border-teal-200 text-teal-800 hover:bg-teal-50",
-  };
   return (
-    <div className="flex items-center gap-2 md:gap-[0.4vw]">
-      <button onClick={onCsv} className={`flex items-center gap-1 md:gap-[0.3vw] px-3 md:px-[0.8vw] h-9 md:h-[2.2vw] border rounded-lg md:rounded-[0.4vw] text-[12px] md:text-[0.7vw] font-semibold cursor-pointer transition-all ${colors[color]}`}>
-        <FileSpreadsheet className="w-4 h-4 md:w-[0.9vw] md:h-[0.9vw]" /> Excel
+    <div className="flex items-center gap-[0.4vw]">
+      <button 
+        onClick={onCsv} 
+        className="flex items-center gap-[0.3vw] px-[0.85vw] h-[2.2vw] border border-emerald-200 bg-white hover:bg-emerald-50 text-emerald-700 rounded-full text-[0.72vw] font-bold cursor-pointer transition-all shadow-2xs hover:border-emerald-300"
+      >
+        <FileSpreadsheet className="w-[0.9vw] h-[0.9vw] text-emerald-600" /> Excel
       </button>
-      <button onClick={onPdf} className={`flex items-center gap-1 md:gap-[0.3vw] px-3 md:px-[0.8vw] h-9 md:h-[2.2vw] border rounded-lg md:rounded-[0.4vw] text-[12px] md:text-[0.7vw] font-semibold cursor-pointer transition-all ${colors[color]}`}>
-        <Download className="w-4 h-4 md:w-[0.9vw] md:h-[0.9vw]" /> PDF
+      <button 
+        onClick={onPdf} 
+        className="flex items-center gap-[0.3vw] px-[0.85vw] h-[2.2vw] border border-rose-200 bg-white hover:bg-rose-50 text-rose-700 rounded-full text-[0.72vw] font-bold cursor-pointer transition-all shadow-2xs hover:border-rose-300"
+      >
+        <Download className="w-[0.9vw] h-[0.9vw] text-rose-600" /> PDF
       </button>
     </div>
   );
@@ -210,38 +249,39 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between mt-3 md:mt-[1vw] gap-3 px-1 bg-slate-50/50 p-2 rounded-lg border border-slate-300">
-      <div className="text-[12px] md:text-[0.7vw] text-slate-500 font-medium">
+    <div className="flex flex-col sm:flex-row items-center justify-between mt-[0.8vw] gap-[0.6vw] px-[0.8vw] py-[0.5vw] bg-white rounded-full border border-slate-200 shadow-2xs">
+      <div className="text-[0.72vw] text-slate-500 font-medium">
         Showing <span className="font-bold text-slate-700">{totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-bold text-slate-700">{Math.min(currentPage * itemsPerPage, totalItems)}</span> of <span className="font-bold text-slate-700">{totalItems}</span> records
       </div>
       
       {totalPages > 1 && (
-        <div className="flex items-center gap-1 md:gap-[0.4vw]">
+        <div className="flex items-center gap-[0.3vw]">
           <button
             onClick={() => onPageChange(1)}
             disabled={currentPage === 1}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronsLeft className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
+            <ChevronsLeft className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
           </button>
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronLeft className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
+            <ChevronLeft className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
           </button>
 
-          <div className="flex items-center mx-1 bg-white p-1 md:p-[0.15vw] rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm">
+          <div className="flex items-center gap-[0.2vw] mx-[0.2vw]">
             {pages.map((page, i) => (
               page === "..." ? (
-                <span key={`dots-${i}`} className="px-1.5 text-slate-400 text-[11px] md:text-[0.65vw]">...</span>
+                <span key={`dots-${i}`} className="px-[0.3vw] text-slate-400 text-[0.65vw]">...</span>
               ) : (
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`min-w-[26px] md:min-w-[1.8vw] h-[26px] md:h-[1.8vw] flex items-center justify-center rounded-md md:rounded-[0.35vw] text-[11px] md:text-[0.68vw] font-bold transition-all cursor-pointer ${currentPage === page ? "bg-blue-600 text-white shadow-sm" : "text-slate-600 hover:bg-slate-50"
-                    }`}
+                  className={`min-w-[1.8vw] h-[1.8vw] px-[0.4vw] flex items-center justify-center rounded-full text-[0.72vw] font-bold transition-all cursor-pointer ${
+                    currentPage === page ? "bg-blue-600 text-white shadow-xs" : "text-slate-600 hover:bg-slate-100"
+                  }`}
                 >
                   {page}
                 </button>
@@ -252,16 +292,16 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronRight className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
+            <ChevronRight className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
           </button>
           <button
             onClick={() => onPageChange(totalPages)}
             disabled={currentPage === totalPages}
-            className="p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.4vw] border border-slate-300 disabled:opacity-30 hover:bg-white hover:border-blue-300 transition-all cursor-pointer group"
+            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronsRight className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw] text-slate-650 group-hover:text-blue-600" />
+            <ChevronsRight className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
           </button>
         </div>
       )}
@@ -312,19 +352,42 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 flex items-center justify-between mb-[0.8vw] gap-[0.6vw]">
+      <div className="flex-shrink-0 flex items-center justify-between mb-[0.6vw] gap-[0.6vw]">
         <div></div>
         <div className="flex items-center gap-[0.5vw]">
-          <div className="relative">
-            <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-black" />
+          <div className="relative w-[14vw]">
+            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search reports..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-blue-400 transition-all text-black font-medium"
+              className="w-full pl-[2.2vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+              >
+                <X className="w-[0.7vw] h-[0.7vw]" />
+              </button>
+            )}
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
+          {(fromDate || toDate) && (
+            <button
+              type="button"
+              onClick={() => {
+                setFromDate("");
+                setToDate("");
+              }}
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+              title="Clear date filter"
+            >
+              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+              <span>Clear</span>
+            </button>
+          )}
           <ExportButtons 
             onCsv={() => {
               const data = filtered.map((r, i) => ({
@@ -486,19 +549,42 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 flex items-center justify-between mb-[0.8vw] gap-[0.6vw]">
+      <div className="flex-shrink-0 flex items-center justify-between mb-[0.6vw] gap-[0.6vw]">
         <div></div>
         <div className="flex items-center gap-[0.5vw]">
-          <div className="relative">
-            <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-black" />
+          <div className="relative w-[14vw]">
+            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search analytics..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-emerald-400 transition-all text-black font-medium"
+              className="w-full pl-[2.2vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+              >
+                <X className="w-[0.7vw] h-[0.7vw]" />
+              </button>
+            )}
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
+          {(fromDate || toDate) && (
+            <button
+              type="button"
+              onClick={() => {
+                setFromDate("");
+                setToDate("");
+              }}
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+              title="Clear date filter"
+            >
+              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+              <span>Clear</span>
+            </button>
+          )}
           <ExportButtons 
             onCsv={() => {
               const data = filtered.map((r, i) => ({
@@ -643,15 +729,30 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
         <div></div>
         <div className="flex items-center gap-[0.5vw]">
           <div className="relative">
-            <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-black/40" />
+            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search RCA details..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-amber-400 transition-all text-black"
+              className="pl-[2.2vw] pr-[1.8vw] h-[2.2vw] bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-[0.76vw] w-[13vw] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-400"
             />
+            {search && (
+              <button onClick={() => setSearch("")} className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-[0.75vw] h-[0.75vw]" />
+              </button>
+            )}
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
+          {(search || fromDate || toDate) && (
+            <button
+              onClick={() => { setSearch(""); setFromDate(""); setToDate(""); }}
+              className="h-[2.2vw] px-[0.8vw] flex items-center gap-[0.3vw] text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 rounded-full transition-all"
+              title="Reset all filters"
+            >
+              <RotateCcw className="w-[0.8vw] h-[0.8vw]" />
+              Reset
+            </button>
+          )}
           <ExportButtons 
             onCsv={() => {
               const data = filtered.map((r, i) => ({
@@ -780,15 +881,30 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
         <div></div>
         <div className="flex items-center gap-[0.5vw]">
           <div className="relative">
-            <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-black/40" />
+            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search CAE..."
-              className="pl-[2vw] pr-[0.8vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] outline-none text-[0.75vw] w-[11vw] focus:border-teal-400 transition-all text-black"
+              className="pl-[2.2vw] pr-[1.8vw] h-[2.2vw] bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-[0.76vw] w-[13vw] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-400"
             />
+            {search && (
+              <button onClick={() => setSearch("")} className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-[0.75vw] h-[0.75vw]" />
+              </button>
+            )}
           </div>
           <DateRangeFilter from={fromDate} setFrom={setFromDate} to={toDate} setTo={setToDate} />
+          {(search || fromDate || toDate) && (
+            <button
+              onClick={() => { setSearch(""); setFromDate(""); setToDate(""); }}
+              className="h-[2.2vw] px-[0.8vw] flex items-center gap-[0.3vw] text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 rounded-full transition-all"
+              title="Reset all filters"
+            >
+              <RotateCcw className="w-[0.8vw] h-[0.8vw]" />
+              Reset
+            </button>
+          )}
           <ExportButtons 
             onCsv={() => {
               const data = filtered.map((r, i) => ({
@@ -888,11 +1004,10 @@ export default function ProductionMaterialReports() {
   }, []);
 
   const tab = TABS.find(t => t.id === activeTab);
-  const colors = TAB_COLORS[tab?.color || "blue"];
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-[1.2vw] rounded-[1vw] border border-slate-300">
+      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-[1.2vw] rounded-[1vw] border border-slate-200">
         <div className="w-[3vw] h-[3vw] border-[0.3vw] border-black/10 border-t-blue-600 rounded-full animate-spin mb-[1vw]" />
         <span className="text-[1vw] font-bold text-slate-800">Fetching records...</span>
       </div>
@@ -900,37 +1015,41 @@ export default function ProductionMaterialReports() {
   }
 
   return (
-    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[14px] md:text-[0.85vw] bg-blue-50/30 p-2 md:p-[0.6vw] rounded-xl md:rounded-[1vw] overflow-hidden">
+    <div className="w-full h-full flex-1 min-h-0 flex flex-col font-sans text-[14px] md:text-[0.85vw] overflow-hidden gap-[0.55vw]">
       {/* Header Panel */}
-      <div className="flex-shrink-0 bg-white border border-slate-300 rounded-xl md:rounded-[0.8vw] shadow-sm mb-3 md:mb-[0.8vw] overflow-hidden">
-        <div className="bg-[#1e40af] px-4 md:px-[1.5vw] py-3 md:py-[1vw] flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-[0.8vw] relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-transparent pointer-events-none" />
-          <div className="bg-white/15 p-1.5 md:p-[0.4vw] rounded-lg md:rounded-[0.6vw] z-10 shadow-inner">
-            <ClipboardList className="w-5 h-5 md:w-[1.4vw] md:h-[1.4vw] text-white" />
-          </div>
-          <div className="z-10">
-            <h2 className="text-[17px] md:text-[1.1vw] font-bold text-white drop-shadow-sm">Production NC Register</h2>
-            <p className="text-[11px] md:text-[0.65vw] text-white font-semibold ">{entries.length} Inward Records Found</p>
-          </div>
+      <div className="flex-shrink-0 bg-white border border-slate-200/90 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] px-[0.8vw] py-[0.4vw] flex items-center justify-between gap-[0.8vw]">
+        {/* Tab Buttons as Segment Track */}
+        <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] max-w-full overflow-x-auto">
+          {TABS.map(t => {
+            const isActive = activeTab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id)}
+                className={`flex items-center gap-[0.4vw] px-[0.8vw] py-[0.3vw] rounded-full text-[0.75vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  isActive
+                    ? "bg-blue-600 text-white font-semibold shadow-xs"
+                    : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
+                }`}
+              >
+                <t.icon className="w-[0.85vw] h-[0.85vw]" />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Tab Buttons */}
-        <div className="px-4 md:px-[1.2vw] py-2 md:py-[0.6vw] flex items-center gap-2 md:gap-[0.6vw] flex-wrap bg-blue-50/20 border-t border-slate-300">
-          {TABS.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setActiveTab(t.id)}
-              className={`flex items-center gap-1.5 md:gap-[0.5vw] px-3 md:px-[1vw] py-1.5 md:py-[0.4vw] rounded-full text-[11px] md:text-[0.7vw] font-semibold border transition-all cursor-pointer ${activeTab === t.id ? TAB_COLORS[t.color].active : TAB_COLORS[t.color].inactive
-                }`}
-            >
-              <t.icon className="w-3.5 h-3.5 md:w-[0.9vw] md:h-[0.9vw]" /> {t.label}
-            </button>
-          ))}
+        <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pr-[0.4vw] flex items-center gap-[0.3vw]">
+          <span>Total:</span>
+          <span className="font-bold text-slate-800 bg-slate-100 px-[0.45vw] py-[0.08vw] rounded-full text-[0.72vw]">
+            {entries.length}
+          </span>
+          <span>Inward Records</span>
         </div>
       </div>
 
       {/* Main Tab Content */}
-      <div className="flex-1 bg-white border border-slate-300 rounded-xl md:rounded-[0.8vw] shadow-sm p-3 md:p-[1vw] overflow-hidden">
+      <div className="flex-1 bg-white border border-slate-200 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] p-[1vw] overflow-hidden flex flex-col min-h-0">
         {activeTab === "technical" && (
           <TechnicalReport 
             entries={entries} 

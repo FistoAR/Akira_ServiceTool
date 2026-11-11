@@ -1871,7 +1871,7 @@ export default function ServiceCall() {
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
               <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
                 {/* Sleek Connected Segmented Track for Status Tabs */}
-                <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] max-w-full overflow-x-auto">
+                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
                   {[
                     { label: "All", dot: "bg-blue-600" },
                     { label: "Registered", dot: "bg-blue-500" },
@@ -1890,7 +1890,7 @@ export default function ServiceCall() {
                       <button
                         key={label}
                         onClick={() => setFilterStatus(label === "All" ? "All" : label)}
-                        className={`flex items-center gap-[0.4vw] px-[0.72vw] py-[0.28vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                        className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                           isActive
                             ? "bg-blue-600 text-white shadow-xs font-semibold"
                             : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
