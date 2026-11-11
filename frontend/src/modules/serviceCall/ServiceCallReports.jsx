@@ -375,7 +375,7 @@ export default function ServiceCallReports() {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 9;
+  const rowsPerPage = (activeMainView === "assignments" && selectedEmployee) ? 8 : 9;
 
   // Modals
   const [historyModalCall, setHistoryModalCall] = useState(null);
@@ -1647,7 +1647,7 @@ export default function ServiceCallReports() {
                                       return (
                                         <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.68vw] text-slate-500 mt-[0.15vw]">{time}</span>}
+                                          {time && <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">{time}</span>}
                                         </div>
                                       );
                                     })()}
@@ -1730,18 +1730,27 @@ export default function ServiceCallReports() {
 
                                 {/* 6. Product / Model */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
-                                  <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">
-                                    <div className="font-normal text-slate-800 text-[0.8vw] truncate">
+                                  <CustomTooltip
+                                    position="top-start"
+                                    className="max-w-full"
+                                    content={
+                                      <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                                        <div className="font-normal text-slate-200">
+                                          {prod.productModel || prod.itemCode || "—"}
+                                        </div>
+                                        {prod.serialNumber && (
+                                          <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                            <span className="text-slate-400 font-sans">SN: </span>
+                                            <span>{prod.serialNumber}</span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    }
+                                  >
+                                    <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
                                       {prod.productModel || prod.itemCode || "—"}
                                     </div>
                                   </CustomTooltip>
-                                  {prod.serialNumber && (
-                                    <div className="mt-[0.1vw]">
-                                      <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
-                                        SN: {prod.serialNumber}
-                                      </span>
-                                    </div>
-                                  )}
                                 </td>
 
                                 {/* 7. Assigned Info */}
@@ -1923,24 +1932,41 @@ export default function ServiceCallReports() {
 
                             {/* 4. Product / SN */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[13vw]">
-                              <CustomTooltip text={item.prod.productModel || item.prod.itemCode} position="top-start" className="max-w-full">
-                                <div className="font-normal text-slate-800 text-[0.8vw] truncate">
+                              <CustomTooltip
+                                position="top-start"
+                                className="max-w-full"
+                                content={
+                                  <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                                    <div className="font-normal text-slate-200">
+                                      {item.prod.productModel || item.prod.itemCode || "—"}
+                                    </div>
+                                    {item.prod.serialNumber && (
+                                      <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                        <span className="text-slate-400 font-sans">SN: </span>
+                                        <span>{item.prod.serialNumber}</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                }
+                              >
+                                <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
                                   {item.prod.productModel || item.prod.itemCode || "—"}
                                 </div>
                               </CustomTooltip>
-                              {item.prod.serialNumber && (
-                                <div className="mt-[0.1vw]">
-                                  <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
-                                    SN: {item.prod.serialNumber}
-                                  </span>
-                                </div>
-                              )}
                             </td>
 
                             {/* 5. Who Escalated */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap align-middle">
                               <div className="flex items-center gap-[0.45vw]">
                                 {(() => {
+                                  const isSystem = !item.escalatedById && (item.escalatedBy === "System Automation" || item.escalatedBy === "System");
+                                  if (isSystem) {
+                                    return (
+                                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-100 text-slate-500 border border-slate-300 flex items-center justify-center text-[0.72vw] shrink-0">
+                                        <Icon icon="solar:cpu-bolt-linear" className="w-[0.95vw] h-[0.95vw] text-slate-500" />
+                                      </div>
+                                    );
+                                  }
                                   const matchedEmp = employees.find(e => (e.userId === item.escalatedById || (e.name && e.name.toLowerCase() === (item.escalatedBy || '').toLowerCase())));
                                   return <UserAvatar name={item.escalatedBy} image={matchedEmp?.profilePicture || matchedEmp?.image} size="1.6vw" textClass="text-[0.68vw]" />;
                                 })()}
@@ -1965,15 +1991,16 @@ export default function ServiceCallReports() {
 
                             {/* 7. Why (Reason) */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw] align-middle">
-                              <span className="font-normal text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.15vw] rounded text-[0.72vw] inline-block leading-snug">
-                                {item.reason}
-                              </span>
+                              <CustomTooltip text={item.reason} position="top-start" className="max-w-full">
+                                <span className="font-normal text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.72vw] inline-block truncate max-w-full">
+                                  {item.reason}
+                                </span>
+                              </CustomTooltip>
                             </td>
 
                             {/* 8. Open Duration */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-center align-middle">
-                              <span className="inline-flex items-center gap-[0.25vw] text-[0.74vw] font-normal text-slate-700">
-                                <Clock className="w-[0.7vw] h-[0.7vw] text-slate-400" />
+                              <span className="text-[0.74vw] font-normal text-slate-700">
                                 {item.openDuration}
                               </span>
                             </td>
@@ -1983,7 +2010,7 @@ export default function ServiceCallReports() {
                               <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${
                                 item.isClosed ? "bg-[#05a854] text-white" : "bg-[#e53935] text-white"
                               }`}>
-                                {item.isClosed ? "Completed" : "Overdue"}
+                                {item.isClosed ? "Completed" : "Critical"}
                               </span>
                             </td>
 
@@ -2151,27 +2178,27 @@ export default function ServiceCallReports() {
                 ) : (
                   /* Drilldown view for selected employee calls */
                   <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                    <div className="px-[1vw] py-[0.55vw] border-b border-slate-300 bg-[#E9EDF7]/60 flex items-center justify-between shrink-0">
-                      <div className="flex items-center gap-[0.7vw]">
+                    <div className="px-[0.8vw] py-[0.4vw] border-b border-slate-300 bg-slate-50/70 flex items-center justify-between shrink-0">
+                      <div className="flex items-center gap-[0.6vw]">
                         <button
                           onClick={() => {
                             setSelectedEmployee(null);
                             setCurrentPage(1);
                           }}
-                          className="flex items-center gap-[0.3vw] px-[0.65vw] h-[2vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:bg-slate-100 font-semibold text-[0.72vw] cursor-pointer shadow-xs transition-all"
+                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.2vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-normal text-[0.72vw] cursor-pointer shadow-2xs transition-colors"
                         >
-                          <ArrowLeft className="w-[0.8vw] h-[0.8vw]" />
+                          <ArrowLeft className="w-[0.75vw] h-[0.75vw]" />
                           <span>Back to All Employees</span>
                         </button>
                         <div className="flex items-center gap-[0.4vw]">
-                          <span className="text-[0.88vw] font-bold text-slate-900">
+                          <span className="text-[0.8vw] font-normal text-slate-900">
                             {selectedEmployee.name}
                           </span>
-                          <span className="text-slate-400 text-[0.75vw]">•</span>
-                          <span className="text-[0.74vw] text-slate-500 font-medium">
+                          <span className="text-slate-300 text-[0.72vw]">/</span>
+                          <span className="text-[0.72vw] text-slate-500 font-normal">
                             {selectedEmployee.department}
                           </span>
-                          <span className="ml-[0.4vw] px-[0.45vw] py-[0.05vw] rounded-full text-[0.68vw] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                          <span className="ml-[0.2vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-normal bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
                             {selectedEmployeeCalls.length} Assigned Calls
                           </span>
                         </div>
@@ -2249,18 +2276,27 @@ export default function ServiceCallReports() {
                                     />
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw]">
-                                    <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">
-                                      <div className="font-normal text-slate-800 text-[0.8vw] truncate">
+                                    <CustomTooltip
+                                      position="top-start"
+                                      className="max-w-full"
+                                      content={
+                                        <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                                          <div className="font-normal text-slate-200">
+                                            {prod.productModel || prod.itemCode || "—"}
+                                          </div>
+                                          {prod.serialNumber && (
+                                            <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                              <span className="text-slate-400 font-sans">SN: </span>
+                                              <span>{prod.serialNumber}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      }
+                                    >
+                                      <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
                                         {prod.productModel || prod.itemCode || "—"}
                                       </div>
                                     </CustomTooltip>
-                                    {prod.serialNumber && (
-                                      <div className="mt-[0.08vw]">
-                                        <span className="text-[0.66vw] text-slate-600 font-mono bg-slate-100 px-[0.35vw] py-[0.05vw] rounded border border-slate-200">
-                                          SN: {prod.serialNumber}
-                                        </span>
-                                      </div>
-                                    )}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-snug">
                                     {(() => {
@@ -2273,11 +2309,29 @@ export default function ServiceCallReports() {
                                       );
                                     })()}
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-indigo-700 font-normal text-[0.72vw]">
-                                    {fmtDateTime(prod._assignedAt || call.createdAt)}
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-normal">
+                                    {(() => {
+                                      const { date, time } = fmtDateParts(prod._assignedAt || call.createdAt);
+                                      return (
+                                        <div className="flex flex-col">
+                                          <span>{date}</span>
+                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.13vw]">{time}</span>}
+                                        </div>
+                                      );
+                                    })()}
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-emerald-700 font-normal text-[0.72vw]">
-                                    {isClosed ? fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date) : "—"}
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-normal">
+                                    {isClosed ? (() => {
+                                      const { date, time } = fmtDateParts(prod._productClosure?.closedAt || prod._productClosure?.date);
+                                      return (
+                                        <div className="flex flex-col">
+                                          <span>{date}</span>
+                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.13vw]">{time}</span>}
+                                        </div>
+                                      );
+                                    })() : (
+                                      <span className="text-slate-300">—</span>
+                                    )}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                     {(() => {

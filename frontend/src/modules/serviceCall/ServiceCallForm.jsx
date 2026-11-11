@@ -384,7 +384,7 @@ const ServiceCallForm = ({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      const firstErrorMessage = Object.values(newErrors)[0];
+      const [firstErrorKey, firstErrorMessage] = Object.entries(newErrors)[0];
       if (typeof toast === "function") {
         toast(firstErrorMessage, "error");
       } else if (toast?.error) {
@@ -392,6 +392,16 @@ const ServiceCallForm = ({
       } else {
         alert(firstErrorMessage);
       }
+
+      // Smooth scroll to the invalid element
+      setTimeout(() => {
+        const el = document.querySelector(`[data-error-field="${firstErrorKey}"]`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          const input = el.querySelector("input, textarea, button, select") || el;
+          if (typeof input.focus === "function") input.focus();
+        }
+      }, 50);
       return;
     }
 
@@ -591,7 +601,7 @@ const ServiceCallForm = ({
                 />
               )}
             </div>
-            <div className="flex flex-col gap-[0.35vw]">
+            <div className="flex flex-col gap-[0.35vw]" data-error-field="mode">
               <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
                 <span>Mode of Call <span className="text-rose-500">*</span></span>
                 <button
@@ -608,14 +618,11 @@ const ServiceCallForm = ({
                 onChange={(val) => set("mode", val)}
                 options={modes.map((m) => ({ value: m, label: m }))}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
-                  errors.mode ? "border-rose-400 ring-2 ring-rose-500/15" : "border-slate-200"
+                  errors.mode ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-200"
                 }`}
               />
-              {errors.mode && (
-                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.mode}</p>
-              )}
             </div>
-            <div className="flex flex-col gap-[0.35vw]">
+            <div className="flex flex-col gap-[0.35vw]" data-error-field="priority">
               <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                 Priority <span className="text-rose-500">*</span>
               </label>
@@ -624,7 +631,7 @@ const ServiceCallForm = ({
                 onChange={(val) => set("priority", val)}
                 options={PRIORITIES.map((p) => ({ value: p, label: p }))}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] font-medium ${
-                  errors.priority ? "border-rose-400 ring-2 ring-rose-500/15" : "border-slate-200"
+                  errors.priority ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-200"
                 } ${
                   formData.priority === "Critical"
                     ? "!text-rose-600 !font-semibold"
@@ -633,9 +640,6 @@ const ServiceCallForm = ({
                       : "text-slate-800"
                 }`}
               />
-              {errors.priority && (
-                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.priority}</p>
-              )}
             </div>
           </div>
         </div>
@@ -675,6 +679,7 @@ const ServiceCallForm = ({
             <div
               className="flex flex-col gap-[0.35vw] col-span-2 relative"
               ref={custRef}
+              data-error-field="customerName"
             >
               <label className="text-[0.76vw] font-semibold text-slate-700 flex justify-between">
                 <span>Customer Name <span className="text-rose-500">*</span></span>
@@ -696,7 +701,7 @@ const ServiceCallForm = ({
                     placeholder="Search & select customer…"
                     className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                       errors.customerName
-                        ? "border-rose-400 ring-2 ring-rose-500/15"
+                        ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                         : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                     }`}
                   />
@@ -725,9 +730,6 @@ const ServiceCallForm = ({
                   <span>New</span>
                 </button>
               </div>
-              {errors.customerName && (
-                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.customerName}</p>
-              )}
               {showCustSearch && (
                 <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[15vw] overflow-y-auto z-20">
                   {filteredCustomers
@@ -780,7 +782,7 @@ const ServiceCallForm = ({
                 className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
               />
             </div>
-            <div className="flex flex-col gap-[0.35vw]">
+            <div className="flex flex-col gap-[0.35vw]" data-error-field="contactNumber">
               <label className="text-[0.76vw] font-semibold text-slate-700">
                 Contact Number <span className="text-rose-500">*</span>
               </label>
@@ -790,13 +792,10 @@ const ServiceCallForm = ({
                 placeholder="e.g. +91 9876543210"
                 className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactNumber
-                    ? "border-rose-400 ring-2 ring-rose-500/15"
+                    ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                     : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
-              {errors.contactNumber && (
-                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.contactNumber}</p>
-              )}
             </div>
             <div className="flex flex-col gap-[0.35vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">Email ID</label>
@@ -838,7 +837,7 @@ const ServiceCallForm = ({
                 triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
               />
             </div>
-            <div className="flex flex-col gap-[0.35vw] col-span-2">
+            <div className="flex flex-col gap-[0.35vw] col-span-2" data-error-field="location">
               <label className="text-[0.76vw] font-semibold text-slate-700">
                 {formData.locationType === "Site" ? (
                   <>Site Address <span className="text-rose-500">*</span></>
@@ -852,15 +851,12 @@ const ServiceCallForm = ({
                 placeholder={formData.locationType === "Site" ? "Enter site address" : "City, State"}
                 className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.location
-                    ? "border-rose-400 ring-2 ring-rose-500/15"
+                    ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                     : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
-              {errors.location && (
-                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.location}</p>
-              )}
             </div>
-            <div className="flex flex-col gap-[0.35vw]">
+            <div className="flex flex-col gap-[0.35vw]" data-error-field="site">
               <label className="text-[0.76vw] font-semibold text-slate-700">
                 Site <span className="text-rose-500">*</span>
               </label>
@@ -876,12 +872,9 @@ const ServiceCallForm = ({
                   })),
                 ]}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
-                  errors.site ? "border-rose-400 ring-2 ring-rose-500/15" : "border-slate-200"
+                  errors.site ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-200"
                 }`}
               />
-              {errors.site && (
-                <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">{errors.site}</p>
-              )}
             </div>
             {formData.partyCode && (
               <div className="col-span-5 flex flex-col gap-[0.35vw] mt-[0.3vw]">
@@ -1046,6 +1039,7 @@ const ServiceCallForm = ({
                   <div
                     className="col-span-2 flex flex-col gap-[0.35vw] relative"
                     ref={(el) => (prodRefs.current[idx] = el)}
+                    data-error-field={`product_${idx}_productModel`}
                   >
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
                       Product Model <span className="text-rose-500">*</span>
@@ -1072,15 +1066,10 @@ const ServiceCallForm = ({
                         }
                         className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
                           errors[`product_${idx}_productModel`]
-                            ? "border-rose-400 ring-2 ring-rose-500/15"
+                            ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                             : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                         }`}
                       />
-                      {errors[`product_${idx}_productModel`] && (
-                        <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">
-                          {errors[`product_${idx}_productModel`]}
-                        </p>
-                      )}
                       {showProdSearch[idx] && formData.partyCode && (
                         <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[12vw] overflow-y-auto z-20">
                           {(() => {
@@ -1226,7 +1215,7 @@ const ServiceCallForm = ({
                     />
                   </div>
 
-                  <div className="col-span-2 flex flex-col gap-[0.35vw]">
+                  <div className="col-span-2 flex flex-col gap-[0.35vw]" data-error-field={`product_${idx}_callDescription`}>
                     <label className="font-semibold text-slate-700 text-[0.76vw]">
                       Call Description / Fault <span className="text-rose-500">*</span>
                     </label>
@@ -1238,16 +1227,11 @@ const ServiceCallForm = ({
                       }
                       className={`border rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
                         errors[`product_${idx}_callDescription`]
-                          ? "border-rose-400 ring-2 ring-rose-500/15"
+                          ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                           : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                       }`}
                       placeholder="Describe the issue…"
                     />
-                    {errors[`product_${idx}_callDescription`] && (
-                      <p className="text-rose-500 text-[0.68vw] mt-[0.1vw]">
-                        {errors[`product_${idx}_callDescription`]}
-                      </p>
-                    )}
                   </div>
 
                   <div className="col-span-2">
