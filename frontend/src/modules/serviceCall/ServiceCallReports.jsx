@@ -167,11 +167,59 @@ const formatDurationFrom = (startDateStr, endDateStr = null) => {
   }
 };
 
-const CustomTooltip = ({ children, text, position = "top", className = "" }) => {
+
+const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => {
+  const hasExtra = Boolean(contactNumber || partyCode);
+
+  return (
+    <div className="flex items-center gap-[0.35vw] max-w-full">
+      <CustomTooltip text={customerName} position="top-start" className="min-w-0 flex-1">
+        <span className="font-normal text-slate-900 text-[0.82vw] truncate block">
+          {customerName || "—"}
+        </span>
+      </CustomTooltip>
+
+      {hasExtra && (
+        <CustomTooltip
+          position="top-start"
+          content={
+            <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
+              <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+                {customerName || "Customer Details"}
+              </div>
+              {contactNumber && (
+                <div className="flex items-center gap-[0.3vw] text-sky-300">
+                  <Phone className="w-[0.65vw] h-[0.65vw] text-sky-400 shrink-0" />
+                  <span>{contactNumber}</span>
+                </div>
+              )}
+              {partyCode && (
+                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.64vw]">
+                  <span className="text-slate-500 font-sans">ID:</span>
+                  <span>{partyCode}</span>
+                </div>
+              )}
+            </div>
+          }
+        >
+          <button
+            type="button"
+            tabIndex={-1}
+            className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+          >
+            <Info className="w-[0.78vw] h-[0.78vw]" />
+          </button>
+        </CustomTooltip>
+      )}
+    </div>
+  );
+};
+
+const CustomTooltip = ({ children, text, content: tooltipContent, position = "top", className = "" }) => {
   const [coords, setCoords] = useState(null);
   const targetRef = useRef(null);
 
-  if (!text) return children;
+  if (!text && !tooltipContent) return children;
 
   const handleMouseEnter = () => {
     if (!targetRef.current) return;
@@ -232,7 +280,7 @@ const CustomTooltip = ({ children, text, position = "top", className = "" }) => 
             }}
             className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
           >
-            <span>{text}</span>
+            {tooltipContent ? tooltipContent : <span>{text}</span>}
             <div
               className={`absolute w-0 h-0 border-[0.25vw] ${
                 coords.side === "bottom"
@@ -1633,29 +1681,11 @@ export default function ServiceCallReports() {
                                     rowSpan={rowCount}
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
                                   >
-                                    <CustomTooltip text={call.customerName} position="top-start" className="max-w-full">
-                                      <div className="font-normal text-slate-900 text-[0.82vw] truncate">
-                                        {call.customerName || "—"}
-                                      </div>
-                                    </CustomTooltip>
-                                    <div className="flex items-center gap-[0.45vw] mt-[0.15vw] flex-wrap">
-                                      {call.contactNumber && (
-                                        <CustomTooltip text="Click to call" position="bottom">
-                                          <a
-                                            href={`tel:${call.contactNumber}`}
-                                            className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-normal text-blue-600 hover:text-blue-800 hover:underline shrink-0"
-                                          >
-                                            <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
-                                            <span>{call.contactNumber}</span>
-                                          </a>
-                                        </CustomTooltip>
-                                      )}
-                                      {call.partyCode && (
-                                        <span className="text-[0.66vw] text-slate-400 font-mono shrink-0">
-                                          {call.partyCode}
-                                        </span>
-                                      )}
-                                    </div>
+                                    <CustomerInfoCell
+                                      customerName={call.customerName}
+                                      contactNumber={call.contactNumber}
+                                      partyCode={call.partyCode}
+                                    />
                                   </td>
                                 )}
 
@@ -1849,29 +1879,11 @@ export default function ServiceCallReports() {
 
                             {/* 2. Customer & Contact */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]">
-                              <CustomTooltip text={item.call.customerName} position="top-start" className="max-w-full">
-                                <div className="font-normal text-slate-900 text-[0.82vw] truncate">
-                                  {item.call.customerName || "—"}
-                                </div>
-                              </CustomTooltip>
-                              <div className="flex items-center gap-[0.45vw] mt-[0.15vw] flex-wrap">
-                                {item.call.contactNumber && (
-                                  <CustomTooltip text="Click to call" position="bottom">
-                                    <a
-                                      href={`tel:${item.call.contactNumber}`}
-                                      className="inline-flex items-center gap-[0.2vw] text-[0.7vw] font-normal text-blue-600 hover:text-blue-800 hover:underline shrink-0"
-                                    >
-                                      <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
-                                      <span>{item.call.contactNumber}</span>
-                                    </a>
-                                  </CustomTooltip>
-                                )}
-                                {item.call.partyCode && (
-                                  <span className="text-[0.66vw] text-slate-400 font-mono shrink-0">
-                                    {item.call.partyCode}
-                                  </span>
-                                )}
-                              </div>
+                              <CustomerInfoCell
+                                customerName={item.call.customerName}
+                                contactNumber={item.call.contactNumber}
+                                partyCode={item.call.partyCode}
+                              />
                             </td>
 
                             {/* 3. Customer Type */}
@@ -2205,11 +2217,11 @@ export default function ServiceCallReports() {
                                     )}
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[14vw]">
-                                    <CustomTooltip text={call.customerName} position="top-start" className="max-w-full">
-                                      <div className="font-normal text-slate-900 text-[0.82vw] truncate">
-                                        {call.customerName || "—"}
-                                      </div>
-                                    </CustomTooltip>
+                                    <CustomerInfoCell
+                                      customerName={call.customerName}
+                                      contactNumber={call.contactNumber}
+                                      partyCode={call.partyCode}
+                                    />
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw]">
                                     <CustomTooltip text={prod.productModel || prod.itemCode} position="top-start" className="max-w-full">

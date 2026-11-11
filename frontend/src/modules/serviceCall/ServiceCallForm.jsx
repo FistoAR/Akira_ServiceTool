@@ -385,7 +385,13 @@ const ServiceCallForm = ({
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       const firstErrorMessage = Object.values(newErrors)[0];
-      toast?.error ? toast.error(firstErrorMessage) : alert(firstErrorMessage);
+      if (typeof toast === "function") {
+        toast(firstErrorMessage, "error");
+      } else if (toast?.error) {
+        toast.error(firstErrorMessage);
+      } else {
+        alert(firstErrorMessage);
+      }
       return;
     }
 
@@ -418,7 +424,11 @@ const ServiceCallForm = ({
       customerDb.some((d) => cleanStr(d.itemCode) === cleanStr(ni.itemCode)),
     );
     if (dups.length > 0) {
-      alert(`Item Code "${dups[0].itemCode}" already exists!`);
+      if (typeof toast === "function") {
+        toast(`Item Code "${dups[0].itemCode}" already exists!`, "error");
+      } else {
+        alert(`Item Code "${dups[0].itemCode}" already exists!`);
+      }
       return;
     }
 
@@ -428,9 +438,12 @@ const ServiceCallForm = ({
     });
 
     if (invalidWarranty) {
-      alert(
-        `Please enter a valid non-negative numeric Warranty Period for item "${invalidWarranty.itemCode || "unnamed"}".`,
-      );
+      const msg = `Please enter a valid non-negative numeric Warranty Period for item "${invalidWarranty.itemCode || "unnamed"}".`;
+      if (typeof toast === "function") {
+        toast(msg, "warning");
+      } else {
+        alert(msg);
+      }
       return;
     }
 
@@ -458,7 +471,11 @@ const ServiceCallForm = ({
         .filter(Boolean)
         .join(", "),
     }));
-    alert("Customer added!");
+    if (typeof toast === "function") {
+      toast("Customer added successfully!", "success");
+    } else {
+      alert("Customer added!");
+    }
     setShowAddCustModal(false);
   };
 
