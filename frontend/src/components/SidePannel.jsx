@@ -357,13 +357,13 @@ export default function Sidebar() {
                       }
                       ${
                         active
-                          ? "bg-blue-50/80 text-blue-600 font-semibold"
+                          ? "bg-blue-100/75 text-blue-700 font-semibold shadow-xs"
                           : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
                       }
                     `}
                   >
                     {!active && hoveredItem === item.path && (
-                      <div className="absolute inset-0 bg-blue-50/40 rounded-xl pointer-events-none" />
+                      <div className="absolute inset-0 bg-blue-50/50 rounded-xl pointer-events-none" />
                     )}
 
                     <div
@@ -413,7 +413,7 @@ export default function Sidebar() {
                         <span
                           className={`text-[0.6vw] font-bold rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
                             active
-                              ? "bg-blue-100 text-blue-700 font-semibold"
+                              ? "bg-blue-200/80 text-blue-800 font-semibold"
                               : "bg-slate-100 text-slate-400"
                           }`}
                         >
@@ -438,7 +438,7 @@ export default function Sidebar() {
                     )}
 
                     {active && (
-                      <div className="absolute left-0 top-[18%] bottom-[18%] w-[0.25vw] bg-blue-600 rounded-r-full" />
+                      <div className="absolute left-0 top-[14%] bottom-[14%] w-[0.32vw] bg-blue-600 rounded-r-full shadow-xs" />
                     )}
                   </Link>
 
@@ -581,19 +581,27 @@ export default function Sidebar() {
         ) : (
           loggedInUser && (
             <div
-              className="flex items-center rounded-xl p-[0.5vw] bg-gradient-to-r from-gray-50 to-gray-50/50 hover:from-blue-50 hover:to-purple-50 transition-all duration-300 cursor-pointer gap-[0.7vw]"
+              className="flex items-center rounded-xl p-[0.5vw] bg-slate-50/80 hover:bg-slate-100/80 transition-all duration-200 cursor-pointer gap-[0.7vw] border border-slate-200/60"
               onClick={() => setIsCollapsed(true)}
               title="Collapse sidebar"
             >
-              <div className="relative flex-shrink-0 rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 flex items-center justify-center shadow-md shadow-blue-500/20 w-[2.2vw] h-[2.2vw]">
-                <span className="text-white font-bold text-[0.6vw]">
-                  {loggedInUser.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .toUpperCase()
-                    .slice(0, 2)}
-                </span>
+              <div className="relative flex-shrink-0 rounded-full bg-blue-600 flex items-center justify-center shadow-xs overflow-hidden w-[2.2vw] h-[2.2vw]">
+                {loggedInUser.profilePicture || loggedInUser.image || loggedInUser.avatar ? (
+                  <img
+                    src={loggedInUser.profilePicture || loggedInUser.image || loggedInUser.avatar}
+                    alt={loggedInUser.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white font-bold text-[0.65vw]">
+                    {loggedInUser.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </span>
+                )}
               </div>
               <div className="flex-1 overflow-hidden">
                 <p className="text-[0.78vw] font-semibold text-gray-800 truncate leading-tight">
@@ -605,7 +613,7 @@ export default function Sidebar() {
               </div>
               <div className="p-[0.3vw] bg-blue-100 rounded-lg flex items-center justify-center hover:bg-blue-200 transition-colors duration-200">
                 <svg
-                  className="w-[0.9vw] h-[0.9vw] text-blue-400 flex-shrink-0 rotate-180"
+                  className="w-[0.9vw] h-[0.9vw] text-blue-500 flex-shrink-0 rotate-180"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
