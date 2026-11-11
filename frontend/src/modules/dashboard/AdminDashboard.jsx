@@ -337,9 +337,9 @@ export default function AdminDashboard({
   const totalMaterialsCount = matTotal || 0;
 
   return (
-    <div className="flex-1 flex flex-col justify-between gap-[0.6vw] min-h-0 overflow-hidden">
+    <div className="flex-1 flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
       {/* ── 1. Top KPI Cards Row ────────────────────────────── */}
-      <div className="grid grid-cols-5 gap-[0.6vw] flex-shrink-0">
+      <div className="grid grid-cols-5 gap-[0.55vw] flex-shrink-0">
         <KpiCard
           label="REGISTERED CALLS"
           value={totalRegisteredCalls}
@@ -379,9 +379,9 @@ export default function AdminDashboard({
       </div>
 
       {/* ── 2. Middle Row: Donut Chart Breakdowns ────────────── */}
-      <div className="grid grid-cols-2 gap-[0.6vw] flex-1 min-h-0">
+      <div className="grid grid-cols-2 gap-[0.55vw] flex-1 min-h-0">
         {/* Card: Service Calls Breakdown */}
-        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-[0.8vw] flex flex-col justify-between min-h-0 overflow-hidden">
+        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col justify-between min-h-0 overflow-hidden">
           <div className="flex items-center gap-[0.4vw] text-indigo-700 font-bold text-[0.76vw] flex-shrink-0">
             <Activity className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
             <span>Service Calls Breakdown</span>
@@ -396,7 +396,7 @@ export default function AdminDashboard({
             />
 
             {/* Legend & Stats Table */}
-            <div className="flex-1 space-y-[0.35vw]">
+            <div className="flex-1 space-y-[0.3vw]">
               {callSegments.map((item, idx) => {
                 const pct =
                   totalCallsCount > 0
@@ -409,7 +409,7 @@ export default function AdminDashboard({
                   >
                     <div className="flex items-center gap-[0.4vw]">
                       <span
-                        className="w-[0.55vw] h-[0.55vw] rounded-full shrink-0"
+                        className="w-[0.5vw] h-[0.5vw] rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="text-slate-600 font-medium">
@@ -430,7 +430,7 @@ export default function AdminDashboard({
             </div>
           </div>
 
-          <div className="pt-[0.5vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
+          <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
             <button
               onClick={() => navigate("/serviceCall")}
               className="text-[0.68vw] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
@@ -444,7 +444,7 @@ export default function AdminDashboard({
         </section>
 
         {/* Card: Service Materials Breakdown */}
-        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-[0.8vw] flex flex-col justify-between min-h-0 overflow-hidden">
+        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col justify-between min-h-0 overflow-hidden">
           <div className="flex items-center gap-[0.4vw] text-indigo-700 font-bold text-[0.76vw] flex-shrink-0">
             <Boxes className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
             <span>Service Materials Breakdown</span>
@@ -459,7 +459,7 @@ export default function AdminDashboard({
             />
 
             {/* Legend & Stats Table */}
-            <div className="flex-1 space-y-[0.35vw]">
+            <div className="flex-1 space-y-[0.3vw]">
               {materialSegments.map((item, idx) => {
                 const pct =
                   totalMaterialsCount > 0
@@ -472,7 +472,7 @@ export default function AdminDashboard({
                   >
                     <div className="flex items-center gap-[0.4vw]">
                       <span
-                        className="w-[0.55vw] h-[0.55vw] rounded-full shrink-0"
+                        className="w-[0.5vw] h-[0.5vw] rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="text-slate-600 font-medium">
@@ -493,7 +493,7 @@ export default function AdminDashboard({
             </div>
           </div>
 
-          <div className="pt-[0.5vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
+          <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
             <button
               onClick={() => navigate("/serviceMaterial")}
               className="text-[0.68vw] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
@@ -508,10 +508,10 @@ export default function AdminDashboard({
       </div>
 
       {/* ── 3. Bottom Row: Approvals & SLA Breaches ────────────── */}
-      <div className="grid grid-cols-2 gap-[0.6vw] flex-1 min-h-0">
+      <div className="grid grid-cols-2 gap-[0.55vw] flex-1 min-h-0">
         {/* Materials Awaiting Approval */}
-        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-[0.8vw] flex flex-col justify-between min-h-0 overflow-hidden">
-          <div className="flex items-center justify-between pb-[0.4vw] border-b border-slate-100 flex-shrink-0">
+        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col min-h-0 overflow-hidden">
+          <div className="flex items-center justify-between pb-[0.35vw] border-b border-slate-100 flex-shrink-0">
             <div className="flex items-center gap-[0.4vw] text-indigo-700 font-bold text-[0.76vw]">
               <CheckSquare className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
               <span>Materials Awaiting Approval</span>
@@ -528,11 +528,11 @@ export default function AdminDashboard({
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center py-[0.4vw] min-h-0 overflow-y-auto">
+          <div className="flex-1 flex flex-col items-center justify-center py-[0.35vw] min-h-0 overflow-y-auto">
             {stats.pendingAdminReviews.length === 0 ? (
-              <div className="flex flex-col items-center justify-center text-center">
-                <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-indigo-50/70 border border-indigo-100 flex items-center justify-center mb-[0.4vw] text-indigo-500 shadow-2xs">
-                  <ClipboardList className="w-[1.2vw] h-[1.2vw]" strokeWidth={1.8} />
+              <div className="flex flex-col items-center justify-center text-center my-auto">
+                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-indigo-50/70 border border-indigo-100 flex items-center justify-center mb-[0.35vw] text-indigo-500 shadow-2xs">
+                  <ClipboardList className="w-[1.1vw] h-[1.1vw]" strokeWidth={1.8} />
                 </div>
                 <h4 className="text-[0.76vw] font-bold text-slate-700">
                   No pending reviews — all clear!
@@ -542,12 +542,12 @@ export default function AdminDashboard({
                 </p>
               </div>
             ) : (
-              <div className="w-full space-y-[0.35vw] overflow-y-auto max-h-full custom-scrollbar">
+              <div className="w-full space-y-[0.3vw] overflow-y-auto max-h-full custom-scrollbar">
                 {stats.pendingAdminReviews.map(({ entry, product }) => (
                   <div
                     key={product._pid}
                     onClick={() => navigate("/serviceMaterial")}
-                    className="flex items-center justify-between p-[0.45vw] rounded-[0.4vw] border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer"
+                    className="flex items-center justify-between p-[0.4vw] rounded-[0.4vw] border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer"
                   >
                     <div>
                       <div className="font-bold text-slate-800 text-[0.68vw]">
@@ -569,8 +569,8 @@ export default function AdminDashboard({
         </section>
 
         {/* Active SLA Breaches */}
-        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] p-[0.8vw] flex flex-col justify-between min-h-0 overflow-hidden">
-          <div className="flex items-center justify-between pb-[0.4vw] border-b border-slate-100 flex-shrink-0">
+        <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col min-h-0 overflow-hidden">
+          <div className="flex items-center justify-between pb-[0.35vw] border-b border-slate-100 flex-shrink-0">
             <div className="flex items-center gap-[0.4vw] text-rose-600 font-bold text-[0.76vw]">
               <AlertTriangle className="w-[0.85vw] h-[0.85vw]" strokeWidth={2.2} />
               <span>Active SLA Breaches</span>
@@ -587,11 +587,11 @@ export default function AdminDashboard({
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col justify-center py-[0.4vw] min-h-0 overflow-y-auto">
+          <div className="flex-1 flex flex-col justify-start py-[0.35vw] min-h-0 overflow-y-auto">
             {stats.criticalCalls.length === 0 ? (
-              <div className="flex flex-col items-center justify-center text-center">
-                <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-[0.4vw] text-emerald-600">
-                  <Shield className="w-[1.2vw] h-[1.2vw]" strokeWidth={1.8} />
+              <div className="flex flex-col items-center justify-center text-center my-auto">
+                <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-[0.35vw] text-emerald-600">
+                  <Shield className="w-[1.1vw] h-[1.1vw]" strokeWidth={1.8} />
                 </div>
                 <h4 className="text-[0.76vw] font-bold text-slate-700">
                   No SLA breaches — system healthy
@@ -601,18 +601,18 @@ export default function AdminDashboard({
                 </p>
               </div>
             ) : (
-              <div className="space-y-[0.35vw] overflow-y-auto max-h-full custom-scrollbar">
-                {stats.criticalCalls.slice(0, 3).map((call) => (
+              <div className="space-y-[0.3vw] overflow-y-auto max-h-full custom-scrollbar pr-[0.1vw]">
+                {stats.criticalCalls.map((call) => (
                   <div
                     key={call._id || call.callNumber}
                     onClick={() => navigate("/serviceCall/escalations")}
-                    className="flex items-center justify-between p-[0.5vw] rounded-[0.4vw] border border-rose-100 bg-rose-50/30 hover:bg-rose-50/70 hover:border-rose-200 transition-colors cursor-pointer"
+                    className="flex items-center justify-between p-[0.45vw] rounded-[0.4vw] border border-rose-100 bg-rose-50/30 hover:bg-rose-50/70 hover:border-rose-200 transition-colors cursor-pointer"
                   >
                     <div>
                       <div className="font-mono font-bold text-rose-600 text-[0.68vw]">
                         {call.callNumber}
                       </div>
-                      <div className="text-[0.68vw] font-semibold text-slate-700 mt-[0.1vw]">
+                      <div className="text-[0.68vw] font-semibold text-slate-700 mt-[0.05vw]">
                         {call.customerName || "—"}
                       </div>
                     </div>
@@ -620,7 +620,7 @@ export default function AdminDashboard({
                       <span className="text-[0.58vw] font-extrabold uppercase tracking-wide text-rose-600 bg-rose-100/70 border border-rose-200 px-[0.35vw] py-[0.1vw] rounded">
                         BREACH
                       </span>
-                      <div className="text-[0.62vw] text-slate-400 mt-[0.1vw]">
+                      <div className="text-[0.62vw] text-slate-400 mt-[0.05vw]">
                         Immediate action
                       </div>
                     </div>
@@ -633,7 +633,7 @@ export default function AdminDashboard({
       </div>
 
       {/* ── 4. Bottom Info Notification Bar ───────────────────── */}
-      <div className="flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] bg-indigo-50/50 border border-indigo-100/80 rounded-[0.45vw] text-[0.68vw] text-indigo-900/80 flex-shrink-0">
+      <div className="flex items-center gap-[0.4vw] px-[0.7vw] py-[0.3vw] bg-indigo-50/50 border border-indigo-100/80 rounded-[0.45vw] text-[0.68vw] text-indigo-900/80 flex-shrink-0">
         <Sparkles className="w-[0.75vw] h-[0.75vw] text-indigo-500 shrink-0" strokeWidth={2} />
         <span>
           Keep an eye on SLA breaches and pending approvals to maintain seamless operations.
