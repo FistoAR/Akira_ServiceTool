@@ -12,58 +12,46 @@ import {
 
 const typeStyles = {
   success: {
-    bg: "bg-white",
-    border: "border-slate-200/90",
-    badgeBg: "bg-emerald-50 text-emerald-600",
-    accentBorder: "border-l-[3px] border-l-emerald-500",
+    border: "border-emerald-300",
+    text: "text-emerald-700",
+    badgeBg: "bg-emerald-600 text-white",
     icon: CheckCircle2,
-    title: "Success",
   },
   warning: {
-    bg: "bg-white",
-    border: "border-slate-200/90",
-    badgeBg: "bg-amber-50 text-amber-600",
-    accentBorder: "border-l-[3px] border-l-amber-500",
+    border: "border-amber-300",
+    text: "text-amber-700",
+    badgeBg: "bg-amber-500 text-white",
     icon: AlertTriangle,
-    title: "Warning",
   },
   error: {
-    bg: "bg-white",
-    border: "border-slate-200/90",
-    badgeBg: "bg-rose-50 text-rose-600",
-    accentBorder: "border-l-[3px] border-l-rose-500",
+    border: "border-rose-300",
+    text: "text-rose-600",
+    badgeBg: "bg-rose-600 text-white",
     icon: AlertCircle,
-    title: "Error",
   },
   critical: {
-    bg: "bg-white",
-    border: "border-rose-200",
-    badgeBg: "bg-rose-100 text-rose-700",
-    accentBorder: "border-l-[3px] border-l-rose-600",
+    border: "border-rose-400",
+    text: "text-rose-700 font-semibold",
+    badgeBg: "bg-rose-700 text-white",
     icon: AlertCircle,
-    title: "Critical",
   },
   delete: {
-    bg: "bg-white",
-    border: "border-slate-200/90",
-    badgeBg: "bg-orange-50 text-orange-600",
-    accentBorder: "border-l-[3px] border-l-orange-500",
+    border: "border-orange-300",
+    text: "text-orange-700",
+    badgeBg: "bg-orange-600 text-white",
     icon: Trash2,
-    title: "Deleted",
   },
   info: {
-    bg: "bg-white",
-    border: "border-slate-200/90",
-    badgeBg: "bg-blue-50 text-blue-600",
-    accentBorder: "border-l-[3px] border-l-blue-500",
+    border: "border-blue-300",
+    text: "text-blue-700",
+    badgeBg: "bg-blue-600 text-white",
     icon: Info,
-    title: "Info",
   },
 };
 
 const ToastItem = ({ toast, onRemove }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const duration = toast.duration || 5000;
+  const duration = toast.duration || 4000;
 
   useEffect(() => {
     if (duration === Infinity) return;
@@ -83,44 +71,41 @@ const ToastItem = ({ toast, onRemove }) => {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: -12, scale: 0.96 }}
+      initial={{ opacity: 0, y: -10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`pointer-events-auto flex items-start gap-[0.7vw] px-[0.85vw] py-[0.7vw] rounded-[0.6vw] shadow-[0_10px_25px_-5px_rgba(15,23,42,0.12),0_4px_10px_-3px_rgba(15,23,42,0.06)] max-w-[28vw] w-fit min-w-[20vw] border ${styles.bg} ${styles.border} ${styles.accentBorder}`}
+      className={`pointer-events-auto flex items-center gap-[0.6vw] px-[0.7vw] py-[0.45vw] rounded-full bg-white shadow-[0_4px_16px_-2px_rgba(0,0,0,0.08)] max-w-[30vw] w-fit min-w-[15vw] border ${styles.border}`}
     >
-      {/* Icon Badge */}
+      {/* Solid Filled Circular Icon Badge */}
       <div
-        className={`flex items-center justify-center w-[1.7vw] h-[1.7vw] rounded-full flex-shrink-0 mt-[0.05vw] ${styles.badgeBg}`}
+        className={`flex items-center justify-center w-[1.4vw] h-[1.4vw] rounded-full flex-shrink-0 shadow-2xs ${styles.badgeBg}`}
       >
-        <IconComponent className="w-[0.95vw] h-[0.95vw]" strokeWidth={2.2} />
+        <IconComponent className="w-[0.9vw] h-[0.9vw]" strokeWidth={2.6} />
       </div>
 
-      {/* Content */}
-      <div className="flex-1 min-w-0 pr-[0.3vw]">
-        <p className="font-semibold text-slate-800 text-[0.78vw] leading-tight">
-          {styles.title}
-        </p>
+      {/* Message Text */}
+      <div className="flex-1 min-w-0 pr-[0.2vw]">
         {React.isValidElement(toast.message) ? (
-          <div className="text-[0.72vw] text-slate-600 mt-[0.2vw] leading-snug font-normal">
+          <div className={`text-[0.74vw] leading-tight font-medium truncate ${styles.text}`}>
             {toast.message}
           </div>
         ) : (
-          <p className="text-[0.72vw] text-slate-600 mt-[0.2vw] whitespace-pre-line leading-snug font-normal">
+          <p className={`text-[0.74vw] leading-tight font-medium ${styles.text}`}>
             {toast.message}
           </p>
         )}
       </div>
 
-      {/* Close button */}
+      {/* Minimal Close 'X' Button */}
       <button
-        className="w-[1.3vw] h-[1.3vw] rounded-[0.3vw] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors mt-[0.05vw] flex-shrink-0"
+        className="w-[1.1vw] h-[1.1vw] rounded-full flex items-center justify-center text-slate-400 hover:text-slate-650 hover:bg-slate-100 cursor-pointer transition-colors flex-shrink-0"
         onClick={onRemove}
         title="Dismiss"
       >
-        <X className="w-[0.8vw] h-[0.8vw]" strokeWidth={2.2} />
+        <X className="w-[0.75vw] h-[0.75vw]" strokeWidth={2.2} />
       </button>
     </motion.div>
   );

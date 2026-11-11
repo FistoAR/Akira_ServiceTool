@@ -55,18 +55,18 @@ import {
   CallSummaryModal,
 } from "./ServiceCall";
 
-const getCustomerTypeTextColor = (type) => {
+const getCustomerTypeBadgeStyle = (type) => {
   switch (type) {
     case "OEM":
-      return "text-blue-600";
+      return "bg-blue-50 text-blue-700 border-blue-200";
     case "End Customer":
-      return "text-emerald-600";
+      return "bg-emerald-50 text-emerald-700 border-emerald-200";
     case "Distributor":
-      return "text-purple-600";
+      return "bg-purple-50 text-purple-700 border-purple-200";
     case "Dealer":
-      return "text-amber-600";
+      return "bg-amber-50 text-amber-700 border-amber-200";
     default:
-      return "text-slate-700";
+      return "bg-slate-50 text-slate-700 border-slate-200";
   }
 };
 
@@ -168,6 +168,34 @@ const formatDurationFrom = (startDateStr, endDateStr = null) => {
   }
 };
 
+
+
+const UserAvatar = ({ name, image, size = "1.6vw", textClass = "text-[0.68vw]" }) => {
+  const [imgError, setImgError] = useState(false);
+
+  if (image && !imgError) {
+    return (
+      <img
+        src={image}
+        alt={name || "User"}
+        onError={() => setImgError(true)}
+        style={{ width: size, height: size }}
+        className="rounded-full object-cover border border-slate-300 shrink-0"
+      />
+    );
+  }
+
+  const initial = (name || "U").charAt(0).toUpperCase();
+
+  return (
+    <div
+      style={{ width: size, height: size }}
+      className={`rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal ${textClass} shrink-0`}
+    >
+      {initial}
+    </div>
+  );
+};
 
 const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => {
   const hasExtra = Boolean(contactNumber || partyCode);
@@ -1617,9 +1645,9 @@ export default function ServiceCallReports() {
                                     {(() => {
                                       const { date, time } = fmtDateParts(call.createdAt || call.dateTime);
                                       return (
-                                        <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-snug">
+                                        <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.68vw] text-slate-500 mt-[0.05vw]">{time}</span>}
+                                          {time && <span className="text-[0.68vw] text-slate-500 mt-[0.15vw]">{time}</span>}
                                         </div>
                                       );
                                     })()}
@@ -1638,14 +1666,9 @@ export default function ServiceCallReports() {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
-                                      <CustomTooltip text="Click to view full details" position="top-start">
-                                        <button
-                                          onClick={() => setSelectedInfoCall(call)}
-                                          className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
-                                        >
-                                          {call.callNumber}
-                                        </button>
-                                      </CustomTooltip>
+                                       <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
+                                         {call.callNumber}
+                                       </span>
                                       {hasEdits && (
                                         <CustomTooltip text="This call has edited records" position="top">
                                           <span className="inline-flex items-center justify-center text-amber-600 hover:text-amber-700 cursor-default p-[0.1vw] transition-colors">
@@ -1664,12 +1687,11 @@ export default function ServiceCallReports() {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap bg-white"
                                   >
                                     {isSelf ? (
-                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
-                                        <UserCheck className="w-[0.65vw] h-[0.65vw]" />
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="text-slate-600 font-normal text-[0.72vw]">
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
                                         Registered
                                       </span>
                                     )}
@@ -1697,7 +1719,7 @@ export default function ServiceCallReports() {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-normal text-[0.78vw]"
                                   >
                                     {call.customerType && call.customerType !== "All" ? (
-                                      <span className={getCustomerTypeTextColor(call.customerType)}>
+                                      <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${getCustomerTypeBadgeStyle(call.customerType)}`}>
                                         {call.customerType}
                                       </span>
                                     ) : (
@@ -1724,23 +1746,29 @@ export default function ServiceCallReports() {
 
                                 {/* 7. Assigned Info */}
                                 <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
-                                  {prod._assignedEngineerName || call.currentEngineerName ? (
-                                    <CustomTooltip
-                                      text={`Assigned: ${fmtDateTime(prod._assignedAt || call.createdAt)}`}
-                                      position="top-start"
-                                    >
-                                      <div className="flex items-center gap-[0.45vw] cursor-default">
-                                        <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal text-[0.68vw] shrink-0">
-                                          {(prod._assignedEngineerName || call.currentEngineerName || "U").charAt(0).toUpperCase()}
+                                  {(() => {
+                                    const engName = prod._assignedEngineerName || call.currentEngineerName;
+                                    const engId = prod._assignedEngineerId || call.currentEngineerId;
+                                    if (!engName) {
+                                      return <span className="text-slate-400 font-normal italic text-[0.72vw]">Unassigned</span>;
+                                    }
+                                    const matchedEmp = employees.find(e => (engId && (e.userId === engId || e._id === engId)) || (e.name && e.name.toLowerCase() === engName.toLowerCase()));
+                                    const userImg = matchedEmp?.profilePicture || matchedEmp?.image || null;
+
+                                    return (
+                                      <CustomTooltip
+                                        text={`Assigned: ${fmtDateTime(prod._assignedAt || call.createdAt)}`}
+                                        position="top-start"
+                                      >
+                                        <div className="flex items-center gap-[0.45vw] cursor-default">
+                                          <UserAvatar name={engName} image={userImg} size="1.6vw" textClass="text-[0.68vw]" />
+                                          <div className="font-normal text-slate-800 text-[0.75vw]">
+                                            {engName}
+                                          </div>
                                         </div>
-                                        <div className="font-normal text-slate-800 text-[0.75vw]">
-                                          {prod._assignedEngineerName || call.currentEngineerName}
-                                        </div>
-                                      </div>
-                                    </CustomTooltip>
-                                  ) : (
-                                    <span className="text-slate-400 font-normal italic text-[0.72vw]">Unassigned</span>
-                                  )}
+                                      </CustomTooltip>
+                                    );
+                                  })()}
                                 </td>
 
                                 {/* 8. Escalation Info */}
@@ -1868,14 +1896,9 @@ export default function ServiceCallReports() {
 
                             {/* 1. Call No */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
-                              <CustomTooltip text="Click to view full details" position="top-start">
-                                <button
-                                  onClick={() => setSelectedInfoCall(item.call)}
-                                  className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
-                                >
+                              <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
                                   {item.call.callNumber}
-                                </button>
-                              </CustomTooltip>
+                                </span>
                             </td>
 
                             {/* 2. Customer & Contact */}
@@ -1890,7 +1913,7 @@ export default function ServiceCallReports() {
                             {/* 3. Customer Type */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-normal text-[0.78vw]">
                               {item.call.customerType && item.call.customerType !== "All" ? (
-                                <span className={getCustomerTypeTextColor(item.call.customerType)}>
+                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${getCustomerTypeBadgeStyle(item.call.customerType)}`}>
                                   {item.call.customerType}
                                 </span>
                               ) : (
@@ -1917,9 +1940,10 @@ export default function ServiceCallReports() {
                             {/* 5. Who Escalated */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap align-middle">
                               <div className="flex items-center gap-[0.45vw]">
-                                <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal text-[0.68vw] shrink-0">
-                                  {(item.escalatedBy || "E").charAt(0).toUpperCase()}
-                                </div>
+                                {(() => {
+                                  const matchedEmp = employees.find(e => (e.userId === item.escalatedById || (e.name && e.name.toLowerCase() === (item.escalatedBy || '').toLowerCase())));
+                                  return <UserAvatar name={item.escalatedBy} image={matchedEmp?.profilePicture || matchedEmp?.image} size="1.6vw" textClass="text-[0.68vw]" />;
+                                })()}
                                 <div className="font-normal text-slate-800 text-[0.75vw]">
                                   {item.escalatedBy}
                                 </div>
@@ -1931,9 +1955,9 @@ export default function ServiceCallReports() {
                               {(() => {
                                 const { date, time } = fmtDateParts(item.escalatedAt);
                                 return (
-                                  <div className="flex flex-col text-[0.72vw] text-gray-800 font-normal leading-snug">
+                                  <div className="flex flex-col text-[0.72vw] text-gray-800 font-normal leading-normal">
                                     <span>{date}</span>
-                                    {time && <span className="text-[0.66vw] text-slate-500 mt-[0.05vw]">{time}</span>}
+                                    {time && <span className="text-[0.66vw] text-slate-500 mt-[0.25vw]">{time}</span>}
                                   </div>
                                 );
                               })()}
@@ -2031,9 +2055,7 @@ export default function ServiceCallReports() {
                               {/* User */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white">
                                 <div className="flex items-center gap-[0.55vw]">
-                                  <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal text-[0.74vw] shrink-0">
-                                    {emp.name.charAt(0).toUpperCase()}
-                                  </div>
+                                  <UserAvatar name={emp.name} image={emp.profilePicture || emp.image} size="1.8vw" textClass="text-[0.74vw]" />
                                   <div>
                                     <div className="font-normal text-slate-900 leading-tight text-[0.8vw]">{emp.name}</div>
                                     <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.05vw]">{emp.userId}</div>
@@ -2197,14 +2219,9 @@ export default function ServiceCallReports() {
                                     </td>
                                   )}
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
-                                    <CustomTooltip text="Click to view full details" position="top-start">
-                                      <button
-                                        onClick={() => setSelectedInfoCall(call)}
-                                        className="font-mono font-medium text-[0.82vw] text-blue-600 hover:text-blue-800 hover:underline cursor-pointer block leading-tight transition-colors"
-                                      >
+                                    <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
                                         {call.callNumber}
-                                      </button>
-                                    </CustomTooltip>
+                                      </span>
                                     {(call.editHistory?.length > 0 || call.isEdited) && (
                                       <CustomTooltip text="This call has edited records" position="top">
                                         <span className="inline-flex items-center justify-center text-amber-600 hover:text-amber-700 cursor-default p-[0.1vw] transition-colors">
@@ -2215,11 +2232,11 @@ export default function ServiceCallReports() {
                                   </td>
                                   <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                     {isSelf ? (
-                                      <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="text-slate-500 font-normal text-[0.72vw]">
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
                                         Registered
                                       </span>
                                     )}
@@ -2249,9 +2266,9 @@ export default function ServiceCallReports() {
                                     {(() => {
                                       const { date, time } = fmtDateParts(call.createdAt);
                                       return (
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col leading-normal">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.05vw]">{time}</span>}
+                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.25vw]">{time}</span>}
                                         </div>
                                       );
                                     })()}
