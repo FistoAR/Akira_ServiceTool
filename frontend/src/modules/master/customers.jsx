@@ -51,7 +51,7 @@ const CUSTOMER_DB_COLUMNS = [
   { key: "partyDescription", label: "Party Description", required: true },
   { key: "itemCode", label: "Item Code", required: true },
   { key: "itemDescription", label: "Item Description" },
-  { key: "warrantyPeriodDays", label: "Warranty (days)" },
+  { key: "warrantyPeriodDays", label: "Warranty" },
   { key: "productSegment", label: "Product Segment" },
   { key: "state", label: "State" },
   { key: "districtCity", label: "District/City" },
@@ -1120,7 +1120,7 @@ const CustomerDatabase = () => {
   const renderHeaderCell = (col) => (
     <th
       key={col.key}
-      className={`py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-r border-slate-300 whitespace-nowrap ${
+      className={`py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-300 whitespace-nowrap ${
         col.key === "state" ? "min-w-[8vw] w-[8vw]" : ""
       }`}
     >
@@ -1133,7 +1133,7 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-[0.78vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-[0.77vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
@@ -1166,7 +1166,7 @@ const CustomerDatabase = () => {
         );
       case "partyCode":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-600 font-mono"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-600"}>
             {row.partyCode}
           </td>
         );
@@ -1373,7 +1373,7 @@ const CustomerDatabase = () => {
                     </button>
                   </th>
                 )}
-                <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-r border-slate-300 w-[3.5%] text-center bg-[#E9EDF7]">
+                <th className="py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-300 w-[3.5%] text-center bg-[#E9EDF7]">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
