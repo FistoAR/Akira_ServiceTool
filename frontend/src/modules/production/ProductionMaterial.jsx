@@ -429,6 +429,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
   const [newProblemType, setNewProblemType] = useState("");
   const [newProductType, setNewProductType] = useState("");
 
+  const [editingItem, setEditingItem] = useState(null); // { category, index, value }
+
   useEffect(() => {
     setStages(stageOptions);
     setDispositions(dispositionOptions);
@@ -445,6 +447,22 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
   const removeDisposition = (d) => setDispositions(prev => prev.filter(x => x !== d));
   const removeProblemType = (p) => setProblemTypes(prev => prev.filter(x => x !== p));
   const removeProductType = (p) => setProductTypes(prev => prev.filter(x => x !== p));
+
+  const saveEdit = () => {
+    if (!editingItem) return;
+    const val = editingItem.value.trim();
+    if (!val) return;
+    if (editingItem.category === "stages") {
+      setStages(prev => prev.map((item, idx) => idx === editingItem.index ? val : item));
+    } else if (editingItem.category === "dispositions") {
+      setDispositions(prev => prev.map((item, idx) => idx === editingItem.index ? val : item));
+    } else if (editingItem.category === "problems") {
+      setProblemTypes(prev => prev.map((item, idx) => idx === editingItem.index ? val : item));
+    } else if (editingItem.category === "products") {
+      setProductTypes(prev => prev.map((item, idx) => idx === editingItem.index ? val : item));
+    }
+    setEditingItem(null);
+  };
 
   if (!open) return null;
 
@@ -507,16 +525,16 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 p-[1.5vw] overflow-y-auto bg-white flex flex-col">
+          <div className="flex-1 p-[1.5vw] overflow-hidden bg-white flex flex-col min-h-0">
             <AnimatePresence mode="wait">
               {activeTab === "stages" && (
-                <motion.div key="stages" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
-                  <div>
+                <motion.div key="stages" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                  <div className="shrink-0">
                     <h4 className="text-[0.95vw] font-medium text-slate-800">Work Stages</h4>
                     <p className="text-[0.72vw] text-slate-500 font-normal">Configure workflow stages available during production and inspection</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
+                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newStage} 
                       onChange={e => setNewStage(e.target.value)} 
@@ -532,49 +550,97 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                    <table className="w-full border-collapse table-fixed">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Stage Name</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {stages.map((s, idx) => (
-                          <tr key={s} className="hover:bg-slate-50/70 transition-colors">
-                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
-                              {idx + 1}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
-                              {s}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.8vw] text-center">
-                              <button 
-                                onClick={() => removeStage(s)} 
-                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
                     </table>
+                    <div className="overflow-y-auto flex-1 min-h-0">
+                      <table className="w-full border-collapse table-fixed">
+                        <tbody className="divide-y divide-slate-100">
+                          {stages.map((s, idx) => {
+                            const isEditing = editingItem?.category === "stages" && editingItem?.index === idx;
+                            return (
+                              <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                  {idx + 1}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      autoFocus
+                                      value={editingItem.value}
+                                      onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
+                                      onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                    />
+                                  ) : (
+                                    s
+                                  )}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                    {isEditing ? (
+                                      <>
+                                        <button 
+                                          onClick={saveEdit} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Save"
+                                        >
+                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => setEditingItem(null)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Cancel"
+                                        >
+                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <button 
+                                          onClick={() => setEditingItem({ category: "stages", index: idx, value: s })} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Edit"
+                                        >
+                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => removeStage(s)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Delete"
+                                        >
+                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </motion.div>
               )}
 
               {activeTab === "dispositions" && (
-                <motion.div key="dispositions" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
-                  <div>
+                <motion.div key="dispositions" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                  <div className="shrink-0">
                     <h4 className="text-[0.95vw] font-medium text-slate-800">Disposition Outcomes</h4>
                     <p className="text-[0.72vw] text-slate-500 font-normal">Configure disposition resolution statuses for rejected or verified items</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
+                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newDisposition} 
                       onChange={e => setNewDisposition(e.target.value)} 
@@ -590,49 +656,97 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                    <table className="w-full border-collapse table-fixed">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Outcome Description</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {dispositions.map((d, idx) => (
-                          <tr key={d} className="hover:bg-slate-50/70 transition-colors">
-                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
-                              {idx + 1}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
-                              {d}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.8vw] text-center">
-                              <button 
-                                onClick={() => removeDisposition(d)} 
-                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
                     </table>
+                    <div className="overflow-y-auto flex-1 min-h-0">
+                      <table className="w-full border-collapse table-fixed">
+                        <tbody className="divide-y divide-slate-100">
+                          {dispositions.map((d, idx) => {
+                            const isEditing = editingItem?.category === "dispositions" && editingItem?.index === idx;
+                            return (
+                              <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                  {idx + 1}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      autoFocus
+                                      value={editingItem.value}
+                                      onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
+                                      onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                    />
+                                  ) : (
+                                    d
+                                  )}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                    {isEditing ? (
+                                      <>
+                                        <button 
+                                          onClick={saveEdit} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Save"
+                                        >
+                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => setEditingItem(null)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Cancel"
+                                        >
+                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <button 
+                                          onClick={() => setEditingItem({ category: "dispositions", index: idx, value: d })} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Edit"
+                                        >
+                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => removeDisposition(d)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Delete"
+                                        >
+                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </motion.div>
               )}
 
               {activeTab === "problems" && (
-                <motion.div key="problems" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
-                  <div>
+                <motion.div key="problems" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                  <div className="shrink-0">
                     <h4 className="text-[0.95vw] font-medium text-slate-800">Problem Types</h4>
                     <p className="text-[0.72vw] text-slate-500 font-normal">Categorize issue classifications identified on production boards</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
+                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newProblemType} 
                       onChange={e => setNewProblemType(e.target.value)} 
@@ -648,49 +762,97 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                    <table className="w-full border-collapse table-fixed">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Problem Classification</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {problemTypes.map((p, idx) => (
-                          <tr key={p} className="hover:bg-slate-50/70 transition-colors">
-                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
-                              {idx + 1}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
-                              {p}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.8vw] text-center">
-                              <button 
-                                onClick={() => removeProblemType(p)} 
-                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
                     </table>
+                    <div className="overflow-y-auto flex-1 min-h-0">
+                      <table className="w-full border-collapse table-fixed">
+                        <tbody className="divide-y divide-slate-100">
+                          {problemTypes.map((p, idx) => {
+                            const isEditing = editingItem?.category === "problems" && editingItem?.index === idx;
+                            return (
+                              <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                  {idx + 1}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      autoFocus
+                                      value={editingItem.value}
+                                      onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
+                                      onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                    />
+                                  ) : (
+                                    p
+                                  )}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                    {isEditing ? (
+                                      <>
+                                        <button 
+                                          onClick={saveEdit} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Save"
+                                        >
+                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => setEditingItem(null)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Cancel"
+                                        >
+                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <button 
+                                          onClick={() => setEditingItem({ category: "problems", index: idx, value: p })} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Edit"
+                                        >
+                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => removeProblemType(p)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Delete"
+                                        >
+                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </motion.div>
               )}
 
               {activeTab === "products" && (
-                <motion.div key="products" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col">
-                  <div>
+                <motion.div key="products" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                  <div className="shrink-0">
                     <h4 className="text-[0.95vw] font-medium text-slate-800">Product Types</h4>
                     <p className="text-[0.72vw] text-slate-500 font-normal">Configure manufacturing assembly and board types</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs">
+                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newProductType} 
                       onChange={e => setNewProductType(e.target.value)} 
@@ -706,37 +868,85 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="bg-[#E9EDF7] border-b border-slate-200 text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                    <table className="w-full border-collapse table-fixed">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Product Type</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[5vw] font-medium">Action</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {productTypes.map((p, idx) => (
-                          <tr key={p} className="hover:bg-slate-50/70 transition-colors">
-                            <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal">
-                              {idx + 1}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
-                              {p}
-                            </td>
-                            <td className="py-[0.5vw] px-[0.8vw] text-center">
-                              <button 
-                                onClick={() => removeProductType(p)} 
-                                className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-[0.8vw] h-[0.8vw]" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
                     </table>
+                    <div className="overflow-y-auto flex-1 min-h-0">
+                      <table className="w-full border-collapse table-fixed">
+                        <tbody className="divide-y divide-slate-100">
+                          {productTypes.map((p, idx) => {
+                            const isEditing = editingItem?.category === "products" && editingItem?.index === idx;
+                            return (
+                              <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                  {idx + 1}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                  {isEditing ? (
+                                    <input
+                                      type="text"
+                                      autoFocus
+                                      value={editingItem.value}
+                                      onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
+                                      onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                    />
+                                  ) : (
+                                    p
+                                  )}
+                                </td>
+                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                    {isEditing ? (
+                                      <>
+                                        <button 
+                                          onClick={saveEdit} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Save"
+                                        >
+                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => setEditingItem(null)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Cancel"
+                                        >
+                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <button 
+                                          onClick={() => setEditingItem({ category: "products", index: idx, value: p })} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Edit"
+                                        >
+                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                        <button 
+                                          onClick={() => removeProductType(p)} 
+                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          title="Delete"
+                                        >
+                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </motion.div>
               )}

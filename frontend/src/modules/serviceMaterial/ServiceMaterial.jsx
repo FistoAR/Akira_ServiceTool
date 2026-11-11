@@ -562,7 +562,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
         </div>
 
         {/* Master Table List */}
-        <div className="flex-1 overflow-y-auto p-[1.2vw] bg-white">
+        <div className="flex-1 overflow-hidden p-[1.2vw] bg-white flex flex-col min-h-0">
           {loading ? (
             <div className="text-center text-[0.8vw] text-slate-500 py-[2vw]">
               Loading...
@@ -572,87 +572,91 @@ const BoardTypeMasterModal = ({ onClose }) => {
               No board types found.
             </div>
           ) : (
-            <div className="border border-slate-300 rounded-[0.6vw] overflow-hidden">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-[#E9EDF7] border-b border-slate-300">
+            <div className="border border-slate-300 rounded-[0.6vw] overflow-hidden flex flex-col flex-1 min-h-0">
+              <table className="w-full border-collapse table-fixed">
+                <thead className="shrink-0 bg-[#E9EDF7]">
+                  <tr className="border-b border-slate-300">
                     <th className="text-left py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider w-[20%]">
+                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider w-[22%]">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {items.map((item) => (
-                    <tr
-                      key={item._id}
-                      className="border-b border-slate-200 last:border-b-0 hover:bg-slate-50/70 transition-colors"
-                    >
-                      {editingId === item._id ? (
-                        <>
-                          <td className="py-[0.45vw] px-[0.8vw]">
-                            <input
-                              type="text"
-                              value={editItem.name}
-                              onChange={(e) =>
-                                setEditItem({ ...editItem, name: e.target.value })
-                              }
-                              className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.78vw] font-medium outline-none focus:ring-1 focus:ring-blue-400"
-                            />
-                          </td>
-                          <td className="py-[0.45vw] px-[0.8vw] text-right">
-                            <div className="flex items-center justify-end gap-[0.3vw]">
-                              <button
-                                onClick={() => handleUpdate(item._id)}
-                                className="text-emerald-600 hover:text-emerald-700 p-[0.3vw] hover:bg-emerald-50 rounded cursor-pointer transition-colors"
-                                title="Save"
-                              >
-                                <Save className="w-[0.85vw] h-[0.85vw]" />
-                              </button>
-                              <button
-                                onClick={() => setEditingId(null)}
-                                className="text-slate-400 hover:text-slate-600 p-[0.3vw] hover:bg-slate-100 rounded cursor-pointer transition-colors"
-                                title="Cancel"
-                              >
-                                <X className="w-[0.85vw] h-[0.85vw]" />
-                              </button>
-                            </div>
-                          </td>
-                        </>
-                      ) : (
-                        <>
-                          <td className="py-[0.55vw] px-[0.8vw] text-[0.78vw] font-normal text-slate-800">
-                            {item.name}
-                          </td>
-                          <td className="py-[0.55vw] px-[0.8vw] text-right">
-                            <div className="flex items-center justify-end gap-[0.3vw]">
-                              <button
-                                onClick={() => {
-                                  setEditingId(item._id);
-                                  setEditItem({ name: item.name });
-                                }}
-                                className="text-slate-500 hover:text-[#1a73e8] p-[0.3vw] hover:bg-blue-50 rounded-full cursor-pointer transition-colors"
-                                title="Edit"
-                              >
-                                <Edit3 className="w-[0.85vw] h-[0.85vw]" />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(item._id)}
-                                className="text-slate-400 hover:text-rose-600 p-[0.3vw] hover:bg-rose-50 rounded-full cursor-pointer transition-colors"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-[0.85vw] h-[0.85vw]" />
-                              </button>
-                            </div>
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
               </table>
+              <div className="overflow-y-auto flex-1 min-h-0">
+                <table className="w-full border-collapse table-fixed">
+                  <tbody>
+                    {items.map((item) => (
+                      <tr
+                        key={item._id}
+                        className="border-b border-slate-200 last:border-b-0 hover:bg-slate-50/70 transition-colors"
+                      >
+                        {editingId === item._id ? (
+                          <>
+                            <td className="py-[0.45vw] px-[0.8vw]">
+                              <input
+                                type="text"
+                                value={editItem.name}
+                                onChange={(e) =>
+                                  setEditItem({ ...editItem, name: e.target.value })
+                                }
+                                className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.78vw] font-medium outline-none focus:ring-1 focus:ring-blue-400"
+                              />
+                            </td>
+                            <td className="py-[0.45vw] px-[0.8vw] text-right w-[22%]">
+                              <div className="flex items-center justify-end gap-[0.3vw]">
+                                <button
+                                  onClick={() => handleUpdate(item._id)}
+                                  className="text-emerald-600 hover:text-emerald-700 p-[0.3vw] hover:bg-emerald-50 rounded cursor-pointer transition-colors"
+                                  title="Save"
+                                >
+                                  <Save className="w-[0.85vw] h-[0.85vw]" />
+                                </button>
+                                <button
+                                  onClick={() => setEditingId(null)}
+                                  className="text-slate-400 hover:text-slate-600 p-[0.3vw] hover:bg-slate-100 rounded cursor-pointer transition-colors"
+                                  title="Cancel"
+                                >
+                                  <X className="w-[0.85vw] h-[0.85vw]" />
+                                </button>
+                              </div>
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="py-[0.55vw] px-[0.8vw] text-[0.78vw] font-normal text-slate-800">
+                              {item.name}
+                            </td>
+                            <td className="py-[0.55vw] px-[0.8vw] text-right w-[22%]">
+                              <div className="flex items-center justify-end gap-[0.3vw]">
+                                <button
+                                  onClick={() => {
+                                    setEditingId(item._id);
+                                    setEditItem({ name: item.name });
+                                  }}
+                                  className="text-slate-500 hover:text-[#1a73e8] p-[0.3vw] hover:bg-blue-50 rounded-full cursor-pointer transition-colors"
+                                  title="Edit"
+                                >
+                                  <Edit3 className="w-[0.85vw] h-[0.85vw]" />
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(item._id)}
+                                  className="text-slate-400 hover:text-rose-600 p-[0.3vw] hover:bg-rose-50 rounded-full cursor-pointer transition-colors"
+                                  title="Delete"
+                                >
+                                  <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                                </button>
+                              </div>
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
