@@ -403,7 +403,7 @@ const ProductClosurePanel = ({
       <div className="flex flex-col gap-[0.6vw]">
         {savedBadge ? (
           <div className="flex items-center justify-between border-b border-slate-200 pb-[0.6vw]">
-            <span className="text-[0.75vw] font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-[0.72vw] font-normal text-slate-400 uppercase tracking-wider">
               Current Status
             </span>
             {savedBadge}
@@ -424,7 +424,7 @@ const ProductClosurePanel = ({
                     setNotes("");
                     setErrors({});
                   }}
-                  className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.76vw] font-bold transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
+                  className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.74vw] font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
                     isActive
                       ? t.activeStyle
                       : `bg-white border-slate-300 text-slate-700 ${t.hoverStyle}`
@@ -450,7 +450,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-blue-50 border border-blue-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-visible shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-blue-900">
+                <div className="text-[0.85vw] font-semibold text-blue-900">
                   Request Support / Escalate
                 </div>
                 <div className="flex flex-col gap-[0.5vw]">
@@ -469,7 +469,7 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, supportPerson: null }));
                       }}
                       placeholder="Search person or department..."
-                      className={`w-full border rounded-[0.5vw] pl-[2vw] pr-[0.7vw] py-[0.5vw] text-[0.75vw] font-bold outline-none bg-white transition-all shadow-sm ${
+                      className={`w-full border rounded-[0.5vw] pl-[2vw] pr-[0.7vw] py-[0.5vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm ${
                         errors.supportPerson
                           ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                           : "border-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
@@ -494,7 +494,7 @@ const ProductClosurePanel = ({
                             }}
                             className={`px-[0.7vw] py-[0.6vw] text-[0.72vw] font-bold cursor-pointer hover:bg-blue-50/65 flex justify-between items-center transition-colors ${
                               selectedPerson?.userId === emp.userId
-                                ? "bg-blue-55 text-blue-950 font-black border-l-2 border-blue-600"
+                                ? "bg-blue-55 text-blue-950 font-bold border-l-2 border-blue-600"
                                 : "text-slate-800"
                             }`}
                           >
@@ -518,7 +518,7 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, notes: null }));
                       }}
                       placeholder="Provide handover notes..."
-                      className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                      className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
                         errors.notes
                           ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                           : "border-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
@@ -535,7 +535,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={handleSupport}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-blue-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-blue-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -552,7 +552,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-emerald-50 border border-emerald-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-emerald-900">
+                <div className="text-[0.85vw] font-bold text-emerald-900">
                   Resolution Details
                 </div>
                 <div>
@@ -564,7 +564,7 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter details of fixed parts, logical adjustments, or resolution explanation..."
-                    className={`w-full border rounded-[0.5vw] p-[0.8vw] text-[0.78vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-[0.5vw] p-[0.8vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
@@ -580,7 +580,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Resolved")}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-emerald-600 to-teal-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md shadow-emerald-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-emerald-600 to-teal-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md shadow-emerald-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -597,7 +597,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-amber-50 border border-amber-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-amber-900">
+                <div className="text-[0.85vw] font-bold text-amber-900">
                   Pending Reason
                 </div>
                 <div>
@@ -625,7 +625,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Pending")}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-amber-500 to-orange-500 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-amber-600 hover:to-orange-655 transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-amber-500 to-orange-500 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-amber-600 hover:to-orange-655 transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -673,7 +673,7 @@ const ProductClosurePanel = ({
                 className="bg-rose-50 border border-rose-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-[0.85vw] font-black text-rose-900 flex items-center gap-[0.35vw]">
+                  <div className="text-[0.85vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
                     <RotateCcw className="w-[0.9vw] h-[0.9vw]" /> Reverse Escalate (Send Back)
                   </div>
                   <span className="text-[0.68vw] bg-rose-100 text-rose-800 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-rose-200">
@@ -737,7 +737,7 @@ const ProductClosurePanel = ({
                       setIsSubmitting(false);
                     }
                   }}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-[0.5vw] font-bold text-[0.75vw] transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-[0.5vw] font-medium text-[0.74vw] transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -756,7 +756,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-purple-50 border border-purple-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-black text-purple-900">
+                <div className="text-[0.85vw] font-bold text-purple-900">
                   Return to Assigned Person
                 </div>
                 <div>

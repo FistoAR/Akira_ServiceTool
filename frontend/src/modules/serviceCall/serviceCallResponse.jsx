@@ -1493,20 +1493,20 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
             {/* Header */}
             <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] border-b border-slate-200 bg-slate-50/80 shrink-0">
               <div>
-                <h3 className="text-[0.95vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
+                <h3 className="text-[0.9vw] font-medium text-slate-800 flex items-center gap-[0.4vw]">
                   Respond to Product
-                  <span className="text-[0.8vw] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-[0.4vw] py-[0.1vw] rounded">
+                  <span className="text-[0.76vw] font-normal font-mono text-indigo-600 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded">
                     {activeModalProduct.entry?.callNumber}
                   </span>
                 </h3>
-                <p className="text-[0.72vw] text-slate-500 mt-[0.1vw]">
+                <p className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw]">
                   {activeModalProduct.prod?.productName || activeModalProduct.prod?.model || ('Product #' + ((activeModalProduct.pIdx ?? 0) + 1))}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveModalProduct(null)}
-                className="p-[0.35vw] text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-full transition-all cursor-pointer font-bold text-[0.9vw]"
+                className="p-[0.35vw] text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-full transition-all cursor-pointer font-normal text-[0.85vw]"
               >
                 ✕
               </button>

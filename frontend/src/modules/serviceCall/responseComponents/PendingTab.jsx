@@ -362,11 +362,14 @@ const PendingTab = ({
               })
             ) : (
               <tr>
-                <td
-                  colSpan={8}
-                  className="py-[10vh] text-center text-slate-400 font-bold"
-                >
-                  No pending checks found. All checks and tasks are up to date.
+                <td colSpan="8" className="text-center py-[4vw] text-slate-500">
+                  <div className="flex flex-col items-center justify-center gap-[0.6vw]">
+                    <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
+                      <AlertCircle className="w-[1.6vw] h-[1.6vw] text-slate-400" />
+                    </div>
+                    <p className="text-[0.9vw] font-medium text-slate-700">No pending checks in this queue</p>
+                    <p className="text-[0.75vw] text-slate-400">All checks and tasks are up to date.</p>
+                  </div>
                 </td>
               </tr>
             )}

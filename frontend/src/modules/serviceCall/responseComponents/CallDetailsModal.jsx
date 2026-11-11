@@ -221,61 +221,61 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── HEADER ──────────────────────────────────────────────────────── */}
-        <div className="px-[1.6vw] py-[1.1vw] border-b border-slate-200/90 bg-white flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-[0.9vw]">
-            <div className="w-[2.7vw] h-[2.7vw] rounded-[0.7vw] bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
-              <FileText className="w-[1.35vw] h-[1.35vw]" />
+        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-[0.75vw]">
+            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
+              <FileText className="w-[1.1vw] h-[1.1vw]" />
             </div>
 
             <div>
-              <div className="flex items-center gap-[0.55vw] flex-wrap">
-                <span className="font-mono font-bold text-[1.15vw] text-slate-900 tracking-tight">
+              <div className="flex items-center gap-[0.45vw] flex-wrap">
+                <span className="font-mono font-medium text-[1vw] text-slate-900 tracking-tight">
                   {call.callNumber || "Service Call"}
                 </span>
 
                 <button
                   type="button"
                   onClick={handleCopyCallNo}
-                  className="p-[0.3vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all cursor-pointer"
+                  className="p-[0.2vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
                   title="Copy Call Reference"
                 >
                   {copied ? (
-                    <Check className="w-[0.85vw] h-[0.85vw] text-emerald-600" />
+                    <Check className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
                   ) : (
-                    <Copy className="w-[0.85vw] h-[0.85vw]" />
+                    <Copy className="w-[0.75vw] h-[0.75vw]" />
                   )}
                 </button>
 
                 {/* Status Pill */}
-                <span className={`inline-flex items-center gap-[0.35vw] px-[0.6vw] py-[0.15vw] rounded-full text-[0.7vw] font-bold border ${statusCfg.pill}`}>
-                  <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${statusCfg.dot}`} />
+                <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${statusCfg.pill}`}>
+                  <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${statusCfg.dot}`} />
                   {statusCfg.label}
                 </span>
 
                 {/* Priority Pill */}
-                <span className={`inline-flex items-center gap-[0.35vw] px-[0.6vw] py-[0.15vw] rounded-full text-[0.7vw] font-bold border ${priorityCfg.pill}`}>
-                  <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${priorityCfg.dot}`} />
+                <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${priorityCfg.pill}`}>
+                  <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${priorityCfg.dot}`} />
                   {priorityCfg.label}
                 </span>
 
                 {call.noEscalation === true && (
-                  <span className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.12vw] rounded-full text-[0.68vw] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
-                    <UserCheck className="w-[0.65vw] h-[0.65vw]" />
+                  <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
+                    <UserCheck className="w-[0.6vw] h-[0.6vw]" />
                     Self Assigned
                   </span>
                 )}
               </div>
 
-              <div className="text-[0.74vw] text-slate-500 font-medium mt-[0.2vw] flex items-center gap-[0.35vw]">
-                <Clock className="w-[0.7vw] h-[0.7vw] text-slate-400 shrink-0" />
+              <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw] flex items-center gap-[0.3vw]">
+                <Clock className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
                 <span>
-                  Registered on <span className="font-semibold text-slate-700">{fmtDate(call.dateTime || call.createdAt)}</span>
+                  Registered on <span className="text-slate-700 font-normal">{fmtDate(call.dateTime || call.createdAt)}</span>
                 </span>
                 {call.registeredByName && call.registeredByName !== "System" && (
                   <>
                     <span className="text-slate-300">•</span>
                     <span>
-                      by <span className="font-semibold text-slate-700">{call.registeredByName}</span>
+                      by <span className="text-slate-700 font-normal">{call.registeredByName}</span>
                     </span>
                   </>
                 )}
@@ -294,10 +294,10 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.3vw] rounded-full text-[0.74vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    className={`flex items-center gap-[0.3vw] px-[0.65vw] py-[0.25vw] rounded-full text-[0.72vw] font-normal transition-all cursor-pointer whitespace-nowrap ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-xs font-semibold"
-                        : "text-slate-700 hover:text-slate-900 hover:bg-white/70"
+                        ? "bg-blue-600 text-white shadow-xs font-medium"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-white/70"
                     }`}
                   >
                     <Icon className={`w-[0.75vw] h-[0.75vw] ${isActive ? "text-white" : "text-slate-500"}`} />
@@ -336,150 +336,131 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
           {activeTab === "overview" && (
             <div className="space-y-[1.2vw]">
               {/* Customer & Call Attributes Cards */}
-              <div className="grid grid-cols-2 gap-[1.2vw]">
+              <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 1. Customer Details Card */}
-                <div className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.2vw] shadow-xs flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between pb-[0.7vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.45vw] text-[0.84vw] font-bold text-slate-900">
-                        <div className="p-[0.32vw] rounded-[0.4vw] bg-blue-50 text-blue-600">
-                          <Building2 className="w-[0.9vw] h-[0.9vw]" />
-                        </div>
-                        <span>Customer Details</span>
+                <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs">
+                  <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
+                    <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-800">
+                      <div className="p-[0.28vw] rounded-[0.35vw] bg-blue-50 text-blue-600">
+                        <Building2 className="w-[0.85vw] h-[0.85vw]" />
                       </div>
-                      {call.partyCode && (
-                        <span className="font-mono text-[0.7vw] font-bold text-slate-600 bg-slate-100 px-[0.45vw] py-[0.1vw] rounded border border-slate-200">
-                          {call.partyCode}
-                        </span>
-                      )}
+                      <span>Customer Details</span>
+                    </div>
+                    {call.partyCode && (
+                      <span className="font-mono text-[0.68vw] font-normal text-slate-600 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded border border-slate-200">
+                        {call.partyCode}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-[0.75vw] space-y-[0.55vw] text-[0.76vw]">
+                    <div className="flex items-start justify-between gap-[0.8vw]">
+                      <span className="text-slate-400 font-normal">Customer Name</span>
+                      <span className="font-normal text-slate-800 text-right max-w-[18vw] leading-snug">
+                        {call.customerName || "—"}
+                      </span>
                     </div>
 
-                    <div className="mt-[0.9vw] space-y-[0.65vw] text-[0.78vw]">
-                      <div className="flex items-start justify-between gap-[1vw]">
-                        <span className="text-slate-500 font-medium">Customer Name</span>
-                        <span className="font-bold text-slate-900 text-right max-w-[18vw] leading-snug">
-                          {call.customerName || "—"}
-                        </span>
-                      </div>
-
-                      {call.customerType && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Customer Type</span>
-                          <span className={`px-[0.5vw] py-[0.1vw] rounded-full text-[0.7vw] font-bold border uppercase tracking-wider ${getCustomerTypePill(call.customerType)}`}>
-                            {call.customerType}
-                          </span>
-                        </div>
-                      )}
-
+                    {call.customerType && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Contact Number</span>
-                        {call.contactNumber ? (
-                          <a
-                            href={`tel:${call.contactNumber}`}
-                            className="font-semibold text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.3vw] transition-colors"
-                          >
-                            <Phone className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
-                            <span>{call.contactNumber}</span>
-                          </a>
-                        ) : (
-                          <span className="text-slate-400 font-normal">—</span>
-                        )}
-                      </div>
-
-                      {call.contactPerson && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Contact Person</span>
-                          <span className="font-semibold text-slate-800">{call.contactPerson}</span>
-                        </div>
-                      )}
-
-                      {call.emailId && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Email Address</span>
-                          <a
-                            href={`mailto:${call.emailId}`}
-                            className="font-semibold text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.3vw]"
-                          >
-                            <Mail className="w-[0.7vw] h-[0.7vw] text-blue-500 shrink-0" />
-                            <span>{call.emailId}</span>
-                          </a>
-                        </div>
-                      )}
-
-                      <div className="flex items-start justify-between gap-[1vw]">
-                        <span className="text-slate-500 font-medium">Location</span>
-                        <span className="font-semibold text-slate-800 text-right flex items-start justify-end gap-[0.3vw] max-w-[18vw] leading-snug">
-                          <MapPin className="w-[0.7vw] h-[0.7vw] text-slate-400 shrink-0 mt-[0.15vw]" />
-                          <span>{call.location || "—"}</span>
+                        <span className="text-slate-400 font-normal">Customer Type</span>
+                        <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-normal border ${getCustomerTypePill(call.customerType)}`}>
+                          {call.customerType}
                         </span>
                       </div>
+                    )}
 
-                      {call.site && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Site / Branch</span>
-                          <span className="font-semibold text-slate-800">{call.site}</span>
-                        </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 font-normal">Contact Number</span>
+                      {call.contactNumber ? (
+                        <a
+                          href={`tel:${call.contactNumber}`}
+                          className="font-normal text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.25vw] transition-colors"
+                        >
+                          <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                          <span>{call.contactNumber}</span>
+                        </a>
+                      ) : (
+                        <span className="text-slate-400 font-normal">—</span>
                       )}
                     </div>
+
+                    {call.contactPerson && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 font-normal">Contact Person</span>
+                        <span className="font-normal text-slate-800">{call.contactPerson}</span>
+                      </div>
+                    )}
+
+                    {call.emailId && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 font-normal">Email Address</span>
+                        <a
+                          href={`mailto:${call.emailId}`}
+                          className="font-normal text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.25vw]"
+                        >
+                          <Mail className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                          <span>{call.emailId}</span>
+                        </a>
+                      </div>
+                    )}
+
+                    <div className="flex items-start justify-between gap-[0.8vw]">
+                      <span className="text-slate-400 font-normal">Location</span>
+                      <span className="font-normal text-slate-800 text-right flex items-start justify-end gap-[0.25vw] max-w-[18vw] leading-snug">
+                        <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0 mt-[0.12vw]" />
+                        <span>{call.location || "—"}</span>
+                      </span>
+                    </div>
+
+                    {call.site && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 font-normal">Site / Branch</span>
+                        <span className="font-normal text-slate-800">{call.site}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* 2. Call Attributes Card */}
-                <div className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.2vw] shadow-xs flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between pb-[0.7vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.45vw] text-[0.84vw] font-bold text-slate-900">
-                        <div className="p-[0.32vw] rounded-[0.4vw] bg-indigo-50 text-indigo-600">
-                          <Briefcase className="w-[0.9vw] h-[0.9vw]" />
-                        </div>
-                        <span>Call Attributes</span>
+                <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs">
+                  <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
+                    <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-800">
+                      <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-600">
+                        <Briefcase className="w-[0.85vw] h-[0.85vw]" />
                       </div>
-                      <span className="font-bold text-[0.7vw] text-slate-700 bg-slate-100 px-[0.45vw] py-[0.1vw] rounded border border-slate-200">
-                        {products.length} Item{products.length > 1 ? "s" : ""}
+                      <span>Call Attributes</span>
+                    </div>
+                    <span className="font-normal text-[0.68vw] text-slate-600 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded border border-slate-200">
+                      {products.length} Item{products.length > 1 ? "s" : ""}
+                    </span>
+                  </div>
+
+                  <div className="mt-[0.75vw] space-y-[0.55vw] text-[0.76vw]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 font-normal">Call Mode</span>
+                      <span className="font-normal text-slate-800">{call.mode || "Phone"}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 font-normal">Current Engineer</span>
+                      <span className="font-normal text-indigo-700 bg-indigo-50 px-[0.4vw] py-[0.06vw] rounded text-[0.74vw] border border-indigo-100">
+                        {call.currentEngineerName || "Unassigned"}
                       </span>
                     </div>
 
-                    <div className="mt-[0.9vw] space-y-[0.65vw] text-[0.78vw]">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Call Mode</span>
-                        <span className="font-bold text-slate-800">{call.mode || "Non Portal"}</span>
-                      </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 font-normal">Department</span>
+                      <span className="font-normal text-slate-800">
+                        {call.currentDepartment || "Support Engineers"}
+                      </span>
+                    </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Current Engineer</span>
-                        <span className="font-bold text-indigo-700 bg-indigo-50/70 px-[0.45vw] py-[0.08vw] rounded text-[0.76vw] border border-indigo-100">
-                          {call.currentEngineerName || "Unassigned"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Department</span>
-                        <span className="font-semibold text-slate-700">
-                          {call.currentDepartment || "Support Engineers"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Registered Date</span>
-                        <span className="font-semibold text-slate-800">
-                          {fmtDate(call.dateTime || call.createdAt)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Registered By</span>
-                        <span className="font-semibold text-slate-800">
-                          {call.registeredByName || call.registeredBy || "System"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Priority Level</span>
-                        <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-bold border uppercase tracking-wider ${priorityCfg.pill}`}>
-                          <span className={`w-[0.38vw] h-[0.38vw] rounded-full ${priorityCfg.dot}`} />
-                          {priorityCfg.label}
-                        </span>
-                      </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 font-normal">Registered By</span>
+                      <span className="font-normal text-slate-800">
+                        {call.registeredByName || call.registeredBy || "System"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -487,24 +468,24 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
               {/* Quick Products Summary Section */}
               <div className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.2vw] shadow-xs">
-                <div className="text-[0.84vw] font-bold text-slate-900 pb-[0.7vw] border-b border-slate-100 flex items-center justify-between">
-                  <span className="flex items-center gap-[0.45vw]">
-                    <div className="p-[0.32vw] rounded-[0.4vw] bg-blue-50 text-blue-600">
-                      <Wrench className="w-[0.9vw] h-[0.9vw]" />
+                <div className="text-[0.8vw] font-medium text-slate-800 pb-[0.6vw] border-b border-slate-100 flex items-center justify-between">
+                  <span className="flex items-center gap-[0.4vw]">
+                    <div className="p-[0.28vw] rounded-[0.35vw] bg-blue-50 text-blue-600">
+                      <Wrench className="w-[0.85vw] h-[0.85vw]" />
                     </div>
                     <span>Product Summary ({products.length})</span>
                   </span>
                   <button
                     type="button"
                     onClick={() => setActiveTab("products")}
-                    className="text-[0.74vw] text-blue-600 font-bold hover:text-blue-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer group"
+                    className="text-[0.72vw] text-blue-600 font-normal hover:text-blue-800 flex items-center gap-[0.15vw] transition-colors cursor-pointer group"
                   >
                     <span>View Details</span>
-                    <ChevronRight className="w-[0.75vw] h-[0.75vw] group-hover:translate-x-0.5 transition-transform" />
+                    <ChevronRight className="w-[0.7vw] h-[0.7vw] group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
 
-                <div className="mt-[0.8vw] divide-y divide-slate-100">
+                <div className="mt-[0.7vw] divide-y divide-slate-100">
                   {products.map((p, idx) => {
                     const closureStatus = p._productClosure?.status || (p._resolved ? "Resolved" : "Open");
                     const pStatusCfg = getStatusBadge(closureStatus);
@@ -512,32 +493,32 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                     return (
                       <div
                         key={idx}
-                        className="py-[0.65vw] first:pt-0 last:pb-0 flex items-center justify-between text-[0.78vw] hover:bg-slate-50/70 px-[0.4vw] rounded-[0.4vw] transition-colors"
+                        className="py-[0.55vw] first:pt-0 last:pb-0 flex items-center justify-between text-[0.76vw] hover:bg-slate-50/70 px-[0.3vw] rounded transition-colors"
                       >
-                        <div className="flex items-center gap-[0.75vw]">
-                          <span className="w-[1.6vw] h-[1.6vw] rounded-[0.4vw] bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-[0.7vw] border border-slate-200">
+                        <div className="flex items-center gap-[0.65vw]">
+                          <span className="w-[1.5vw] h-[1.5vw] rounded bg-slate-100 text-slate-600 font-normal flex items-center justify-center text-[0.68vw] border border-slate-200">
                             #{idx + 1}
                           </span>
                           <div>
-                            <div className="font-bold text-slate-900 text-[0.82vw]">
+                            <div className="font-medium text-slate-800 text-[0.78vw]">
                               {p.productModel || p.productName || p.itemCode || "Product"}
                             </div>
-                            <div className="text-[0.7vw] text-slate-500 font-mono mt-[0.05vw] flex items-center gap-[0.4vw]">
-                              <span>SN: <span className="text-slate-700 font-semibold">{p.serialNumber || "N/A"}</span></span>
+                            <div className="text-[0.68vw] text-slate-500 font-mono mt-[0.05vw] flex items-center gap-[0.35vw]">
+                              <span>SN: <span className="text-slate-600 font-normal">{p.serialNumber || "N/A"}</span></span>
                               <span className="text-slate-300">•</span>
-                              <span>Segment: <span className="text-slate-700 font-medium">{p.productSegment || "General"}</span></span>
+                              <span>Segment: <span className="text-slate-600 font-normal">{p.productSegment || "General"}</span></span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-[0.7vw]">
+                        <div className="flex items-center gap-[0.6vw]">
                           {p.errorCode && (
-                            <span className="px-[0.45vw] py-[0.1vw] bg-rose-50 border border-rose-200 text-rose-700 font-mono font-bold text-[0.7vw] rounded">
+                            <span className="px-[0.4vw] py-[0.08vw] bg-rose-50 border border-rose-200 text-rose-700 font-mono font-normal text-[0.68vw] rounded">
                               Err: {p.errorCode}
                             </span>
                           )}
-                          <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold border uppercase tracking-wide ${pStatusCfg.pill}`}>
-                            <span className={`w-[0.38vw] h-[0.38vw] rounded-full ${pStatusCfg.dot}`} />
+                          <span className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
+                            <span className={`w-[0.32vw] h-[0.32vw] rounded-full ${pStatusCfg.dot}`} />
                             {pStatusCfg.label}
                           </span>
                         </div>
@@ -551,7 +532,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
           {/* TAB 2: PRODUCTS DETAILED */}
           {activeTab === "products" && (
-            <div className="space-y-[1vw]">
+            <div className="space-y-[0.9vw]">
               {products.map((p, idx) => {
                 const closure = p._productClosure || {};
                 const closureStatus = closure.status || (p._resolved ? "Resolved" : "Open");
@@ -560,48 +541,48 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                 return (
                   <div
                     key={idx}
-                    className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.2vw] shadow-xs space-y-[0.85vw]"
+                    className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.75vw]"
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.6vw]">
-                        <span className="px-[0.5vw] py-[0.2vw] rounded-[0.4vw] bg-blue-50 text-blue-700 font-mono font-bold text-[0.74vw] border border-blue-200">
-                          Product #{idx + 1}
+                    <div className="flex items-center justify-between pb-[0.55vw] border-b border-slate-100">
+                      <div className="flex items-center gap-[0.55vw]">
+                        <span className="px-[0.45vw] py-[0.12vw] rounded bg-blue-50 text-blue-700 font-mono font-normal text-[0.7vw] border border-blue-200">
+                          #{idx + 1}
                         </span>
-                        <h4 className="text-[0.95vw] font-bold text-slate-900">
+                        <h4 className="text-[0.85vw] font-medium text-slate-800">
                           {p.productModel || p.productName || p.itemCode || "Item"}
                         </h4>
                       </div>
 
-                      <span className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.15vw] rounded-full text-[0.7vw] font-bold border uppercase tracking-wide ${pStatusCfg.pill}`}>
-                        <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${pStatusCfg.dot}`} />
+                      <span className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
+                        <span className={`w-[0.32vw] h-[0.32vw] rounded-full ${pStatusCfg.dot}`} />
                         {pStatusCfg.label}
                       </span>
                     </div>
 
                     {/* Product Specs Grid */}
-                    <div className="grid grid-cols-4 gap-[0.8vw] text-[0.78vw] bg-slate-50/80 p-[0.9vw] rounded-[0.6vw] border border-slate-200/80">
-                      <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.66vw] font-bold uppercase tracking-wider">Serial Number</span>
-                        <span className="font-mono font-bold text-slate-800 text-[0.82vw] mt-[0.15vw] block">
+                    <div className="grid grid-cols-4 gap-[0.7vw] text-[0.74vw] bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border border-slate-200/80">
+                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
+                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Serial Number</span>
+                        <span className="font-mono font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
                           {p.serialNumber || "—"}
                         </span>
                       </div>
-                      <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.66vw] font-bold uppercase tracking-wider">Product Segment</span>
-                        <span className="font-semibold text-slate-800 text-[0.82vw] mt-[0.15vw] block">
+                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
+                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Product Segment</span>
+                        <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
                           {p.productSegment || "—"}
                         </span>
                       </div>
-                      <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.66vw] font-bold uppercase tracking-wider">Warranty Status</span>
-                        <span className="font-semibold text-slate-800 text-[0.82vw] mt-[0.15vw] block">
+                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
+                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Warranty Status</span>
+                        <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
                           {p.warrantyStatus || "In Warranty"}
                         </span>
                       </div>
-                      <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.66vw] font-bold uppercase tracking-wider">Error Code</span>
-                        <span className="font-mono font-bold text-rose-600 text-[0.82vw] mt-[0.15vw] block">
+                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
+                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Error Code</span>
+                        <span className="font-mono font-normal text-rose-600 text-[0.78vw] mt-[0.1vw] block">
                           {p.errorCode || "—"}
                         </span>
                       </div>
@@ -609,35 +590,35 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                     {/* Issue Description */}
                     <div>
-                      <span className="text-[0.7vw] font-bold text-slate-500 uppercase tracking-wider block mb-[0.25vw]">
+                      <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                         Reported Issue
                       </span>
-                      <div className="text-[0.78vw] text-slate-800 bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border border-slate-200 font-medium leading-relaxed">
+                      <div className="text-[0.74vw] text-slate-700 bg-slate-50/60 p-[0.6vw] rounded border border-slate-200 font-normal leading-relaxed">
                         {p.callDescription ? p.callDescription : <span className="text-slate-400 italic">No specific issue description entered.</span>}
                       </div>
                     </div>
 
                     {/* Closure Report Section */}
                     {closure.status && (
-                      <div className="bg-emerald-50/70 border border-emerald-250 rounded-[0.6vw] p-[0.9vw] space-y-[0.45vw]">
+                      <div className="bg-emerald-50/50 border border-emerald-200 rounded-[0.5vw] p-[0.75vw] space-y-[0.4vw]">
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.76vw] font-bold text-emerald-900 flex items-center gap-[0.35vw]">
-                            <CheckCircle2 className="w-[0.85vw] h-[0.85vw] text-emerald-600" />
-                            Submitted Closure Report ({closure.status})
+                          <span className="text-[0.74vw] font-normal text-emerald-800 flex items-center gap-[0.3vw]">
+                            <CheckCircle2 className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
+                            Closure Report ({closure.status})
                           </span>
                           {closure.resolutionType && (
-                            <span className="text-[0.7vw] font-bold bg-white text-emerald-700 px-[0.45vw] py-[0.1vw] rounded border border-emerald-200">
+                            <span className="text-[0.66vw] font-normal bg-white text-emerald-700 px-[0.4vw] py-[0.08vw] rounded border border-emerald-200">
                               {closure.resolutionType}
                             </span>
                           )}
                         </div>
                         {closure.remarks && (
-                          <div className="text-[0.78vw] text-emerald-950 font-medium leading-relaxed bg-white/70 p-[0.6vw] rounded border border-emerald-100">
+                          <div className="text-[0.74vw] text-emerald-950 font-normal leading-relaxed bg-white/80 p-[0.5vw] rounded border border-emerald-100">
                             {closure.remarks}
                           </div>
                         )}
-                        <div className="text-[0.7vw] text-emerald-800 font-medium pt-[0.2vw]">
-                          Closed by: <span className="font-bold text-emerald-950">{closure.closedByName || closure.userName || "Engineer"}</span>
+                        <div className="text-[0.68vw] text-emerald-700 font-normal pt-[0.1vw]">
+                          Closed by: <span className="font-normal text-emerald-900">{closure.closedByName || closure.userName || "Engineer"}</span>
                           {closure.closedAt && ` on ${fmtDate(closure.closedAt)}`}
                         </div>
                       </div>
@@ -650,12 +631,12 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
           {/* TAB 3: AUDIT TIMELINE */}
           {activeTab === "timeline" && (
-            <div className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.4vw] shadow-xs space-y-[1vw]">
-              <div className="text-[0.85vw] font-bold text-slate-900 pb-[0.7vw] border-b border-slate-100 flex items-center gap-[0.45vw]">
-                <div className="p-[0.32vw] rounded-[0.4vw] bg-indigo-50 text-indigo-600">
-                  <Activity className="w-[0.9vw] h-[0.9vw]" />
+            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.9vw]">
+              <div className="text-[0.8vw] font-medium text-slate-800 pb-[0.6vw] border-b border-slate-100 flex items-center gap-[0.4vw]">
+                <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-600">
+                  <Activity className="w-[0.85vw] h-[0.85vw]" />
                 </div>
-                <span>Complete Lifecycle History & Audits</span>
+                <span>Lifecycle History & Audits</span>
               </div>
 
               {(() => {
@@ -701,47 +682,53 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                 if (timelineEvents.length === 0) {
                   return (
-                    <div className="text-center py-[2.5vw] text-slate-400 text-[0.8vw] font-medium">
+                    <div className="text-center py-[2vw] text-slate-400 text-[0.76vw] font-normal">
                       No historical events recorded for this call.
                     </div>
                   );
                 }
 
                 return (
-                  <div className="relative pl-[1.6vw] space-y-[0.8vw] before:absolute before:left-[0.6vw] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-200">
+                  <div className="relative pl-[1.6vw] space-y-[0.65vw]">
+                    {/* Vertical timeline line positioned at left: 0.55vw */}
+                    <div className="absolute left-[0.55vw] top-[0.6vw] bottom-[0.6vw] w-[2px] bg-slate-200 pointer-events-none" />
+
                     {timelineEvents.map((ev, i) => {
                       const isCritical = ev.title.includes("Critical");
                       const isEscalation = ev.title.includes("Escalat") || ev.type === "escalate";
                       const isResolved = ev.title.includes("Resolved") || ev.title.includes("Closed");
 
                       let dotColor = "bg-blue-600";
-                      let cardBorder = "border-slate-200/80 bg-slate-50/70";
+                      let cardBorder = "border-slate-200 bg-slate-50/60";
 
                       if (isCritical) {
                         dotColor = "bg-rose-600";
-                        cardBorder = "border-rose-200/70 bg-rose-50/30";
+                        cardBorder = "border-rose-200 bg-rose-50/30";
                       } else if (isEscalation) {
                         dotColor = "bg-orange-500";
-                        cardBorder = "border-amber-200/70 bg-amber-50/30";
+                        cardBorder = "border-amber-200 bg-amber-50/30";
                       } else if (isResolved) {
                         dotColor = "bg-emerald-600";
-                        cardBorder = "border-emerald-200/70 bg-emerald-50/30";
+                        cardBorder = "border-emerald-200 bg-emerald-50/30";
                       }
 
                       return (
                         <div key={i} className="relative group">
-                          {/* Dot */}
-                          <div className={`absolute -left-[1.6vw] top-2 w-[0.65vw] h-[0.65vw] rounded-full ${dotColor} ring-4 ring-white shadow-xs`} />
+                          {/* Dot positioned on the line outside the card */}
+                          <div
+                            style={{ left: "calc(0.55vw + 1px)" }}
+                            className={`absolute -translate-x-1/2 top-[0.7vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
+                          />
 
-                          <div className={`border rounded-[0.6vw] p-[0.75vw] transition-colors ${cardBorder} hover:bg-white`}>
-                            <div className="flex items-center justify-between text-[0.76vw]">
-                              <span className="font-bold text-slate-900">{ev.title}</span>
-                              <span className="text-slate-400 font-mono text-[0.72vw]">
+                          <div className={`border rounded-[0.5vw] p-[0.65vw] transition-colors ${cardBorder} hover:bg-white`}>
+                            <div className="flex items-center justify-between text-[0.74vw]">
+                              <span className="font-normal text-slate-800">{ev.title}</span>
+                              <span className="text-slate-400 font-mono text-[0.68vw]">
                                 {fmtDate(ev.time)}
                               </span>
                             </div>
-                            <div className="text-[0.74vw] text-slate-600 mt-[0.2vw] leading-relaxed">
-                              By <span className="font-semibold text-slate-800">{ev.person}</span> • {ev.details}
+                            <div className="text-[0.72vw] text-slate-600 mt-[0.15vw] leading-relaxed font-normal">
+                              By <span className="font-normal text-slate-800">{ev.person}</span> • {ev.details}
                             </div>
                           </div>
                         </div>
@@ -759,7 +746,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.3vw] h-[2.2vw] text-[0.78vw] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+            className="px-[1.3vw] h-[2vw] text-[0.74vw] font-normal text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
           >
             Close
           </button>

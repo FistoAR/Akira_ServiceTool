@@ -161,7 +161,7 @@ const VisitsTab = ({
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-[0.8vw]">
             {paginatedCalls.length > 0 ? (
               paginatedCalls.map((row) => {
                 const visitProducts = row._matchingVisitProducts || [{ p: row.products?.[0] || {}, pIdx: 0 }];
@@ -177,22 +177,31 @@ const VisitsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap text-[0.78vw] font-medium text-slate-700 bg-white"
+                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                         >
                           {(() => {
                             const dateVal = prod._fieldVisit?.visitDate || row.dateTime || row.timestamp || row.createdAt;
                             try {
                               const d = new Date(dateVal);
-                              if (isNaN(d.getTime())) return dateVal || "—";
+                              if (isNaN(d.getTime())) return <span className="text-[0.74vw] text-slate-800 font-normal">{dateVal || "—"}</span>;
+                              const datePart = d.toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                              });
+                              const timePart = d.toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              });
                               return (
-                                <div>
-                                  <div className="font-semibold text-slate-700">
-                                    {d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" })}
-                                  </div>
+                                <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
+                                  <span>{datePart}</span>
+                                  <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">{timePart}</span>
                                 </div>
                               );
                             } catch {
-                              return dateVal || "—";
+                              return <span className="text-[0.74vw] text-slate-800 font-normal">{dateVal || "—"}</span>;
                             }
                           })()}
                         </td>
@@ -203,10 +212,15 @@ const VisitsTab = ({
                           rowSpan={rowCount}
                           className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                         >
-                          <div className="font-semibold text-[#1a73e8] text-[0.82vw]">
+                          <button
+                            type="button"
+                            onClick={() => onOpenInfo && onOpenInfo(row)}
+                            title="View Call Details"
+                            className="font-mono text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
+                          >
                             {row.callNumber || row.callNo}
-                          </div>
-                          <div className="text-[0.65vw] text-slate-500 font-medium mt-[0.1vw]">
+                          </button>
+                          <div className="text-[0.66vw] text-slate-400 mt-[0.14vw]">
                             {rowCount} Visit Item{rowCount > 1 ? "s" : ""}
                           </div>
                         </td>
@@ -215,43 +229,69 @@ const VisitsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white"
+                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
                         >
-                          <CustomerInfoCell row={row} />
-                          {row.site && (
-                            <div className="text-[0.68vw] text-slate-600 font-medium mt-[0.1vw]">
-                              Site: {row.site}
-                            </div>
-                          )}
+                          <CustomerInfoCell
+                            customerName={row.customerName || row.partyDescription}
+                            contactNumber={row.contactNumber}
+                            partyCode={row.partyCode}
+                          />
+                          <div className="flex items-center gap-[0.4vw] mt-[0.2vw] flex-wrap">
+                            {row.site && (
+                              <span className="text-[0.68vw] text-slate-500 font-normal">
+                                Site: {row.site}
+                              </span>
+                            )}
+                            {row.customerType && (
+                              <span
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border shadow-2xs whitespace-nowrap ${getTypeColor(
+                                  row.customerType,
+                                )}`}
+                              >
+                                {row.customerType}
+                              </span>
+                            )}
+                          </div>
                         </td>
                       )}
 
-                      <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle">
+                      <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
                         <CustomTooltip
+                          position="top-start"
+                          className="max-w-full"
                           content={
-                            <div className="space-y-[0.3vw] text-[0.7vw]">
-                              <div><span className="font-semibold text-slate-300">Model:</span> {prod?.productModel || "—"}</div>
-                              {prod?.serialNumber && <div><span className="font-semibold text-slate-300">SN:</span> {prod.serialNumber}</div>}
-                              {prod?.callDescription && <div><span className="font-semibold text-slate-300">Description:</span> {prod.callDescription}</div>}
+                            <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                              <div className="font-normal text-slate-200">
+                                {prod?.productModel || prod?.itemCode || "—"}
+                              </div>
+                              {prod?.serialNumber && (
+                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                  <span className="text-slate-400 font-sans">SN: </span>
+                                  <span>{prod.serialNumber}</span>
+                                </div>
+                              )}
+                              {prod?.callDescription && (
+                                <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                  {prod.callDescription}
+                                </div>
+                              )}
                             </div>
                           }
                         >
-                          <div className="space-y-[0.15vw] cursor-pointer">
-                            <div className="font-medium text-slate-900 text-[0.8vw]">
-                              {prod?.productModel || prod?.itemCode || "—"}
-                            </div>
-                            {prod?.serialNumber && (
-                              <div className="text-[0.7vw] text-slate-500 font-mono">
-                                SN: {prod.serialNumber}
-                              </div>
-                            )}
-                            {prod?.callDescription && (
-                              <div className="text-[0.72vw] text-slate-600 line-clamp-1 italic">
-                                {prod.callDescription}
-                              </div>
-                            )}
+                          <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                            {prod?.productModel || prod?.itemCode || "—"}
                           </div>
                         </CustomTooltip>
+                        {prod?.serialNumber && (
+                          <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.1vw]">
+                            SN: {prod.serialNumber}
+                          </div>
+                        )}
+                        {prod?.callDescription && (
+                          <div className="text-[0.68vw] text-slate-500 italic mt-[0.1vw] truncate">
+                            {prod.callDescription}
+                          </div>
+                        )}
                       </td>
 
                       {pIdx === 0 && (
@@ -266,7 +306,7 @@ const VisitsTab = ({
                             else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                             else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                             return (
-                              <span className={`px-[0.6vw] py-[0.18vw] rounded-full text-[0.74vw] font-medium ${badgeStyle}`}>
+                              <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                 {p}
                               </span>
                             );
@@ -276,20 +316,20 @@ const VisitsTab = ({
 
                       <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle">
                         {subView === "assigned" ? (
-                          <div>
-                            <div className="text-[0.76vw] font-medium text-slate-800">
+                          <div className="text-left leading-tight">
+                            <div className="text-[0.74vw] font-normal text-slate-800">
                               By: {prod._fieldVisit?.assignedByName || "Lead"}
                             </div>
-                            <div className="text-[0.72vw] text-slate-600 italic line-clamp-2 mt-[0.1vw]">
+                            <div className="text-[0.68vw] text-slate-500 italic truncate mt-[0.14vw]">
                               {prod._fieldVisit?.diagnosisSummary || "Onsite inspection required"}
                             </div>
                           </div>
                         ) : (
-                          <div>
-                            <div className="text-[0.76vw] font-medium text-slate-800">
+                          <div className="text-left leading-tight">
+                            <div className="text-[0.74vw] font-normal text-slate-800">
                               Assigned to: {prod._fieldVisit?.assignedToName || "Technician"}
                             </div>
-                            <span className="inline-block mt-[0.15vw] text-[0.68vw] bg-purple-50 text-purple-700 px-[0.4vw] py-[0.05vw] rounded border border-purple-200 font-medium">
+                            <span className="inline-block mt-[0.15vw] text-[0.64vw] bg-purple-50 text-purple-700 px-[0.4vw] py-[0.05vw] rounded border border-purple-200 font-normal">
                               {prod._fieldVisit?.status || "In Progress"}
                             </span>
                           </div>
@@ -301,10 +341,10 @@ const VisitsTab = ({
                           <button
                             type="button"
                             onClick={() => onOpenRespond({ entry: row, callId: row.callId || row._id, prod, pIdx: safeIdx })}
-                            className="inline-flex items-center gap-[0.3vw] px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                            className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
                             title="Manage Field Visit / Closure"
                           >
-                            <Edit3 className="w-[0.75vw] h-[0.75vw]" />
+                            <Edit3 className="w-[0.7vw] h-[0.7vw]" />
                             <span>Respond</span>
                           </button>
                           {onOpenInfo && (
