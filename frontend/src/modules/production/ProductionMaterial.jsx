@@ -1663,7 +1663,7 @@ export default function ProductionMaterial() {
         <AnimatePresence>{reportsRow && <ReportsModal row={reportsRow} onClose={() => setReportsRow(null)} />}</AnimatePresence>
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0">
           {/* ── 1. Top Level Scoping Toolbar: Pill Search, Date Range, Clear & Actions ── */}
-          <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0 flex-wrap">
+          <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
             {/* Soft Pill Search Box */}
             <div className="relative w-[20vw]">
               <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
@@ -1793,7 +1793,7 @@ export default function ProductionMaterial() {
           <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
             {/* Integrated Header: Segment Track on left, Result count on right */}
             <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
+              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
                 {[
                   { label: "All", dot: "bg-blue-600" },
                   { label: "Pending", dot: "bg-amber-500" },
