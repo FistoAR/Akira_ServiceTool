@@ -30,16 +30,6 @@ html {
   }
 }
 
-/* Ensure legible font and icon sizes in tables, inputs, badges and buttons */
-input, select, textarea, button {
-  font-size: max(12px, 0.78vw);
-}
-
-/* Global button and input comfort scaling - do not stretch utility or inline buttons */
-button:not([class*="p-0"]):not([class*="w-"]):not([class*="h-"]):not([class*="py-"]):not([class*="rounded-full"]) {
-  min-height: 2rem;
-}
-
 /* index.css - Add these animations */
 
 @keyframes slideIn {
