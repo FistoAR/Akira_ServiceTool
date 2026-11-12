@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import ReactDOM from "react-dom";
 import * as XLSX from "xlsx-js-style";
 import {
   Package,
@@ -32,6 +33,99 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import CustomDropdown from "../../components/CustomDropdown";
+
+// Custom Floating Tooltip (matches ServiceCall modules)
+const CustomTooltip = ({
+  children,
+  text,
+  content: tooltipContent,
+  position = "top",
+  className = "",
+}) => {
+  const [coords, setCoords] = useState(null);
+  const targetRef = useRef(null);
+
+  if (!text && !tooltipContent) return children;
+
+  const handleMouseEnter = () => {
+    if (!targetRef.current) return;
+    const rect = targetRef.current.getBoundingClientRect();
+    const gap = 6;
+
+    let x = rect.left + rect.width / 2;
+    let y = rect.top - gap;
+    let side = "top";
+
+    // Auto flip to bottom if too close to viewport top
+    if (rect.top < 120 || position === "bottom") {
+      y = rect.bottom + gap;
+      side = "bottom";
+    }
+
+    if (position === "top-start") {
+      x = rect.left;
+    } else if (position === "top-end") {
+      x = rect.right;
+    }
+
+    setCoords({ x, y, side, align: position });
+  };
+
+  const handleMouseLeave = () => {
+    setCoords(null);
+  };
+
+  return (
+    <div
+      ref={targetRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`inline-flex items-center ${className}`}
+    >
+      {children}
+      {coords &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: `${coords.y}px`,
+              left: `${coords.x}px`,
+              transform:
+                coords.align === "top-start"
+                  ? coords.side === "bottom"
+                    ? "translate(0, 0)"
+                    : "translate(0, -100%)"
+                  : coords.align === "top-end"
+                  ? coords.side === "bottom"
+                    ? "translate(-100%, 0)"
+                    : "translate(-100%, -100%)"
+                  : coords.side === "bottom"
+                  ? "translate(-50%, 0)"
+                  : "translate(-50%, -100%)",
+              zIndex: 99999,
+            }}
+            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+          >
+            {tooltipContent ? tooltipContent : <span>{text}</span>}
+            <div
+              className={`absolute w-0 h-0 border-[0.25vw] ${
+                coords.side === "bottom"
+                  ? "bottom-full border-transparent border-b-slate-900"
+                  : "top-full border-transparent border-t-slate-900"
+              } ${
+                coords.align === "top-start"
+                  ? "left-[0.6vw]"
+                  : coords.align === "top-end"
+                  ? "right-[0.6vw]"
+                  : "left-1/2 -translate-x-1/2"
+              }`}
+            />
+          </div>,
+          document.body
+        )}
+    </div>
+  );
+};
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -928,36 +1022,38 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
               className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[17vw] rounded-full border border-slate-200/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
-              <button
-                onClick={() => {
-                  setSearch("");
-                  setCurrentPage(1);
-                }}
-                className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-[0.2vw] cursor-pointer transition-colors"
-                title="Clear search"
-              >
-                <X className="w-[0.8vw] h-[0.8vw]" />
-              </button>
+              <CustomTooltip text="Clear search">
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setCurrentPage(1);
+                  }}
+                  className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-[0.2vw] cursor-pointer transition-colors"
+                >
+                  <X className="w-[0.8vw] h-[0.8vw]" />
+                </button>
+              </CustomTooltip>
             )}
           </div>
 
           {/* Filter Popover Button */}
           <div className="relative">
-            <button
-              onClick={() => setShowFilterPopover(!showFilterPopover)}
-              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
-                showFilterPopover || hasActiveFilters
-                  ? "bg-blue-50 border-blue-300 text-blue-700"
-                  : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
-              }`}
-              title="Filter by dates, employee, category, or warranty"
-            >
-              <Filter className="w-[0.85vw] h-[0.85vw]" />
-              <span>Filters</span>
-              {hasActiveFilters && (
-                <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-blue-600" />
-              )}
-            </button>
+            <CustomTooltip text="Filter by dates, employee, category, or warranty">
+              <button
+                onClick={() => setShowFilterPopover(!showFilterPopover)}
+                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+                  showFilterPopover || hasActiveFilters
+                    ? "bg-blue-50 border-blue-300 text-blue-700"
+                    : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <Filter className="w-[0.85vw] h-[0.85vw]" />
+                <span>Filters</span>
+                {hasActiveFilters && (
+                  <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-blue-600" />
+                )}
+              </button>
+            </CustomTooltip>
 
             {/* Filter Dropdown Popover */}
             {showFilterPopover && (
@@ -1083,21 +1179,22 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
           {/* Select Export Columns Button */}
           <div className="relative">
-            <button
-              onClick={() => setShowColPicker(!showColPicker)}
-              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
-                showColPicker
-                  ? "bg-blue-50 border-blue-300 text-blue-700"
-                  : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
-              }`}
-              title="Select columns to export"
-            >
-              <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
-              <span>Columns</span>
-              <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                {selectedExportCols.length}/{EXPORT_COLUMNS.length}
-              </span>
-            </button>
+            <CustomTooltip text="Select columns to export">
+              <button
+                onClick={() => setShowColPicker(!showColPicker)}
+                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+                  showColPicker
+                    ? "bg-blue-50 border-blue-300 text-blue-700"
+                    : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
+                <span>Columns</span>
+                <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                  {selectedExportCols.length}/{EXPORT_COLUMNS.length}
+                </span>
+              </button>
+            </CustomTooltip>
 
             {/* Column Picker Popover */}
             {showColPicker && (
@@ -1165,14 +1262,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
           </div>
 
           {/* Export Excel Button (Matches Service Call Report Button) */}
-          <button
-            onClick={handleExportExcel}
-            className="flex items-center gap-[0.35vw] px-[1vw] h-[2.2vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-[0.76vw] transition-all cursor-pointer shadow-sm"
-            title="Export filtered reports to styled Excel sheet"
-          >
-            <Download className="w-[0.85vw] h-[0.85vw]" />
-            <span>Export Excel</span>
-          </button>
+          <CustomTooltip text="Export filtered reports to styled Excel sheet">
+            <button
+              onClick={handleExportExcel}
+              className="flex items-center gap-[0.35vw] px-[1vw] h-[2.2vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-[0.76vw] transition-all cursor-pointer shadow-sm"
+            >
+              <Download className="w-[0.85vw] h-[0.85vw]" />
+              <span>Export Excel</span>
+            </button>
+          </CustomTooltip>
         </div>
       </div>
 
@@ -1295,16 +1393,49 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Customer Name & Code */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 max-w-[14vw]">
-                                <div className="font-normal text-slate-800 truncate" title={entry.customerName}>
-                                  {entry.customerName}
-                                </div>
-                                <div className="flex items-center gap-[0.35vw] text-[0.68vw] text-slate-500 mt-[0.1vw]">
-                                  {entry.customerCode && <span>{entry.customerCode}</span>}
-                                  {entry.site && (
-                                    <>
-                                      <span>•</span>
-                                      <span className="text-slate-600 truncate">{entry.site}</span>
-                                    </>
+                                <div className="flex items-center gap-[0.35vw] max-w-full">
+                                  <CustomTooltip text={entry.customerName} position="top-start" className="min-w-0 flex-1">
+                                    <span className="font-normal text-slate-800 truncate block">
+                                      {entry.customerName || "—"}
+                                    </span>
+                                  </CustomTooltip>
+                                  {(entry.customerCode || entry.site || entry.unit) && (
+                                    <CustomTooltip
+                                      position="top-start"
+                                      content={
+                                        <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
+                                          <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+                                            {entry.customerName || "Customer Details"}
+                                          </div>
+                                          {entry.customerCode && (
+                                            <div className="flex items-center gap-[0.3vw] text-slate-300 font-mono text-[0.64vw]">
+                                              <span className="text-slate-400 font-sans">Code:</span>
+                                              <span>{entry.customerCode}</span>
+                                            </div>
+                                          )}
+                                          {entry.unit && (
+                                            <div className="flex items-center gap-[0.3vw] text-teal-300 text-[0.64vw]">
+                                              <span className="text-slate-400">Unit:</span>
+                                              <span>{entry.unit}</span>
+                                            </div>
+                                          )}
+                                          {entry.site && (
+                                            <div className="flex items-center gap-[0.3vw] text-sky-300 text-[0.64vw]">
+                                              <span className="text-slate-400">Site:</span>
+                                              <span>{entry.site}</span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      }
+                                    >
+                                      <button
+                                        type="button"
+                                        tabIndex={-1}
+                                        className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+                                      >
+                                        <Info className="w-[0.75vw] h-[0.75vw]" />
+                                      </button>
+                                    </CustomTooltip>
                                   )}
                                 </div>
                               </td>
@@ -1322,12 +1453,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Ref No */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap">
-                                <div className="text-[0.74vw] font-normal text-purple-700 truncate" title={entry.refNoCustomer || ""}>
-                                  {entry.refNoCustomer ? `Cust: ${entry.refNoCustomer}` : ""}
+                                <div className="text-[0.74vw] font-normal text-purple-700 truncate">
+                                  {entry.refNoCustomer ? (
+                                    <CustomTooltip text={`Customer Ref: ${entry.refNoCustomer}`}>
+                                      <span>Cust: {entry.refNoCustomer}</span>
+                                    </CustomTooltip>
+                                  ) : null}
                                 </div>
                                 {entry.refNoInternal && (
-                                  <div className="text-[0.68vw] text-blue-600 font-normal truncate" title={entry.refNoInternal}>
-                                    Int: {entry.refNoInternal}
+                                  <div className="text-[0.68vw] text-blue-600 font-normal truncate">
+                                    <CustomTooltip text={`Internal Ref: ${entry.refNoInternal}`}>
+                                      <span>Int: {entry.refNoInternal}</span>
+                                    </CustomTooltip>
                                   </div>
                                 )}
                                 {!entry.refNoCustomer && !entry.refNoInternal && (
@@ -1337,11 +1474,39 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Product Description */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 max-w-[15vw]">
-                                <div className="font-normal text-slate-800 truncate" title={product.productDescription}>
-                                  {product.productDescription || "—"}
-                                </div>
-                                <div className="text-[0.68vw] text-slate-500 font-mono mt-[0.1vw]">
-                                  {product.productCode || "—"}
+                                <div className="flex items-center gap-[0.35vw] max-w-full">
+                                  <CustomTooltip text={product.productDescription} position="top-start" className="min-w-0 flex-1">
+                                    <span className="font-normal text-slate-800 truncate block">
+                                      {product.productDescription || "—"}
+                                    </span>
+                                  </CustomTooltip>
+                                  {product.productCode && (
+                                    <CustomTooltip
+                                      position="top-start"
+                                      content={
+                                        <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
+                                          <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+                                            Product Details
+                                          </div>
+                                          <div className="text-slate-300 text-[0.66vw] max-w-[14vw] leading-tight mb-[0.1vw]">
+                                            {product.productDescription}
+                                          </div>
+                                          <div className="flex items-center gap-[0.3vw] text-slate-300 font-mono text-[0.64vw]">
+                                            <span className="text-slate-400 font-sans">Item Code:</span>
+                                            <span className="text-amber-300">{product.productCode}</span>
+                                          </div>
+                                        </div>
+                                      }
+                                    >
+                                      <button
+                                        type="button"
+                                        tabIndex={-1}
+                                        className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+                                      >
+                                        <Info className="w-[0.75vw] h-[0.75vw]" />
+                                      </button>
+                                    </CustomTooltip>
+                                  )}
                                 </div>
                               </td>
 
@@ -1387,20 +1552,22 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               {/* Actions */}
                               <td className="py-[0.65vw] px-[0.7vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                 <div className="flex items-center justify-center gap-[0.45vw]">
-                                  <button
-                                    onClick={() => setInfoItem({ entry, product })}
-                                    className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
-                                    title="View Details"
-                                  >
-                                    <Eye className="w-[0.95vw] h-[0.95vw]" />
-                                  </button>
-                                  <button
-                                    onClick={() => setHistoryItem({ entry, product })}
-                                    className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-200 hover:border-slate-700"
-                                    title="View Lifecycle History"
-                                  >
-                                    <History className="w-[1vw] h-[1vw]" />
-                                  </button>
+                                  <CustomTooltip text="View Details">
+                                    <button
+                                      onClick={() => setInfoItem({ entry, product })}
+                                      className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
+                                    >
+                                      <Eye className="w-[0.95vw] h-[0.95vw]" />
+                                    </button>
+                                  </CustomTooltip>
+                                  <CustomTooltip text="View Lifecycle History">
+                                    <button
+                                      onClick={() => setHistoryItem({ entry, product })}
+                                      className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-200 hover:border-slate-700"
+                                    >
+                                      <History className="w-[1vw] h-[1vw]" />
+                                    </button>
+                                  </CustomTooltip>
                                 </div>
                               </td>
                             </tr>
@@ -1429,27 +1596,29 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                   {/* Pagination Prev/Next Buttons */}
                   <div className="flex items-center gap-[0.4vw]">
-                    <button
-                      disabled={currentPage <= 1}
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      className="p-[0.35vw] rounded-[0.4vw] border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
-                      title="Previous Page"
-                    >
-                      <ChevronLeft className="w-[0.9vw] h-[0.9vw] text-slate-600" />
-                    </button>
+                    <CustomTooltip text="Previous Page">
+                      <button
+                        disabled={currentPage <= 1}
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        className="p-[0.35vw] rounded-[0.4vw] border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
+                      >
+                        <ChevronLeft className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                      </button>
+                    </CustomTooltip>
 
                     <span className="text-[0.72vw] font-medium text-slate-600 px-[0.5vw]">
                       {currentPage} / {totalPages}
                     </span>
 
-                    <button
-                      disabled={currentPage >= totalPages}
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      className="p-[0.35vw] rounded-[0.4vw] border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
-                      title="Next Page"
-                    >
-                      <ChevronRight className="w-[0.9vw] h-[0.9vw] text-slate-600" />
-                    </button>
+                    <CustomTooltip text="Next Page">
+                      <button
+                        disabled={currentPage >= totalPages}
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        className="p-[0.35vw] rounded-[0.4vw] border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
+                      >
+                        <ChevronRight className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                      </button>
+                    </CustomTooltip>
                   </div>
                 </div>
               </div>
