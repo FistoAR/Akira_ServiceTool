@@ -1347,18 +1347,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   <table className="w-full text-left border-collapse">
                     <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                       <tr>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[7.5vw] whitespace-nowrap">Date</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Customer Name &amp; Code</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7vw] whitespace-nowrap">Category</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8vw] whitespace-nowrap">Ref No</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[15vw] whitespace-nowrap">Product Description</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[7.5vw] whitespace-nowrap">Board Type</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8.5vw] whitespace-nowrap">Serial No</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[5vw] whitespace-nowrap">Type</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10vw] whitespace-nowrap">Claimed By</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Status</th>
-                        <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[7vw]">Actions</th>
+                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[2.6vw] whitespace-nowrap">S.No</th>
+                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap">Date</th>
+                        <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[11.5vw] whitespace-nowrap">Customer Name &amp; Code</th>
+                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5.5vw] whitespace-nowrap">Category</th>
+                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6.5vw] whitespace-nowrap">Ref No</th>
+                        <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Product Description</th>
+                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 w-[5.5vw] whitespace-nowrap">Board Type</th>
+                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6.5vw] whitespace-nowrap">Serial No</th>
+                        <th className="py-[0.6vw] px-[0.45vw] border-r border-slate-300 text-center w-[3.8vw] whitespace-nowrap">Type</th>
+                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[7.5vw] whitespace-nowrap">Claimed By</th>
+                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[7.2vw] whitespace-nowrap">Status</th>
+                        <th className="py-[0.6vw] px-[0.5vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="text-[0.78vw]">
@@ -1382,17 +1382,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               className="hover:bg-blue-50/40 transition-colors border-b border-slate-200 last:border-0"
                             >
                               {/* S.No */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 text-center text-slate-600 font-normal">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center text-slate-600 font-normal">
                                 {itemIndex}
                               </td>
 
                               {/* Date */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-800 font-normal">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap text-slate-800 font-normal">
                                 {fmtDate(entry.date)}
                               </td>
 
                               {/* Customer Name & Code */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 max-w-[14vw]">
+                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-200 max-w-[11.5vw]">
                                 <div className="flex items-center gap-[0.35vw] max-w-full">
                                   <CustomTooltip text={entry.customerName} position="top-start" className="min-w-0 flex-1">
                                     <span className="font-normal text-slate-800 truncate block">
@@ -1441,9 +1441,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Category */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
                                 {entry.category ? (
-                                  <span className={`inline-flex items-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs ${getCustomerTypeBadgeStyle(entry.category)}`}>
+                                  <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border shadow-2xs ${getCustomerTypeBadgeStyle(entry.category)}`}>
                                     {entry.category}
                                   </span>
                                 ) : (
@@ -1452,8 +1452,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Ref No */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap">
-                                <div className="text-[0.74vw] font-normal text-purple-700 truncate">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap">
+                                <div className="text-[0.72vw] font-normal text-purple-700 truncate">
                                   {entry.refNoCustomer ? (
                                     <CustomTooltip text={`Customer Ref: ${entry.refNoCustomer}`}>
                                       <span>Cust: {entry.refNoCustomer}</span>
@@ -1461,7 +1461,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   ) : null}
                                 </div>
                                 {entry.refNoInternal && (
-                                  <div className="text-[0.68vw] text-blue-600 font-normal truncate">
+                                  <div className="text-[0.66vw] text-blue-600 font-normal truncate">
                                     <CustomTooltip text={`Internal Ref: ${entry.refNoInternal}`}>
                                       <span>Int: {entry.refNoInternal}</span>
                                     </CustomTooltip>
@@ -1473,7 +1473,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Product Description */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 max-w-[15vw]">
+                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-200 max-w-[12vw]">
                                 <div className="flex items-center gap-[0.35vw] max-w-full">
                                   <CustomTooltip text={product.productDescription} position="top-start" className="min-w-0 flex-1">
                                     <span className="font-normal text-slate-800 truncate block">
@@ -1511,18 +1511,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Board Type */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-700 font-normal">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 whitespace-nowrap text-slate-700 font-normal">
                                 {product.boardType || "—"}
                               </td>
 
                               {/* Serial No */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap font-mono font-normal text-slate-800">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap font-mono font-normal text-slate-800">
                                 {product.serialNumber || "—"}
                               </td>
 
                               {/* Type (W / PW) */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className={`inline-block px-[0.45vw] py-[0.1vw] rounded text-[0.68vw] font-normal ${
+                              <td className="py-[0.55vw] px-[0.45vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-normal ${
                                   product.type === "W"
                                     ? "bg-green-100 text-green-700 border border-green-200"
                                     : "bg-blue-100 text-blue-700 border border-blue-200"
@@ -1531,8 +1531,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 </span>
                               </td>
 
-                              {/* Assigned Engineer */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap font-normal">
+                              {/* Claimed By */}
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap font-normal">
                                 {product.assignedToName ? (
                                   <div className="font-normal text-slate-800">
                                     {product.assignedToName}
@@ -1543,29 +1543,29 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Status */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className={`inline-flex items-center justify-center px-[0.8vw] py-[0.25vw] rounded-lg text-[0.72vw] font-normal tracking-wide ${statusBadge.style}`}>
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className={`inline-flex items-center justify-center px-[0.7vw] py-[0.2vw] rounded-lg text-[0.7vw] font-normal tracking-wide ${statusBadge.style}`}>
                                   {statusBadge.label}
                                 </span>
                               </td>
 
                               {/* Actions */}
-                              <td className="py-[0.65vw] px-[0.7vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                <div className="flex items-center justify-center gap-[0.45vw]">
+                              <td className="py-[0.55vw] px-[0.5vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                <div className="flex items-center justify-center gap-[0.4vw]">
                                   <CustomTooltip text="View Details">
                                     <button
                                       onClick={() => setInfoItem({ entry, product })}
-                                      className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
                                     >
-                                      <Eye className="w-[0.95vw] h-[0.95vw]" />
+                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
                                   </CustomTooltip>
                                   <CustomTooltip text="View Lifecycle History">
                                     <button
                                       onClick={() => setHistoryItem({ entry, product })}
-                                      className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-200 hover:border-slate-700"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-200 hover:border-slate-700"
                                     >
-                                      <History className="w-[1vw] h-[1vw]" />
+                                      <History className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
                                   </CustomTooltip>
                                 </div>
