@@ -227,7 +227,7 @@ const EXPORT_COLUMNS = [
   { key: "serialNumber", label: "Serial Number" },
   { key: "type", label: "Warranty Type (W/PW)" },
   { key: "expectedDeliveryDate", label: "Expected Delivery Date" },
-  { key: "assignedToName", label: "Assigned Engineer" },
+  { key: "assignedToName", label: "Claimed By" },
   { key: "testedBy", label: "Tested By" },
   { key: "fourMCategory", label: "4M Category" },
   { key: "errorCode", label: "Error Code" },
@@ -353,7 +353,7 @@ const ServiceInfoModal = ({ item, onClose }) => {
                 <span className="font-semibold text-slate-800">{fmtDate(product.expectedDeliveryDate)}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Assigned Engineer</span>
+                <span className="text-[0.68vw] text-slate-500 block font-medium">Claimed By</span>
                 <span className="font-bold text-slate-800">{product.assignedToName || "Unassigned"}</span>
               </div>
             </div>
@@ -1356,7 +1356,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[7.5vw] whitespace-nowrap">Board Type</th>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[8.5vw] whitespace-nowrap">Serial No</th>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[5vw] whitespace-nowrap">Type</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10vw] whitespace-nowrap">Assigned Engineer</th>
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10vw] whitespace-nowrap">Claimed By</th>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[7.5vw] whitespace-nowrap">Status</th>
                         <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[7vw]">Actions</th>
                       </tr>
