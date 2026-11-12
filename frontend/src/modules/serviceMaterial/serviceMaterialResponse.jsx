@@ -195,8 +195,6 @@ const StatsBar = ({
   onFilterChange,
   counts,
   totalClaimed,
-  itemsPerPage,
-  setItemsPerPage,
 }) => {
   return (
     <div className="flex items-center justify-between gap-[1vw] w-full flex-wrap">
@@ -242,24 +240,6 @@ const StatsBar = ({
       </div>
 
       <div className="flex items-center gap-[1.2vw]">
-        <div className="flex items-center gap-[0.5vw]">
-          <span className="text-[0.68vw] text-gray-500 font-semibold tracking-wider">
-            Rows per page:
-          </span>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => {
-              setItemsPerPage(Number(e.target.value));
-            }}
-            className="bg-white border-r border-b border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-semibold text-blue-700 outline-none focus:border-blue-500 transition-all cursor-pointer shadow-sm"
-          >
-            {[10, 20, 50, 100].map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </div>
         <div className="text-[0.72vw] text-blue-700 font-semibold bg-blue-50 border border-blue-200 px-[0.8vw] py-[0.38vw] rounded-full shadow-sm">
           Total Claimed: {totalClaimed}
         </div>
@@ -2161,8 +2141,6 @@ export default function ServiceMaterialInwardResponse({
             <StatsBar
               counts={statusCounts}
               totalClaimed={totalClaimed}
-              itemsPerPage={itemsPerPage}
-              setItemsPerPage={setItemsPerPage}
               activeFilter={filterStatus}
               onFilterChange={setFilterStatus}
             />

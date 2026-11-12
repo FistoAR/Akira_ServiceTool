@@ -31,6 +31,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import { useSocket } from "../../contexts/SocketContext";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -997,74 +998,70 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                   {/* Assigned Employee */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
                       Assigned Employee
                     </label>
-                    <div className="relative">
-                      <select
-                        value={selectedEmployee}
-                        onChange={(e) => {
-                          setSelectedEmployee(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
-                      >
-                        <option value="All">All Employees</option>
-                        {employees.map((emp) => (
-                          <option key={emp.userId || emp._id} value={emp.userId || emp._id}>
-                            {emp.name} ({emp.department || "No Dept"})
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
-                    </div>
+                    <CustomDropdown
+                      size="sm"
+                      searchable={true}
+                      value={selectedEmployee}
+                      onChange={(val) => {
+                        setSelectedEmployee(val);
+                        setCurrentPage(1);
+                      }}
+                      options={[
+                        { value: "All", label: "All Employees" },
+                        ...employees.map((emp) => ({
+                          value: emp.userId || emp._id,
+                          label: `${emp.name} (${emp.department || "No Dept"})`,
+                        })),
+                      ]}
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal"
+                    />
                   </div>
 
                   {/* Customer Category */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
                       Customer Category
                     </label>
-                    <div className="relative">
-                      <select
-                        value={categoryFilter}
-                        onChange={(e) => {
-                          setCategoryFilter(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
-                      >
-                        <option value="All">All Categories</option>
-                        {categoriesList.map((cat) => (
-                          <option key={cat} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
-                    </div>
+                    <CustomDropdown
+                      size="sm"
+                      value={categoryFilter}
+                      onChange={(val) => {
+                        setCategoryFilter(val);
+                        setCurrentPage(1);
+                      }}
+                      options={[
+                        { value: "All", label: "All Categories" },
+                        ...categoriesList.map((cat) => ({
+                          value: cat,
+                          label: cat,
+                        })),
+                      ]}
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal"
+                    />
                   </div>
 
                   {/* Warranty Type (W/PW) */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
                       Warranty Type
                     </label>
-                    <div className="relative">
-                      <select
-                        value={warrantyFilter}
-                        onChange={(e) => {
-                          setWarrantyFilter(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
-                      >
-                        <option value="All">All Types</option>
-                        <option value="W">Warranty (W)</option>
-                        <option value="PW">Paid (PW)</option>
-                      </select>
-                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
-                    </div>
+                    <CustomDropdown
+                      size="sm"
+                      value={warrantyFilter}
+                      onChange={(val) => {
+                        setWarrantyFilter(val);
+                        setCurrentPage(1);
+                      }}
+                      options={[
+                        { value: "All", label: "All Types" },
+                        { value: "W", label: "Warranty (W)" },
+                        { value: "PW", label: "Paid (PW)" },
+                      ]}
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal"
+                    />
                   </div>
 
                   {/* Clear Filter Button */}
@@ -1292,7 +1289,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Customer Name & Code */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 max-w-[14vw]">
-                                <div className="font-semibold text-slate-800 truncate" title={entry.customerName}>
+                                <div className="font-normal text-slate-800 truncate" title={entry.customerName}>
                                   {entry.customerName}
                                 </div>
                                 <div className="flex items-center gap-[0.35vw] text-[0.68vw] text-slate-500 mt-[0.1vw]">
@@ -1319,11 +1316,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Ref No */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap">
-                                <div className="text-[0.74vw] font-medium text-purple-700 truncate" title={entry.refNoCustomer || ""}>
+                                <div className="text-[0.74vw] font-normal text-purple-700 truncate" title={entry.refNoCustomer || ""}>
                                   {entry.refNoCustomer ? `Cust: ${entry.refNoCustomer}` : ""}
                                 </div>
                                 {entry.refNoInternal && (
-                                  <div className="text-[0.68vw] text-blue-600 font-medium truncate" title={entry.refNoInternal}>
+                                  <div className="text-[0.68vw] text-blue-600 font-normal truncate" title={entry.refNoInternal}>
                                     Int: {entry.refNoInternal}
                                   </div>
                                 )}
@@ -1343,18 +1340,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Board Type */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-700">
+                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap text-slate-700 font-normal">
                                 {product.boardType || "—"}
                               </td>
 
                               {/* Serial No */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap font-mono font-medium text-slate-800">
+                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap font-mono font-normal text-slate-800">
                                 {product.serialNumber || "—"}
                               </td>
 
                               {/* Type (W / PW) */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className={`inline-block px-[0.45vw] py-[0.1vw] rounded text-[0.68vw] font-bold ${
+                                <span className={`inline-block px-[0.45vw] py-[0.1vw] rounded text-[0.68vw] font-normal ${
                                   product.type === "W"
                                     ? "bg-green-100 text-green-700 border border-green-200"
                                     : "bg-blue-100 text-blue-700 border border-blue-200"
@@ -1364,9 +1361,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Assigned Engineer */}
-                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap">
+                              <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 whitespace-nowrap font-normal">
                                 {product.assignedToName ? (
-                                  <div className="font-semibold text-slate-800">
+                                  <div className="font-normal text-slate-800">
                                     {product.assignedToName}
                                   </div>
                                 ) : (
@@ -1376,7 +1373,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Status */}
                               <td className="py-[0.65vw] px-[0.7vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className={`inline-flex items-center justify-center px-[0.8vw] py-[0.25vw] rounded-lg text-[0.72vw] font-semibold tracking-wide ${statusBadge.style}`}>
+                                <span className={`inline-flex items-center justify-center px-[0.8vw] py-[0.25vw] rounded-lg text-[0.72vw] font-normal tracking-wide ${statusBadge.style}`}>
                                   {statusBadge.label}
                                 </span>
                               </td>
@@ -1424,20 +1421,21 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                     <div className="flex items-center gap-[0.4vw] text-[0.72vw] text-slate-600">
                       <span>Rows per page:</span>
-                      <select
+                      <CustomDropdown
+                        size="sm"
                         value={rowsPerPage}
-                        onChange={(e) => {
-                          setRowsPerPage(Number(e.target.value));
+                        onChange={(val) => {
+                          setRowsPerPage(Number(val));
                           setCurrentPage(1);
                         }}
-                        className="bg-white border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.15vw] text-[0.72vw] font-semibold text-slate-700 outline-none cursor-pointer"
-                      >
-                        {[10, 20, 50, 100].map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
+                        options={[
+                          { value: 10, label: "10" },
+                          { value: 20, label: "20" },
+                          { value: 50, label: "50" },
+                          { value: 100, label: "100" },
+                        ]}
+                        triggerClassName="!h-[1.7vw] !text-[0.72vw] border-slate-300 rounded-[0.3vw] font-normal !py-0 !px-[0.5vw] w-[4.5vw]"
+                      />
                     </div>
                   </div>
 
