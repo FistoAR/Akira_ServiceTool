@@ -27,6 +27,7 @@ import {
   Check,
   CheckCircle2,
   Users,
+  ArrowLeft,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -569,6 +570,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState("All");
+  const [drilldownEmployee, setDrilldownEmployee] = useState(null); // when clicked "View" on an employee row
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [warrantyFilter, setWarrantyFilter] = useState("All");
 
@@ -1286,6 +1288,42 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             {/* VIEW 1: All Material Inwards Table */}
             {activeMainView === "allProducts" && (
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                {/* Active Drilldown Banner when viewing an employee's data */}
+                {drilldownEmployee && (
+                  <div className="px-[0.8vw] py-[0.35vw] border-b border-blue-200 bg-blue-50/70 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-[0.5vw]">
+                      <button
+                        onClick={() => {
+                          setDrilldownEmployee(null);
+                          setSelectedEmployee("All");
+                          setActiveMainView("assignments");
+                          setCurrentPage(1);
+                        }}
+                        className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.18vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-medium text-[0.7vw] cursor-pointer shadow-2xs transition-colors"
+                      >
+                        <ArrowLeft className="w-[0.75vw] h-[0.75vw]" />
+                        <span>Back to Assignment View</span>
+                      </button>
+                      <div className="flex items-center gap-[0.35vw] text-[0.74vw]">
+                        <span className="text-slate-500 font-normal">Engineer:</span>
+                        <span className="font-medium text-blue-900 bg-blue-100/70 px-[0.45vw] py-[0.08vw] rounded-full border border-blue-200">
+                          {drilldownEmployee.name} ({drilldownEmployee.department})
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setDrilldownEmployee(null);
+                        setSelectedEmployee("All");
+                        setCurrentPage(1);
+                      }}
+                      className="text-[0.7vw] font-medium text-slate-500 hover:text-rose-600 cursor-pointer transition-colors"
+                    >
+                      Clear Filter
+                    </button>
+                  </div>
+                )}
+
                 {/* Status Segmented Track Bar (Header Integrated) */}
                 <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
                   <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
@@ -1627,63 +1665,86 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             {/* VIEW 2: Employee Assignment Summary Report */}
             {activeMainView === "assignments" && (
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                <div className="flex-1 overflow-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
-                      <tr>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[4vw] whitespace-nowrap">S.No</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[16vw] whitespace-nowrap">Engineer Name</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Department</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[10vw] whitespace-nowrap">Total Assigned</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[10vw] whitespace-nowrap">In Progress / Testing</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[10vw] whitespace-nowrap">Review Required</th>
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[10vw] whitespace-nowrap">Pending / Hold</th>
-                        <th className="py-[0.7vw] px-[0.7vw] text-center w-[10vw] whitespace-nowrap">Completed</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-[0.78vw]">
-                      {employeeSummaryData.length === 0 ? (
+                {!drilldownEmployee ? (
+                  <div className="flex-1 overflow-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                         <tr>
-                          <td colSpan={8} className="py-[8vh] text-center text-slate-400 font-semibold">
-                            No employees configured.
-                          </td>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Engineer Name</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Department</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Total Assigned</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">In Progress / Testing</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Review Required</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Pending / Hold</th>
+                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Completed</th>
+                          <th className="py-[0.6vw] px-[0.6vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Action</th>
                         </tr>
-                      ) : (
-                        employeeSummaryData.map((emp, index) => (
-                          <tr
-                            key={emp.id}
-                            className="hover:bg-blue-50/40 transition-colors border-b border-slate-200 last:border-0"
-                          >
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center text-slate-600">
-                              {index + 1}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 font-bold text-slate-800">
-                              {emp.name}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-slate-600">
-                              {emp.department}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-800">
-                              {emp.assignedCount}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-700">
-                              {emp.inProgressCount}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-700">
-                              {emp.reviewCount}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-700">
-                              {emp.pendingCount}
-                            </td>
-                            <td className="py-[0.7vw] px-[0.7vw] text-center font-normal text-slate-700">
-                              {emp.completedCount}
+                      </thead>
+                      <tbody className="text-[0.78vw]">
+                        {employeeSummaryData.length === 0 ? (
+                          <tr>
+                            <td colSpan={9} className="py-[8vh] text-center text-slate-400 font-semibold">
+                              No employees configured.
                             </td>
                           </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                        ) : (
+                          employeeSummaryData.map((emp, index) => (
+                            <tr
+                              key={emp.id}
+                              className="hover:bg-blue-50/40 transition-colors border-b border-slate-200 last:border-0"
+                            >
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center text-slate-600">
+                                {index + 1}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 font-medium text-slate-800">
+                                {emp.name}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-slate-600 font-normal">
+                                {emp.department}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-800">
+                                {emp.assignedCount}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                                {emp.inProgressCount}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                                {emp.reviewCount}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                                {emp.pendingCount}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                                {emp.completedCount}
+                              </td>
+                              <td className="py-[0.6vw] px-[0.6vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                <CustomTooltip text={emp.assignedCount > 0 ? "View Assigned Material" : "No Material Assigned"}>
+                                  <button
+                                    onClick={() => {
+                                      setDrilldownEmployee(emp);
+                                      setSelectedEmployee(emp.id);
+                                      setActiveMainView("allProducts");
+                                      setCurrentPage(1);
+                                    }}
+                                    disabled={emp.assignedCount === 0}
+                                    className={`px-[0.65vw] py-[0.22vw] rounded-full text-[0.7vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                                      emp.assignedCount > 0
+                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                        : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
+                                    }`}
+                                  >
+                                    View
+                                  </button>
+                                </CustomTooltip>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : null}
               </div>
             )}
           </>
