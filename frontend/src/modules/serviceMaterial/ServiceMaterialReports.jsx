@@ -1190,7 +1190,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 {/* Status Segmented Track Bar (Header Integrated) */}
                 <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-                  <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.35vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
+                  <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
                     {STATUS_CHIPS.map(({ label, dot }) => {
                       const isActive = activeStatusTab === label;
                       const count = statusCounts[label] ?? 0;
@@ -1201,21 +1201,27 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             setActiveStatusTab(label);
                             setCurrentPage(1);
                           }}
-                          className={`flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full text-[0.72vw] font-bold transition-all cursor-pointer whitespace-nowrap ${
+                          className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.74vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                             isActive
-                              ? "bg-blue-600 text-white shadow-xs"
-                              : "text-slate-600 hover:text-slate-900 hover:bg-white/70"
+                              ? "bg-blue-600 text-white shadow-xs font-medium"
+                              : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                           }`}
                         >
+                          {label !== "All" && (
+                            <span
+                              className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
+                                isActive ? "bg-white" : dot
+                              }`}
+                            />
+                          )}
+                          <span className={isActive ? "text-white" : "text-slate-700 font-medium"}>
+                            {label}
+                          </span>
                           <span
-                            className={`w-[0.4vw] h-[0.4vw] rounded-full ${
-                              isActive ? "bg-white" : dot
-                            }`}
-                          />
-                          <span>{label}</span>
-                          <span
-                            className={`text-[0.62vw] px-[0.3vw] py-[0.02vw] rounded-full ${
-                              isActive ? "bg-white/25 text-white" : "bg-slate-200/70 text-slate-600"
+                            className={`text-[0.66vw] font-medium ml-[0.1vw] transition-all ${
+                              isActive
+                                ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                                : "text-slate-400"
                             }`}
                           >
                             {count}
@@ -1225,15 +1231,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     })}
                   </div>
 
-                  <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-500 font-semibold shrink-0">
+                  <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-500 font-medium shrink-0">
                     <span>
                       Total Claimed:{" "}
-                      <strong className="text-blue-700 bg-blue-50 px-[0.4vw] py-[0.1vw] rounded-full border border-blue-200">
+                      <span className="text-blue-700 bg-blue-50 px-[0.45vw] py-[0.1vw] rounded-full border border-blue-200 font-medium">
                         {allProducts.filter((p) => p.product.assignedTo).length}
-                      </strong>
+                      </span>
                     </span>
                     <span>
-                      Active: <strong className="text-slate-800">{filteredProducts.length}</strong> items
+                      Active: <span className="text-slate-700 font-medium">{filteredProducts.length}</span> items
                     </span>
                   </div>
                 </div>
