@@ -415,20 +415,20 @@ const EditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className="w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[15vw]"
+      className="w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[2vw]"
     >
       <table className="w-full border-collapse text-[0.8vw]">
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
           <tr>
-            {!isReadOnly && <th className="w-[4vw] py-[0.8vw] px-[0.5vw] border-r border-b border-slate-300"></th>}
-            <th className="w-[4vw] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
-            <th className="min-w-[30vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[15vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
-            <th className="w-[15vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
-            {!isReadOnly && <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
+            {!isReadOnly && <th className="w-[2.5vw] py-[0.7vw] px-[0.4vw] border-r border-b border-slate-300"></th>}
+            <th className="w-[3vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
+            <th className="min-w-[18vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="w-[9vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
+            <th className="w-[8vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[10vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
+            <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
+            <th className="w-[9.5vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
+            {!isReadOnly && <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -522,17 +522,17 @@ const EditableProductTable = ({
                           )}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
-                          <div className="text-black px-[0.6vw] py-[0.4vw] rounded-[0.3vw] font-semibold text-[0.75vw]">{prod.productCode || "—"}</div>
+                        <td className={`py-[0.6vw] px-[0.5vw] relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
+                          <div className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-semibold text-[0.75vw] truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
                           {renderFillHandle(index, 1)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
                           <select
                             value={prod.boardType || ""}
                             onChange={(e) => handleUpdate(prod._pid, "boardType", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent text-[0.78vw] cursor-pointer"
                           >
                             <option value="">Select</option>
                             {boardTypes.map(bt => (
@@ -542,42 +542,42 @@ const EditableProductTable = ({
                           {renderFillHandle(index, 2)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
+                        <td className={`py-[0.6vw] px-[0.5vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
                           <div className="relative flex items-center group">
-                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent" />
-                            {!isReadOnly && <button type="button" className="absolute right-[0.4vw] p-[0.3vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-[1vw] h-[1vw]" /></button>}
+                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.4vw] pr-[1.8vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent text-[0.78vw]" />
+                            {!isReadOnly && <button type="button" className="absolute right-[0.2vw] p-[0.2vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-[0.9vw] h-[0.9vw]" /></button>}
                           </div>
                           {renderFillHandle(index, 3)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <div className="flex bg-gray-100 p-[0.2vw] rounded-[0.4vw] w-full border-r border-b border-slate-300">
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
+                          <div className="flex bg-gray-100 p-[0.15vw] rounded-[0.3vw] w-full border border-slate-200">
                             {typeOptions.map(opt => (
-                              <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly} className={`flex-1 py-[0.3vw] text-[0.7vw] font-semibold rounded-[0.3vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
+                              <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly} className={`flex-1 py-[0.25vw] text-[0.68vw] font-bold rounded-[0.25vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
                             ))}
                           </div>
                           {renderFillHandle(index, 4)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <div className="relative flex items-center">
                             <input 
                               type="date" 
                               value={prod.expectedDeliveryDate} 
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
                               disabled={isReadOnly && !allowPartialEdit} 
-                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.5vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-transparent disabled:border-transparent cursor-pointer disabled:cursor-not-allowed" 
+                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.4vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-transparent disabled:border-transparent cursor-pointer disabled:cursor-not-allowed text-[0.76vw]" 
                             />
-                            <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none" />
+                            <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.3vw] pointer-events-none" />
                           </div>
                           {renderFillHandle(index, 5)}
                         </td>
 
                         {!isReadOnly && (
-                          <td className="py-[0.6vw] px-[0.8vw] border-r border-b border-slate-300">
-                            <div className="flex items-center justify-center gap-[0.5vw]">
-                              <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.4vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors"><Copy className="w-[1vw] h-[1vw]" /></button>
-                              <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.4vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors"><Trash2 className="w-[1vw] h-[1vw]" /></button>
+                          <td className="py-[0.6vw] px-[0.4vw] border-r border-b border-slate-300 text-center">
+                            <div className="flex items-center justify-center gap-[0.3vw]">
+                              <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.3vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors" title="Duplicate row"><Copy className="w-[0.9vw] h-[0.9vw]" /></button>
+                              <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.3vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors" title="Delete row"><Trash2 className="w-[0.9vw] h-[0.9vw]" /></button>
                             </div>
                           </td>
                         )}
