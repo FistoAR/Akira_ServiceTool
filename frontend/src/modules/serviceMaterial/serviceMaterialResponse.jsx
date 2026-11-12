@@ -69,6 +69,20 @@ const fmtDate = (d) => {
   return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
 };
 
+const toInputDate = (d) => {
+  if (!d) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(d))) return String(d);
+  // If DD-MM-YYYY or DD/MM/YYYY
+  const dmyMatch = String(d).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+  if (dmyMatch) {
+    const [, day, month, year] = dmyMatch;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+};
+
 // ── Badge ─────────────────────────────────────────────────────────────────────
 const Badge = ({ label, color = "gray", size = "sm" }) => {
   const colorMap = {
@@ -166,14 +180,14 @@ const STATUS_OPTIONS = [
 const DISPOSITION_OPTIONS = ["Repaired", "Replaced", "Scrap", "Return As Is"];
 
 const STATUS_CHIPS = [
-  { label: "All" },
-  { label: "Repair in Progress" },
-  { label: "Pending" },
-  { label: "Not Repairable" },
-  { label: "Under Testing" },
-  { label: "Hold" },
-  { label: "Completed" },
-  { label: "Admin Returned" },
+  { label: "All", dot: "bg-blue-600" },
+  { label: "Repair in Progress", dot: "bg-amber-500" },
+  { label: "Pending", dot: "bg-orange-500" },
+  { label: "Not Repairable", dot: "bg-red-600" },
+  { label: "Under Testing", dot: "bg-sky-500" },
+  { label: "Hold", dot: "bg-rose-500" },
+  { label: "Completed", dot: "bg-emerald-600" },
+  { label: "Admin Returned", dot: "bg-purple-600" },
 ];
 
 const StatsBar = ({
@@ -186,27 +200,38 @@ const StatsBar = ({
 }) => {
   return (
     <div className="flex items-center justify-between gap-[1vw] w-full flex-wrap">
-      <div className="flex items-center gap-[0.75vw] flex-wrap">
-        {STATUS_CHIPS.map((chip) => {
-          const isActive = activeFilter === chip.label;
-          const count = counts[chip.label] || 0;
+      {/* Sleek Connected Segmented Track for Status Tabs */}
+      <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+        {STATUS_CHIPS.map(({ label, dot }) => {
+          const isActive = activeFilter === label;
+          const count = counts[label] ?? 0;
 
           return (
             <button
-              key={chip.label}
-              onClick={() => onFilterChange(chip.label)}
-              className={`flex items-center gap-[0.38vw] px-[0.75vw] py-[0.38vw] rounded-full border text-[0.7vw] font-semibold cursor-pointer transition-all duration-150 select-none ${
+              key={label}
+              type="button"
+              onClick={() => onFilterChange(label)}
+              className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                 isActive
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-blue-300"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold"
+                  : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
               }`}
             >
-              <span>{chip.label}</span>
+              {label !== "All" && (
+                <span
+                  className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
+                    isActive ? "bg-white" : dot
+                  }`}
+                />
+              )}
+              <span className={isActive ? "text-white" : "text-slate-700"}>
+                {label}
+              </span>
               <span
-                className={`px-[0.3vw] py-[0.03vw] rounded-full text-[0.6vw] font-semibold ${
+                className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
                   isActive
-                    ? "bg-white/25 text-white"
-                    : "bg-black/10 text-gray-600"
+                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                    : "text-slate-400"
                 }`}
               >
                 {count}
@@ -215,9 +240,10 @@ const StatsBar = ({
           );
         })}
       </div>
+
       <div className="flex items-center gap-[1.2vw]">
         <div className="flex items-center gap-[0.5vw]">
-          <span className="text-[0.68vw] text-gray-500 font-semibold  tracking-wider">
+          <span className="text-[0.68vw] text-gray-500 font-semibold tracking-wider">
             Rows per page:
           </span>
           <select
@@ -272,7 +298,7 @@ const ClaimButton = ({ onClaim }) => (
 );
 
 // ── Service Info Modal (Read-only) ───────────────────────────────────────────
-const ServiceInfoModal = ({ entry, product, onClose }) => {
+const ServiceInfoModal = ({ entry, product, onClose, onPreviewDoc }) => {
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-[2vw]">
       <motion.div
@@ -431,11 +457,13 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                             const url = product.report.image.startsWith("http")
                               ? product.report.image
                               : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
-                            setDocPreviewModal({
-                              url,
-                              title: `${product.productDescription || "Product"} - Technical PDF`,
-                              isPdf: true,
-                            });
+                            if (onPreviewDoc) {
+                              onPreviewDoc({
+                                url,
+                                title: `${product.productDescription || "Product"} - Technical PDF`,
+                                isPdf: true,
+                              });
+                            }
                           }}
                           className="inline-flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vw] bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-[0.4vw] text-[0.75vw] font-bold shadow-xs transition-colors cursor-pointer"
                         >
@@ -458,11 +486,13 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
                               product.report.image.startsWith("http")
                                 ? product.report.image
                                 : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
-                            setDocPreviewModal({
-                              url,
-                              title: `${product.productDescription || "Product"} - Technical Image`,
-                              isPdf: false,
-                            });
+                            if (onPreviewDoc) {
+                              onPreviewDoc({
+                                url,
+                                title: `${product.productDescription || "Product"} - Technical Image`,
+                                isPdf: false,
+                              });
+                            }
                           }}
                         />
                       )}
@@ -486,71 +516,6 @@ const ServiceInfoModal = ({ entry, product, onClose }) => {
           </button>
         </div>
       </motion.div>
-      {/* In-App Document Preview Modal (for Image & PDF without navigating away) */}
-      <AnimatePresence>
-        {docPreviewModal && (
-          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[110] p-[1.5vw]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[75vw] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
-            >
-              {/* Modal Header */}
-              <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] bg-slate-900 text-white">
-                <div className="flex items-center gap-[0.6vw]">
-                  {docPreviewModal.isPdf ? (
-                    <FileText className="w-[1.2vw] h-[1.2vw] text-red-400" />
-                  ) : (
-                    <Eye className="w-[1.2vw] h-[1.2vw] text-blue-400" />
-                  )}
-                  <h3 className="text-[0.9vw] font-bold text-white tracking-wide">
-                    {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
-                  </h3>
-                </div>
-                <div className="flex items-center gap-[0.8vw]">
-                  <a
-                    href={docPreviewModal.url}
-                    download
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[0.72vw] text-slate-300 hover:text-white flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
-                  >
-                    <Download className="w-[0.8vw] h-[0.8vw]" />
-                    <span>Download</span>
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => setDocPreviewModal(null)}
-                    className="text-slate-400 hover:text-white p-[0.3vw] rounded-full hover:bg-white/10 transition-colors cursor-pointer border-0 bg-transparent"
-                  >
-                    <X className="w-[1.1vw] h-[1.1vw]" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Modal Content */}
-              <div className="flex-1 bg-slate-100 flex items-center justify-center overflow-hidden p-[1vw]">
-                {docPreviewModal.isPdf ? (
-                  <iframe
-                    src={`${docPreviewModal.url}#toolbar=1&navpanes=0`}
-                    title="PDF Document"
-                    className="w-full h-full rounded-[0.4vw] border border-slate-300 bg-white shadow-inner"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center overflow-auto p-[1vw]">
-                    <img
-                      src={docPreviewModal.url}
-                      alt="Attachment Preview"
-                      className="max-h-full max-w-full object-contain rounded-[0.4vw] shadow-md border border-slate-300 bg-white"
-                    />
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
@@ -575,6 +540,7 @@ export default function ServiceMaterialInwardResponse({
   const [drafts, setDrafts] = useState({});
   const [savingStates, setSavingStates] = useState({});
   const [unclaimingStates, setUnclaimingStates] = useState({});
+  const [editingCompletedPids, setEditingCompletedPids] = useState({});
   const [isBulkSaving, setIsBulkSaving] = useState(false);
   const isSavingRef = useRef(false);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -972,7 +938,7 @@ export default function ServiceMaterialInwardResponse({
       rootCause: product.report?.rootCause || "",
       partsReplacement: product.report?.partsReplacement || "",
       correctiveAction: product.report?.correctiveAction || "",
-      completedDate: product.report?.completedDate || "",
+      completedDate: toInputDate(product.report?.completedDate),
       status: initialStatus,
       currentRemark: "",
       designators: product.report?.designators || "",
@@ -2064,19 +2030,6 @@ export default function ServiceMaterialInwardResponse({
               )}
             </div>
           </div>
-
-          {/* Right Controls: Export */}
-          <div className="flex items-center gap-[0.5vw] flex-shrink-0 ml-auto">
-            {/* Export Button */}
-            <button
-              type="button"
-              onClick={() => setShowExportModal(true)}
-              className="flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.7vw] py-[0.38vw] rounded-[0.4vw] text-[0.7vw] font-bold shadow-sm transition-all cursor-pointer h-[1.9vw] border-0 whitespace-nowrap flex-shrink-0"
-            >
-              <Download className="w-[0.8vw] h-[0.8vw]" />
-              Export Report
-            </button>
-          </div>
         </div>
 
         {/* Collapsible Filters Tray (shown below button when clicked) */}
@@ -2336,10 +2289,11 @@ export default function ServiceMaterialInwardResponse({
                       isAdminReturnedProduct &&
                       product.assignedTo ===
                         (currentUser?.userId || currentUser?.id);
-                    // Allow inline editing when claimed by me (except when already in Completed tab, or if completed in 'All' tab, or pending final admin approval)
+                    // Allow inline editing when claimed by me (except when already completed and not in edit mode, or pending final admin approval)
                     const isProductCompleted = pStatus === "Completed";
+                    const isEditingCompleted = Boolean(editingCompletedPids[product._pid]);
                     const canEditInline =
-                      (isClaimedByMe && filterStatus !== "Completed" && !isProductCompleted) || isResubmitting;
+                      (isClaimedByMe && (!isProductCompleted || isEditingCompleted)) || isResubmitting;
                     const draft =
                       canEditInline
                         ? getDraft(product._pid, product)
@@ -2905,7 +2859,7 @@ export default function ServiceMaterialInwardResponse({
                             {draft ? (
                               <input
                                 type="date"
-                                value={draft.completedDate}
+                                value={toInputDate(draft.completedDate)}
                                 onChange={(e) =>
                                   hc("completedDate", e.target.value)
                                 }
@@ -3212,7 +3166,16 @@ export default function ServiceMaterialInwardResponse({
                             ) : isClaimedByMe && draft ? (
                               <div className="flex items-center justify-center gap-[0.35vw]">
                                 <button
-                                  onClick={() => saveRow(entry, product, draft)}
+                                  onClick={async () => {
+                                    const saved = await saveRow(entry, product, draft);
+                                    if (saved && isEditingCompleted) {
+                                      setEditingCompletedPids((prev) => {
+                                        const next = { ...prev };
+                                        delete next[product._pid];
+                                        return next;
+                                      });
+                                    }
+                                  }}
                                   disabled={
                                     !draft?.hasChanges ||
                                     savingStates[product._pid]
@@ -3237,6 +3200,28 @@ export default function ServiceMaterialInwardResponse({
                                     </>
                                   )}
                                 </button>
+                                {isEditingCompleted && (
+                                  <button
+                                    onClick={() => {
+                                      // Revert draft back to original product data
+                                      setDrafts((prev) => {
+                                        const next = { ...prev };
+                                        delete next[product._pid];
+                                        return next;
+                                      });
+                                      setEditingCompletedPids((prev) => {
+                                        const next = { ...prev };
+                                        delete next[product._pid];
+                                        return next;
+                                      });
+                                    }}
+                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all cursor-pointer shadow-2xs"
+                                    title="Cancel Edit"
+                                  >
+                                    <X className="w-[0.65vw] h-[0.65vw]" />
+                                    <span>Cancel</span>
+                                  </button>
+                                )}
                                 {canUnclaim && (
                                   <button
                                     onClick={() => unclaimProduct(entry.id, product._pid)}
@@ -3263,15 +3248,13 @@ export default function ServiceMaterialInwardResponse({
                                 </span>
                                 <button
                                   onClick={() => {
-                                    setEditReportModal({
-                                      entry,
-                                      product,
-                                      draft: { ...getDraft(product._pid, product) },
-                                    });
-                                    setEditReason("");
+                                    setEditingCompletedPids((prev) => ({
+                                      ...prev,
+                                      [product._pid]: true,
+                                    }));
                                   }}
                                   className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer"
-                                  title="Edit Completed Report"
+                                  title="Edit Completed Row Directly"
                                 >
                                   <Edit3 className="w-[0.65vw] h-[0.65vw]" />
                                   <span>Edit</span>
@@ -3424,6 +3407,7 @@ export default function ServiceMaterialInwardResponse({
               },
             }}
             onClose={() => setInfoSelected(null)}
+            onPreviewDoc={(doc) => setDocPreviewModal(doc)}
           />
         )}
       </AnimatePresence>
@@ -4003,94 +3987,6 @@ export default function ServiceMaterialInwardResponse({
                       Save Modifications
                     </>
                   )}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Export Options Modal */}
-      <AnimatePresence>
-        {showExportModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center z-50">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[24vw] p-[1.5vw] flex flex-col gap-[1.2vw]"
-            >
-              <div>
-                <h3 className="text-[1vw] font-bold text-slate-800">
-                  Export Options
-                </h3>
-              </div>
-
-              {/* Form Options */}
-              <div className="flex flex-col gap-[1vw]">
-                {/* Radio Group */}
-                <div className="flex flex-col gap-[0.6vw]">
-                  <label className="flex items-center gap-[0.6vw] cursor-pointer text-[0.8vw] font-semibold text-slate-700">
-                    <input
-                      type="radio"
-                      name="exportFormat"
-                      checked={exportFormat === "pdf"}
-                      onChange={() => setExportFormat("pdf")}
-                      className="w-[1vw] h-[1vw] text-blue-600 border-gray-300 focus:ring-blue-500 cursor-pointer"
-                    />
-                    <span>Export as PDF</span>
-                  </label>
-                  <label className="flex items-center gap-[0.6vw] cursor-pointer text-[0.8vw] font-semibold text-slate-700">
-                    <input
-                      type="radio"
-                      name="exportFormat"
-                      checked={exportFormat === "excel"}
-                      onChange={() => setExportFormat("excel")}
-                      className="w-[1vw] h-[1vw] text-blue-600 border-gray-300 focus:ring-blue-500 cursor-pointer"
-                    />
-                    <span>Export as Excel</span>
-                  </label>
-                </div>
-
-                <hr className="border-slate-200" />
-
-                {/* Checkbox */}
-                <label className="flex items-center gap-[0.6vw] cursor-pointer text-[0.8vw] font-semibold text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={withHistory}
-                    onChange={(e) => setWithHistory(e.target.checked)}
-                    className="w-[1vw] h-[1vw] text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
-                  />
-                  <span>With History</span>
-                </label>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-[0.6vw] mt-[0.5vw]">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowExportModal(false);
-                    setWithHistory(false);
-                  }}
-                  className="px-[1.2vw] py-[0.5vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-bold text-[0.78vw] cursor-pointer transition-all border-0"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (exportFormat === "pdf") {
-                      handleExportPDF();
-                    } else {
-                      handleExportExcel();
-                    }
-                    setShowExportModal(false);
-                  }}
-                  className="px-[1.5vw] py-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-[0.78vw] cursor-pointer transition-all border-0"
-                >
-                  Export
                 </button>
               </div>
             </motion.div>

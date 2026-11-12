@@ -1508,21 +1508,19 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-slate-600">
                               {emp.department}
                             </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center">
-                              <span className="inline-flex items-center justify-center px-[0.6vw] py-[0.15vw] rounded-full bg-blue-50 text-blue-700 font-bold border border-blue-200">
-                                {emp.assignedCount}
-                              </span>
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-800">
+                              {emp.assignedCount}
                             </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-semibold text-cyan-700">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-700">
                               {emp.inProgressCount}
                             </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-semibold text-purple-700">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-700">
                               {emp.reviewCount}
                             </td>
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-semibold text-amber-700">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-slate-200 text-center font-normal text-slate-700">
                               {emp.pendingCount}
                             </td>
-                            <td className="py-[0.7vw] px-[0.7vw] text-center font-bold text-emerald-700">
+                            <td className="py-[0.7vw] px-[0.7vw] text-center font-normal text-slate-700">
                               {emp.completedCount}
                             </td>
                           </tr>

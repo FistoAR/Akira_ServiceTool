@@ -74,8 +74,8 @@ const NavBar = ({ type }) => {
 
   return (
     <>
-      <div className={`sticky top-0 p-[0.3vw] z-48 min-h-[8%] max-h-[8%]`}>
-        <div className="flex justify-between items-start">
+      <div className="sticky top-0 p-[0.3vw] z-48 shrink-0">
+        <div className="flex justify-between items-center">
           {type === "Service Call" ? (
             <h1 className="text-[1.3vw] font-semibold text-black flex items-center gap-[0.8vw]">
               <Phone className="w-[1.1vw] h-[1.1vw] text-slate-700" />
@@ -106,7 +106,7 @@ const NavBar = ({ type }) => {
               )}
             </button>
 
-            <div className="flex items-center space-x-3 bg-white border border-gray-300 rounded-full px-[0.4vw] py-[0.33vw] hover:shadow-md hover:border-gray-400 transition-all duration-200">
+            <div className="flex items-center gap-[0.4vw] bg-white border border-gray-300 rounded-full px-[0.4vw] py-[0.33vw] hover:shadow-md hover:border-gray-400 transition-all duration-200">
               {/* Notification Icon */}
               <NotificationsDropdown />
 

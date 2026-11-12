@@ -43,13 +43,14 @@
        - Direction arrow `→` in `text-slate-400 font-bold`.
        - Updated value in emerald/green box (`bg-emerald-50/40 border border-emerald-200 text-emerald-900 font-semibold`).
 
-
 7. **Service Material Response Action Column Rules**
    - **For In-Progress / Active Items:**
      - The employee directly inputs and updates report cells inline in the table.
      - The Action column shows the **Save** button (and **Unclaim** button if no report was submitted yet).
      - **Do NOT** display the `Edit` button for active/in-progress items, as they are already directly editable.
    - **For Completed Items (in all views, including the 'All' tab):**
-     - Completed records are locked from inline typing.
-     - **Do NOT** display the `Save` button.
-     - Only show the status badge and the **`Edit`** button (<kbd>✎ Edit</kbd>), which opens the modal popup with mandatory reason logging for changing closed records.
+     - Completed records are locked from inline typing by default, showing the status badge and the **`Edit`** button (<kbd>✎ Edit</kbd>).
+     - Clicking **`Edit`** unlocks the row for **direct inline editing** (no popup).
+     - In edit mode, the Action column shows the **`Save`** button and a **`Cancel`** (<kbd>✕ Cancel</kbd>) button.
+     - Clicking **`Cancel`** reverts any unsaved changes and locks the row back to the completed state.
+     - Clicking **`Save`** persists the edits directly and re-locks the row.
