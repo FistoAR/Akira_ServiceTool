@@ -2466,7 +2466,7 @@ export default function ServiceMaterialInwardResponse({
                                   options={employees
                                     .filter((emp) => emp.role === "User")
                                     .map((e) => ({ value: e.name, label: e.name }))}
-                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300"
+                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
@@ -2488,7 +2488,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.fqaBy || ""}
                                 onChange={(e) => hc("fqaBy", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="FQA By..."
                               />
                             ) : (
@@ -2516,7 +2516,7 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt.name,
                                     label: opt.name,
                                   }))}
-                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300"
+                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
@@ -2541,7 +2541,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="Code..."
                               />
                             ) : (
@@ -2566,7 +2566,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
                                 placeholder="Problem..."
                               />
                             ) : (
@@ -2588,7 +2588,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
                                 onChange={(e) => hc("pv", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="PV..."
                               />
                             ) : (
@@ -2610,7 +2610,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
                                 onChange={(e) => hc("cv", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="CV..."
                               />
                             ) : (
@@ -2634,7 +2634,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="Designator..."
                               />
                             ) : (
@@ -2658,7 +2658,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
@@ -2680,7 +2680,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.faultParts || ""}
                                 onChange={(e) => hc("faultParts", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[9vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[9vw]"
                                 placeholder="Fault Parts..."
                               />
                             ) : (
@@ -2704,7 +2704,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Parts..."
                               />
                             ) : (
@@ -2728,7 +2728,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Action..."
                               />
                             ) : (
@@ -2750,7 +2750,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.timeInHours || ""}
                                 onChange={(e) => hc("timeInHours", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 text-center min-w-[5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-center min-w-[5vw]"
                                 placeholder="Hrs e.g. 2.5"
                               />
                             ) : (
@@ -2772,7 +2772,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.materialCost || ""}
                                 onChange={(e) => hc("materialCost", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 text-right min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-right min-w-[6vw]"
                                 placeholder="Cost e.g. 1500"
                               />
                             ) : (
@@ -2811,7 +2811,7 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt,
                                     label: opt,
                                   }))}
-                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300"
+                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
@@ -2835,7 +2835,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("completedDate", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                               />
                             ) : (
                               <span className="text-[0.75vw] whitespace-nowrap">
@@ -2864,7 +2864,7 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt,
                                     label: opt,
                                   }))}
-                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300 font-semibold"
+                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
                                 />
                               </div>
                             ) : (
@@ -2891,7 +2891,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="Remark..."
                               />
                             ) : (
@@ -4079,40 +4079,59 @@ export default function ServiceMaterialInwardResponse({
       {/* In-App Document Preview Modal (for Image & PDF without navigating away) */}
       <AnimatePresence>
         {docPreviewModal && (
-          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-[110] p-[1.5vw]">
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[110] p-[1.5vw]"
+            onClick={() => setDocPreviewModal(null)}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[75vw] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[75vw] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] bg-slate-900 text-white">
-                <div className="flex items-center gap-[0.6vw]">
-                  {docPreviewModal.isPdf ? (
-                    <FileText className="w-[1.2vw] h-[1.2vw] text-red-400" />
-                  ) : (
-                    <Eye className="w-[1.2vw] h-[1.2vw] text-blue-400" />
-                  )}
-                  <h3 className="text-[0.9vw] font-bold text-white tracking-wide">
-                    {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
-                  </h3>
+              <div className="flex items-center justify-between px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white">
+                <div className="flex items-center gap-[0.7vw]">
+                  <div
+                    className={`w-[2.2vw] h-[2.2vw] rounded-[0.5vw] flex items-center justify-center shadow-xs shrink-0 ${
+                      docPreviewModal.isPdf
+                        ? "bg-rose-50 text-rose-600 border border-rose-200"
+                        : "bg-blue-50 text-blue-600 border border-blue-200"
+                    }`}
+                  >
+                    {docPreviewModal.isPdf ? (
+                      <FileText className="w-[1.1vw] h-[1.1vw]" />
+                    ) : (
+                      <Eye className="w-[1.1vw] h-[1.1vw]" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-[0.95vw] font-bold text-slate-900 leading-tight">
+                      {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
+                    </h3>
+                    <p className="text-[0.7vw] text-slate-500 font-medium">
+                      {docPreviewModal.isPdf ? "PDF technical document" : "Technical image attachment"}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-[0.8vw]">
+
+                <div className="flex items-center gap-[0.6vw]">
                   <a
                     href={docPreviewModal.url}
                     download
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.72vw] text-slate-300 hover:text-white flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
+                    className="text-[0.74vw] font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-[0.35vw] px-[0.85vw] py-[0.35vw] rounded-full bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer border border-slate-200/80"
                   >
-                    <Download className="w-[0.8vw] h-[0.8vw]" />
+                    <Download className="w-[0.8vw] h-[0.8vw] text-slate-600" />
                     <span>Download</span>
                   </a>
                   <button
                     type="button"
                     onClick={() => setDocPreviewModal(null)}
-                    className="text-slate-400 hover:text-white p-[0.3vw] rounded-full hover:bg-white/10 transition-colors cursor-pointer border-0 bg-transparent"
+                    className="p-[0.4vw] rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border-0 bg-transparent"
+                    title="Close preview"
                   >
                     <X className="w-[1.1vw] h-[1.1vw]" />
                   </button>
@@ -4120,19 +4139,19 @@ export default function ServiceMaterialInwardResponse({
               </div>
 
               {/* Modal Content */}
-              <div className="flex-1 bg-slate-100 flex items-center justify-center overflow-hidden p-[1vw]">
+              <div className="flex-1 bg-[#f8fafd] flex items-center justify-center overflow-hidden p-[1.2vw]">
                 {docPreviewModal.isPdf ? (
                   <iframe
                     src={`${docPreviewModal.url}#toolbar=1&navpanes=0`}
                     title="PDF Document"
-                    className="w-full h-full rounded-[0.4vw] border border-slate-300 bg-white shadow-inner"
+                    className="w-full h-full rounded-[0.5vw] border border-slate-200 bg-white shadow-sm"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center overflow-auto p-[1vw]">
+                  <div className="w-full h-full flex items-center justify-center overflow-auto p-[0.8vw]">
                     <img
                       src={docPreviewModal.url}
                       alt="Attachment Preview"
-                      className="max-h-full max-w-full object-contain rounded-[0.4vw] shadow-md border border-slate-300 bg-white"
+                      className="max-h-full max-w-full object-contain rounded-[0.5vw] shadow-md border border-slate-200 bg-white"
                     />
                   </div>
                 )}

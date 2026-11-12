@@ -1386,19 +1386,20 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* Actions */}
                               <td className="py-[0.65vw] px-[0.7vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                <div className="flex items-center justify-center gap-[0.35vw]">
+                                <div className="flex items-center justify-center gap-[0.45vw]">
                                   <button
                                     onClick={() => setInfoItem({ entry, product })}
-                                    className="px-[0.65vw] py-[0.25vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                    className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
+                                    title="View Details"
                                   >
-                                    View Details
+                                    <Eye className="w-[0.95vw] h-[0.95vw]" />
                                   </button>
                                   <button
                                     onClick={() => setHistoryItem({ entry, product })}
-                                    className="p-[0.35vw] text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                    className="w-[1.8vw] h-[1.8vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-200 hover:border-slate-700"
                                     title="View Lifecycle History"
                                   >
-                                    <History className="w-[0.9vw] h-[0.9vw]" />
+                                    <History className="w-[1vw] h-[1vw]" />
                                   </button>
                                 </div>
                               </td>
