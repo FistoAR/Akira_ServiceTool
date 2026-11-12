@@ -13,7 +13,11 @@ export function usePageTitle() {
     "/serviceCall/reports": "Service Call Reports",
     "/serviceCallResponse": "Call Response",
     "/serviceMaterial": "Service Material",
+    "/serviceMaterialResponse": "Service Material Response",
+    "/serviceMaterial/reports": "Service Material Reports",
     "/productionMaterial": "Production Material",
+    "/productionMaterialResponse": "Production Material Response",
+    "/productionMaterial/reports": "Production Material Reports",
     "/masterPage": "Master Access",
     "/troubleshoot": "Troubleshoot"
   };
