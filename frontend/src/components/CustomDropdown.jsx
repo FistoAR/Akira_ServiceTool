@@ -352,7 +352,7 @@ const CustomDropdown = ({
           ) : multiple ? (
             <span className="truncate">
               {Array.isArray(selectedOptions) && selectedOptions.length > 0 ? (
-                <span className="font-medium text-gray-900">
+                <span className="font-normal text-slate-700">
                   {selectedOptions.length === 1
                     ? selectedOptions[0].label
                     : `${selectedOptions.length} items selected`}
@@ -376,7 +376,7 @@ const CustomDropdown = ({
                   className={`${sizeClasses.icon} text-blue-600 flex-shrink-0`}
                 />
               )}
-              <span className="truncate font-medium text-gray-900">
+              <span className="truncate font-normal text-slate-700">
                 {selectedOptions.label}
               </span>
               {selectedOptions.badge && (
@@ -508,7 +508,7 @@ const CustomDropdown = ({
                       opt.disabled
                         ? "opacity-40 cursor-not-allowed bg-gray-50 text-gray-400"
                         : selected
-                        ? "bg-blue-50 text-blue-700 font-semibold"
+                        ? "bg-blue-50 text-blue-700 font-medium"
                         : isHighlighted
                         ? "bg-slate-100 text-gray-900"
                         : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
@@ -595,4 +595,6 @@ const CustomDropdown = ({
 };
 
 export default CustomDropdown;
+
+
 

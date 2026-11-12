@@ -2457,20 +2457,18 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "testedBy")}
                           >
                             {draft ? (
-                              <select
-                                value={draft.testedBy}
-                                onChange={(e) => hc("testedBy", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
-                              >
-                                <option value="">Select</option>
-                                {employees
-                                  .filter((emp) => emp.role === "User")
-                                  .map((e) => (
-                                    <option key={e.userId} value={e.name}>
-                                      {e.name}
-                                    </option>
-                                  ))}
-                              </select>
+                              <div className="min-w-[8vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  placeholder="Select"
+                                  value={draft.testedBy || ""}
+                                  onChange={(val) => hc("testedBy", val)}
+                                  options={employees
+                                    .filter((emp) => emp.role === "User")
+                                    .map((e) => ({ value: e.name, label: e.name }))}
+                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300"
+                                />
+                              </div>
                             ) : (
                               <span className="text-[0.75vw] whitespace-nowrap">
                                 {product.report?.testedBy || "—"}
@@ -2508,23 +2506,19 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "fourM")}
                           >
                             {draft ? (
-                              <select
-                                value={draft.fourMCategory}
-                                onChange={(e) =>
-                                  hc("fourMCategory", e.target.value)
-                                }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
-                              >
-                                <option value="">Select</option>
-                                {fourMCategories?.map((opt) => (
-                                  <option
-                                    key={opt._id || opt.id}
-                                    value={opt.name}
-                                  >
-                                    {opt.name}
-                                  </option>
-                                ))}
-                              </select>
+                              <div className="min-w-[8vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  placeholder="Select"
+                                  value={draft.fourMCategory || ""}
+                                  onChange={(val) => hc("fourMCategory", val)}
+                                  options={(fourMCategories || []).map((opt) => ({
+                                    value: opt.name,
+                                    label: opt.name,
+                                  }))}
+                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300"
+                                />
+                              </div>
                             ) : (
                               <span className="text-[0.75vw] whitespace-nowrap">
                                 {product.report?.fourMCategory || "—"}
@@ -2807,20 +2801,19 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "disposition")}
                           >
                             {draft ? (
-                              <select
-                                value={draft.disposition}
-                                onChange={(e) =>
-                                  hc("disposition", e.target.value)
-                                }
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 min-w-[8vw]"
-                              >
-                                <option value="">Select</option>
-                                {DISPOSITION_OPTIONS.map((opt) => (
-                                  <option key={opt} value={opt}>
-                                    {opt}
-                                  </option>
-                                ))}
-                              </select>
+                              <div className="min-w-[8vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  placeholder="Select"
+                                  value={draft.disposition || ""}
+                                  onChange={(val) => hc("disposition", val)}
+                                  options={DISPOSITION_OPTIONS.map((opt) => ({
+                                    value: opt,
+                                    label: opt,
+                                  }))}
+                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300"
+                                />
+                              </div>
                             ) : (
                               <span className="text-[0.75vw]">
                                 {product.report?.disposition || "—"}
@@ -2861,18 +2854,19 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "status")}
                           >
                             {draft ? (
-                              <select
-                                value={draft.status}
-                                onChange={(e) => hc("status", e.target.value)}
-                                className="w-full text-[0.75vw] border-r border-b border-slate-300 rounded p-[0.3vw] outline-none focus:border-blue-500 font-semibold min-w-[9vw]"
-                              >
-                                <option value="">Select</option>
-                                {STATUS_OPTIONS.map((opt) => (
-                                  <option key={opt} value={opt}>
-                                    {opt}
-                                  </option>
-                                ))}
-                              </select>
+                              <div className="min-w-[9vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  placeholder="Select"
+                                  value={draft.status || ""}
+                                  onChange={(val) => hc("status", val)}
+                                  options={STATUS_OPTIONS.map((opt) => ({
+                                    value: opt,
+                                    label: opt,
+                                  }))}
+                                  triggerClassName="!h-[1.8vw] !text-[0.74vw] !py-[0.15vw] !px-[0.4vw] !rounded-[0.25vw] !border-slate-300 font-semibold"
+                                />
+                              </div>
                             ) : (
                               <span
                                 className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-full border text-[0.68vw] font-semibold whitespace-nowrap ${statusCfg.bg} ${statusCfg.border} ${statusCfg.text}`}
@@ -3700,19 +3694,17 @@ export default function ServiceMaterialInwardResponse({
                 <div className="grid grid-cols-3 gap-[0.8vw]">
                   <div>
                     <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Status</label>
-                    <select
+                    <CustomDropdown
+                      size="sm"
+                      placeholder="Select Status"
                       value={editReportModal.draft.status || ""}
-                      onChange={(e) => setEditReportModal((prev) => ({
+                      onChange={(val) => setEditReportModal((prev) => ({
                         ...prev,
-                        draft: { ...prev.draft, status: e.target.value }
+                        draft: { ...prev.draft, status: val }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500 font-semibold"
-                    >
-                      <option value="">Select</option>
-                      {STATUS_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
+                      options={STATUS_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
+                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] font-semibold"
+                    />
                   </div>
                   <div>
                     <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Tested By</label>
@@ -3740,19 +3732,17 @@ export default function ServiceMaterialInwardResponse({
                   </div>
                   <div>
                     <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">4M Category</label>
-                    <select
+                    <CustomDropdown
+                      size="sm"
+                      placeholder="Select 4M Category"
                       value={editReportModal.draft.fourMCategory || ""}
-                      onChange={(e) => setEditReportModal((prev) => ({
+                      onChange={(val) => setEditReportModal((prev) => ({
                         ...prev,
-                        draft: { ...prev.draft, fourMCategory: e.target.value }
+                        draft: { ...prev.draft, fourMCategory: val }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
-                    >
-                      <option value="">Select</option>
-                      {fourMCategories?.map((opt) => (
-                        <option key={opt._id || opt.id} value={opt.name}>{opt.name}</option>
-                      ))}
-                    </select>
+                      options={(fourMCategories || []).map((opt) => ({ value: opt.name, label: opt.name }))}
+                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw]"
+                    />
                   </div>
                   <div>
                     <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Error Code</label>

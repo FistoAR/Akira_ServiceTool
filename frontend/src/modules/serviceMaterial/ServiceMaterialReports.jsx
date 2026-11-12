@@ -969,7 +969,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-lg z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
                   {/* Date Range */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
                       Date Range
                     </label>
                     <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[1.9vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
@@ -998,7 +998,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                   {/* Assigned Employee */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
                       Assigned Employee
                     </label>
                     <CustomDropdown
@@ -1016,13 +1016,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           label: `${emp.name} (${emp.department || "No Dept"})`,
                         })),
                       ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal"
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
                     />
                   </div>
 
                   {/* Customer Category */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
                       Customer Category
                     </label>
                     <CustomDropdown
@@ -1039,13 +1039,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           label: cat,
                         })),
                       ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal"
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
                     />
                   </div>
 
                   {/* Warranty Type (W/PW) */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
                       Warranty Type
                     </label>
                     <CustomDropdown
@@ -1060,7 +1060,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         { value: "W", label: "Warranty (W)" },
                         { value: "PW", label: "Paid (PW)" },
                       ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal"
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
                     />
                   </div>
 
