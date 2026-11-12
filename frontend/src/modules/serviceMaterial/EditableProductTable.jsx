@@ -166,11 +166,16 @@ const EditableProductTable = ({
     if (isReadOnly) {
       if (!(allowPartialEdit && field === "expectedDeliveryDate")) return;
     }
+    // Prevent manual editing of Type (W/PW) as per business requirement
+    if (field === "type") return;
+
     setProducts((prev) =>
       prev.map((p) => {
         if (p._pid === id) {
           const newP = { ...p, [field]: value };
-          if (field === "serialNumber" && value) {
+          if (field === "serialNumber") {
+            const trimmedVal = (value || "").trim();
+            if (trimmedVal) {
               let activeCustomer = Array.isArray(customerDb)
                 ? customerDb.find(c => c.code === customerCode)
                 : (customerDb && customerDb[customerCode] ? customerDb[customerCode] : null);
@@ -190,44 +195,47 @@ const EditableProductTable = ({
                 catConfig = categories.find(c => (c.productSegment || c.partyType || c.name || "").toLowerCase() === "default");
               }
 
-             const weekStart = catConfig?.weekStartIdx ?? 3;
-             const weekLen = catConfig?.weekLength ?? 2;
-             const yearStart = catConfig?.yearStartIdx ?? 5;
-             const yearLen = catConfig?.yearLength ?? 2;
-             const warrantyYears = catConfig?.warrantyPeriodYears ?? 1;
-             const warrantySLA = catConfig?.warrantySLADays ?? 7;
-             const postWarrantySLA = catConfig?.postWarrantySLADays ?? 10;
+              const weekStart = catConfig?.weekStartIdx ?? 3;
+              const weekLen = catConfig?.weekLength ?? 2;
+              const yearStart = catConfig?.yearStartIdx ?? 5;
+              const yearLen = catConfig?.yearLength ?? 2;
+              const warrantyYears = catConfig?.warrantyPeriodYears ?? 1;
+              const warrantySLA = catConfig?.warrantySLADays ?? 7;
+              const postWarrantySLA = catConfig?.postWarrantySLADays ?? 10;
 
-             if (value.length >= Math.max(weekStart + weekLen, yearStart + yearLen)) {
-                const weekStr = value.substring(weekStart, weekStart + weekLen);
-                const yearStr = value.substring(yearStart, yearStart + yearLen);
+              if (trimmedVal.length >= Math.max(weekStart + weekLen, yearStart + yearLen)) {
+                const weekStr = trimmedVal.substring(weekStart, weekStart + weekLen);
+                const yearStr = trimmedVal.substring(yearStart, yearStart + yearLen);
                 const week = parseInt(weekStr, 10);
                 const year = parseInt(yearStr, 10);
                 if (!isNaN(week) && !isNaN(year) && week > 0 && week <= 53) {
-                   const fullYear = 2000 + year;
-                   const weekStartDate = new Date(fullYear, 0, 1 + (week - 1) * 7);
-                   const regDate = registrationDate ? new Date(registrationDate) : new Date();
-                   
-                   const diffTime = regDate - weekStartDate;
-                   const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
-                   
-                   if (diffYears <= warrantyYears && diffYears >= 0) {
-                      newP.type = "W";
-                      newP.expectedDeliveryDate = new Date(regDate.getTime() + warrantySLA * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                      newP._autoCalculated = true;
-                   } else {
-                      newP.type = "PW";
-                      newP.expectedDeliveryDate = new Date(regDate.getTime() + postWarrantySLA * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                      newP._autoCalculated = true;
-                   }
+                  const fullYear = 2000 + year;
+                  const weekStartDate = new Date(fullYear, 0, 1 + (week - 1) * 7);
+                  const regDate = registrationDate ? new Date(registrationDate) : new Date();
+                  
+                  const diffTime = regDate - weekStartDate;
+                  const diffYears = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+                  
+                  if (diffYears <= warrantyYears && diffYears >= 0) {
+                    newP.type = "W";
+                    newP.expectedDeliveryDate = new Date(regDate.getTime() + warrantySLA * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                    newP._autoCalculated = true;
+                  } else {
+                    newP.type = "PW";
+                    newP.expectedDeliveryDate = new Date(regDate.getTime() + postWarrantySLA * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                    newP._autoCalculated = true;
+                  }
                 } else {
-                   newP._autoCalculated = false;
+                  newP._autoCalculated = false;
                 }
-             } else {
+              } else {
                 newP._autoCalculated = false;
-             }
-          } else if (field === "serialNumber") {
-             newP._autoCalculated = false;
+              }
+            } else {
+              // Serial number is empty or cleared: clear auto-calculated delivery date and calculation flag
+              newP._autoCalculated = false;
+              newP.expectedDeliveryDate = "";
+            }
           }
           return newP;
         }
@@ -323,7 +331,11 @@ const EditableProductTable = ({
         if (r === startRow) continue; 
         for (let c = minC; c <= maxC; c++) {
           const field = COLUMN_FIELDS[c];
-          if (field !== 'productCode' && field !== '_pid') {
+          if (field !== 'productCode' && field !== '_pid' && field !== 'type') {
+            // Only allow dragging expectedDeliveryDate if the target row has serialNumber
+            if (field === 'expectedDeliveryDate' && !newProducts[r].serialNumber) {
+              continue;
+            }
             newProducts[r] = { ...newProducts[r], [field]: sourceRow[field] };
           }
         }
@@ -551,9 +563,14 @@ const EditableProductTable = ({
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <div className="flex bg-gray-100 p-[0.15vw] rounded-[0.3vw] w-full border border-slate-200">
+                          <div className="flex bg-gray-100 p-[0.15vw] rounded-[0.3vw] w-full border border-slate-200 cursor-default select-none">
                             {typeOptions.map(opt => (
-                              <button key={opt} type="button" onClick={() => handleUpdate(prod._pid, "type", opt)} disabled={isReadOnly} className={`flex-1 py-[0.25vw] text-[0.68vw] font-bold rounded-[0.25vw] transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700 hover:bg-gray-200"} disabled:opacity-70 disabled:cursor-not-allowed`}>{opt}</button>
+                              <span 
+                                key={opt} 
+                                className={`flex-1 py-[0.25vw] text-[0.68vw] font-bold rounded-[0.25vw] text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-400"}`}
+                              >
+                                {opt}
+                              </span>
                             ))}
                           </div>
                           {renderFillHandle(index, 4)}
@@ -563,12 +580,13 @@ const EditableProductTable = ({
                           <div className="relative flex items-center">
                             <input 
                               type="date" 
-                              value={prod.expectedDeliveryDate} 
+                              value={prod.expectedDeliveryDate || ""} 
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
-                              disabled={isReadOnly && !allowPartialEdit} 
-                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.4vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-transparent disabled:border-transparent cursor-pointer disabled:cursor-not-allowed text-[0.76vw]" 
+                              disabled={!prod.serialNumber || (isReadOnly && !allowPartialEdit)} 
+                              title={!prod.serialNumber ? "Enter Serial Number first" : ""}
+                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.4vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-400 text-[0.76vw]" 
                             />
-                            <Calendar className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.3vw] pointer-events-none" />
+                            <Calendar className={`w-[0.8vw] h-[0.8vw] absolute right-[0.3vw] pointer-events-none ${!prod.serialNumber ? "text-gray-300" : "text-gray-700"}`} />
                           </div>
                           {renderFillHandle(index, 5)}
                         </td>
