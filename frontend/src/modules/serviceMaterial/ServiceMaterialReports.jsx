@@ -1413,36 +1413,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 {/* Table Footer with Pagination Controls */}
                 <div className="bg-slate-50 border-t border-slate-200 px-[1vw] py-[0.55vw] flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-[1.2vw]">
-                    <span className="text-[0.72vw] text-slate-600 font-medium">
+                    <span className="text-[0.72vw] text-slate-600 font-normal">
                       Showing{" "}
-                      <strong className="text-slate-800">
+                      <span className="text-slate-700 font-medium">
                         {filteredProducts.length === 0
                           ? 0
                           : (currentPage - 1) * rowsPerPage + 1}
                         -
                         {Math.min(currentPage * rowsPerPage, filteredProducts.length)}
-                      </strong>{" "}
-                      of <strong className="text-slate-800">{filteredProducts.length}</strong> products
+                      </span>{" "}
+                      of <span className="text-slate-700 font-medium">{filteredProducts.length}</span> products
                     </span>
-
-                    <div className="flex items-center gap-[0.4vw] text-[0.72vw] text-slate-600">
-                      <span>Rows per page:</span>
-                      <CustomDropdown
-                        size="sm"
-                        value={rowsPerPage}
-                        onChange={(val) => {
-                          setRowsPerPage(Number(val));
-                          setCurrentPage(1);
-                        }}
-                        options={[
-                          { value: 10, label: "10" },
-                          { value: 20, label: "20" },
-                          { value: 50, label: "50" },
-                          { value: 100, label: "100" },
-                        ]}
-                        triggerClassName="!h-[1.7vw] !text-[0.72vw] border-slate-300 rounded-[0.3vw] font-normal !py-0 !px-[0.5vw] w-[4.5vw]"
-                      />
-                    </div>
                   </div>
 
                   {/* Pagination Prev/Next Buttons */}
@@ -1456,7 +1437,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       <ChevronLeft className="w-[0.9vw] h-[0.9vw] text-slate-600" />
                     </button>
 
-                    <span className="text-[0.72vw] font-bold text-slate-700 px-[0.5vw]">
+                    <span className="text-[0.72vw] font-medium text-slate-600 px-[0.5vw]">
                       {currentPage} / {totalPages}
                     </span>
 
