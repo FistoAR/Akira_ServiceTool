@@ -169,3 +169,11 @@ button:not([class*="p-0"]):not([class*="w-"]):not([class*="h-"]):not([class*="py
 .no-native-calendar {
   -moz-appearance: textfield;
 }
+/* Hide scrollbars while allowing scroll on overflow */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

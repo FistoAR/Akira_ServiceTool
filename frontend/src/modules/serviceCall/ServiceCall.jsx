@@ -1723,9 +1723,9 @@ export default function ServiceCall() {
             className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
             {/* ── 1. Top Level Scoping Toolbar: Search, Date Range, Priority & Action ── */}
-            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0 flex-wrap">
               {/* Left side: Soft Pill Search Box */}
-              <div className="relative w-[18vw]">
+              <div className="relative w-[18vw] min-w-[180px] max-w-full flex-1">
                 <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
                 <input
                   type="text"
@@ -1872,7 +1872,7 @@ export default function ServiceCall() {
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
               <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
                 {/* Sleek Connected Segmented Track for Status Tabs */}
-                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
                   {[
                     { label: "All", dot: "bg-blue-600" },
                     { label: "Registered", dot: "bg-blue-500" },

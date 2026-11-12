@@ -3026,9 +3026,9 @@ export default function App() {
             exit={{ opacity: 0, x: 20 }}
           >
                         {/* Top bar - Standard Service Call Pill Toolbar */}
-            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] mb-[0.8vw] shrink-0">
+            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] mb-[0.8vw] shrink-0 flex-wrap">
               {/* Left side: Soft Pill Search Box */}
-              <div className="relative w-[18vw]">
+              <div className="relative w-[18vw] min-w-[180px] max-w-full flex-1">
                 <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
                 <input
                   type="text"
@@ -3153,7 +3153,7 @@ export default function App() {
             </div>
 
             {/* Sleek Connected Segmented Track for Status Tabs */}
-            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] mb-[0.8vw] max-w-full overflow-x-auto">
+            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] mb-[0.8vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
               {STATUS_CHIPS.map(({ label, dot }) => {
                 const isActive = activeFilter === label;
                 const count = counts[label] ?? 0;

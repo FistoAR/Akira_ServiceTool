@@ -381,9 +381,9 @@ export default function ServiceCallAssignment() {
     <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
 
       {/* ── FILTER & SEARCH TOOLBAR ── */}
-      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0 flex-wrap">
         {/* Left side: Soft Pill Search Box */}
-        <div className="relative w-[18vw]">
+        <div className="relative w-[18vw] min-w-[180px] max-w-full flex-1">
           <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
           <input
             type="text"

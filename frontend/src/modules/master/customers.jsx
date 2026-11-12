@@ -1225,9 +1225,9 @@ const CustomerDatabase = () => {
   return (
     <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
       {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel (Matching Service Call Entry page) ── */}
-      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0 flex-wrap">
         {/* Soft Pill Search Box */}
-        <div className="relative w-[22vw]">
+        <div className="relative w-[22vw] min-w-[200px] max-w-full flex-1">
           <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
           <input
             type="text"
