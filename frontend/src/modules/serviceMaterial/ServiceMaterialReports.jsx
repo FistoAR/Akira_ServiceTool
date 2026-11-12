@@ -707,6 +707,53 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     return counts;
   }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter]);
 
+  // Comprehensive Quantity Summary across active filtered inward sets
+  const quantityStats = useMemo(() => {
+    let receivedQty = 0;
+    let claimedInProgressQty = 0;
+    let dispatchedQty = 0; // Completed & Approved
+    let reviewRequiredQty = 0;
+    let openQty = 0;
+
+    filteredProducts.forEach(({ product }) => {
+      const q = Math.max(1, Number(product.qty) || 1);
+      receivedQty += q;
+
+      const rawStatus = product.status || product.report?.status || "Open";
+      const isCompletedAndApproved = rawStatus === "Completed" && product.finalStatus === "Completed";
+      const isReviewRequired = rawStatus === "Completed" && product.finalStatus !== "Completed";
+
+      if (isCompletedAndApproved) {
+        dispatchedQty += q;
+      } else if (isReviewRequired) {
+        reviewRequiredQty += q;
+        claimedInProgressQty += q;
+      } else if (
+        product.assignedTo ||
+        rawStatus === "Assigned" ||
+        rawStatus === "Repair in Progress" ||
+        rawStatus === "Under Testing" ||
+        rawStatus === "Pending" ||
+        rawStatus === "Hold"
+      ) {
+        claimedInProgressQty += q;
+      } else {
+        openQty += q;
+      }
+    });
+
+    const balanceQty = Math.max(0, receivedQty - dispatchedQty);
+
+    return {
+      receivedQty,
+      dispatchedQty,
+      balanceQty,
+      claimedInProgressQty,
+      reviewRequiredQty,
+      openQty,
+    };
+  }, [filteredProducts]);
+
   // Filtered Products List
   const filteredProducts = useMemo(() => {
     return allProducts.filter(({ entry, product }) => {
@@ -1367,16 +1414,30 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     })}
                   </div>
 
-                  <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-500 font-medium shrink-0">
-                    <span>
-                      Total Claimed:{" "}
-                      <span className="text-blue-700 bg-blue-50 px-[0.45vw] py-[0.1vw] rounded-full border border-blue-200 font-medium">
-                        {allProducts.filter((p) => p.product.assignedTo).length}
-                      </span>
-                    </span>
-                    <span>
-                      Active: <span className="text-slate-700 font-medium">{filteredProducts.length}</span> items
-                    </span>
+                  <div className="flex items-center gap-[0.6vw] text-[0.72vw] text-slate-600 font-medium shrink-0">
+                    {/* Received Qty */}
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-slate-100 border border-slate-200">
+                      <span className="text-slate-500 font-normal">Received Qty:</span>
+                      <span className="text-slate-800 font-medium">{quantityStats.receivedQty}</span>
+                    </div>
+
+                    {/* Claimed / In Progress Qty */}
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-blue-50 border border-blue-200">
+                      <span className="text-blue-600 font-normal">Claimed:</span>
+                      <span className="text-blue-700 font-medium">{quantityStats.claimedInProgressQty}</span>
+                    </div>
+
+                    {/* Dispatched Qty */}
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-emerald-50 border border-emerald-200">
+                      <span className="text-emerald-700 font-normal">Dispatched:</span>
+                      <span className="text-emerald-700 font-medium">{quantityStats.dispatchedQty}</span>
+                    </div>
+
+                    {/* Balance Qty */}
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-amber-50 border border-amber-200">
+                      <span className="text-amber-800 font-normal">Balance:</span>
+                      <span className="text-amber-800 font-medium">{quantityStats.balanceQty}</span>
+                    </div>
                   </div>
                 </div>
 

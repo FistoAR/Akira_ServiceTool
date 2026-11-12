@@ -2233,6 +2233,38 @@ const AdminTableView = ({
                                   {prods.length === 1 ? "Product" : "Products"}
                                 </span>
 
+                                {/* Inward Quantities Summary: Received, Claimed, Dispatched, Balance */}
+                                {(() => {
+                                  const rowReceived = prods.reduce((sum, p) => sum + (Math.max(1, Number(p.qty) || 1)), 0);
+                                  const rowDispatched = prods.reduce((sum, p) => {
+                                    const raw = p.status || p.report?.status || "Open";
+                                    return sum + (raw === "Completed" && p.finalStatus === "Completed" ? Math.max(1, Number(p.qty) || 1) : 0);
+                                  }, 0);
+                                  const rowClaimed = prods.reduce((sum, p) => {
+                                    const raw = p.status || p.report?.status || "Open";
+                                    const isDone = raw === "Completed" && p.finalStatus === "Completed";
+                                    return sum + (!isDone && (p.assignedTo || raw !== "Open") ? Math.max(1, Number(p.qty) || 1) : 0);
+                                  }, 0);
+                                  const rowBalance = Math.max(0, rowReceived - rowDispatched);
+
+                                  return (
+                                    <div className="flex items-center gap-[0.4vw] text-[0.66vw] font-medium ml-[0.3vw]">
+                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-slate-100 text-slate-700 border border-slate-200" title="Received Qty">
+                                        Rec: <strong className="font-semibold text-slate-800">{rowReceived}</strong>
+                                      </span>
+                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-blue-50 text-blue-700 border border-blue-200" title="Claimed / In Progress Qty">
+                                        Claimed: <strong className="font-semibold text-blue-800">{rowClaimed}</strong>
+                                      </span>
+                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-emerald-50 text-emerald-700 border border-emerald-200" title="Dispatched Qty">
+                                        Disp: <strong className="font-semibold text-emerald-800">{rowDispatched}</strong>
+                                      </span>
+                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-amber-50 text-amber-800 border border-amber-200" title="Balance Qty">
+                                        Bal: <strong className="font-semibold text-amber-900">{rowBalance}</strong>
+                                      </span>
+                                    </div>
+                                  );
+                                })()}
+
                                 {/* Actions — right side */}
                                 <div
                                   className="ml-auto flex items-center gap-[0.4vw]"
@@ -3152,44 +3184,83 @@ export default function App() {
               </div>
             </div>
 
-            {/* Sleek Connected Segmented Track for Status Tabs */}
-            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] mb-[0.8vw] max-w-full overflow-x-auto">
-              {STATUS_CHIPS.map(({ label, dot }) => {
-                const isActive = activeFilter === label;
-                const count = counts[label] ?? 0;
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => setActiveFilter(label)}
-                    className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
-                      isActive
-                        ? "bg-blue-600 text-white shadow-xs font-semibold"
-                        : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
-                    }`}
-                  >
-                    {label !== "All" && (
-                      <span
-                        className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
-                          isActive ? "bg-white" : dot
-                        }`}
-                      />
-                    )}
-                    <span className={isActive ? "text-white" : "text-slate-700"}>
-                      {label}
-                    </span>
-                    <span
-                      className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+            {/* Sleek Connected Segmented Track for Status Tabs & Overall Quantity KPI Capsules */}
+            <div className="flex items-center justify-between gap-[0.8vw] mb-[0.8vw] flex-wrap">
+              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+                {STATUS_CHIPS.map(({ label, dot }) => {
+                  const isActive = activeFilter === label;
+                  const count = counts[label] ?? 0;
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => setActiveFilter(label)}
+                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                         isActive
-                          ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                          : "text-slate-400"
+                          ? "bg-blue-600 text-white shadow-xs font-semibold"
+                          : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                       }`}
                     >
-                      {count}
-                    </span>
-                  </button>
+                      {label !== "All" && (
+                        <span
+                          className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
+                            isActive ? "bg-white" : dot
+                          }`}
+                        />
+                      )}
+                      <span className={isActive ? "text-white" : "text-slate-700"}>
+                        {label}
+                      </span>
+                      <span
+                        className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                          isActive
+                            ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Quantities Summary Capsules: Received, Claimed, Dispatched, Balance */}
+              {(() => {
+                const allProds = filteredData.flatMap((r) => r.products || []);
+                const totalReceived = allProds.reduce((sum, p) => sum + (Math.max(1, Number(p.qty) || 1)), 0);
+                const totalDispatched = allProds.reduce((sum, p) => {
+                  const raw = p.status || p.report?.status || "Open";
+                  return sum + (raw === "Completed" && p.finalStatus === "Completed" ? Math.max(1, Number(p.qty) || 1) : 0);
+                }, 0);
+                const totalClaimed = allProds.reduce((sum, p) => {
+                  const raw = p.status || p.report?.status || "Open";
+                  const isDone = raw === "Completed" && p.finalStatus === "Completed";
+                  return sum + (!isDone && (p.assignedTo || raw !== "Open") ? Math.max(1, Number(p.qty) || 1) : 0);
+                }, 0);
+                const totalBalance = Math.max(0, totalReceived - totalDispatched);
+
+                return (
+                  <div className="flex items-center gap-[0.45vw] text-[0.72vw]">
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-slate-100 border border-slate-200">
+                      <span className="text-slate-500 font-normal">Received Qty:</span>
+                      <span className="text-slate-800 font-semibold">{totalReceived}</span>
+                    </div>
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-blue-50 border border-blue-200">
+                      <span className="text-blue-600 font-normal">Claimed:</span>
+                      <span className="text-blue-700 font-semibold">{totalClaimed}</span>
+                    </div>
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-emerald-50 border border-emerald-200">
+                      <span className="text-emerald-700 font-normal">Dispatched:</span>
+                      <span className="text-emerald-700 font-semibold">{totalDispatched}</span>
+                    </div>
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-amber-50 border border-amber-200">
+                      <span className="text-amber-800 font-normal">Balance:</span>
+                      <span className="text-amber-800 font-semibold">{totalBalance}</span>
+                    </div>
+                  </div>
                 );
-              })}
+              })()}
             </div>
 
             <AdminTableView
