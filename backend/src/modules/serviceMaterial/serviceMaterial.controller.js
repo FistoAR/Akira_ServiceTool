@@ -204,6 +204,56 @@ exports.claimProduct = async (req, res) => {
   }
 };
 
+// ── PATCH /api/service-material/:id/unclaim-product ──────────────────────────
+exports.unclaimProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { productId } = req.body;
+
+    const inward = await ServiceMaterial.findById(id);
+    if (!inward) return res.status(404).json({ message: 'Inward not found' });
+
+    const product = inward.products.find(p => p._pid === productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    // Verify product has not had reports submitted
+    const isReportSubmitted =
+      product.report &&
+      (product.report.testedBy ||
+       product.report.fourMCategory ||
+       product.report.problemDescription ||
+       product.report.rootCause ||
+       product.report.correctiveAction ||
+       product.report.timeInHours ||
+       product.report.materialCost ||
+       (product.report.status && product.report.status !== 'Open' && product.report.status !== 'Assigned'));
+
+    if (isReportSubmitted) {
+      return res.status(400).json({ message: 'Cannot unclaim: A report has already been submitted for this product.' });
+    }
+
+    product.assignedTo = null;
+    product.assignedToName = null;
+    product.status = 'Open';
+    if (product.report) {
+      product.report.status = 'Open';
+    }
+
+    inward.markModified('products');
+    await inward.save();
+
+    try {
+      socketConfig.getIO().emit('service-materials-changed');
+    } catch (e) {
+      console.error('Socket emission error:', e);
+    }
+
+    res.json(inward);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // ── PATCH /api/service-material/:id/product/:productId/report ──────────────────
 exports.updateProductReport = async (req, res) => {
   try {

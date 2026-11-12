@@ -37,6 +37,7 @@ import {
   Filter,
   ListFilter,
   Trash2,
+  Undo2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -573,6 +574,7 @@ export default function ServiceMaterialInwardResponse({
 
   const [drafts, setDrafts] = useState({});
   const [savingStates, setSavingStates] = useState({});
+  const [unclaimingStates, setUnclaimingStates] = useState({});
   const [isBulkSaving, setIsBulkSaving] = useState(false);
   const isSavingRef = useRef(false);
   const [showExportModal, setShowExportModal] = useState(false);
@@ -1575,6 +1577,38 @@ export default function ServiceMaterialInwardResponse({
     }
   };
 
+  const unclaimProduct = async (id, productId) => {
+    if (!window.confirm("Are you sure you want to unclaim this product? It will be released back to Open queue.")) {
+      return;
+    }
+    setUnclaimingStates((prev) => ({ ...prev, [productId]: true }));
+    try {
+      const res = await axios.patch(
+        `${API_URL}/service-material/${id}/unclaim-product`,
+        { productId },
+      );
+      const updatedRow = { ...res.data, id: res.data._id };
+      setEntries((prev) => prev.map((e) => (e.id === id ? updatedRow : e)));
+      // Clear draft for this product
+      setDrafts((prev) => {
+        const next = { ...prev };
+        delete next[productId];
+        return next;
+      });
+      toast("Product successfully unclaimed and released.");
+      if (socket) {
+        socket.emit("service-material:change");
+      }
+    } catch (err) {
+      toast(
+        err.response?.data?.message || "Failed to unclaim product",
+        "error",
+      );
+    } finally {
+      setUnclaimingStates((prev) => ({ ...prev, [productId]: false }));
+    }
+  };
+
   // Table columns configuration
   const EDITABLE_COL_FIELDS = {
     testedBy: "testedBy",
@@ -1755,21 +1789,17 @@ export default function ServiceMaterialInwardResponse({
     },
     { key: "image", label: "Image", align: "text-center", minW: "min-w-[6vw]" },
     { key: "info", label: "Info", align: "text-center" },
-    ...(filterStatus !== "All"
-      ? [
-          {
-            key: "history",
-            label: "History",
-            align: "text-center",
-            minW: "min-w-[6vw]",
-          },
-        ]
-      : []),
+    {
+      key: "history",
+      label: "History",
+      align: "text-center",
+      minW: "min-w-[6vw]",
+    },
     {
       key: "action",
       label: "Action",
       align: "text-center",
-      minW: "min-w-[8vw]",
+      minW: "min-w-[10vw]",
     },
   ];
 
@@ -2196,14 +2226,17 @@ export default function ServiceMaterialInwardResponse({
             <table className="w-full min-w-max border-collapse">
               <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
                 <tr className="bg-[#E9EDF7]">
-                  {columns.map((col) => (
-                    <th
-                      key={col.key}
-                      className={`${col.width} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky top-0 z-30 bg-[#E9EDF7]`}
-                    >
-                      {col.label}
-                    </th>
-                  ))}
+                  {columns.map((col) => {
+                    const isAction = col.key === "action";
+                    return (
+                      <th
+                        key={col.key}
+                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
+                      >
+                        {col.label}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
@@ -2231,14 +2264,17 @@ export default function ServiceMaterialInwardResponse({
               {/* Table Header */}
               <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
                 <tr className="bg-[#E9EDF7]">
-                  {columns.map((col) => (
-                    <th
-                      key={col.key}
-                      className={`${col.width} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky top-0 z-30 bg-[#E9EDF7]`}
-                    >
-                      {col.label}
-                    </th>
-                  ))}
+                  {columns.map((col) => {
+                    const isAction = col.key === "action";
+                    return (
+                      <th
+                        key={col.key}
+                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
+                      >
+                        {col.label}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
 
@@ -2283,15 +2319,27 @@ export default function ServiceMaterialInwardResponse({
                       product.assignedTo ===
                         (currentUser?.userId || currentUser?.id) &&
                       !isAdminReturnedProduct;
+                    const isReportSaved =
+                      Boolean(product.report &&
+                      (product.report.testedBy ||
+                       product.report.fourMCategory ||
+                       product.report.problemDescription ||
+                       product.report.rootCause ||
+                       product.report.correctiveAction ||
+                       product.report.timeInHours ||
+                       product.report.materialCost ||
+                       (product.report.status && product.report.status !== "Open" && product.report.status !== "Assigned")));
+                    const canUnclaim = isClaimedByMe && !isReportSaved;
                     // Employee can re-submit from Admin Returned tab
                     const isResubmitting =
                       filterStatus === "Admin Returned" &&
                       isAdminReturnedProduct &&
                       product.assignedTo ===
                         (currentUser?.userId || currentUser?.id);
-                    // Allow inline editing when claimed by me (except when already in Completed tab or pending final admin approval)
+                    // Allow inline editing when claimed by me (except when already in Completed tab, or if completed in 'All' tab, or pending final admin approval)
+                    const isProductCompleted = pStatus === "Completed";
                     const canEditInline =
-                      (isClaimedByMe && filterStatus !== "Completed") || isResubmitting;
+                      (isClaimedByMe && filterStatus !== "Completed" && !isProductCompleted) || isResubmitting;
                     const draft =
                       canEditInline
                         ? getDraft(product._pid, product)
@@ -3092,7 +3140,7 @@ export default function ServiceMaterialInwardResponse({
 
                           {/* History */}
                           <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
-                            {filterStatus !== "All" ? (
+                            {product.report?.history && product.report.history.length > 0 ? (
                               <button
                                 onClick={() =>
                                   setHistorySelected({ entry, product })
@@ -3162,32 +3210,73 @@ export default function ServiceMaterialInwardResponse({
                                 )}
                               </button>
                             ) : isClaimedByMe && draft ? (
-                              <button
-                                onClick={() => saveRow(entry, product, draft)}
-                                disabled={
-                                  !draft?.hasChanges ||
-                                  savingStates[product._pid]
-                                }
-                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
-                                  savingStates[product._pid]
-                                    ? "bg-blue-400 text-white cursor-not-allowed"
-                                    : draft?.hasChanges
-                                      ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
-                                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                }`}
-                              >
-                                {savingStates[product._pid] ? (
-                                  <>
-                                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
-                                    Saving...
-                                  </>
-                                ) : (
-                                  <>
-                                    <Save className="w-[0.75vw] h-[0.75vw]" />
-                                    Save
-                                  </>
+                              <div className="flex items-center justify-center gap-[0.35vw]">
+                                <button
+                                  onClick={() => saveRow(entry, product, draft)}
+                                  disabled={
+                                    !draft?.hasChanges ||
+                                    savingStates[product._pid]
+                                  }
+                                  className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                    savingStates[product._pid]
+                                      ? "bg-blue-400 text-white cursor-not-allowed"
+                                      : draft?.hasChanges
+                                        ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
+                                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                  }`}
+                                >
+                                  {savingStates[product._pid] ? (
+                                    <>
+                                      <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                      Saving...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Save className="w-[0.75vw] h-[0.75vw]" />
+                                      Save
+                                    </>
+                                  )}
+                                </button>
+                                {canUnclaim && (
+                                  <button
+                                    onClick={() => unclaimProduct(entry.id, product._pid)}
+                                    disabled={unclaimingStates[product._pid]}
+                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-sm cursor-pointer"
+                                    title="Unclaim item and return to open queue"
+                                  >
+                                    {unclaimingStates[product._pid] ? (
+                                      <Loader2 className="w-[0.65vw] h-[0.65vw] animate-spin text-rose-600" />
+                                    ) : (
+                                      <Undo2 className="w-[0.65vw] h-[0.65vw]" />
+                                    )}
+                                    <span>Unclaim</span>
+                                  </button>
                                 )}
-                              </button>
+                              </div>
+                            ) : isClaimedByMe && isProductCompleted ? (
+                              <div className="flex items-center justify-center gap-[0.4vw]">
+                                <span
+                                  className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
+                                >
+                                  <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
+                                  {pStatus}
+                                </span>
+                                <button
+                                  onClick={() => {
+                                    setEditReportModal({
+                                      entry,
+                                      product,
+                                      draft: { ...getDraft(product._pid, product) },
+                                    });
+                                    setEditReason("");
+                                  }}
+                                  className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer"
+                                  title="Edit Completed Report"
+                                >
+                                  <Edit3 className="w-[0.65vw] h-[0.65vw]" />
+                                  <span>Edit</span>
+                                </button>
+                              </div>
                             ) : !product.assignedTo ? (
                               <ClaimButton
                                 onClaim={() =>
@@ -3347,30 +3436,30 @@ export default function ServiceMaterialInwardResponse({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[35vw] max-h-[85vh] flex flex-col overflow-hidden"
+              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] max-h-[85vh] flex flex-col overflow-hidden"
             >
               {/* Header */}
-              <div className="px-[1.5vw] py-[1.2vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+              <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1vw] font-semibold text-gray-900 flex items-center gap-[0.4vw]">
-                    <Clock className="w-[1.2vw] h-[1.2vw] text-blue-600" />
-                    Status History
+                  <h3 className="text-[1.05vw] font-bold text-slate-900 flex items-center gap-[0.45vw]">
+                    <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
+                    Status & Edit History
                   </h3>
-                  <p className="text-[0.7vw] text-gray-500 font-medium mt-[0.2vw]">
+                  <p className="text-[0.74vw] text-slate-600 font-medium mt-[0.15vw]">
                     {historySelected.product.productDescription} (
-                    {historySelected.product.serialNumber})
+                    <span className="font-mono font-semibold text-slate-800">{historySelected.product.serialNumber}</span>)
                   </p>
                 </div>
                 <button
                   onClick={() => setHistorySelected(null)}
-                  className="p-[0.4vw] rounded-full hover:bg-slate-200 text-gray-400 hover:text-gray-700 transition-all cursor-pointer"
+                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-[1.05vw] h-[1.05vw]" />
                 </button>
               </div>
 
               {/* Timeline Area */}
-              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.5vw]">
+              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-[#f8fafd]">
                 {(() => {
                   const empHistory =
                     historySelected.product.report?.history || [];
@@ -3411,9 +3500,18 @@ export default function ServiceMaterialInwardResponse({
                   // Add general inward edit history entries if relevant to this product
                   const inwardEdits = historySelected.entry.editHistory || [];
                   inwardEdits.forEach((ie) => {
-                    const relevantDiffs = (ie.diffs || []).filter(
-                      (d) => d.field.includes(historySelected.product.productCode || "") || d.field.includes("Product")
-                    );
+                    const relevantDiffs = (ie.diffs || []).filter((d) => {
+                      const f = d.field || "";
+                      const prodDesc = historySelected.product.productDescription || "";
+                      const prodCode = historySelected.product.productCode || "";
+                      const serial = historySelected.product.serialNumber || "";
+                      return (
+                        (prodDesc && f.includes(prodDesc)) ||
+                        (prodCode && f.includes(prodCode)) ||
+                        (serial && f.includes(serial)) ||
+                        (!f.includes("Product (") && !f.includes("Product 1") && !f.includes("Product 2") && !f.includes("Product 3") && !f.includes("Product 4") && !f.includes("Product 5") && !f.includes("Product 6") && !f.includes("Product 7"))
+                      );
+                    });
                     if (relevantDiffs.length > 0) {
                       timeline.push({
                         type: "closureEdit",
@@ -3427,7 +3525,7 @@ export default function ServiceMaterialInwardResponse({
                     }
                   });
 
-                  // Sort timeline chronologically (oldest to newest)
+                  // Sort timeline chronologically (newest first like modern audit feeds)
                   timeline.sort((a, b) => {
                     const tA = a.timestamp
                       ? new Date(a.timestamp).getTime()
@@ -3435,108 +3533,92 @@ export default function ServiceMaterialInwardResponse({
                     const tB = b.timestamp
                       ? new Date(b.timestamp).getTime()
                       : 0;
-                    return tA - tB;
+                    return tB - tA;
                   });
 
                   if (timeline.length === 0) {
                     return (
-                      <div className="text-center py-[2vw] text-gray-400 italic text-[0.75vw]">
-                        No status history recorded yet.
+                      <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-500">
+                        <Info className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
+                        <span className="text-[0.82vw] font-semibold text-slate-700">No status history recorded yet.</span>
                       </div>
                     );
                   }
 
                   return (
-                    <div className="relative pl-[1.5vw] border-l-2 border-blue-100 ml-[0.6vw] space-y-[1.5vw] py-[0.5vw]">
+                    <div className="relative pl-[1.8vw] space-y-[0.85vw]">
+                      {/* Vertical timeline line precisely positioned */}
+                      <div className="absolute left-[0.6vw] -translate-x-1/2 top-[0.5vw] bottom-[0.5vw] w-[2px] bg-slate-200 pointer-events-none" />
+
                       {timeline.map((item, index) => {
-                        let cfg =
-                          STATUS_CONFIG[item.status] || STATUS_CONFIG["Open"];
                         let label = item.status;
                         let remarkText =
                           item.remark || item.currentRemark || "";
 
+                        let dotColor = "bg-indigo-600";
+                        let pillClass = "bg-indigo-50 text-indigo-800 border-indigo-200";
+
                         if (item.type === "closureEdit") {
-                          cfg = {
-                            icon: Edit3,
-                            bg: "bg-purple-50 text-purple-700 border-purple-300",
-                            border: "border-purple-300",
-                            text: "text-purple-800",
-                          };
+                          dotColor = "bg-purple-600";
+                          pillClass = "bg-purple-50 text-purple-800 border-purple-200";
                           label = `${item.status} (${item.role || "User"}: ${item.adminName || "—"})`;
                         } else if (item.type === "admin") {
                           if (item.status === "Approved") {
-                            cfg = {
-                              icon: CheckCircle,
-                              bg: "bg-green-50 text-green-700 border-green-300",
-                              border: "border-green-300",
-                              text: "text-green-800",
-                            };
+                            dotColor = "bg-emerald-600";
+                            pillClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
                           } else {
-                            cfg = {
-                              icon: AlertTriangle,
-                              bg: "bg-amber-50 text-amber-700 border-amber-300",
-                              border: "border-amber-300",
-                              text: "text-amber-800",
-                            };
+                            dotColor = "bg-amber-600";
+                            pillClass = "bg-amber-50 text-amber-800 border-amber-200";
                           }
                           label = item.adminName
                             ? `${item.status} → ${item.adminName}`
                             : item.status;
                         } else {
-                          // Normal report status styling
                           const itemStatus = item.status || "Open";
                           const baseCfg =
                             STATUS_CONFIG[itemStatus] || STATUS_CONFIG["Open"];
-                          cfg = {
-                            icon: baseCfg.icon,
-                            bg: `${baseCfg.bg} ${baseCfg.text} ${baseCfg.border}`,
-                            border: baseCfg.border,
-                            text: baseCfg.text,
-                          };
+                          pillClass = `${baseCfg.bg} ${baseCfg.text} ${baseCfg.border}`;
+                          if (itemStatus === "Completed") dotColor = "bg-emerald-600";
+                          else if (itemStatus.includes("Progress") || itemStatus.includes("Testing")) dotColor = "bg-blue-600";
+                          else dotColor = "bg-slate-500";
                         }
 
-                        const Icon = cfg.icon || Clock;
-
                         return (
-                          <div key={index} className="relative">
-                            {/* Timeline Node Icon */}
+                          <div key={index} className="relative group">
+                            {/* Dot precisely in the timeline line */}
                             <div
-                              className={`absolute -left-[2.15vw] top-[0.1vw] w-[1.2vw] h-[1.2vw] rounded-full border-2 border-white flex items-center justify-center shadow-sm ${cfg.bg}`}
-                            >
-                              <Icon className="w-[0.7vw] h-[0.7vw]" />
-                            </div>
+                              className={`absolute -left-[1.8vw] top-[0.6vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                            />
 
                             {/* Card Content */}
-                            <div className="bg-slate-50 rounded-[0.5vw] p-[0.8vw] border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                            <div className="bg-white rounded-[0.6vw] p-[0.85vw] border border-slate-200 shadow-2xs hover:shadow-xs transition-shadow">
                               <div className="flex items-center justify-between gap-[0.5vw]">
-                                <div className="flex items-center gap-[0.4vw]">
-                                  <span
-                                    className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.72vw] font-bold tracking-wider border ${cfg.bg}`}
-                                  >
-                                    {label}
-                                  </span>
-                                </div>
-                                <span className="text-[0.68vw] text-slate-500 font-bold whitespace-nowrap">
+                                <span
+                                  className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-bold tracking-wide border ${pillClass}`}
+                                >
+                                  {label}
+                                </span>
+                                <span className="text-[0.68vw] text-slate-600 font-mono font-medium whitespace-nowrap">
                                   {(() => {
                                     const dt = new Date(item.timestamp);
-                                    const dStr = dt.toLocaleDateString("en-GB"); // dd/mm/yyyy
+                                    if (isNaN(dt.getTime())) return item.timestamp || "—";
+                                    const dStr = dt.toLocaleDateString("en-GB");
                                     const tStr = dt
                                       .toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                         hour12: true,
                                       })
-                                      .toLowerCase()
-                                      .replace(/\s+/g, "");
+                                      .toLowerCase();
                                     return `${dStr}, ${tStr}`;
                                   })()}
                                 </span>
                               </div>
 
                               {remarkText && (
-                                <div className="mt-[0.6vw]">
-                                  <p className="text-[0.8vw] text-slate-800 font-semibold break-words leading-relaxed">
-                                    <span className="text-[0.75vw] font-bold text-slate-400 mr-[0.4vw]">
+                                <div className="mt-[0.5vw] bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.45vw]">
+                                  <p className="text-[0.76vw] text-slate-800 leading-relaxed font-normal">
+                                    <span className="font-semibold text-slate-700 mr-[0.35vw]">
                                       Remark:
                                     </span>
                                     {remarkText}
@@ -3545,23 +3627,55 @@ export default function ServiceMaterialInwardResponse({
                               )}
 
                               {item.diffs && item.diffs.length > 0 && (
-                                <div className="mt-[0.5vw] p-[0.5vw] bg-white rounded-[0.4vw] border border-purple-100 text-[0.72vw]">
-                                  <span className="font-bold text-purple-700 block mb-[0.2vw]">
-                                    Field Changes:
-                                  </span>
-                                  <div className="space-y-[0.2vw]">
+                                <div className="mt-[0.6vw] bg-white rounded-[0.45vw] border border-purple-200 shadow-2xs overflow-hidden">
+                                  <div className="bg-purple-50/70 px-[0.6vw] py-[0.3vw] border-b border-purple-100 flex items-center justify-between text-[0.72vw]">
+                                    <span className="font-bold text-purple-900 flex items-center gap-[0.35vw]">
+                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-600" />
+                                      Changed Fields ({item.diffs.length})
+                                    </span>
+                                    {item.remark && (
+                                      <span className="font-medium text-slate-600 text-[0.68vw]">
+                                        Reason: <span className="text-slate-800">{item.remark}</span>
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <div className="p-[0.5vw] space-y-[0.35vw]">
                                     {item.diffs.map((d, di) => (
-                                      <div key={di} className="flex items-center gap-[0.4vw] flex-wrap text-slate-600">
-                                        <span className="font-semibold text-slate-800 bg-slate-100 px-[0.3vw] py-[0.05vw] rounded">
+                                      <div
+                                        key={di}
+                                        className="text-[0.74vw] bg-slate-50/80 rounded-[0.35vw] p-[0.45vw] border border-slate-200/70"
+                                      >
+                                        <div className="font-bold text-slate-700 text-[0.7vw] mb-[0.2vw]">
                                           {d.field}
-                                        </span>
-                                        <span className="text-red-500 line-through">
-                                          {d.originalValue || "—"}
-                                        </span>
-                                        <span className="text-slate-400">→</span>
-                                        <span className="text-emerald-600 font-semibold">
-                                          {d.editedValue || "—"}
-                                        </span>
+                                        </div>
+
+                                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
+                                          {/* Previous Value */}
+                                          <div className="bg-white rounded-[0.3vw] px-[0.45vw] py-[0.3vw] border border-rose-200/80 bg-rose-50/30">
+                                            <div className="text-[0.6vw] font-bold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                              Previous
+                                            </div>
+                                            <div className="text-rose-700 font-medium text-[0.72vw] line-through break-words">
+                                              {d.originalValue || "—"}
+                                            </div>
+                                          </div>
+
+                                          {/* Arrow Indicator */}
+                                          <div className="text-slate-400 font-bold text-[0.75vw] px-[0.1vw]">
+                                            →
+                                          </div>
+
+                                          {/* Updated Value */}
+                                          <div className="bg-emerald-50/40 rounded-[0.3vw] px-[0.45vw] py-[0.3vw] border border-emerald-200/80">
+                                            <div className="text-[0.6vw] font-bold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                              Updated
+                                            </div>
+                                            <div className="text-emerald-900 font-semibold text-[0.72vw] break-words">
+                                              {d.editedValue || "—"}
+                                            </div>
+                                          </div>
+                                        </div>
                                       </div>
                                     ))}
                                   </div>
@@ -3577,12 +3691,13 @@ export default function ServiceMaterialInwardResponse({
               </div>
 
               {/* Footer */}
-              <div className="p-[1vw] border-t border-slate-200 bg-slate-50 text-right">
+              <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
                 <button
+                  type="button"
                   onClick={() => setHistorySelected(null)}
-                  className="px-[1.5vw] py-[0.5vw] bg-gray-800 text-white rounded-[0.4vw] font-semibold text-[0.8vw] cursor-pointer hover:bg-gray-700 transition-all"
+                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
-                  Close History
+                  Close
                 </button>
               </div>
             </motion.div>
