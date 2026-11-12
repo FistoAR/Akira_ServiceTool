@@ -707,53 +707,6 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     return counts;
   }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter]);
 
-  // Comprehensive Quantity Summary across active filtered inward sets
-  const quantityStats = useMemo(() => {
-    let receivedQty = 0;
-    let claimedInProgressQty = 0;
-    let dispatchedQty = 0; // Completed & Approved
-    let reviewRequiredQty = 0;
-    let openQty = 0;
-
-    filteredProducts.forEach(({ product }) => {
-      const q = Math.max(1, Number(product.qty) || 1);
-      receivedQty += q;
-
-      const rawStatus = product.status || product.report?.status || "Open";
-      const isCompletedAndApproved = rawStatus === "Completed" && product.finalStatus === "Completed";
-      const isReviewRequired = rawStatus === "Completed" && product.finalStatus !== "Completed";
-
-      if (isCompletedAndApproved) {
-        dispatchedQty += q;
-      } else if (isReviewRequired) {
-        reviewRequiredQty += q;
-        claimedInProgressQty += q;
-      } else if (
-        product.assignedTo ||
-        rawStatus === "Assigned" ||
-        rawStatus === "Repair in Progress" ||
-        rawStatus === "Under Testing" ||
-        rawStatus === "Pending" ||
-        rawStatus === "Hold"
-      ) {
-        claimedInProgressQty += q;
-      } else {
-        openQty += q;
-      }
-    });
-
-    const balanceQty = Math.max(0, receivedQty - dispatchedQty);
-
-    return {
-      receivedQty,
-      dispatchedQty,
-      balanceQty,
-      claimedInProgressQty,
-      reviewRequiredQty,
-      openQty,
-    };
-  }, [filteredProducts]);
-
   // Filtered Products List
   const filteredProducts = useMemo(() => {
     return allProducts.filter(({ entry, product }) => {
@@ -812,6 +765,53 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       return true;
     });
   }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, activeStatusTab]);
+
+  // Comprehensive Quantity Summary across active filtered inward sets
+  const quantityStats = useMemo(() => {
+    let receivedQty = 0;
+    let claimedInProgressQty = 0;
+    let dispatchedQty = 0; // Completed & Approved
+    let reviewRequiredQty = 0;
+    let openQty = 0;
+
+    filteredProducts.forEach(({ product }) => {
+      const q = Math.max(1, Number(product.qty) || 1);
+      receivedQty += q;
+
+      const rawStatus = product.status || product.report?.status || "Open";
+      const isCompletedAndApproved = rawStatus === "Completed" && product.finalStatus === "Completed";
+      const isReviewRequired = rawStatus === "Completed" && product.finalStatus !== "Completed";
+
+      if (isCompletedAndApproved) {
+        dispatchedQty += q;
+      } else if (isReviewRequired) {
+        reviewRequiredQty += q;
+        claimedInProgressQty += q;
+      } else if (
+        product.assignedTo ||
+        rawStatus === "Assigned" ||
+        rawStatus === "Repair in Progress" ||
+        rawStatus === "Under Testing" ||
+        rawStatus === "Pending" ||
+        rawStatus === "Hold"
+      ) {
+        claimedInProgressQty += q;
+      } else {
+        openQty += q;
+      }
+    });
+
+    const balanceQty = Math.max(0, receivedQty - dispatchedQty);
+
+    return {
+      receivedQty,
+      dispatchedQty,
+      balanceQty,
+      claimedInProgressQty,
+      reviewRequiredQty,
+      openQty,
+    };
+  }, [filteredProducts]);
 
   // Employee Assignment Summary Data (for View 2: Employee Assignment Report)
   const employeeSummaryData = useMemo(() => {
