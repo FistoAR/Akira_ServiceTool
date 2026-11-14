@@ -12,6 +12,7 @@ import {
   ScanBarcode
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const COLUMN_FIELDS = [
   "productDescription",
@@ -152,6 +153,13 @@ const EditableProductTable = ({
         (p.itemCode && p.itemCode.toLowerCase().includes(s))
     );
   }, [productsForCustomer, searchTerm]);
+
+  const boardTypeOptions = useMemo(() => {
+    return (boardTypes || []).map((bt) => {
+      const val = typeof bt === "string" ? bt : (bt.name || bt.label || bt.value || "");
+      return { value: val, label: val };
+    });
+  }, [boardTypes]);
 
   const onDragEnd = (result) => {
     if (!result.destination || isReadOnly) return;
@@ -581,17 +589,20 @@ const EditableProductTable = ({
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
-                          <select
+                          <CustomDropdown
                             value={prod.boardType || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "boardType", e.target.value)}
+                            onChange={(val) => handleUpdate(prod._pid, "boardType", val)}
                             disabled={isRowDisabled}
-                            className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent text-[0.78vw] ${isRowDisabled ? "cursor-not-allowed text-slate-500" : "cursor-pointer"}`}
-                          >
-                            <option value="">Select</option>
-                            {boardTypes.map(bt => (
-                              <option key={bt.id || bt._id} value={bt.name}>{bt.name}</option>
-                            ))}
-                          </select>
+                            placeholder="Select"
+                            size="sm"
+                            options={boardTypeOptions}
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isRowDisabled
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
                           {renderFillHandle(index, 2)}
                         </td>
 
