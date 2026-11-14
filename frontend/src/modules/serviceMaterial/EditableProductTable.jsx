@@ -605,9 +605,31 @@ const EditableProductTable = ({
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
                               disabled={!prod.serialNumber || (isReadOnly && !allowPartialEdit)} 
                               title={!prod.serialNumber ? "Enter Serial Number first" : ""}
-                              className="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.4vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-400 text-[0.76vw]" 
+                              className="no-native-calendar w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.6vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-400 text-[0.76vw]" 
                             />
-                            <Calendar className={`w-[0.8vw] h-[0.8vw] absolute right-[0.3vw] pointer-events-none ${!prod.serialNumber ? "text-gray-300" : "text-gray-700"}`} />
+                            <button
+                              type="button"
+                              tabIndex={-1}
+                              disabled={!prod.serialNumber || (isReadOnly && !allowPartialEdit)}
+                              onClick={(e) => {
+                                const input = e.currentTarget.parentElement?.querySelector('input[type="date"]');
+                                if (input) {
+                                  try {
+                                    input.showPicker();
+                                  } catch {
+                                    input.focus();
+                                  }
+                                }
+                              }}
+                              className={`absolute right-[0.3vw] p-[0.1vw] flex items-center justify-center rounded-[0.2vw] transition-colors ${
+                                !prod.serialNumber || (isReadOnly && !allowPartialEdit)
+                                  ? "text-gray-300 cursor-not-allowed"
+                                  : "text-gray-600 hover:text-blue-600 cursor-pointer"
+                              }`}
+                              title={!prod.serialNumber ? "Enter Serial Number first" : "Choose Date"}
+                            >
+                              <Calendar className="w-[0.8vw] h-[0.8vw]" />
+                            </button>
                           </div>
                           {renderFillHandle(index, 5)}
                         </td>
