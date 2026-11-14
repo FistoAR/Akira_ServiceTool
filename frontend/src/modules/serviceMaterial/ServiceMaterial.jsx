@@ -2037,12 +2037,12 @@ const AdminTableView = ({
                   // ── CUSTOMER HEADER ROW ──────────────────────────────────
                   <tr
                     key={`cust-${customerName}`}
-                    className="cursor-pointer select-none border-b border-slate-300 bg-[#e2e8f0] hover:bg-[#cbd5e1] transition-colors sticky top-[3.6vw] z-30 shadow-xs"
+                    className="cursor-pointer select-none border-b border-slate-300 bg-[#EEF2F6] hover:bg-[#E2E8F0] transition-colors sticky top-[3.6vw] z-30 shadow-xs"
                     onClick={() => toggleCustomer(customerName)}
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.18vw] border-[#1a73e8] bg-[#e2e8f0] border-b border-slate-300"
+                      className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
                     >
                       <div className="flex items-center gap-[0.5vw]">
                         {isCustomerCollapsed ? (
@@ -2159,12 +2159,12 @@ const AdminTableView = ({
                             className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
                               isSelected
                                 ? "bg-[#e0f2fe]"
-                                : "bg-[#f8fafc] hover:bg-[#f1f5f9]"
+                                : "bg-[#F8FAFC] hover:bg-[#F1F5F9]"
                             }`}
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
+                                className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F8FAFC]"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -2193,7 +2193,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
+                              className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F8FAFC]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -2202,7 +2202,7 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#f8fafc]"}`}
+                              className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F8FAFC]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               <div className="flex items-center gap-[0.6vw] flex-wrap">
