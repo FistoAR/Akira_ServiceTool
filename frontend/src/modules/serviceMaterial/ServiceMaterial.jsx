@@ -2279,13 +2279,13 @@ const AdminTableView = ({
                                     >
                                       <Eye className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
-                                  ) : row.products?.some(
+                                  ) : row.products?.every(
                                       (p) => !!p.assignedTo,
                                     ) ? (
                                     <button
                                       type="button"
                                       onClick={() => onView(row)}
-                                      title="View (assigned)"
+                                      title="View (all assigned)"
                                       className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Eye className="w-[0.8vw] h-[0.8vw]" />
@@ -2294,7 +2294,7 @@ const AdminTableView = ({
                                     <button
                                       type="button"
                                       onClick={() => onEdit(row)}
-                                      title="Edit"
+                                      title="Edit (unclaimed records)"
                                       className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Edit3 className="w-[0.8vw] h-[0.8vw]" />

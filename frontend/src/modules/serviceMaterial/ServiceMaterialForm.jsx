@@ -694,15 +694,7 @@ const ServiceMaterialForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const hasExpDateChanges =
-      isReadOnly &&
-      products.some(
-        (p) =>
-          p.expectedDeliveryDate !==
-          (initialData.products?.find((ip) => ip._pid === p._pid)
-            ?.expectedDeliveryDate || ""),
-      );
-    if (isReadOnly && !hasExpDateChanges) {
+    if (isReadOnly) {
       onBack();
       return;
     }
@@ -846,9 +838,7 @@ const ServiceMaterialForm = ({
           </button>
           <h2 className="text-[1.05vw] font-semibold text-slate-800">
             {isReadOnly
-              ? initialData.products?.some((p) => p.expectedDeliveryDate === "")
-                ? "Update Inward Entry"
-                : "View Inward Entry"
+              ? "View Inward Entry"
               : isEdit
                 ? "Edit Inward Entry"
                 : "New Service Material Inward"}
@@ -856,9 +846,7 @@ const ServiceMaterialForm = ({
           {isReadOnly && (
             <span className="text-[0.74vw] bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.15vw] rounded-full flex items-center gap-[0.3vw] font-semibold">
               <Eye className="w-[0.85vw] h-[0.85vw]" />
-              {initialData.products?.some((p) => p.expectedDeliveryDate === "")
-                ? "Partial Edit Mode — Exp. Delivery Date"
-                : "Read Only Mode"}
+              Read Only Mode
             </span>
           )}
           {!isReadOnly && !isEdit && products.length > 1 && (
@@ -1189,34 +1177,17 @@ const ServiceMaterialForm = ({
             className="px-[1.4vw] h-[2.2vw] border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
           >
             <X className="w-[0.9vw] h-[0.9vw]" />
-            <span>
-              {isReadOnly &&
-              !products.some(
-                (p) =>
-                  p.expectedDeliveryDate !==
-                  (initialData.products?.find((ip) => ip._pid === p._pid)
-                    ?.expectedDeliveryDate || ""),
-              )
-                ? "Close"
-                : "Cancel"}
-            </span>
+            <span>{isReadOnly ? "Close" : "Cancel"}</span>
           </button>
-          {(isEdit ? canUpdate : canWrite) &&
-            (!isReadOnly ||
-              products.some(
-                (p) =>
-                  p.expectedDeliveryDate !==
-                  (initialData.products?.find((ip) => ip._pid === p._pid)
-                    ?.expectedDeliveryDate || ""),
-              )) && (
-              <button
-                type="submit"
-                className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.78vw] shadow-sm hover:shadow transition-all"
-              >
-                <Save className="w-[0.9vw] h-[0.9vw]" />
-                <span>{isEdit || isReadOnly ? "Update Entry" : "Register Inward"}</span>
-              </button>
-            )}
+          {!isReadOnly && (isEdit ? canUpdate : canWrite) && (
+            <button
+              type="submit"
+              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.78vw] shadow-sm hover:shadow transition-all"
+            >
+              <Save className="w-[0.9vw] h-[0.9vw]" />
+              <span>{isEdit ? "Update Entry" : "Register Inward"}</span>
+            </button>
+          )}
         </div>
       </form>
 
