@@ -280,7 +280,11 @@ const EditableProductTable = ({
 
   const handleFillHandleMouseDown = (e) => {
     if (isReadOnly) return;
+    e.preventDefault();
     e.stopPropagation();
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+    }
     setIsFilling(true);
   };
 
@@ -347,8 +351,25 @@ const EditableProductTable = ({
   };
 
   useEffect(() => {
+    if (isFilling) {
+      document.body.style.userSelect = 'none';
+      document.body.style.webkitUserSelect = 'none';
+    } else {
+      document.body.style.userSelect = '';
+      document.body.style.webkitUserSelect = '';
+    }
+    return () => {
+      document.body.style.userSelect = '';
+      document.body.style.webkitUserSelect = '';
+    };
+  }, [isFilling]);
+
+  useEffect(() => {
     const handleWindowMouseMove = (e) => {
       if (isFilling && selection && tableContainerRef.current) {
+        if (window.getSelection) {
+          window.getSelection().removeAllRanges();
+        }
         if (e.clientY > window.innerHeight - 60) {
           window.scrollBy(0, 15);
         }
@@ -427,7 +448,7 @@ const EditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className="w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[2vw]"
+      className={`w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[2vw] ${isFilling ? "select-none" : ""}`}
     >
       <table className="w-full border-collapse text-[0.8vw]">
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
