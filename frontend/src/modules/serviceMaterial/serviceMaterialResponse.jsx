@@ -1974,28 +1974,144 @@ export default function ServiceMaterialInwardResponse({
               )}
             </div>
 
-            {/* More Filters Toggle Button (wraps Unclaimed, Unsaved, and Dates) */}
-            <button
-              type="button"
-              onClick={() => setShowFiltersPanel((p) => !p)}
-              className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm flex-shrink-0 ${
-                showFiltersPanel || (dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved)
-                  ? "bg-blue-50 border-blue-300 text-blue-700 shadow-blue-50"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-              }`}
-              title="Toggle Date and Status Filters"
-            >
-              <Filter className="w-[0.8vw] h-[0.8vw] text-blue-600" />
-              <span>Filters</span>
-              {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
-                <span className="w-[0.42vw] h-[0.42vw] rounded-full bg-blue-600 animate-pulse" />
-              )}
-              <ChevronDown
-                className={`w-[0.75vw] h-[0.75vw] text-slate-400 transition-transform duration-200 ${
-                  showFiltersPanel ? "rotate-180 text-blue-600" : ""
+            {/* Filters Popover Button (Popup View) */}
+            <div className="relative flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowFiltersPanel((p) => !p)}
+                className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
+                  showFiltersPanel || (dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved)
+                    ? "bg-blue-50 border-blue-300 text-blue-700 shadow-blue-50"
+                    : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                 }`}
-              />
-            </button>
+                title="Filter by date range and status"
+              >
+                <Filter className="w-[0.8vw] h-[0.8vw] text-blue-600" />
+                <span>Filters</span>
+                {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
+                  <span className="w-[0.42vw] h-[0.42vw] rounded-full bg-blue-600 animate-pulse" />
+                )}
+                <ChevronDown
+                  className={`w-[0.75vw] h-[0.75vw] text-slate-400 transition-transform duration-200 ${
+                    showFiltersPanel ? "rotate-180 text-blue-600" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Popup View Popover */}
+              {showFiltersPanel && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowFiltersPanel(false)}
+                  />
+                  <div className="absolute left-0 top-full mt-[0.4vw] w-[18vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.7vw] animate-in fade-in zoom-in-95 duration-100">
+                    {/* Date Range */}
+                    <div>
+                      <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.25vw]">
+                        Date Range
+                      </label>
+                      <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[2vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
+                        <input
+                          type="date"
+                          value={dateFrom}
+                          onChange={(e) => setDateFrom(e.target.value)}
+                          className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                        />
+                        <span className="text-slate-400 mx-[0.25vw] shrink-0">—</span>
+                        <input
+                          type="date"
+                          value={dateTo}
+                          min={dateFrom}
+                          onChange={(e) => setDateTo(e.target.value)}
+                          className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Quick Views */}
+                    <div>
+                      <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.3vw]">
+                        Quick Views
+                      </label>
+                      {filterStatus === "All" ? (
+                        <div className="flex flex-col gap-[0.4vw]">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowOnlyUnclaimed((prev) => !prev);
+                              if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
+                            }}
+                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.72vw] font-semibold cursor-pointer transition-all ${
+                              showOnlyUnclaimed
+                                ? "bg-blue-600 border-blue-600 text-white shadow-xs"
+                                : "bg-slate-50/80 border-slate-200 text-slate-700 hover:bg-slate-100"
+                            }`}
+                          >
+                            <div
+                              className={`w-[0.45vw] h-[0.45vw] rounded-full ${
+                                showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-slate-400"
+                              }`}
+                            />
+                            <span>Unclaimed Records Only</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowOnlyUnsaved((prev) => !prev);
+                              if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
+                            }}
+                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.72vw] font-semibold cursor-pointer transition-all ${
+                              showOnlyUnsaved
+                                ? "bg-blue-600 border-blue-600 text-white shadow-xs"
+                                : "bg-slate-50/80 border-slate-200 text-slate-700 hover:bg-slate-100"
+                            }`}
+                          >
+                            <div
+                              className={`w-[0.45vw] h-[0.45vw] rounded-full ${
+                                showOnlyUnsaved ? "bg-white animate-pulse" : "bg-slate-400"
+                              }`}
+                            />
+                            <span>Unsaved Records Only</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-[0.68vw] text-slate-400 italic bg-slate-50 p-[0.4vw] rounded-[0.3vw] border border-slate-200">
+                          Quick views available on 'All' tab
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Reset All Filters Button */}
+                    {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
+                      <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDateFrom("");
+                            setDateTo("");
+                            setShowOnlyUnclaimed(false);
+                            setShowOnlyUnsaved(false);
+                          }}
+                          className="inline-flex items-center gap-[0.25vw] text-[0.7vw] font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer py-[0.1vw]"
+                        >
+                          <X className="w-[0.7vw] h-[0.7vw]" />
+                          <span>Reset Filters</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowFiltersPanel(false)}
+                          className="px-[0.65vw] py-[0.25vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.7vw] rounded-[0.3vw] cursor-pointer shadow-2xs"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Quick Active Filter Badges */}
             <div className="flex items-center gap-[0.3vw] flex-wrap overflow-hidden">
@@ -2041,126 +2157,6 @@ export default function ServiceMaterialInwardResponse({
             </div>
           </div>
         </div>
-
-        {/* Collapsible Filters Tray (shown below button when clicked) */}
-        <AnimatePresence>
-          {showFiltersPanel && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden border-t border-slate-100 mt-[0.45vw] pt-[0.45vw]"
-            >
-              <div className="flex items-center justify-between gap-[1vw] flex-wrap bg-slate-50/70 p-[0.6vw] rounded-[0.5vw] border border-slate-200/70">
-                {/* Left Side: Unsaved & Unclaimed Toggles */}
-                <div className="flex items-center gap-[0.6vw] flex-wrap">
-                  <span className="text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider">
-                    Quick Views:
-                  </span>
-                  {filterStatus === "All" ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowOnlyUnclaimed((prev) => !prev);
-                          if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
-                        }}
-                        className={`flex items-center gap-[0.3vw] px-[0.65vw] py-[0.35vw] rounded-[0.4vw] border text-[0.7vw] font-semibold cursor-pointer transition-all shadow-xs ${
-                          showOnlyUnclaimed
-                            ? "bg-blue-600 border-blue-600 text-white shadow-blue-200"
-                            : "bg-white border-slate-300 text-slate-700 hover:bg-slate-100"
-                        }`}
-                      >
-                        <div
-                          className={`w-[0.4vw] h-[0.4vw] rounded-full ${
-                            showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-slate-400"
-                          }`}
-                        />
-                        <span>Unclaimed Records Only</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowOnlyUnsaved((prev) => !prev);
-                          if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
-                        }}
-                        className={`flex items-center gap-[0.3vw] px-[0.65vw] py-[0.35vw] rounded-[0.4vw] border text-[0.7vw] font-semibold cursor-pointer transition-all shadow-xs ${
-                          showOnlyUnsaved
-                            ? "bg-blue-600 border-blue-600 text-white shadow-blue-200"
-                            : "bg-white border-slate-300 text-slate-700 hover:bg-slate-100"
-                        }`}
-                      >
-                        <div
-                          className={`w-[0.4vw] h-[0.4vw] rounded-full ${
-                            showOnlyUnsaved ? "bg-white animate-pulse" : "bg-slate-400"
-                          }`}
-                        />
-                        <span>Unsaved Records Only</span>
-                      </button>
-                    </>
-                  ) : (
-                    <span className="text-[0.68vw] text-slate-400 italic">
-                      (Available when 'All' tab is selected)
-                    </span>
-                  )}
-                </div>
-
-                {/* Right Side: Date Range Filter */}
-                <div className="flex items-center gap-[0.6vw] flex-wrap ml-auto">
-                  <span className="text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider">
-                    Date Range:
-                  </span>
-                  {/* From Date */}
-                  <div className="flex items-center gap-[0.3vw]">
-                    <span className="text-[0.68vw] font-semibold text-slate-600">From</span>
-                    <div className="relative">
-                      <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-slate-400 pointer-events-none" />
-                      <input
-                        type="date"
-                        value={dateFrom}
-                        onChange={(e) => setDateFrom(e.target.value)}
-                        className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-slate-300 rounded-[0.38vw] text-[0.68vw] font-medium text-slate-700 outline-none focus:border-blue-500 bg-white shadow-2xs w-[7.8vw]"
-                      />
-                    </div>
-                  </div>
-
-                  {/* To Date */}
-                  <div className="flex items-center gap-[0.3vw]">
-                    <span className="text-[0.68vw] font-semibold text-slate-600">To</span>
-                    <div className="relative">
-                      <Calendar className="absolute left-[0.35vw] top-1/2 -translate-y-1/2 w-[0.68vw] h-[0.68vw] text-slate-400 pointer-events-none" />
-                      <input
-                        type="date"
-                        value={dateTo}
-                        min={dateFrom}
-                        onChange={(e) => setDateTo(e.target.value)}
-                        className="pl-[1.4vw] pr-[0.3vw] py-[0.3vw] border border-slate-300 rounded-[0.38vw] text-[0.68vw] font-medium text-slate-700 outline-none focus:border-blue-500 bg-white shadow-2xs w-[7.8vw]"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Clear Date Filter Button */}
-                  {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDateFrom("");
-                        setDateTo("");
-                        setShowOnlyUnclaimed(false);
-                        setShowOnlyUnsaved(false);
-                      }}
-                      className="flex items-center gap-[0.2vw] px-[0.55vw] py-[0.3vw] rounded-[0.38vw] border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 text-[0.68vw] font-bold transition-all cursor-pointer shadow-2xs ml-[0.3vw]"
-                    >
-                      <X className="w-[0.65vw] h-[0.65vw]" /> Reset All
-                    </button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       {/* Header */}
