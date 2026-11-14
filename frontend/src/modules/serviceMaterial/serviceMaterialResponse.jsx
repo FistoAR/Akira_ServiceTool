@@ -1913,17 +1913,17 @@ export default function ServiceMaterialInwardResponse({
               )}
             </div>
 
-            {/* Multi-Serial Number Filter Button & Quick Display */}
-            <div className="flex items-center gap-[0.35vw] flex-shrink-0">
+            {/* Multi-Serial Number Filter Button (Anchored Popover) */}
+            <div className="relative flex-shrink-0">
               <button
                 type="button"
                 onClick={openSerialModal}
                 className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
-                  activeSerials.length > 0
+                  activeSerials.length > 0 || showSerialFilterModal
                     ? "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100"
                     : "bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50/60 hover:border-indigo-300"
                 }`}
-                title="Filter by multiple serial numbers (Batch / List / Paste)"
+                title="Filter by multiple serial numbers"
               >
                 <ListFilter className="w-[0.85vw] h-[0.85vw]" />
                 <span>Filter Serials</span>
@@ -1932,47 +1932,127 @@ export default function ServiceMaterialInwardResponse({
                     {activeSerials.length}
                   </span>
                 )}
+                <ChevronDown
+                  className={`w-[0.7vw] h-[0.7vw] transition-transform duration-200 ${
+                    showSerialFilterModal ? "rotate-180" : ""
+                  }`}
+                />
               </button>
 
-              {/* Show active serial chips for quick removal right in toolbar */}
-              {activeSerials.length > 0 && (
-                <div className="flex items-center gap-[0.25vw] max-w-[14vw] overflow-x-auto scrollbar-none py-[0.1vw]">
-                  {activeSerials.slice(0, 2).map((sn) => (
-                    <span
-                      key={sn}
-                      className="inline-flex items-center gap-[0.2vw] px-[0.4vw] py-[0.18vw] rounded-[0.3vw] bg-indigo-50 border border-indigo-200 text-indigo-800 text-[0.65vw] font-semibold shadow-2xs whitespace-nowrap"
-                    >
-                      <span>{sn}</span>
+              {/* Anchored Popover directly below the button */}
+              {showSerialFilterModal && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowSerialFilterModal(false)}
+                  />
+                  <div className="absolute left-0 top-full mt-[0.4vw] w-[19vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-[0.3vw]">
+                        <span className="text-[0.72vw] font-bold text-slate-800">
+                          Filter Serial Numbers
+                        </span>
+                        {tempSerialInput.trim() && (
+                          <span className="text-[0.62vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.35vw] py-[0.05vw] rounded">
+                            {
+                              tempSerialInput
+                                .split(/[,\s\n]+/)
+                                .map((s) => s.trim())
+                                .filter(Boolean).length
+                            }{" "}
+                            items
+                          </span>
+                        )}
+                      </div>
                       <button
                         type="button"
-                        onClick={() => removeSerialToken(sn)}
-                        className="text-indigo-400 hover:text-indigo-700 cursor-pointer ml-[0.1vw]"
-                        title={`Remove ${sn}`}
+                        onClick={() => setShowSerialFilterModal(false)}
+                        className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
                       >
-                        <X className="w-[0.55vw] h-[0.55vw]" />
+                        <X className="w-[0.75vw] h-[0.75vw]" />
                       </button>
-                    </span>
-                  ))}
-                  {activeSerials.length > 2 && (
-                    <button
-                      type="button"
-                      onClick={openSerialModal}
-                      className="text-[0.62vw] text-indigo-600 font-bold bg-indigo-50 px-[0.35vw] py-[0.18vw] rounded-[0.3vw] border border-indigo-200 hover:bg-indigo-100 cursor-pointer whitespace-nowrap"
-                    >
-                      +{activeSerials.length - 2} more
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={clearAllSerials}
-                    className="text-[0.62vw] text-red-500 hover:text-red-700 font-semibold px-[0.25vw] cursor-pointer whitespace-nowrap"
-                    title="Clear serial filter"
-                  >
-                    Clear
-                  </button>
-                </div>
+                    </div>
+
+                    <textarea
+                      rows={5}
+                      value={tempSerialInput}
+                      onChange={(e) => setTempSerialInput(e.target.value)}
+                      placeholder="Paste serial numbers (one per line, comma or space separated)"
+                      className="w-full p-[0.6vw] border border-slate-300 rounded-[0.4vw] text-[0.72vw] font-mono text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 resize-none shadow-2xs placeholder:font-sans placeholder:text-slate-400"
+                      autoFocus
+                    />
+
+                    <div className="flex items-center justify-between pt-[0.2vw] text-[0.68vw]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          clearAllSerials();
+                          setShowSerialFilterModal(false);
+                        }}
+                        className="text-slate-500 hover:text-rose-600 font-semibold cursor-pointer"
+                      >
+                        Clear All
+                      </button>
+                      <div className="flex items-center gap-[0.4vw]">
+                        <button
+                          type="button"
+                          onClick={() => setShowSerialFilterModal(false)}
+                          className="px-[0.65vw] py-[0.25vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-[0.3vw] cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={applySerialModal}
+                          className="px-[0.8vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-[0.3vw] cursor-pointer shadow-2xs"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
+
+            {/* Show active serial chips for quick removal right in toolbar */}
+            {activeSerials.length > 0 && (
+              <div className="flex items-center gap-[0.25vw] max-w-[14vw] overflow-x-auto scrollbar-none py-[0.1vw]">
+                {activeSerials.slice(0, 2).map((sn) => (
+                  <span
+                    key={sn}
+                    className="inline-flex items-center gap-[0.2vw] px-[0.4vw] py-[0.18vw] rounded-[0.3vw] bg-indigo-50 border border-indigo-200 text-indigo-800 text-[0.65vw] font-semibold shadow-2xs whitespace-nowrap"
+                  >
+                    <span>{sn}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeSerialToken(sn)}
+                      className="text-indigo-400 hover:text-indigo-700 cursor-pointer ml-[0.1vw]"
+                      title={`Remove ${sn}`}
+                    >
+                      <X className="w-[0.55vw] h-[0.55vw]" />
+                    </button>
+                  </span>
+                ))}
+                {activeSerials.length > 2 && (
+                  <button
+                    type="button"
+                    onClick={openSerialModal}
+                    className="text-[0.62vw] text-indigo-600 font-bold bg-indigo-50 px-[0.35vw] py-[0.18vw] rounded-[0.3vw] border border-indigo-200 hover:bg-indigo-100 cursor-pointer whitespace-nowrap"
+                  >
+                    +{activeSerials.length - 2} more
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={clearAllSerials}
+                  className="text-[0.62vw] text-red-500 hover:text-red-700 font-semibold px-[0.25vw] cursor-pointer whitespace-nowrap"
+                  title="Clear serial filter"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
 
             {/* Filters Popover Button (Popup View) */}
             <div className="relative flex-shrink-0">
@@ -3988,119 +4068,6 @@ export default function ServiceMaterialInwardResponse({
         )}
       </AnimatePresence>
 
-      {/* Multi-Serial Filter Modal */}
-      <AnimatePresence>
-        {showSerialFilterModal && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-[2px] flex items-center justify-center z-[70] p-[1vw]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[30vw] max-w-[500px] flex flex-col overflow-hidden"
-            >
-              {/* Modal Header */}
-              <div className="flex items-center justify-between px-[1.2vw] py-[0.9vw] bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-indigo-100">
-                <div className="flex items-center gap-[0.5vw]">
-                  <div className="w-[1.8vw] h-[1.8vw] rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-sm">
-                    <ListFilter className="w-[1vw] h-[1vw]" />
-                  </div>
-                  <div>
-                    <h3 className="text-[0.95vw] font-bold text-slate-900 leading-tight">
-                      Filter by Serial Numbers
-                    </h3>
-                    <p className="text-[0.68vw] text-slate-500 font-medium">
-                      Paste or enter multiple serial numbers to filter the records
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowSerialFilterModal(false)}
-                  className="w-[1.6vw] h-[1.6vw] rounded-full hover:bg-white text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer"
-                >
-                  <X className="w-[0.9vw] h-[0.9vw]" />
-                </button>
-              </div>
-
-              {/* Modal Body */}
-              <div className="p-[1.2vw] flex flex-col gap-[0.8vw]">
-                <div>
-                  <div className="flex items-center justify-between mb-[0.3vw]">
-                    <label className="text-[0.72vw] font-bold text-slate-700">
-                      Serial Numbers (one per line, comma or space separated)
-                    </label>
-                    {tempSerialInput.trim() && (
-                      <span className="text-[0.65vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.4vw] py-[0.1vw] rounded">
-                        {
-                          tempSerialInput
-                            .split(/[,\s\n]+/)
-                            .map((s) => s.trim())
-                            .filter(Boolean).length
-                        }{" "}
-                        detected
-                      </span>
-                    )}
-                  </div>
-                  <textarea
-                    rows={6}
-                    value={tempSerialInput}
-                    onChange={(e) => setTempSerialInput(e.target.value)}
-                    placeholder="Example:&#10;NB2326Jhjh&#10;CSF2326xJjkjh&#10;FGF2326xJjkjh"
-                    className="w-full p-[0.7vw] border border-slate-300 rounded-[0.5vw] text-[0.75vw] font-mono font-medium text-slate-800 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all resize-y shadow-inner placeholder:font-sans placeholder:text-slate-400"
-                    autoFocus
-                  />
-                  <p className="text-[0.65vw] text-slate-500 mt-[0.3vw]">
-                    Tip: You can copy a column of serial numbers directly from Excel or Google Sheets and paste here.
-                  </p>
-                </div>
-
-                {/* Quick actions inside modal */}
-                <div className="flex items-center justify-between pt-[0.4vw] border-t border-slate-100 text-[0.7vw]">
-                  <button
-                    type="button"
-                    onClick={() => setTempSerialInput("")}
-                    className="text-slate-500 hover:text-red-600 font-semibold flex items-center gap-[0.3vw] cursor-pointer"
-                  >
-                    <Trash2 className="w-[0.75vw] h-[0.75vw]" />
-                    <span>Clear text</span>
-                  </button>
-                  <span className="text-slate-400 text-[0.65vw]">
-                    Matching is case-insensitive
-                  </span>
-                </div>
-              </div>
-
-              {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-[0.6vw] px-[1.2vw] py-[0.8vw] bg-slate-50 border-t border-slate-200">
-                <button
-                  type="button"
-                  onClick={() => setShowSerialFilterModal(false)}
-                  className="px-[1.2vw] py-[0.45vw] bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-[0.4vw] font-semibold text-[0.75vw] cursor-pointer transition-all shadow-xs"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    clearAllSerials();
-                    setShowSerialFilterModal(false);
-                  }}
-                  className="px-[1vw] py-[0.45vw] bg-red-50 hover:bg-red-100 text-red-600 rounded-[0.4vw] font-semibold text-[0.75vw] cursor-pointer transition-all"
-                >
-                  Reset Filter
-                </button>
-                <button
-                  type="button"
-                  onClick={applySerialModal}
-                  className="px-[1.5vw] py-[0.45vw] bg-indigo-600 hover:bg-indigo-700 text-white rounded-[0.4vw] font-semibold text-[0.75vw] cursor-pointer transition-all shadow-sm"
-                >
-                  Apply Filter
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
       {/* In-App Document Preview Modal (for Image & PDF without navigating away) */}
       <AnimatePresence>
         {docPreviewModal && (
