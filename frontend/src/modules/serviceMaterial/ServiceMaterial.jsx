@@ -458,204 +458,246 @@ const BoardTypeMasterModal = ({ onClose }) => {
   );
 };
 
-// Product Report Modal
+// Product Report Modal (White Theme matching ServiceCall CallDetailsModal)
 const ProductReportModal = ({ product, onClose }) => {
   if (!product || !product.report) return null;
   const r = product.report;
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-[2vw]">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-[1.5vw] animate-in fade-in duration-200">
       <motion.div
-        initial={{ scale: 0.96, opacity: 0, y: 12 }}
+        initial={{ scale: 0.97, opacity: 0, y: 10 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.96, opacity: 0, y: 12 }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
-        className="bg-white w-[42vw] max-h-[85vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200"
+        exit={{ scale: 0.97, opacity: 0, y: 10 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="bg-white w-[46vw] max-w-[650px] max-h-[88vh] rounded-[1.2vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200/90 font-sans"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="bg-slate-900 px-[1.4vw] py-[1vw] flex justify-between items-center shadow-sm border-b border-slate-800">
-          <div className="flex items-center gap-[0.7vw]">
-            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
-              <FileText className="w-[1.1vw] h-[1.1vw] text-blue-400" />
+        {/* Header - White theme matching CallDetailsModal */}
+        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-[0.75vw]">
+            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
+              <FileText className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="font-semibold text-white text-[0.95vw] leading-tight">
-                Technical Report Details
-              </h3>
-              <p className="text-[0.68vw] text-slate-400 font-normal mt-[0.15vw] truncate max-w-[28vw]">
-                {product.productDescription || "Service Report"}
-              </p>
+              <div className="flex items-center gap-[0.45vw] flex-wrap">
+                <span className="font-medium text-[0.95vw] text-slate-900 tracking-tight">
+                  Technical Report Details
+                </span>
+                {r.disposition && (
+                  <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal border bg-emerald-50 text-emerald-700 border-emerald-200">
+                    <span className="w-[0.32vw] h-[0.32vw] rounded-full bg-emerald-500" />
+                    {r.disposition}
+                  </span>
+                )}
+                {product.type && (
+                  <span className="inline-flex items-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal border bg-blue-50 text-blue-700 border-blue-200">
+                    {product.type === "W" ? "Warranty" : "Paid"}
+                  </span>
+                )}
+              </div>
+              <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw] flex items-center gap-[0.3vw] truncate max-w-[30vw]">
+                <span>{product.productDescription || "Service Report"}</span>
+              </div>
             </div>
           </div>
+
           <button
+            type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white cursor-pointer transition-colors p-[0.35vw] rounded-[0.4vw] hover:bg-slate-800 border-0 bg-transparent"
+            className="p-[0.45vw] text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer border-0 bg-transparent"
+            title="Close modal"
           >
-            <X className="w-[1.1vw] h-[1.1vw]" />
+            <X className="w-[1.05vw] h-[1.05vw]" />
           </button>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.1vw] bg-slate-50/60">
-          {/* Metadata Cards */}
+        <div className="flex-1 overflow-y-auto p-[1.3vw] space-y-[1vw] bg-slate-50/50">
+          {/* 1. Product & Service Execution Cards */}
           <div className="grid grid-cols-2 gap-[0.9vw]">
             {/* Product Info Card */}
-            <div className="bg-white border border-slate-200/90 p-[0.85vw] rounded-[0.55vw] shadow-2xs flex flex-col justify-between">
-              <div>
-                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1vw] shadow-2xs space-y-[0.6vw]">
+              <div className="flex items-center justify-between pb-[0.45vw] border-b border-slate-100">
+                <span className="text-[0.74vw] font-medium text-slate-800 flex items-center gap-[0.35vw]">
+                  <Package className="w-[0.8vw] h-[0.8vw] text-blue-600" />
                   Product Info
                 </span>
-                <span className="text-[0.78vw] font-medium text-slate-800 leading-snug line-clamp-2" title={product.productDescription}>
-                  {product.productDescription || "—"}
+                <span className="font-mono text-[0.68vw] text-slate-500 bg-slate-100 px-[0.35vw] py-[0.08vw] rounded border border-slate-200/80">
+                  {product.productCode || "Item"}
                 </span>
               </div>
-              <div className="flex items-center gap-[0.4vw] text-[0.68vw] text-slate-500 font-normal mt-[0.4vw] pt-[0.4vw] border-t border-slate-100">
-                <span>SN: <strong className="font-medium text-slate-700">{product.serialNumber || "—"}</strong></span>
-                <span className="text-slate-300">•</span>
-                <span>Board: <strong className="font-medium text-slate-700">{product.boardType || "—"}</strong></span>
+
+              <div className="space-y-[0.4vw] text-[0.74vw]">
+                <div className="font-medium text-slate-800 leading-snug line-clamp-2" title={product.productDescription}>
+                  {product.productDescription || "—"}
+                </div>
+                <div className="flex items-center justify-between text-slate-600 pt-[0.2vw]">
+                  <span className="text-slate-400 font-normal">Serial Number</span>
+                  <span className="font-mono text-slate-800 font-normal">{product.serialNumber || "—"}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600">
+                  <span className="text-slate-400 font-normal">Board Type</span>
+                  <span className="text-slate-800 font-normal">{product.boardType || "—"}</span>
+                </div>
               </div>
             </div>
 
             {/* Service Execution Card */}
-            <div className="bg-white border border-slate-200/90 p-[0.85vw] rounded-[0.55vw] shadow-2xs flex flex-col justify-between">
-              <div>
-                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1vw] shadow-2xs space-y-[0.6vw]">
+              <div className="flex items-center justify-between pb-[0.45vw] border-b border-slate-100">
+                <span className="text-[0.74vw] font-medium text-slate-800 flex items-center gap-[0.35vw]">
+                  <User className="w-[0.8vw] h-[0.8vw] text-indigo-600" />
                   Service Execution
                 </span>
-                <div className="text-[0.78vw] font-medium text-slate-800 flex items-center gap-[0.35vw]">
-                  <User className="w-[0.85vw] h-[0.85vw] text-blue-600 flex-shrink-0" />
-                  <span>Tested By: <strong className="font-semibold text-slate-900">{r.testedBy || "—"}</strong></span>
-                </div>
+                <span className="text-[0.68vw] text-slate-500 font-normal">
+                  Technician
+                </span>
               </div>
-              <div className="text-[0.68vw] text-slate-500 font-normal mt-[0.4vw] pt-[0.4vw] border-t border-slate-100">
-                Completed:{" "}
-                <strong className="font-medium text-slate-700">
-                  {r.completedDate
-                    ? new Date(r.completedDate).toLocaleDateString()
-                    : "—"}
-                </strong>
+
+              <div className="space-y-[0.4vw] text-[0.74vw]">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 font-normal">Tested By</span>
+                  <span className="text-slate-800 font-medium">{r.testedBy || "—"}</span>
+                </div>
+                {r.fqaBy && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-normal">FQA By</span>
+                    <span className="text-slate-800 font-normal">{r.fqaBy}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 font-normal">Completed Date</span>
+                  <span className="text-slate-800 font-normal">
+                    {r.completedDate ? fmtDate(r.completedDate) : "—"}
+                  </span>
+                </div>
+                {r.timeInHours && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-normal">Time (Hours)</span>
+                    <span className="text-slate-800 font-normal">{r.timeInHours} hrs</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Details Card */}
-          <div className="bg-white border border-slate-200/90 rounded-[0.55vw] p-[1.1vw] shadow-2xs space-y-[0.9vw]">
-            {/* Top 3 Metric Pills */}
-            <div className="grid grid-cols-3 gap-[0.8vw] pb-[0.8vw] border-b border-slate-100">
-              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.6vw]">
-                <span className="text-[0.56vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                  4M Category
-                </span>
-                <span className="text-[0.76vw] font-medium text-slate-800">
-                  {r.fourMCategory || "—"}
-                </span>
-              </div>
-              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.6vw]">
-                <span className="text-[0.56vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                  Error Code
-                </span>
-                <span className="text-[0.76vw] font-medium text-slate-800 font-mono">
-                  {r.errorCode || "—"}
-                </span>
-              </div>
-              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.6vw]">
-                <span className="text-[0.56vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                  Disposition
-                </span>
-                <span className="text-[0.76vw] font-medium text-emerald-700 bg-emerald-50/80 border border-emerald-200/80 px-[0.4vw] py-[0.08vw] rounded-[0.25vw] inline-block">
-                  {r.disposition || "—"}
-                </span>
-              </div>
+          {/* 2. Key Attributes Grid (4M Category, Error Code, Disposition) */}
+          <div className="grid grid-cols-3 gap-[0.7vw]">
+            <div className="bg-white p-[0.75vw] rounded-[0.6vw] border border-slate-200 shadow-2xs">
+              <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">
+                4M Category
+              </span>
+              <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.15vw] block">
+                {r.fourMCategory || "—"}
+              </span>
             </div>
 
-            {/* Structured Text Fields */}
-            <div className="space-y-[0.75vw]">
-              <div>
-                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                  Problem Description
-                </span>
-                <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed">
-                  {r.problemDescription || "—"}
-                </div>
-              </div>
+            <div className="bg-white p-[0.75vw] rounded-[0.6vw] border border-slate-200 shadow-2xs">
+              <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">
+                Error Code
+              </span>
+              <span className="font-mono font-normal text-slate-800 text-[0.78vw] mt-[0.15vw] block">
+                {r.errorCode || "—"}
+              </span>
+            </div>
 
-              <div>
-                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                  Root Cause
-                </span>
-                <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed">
-                  {r.rootCause || "—"}
-                </div>
-              </div>
-
-              <div>
-                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                  Corrective Action
-                </span>
-                <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed">
-                  {r.correctiveAction || "—"}
-                </div>
-              </div>
-
-              {r.designators && (
-                <div>
-                  <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                    Designators
-                  </span>
-                  <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed font-mono">
-                    {r.designators}
-                  </div>
-                </div>
-              )}
-
-              {/* Parts Replacement List */}
-              {r.partsReplacement && (
-                <div>
-                  <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.35vw]">
-                    Parts Replaced
-                  </span>
-                  <div className="flex flex-wrap gap-[0.35vw]">
-                    {r.partsReplacement
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean)
-                      .map((part, i) => (
-                        <span
-                          key={i}
-                          className="text-[0.7vw] font-medium text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.18vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
-                        >
-                          <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-500" />
-                          {part}
-                        </span>
-                      ))}
-                  </div>
-                </div>
-              )}
+            <div className="bg-white p-[0.75vw] rounded-[0.6vw] border border-slate-200 shadow-2xs">
+              <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">
+                Disposition
+              </span>
+              <span className="font-normal text-emerald-700 text-[0.78vw] mt-[0.15vw] block">
+                {r.disposition || "—"}
+              </span>
             </div>
           </div>
 
-          {/* Report Attachment */}
+          {/* 3. Detailed Technical Analysis */}
+          <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.8vw]">
+            <div>
+              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+                Problem Description
+              </span>
+              <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-normal leading-relaxed">
+                {r.problemDescription ? r.problemDescription : <span className="text-slate-400 italic">No description recorded.</span>}
+              </div>
+            </div>
+
+            <div>
+              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+                Root Cause
+              </span>
+              <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-normal leading-relaxed">
+                {r.rootCause ? r.rootCause : <span className="text-slate-400 italic">No root cause recorded.</span>}
+              </div>
+            </div>
+
+            <div>
+              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+                Corrective Action
+              </span>
+              <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-normal leading-relaxed">
+                {r.correctiveAction ? r.correctiveAction : <span className="text-slate-400 italic">No corrective action recorded.</span>}
+              </div>
+            </div>
+
+            {r.designators && (
+              <div>
+                <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+                  Designators
+                </span>
+                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-mono leading-relaxed">
+                  {r.designators}
+                </div>
+              </div>
+            )}
+
+            {r.partsReplacement && (
+              <div>
+                <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.35vw]">
+                  Parts Replaced
+                </span>
+                <div className="flex flex-wrap gap-[0.35vw]">
+                  {r.partsReplacement
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                    .map((part, i) => (
+                      <span
+                        key={i}
+                        className="text-[0.72vw] font-normal text-slate-700 bg-slate-100 border border-slate-200/90 px-[0.55vw] py-[0.18vw] rounded-[0.35vw] flex items-center gap-[0.3vw]"
+                      >
+                        <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-500" />
+                        {part}
+                      </span>
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 4. Report Attachment Preview */}
           {r.image && (
-            <div className="bg-white border border-slate-200/90 rounded-[0.55vw] p-[1.1vw] shadow-2xs flex flex-col gap-[0.5vw]">
-              <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider">
+            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1vw] shadow-2xs flex flex-col gap-[0.5vw]">
+              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider">
                 Report Attachment (Image / PDF)
               </span>
-              <div className="rounded-[0.45vw] overflow-hidden border border-slate-200/90 bg-slate-50 max-h-[22vh] p-[0.5vw] flex justify-center items-center">
+              <div className="rounded-[0.5vw] overflow-hidden border border-slate-200 bg-slate-50/60 max-h-[24vh] p-[0.6vw] flex justify-center items-center">
                 {r.image.toLowerCase().endsWith(".pdf") ? (
                   <a
                     href={`${API_URL.replace("/api", "")}${r.image}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-[0.45vw] px-[0.9vw] py-[0.5vw] bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-[0.35vw] font-medium text-[0.76vw] cursor-pointer transition-colors"
+                    className="flex items-center gap-[0.45vw] px-[1vw] py-[0.55vw] bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-[0.4vw] font-medium text-[0.76vw] cursor-pointer transition-colors"
                   >
-                    <FileText className="w-[1.1vw] h-[1.1vw] text-red-600" />
+                    <FileText className="w-[1.1vw] h-[1.1vw] text-rose-600" />
                     <span>Open Attached PDF Document</span>
                   </a>
                 ) : (
                   <img
                     src={`${API_URL.replace("/api", "")}${r.image}`}
                     alt="Report Attachment"
-                    className="max-h-[20vh] w-auto object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-[0.2vw]"
+                    className="max-h-[22vh] w-auto object-contain cursor-pointer hover:opacity-95 transition-opacity rounded-[0.3vw] border border-slate-200 shadow-2xs bg-white"
                     onClick={() =>
                       window.open(
                         `${API_URL.replace("/api", "")}${r.image}`,
@@ -668,269 +710,367 @@ const ProductReportModal = ({ product, onClose }) => {
             </div>
           )}
         </div>
+
+        {/* Footer */}
+        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[0.76vw] rounded-full transition-colors cursor-pointer border-0"
+          >
+            Close
+          </button>
+        </div>
       </motion.div>
     </div>
   );
 };
 
-// Reports Modal
+// Reports Modal (White Theme matching ServiceCall CallDetailsModal)
 const ReportsModal = ({ row, onClose }) => {
+  if (!row) return null;
   const products = row.products || [];
   const [expandedIndex, setExpandedIndex] = useState(0);
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-[2vw]">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-[1.5vw] animate-in fade-in duration-200">
       <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-white w-[60vw] max-h-[85vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-gray-400"
+        initial={{ scale: 0.97, opacity: 0, y: 10 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.97, opacity: 0, y: 10 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="bg-white w-[58vw] max-w-[850px] max-h-[88vh] rounded-[1.2vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200/90 font-sans"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-[#1a73e8] px-[1.5vw] py-[1.2vw] flex justify-between items-center shadow-md">
-          <div className="flex items-center gap-[0.9vw]">
-            <div className="bg-white/20 p-[0.4vw] rounded-full">
-              <FileText className="w-[1.4vw] h-[1.4vw] text-slate-800" />
+        {/* Header */}
+        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-[0.75vw]">
+            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
+              <FileText className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.1vw] font-bold text-slate-800 uppercase tracking-wider">
-                Service Technical Reports
-              </h3>
-              <p className="text-[0.75vw] text-slate-800 font-medium">
-                {row.customerName} · Ref: {row.refNoCustomer || "N/A"}
-              </p>
+              <div className="flex items-center gap-[0.45vw] flex-wrap">
+                <span className="font-medium text-[0.95vw] text-slate-900 tracking-tight">
+                  Service Technical Reports
+                </span>
+                <span className="inline-flex items-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal border bg-blue-50 text-blue-700 border-blue-200">
+                  {products.length} {products.length === 1 ? "Product" : "Products"}
+                </span>
+              </div>
+              <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw] flex items-center gap-[0.3vw] truncate max-w-[32vw]">
+                <span className="text-slate-800 font-medium">{row.customerName || "Customer"}</span>
+                <span className="text-slate-300">•</span>
+                <span>Ref: <span className="font-mono text-slate-700">{row.refNoCustomer || row.refNo || "—"}</span></span>
+                {row.category && (
+                  <>
+                    <span className="text-slate-300">•</span>
+                    <span>Type: {row.category}</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
+
           <button
+            type="button"
             onClick={onClose}
-            className="text-slate-800 hover:text-slate-800 cursor-pointer transition-all hover:bg-white/10 p-[0.4vw] rounded-full"
+            className="p-[0.45vw] text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer border-0 bg-transparent"
+            title="Close modal"
           >
-            <X className="w-[1.3vw] h-[1.3vw]" />
+            <X className="w-[1.05vw] h-[1.05vw]" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[0.8vw]">
-          {products.map((prod, idx) => {
-            const r = prod.report;
-            const isExpanded = expandedIndex === idx;
-            return (
-              <div
-                key={prod._pid}
-                className={`border rounded-[0.6vw] transition-all shadow-sm ${
-                  isExpanded ? "border-blue-400" : "border-gray-400"
-                }`}
-              >
+        {/* Scrollable Products List */}
+        <div className="flex-1 overflow-y-auto p-[1.3vw] space-y-[0.85vw] bg-slate-50/50">
+          {products.length === 0 ? (
+            <div className="p-[3vw] text-center text-slate-400 text-[0.8vw] italic flex flex-col items-center gap-[0.6vw] bg-white rounded-[0.8vw] border border-slate-200">
+              <AlertCircle className="w-[1.8vw] h-[1.8vw] text-slate-400" />
+              <span>No products attached to this inward entry.</span>
+            </div>
+          ) : (
+            products.map((prod, idx) => {
+              const r = prod.report;
+              const isExpanded = expandedIndex === idx;
+
+              return (
                 <div
-                  onClick={() => setExpandedIndex(isExpanded ? -1 : idx)}
-                  className={`px-[1.2vw] py-[0.8vw] flex justify-between items-center cursor-pointer transition-colors ${
-                    isExpanded
-                      ? "bg-blue-50/50"
-                      : "bg-gray-50 hover:bg-blue-50/30"
+                  key={prod._pid || idx}
+                  className={`border rounded-[0.8vw] bg-white transition-all shadow-2xs overflow-hidden ${
+                    isExpanded ? "border-blue-400 ring-2 ring-blue-500/10" : "border-slate-200/90 hover:border-slate-300"
                   }`}
                 >
-                  <div className="flex items-center gap-[1vw]">
-                    <span className="w-[1.6vw] h-[1.6vw] bg-[#1a73e8] text-slate-800 rounded-full flex items-center justify-center text-[0.7vw] font-bold shadow-sm">
-                      {idx + 1}
-                    </span>
-                    <div>
-                      <span className="text-[0.9vw] font-bold text-black">
-                        {prod.productDescription}
+                  {/* Product Summary Header */}
+                  <div
+                    onClick={() => setExpandedIndex(isExpanded ? -1 : idx)}
+                    className={`px-[1.1vw] py-[0.75vw] flex justify-between items-center cursor-pointer transition-colors ${
+                      isExpanded ? "bg-blue-50/40" : "bg-white hover:bg-slate-50/60"
+                    }`}
+                  >
+                    <div className="flex items-center gap-[0.8vw]">
+                      <span className="w-[1.5vw] h-[1.5vw] bg-blue-50 border border-blue-200 text-blue-700 rounded-full flex items-center justify-center text-[0.68vw] font-mono font-medium shrink-0">
+                        #{idx + 1}
                       </span>
-                      <div className="flex items-center gap-[0.7vw] text-[0.72vw] text-gray-800 font-bold mt-[0.3vw]">
-                        <span className="bg-gray-200 px-[0.4vw] py-[0.05vw] rounded border border-gray-400">
-                          SN: {prod.serialNumber || "—"}
-                        </span>
-                        <span className="text-blue-500">·</span>
-                        <span className="flex items-center gap-[0.3vw]">
-                          <User className="w-[0.8vw] h-[0.8vw] text-blue-600" />
-                          Assigned:{" "}
-                          <span className="text-blue-700 font-bold">
-                            {prod.assignedToName || "Unassigned"}
+                      <div>
+                        <div className="text-[0.82vw] font-medium text-slate-800 leading-snug">
+                          {prod.productDescription || "Product Item"}
+                        </div>
+                        <div className="flex items-center gap-[0.6vw] text-[0.7vw] text-slate-500 font-normal mt-[0.15vw]">
+                          <span>SN: <span className="font-mono font-medium text-slate-700">{prod.serialNumber || "—"}</span></span>
+                          <span className="text-slate-300">•</span>
+                          <span>Board: <span className="text-slate-700 font-medium">{prod.boardType || "—"}</span></span>
+                          <span className="text-slate-300">•</span>
+                          <span className="flex items-center gap-[0.25vw]">
+                            <User className="w-[0.65vw] h-[0.65vw] text-indigo-500 shrink-0" />
+                            <span>Assigned: <span className="text-slate-800 font-medium">{prod.assignedToName || "Unassigned"}</span></span>
                           </span>
-                        </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-[0.8vw]">
+                      <span
+                        className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border ${
+                          r?.status === "Completed"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : r?.status === "Repair in Progress" || r?.status === "Under Testing"
+                              ? "bg-amber-50 text-amber-700 border-amber-200"
+                              : r?.status === "Not Repairable" || r?.status === "Pending"
+                                ? "bg-rose-50 text-rose-700 border-rose-200"
+                                : "bg-slate-100 text-slate-600 border-slate-200"
+                        }`}
+                      >
+                        <span
+                          className={`w-[0.32vw] h-[0.32vw] rounded-full ${
+                            r?.status === "Completed"
+                              ? "bg-emerald-500"
+                              : r?.status === "Repair in Progress" || r?.status === "Under Testing"
+                                ? "bg-amber-500"
+                                : r?.status === "Not Repairable" || r?.status === "Pending"
+                                  ? "bg-rose-500"
+                                  : "bg-slate-400"
+                          }`}
+                        />
+                        <span>{r?.status || "No Report Yet"}</span>
+                      </span>
+
+                      <div className="p-[0.2vw] text-slate-400 hover:text-blue-600 transition-colors">
+                        {isExpanded ? (
+                          <ChevronUp className="w-[1vw] h-[1vw]" />
+                        ) : (
+                          <ChevronDown className="w-[1vw] h-[1vw]" />
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-[1vw]">
-                    <span
-                      className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.65vw] font-bold border shadow-none ${
-                        r?.status === "Completed"
-                          ? "bg-green-100 text-green-700 border-green-400"
-                          : r?.status === "Repair in Progress"
-                            ? "bg-blue-50 text-blue-700 border-blue-400"
-                            : r?.status === "Not Repairable"
-                              ? "bg-red-50 text-red-700 border-red-400"
-                              : "bg-gray-100 text-gray-800 border-gray-400"
-                      }`}
-                    >
-                      {r?.status || "No Report Yet"}
-                    </span>
-                    {isExpanded ? (
-                      <ChevronUp className="w-[1.2vw] h-[1.2vw] text-blue-600" />
-                    ) : (
-                      <ChevronDown className="w-[1.2vw] h-[1.2vw] text-blue-600" />
-                    )}
-                  </div>
-                </div>
 
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden border-t border-gray-400 bg-white"
-                    >
-                      {!r ? (
-                        <div className="p-[2.5vw] text-center text-black text-[0.85vw] italic flex flex-col items-center gap-[0.6vw]">
-                          <AlertCircle className="w-[1.8vw] h-[1.8vw] text-blue-400" />
-                          "No technical report submitted yet by the assigned
-                          employee."
-                        </div>
-                      ) : (
-                        <div className="p-[1.2vw] grid grid-cols-2 gap-[1.5vw]">
-                          <div className="space-y-[1.2vw]">
-                            <div className="grid grid-cols-2 gap-[1vw]">
-                              <DetailItem
-                                label="Tested By"
-                                value={r.testedBy}
-                              />
-                              <DetailItem
-                                label="Designators"
-                                value={r.designators}
-                              />
-                              <DetailItem
-                                label="Completed Date"
-                                value={fmtDate(r.completedDate)}
-                              />
-                              <DetailItem
-                                label="4M Category"
-                                value={r.fourMCategory}
-                              />
-                              <DetailItem
-                                label="Error Code"
-                                value={r.errorCode}
-                              />
-                            </div>
-                            <DetailSection
-                              label="Problem Identification"
-                              value={r.problemDescription}
-                            />
-                            <DetailSection
-                              label="Root Cause Analysis"
-                              value={r.rootCause}
-                            />
-                            <DetailSection
-                              label="Corrective Action"
-                              value={r.correctiveAction}
-                            />
-                            {r.partsReplacement && (
-                              <div className="bg-white border border-slate-300 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
-                                <span className="text-[0.62vw] font-bold text-blue-500 uppercase block mb-[0.6vw]">
-                                  Parts Replacement
+                  {/* Expanded Report Content */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden border-t border-slate-200/80 bg-white"
+                      >
+                        {!r ? (
+                          <div className="p-[2vw] text-center text-slate-400 text-[0.76vw] italic flex flex-col items-center gap-[0.4vw]">
+                            <AlertCircle className="w-[1.4vw] h-[1.4vw] text-blue-400" />
+                            <span>No technical report submitted yet by the assigned employee.</span>
+                          </div>
+                        ) : (
+                          <div className="p-[1.1vw] space-y-[0.9vw] bg-slate-50/40">
+                            {/* Key Metric Cards */}
+                            <div className="grid grid-cols-4 gap-[0.65vw]">
+                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
+                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                                  Tested By
                                 </span>
-                                <div className="space-y-[0.4vw]">
-                                  {r.partsReplacement
-                                    .split(",")
-                                    .map((s) => s.trim())
-                                    .filter((s) => s.length > 0)
-                                    .map((part, i) => (
-                                      <div
-                                        key={i}
-                                        className="flex items-center gap-[0.6vw] text-[0.8vw] font-bold text-slate-800 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.4vw] rounded-[0.4vw]"
-                                      >
-                                        <div className="w-[0.4vw] h-[0.4vw] rounded-full bg-blue-500" />
-                                        {part}
-                                      </div>
-                                    ))}
-                                  {r.partsReplacement
-                                    .split(",")
-                                    .map((s) => s.trim())
-                                    .filter((s) => s.length > 0).length ===
-                                    0 && (
-                                    <div className="text-[0.82vw] text-slate-400 italic">
-                                      No parts recorded
-                                    </div>
+                                <span className="font-medium text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                  {r.testedBy || "—"}
+                                </span>
+                              </div>
+                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
+                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                                  Completed Date
+                                </span>
+                                <span className="font-normal text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                  {r.completedDate ? fmtDate(r.completedDate) : "—"}
+                                </span>
+                              </div>
+                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
+                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                                  4M Category
+                                </span>
+                                <span className="font-normal text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                  {r.fourMCategory || "—"}
+                                </span>
+                              </div>
+                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
+                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                                  Error Code
+                                </span>
+                                <span className="font-mono font-normal text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                  {r.errorCode || "—"}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Details: Problems, Root Cause, Corrective Action */}
+                            <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[0.9vw] shadow-2xs space-y-[0.7vw]">
+                              <div>
+                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                  Problem Description
+                                </span>
+                                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.55vw] rounded-[0.35vw] border border-slate-200/90 font-normal leading-relaxed">
+                                  {r.problemDescription ? r.problemDescription : <span className="text-slate-400 italic">No description recorded.</span>}
+                                </div>
+                              </div>
+
+                              <div>
+                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                  Root Cause Analysis
+                                </span>
+                                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.55vw] rounded-[0.35vw] border border-slate-200/90 font-normal leading-relaxed">
+                                  {r.rootCause ? r.rootCause : <span className="text-slate-400 italic">No root cause recorded.</span>}
+                                </div>
+                              </div>
+
+                              <div>
+                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                  Corrective Action Taken
+                                </span>
+                                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.55vw] rounded-[0.35vw] border border-slate-200/90 font-normal leading-relaxed">
+                                  {r.correctiveAction ? r.correctiveAction : <span className="text-slate-400 italic">No corrective action recorded.</span>}
+                                </div>
+                              </div>
+
+                              {r.designators && (
+                                <div>
+                                  <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                    Designators
+                                  </span>
+                                  <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.5vw] rounded-[0.35vw] border border-slate-200/90 font-mono">
+                                    {r.designators}
+                                  </div>
+                                </div>
+                              )}
+
+                              {r.partsReplacement && (
+                                <div>
+                                  <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.3vw]">
+                                    Parts Replacement
+                                  </span>
+                                  <div className="flex flex-wrap gap-[0.35vw]">
+                                    {r.partsReplacement
+                                      .split(",")
+                                      .map((s) => s.trim())
+                                      .filter(Boolean)
+                                      .map((part, i) => (
+                                        <span
+                                          key={i}
+                                          className="text-[0.7vw] font-normal text-slate-700 bg-slate-100 border border-slate-200/90 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
+                                        >
+                                          <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-500" />
+                                          {part}
+                                        </span>
+                                      ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Attachment / Image */}
+                            {r.image && (
+                              <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[0.8vw] shadow-2xs flex flex-col gap-[0.4vw]">
+                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider">
+                                  Technical Attachment
+                                </span>
+                                <div className="rounded-[0.4vw] overflow-hidden border border-slate-200 bg-slate-50/60 max-h-[22vh] p-[0.5vw] flex justify-center items-center">
+                                  {r.image.toLowerCase().endsWith(".pdf") ? (
+                                    <a
+                                      href={`${API_URL.replace("/api", "")}${r.image}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-[0.35vw] font-medium text-[0.74vw] cursor-pointer transition-colors"
+                                    >
+                                      <FileText className="w-[1vw] h-[1vw] text-rose-600" />
+                                      <span>Open Attached PDF Document</span>
+                                    </a>
+                                  ) : (
+                                    <img
+                                      src={`${API_URL.replace("/api", "")}${r.image}`}
+                                      alt="Technical Attachment"
+                                      className="max-h-[20vh] w-auto object-contain cursor-pointer hover:opacity-95 transition-opacity rounded-[0.25vw] border border-slate-200 shadow-2xs bg-white"
+                                      onClick={() =>
+                                        window.open(
+                                          `${API_URL.replace("/api", "")}${r.image}`,
+                                          "_blank",
+                                        )
+                                      }
+                                    />
                                   )}
                                 </div>
                               </div>
                             )}
-                            {r.image && (
-                              <div className="bg-white border border-slate-300 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
-                                <span className="text-[0.62vw] font-bold text-blue-500 uppercase block mb-[0.6vw]">
-                                  Technical Image
-                                </span>
-                                <img
-                                  src={`${API_URL}${r.image}`}
-                                  alt="Technical"
-                                  className="max-w-full h-auto rounded-[0.4vw] border border-slate-300 cursor-pointer hover:scale-[1.02] transition-transform"
-                                  onClick={() =>
-                                    window.open(
-                                      `${API_URL}${r.image}`,
-                                      "_blank",
-                                    )
-                                  }
-                                />
+
+                            {/* Status History Trail */}
+                            {r.history && r.history.length > 0 && (
+                              <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[0.9vw] shadow-2xs space-y-[0.7vw]">
+                                <h4 className="text-[0.75vw] font-medium text-slate-800 flex items-center gap-[0.4vw] pb-[0.45vw] border-b border-slate-100">
+                                  <History className="w-[0.8vw] h-[0.8vw] text-blue-600" />
+                                  Status History Trail
+                                </h4>
+                                <div className="space-y-[0.75vw] pl-[0.5vw]">
+                                  {r.history
+                                    .slice()
+                                    .reverse()
+                                    .map((h, hi) => (
+                                      <div
+                                        key={hi}
+                                        className="relative pl-[1.4vw] pb-[0.6vw] last:pb-0 border-l-2 border-slate-200 last:border-transparent"
+                                      >
+                                        <div className="absolute -left-[0.45vw] top-[0.1vw] w-[0.7vw] h-[0.7vw] bg-blue-600 rounded-full border-2 border-white shadow-2xs" />
+                                        <div className="flex justify-between items-start gap-[1vw]">
+                                          <div className="flex-1">
+                                            <span className="text-[0.66vw] font-normal text-blue-700 px-[0.45vw] py-[0.08vw] bg-blue-50 rounded-full border border-blue-200">
+                                              {h.status}
+                                            </span>
+                                            <p className="text-[0.74vw] text-slate-700 mt-[0.25vw] leading-relaxed">
+                                              {h.remark || "No remark provided."}
+                                            </p>
+                                          </div>
+                                          <div className="text-right flex-shrink-0 text-[0.68vw] text-slate-500 font-normal">
+                                            {new Date(h.timestamp).toLocaleDateString("en-GB")}{" "}
+                                            {new Date(h.timestamp).toLocaleTimeString([], {
+                                              hour: "2-digit",
+                                              minute: "2-digit",
+                                              hour12: true,
+                                            })}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                </div>
                               </div>
                             )}
                           </div>
-                          <div className="bg-blue-50/40 rounded-[0.6vw] border border-blue-100 p-[1vw]">
-                            <h4 className="text-[0.75vw] font-bold text-blue-700 uppercase tracking-wider mb-[1.2vw] flex items-center gap-[0.5vw]">
-                              <History className="w-[1vw] h-[1vw] text-blue-600" />{" "}
-                              Status History Trail
-                            </h4>
-                            <div className="space-y-[1vw]">
-                              {r.history
-                                ?.slice()
-                                .reverse()
-                                .map((h, hi) => (
-                                  <div
-                                    key={hi}
-                                    className="relative pl-[1.6vw] pb-[1vw] last:pb-0 border-l-2 border-blue-200 last:border-transparent"
-                                  >
-                                    <div className="absolute left-[-0.4vw] top-0 w-[0.8vw] h-[0.8vw] bg-blue-600 rounded-full border-2 border-white shadow-md" />
-                                    <div className="flex justify-between items-start gap-[1vw]">
-                                      <div className="flex-1">
-                                        <span className="text-[0.68vw] font-bold text-blue-700 px-[0.5vw] py-[0.05vw] bg-blue-100 rounded border border-blue-200 uppercase">
-                                          {h.status}
-                                        </span>
-                                        <p className="text-[0.78vw] text-black mt-[0.3vw] leading-relaxed">
-                                          {h.remark || "No remark provided."}
-                                        </p>
-                                      </div>
-                                      <div className="text-right flex-shrink-0">
-                                        <div className="text-[0.68vw] font-bold text-blue-600 bg-white px-[0.4vw] py-[0.05vw] rounded border border-blue-200 mb-[0.1vw] shadow-sm">
-                                          {new Date(
-                                            h.timestamp,
-                                          ).toLocaleDateString("en-GB")}
-                                        </div>
-                                        <div className="text-[0.62vw] text-black font-medium opacity-80 tracking-[.05vw] mt-[.2vw]">
-                                          {new Date(
-                                            h.timestamp,
-                                          ).toLocaleTimeString([], {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                            hour12: true,
-                                          })}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })
+          )}
         </div>
 
-        <div className="px-[1.5vw] py-[1vw] border-t border-gray-400 bg-gray-50 flex justify-end">
+        {/* Footer */}
+        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
           <button
+            type="button"
             onClick={onClose}
-            className="px-[2.5vw] py-[0.6vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.5vw] text-[0.85vw] font-bold cursor-pointer transition-all shadow-md active:scale-95 flex items-center gap-[0.5vw]"
+            className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[0.76vw] rounded-full transition-colors cursor-pointer border-0"
           >
             Close Panel
           </button>
