@@ -28,6 +28,10 @@ import {
   CheckCircle2,
   Users,
   ArrowLeft,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  RotateCcw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -174,7 +178,34 @@ const getCustomerTypeBadgeStyle = (type) => {
   }
 };
 
-// Status Configuration matching Service Call pill styling
+// Turnaround Time & Age Helpers
+const calculateTatDays = (receivedDate, completedDate) => {
+  if (!receivedDate) return null;
+  const start = new Date(receivedDate).getTime();
+  if (isNaN(start)) return null;
+  const end = completedDate ? new Date(completedDate).getTime() : Date.now();
+  if (isNaN(end)) return null;
+  const diffMs = Math.max(0, end - start);
+  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+};
+
+const formatTatText = (receivedDate, completedDate) => {
+  const days = calculateTatDays(receivedDate, completedDate);
+  if (days === null) return "—";
+  if (days === 0) return "< 1 day";
+  if (days === 1) return "1 day";
+  return `${days} days`;
+};
+
+const getAgeGroupLabel = (days) => {
+  if (days === null || days === undefined) return "—";
+  if (days <= 3) return "0–3 days";
+  if (days <= 7) return "4–7 days";
+  if (days <= 15) return "8–15 days";
+  return "Above 15 days";
+};
+
+// Status Configuration: Pending = red, In Progress = amber, Completed = green
 const getMaterialStatusBadge = (status, finalStatus) => {
   let displayStatus = status || "Open";
   if (displayStatus === "Completed" && finalStatus !== "Completed") {
@@ -184,14 +215,20 @@ const getMaterialStatusBadge = (status, finalStatus) => {
   let badgeStyle = "bg-slate-100 text-slate-700 border-slate-300";
   if (displayStatus === "Completed") {
     badgeStyle = "bg-emerald-600 text-white border-emerald-600";
-  } else if (displayStatus === "Under Testing" || displayStatus === "Repair in Progress" || displayStatus === "Assigned") {
-    badgeStyle = "bg-blue-600 text-white border-blue-600";
-  } else if (displayStatus === "Pending" || displayStatus === "Hold") {
+  } else if (
+    displayStatus === "Under Testing" ||
+    displayStatus === "Repair in Progress" ||
+    displayStatus === "Assigned"
+  ) {
     badgeStyle = "bg-amber-500 text-white border-amber-500";
+  } else if (
+    displayStatus === "Pending" ||
+    displayStatus === "Hold" ||
+    displayStatus === "Not Repairable"
+  ) {
+    badgeStyle = "bg-rose-600 text-white border-rose-600";
   } else if (displayStatus === "Review Required") {
     badgeStyle = "bg-indigo-600 text-white border-indigo-600";
-  } else if (displayStatus === "Not Repairable") {
-    badgeStyle = "bg-rose-600 text-white border-rose-600";
   }
 
   return { label: displayStatus, style: badgeStyle };
@@ -201,13 +238,13 @@ const getMaterialStatusBadge = (status, finalStatus) => {
 const STATUS_CHIPS = [
   { label: "All", dot: "bg-blue-600" },
   { label: "Open", dot: "bg-slate-500" },
-  { label: "Assigned", dot: "bg-blue-500" },
-  { label: "Repair in Progress", dot: "bg-cyan-600" },
-  { label: "Under Testing", dot: "bg-indigo-500" },
-  { label: "Pending", dot: "bg-amber-500" },
-  { label: "Hold", dot: "bg-orange-500" },
+  { label: "Assigned", dot: "bg-amber-500" },
+  { label: "Repair in Progress", dot: "bg-amber-500" },
+  { label: "Under Testing", dot: "bg-amber-500" },
+  { label: "Pending", dot: "bg-rose-600" },
+  { label: "Hold", dot: "bg-rose-600" },
   { label: "Review Required", dot: "bg-purple-600" },
-  { label: "Not Repairable", dot: "bg-rose-500" },
+  { label: "Not Repairable", dot: "bg-rose-600" },
   { label: "Completed", dot: "bg-emerald-600" },
 ];
 
@@ -224,12 +261,17 @@ const EXPORT_COLUMNS = [
   { key: "refNoInternal", label: "Ref No (Internal)" },
   { key: "productDescription", label: "Product Description" },
   { key: "productCode", label: "Product Code" },
+  { key: "productSegment", label: "Product Segment" },
   { key: "boardType", label: "Board Type" },
   { key: "serialNumber", label: "Serial Number" },
+  { key: "qty", label: "Quantity" },
   { key: "type", label: "Warranty Type (W/PW)" },
   { key: "expectedDeliveryDate", label: "Expected Delivery Date" },
   { key: "assignedToName", label: "Claimed By" },
   { key: "testedBy", label: "Tested By" },
+  { key: "materialCost", label: "Material Cost" },
+  { key: "tat", label: "Turnaround Time (TAT)" },
+  { key: "ageGroup", label: "Age Group" },
   { key: "fourMCategory", label: "4M Category" },
   { key: "errorCode", label: "Error Code" },
   { key: "problemDescription", label: "Problem Description" },
@@ -573,6 +615,32 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   const [drilldownEmployee, setDrilldownEmployee] = useState(null); // when clicked "View" on an employee row
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [warrantyFilter, setWarrantyFilter] = useState("All");
+  const [segmentFilter, setSegmentFilter] = useState("All");
+
+  // Sorting: Users can change sort; resets to default order when report is opened
+  const [sortField, setSortField] = useState(null); // null = default chronological order
+  const [sortDirection, setSortDirection] = useState("asc"); // "asc" | "desc"
+
+  const handleSort = (field) => {
+    if (sortField === field) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else {
+        setSortField(null);
+        setSortDirection("asc");
+      }
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+    setCurrentPage(1);
+  };
+
+  const resetSort = () => {
+    setSortField(null);
+    setSortDirection("asc");
+    setCurrentPage(1);
+  };
 
   // Popover Toggles
   const [showFilterPopover, setShowFilterPopover] = useState(false);
@@ -639,6 +707,16 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     return Array.from(set);
   }, [entries]);
 
+  // Distinct Product Segments
+  const segmentsList = useMemo(() => {
+    const set = new Set();
+    allProducts.forEach(({ product }) => {
+      const seg = product.productSegment || product.segment;
+      if (seg && seg.trim()) set.add(seg.trim());
+    });
+    return Array.from(set);
+  }, [allProducts]);
+
   // Status Tab Counts (computed against the current date/search/employee filters)
   const statusCounts = useMemo(() => {
     const counts = { All: 0 };
@@ -687,6 +765,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         return;
       }
 
+      // Product Segment Filter
+      if (segmentFilter !== "All") {
+        const seg = (product.productSegment || product.segment || "").trim();
+        if (seg.toLowerCase() !== segmentFilter.toLowerCase()) return;
+      }
+
       counts.All++;
 
       const rawStatus = product.status || product.report?.status || "Open";
@@ -705,7 +789,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     });
 
     return counts;
-  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter]);
+  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter]);
 
   // Filtered Products List
   const filteredProducts = useMemo(() => {
@@ -750,7 +834,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         return false;
       }
 
-      // 6. Status Tab Filter
+      // 6. Product Segment Filter
+      if (segmentFilter !== "All") {
+        const seg = (product.productSegment || product.segment || "").trim();
+        if (seg.toLowerCase() !== segmentFilter.toLowerCase()) return false;
+      }
+
+      // 7. Status Tab Filter
       if (activeStatusTab !== "All") {
         const rawStatus = product.status || product.report?.status || "Open";
         if (activeStatusTab === "Review Required") {
@@ -764,7 +854,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
       return true;
     });
-  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, activeStatusTab]);
+  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter, activeStatusTab]);
 
   // Comprehensive Quantity Summary across active filtered inward sets
   const quantityStats = useMemo(() => {
@@ -773,10 +863,16 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     let dispatchedQty = 0; // Completed & Approved
     let reviewRequiredQty = 0;
     let openQty = 0;
+    let totalMaterialCost = 0;
 
     filteredProducts.forEach(({ product }) => {
       const q = Math.max(1, Number(product.qty) || 1);
       receivedQty += q;
+
+      const costNum = Number(product.report?.materialCost || product.materialCost || 0);
+      if (!isNaN(costNum) && costNum > 0) {
+        totalMaterialCost += costNum;
+      }
 
       const rawStatus = product.status || product.report?.status || "Open";
       const isCompletedAndApproved = rawStatus === "Completed" && product.finalStatus === "Completed";
@@ -810,6 +906,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       claimedInProgressQty,
       reviewRequiredQty,
       openQty,
+      totalMaterialCost,
     };
   }, [filteredProducts]);
 
@@ -854,18 +951,93 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     return Object.values(map);
   }, [employees, allProducts]);
 
-  // Reset pagination when active filter changes
+  // Sorted and Filtered Products List
+  const sortedProducts = useMemo(() => {
+    if (!sortField) return filteredProducts;
+
+    return [...filteredProducts].sort((a, b) => {
+      let valA, valB;
+      const rA = a.product.report || {};
+      const rB = b.product.report || {};
+
+      switch (sortField) {
+        case "date":
+          valA = a.entry.date ? new Date(a.entry.date).getTime() : 0;
+          valB = b.entry.date ? new Date(b.entry.date).getTime() : 0;
+          break;
+        case "customerName":
+          valA = (a.entry.customerName || "").toLowerCase();
+          valB = (b.entry.customerName || "").toLowerCase();
+          break;
+        case "category":
+          valA = (a.entry.category || "").toLowerCase();
+          valB = (b.entry.category || "").toLowerCase();
+          break;
+        case "productDescription":
+          valA = (a.product.productDescription || "").toLowerCase();
+          valB = (b.product.productDescription || "").toLowerCase();
+          break;
+        case "productSegment":
+          valA = (a.product.productSegment || a.product.segment || "").toLowerCase();
+          valB = (b.product.productSegment || b.product.segment || "").toLowerCase();
+          break;
+        case "boardType":
+          valA = (a.product.boardType || "").toLowerCase();
+          valB = (b.product.boardType || "").toLowerCase();
+          break;
+        case "serialNumber":
+          valA = (a.product.serialNumber || "").toLowerCase();
+          valB = (b.product.serialNumber || "").toLowerCase();
+          break;
+        case "qty":
+          valA = Number(a.product.qty) || 1;
+          valB = Number(b.product.qty) || 1;
+          break;
+        case "materialCost":
+          valA = Number(rA.materialCost || a.product.materialCost || 0);
+          valB = Number(rB.materialCost || b.product.materialCost || 0);
+          break;
+        case "tat":
+          valA = calculateTatDays(a.entry.date, rA.completedDate) ?? -1;
+          valB = calculateTatDays(b.entry.date, rB.completedDate) ?? -1;
+          break;
+        case "ageGroup":
+          valA = calculateTatDays(a.entry.date, rA.completedDate) ?? -1;
+          valB = calculateTatDays(b.entry.date, rB.completedDate) ?? -1;
+          break;
+        case "assignedToName":
+          valA = (a.product.assignedToName || "").toLowerCase();
+          valB = (b.product.assignedToName || "").toLowerCase();
+          break;
+        case "status": {
+          const sA = a.product.status || rA.status || "Open";
+          const sB = b.product.status || rB.status || "Open";
+          valA = sA.toLowerCase();
+          valB = sB.toLowerCase();
+          break;
+        }
+        default:
+          return 0;
+      }
+
+      if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+      if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [filteredProducts, sortField, sortDirection]);
+
+  // Reset pagination when active filter or sort changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, activeStatusTab, activeMainView]);
+  }, [search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter, activeStatusTab, activeMainView, sortField, sortDirection]);
 
   // Pagination Slicing
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
-    return filteredProducts.slice(start, start + rowsPerPage);
-  }, [filteredProducts, currentPage, rowsPerPage]);
+    return sortedProducts.slice(start, start + rowsPerPage);
+  }, [sortedProducts, currentPage, rowsPerPage]);
 
-  const totalPages = Math.ceil(filteredProducts.length / rowsPerPage) || 1;
+  const totalPages = Math.ceil(sortedProducts.length / rowsPerPage) || 1;
 
   // Toggle Column Selection
   const toggleExportCol = (key) => {
@@ -879,15 +1051,30 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
   // Excel Export Handler using xlsx-js-style
   const handleExportExcel = () => {
-    if (filteredProducts.length === 0) {
+    if (sortedProducts.length === 0) {
       toast("No data available to export", "error");
       return;
     }
 
     try {
       const activeCols = EXPORT_COLUMNS.filter((c) => selectedExportCols.includes(c.key));
-      const rows = filteredProducts.map(({ entry, product }, idx) => {
+      let totalQty = 0;
+      let totalCost = 0;
+
+      const rows = sortedProducts.map(({ entry, product }, idx) => {
         const report = product.report || {};
+        const qNum = Math.max(1, Number(product.qty) || 1);
+        totalQty += qNum;
+
+        const cNum = Number(report.materialCost || product.materialCost || 0);
+        if (!isNaN(cNum) && cNum > 0) {
+          totalCost += cNum;
+        }
+
+        const tatDays = calculateTatDays(entry.date, report.completedDate);
+        const tatText = formatTatText(entry.date, report.completedDate);
+        const ageGroup = getAgeGroupLabel(tatDays);
+
         const fullRow = {
           sno: idx + 1,
           date: fmtDate(entry.date),
@@ -900,12 +1087,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
           refNoInternal: entry.refNoInternal || "",
           productDescription: product.productDescription || "",
           productCode: product.productCode || "",
+          productSegment: product.productSegment || product.segment || "",
           boardType: product.boardType || "",
           serialNumber: product.serialNumber || "",
+          qty: qNum,
           type: product.type === "W" ? "Warranty" : "Paid",
           expectedDeliveryDate: fmtDate(product.expectedDeliveryDate),
           assignedToName: product.assignedToName || "Unassigned",
           testedBy: report.testedBy || "",
+          materialCost: cNum > 0 ? cNum : 0,
+          tat: tatText,
+          ageGroup: ageGroup,
           fourMCategory: report.fourMCategory || "",
           errorCode: report.errorCode || "",
           problemDescription: report.problemDescription || "",
@@ -928,14 +1120,25 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
       const ws = XLSX.utils.json_to_sheet(rows);
 
-      // Header and Cell Styling
+      // Append Total Row for Material Cost and Qty
+      const totalRowAoa = activeCols.map((col, cIdx) => {
+        if (cIdx === 0) return "Total";
+        if (col.key === "qty") return totalQty;
+        if (col.key === "materialCost") return totalCost;
+        return "";
+      });
+      XLSX.utils.sheet_add_aoa(ws, [totalRowAoa], { origin: -1 });
+
+      // Header, Cell, and Total Styling
       const headerStyle = {
         font: { bold: true, color: { rgb: "FFFFFF" }, sz: 10, name: "Calibri" },
         fill: { fgColor: { rgb: "1A73E8" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
         border: {
-          top: { style: "thin", color: { rgb: "E2E8F0" } },
-          bottom: { style: "thin", color: { rgb: "E2E8F0" } },
+          top: { style: "thin", color: { rgb: "CBD5E1" } },
+          bottom: { style: "thin", color: { rgb: "CBD5E1" } },
+          left: { style: "thin", color: { rgb: "CBD5E1" } },
+          right: { style: "thin", color: { rgb: "CBD5E1" } },
         },
       };
 
@@ -943,7 +1146,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         font: { sz: 9, name: "Calibri" },
         alignment: { vertical: "center" },
         border: {
-          bottom: { style: "thin", color: { rgb: "F1F5F9" } },
+          bottom: { style: "thin", color: { rgb: "E2E8F0" } },
+          right: { style: "thin", color: { rgb: "E2E8F0" } },
         },
       };
 
@@ -952,15 +1156,87 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         fill: { fgColor: { rgb: "F8FAFC" } },
       };
 
+      // Status Pill Colors for Excel Export: Pending = red, In Progress = amber, Completed = green
+      const getStatusExcelStyle = (statusVal) => {
+        const s = String(statusVal || "").toLowerCase().trim();
+        if (s.includes("completed")) {
+          return {
+            fill: { fgColor: { rgb: "DCFCE7" } }, // light green
+            font: { bold: true, color: { rgb: "15803D" }, sz: 9, name: "Calibri" }, // dark green
+            alignment: { horizontal: "center", vertical: "center" },
+          };
+        }
+        if (
+          s.includes("repair") ||
+          s.includes("testing") ||
+          s.includes("progress") ||
+          s.includes("assigned")
+        ) {
+          return {
+            fill: { fgColor: { rgb: "FEF3C7" } }, // light amber
+            font: { bold: true, color: { rgb: "B45309" }, sz: 9, name: "Calibri" }, // dark amber
+            alignment: { horizontal: "center", vertical: "center" },
+          };
+        }
+        if (
+          s.includes("pending") ||
+          s.includes("hold") ||
+          s.includes("not repairable") ||
+          s.includes("rejected")
+        ) {
+          return {
+            fill: { fgColor: { rgb: "FEE2E2" } }, // light red
+            font: { bold: true, color: { rgb: "B91C1C" }, sz: 9, name: "Calibri" }, // dark red
+            alignment: { horizontal: "center", vertical: "center" },
+          };
+        }
+        return null;
+      };
+
+      const totalRowStyle = {
+        font: { bold: true, sz: 10, name: "Calibri", color: { rgb: "0F172A" } },
+        fill: { fgColor: { rgb: "E2E8F0" } },
+        alignment: { vertical: "center" },
+        border: {
+          top: { style: "medium", color: { rgb: "64748B" } },
+          bottom: { style: "double", color: { rgb: "0F172A" } },
+        },
+      };
+
       const range = XLSX.utils.decode_range(ws["!ref"] || "A1");
+      const statusColIndex = activeCols.findIndex((c) => c.key === "status");
+
       for (let R = range.s.r; R <= range.e.r; ++R) {
+        const isHeader = R === 0;
+        const isTotalRow = R === range.e.r;
+
         for (let C = range.s.c; C <= range.e.c; ++C) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!ws[cellRef]) ws[cellRef] = { t: "s", v: "" };
-          if (R === 0) {
+
+          if (isHeader) {
             ws[cellRef].s = headerStyle;
+          } else if (isTotalRow) {
+            ws[cellRef].s = totalRowStyle;
+            if (C === 0) {
+              ws[cellRef].s = {
+                ...totalRowStyle,
+                alignment: { horizontal: "center", vertical: "center" },
+              };
+            }
           } else {
-            ws[cellRef].s = R % 2 === 0 ? altCellStyle : cellStyle;
+            let base = R % 2 === 0 ? altCellStyle : cellStyle;
+            if (C === statusColIndex) {
+              const statusOverride = getStatusExcelStyle(ws[cellRef].v);
+              if (statusOverride) {
+                base = {
+                  ...base,
+                  ...statusOverride,
+                  border: base.border,
+                };
+              }
+            }
+            ws[cellRef].s = base;
           }
         }
       }
@@ -989,7 +1265,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     Boolean(toDate) ||
     selectedEmployee !== "All" ||
     categoryFilter !== "All" ||
-    warrantyFilter !== "All";
+    warrantyFilter !== "All" ||
+    segmentFilter !== "All";
 
   const clearAllFilters = () => {
     setFromDate("");
@@ -997,6 +1274,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     setSelectedEmployee("All");
     setCategoryFilter("All");
     setWarrantyFilter("All");
+    setSegmentFilter("All");
     setCurrentPage(1);
   };
 
@@ -1204,6 +1482,30 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         { value: "All", label: "All Types" },
                         { value: "W", label: "Warranty (W)" },
                         { value: "PW", label: "Paid (PW)" },
+                      ]}
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                    />
+                  </div>
+
+                  {/* Product Segment */}
+                  <div>
+                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
+                      Product Segment
+                    </label>
+                    <CustomDropdown
+                      size="sm"
+                      searchable={true}
+                      value={segmentFilter}
+                      onChange={(val) => {
+                        setSegmentFilter(val);
+                        setCurrentPage(1);
+                      }}
+                      options={[
+                        { value: "All", label: "All Segments" },
+                        ...segmentsList.map((seg) => ({
+                          value: seg,
+                          label: seg,
+                        })),
                       ]}
                       triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
                     />
@@ -1438,6 +1740,24 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       <span className="text-amber-800 font-normal">Balance:</span>
                       <span className="text-amber-800 font-medium">{quantityStats.balanceQty}</span>
                     </div>
+
+                    {/* Material Cost Total */}
+                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-indigo-50 border border-indigo-200">
+                      <span className="text-indigo-700 font-normal">Total Cost:</span>
+                      <span className="text-indigo-800 font-medium">₹{quantityStats.totalMaterialCost.toLocaleString()}</span>
+                    </div>
+
+                    {/* Reset Sort Button (if user changed sort) */}
+                    {sortField && (
+                      <button
+                        onClick={resetSort}
+                        title="Reset to default report sort"
+                        className="flex items-center gap-[0.25vw] px-[0.5vw] py-[0.15vw] rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-slate-800 font-normal cursor-pointer transition-colors shadow-2xs"
+                      >
+                        <RotateCcw className="w-[0.7vw] h-[0.7vw]" />
+                        <span>Reset Sort</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -1447,23 +1767,172 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
                       <tr>
                         <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[2.6vw] whitespace-nowrap">S.No</th>
-                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap">Date</th>
-                        <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[11.5vw] whitespace-nowrap">Customer Name &amp; Code</th>
-                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5.5vw] whitespace-nowrap">Category</th>
-                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6.5vw] whitespace-nowrap">Ref No</th>
-                        <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Product Description</th>
-                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 w-[5.5vw] whitespace-nowrap">Board Type</th>
-                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6.5vw] whitespace-nowrap">Serial No</th>
-                        <th className="py-[0.6vw] px-[0.45vw] border-r border-slate-300 text-center w-[3.8vw] whitespace-nowrap">Type</th>
-                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[7.5vw] whitespace-nowrap">Claimed By</th>
-                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[7.2vw] whitespace-nowrap">Status</th>
-                        <th className="py-[0.6vw] px-[0.5vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
+                        <th
+                          onClick={() => handleSort("date")}
+                          className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center gap-[0.2vw]">
+                            <span>Date</span>
+                            {sortField === "date" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("customerName")}
+                          className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[11vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center gap-[0.2vw]">
+                            <span>Customer Name &amp; Code</span>
+                            {sortField === "customerName" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("category")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-center gap-[0.2vw]">
+                            <span>Category</span>
+                            {sortField === "category" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap">Ref No</th>
+                        <th
+                          onClick={() => handleSort("productDescription")}
+                          className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[11.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center gap-[0.2vw]">
+                            <span>Product Description</span>
+                            {sortField === "productDescription" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("productSegment")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[6vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-center gap-[0.2vw]">
+                            <span>Segment</span>
+                            {sortField === "productSegment" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("boardType")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 w-[5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center gap-[0.2vw]">
+                            <span>Board</span>
+                            {sortField === "boardType" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap font-mono">Serial No</th>
+                        <th
+                          onClick={() => handleSort("qty")}
+                          className="py-[0.6vw] px-[0.4vw] border-r border-slate-300 text-center w-[3.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-center gap-[0.2vw]">
+                            <span>Qty</span>
+                            {sortField === "qty" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("materialCost")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-end gap-[0.2vw]">
+                            <span>Cost</span>
+                            {sortField === "materialCost" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("tat")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-center gap-[0.2vw]">
+                            <span>TAT</span>
+                            {sortField === "tat" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("ageGroup")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-center gap-[0.2vw]">
+                            <span>Age Group</span>
+                            {sortField === "ageGroup" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th className="py-[0.6vw] px-[0.45vw] border-r border-slate-300 text-center w-[3.2vw] whitespace-nowrap">Type</th>
+                        <th
+                          onClick={() => handleSort("assignedToName")}
+                          className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center gap-[0.2vw]">
+                            <span>Claimed</span>
+                            {sortField === "assignedToName" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("status")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[6.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-center gap-[0.2vw]">
+                            <span>Status</span>
+                            {sortField === "status" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th className="py-[0.6vw] px-[0.5vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[4.5vw]">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="text-[0.78vw]">
                       {paginatedProducts.length === 0 ? (
                         <tr>
-                          <td colSpan={12} className="py-[8vh] text-center text-slate-400 font-semibold">
+                          <td colSpan={17} className="py-[8vh] text-center text-slate-400 font-semibold">
                             No service material records match the selected criteria.
                           </td>
                         </tr>
@@ -1572,7 +2041,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Product Description */}
-                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-200 max-w-[12vw]">
+                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-200 max-w-[11.5vw]">
                                 <div className="flex items-center gap-[0.35vw] max-w-full">
                                   <CustomTooltip text={product.productDescription} position="top-start" className="min-w-0 flex-1">
                                     <span className="font-normal text-slate-800 truncate block">
@@ -1609,6 +2078,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 </div>
                               </td>
 
+                              {/* Segment */}
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap text-slate-700 font-normal">
+                                {product.productSegment || product.segment ? (
+                                  <span className="inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] bg-slate-100 text-slate-700 border border-slate-200">
+                                    {product.productSegment || product.segment}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-300">—</span>
+                                )}
+                              </td>
+
                               {/* Board Type */}
                               <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 whitespace-nowrap text-slate-700 font-normal">
                                 {product.boardType || "—"}
@@ -1617,6 +2097,53 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               {/* Serial No */}
                               <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap font-mono font-normal text-slate-800">
                                 {product.serialNumber || "—"}
+                              </td>
+
+                              {/* Qty */}
+                              <td className="py-[0.55vw] px-[0.4vw] border-r border-slate-200 text-center font-semibold text-slate-800">
+                                {Math.max(1, Number(product.qty) || 1)}
+                              </td>
+
+                              {/* Material Cost */}
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-right font-medium text-slate-800">
+                                {Number(product.report?.materialCost || product.materialCost) > 0 ? (
+                                  <span>₹{Number(product.report?.materialCost || product.materialCost).toLocaleString()}</span>
+                                ) : (
+                                  <span className="text-slate-300 font-normal">—</span>
+                                )}
+                              </td>
+
+                              {/* TAT */}
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                <span className="inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                  {formatTatText(entry.date, product.report?.completedDate)}
+                                </span>
+                              </td>
+
+                              {/* Age Group */}
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
+                                {(() => {
+                                  const days = calculateTatDays(entry.date, product.report?.completedDate);
+                                  const label = getAgeGroupLabel(days);
+                                  const badgeClass =
+                                    days === null
+                                      ? "text-slate-300"
+                                      : days <= 3
+                                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                      : days <= 7
+                                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                                      : days <= 15
+                                      ? "bg-amber-50 text-amber-700 border-amber-200"
+                                      : "bg-rose-50 text-rose-700 border-rose-200";
+
+                                  return days === null ? (
+                                    <span className="text-slate-300 font-normal">—</span>
+                                  ) : (
+                                    <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.66vw] font-medium border ${badgeClass}`}>
+                                      {label}
+                                    </span>
+                                  );
+                                })()}
                               </td>
 
                               {/* Type (W / PW) */}
@@ -1674,6 +2201,25 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         })
                       )}
                     </tbody>
+                    {/* Total Row for Material Cost and Qty */}
+                    {sortedProducts.length > 0 && (
+                      <tfoot className="sticky bottom-0 bg-[#F1F5F9] border-t-2 border-slate-300 font-bold text-[0.74vw] text-slate-800 shadow-[0_-2px_6px_rgba(0,0,0,0.04)] z-10">
+                        <tr>
+                          <td colSpan={9} className="py-[0.6vw] px-[0.7vw] border-r border-slate-300 text-right uppercase tracking-wider text-slate-600">
+                            Total
+                          </td>
+                          <td className="py-[0.6vw] px-[0.4vw] border-r border-slate-300 text-center font-bold text-slate-900">
+                            {quantityStats.receivedQty}
+                          </td>
+                          <td className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right font-bold text-indigo-900">
+                            {quantityStats.totalMaterialCost > 0
+                              ? `₹${quantityStats.totalMaterialCost.toLocaleString()}`
+                              : "—"}
+                          </td>
+                          <td colSpan={6} className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 bg-[#F1F5F9]"></td>
+                        </tr>
+                      </tfoot>
+                    )}
                   </table>
                 </div>
 
