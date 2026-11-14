@@ -448,7 +448,7 @@ const EditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className={`w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[2vw] ${isFilling ? "select-none" : ""}`}
+      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
     >
       <table className="w-full border-collapse text-[0.8vw]">
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
