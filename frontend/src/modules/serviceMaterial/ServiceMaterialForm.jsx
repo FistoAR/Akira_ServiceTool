@@ -898,7 +898,7 @@ const ServiceMaterialForm = ({
                 <input
                   readOnly
                   value={fmtDate(base.date)}
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               </div>
@@ -914,7 +914,7 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoCustomer", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter customer ref no…"
-                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
@@ -929,7 +929,7 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoInternal", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter internal ref no…"
-                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
@@ -955,7 +955,7 @@ const ServiceMaterialForm = ({
                       label: t.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
 
@@ -998,7 +998,7 @@ const ServiceMaterialForm = ({
                       }}
                       disabled={isReadOnly}
                       placeholder="Search & select customer…"
-                      className="w-full border border-slate-200 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                      className="w-full border border-slate-300 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1099,7 +1099,7 @@ const ServiceMaterialForm = ({
                       label: u.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
 
@@ -1120,7 +1120,7 @@ const ServiceMaterialForm = ({
                       label: s.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
             </div>
@@ -1266,7 +1266,7 @@ const ServiceMaterialForm = ({
                           partyCode: e.target.value,
                         })
                       }
-                      className="border border-slate-200 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                       placeholder="e.g. CUS-001"
                     />
                   </div>
@@ -1283,7 +1283,7 @@ const ServiceMaterialForm = ({
                         })
                       }
                       options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
-                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-200 text-[0.8vw]"
+                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-300 text-[0.8vw]"
                     />
                   </div>
                 </div>
@@ -1300,7 +1300,7 @@ const ServiceMaterialForm = ({
                         partyDescription: e.target.value,
                       })
                     }
-                    className="border border-slate-200 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                    className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                     placeholder="Company Name"
                   />
                 </div>
@@ -1316,7 +1316,7 @@ const ServiceMaterialForm = ({
                           state: e.target.value,
                         })
                       }
-                      className="border border-slate-200 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                       placeholder="e.g. Tamil Nadu"
                     />
                   </div>
@@ -1333,7 +1333,7 @@ const ServiceMaterialForm = ({
                           districtCity: e.target.value,
                         })
                       }
-                      className="border border-slate-200 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                       placeholder="e.g. Coimbatore"
                     />
                   </div>
@@ -1377,7 +1377,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-200 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Segment"
                         />
                       </div>
@@ -1397,7 +1397,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-200 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Code"
                         />
                       </div>
@@ -1417,7 +1417,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-200 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Description"
                         />
                       </div>
@@ -1439,7 +1439,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-200 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Days"
                         />
                       </div>

@@ -563,7 +563,7 @@ const EditableProductTable = ({
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <div className="flex bg-gray-100 p-[0.15vw] rounded-[0.3vw] w-full border border-slate-200 cursor-default select-none">
+                          <div className="flex bg-gray-100 p-[0.15vw] rounded-[0.3vw] w-full border border-slate-300 cursor-default select-none">
                             {typeOptions.map(opt => (
                               <span 
                                 key={opt} 
