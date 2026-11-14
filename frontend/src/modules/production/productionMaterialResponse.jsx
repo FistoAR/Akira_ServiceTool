@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   Package, Clock, User, CheckCircle, AlertCircle, X, Eye, Send,
   FileText, Calendar, Hash, Tag, Wrench,
-  AlertTriangle, Info, ChevronDown, ChevronLeft, ChevronRight, Plus, Search, Check, Edit3, RotateCcw
+  AlertTriangle, Info, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Plus, Search, Check, Edit3, RotateCcw
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
