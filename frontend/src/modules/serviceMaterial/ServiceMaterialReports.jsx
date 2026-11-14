@@ -479,8 +479,8 @@ const ProductHistoryModal = ({ item, onClose }) => {
               <Clock className="w-[0.95vw] h-[0.95vw]" />
             </div>
             <div>
-              <h3 className="text-[1vw] font-bold text-slate-800">Status History</h3>
-              <p className="text-[0.7vw] text-slate-500 font-medium">
+              <h3 className="text-[1vw] font-semibold text-slate-800">Status History</h3>
+              <p className="text-[0.7vw] text-slate-500 font-normal">
                 {product.productDescription} {product.serialNumber ? `(${product.serialNumber})` : ""}
               </p>
             </div>
@@ -514,7 +514,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
                     {/* Content Card */}
                     <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-slate-200 shadow-2xs">
                       <div className="flex items-center justify-between mb-[0.3vw]">
-                        <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-bold ${
+                        <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium ${
                           isApproved
                             ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                             : isAdmin
@@ -523,13 +523,13 @@ const ProductHistoryModal = ({ item, onClose }) => {
                         }`}>
                           {item.status}
                         </span>
-                        <span className="text-[0.68vw] text-slate-400 font-medium">
+                        <span className="text-[0.68vw] text-slate-400 font-normal">
                           {fmtDateTime(item.timestamp)}
                         </span>
                       </div>
 
                       {item.remark && (
-                        <p className="text-[0.75vw] text-slate-700 font-medium mt-[0.3vw] bg-slate-50/80 p-[0.4vw] rounded-[0.35vw] border border-slate-200/70">
+                        <p className="text-[0.75vw] text-slate-600 font-normal mt-[0.3vw] bg-slate-50/80 p-[0.4vw] rounded-[0.35vw] border border-slate-200/70">
                           {item.remark}
                         </p>
                       )}

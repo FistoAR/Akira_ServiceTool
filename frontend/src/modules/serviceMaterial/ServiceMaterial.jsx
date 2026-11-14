@@ -1503,17 +1503,17 @@ const HistoryCellButton = ({ prod }) => {
                   initial={{ opacity: 0, scale: 0.95, y: showAbove ? 4 : -4 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-white border border-gray-400 shadow-2xl rounded-[0.5vw] w-[22vw] p-[1vw]"
+                  className="bg-white border border-slate-200 shadow-2xl rounded-[0.6vw] w-[22vw] p-[1vw]"
                 >
-                  <div className="flex items-center justify-between mb-[0.8vw] pb-[0.4vw] border-b border-gray-400">
-                    <div className="text-[0.8vw] font-bold text-black flex items-center gap-[0.4vw]">
-                      <Clock className="w-[0.9vw] h-[0.9vw] text-blue-500" />
+                  <div className="flex items-center justify-between mb-[0.6vw] pb-[0.35vw] border-b border-slate-200">
+                    <div className="text-[0.78vw] font-semibold text-slate-800 flex items-center gap-[0.4vw]">
+                      <Clock className="w-[0.85vw] h-[0.85vw] text-blue-600" />
                       Status History
                     </div>
                     <button
                       type="button"
                       onClick={() => setShowHistory(false)}
-                      className="text-black/40 hover:text-black cursor-pointer"
+                      className="text-slate-400 hover:text-slate-700 cursor-pointer p-[0.15vw] rounded-full hover:bg-slate-100 transition-colors"
                     >
                       <X className="w-[0.8vw] h-[0.8vw]" />
                     </button>
@@ -1613,18 +1613,18 @@ const HistoryCellButton = ({ prod }) => {
                                   <div
                                     className={`absolute left-[-1.05vw] top-[0.25vw] w-[0.55vw] h-[0.55vw] rounded-full border-2 border-white ${dotColor} shadow-sm z-10`}
                                   />
-                                  <div className="flex-1 bg-gray-50 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] border border-gray-200">
+                                  <div className="flex-1 bg-slate-50/70 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] border border-slate-200">
                                     <div className="flex items-center justify-between gap-[0.4vw] flex-wrap">
                                       {entry.type === "assigned" ? (
-                                        <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-blue-50 text-blue-700 border-blue-300">
+                                        <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
                                           Assigned → {entry.name}
                                         </span>
                                       ) : entry.type === "admin" ? (
                                         <span
-                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                             entry.status === "Approved"
-                                              ? "bg-emerald-50 text-emerald-700 border-emerald-300"
-                                              : "bg-amber-50 text-amber-700 border-amber-300"
+                                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                              : "bg-amber-50 text-amber-700 border-amber-200"
                                           }`}
                                         >
                                           {entry.adminName
@@ -1633,32 +1633,32 @@ const HistoryCellButton = ({ prod }) => {
                                         </span>
                                       ) : (
                                         <span
-                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                             entry.status === "Completed"
-                                              ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                               : entry.status === "Hold"
-                                                ? "bg-rose-50 text-rose-700 border-rose-300"
+                                                ? "bg-rose-50 text-rose-700 border-rose-200"
                                                 : entry.status ===
                                                     "Not Repairable"
-                                                  ? "bg-slate-100 text-slate-700 border-slate-400"
+                                                  ? "bg-slate-100 text-slate-700 border-slate-300"
                                                   : entry.status ===
                                                       "Under Testing"
-                                                    ? "bg-purple-50 text-purple-700 border-purple-300"
-                                                    : "bg-amber-50 text-amber-700 border-amber-300"
+                                                    ? "bg-purple-50 text-purple-700 border-purple-200"
+                                                    : "bg-amber-50 text-amber-700 border-amber-200"
                                           }`}
                                         >
                                           {entry.status}
                                         </span>
                                       )}
                                       {tsLabel && (
-                                        <span className="text-[0.65vw] text-gray-400 font-medium whitespace-nowrap">
+                                        <span className="text-[0.65vw] text-slate-400 font-normal whitespace-nowrap">
                                           {tsLabel}
                                         </span>
                                       )}
                                     </div>
                                     {entry.remark && (
-                                      <div className="mt-[0.3vw] text-[0.7vw] text-gray-700">
-                                        <span className="font-semibold text-gray-500">
+                                      <div className="mt-[0.3vw] text-[0.7vw] text-slate-600 font-normal">
+                                        <span className="text-slate-500 font-medium">
                                           Remarks:{" "}
                                         </span>
                                         {entry.remark}
