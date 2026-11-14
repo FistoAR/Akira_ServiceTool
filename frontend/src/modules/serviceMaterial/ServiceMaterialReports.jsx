@@ -605,6 +605,20 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   const { toast } = useNotification();
   const { socket } = useSocket();
 
+  // Resolved Logged-in User
+  const loggedInUser = useMemo(() => {
+    try {
+      return (
+        propUser ||
+        JSON.parse(sessionStorage.getItem("loggedInUser")) ||
+        JSON.parse(localStorage.getItem("loggedInUser")) ||
+        null
+      );
+    } catch {
+      return null;
+    }
+  }, [propUser]);
+
   // Filters & State
   const [activeMainView, setActiveMainView] = useState("allProducts"); // "allProducts" | "assignments"
   const [activeStatusTab, setActiveStatusTab] = useState("All");
@@ -1118,7 +1132,27 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         return exportRow;
       });
 
-      const ws = XLSX.utils.json_to_sheet(rows);
+      const exportDateStr = new Date().toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      const exporterName = loggedInUser?.name || loggedInUser?.username || "System User";
+      const exporterRole = loggedInUser?.role || loggedInUser?.department || "";
+      const exporterInfo = exporterRole ? `${exporterName} (${exporterRole})` : exporterName;
+
+      // Top metadata header block: Title, Exported By & Export Date
+      const metaRows = [
+        ["SERVICE MATERIAL REPORT"],
+        [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+        [], // blank separator row
+      ];
+
+      const ws = XLSX.utils.aoa_to_sheet(metaRows);
+      XLSX.utils.sheet_add_json(ws, rows, { origin: "A4" });
 
       // Append Total Row for Material Cost and Qty
       const totalRowAoa = activeCols.map((col, cIdx) => {
@@ -1128,6 +1162,26 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         return "";
       });
       XLSX.utils.sheet_add_aoa(ws, [totalRowAoa], { origin: -1 });
+
+      const totalCols = activeCols.length;
+      ws["!merges"] = [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: Math.max(3, totalCols - 1) } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) } },
+        { s: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) + 1 }, e: { r: 1, c: Math.max(4, totalCols - 1) } },
+      ];
+
+      // Metadata Styles
+      const titleStyle = {
+        font: { bold: true, color: { rgb: "FFFFFF" }, sz: 12, name: "Calibri" },
+        fill: { fgColor: { rgb: "0F172A" } }, // Slate-900 banner
+        alignment: { horizontal: "left", vertical: "center", indent: 1 },
+      };
+
+      const metaInfoStyle = {
+        font: { bold: true, color: { rgb: "334155" }, sz: 9.5, name: "Calibri" },
+        fill: { fgColor: { rgb: "F1F5F9" } }, // Slate-100 banner
+        alignment: { vertical: "center", indent: 1 },
+      };
 
       // Header, Cell, and Total Styling
       const headerStyle = {
@@ -1207,14 +1261,23 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       const statusColIndex = activeCols.findIndex((c) => c.key === "status");
 
       for (let R = range.s.r; R <= range.e.r; ++R) {
-        const isHeader = R === 0;
+        const isTitleRow = R === 0;
+        const isMetaRow = R === 1;
+        const isBlankRow = R === 2;
+        const isHeader = R === 3;
         const isTotalRow = R === range.e.r;
+
+        if (isBlankRow) continue;
 
         for (let C = range.s.c; C <= range.e.c; ++C) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!ws[cellRef]) ws[cellRef] = { t: "s", v: "" };
 
-          if (isHeader) {
+          if (isTitleRow) {
+            ws[cellRef].s = titleStyle;
+          } else if (isMetaRow) {
+            ws[cellRef].s = metaInfoStyle;
+          } else if (isHeader) {
             ws[cellRef].s = headerStyle;
           } else if (isTotalRow) {
             ws[cellRef].s = totalRowStyle;
@@ -1245,7 +1308,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       ws["!cols"] = Object.keys(rows[0] || {}).map((k) => ({
         wch: Math.min(Math.max(k.length + 4, 14), 40),
       }));
-      ws["!rows"] = [{ hpt: 26 }];
+      ws["!rows"] = [{ hpt: 28 }, { hpt: 20 }, { hpt: 8 }, { hpt: 26 }];
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Service Material Reports");

@@ -1212,9 +1212,48 @@ const buildEscalationHistoryString = (call, prod) => {
         return;
       }
 
-      const ws = XLSX.utils.json_to_sheet(rows);
+      const exportDateStr = new Date().toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      const exporterName = currentUser?.name || currentUser?.username || "System User";
+      const exporterRole = currentUser?.role || currentUser?.department || "";
+      const exporterInfo = exporterRole ? `${exporterName} (${exporterRole})` : exporterName;
+
+      // Metadata header block
+      const metaRows = [
+        [sheetName.toUpperCase()],
+        [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+        [], // blank separator row
+      ];
+
+      const ws = XLSX.utils.aoa_to_sheet(metaRows);
+      XLSX.utils.sheet_add_json(ws, rows, { origin: "A4" });
+
+      const totalCols = Object.keys(rows[0] || {}).length;
+      ws["!merges"] = [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: Math.max(3, totalCols - 1) } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) } },
+        { s: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) + 1 }, e: { r: 1, c: Math.max(4, totalCols - 1) } },
+      ];
 
       // ── Apply Professional Styling: Borders, Header Colors, Left Alignment & Text Wrapping ──
+      const titleStyle = {
+        font: { name: "Segoe UI", sz: 12, bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "1E3A8A" } }, // Rich dark navy
+        alignment: { horizontal: "left", vertical: "center", indent: 1 },
+      };
+
+      const metaInfoStyle = {
+        font: { name: "Segoe UI", sz: 9.5, bold: true, color: { rgb: "334155" } },
+        fill: { fgColor: { rgb: "F1F5F9" } },
+        alignment: { vertical: "center", indent: 1 },
+      };
+
       const thinBorder = {
         top: { style: "thin", color: { rgb: "CBD5E1" } }, // slate-300
         bottom: { style: "thin", color: { rgb: "CBD5E1" } },
@@ -1250,18 +1289,29 @@ const buildEscalationHistoryString = (call, prod) => {
       const range = XLSX.utils.decode_range(ws["!ref"] || "A1");
 
       for (let R = range.s.r; R <= range.e.r; ++R) {
+        const isTitleRow = R === 0;
+        const isMetaRow = R === 1;
+        const isBlankRow = R === 2;
+        const isHeader = R === 3;
+
+        if (isBlankRow) continue;
+
         for (let C = range.s.c; C <= range.e.c; ++C) {
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!ws[cellRef]) {
             ws[cellRef] = { t: "s", v: "" };
           }
 
-          if (R === 0) {
+          if (isTitleRow) {
+            ws[cellRef].s = titleStyle;
+          } else if (isMetaRow) {
+            ws[cellRef].s = metaInfoStyle;
+          } else if (isHeader) {
             // Header row
             ws[cellRef].s = headerStyle;
           } else {
             // Alternating data rows
-            ws[cellRef].s = R % 2 === 0 ? alternateCellStyle : cellStyle;
+            ws[cellRef].s = (R - 4) % 2 === 1 ? alternateCellStyle : cellStyle;
           }
         }
       }
@@ -1276,8 +1326,8 @@ const buildEscalationHistoryString = (call, prod) => {
       });
       ws["!cols"] = colWidths;
 
-      // Set header row height
-      ws["!rows"] = [{ hpt: 28 }];
+      // Set header row heights: Title, Meta, Blank, Header
+      ws["!rows"] = [{ hpt: 28 }, { hpt: 20 }, { hpt: 8 }, { hpt: 28 }];
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, sheetName);

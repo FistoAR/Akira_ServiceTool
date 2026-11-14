@@ -884,8 +884,37 @@ export default function ServiceMaterialInwardResponse({
       data.push(row);
     });
 
-    const ws = XLSX.utils.json_to_sheet(data);
+    const exportDateStr = new Date().toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    const exporterName = currentUser?.name || currentUser?.username || "Employee";
+    const exporterRole = currentUser?.role || currentUser?.department || "";
+    const exporterInfo = exporterRole ? `${exporterName} (${exporterRole})` : exporterName;
+
+    // Prepend metadata rows
+    const metaRows = [
+      ["SERVICE MATERIAL TECHNICIAN REPORT"],
+      [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+      [], // blank separator row
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(metaRows);
+    XLSX.utils.sheet_add_json(ws, data, { origin: "A4" });
+
+    const totalCols = Object.keys(data[0] || {}).length;
+    ws["!merges"] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: Math.max(3, totalCols - 1) } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) } },
+      { s: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) + 1 }, e: { r: 1, c: Math.max(4, totalCols - 1) } },
+    ];
     ws["!cols"] = Object.keys(data[0] || {}).map(() => ({ wch: 20 }));
+    ws["!rows"] = [{ hpt: 26 }, { hpt: 18 }, { hpt: 8 }, { hpt: 24 }];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "My Reports");
     XLSX.writeFile(

@@ -162,7 +162,52 @@ const exportToPDF = (title, headers, data, filename, dateRange = "") => {
 };
 
 const exportToExcel = ({ data, filename }) => {
-  const ws = XLSX.utils.json_to_sheet(data);
+  let currentUser = null;
+  try {
+    currentUser =
+      JSON.parse(sessionStorage.getItem("loggedInUser")) ||
+      JSON.parse(localStorage.getItem("loggedInUser")) ||
+      null;
+  } catch (e) {
+    currentUser = null;
+  }
+
+  const exportDateStr = new Date().toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  const exporterName = currentUser?.name || currentUser?.username || "System User";
+  const exporterRole = currentUser?.role || currentUser?.department || "";
+  const exporterInfo = exporterRole ? `${exporterName} (${exporterRole})` : exporterName;
+
+  const reportTitle = (filename || "Production Material Report")
+    .replace(/_/g, " ")
+    .toUpperCase();
+
+  const metaRows = [
+    [reportTitle],
+    [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+    [], // blank separator row
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(metaRows);
+  XLSX.utils.sheet_add_json(ws, data, { origin: "A4" });
+
+  const totalCols = Object.keys(data[0] || {}).length;
+  ws["!merges"] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: Math.max(3, totalCols - 1) } },
+    { s: { r: 1, c: 0 }, e: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) } },
+    { s: { r: 1, c: Math.min(3, Math.floor(totalCols / 2) - 1) + 1 }, e: { r: 1, c: Math.max(4, totalCols - 1) } },
+  ];
+  ws["!cols"] = Object.keys(data[0] || {}).map((k) => ({
+    wch: Math.min(Math.max(k.length + 4, 14), 40),
+  }));
+  ws["!rows"] = [{ hpt: 26 }, { hpt: 18 }, { hpt: 8 }, { hpt: 24 }];
+
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Data");
   XLSX.writeFile(wb, `${filename}.xlsx`);
