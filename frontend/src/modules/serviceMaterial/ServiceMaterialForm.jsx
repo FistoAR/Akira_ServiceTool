@@ -266,7 +266,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
   );
 };
 
-// Unsaved Changes Confirmation Modal
+// Unsaved Changes Confirmation Modal (Clean & Minimal)
 const UnsavedChangesModal = ({ onConfirm, onClose }) => {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
@@ -274,40 +274,36 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 p-[2vw] w-[25vw]"
+        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 p-[1.4vw] w-[21vw]"
       >
-        <div className="flex items-center gap-[0.8vw] mb-[1.2vw]">
-          <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-red-100 flex items-center justify-center">
-            <AlertCircle className="w-[1.2vw] h-[1.2vw] text-red-600" />
+        <div className="flex items-start gap-[0.7vw] mb-[1.2vw]">
+          <div className="w-[2vw] h-[2vw] rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0 mt-[0.1vw]">
+            <AlertCircle className="w-[1vw] h-[1vw] text-rose-600" />
           </div>
-          <div>
-            <div className="text-[1vw] font-bold text-slate-800">
-              Unsaved Changes
-            </div>
-            <div className="text-[0.75vw] text-slate-500">
-              You have made changes to the form. Are you sure you want to go back?
-            </div>
+          <div className="flex-1">
+            <h4 className="text-[0.9vw] font-bold text-slate-800 leading-tight">
+              Discard Changes?
+            </h4>
+            <p className="text-[0.75vw] text-slate-500 mt-[0.3vw] leading-relaxed">
+              You have unsaved changes. Leaving now will discard them.
+            </p>
           </div>
         </div>
 
-        <div className="text-[0.72vw] text-red-700 bg-red-50 rounded-[0.5vw] p-[0.8vw] border border-red-200 mb-[1.5vw]">
-          <strong>Warning:</strong> Any unsaved information will be permanently lost if you leave this page.
-        </div>
-
-        <div className="flex gap-[0.8vw] justify-end">
+        <div className="flex gap-[0.6vw] justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.5vw] py-[0.6vw] border border-slate-200 rounded-[0.5vw] text-[0.8vw] font-bold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
+            className="px-[1vw] h-[2vw] border border-slate-300 rounded-[0.45vw] text-[0.76vw] font-medium text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
           >
-            Continue Editing
+            Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="px-[1.5vw] py-[0.6vw] bg-red-600 hover:bg-red-700 text-white rounded-[0.5vw] text-[0.8vw] font-bold cursor-pointer transition-all shadow-sm active:scale-95"
+            className="px-[1.1vw] h-[2vw] bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-[0.45vw] text-[0.76vw] font-medium cursor-pointer transition-all shadow-xs"
           >
-            Yes, Discard Changes
+            Discard
           </button>
         </div>
       </motion.div>
