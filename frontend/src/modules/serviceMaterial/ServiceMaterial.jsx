@@ -2227,12 +2227,6 @@ const AdminTableView = ({
                                   </span>
                                 </div>
 
-                                {/* Product count badge */}
-                                <span className="text-[0.68vw] font-normal text-blue-700 bg-blue-50 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap">
-                                  {prods.length}{" "}
-                                  {prods.length === 1 ? "Product" : "Products"}
-                                </span>
-
                                 {/* Inward Quantities Summary: Received, Claimed, Dispatched, Balance */}
                                 {(() => {
                                   const rowReceived = prods.reduce((sum, p) => sum + (Math.max(1, Number(p.qty) || 1)), 0);
@@ -2248,18 +2242,21 @@ const AdminTableView = ({
                                   const rowBalance = Math.max(0, rowReceived - rowDispatched);
 
                                   return (
-                                    <div className="flex items-center gap-[0.4vw] text-[0.66vw] font-medium ml-[0.3vw]">
-                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-slate-100 text-slate-700 border border-slate-200" title="Received Qty">
-                                        Rec: <strong className="font-semibold text-slate-800">{rowReceived}</strong>
+                                    <div className="flex items-center gap-[0.35vw] text-[0.7vw] text-slate-600 font-normal ml-[0.6vw]">
+                                      <span title="Received Qty">
+                                        Received: <span className="font-semibold text-slate-800">{rowReceived}</span>
                                       </span>
-                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-blue-50 text-blue-700 border border-blue-200" title="Claimed / In Progress Qty">
-                                        Claimed: <strong className="font-semibold text-blue-800">{rowClaimed}</strong>
+                                      <span className="text-slate-300">|</span>
+                                      <span title="Claimed / In Progress Qty">
+                                        Claimed: <span className="font-semibold text-slate-800">{rowClaimed}</span>
                                       </span>
-                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-emerald-50 text-emerald-700 border border-emerald-200" title="Dispatched Qty">
-                                        Disp: <strong className="font-semibold text-emerald-800">{rowDispatched}</strong>
+                                      <span className="text-slate-300">|</span>
+                                      <span title="Dispatched Qty">
+                                        Dispatched: <span className="font-semibold text-slate-800">{rowDispatched}</span>
                                       </span>
-                                      <span className="px-[0.38vw] py-[0.05vw] rounded bg-amber-50 text-amber-800 border border-amber-200" title="Balance Qty">
-                                        Bal: <strong className="font-semibold text-amber-900">{rowBalance}</strong>
+                                      <span className="text-slate-300">|</span>
+                                      <span title="Balance Qty">
+                                        Balance: <span className="font-semibold text-slate-800">{rowBalance}</span>
                                       </span>
                                     </div>
                                   );
