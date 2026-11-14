@@ -1227,10 +1227,24 @@ const buildEscalationHistoryString = (call, prod) => {
       const exporterRole = currentUser?.role || currentUser?.department || "";
       const exporterInfo = exporterRole ? `${exporterName} (${exporterRole})` : exporterName;
 
+      const lastUpdatedStr = lastUpdated
+        ? new Date(lastUpdated).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })
+        : exportDateStr;
+
       // Metadata header block
       const metaRows = [
         [sheetName.toUpperCase()],
-        [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+        [
+          `Exported By: ${exporterInfo}`,
+          `Last Updated: ${lastUpdatedStr} | Export Date: ${exportDateStr}`,
+        ],
         [], // blank separator row
       ];
 
@@ -1266,7 +1280,7 @@ const buildEscalationHistoryString = (call, prod) => {
 
       const headerStyle = {
         fill: { fgColor: { rgb: "1E40AF" } }, // Rich royal blue (#1E40AF)
-        font: { name: "Segoe UI", sz: 10, bold: true, color: { rgb: "FFFFFF" } },
+        font: { name: "Segoe UI", sz: 11, bold: true, color: { rgb: "FFFFFF" } },
         alignment: { horizontal: "left", vertical: "center", wrapText: true },
         border: {
           top: { style: "medium", color: { rgb: "1E3A8A" } },
@@ -1277,14 +1291,14 @@ const buildEscalationHistoryString = (call, prod) => {
       };
 
       const cellStyle = {
-        font: { name: "Segoe UI", sz: 9.5, color: { rgb: "1E293B" } }, // slate-800
+        font: { name: "Segoe UI", sz: 10.5, color: { rgb: "1E293B" } }, // slate-800
         alignment: { horizontal: "left", vertical: "center", wrapText: true },
         border: thinBorder,
       };
 
       const alternateCellStyle = {
         fill: { fgColor: { rgb: "F8FAFC" } }, // subtle slate-50
-        font: { name: "Segoe UI", sz: 9.5, color: { rgb: "1E293B" } },
+        font: { name: "Segoe UI", sz: 10.5, color: { rgb: "1E293B" } },
         alignment: { horizontal: "left", vertical: "center", wrapText: true },
         border: thinBorder,
       };
@@ -1692,23 +1706,6 @@ const buildEscalationHistoryString = (call, prod) => {
                 </div>
               </>
             )}
-          </div>
-
-          {/* Last Updated indicator & Refresh */}
-          <div className="flex items-center gap-[0.35vw] bg-white border border-slate-200/90 rounded-full h-[2.2vw] px-[0.75vw] text-[0.72vw] text-slate-600 shadow-2xs">
-            <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-slate-400 font-medium">Updated:</span>
-            <span className="font-semibold text-slate-700">
-              {lastUpdated ? lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "—"}
-            </span>
-            <button
-              type="button"
-              onClick={fetchData}
-              className="p-[0.2vw] text-slate-400 hover:text-indigo-600 rounded-full transition-colors cursor-pointer border-0 bg-transparent flex items-center justify-center ml-[0.1vw]"
-              title="Refresh report data"
-            >
-              <RefreshCw className="w-[0.75vw] h-[0.75vw]" />
-            </button>
           </div>
 
           {/* Export Excel Button */}

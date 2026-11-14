@@ -191,7 +191,10 @@ const exportToExcel = ({ data, filename }) => {
 
   const metaRows = [
     [reportTitle],
-    [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+    [
+      `Exported By: ${exporterInfo}`,
+      `Last Updated: ${exportDateStr} | Export Date: ${exportDateStr}`,
+    ],
     [], // blank separator row
   ];
 
@@ -1088,23 +1091,6 @@ export default function ProductionMaterialReports() {
         </div>
 
         <div className="flex items-center gap-[0.8vw]">
-          {/* Last Updated indicator & Refresh */}
-          <div className="flex items-center gap-[0.35vw] bg-white border border-slate-200/90 rounded-full h-[2.1vw] px-[0.75vw] text-[0.72vw] text-slate-600 shadow-2xs">
-            <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-slate-400 font-medium">Updated:</span>
-            <span className="font-semibold text-slate-700">
-              {lastUpdated ? lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "—"}
-            </span>
-            <button
-              type="button"
-              onClick={fetchData}
-              className="p-[0.2vw] text-slate-400 hover:text-blue-600 rounded-full transition-colors cursor-pointer border-0 bg-transparent flex items-center justify-center ml-[0.1vw]"
-              title="Refresh report data"
-            >
-              <RefreshCw className="w-[0.75vw] h-[0.75vw]" />
-            </button>
-          </div>
-
           <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pr-[0.4vw] flex items-center gap-[0.3vw]">
             <span>Total:</span>
             <span className="font-bold text-slate-800 bg-slate-100 px-[0.45vw] py-[0.08vw] rounded-full text-[0.72vw]">

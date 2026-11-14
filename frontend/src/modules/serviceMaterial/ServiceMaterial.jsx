@@ -36,6 +36,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import EditableProductTable from "./EditableProductTable";
 import ServiceMaterialForm from "./ServiceMaterialForm";
+import ServiceMaterialDetailModal from "./ServiceMaterialDetailModal";
 import CustomDropdown from "../../components/CustomDropdown";
 import { io } from "socket.io-client";
 import useModulePermissions from "../../components/useModulePermissions";
@@ -310,17 +311,17 @@ const BoardTypeMasterModal = ({ onClose }) => {
               <Wrench className="w-[1vw] h-[1vw]" />
             </div>
             <div>
-              <h3 className="text-[0.95vw] font-semibold text-slate-800 tracking-tight">
+              <h3 className="text-[0.95vw] font-bold text-slate-900 tracking-tight">
                 Manage Board Types
               </h3>
-              <p className="text-[0.7vw] text-slate-500">
+              <p className="text-[0.7vw] text-slate-700">
                 Add, edit or delete board types master data
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-[0.3vw] hover:bg-slate-100 rounded-full"
+            className="text-slate-600 hover:text-slate-900 cursor-pointer transition-colors p-[0.3vw] hover:bg-slate-100 rounded-full"
             title="Close"
           >
             <X className="w-[1.1vw] h-[1.1vw]" />
@@ -331,7 +332,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
         <div className="p-[1.2vw] bg-slate-50/60 border-b border-slate-200">
           <form onSubmit={handleAdd} className="flex gap-[0.7vw] items-end">
             <div className="flex-1 space-y-[0.3vw]">
-              <label className="text-[0.72vw] font-semibold text-slate-700">
+              <label className="text-[0.72vw] font-bold text-slate-800">
                 Board Type Name <span className="text-rose-500">*</span>
               </label>
               <input
@@ -341,7 +342,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                 onChange={(e) =>
                   setNewItem({ ...newItem, name: e.target.value })
                 }
-                className="w-full border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-800 bg-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
+                className="w-full border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-900 bg-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-500"
                 placeholder="e.g. Main Board"
               />
             </div>
@@ -357,11 +358,11 @@ const BoardTypeMasterModal = ({ onClose }) => {
         {/* Master Table List */}
         <div className="flex-1 overflow-hidden p-[1.2vw] bg-white flex flex-col min-h-0">
           {loading ? (
-            <div className="text-center text-[0.8vw] text-slate-500 py-[2vw]">
+            <div className="text-center text-[0.8vw] text-slate-700 py-[2vw]">
               Loading...
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center text-[0.8vw] text-slate-400 py-[2vw]">
+            <div className="text-center text-[0.8vw] text-slate-700 py-[2vw]">
               No board types found.
             </div>
           ) : (
@@ -369,10 +370,10 @@ const BoardTypeMasterModal = ({ onClose }) => {
               <table className="w-full border-collapse table-fixed">
                 <thead className="shrink-0 bg-[#E9EDF7]">
                   <tr className="border-b border-slate-300">
-                    <th className="text-left py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider">
+                    <th className="text-left py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-800 uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider w-[22%]">
+                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-800 uppercase tracking-wider w-[22%]">
                       Actions
                     </th>
                   </tr>
@@ -395,21 +396,21 @@ const BoardTypeMasterModal = ({ onClose }) => {
                                 onChange={(e) =>
                                   setEditItem({ ...editItem, name: e.target.value })
                                 }
-                                className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.78vw] font-medium outline-none focus:ring-1 focus:ring-blue-400"
+                                className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.78vw] font-medium text-slate-900 outline-none focus:ring-1 focus:ring-blue-400"
                               />
                             </td>
                             <td className="py-[0.45vw] px-[0.8vw] text-right w-[22%]">
                               <div className="flex items-center justify-end gap-[0.3vw]">
                                 <button
                                   onClick={() => handleUpdate(item._id)}
-                                  className="text-emerald-600 hover:text-emerald-700 p-[0.3vw] hover:bg-emerald-50 rounded cursor-pointer transition-colors"
+                                  className="text-emerald-700 hover:text-emerald-800 p-[0.3vw] hover:bg-emerald-50 rounded cursor-pointer transition-colors"
                                   title="Save"
                                 >
                                   <Save className="w-[0.85vw] h-[0.85vw]" />
                                 </button>
                                 <button
                                   onClick={() => setEditingId(null)}
-                                  className="text-slate-400 hover:text-slate-600 p-[0.3vw] hover:bg-slate-100 rounded cursor-pointer transition-colors"
+                                  className="text-slate-600 hover:text-slate-800 p-[0.3vw] hover:bg-slate-100 rounded cursor-pointer transition-colors"
                                   title="Cancel"
                                 >
                                   <X className="w-[0.85vw] h-[0.85vw]" />
@@ -419,7 +420,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                           </>
                         ) : (
                           <>
-                            <td className="py-[0.55vw] px-[0.8vw] text-[0.78vw] font-normal text-slate-800">
+                            <td className="py-[0.55vw] px-[0.8vw] text-[0.78vw] font-medium text-slate-800">
                               {item.name}
                             </td>
                             <td className="py-[0.55vw] px-[0.8vw] text-right w-[22%]">
@@ -429,14 +430,14 @@ const BoardTypeMasterModal = ({ onClose }) => {
                                     setEditingId(item._id);
                                     setEditItem({ name: item.name });
                                   }}
-                                  className="text-slate-500 hover:text-[#1a73e8] p-[0.3vw] hover:bg-blue-50 rounded-full cursor-pointer transition-colors"
+                                  className="text-slate-600 hover:text-[#1a73e8] p-[0.3vw] hover:bg-blue-50 rounded-full cursor-pointer transition-colors"
                                   title="Edit"
                                 >
                                   <Edit3 className="w-[0.85vw] h-[0.85vw]" />
                                 </button>
                                 <button
                                   onClick={() => handleDelete(item._id)}
-                                  className="text-slate-400 hover:text-rose-600 p-[0.3vw] hover:bg-rose-50 rounded-full cursor-pointer transition-colors"
+                                  className="text-slate-600 hover:text-rose-600 p-[0.3vw] hover:bg-rose-50 rounded-full cursor-pointer transition-colors"
                                   title="Delete"
                                 >
                                   <Trash2 className="w-[0.85vw] h-[0.85vw]" />
@@ -452,274 +453,6 @@ const BoardTypeMasterModal = ({ onClose }) => {
               </div>
             </div>
           )}
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
-// Product Report Modal (White Theme matching ServiceCall CallDetailsModal)
-const ProductReportModal = ({ product, onClose }) => {
-  if (!product || !product.report) return null;
-  const r = product.report;
-
-  return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-[1.5vw] animate-in fade-in duration-200">
-      <motion.div
-        initial={{ scale: 0.97, opacity: 0, y: 10 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.97, opacity: 0, y: 10 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-white w-[46vw] max-w-[650px] max-h-[88vh] rounded-[1.2vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200/90 font-sans"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header - White theme matching CallDetailsModal */}
-        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-[0.75vw]">
-            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
-              <FileText className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-[0.45vw] flex-wrap">
-                <span className="font-medium text-[0.95vw] text-slate-900 tracking-tight">
-                  Technical Report Details
-                </span>
-                {r.disposition && (
-                  <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal border bg-emerald-50 text-emerald-700 border-emerald-200">
-                    <span className="w-[0.32vw] h-[0.32vw] rounded-full bg-emerald-500" />
-                    {r.disposition}
-                  </span>
-                )}
-                {product.type && (
-                  <span className="inline-flex items-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal border bg-blue-50 text-blue-700 border-blue-200">
-                    {product.type === "W" ? "Warranty" : "Paid"}
-                  </span>
-                )}
-              </div>
-              <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw] flex items-center gap-[0.3vw] truncate max-w-[30vw]">
-                <span>{product.productDescription || "Service Report"}</span>
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-[0.45vw] text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer border-0 bg-transparent"
-            title="Close modal"
-          >
-            <X className="w-[1.05vw] h-[1.05vw]" />
-          </button>
-        </div>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-[1.3vw] space-y-[1vw] bg-slate-50/50">
-          {/* 1. Product & Service Execution Cards */}
-          <div className="grid grid-cols-2 gap-[0.9vw]">
-            {/* Product Info Card */}
-            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1vw] shadow-2xs space-y-[0.6vw]">
-              <div className="flex items-center justify-between pb-[0.45vw] border-b border-slate-100">
-                <span className="text-[0.74vw] font-medium text-slate-800 flex items-center gap-[0.35vw]">
-                  <Package className="w-[0.8vw] h-[0.8vw] text-blue-600" />
-                  Product Info
-                </span>
-                <span className="font-mono text-[0.68vw] text-slate-500 bg-slate-100 px-[0.35vw] py-[0.08vw] rounded border border-slate-200/80">
-                  {product.productCode || "Item"}
-                </span>
-              </div>
-
-              <div className="space-y-[0.4vw] text-[0.74vw]">
-                <div className="font-medium text-slate-800 leading-snug line-clamp-2" title={product.productDescription}>
-                  {product.productDescription || "—"}
-                </div>
-                <div className="flex items-center justify-between text-slate-600 pt-[0.2vw]">
-                  <span className="text-slate-400 font-normal">Serial Number</span>
-                  <span className="font-mono text-slate-800 font-normal">{product.serialNumber || "—"}</span>
-                </div>
-                <div className="flex items-center justify-between text-slate-600">
-                  <span className="text-slate-400 font-normal">Board Type</span>
-                  <span className="text-slate-800 font-normal">{product.boardType || "—"}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Service Execution Card */}
-            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1vw] shadow-2xs space-y-[0.6vw]">
-              <div className="flex items-center justify-between pb-[0.45vw] border-b border-slate-100">
-                <span className="text-[0.74vw] font-medium text-slate-800 flex items-center gap-[0.35vw]">
-                  <User className="w-[0.8vw] h-[0.8vw] text-indigo-600" />
-                  Service Execution
-                </span>
-                <span className="text-[0.68vw] text-slate-500 font-normal">
-                  Technician
-                </span>
-              </div>
-
-              <div className="space-y-[0.4vw] text-[0.74vw]">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 font-normal">Tested By</span>
-                  <span className="text-slate-800 font-medium">{r.testedBy || "—"}</span>
-                </div>
-                {r.fqaBy && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400 font-normal">FQA By</span>
-                    <span className="text-slate-800 font-normal">{r.fqaBy}</span>
-                  </div>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 font-normal">Completed Date</span>
-                  <span className="text-slate-800 font-normal">
-                    {r.completedDate ? fmtDate(r.completedDate) : "—"}
-                  </span>
-                </div>
-                {r.timeInHours && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400 font-normal">Time (Hours)</span>
-                    <span className="text-slate-800 font-normal">{r.timeInHours} hrs</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* 2. Key Attributes Grid (4M Category, Error Code, Disposition) */}
-          <div className="grid grid-cols-3 gap-[0.7vw]">
-            <div className="bg-white p-[0.75vw] rounded-[0.6vw] border border-slate-200 shadow-2xs">
-              <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">
-                4M Category
-              </span>
-              <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.15vw] block">
-                {r.fourMCategory || "—"}
-              </span>
-            </div>
-
-            <div className="bg-white p-[0.75vw] rounded-[0.6vw] border border-slate-200 shadow-2xs">
-              <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">
-                Error Code
-              </span>
-              <span className="font-mono font-normal text-slate-800 text-[0.78vw] mt-[0.15vw] block">
-                {r.errorCode || "—"}
-              </span>
-            </div>
-
-            <div className="bg-white p-[0.75vw] rounded-[0.6vw] border border-slate-200 shadow-2xs">
-              <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">
-                Disposition
-              </span>
-              <span className="font-normal text-emerald-700 text-[0.78vw] mt-[0.15vw] block">
-                {r.disposition || "—"}
-              </span>
-            </div>
-          </div>
-
-          {/* 3. Detailed Technical Analysis */}
-          <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.8vw]">
-            <div>
-              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
-                Problem Description
-              </span>
-              <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-normal leading-relaxed">
-                {r.problemDescription ? r.problemDescription : <span className="text-slate-400 italic">No description recorded.</span>}
-              </div>
-            </div>
-
-            <div>
-              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
-                Root Cause
-              </span>
-              <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-normal leading-relaxed">
-                {r.rootCause ? r.rootCause : <span className="text-slate-400 italic">No root cause recorded.</span>}
-              </div>
-            </div>
-
-            <div>
-              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
-                Corrective Action
-              </span>
-              <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-normal leading-relaxed">
-                {r.correctiveAction ? r.correctiveAction : <span className="text-slate-400 italic">No corrective action recorded.</span>}
-              </div>
-            </div>
-
-            {r.designators && (
-              <div>
-                <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
-                  Designators
-                </span>
-                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.6vw] rounded-[0.4vw] border border-slate-200 font-mono leading-relaxed">
-                  {r.designators}
-                </div>
-              </div>
-            )}
-
-            {r.partsReplacement && (
-              <div>
-                <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.35vw]">
-                  Parts Replaced
-                </span>
-                <div className="flex flex-wrap gap-[0.35vw]">
-                  {r.partsReplacement
-                    .split(",")
-                    .map((s) => s.trim())
-                    .filter(Boolean)
-                    .map((part, i) => (
-                      <span
-                        key={i}
-                        className="text-[0.72vw] font-normal text-slate-700 bg-slate-100 border border-slate-200/90 px-[0.55vw] py-[0.18vw] rounded-[0.35vw] flex items-center gap-[0.3vw]"
-                      >
-                        <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-500" />
-                        {part}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 4. Report Attachment Preview */}
-          {r.image && (
-            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1vw] shadow-2xs flex flex-col gap-[0.5vw]">
-              <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider">
-                Report Attachment (Image / PDF)
-              </span>
-              <div className="rounded-[0.5vw] overflow-hidden border border-slate-200 bg-slate-50/60 max-h-[24vh] p-[0.6vw] flex justify-center items-center">
-                {r.image.toLowerCase().endsWith(".pdf") ? (
-                  <a
-                    href={`${API_URL.replace("/api", "")}${r.image}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-[0.45vw] px-[1vw] py-[0.55vw] bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-[0.4vw] font-medium text-[0.76vw] cursor-pointer transition-colors"
-                  >
-                    <FileText className="w-[1.1vw] h-[1.1vw] text-rose-600" />
-                    <span>Open Attached PDF Document</span>
-                  </a>
-                ) : (
-                  <img
-                    src={`${API_URL.replace("/api", "")}${r.image}`}
-                    alt="Report Attachment"
-                    className="max-h-[22vh] w-auto object-contain cursor-pointer hover:opacity-95 transition-opacity rounded-[0.3vw] border border-slate-200 shadow-2xs bg-white"
-                    onClick={() =>
-                      window.open(
-                        `${API_URL.replace("/api", "")}${r.image}`,
-                        "_blank",
-                      )
-                    }
-                  />
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[0.76vw] rounded-full transition-colors cursor-pointer border-0"
-          >
-            Close
-          </button>
         </div>
       </motion.div>
     </div>
@@ -879,78 +612,78 @@ const ReportsModal = ({ row, onClose }) => {
                             <span>No technical report submitted yet by the assigned employee.</span>
                           </div>
                         ) : (
-                          <div className="p-[1.1vw] space-y-[0.9vw] bg-slate-50/40">
-                            {/* Key Metric Cards */}
-                            <div className="grid grid-cols-4 gap-[0.65vw]">
-                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
-                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                          <div className="p-[1.1vw] space-y-[0.9vw] bg-white divide-y divide-slate-200">
+                            {/* Key Metric Row (Clean inline stat strip) */}
+                            <div className="grid grid-cols-4 gap-[0.8vw] pb-[0.8vw] text-[0.76vw]">
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
                                   Tested By
                                 </span>
-                                <span className="font-medium text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                <span className="font-bold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
                                   {r.testedBy || "—"}
                                 </span>
                               </div>
-                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
-                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
                                   Completed Date
                                 </span>
-                                <span className="font-normal text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
                                   {r.completedDate ? fmtDate(r.completedDate) : "—"}
                                 </span>
                               </div>
-                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
-                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
                                   4M Category
                                 </span>
-                                <span className="font-normal text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                <span className="font-bold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
                                   {r.fourMCategory || "—"}
                                 </span>
                               </div>
-                              <div className="bg-white p-[0.65vw] rounded-[0.5vw] border border-slate-200 shadow-2xs">
-                                <span className="text-slate-400 block text-[0.62vw] font-normal uppercase tracking-wider">
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
                                   Error Code
                                 </span>
-                                <span className="font-mono font-normal text-slate-800 text-[0.75vw] mt-[0.1vw] block">
+                                <span className="font-mono font-bold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
                                   {r.errorCode || "—"}
                                 </span>
                               </div>
                             </div>
 
                             {/* Details: Problems, Root Cause, Corrective Action */}
-                            <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[0.9vw] shadow-2xs space-y-[0.7vw]">
+                            <div className="pt-[0.8vw] space-y-[0.7vw]">
                               <div>
-                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                   Problem Description
                                 </span>
-                                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.55vw] rounded-[0.35vw] border border-slate-200/90 font-normal leading-relaxed">
-                                  {r.problemDescription ? r.problemDescription : <span className="text-slate-400 italic">No description recorded.</span>}
+                                <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
+                                  {r.problemDescription ? r.problemDescription : <span className="text-slate-700 italic">No description recorded.</span>}
                                 </div>
                               </div>
 
                               <div>
-                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                   Root Cause Analysis
                                 </span>
-                                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.55vw] rounded-[0.35vw] border border-slate-200/90 font-normal leading-relaxed">
-                                  {r.rootCause ? r.rootCause : <span className="text-slate-400 italic">No root cause recorded.</span>}
+                                <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
+                                  {r.rootCause ? r.rootCause : <span className="text-slate-700 italic">No root cause recorded.</span>}
                                 </div>
                               </div>
 
                               <div>
-                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                   Corrective Action Taken
                                 </span>
-                                <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.55vw] rounded-[0.35vw] border border-slate-200/90 font-normal leading-relaxed">
-                                  {r.correctiveAction ? r.correctiveAction : <span className="text-slate-400 italic">No corrective action recorded.</span>}
+                                <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
+                                  {r.correctiveAction ? r.correctiveAction : <span className="text-slate-700 italic">No corrective action recorded.</span>}
                                 </div>
                               </div>
 
                               {r.designators && (
                                 <div>
-                                  <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                                  <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                     Designators
                                   </span>
-                                  <div className="text-[0.74vw] text-slate-700 bg-slate-50/70 p-[0.5vw] rounded-[0.35vw] border border-slate-200/90 font-mono">
+                                  <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.5vw] rounded-[0.35vw] border border-slate-200 font-mono font-medium">
                                     {r.designators}
                                   </div>
                                 </div>
@@ -958,7 +691,7 @@ const ReportsModal = ({ row, onClose }) => {
 
                               {r.partsReplacement && (
                                 <div>
-                                  <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.3vw]">
+                                  <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.3vw]">
                                     Parts Replacement
                                   </span>
                                   <div className="flex flex-wrap gap-[0.35vw]">
@@ -969,9 +702,9 @@ const ReportsModal = ({ row, onClose }) => {
                                       .map((part, i) => (
                                         <span
                                           key={i}
-                                          className="text-[0.7vw] font-normal text-slate-700 bg-slate-100 border border-slate-200/90 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
+                                          className="text-[0.72vw] font-bold text-slate-800 bg-slate-100 border border-slate-300 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
                                         >
-                                          <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-500" />
+                                          <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-600" />
                                           {part}
                                         </span>
                                       ))}
@@ -982,8 +715,8 @@ const ReportsModal = ({ row, onClose }) => {
 
                             {/* Attachment / Image */}
                             {r.image && (
-                              <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[0.8vw] shadow-2xs flex flex-col gap-[0.4vw]">
-                                <span className="text-[0.64vw] font-normal text-slate-400 uppercase tracking-wider">
+                              <div className="pt-[0.8vw] flex flex-col gap-[0.4vw]">
+                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide">
                                   Technical Attachment
                                 </span>
                                 <div className="rounded-[0.4vw] overflow-hidden border border-slate-200 bg-slate-50/60 max-h-[22vh] p-[0.5vw] flex justify-center items-center">
@@ -992,7 +725,7 @@ const ReportsModal = ({ row, onClose }) => {
                                       href={`${API_URL.replace("/api", "")}${r.image}`}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-[0.35vw] font-medium text-[0.74vw] cursor-pointer transition-colors"
+                                      className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 rounded-[0.35vw] font-bold text-[0.74vw] cursor-pointer transition-colors"
                                     >
                                       <FileText className="w-[1vw] h-[1vw] text-rose-600" />
                                       <span>Open Attached PDF Document</span>
@@ -1582,253 +1315,381 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
   );
 };
 
-// HistoryCellButton — standalone clock icon that opens the status history portal
-const HistoryCellButton = ({ prod }) => {
-  const historyRef = useRef(null);
-  const historyPortalRef = useRef(null);
+// HistoryCellButton — opens the status history modal popup
+const HistoryCellButton = ({ prod, row }) => {
   const [showHistory, setShowHistory] = useState(false);
-  const [historyButtonRect, setHistoryButtonRect] = useState(null);
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (
-        historyRef.current &&
-        !historyRef.current.contains(e.target) &&
-        (!historyPortalRef.current ||
-          !historyPortalRef.current.contains(e.target))
-      ) {
-        setShowHistory(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
   return (
-    <div ref={historyRef}>
+    <div>
       <button
         type="button"
-        onClick={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          setHistoryButtonRect(r);
-          setShowHistory((s) => !s);
-        }}
+        onClick={() => setShowHistory(true)}
         title="View History"
-        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-medium text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs"
+        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
       >
         View
       </button>
+
       {showHistory &&
-        historyButtonRect &&
         ReactDOM.createPortal(
-          (() => {
-            const POPUP_W = Math.min(window.innerWidth * 0.22, 360);
-            const GAP = 6;
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-
-            const spaceBelow = vh - historyButtonRect.bottom;
-            const showAbove = spaceBelow < 220;
-
-            const top = showAbove
-              ? historyButtonRect.top + window.scrollY - GAP
-              : historyButtonRect.bottom + window.scrollY + GAP;
-
-            let left = historyButtonRect.right + window.scrollX - POPUP_W;
-            left = Math.max(
-              GAP,
-              Math.min(left, vw + window.scrollX - POPUP_W - GAP),
-            );
-
-            return (
-              <div
-                style={{
-                  position: "absolute",
-                  top: `${top}px`,
-                  left: `${left}px`,
-                  zIndex: 99999,
-                  transform: showAbove ? "translateY(-100%)" : "none",
-                }}
-              >
-                <motion.div
-                  ref={historyPortalRef}
-                  initial={{ opacity: 0, scale: 0.95, y: showAbove ? 4 : -4 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-white border border-slate-200 shadow-2xl rounded-[0.6vw] w-[22vw] p-[1vw]"
+          <div className="fixed inset-0 z-[99999] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-[2vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] max-w-[650px] min-w-[360px] max-h-[85vh] flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+                <div>
+                  <h3 className="text-[1.05vw] font-bold text-slate-900 flex items-center gap-[0.45vw]">
+                    <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
+                    Status & Edit History
+                  </h3>
+                  <p className="text-[0.74vw] text-slate-700 font-medium mt-[0.15vw]">
+                    {prod.productDescription || "Product"} (
+                    <span className="font-mono font-semibold text-slate-900">{prod.serialNumber || "—"}</span>)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowHistory(false)}
+                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                 >
-                  <div className="flex items-center justify-between mb-[0.6vw] pb-[0.35vw] border-b border-slate-200">
-                    <div className="text-[0.78vw] font-semibold text-slate-800 flex items-center gap-[0.4vw]">
-                      <Clock className="w-[0.85vw] h-[0.85vw] text-blue-600" />
-                      Status History
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowHistory(false)}
-                      className="text-slate-400 hover:text-slate-700 cursor-pointer p-[0.15vw] rounded-full hover:bg-slate-100 transition-colors"
-                    >
-                      <X className="w-[0.8vw] h-[0.8vw]" />
-                    </button>
-                  </div>
-                  <div className="max-h-[18vw] overflow-y-auto pr-[0.3vw]">
-                    {(() => {
-                      const empHistory = prod.report?.history || [];
-                      const finalHistory = prod.finalStatusHistory || [];
-                      const timeline = [];
+                  <X className="w-[1.1vw] h-[1.1vw]" />
+                </button>
+              </div>
 
-                      if (prod.assignedTo) {
+              {/* Timeline Area */}
+              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-[#f8fafd]">
+                {(() => {
+                  const empHistory = prod.report?.history || [];
+                  const finalHistory = prod.finalStatusHistory || [];
+                  const timeline = [];
+
+                  if (prod.assignedTo) {
+                    timeline.push({
+                      type: "assigned",
+                      label: "Assigned",
+                      name: prod.assignedToName || prod.assignedTo,
+                      timestamp:
+                        empHistory.length > 0
+                          ? empHistory[0].timestamp
+                          : null,
+                    });
+                  }
+
+                  // Employee report status changes & edits
+                  empHistory.forEach((h) => {
+                    const isEdit = h.metadata?.isEdit || String(h.status || "").toLowerCase().includes("edit");
+                    const isPostCompleted = h.metadata?.isPostCompletedEdit || String(h.status || "").toLowerCase().includes("after completed");
+                    timeline.push({
+                      type: isEdit ? "closureEdit" : "report",
+                      status: h.status,
+                      remark: h.remark,
+                      diffs: h.metadata?.diffs || [],
+                      isPostCompletedEdit: isPostCompleted,
+                      timestamp: h.timestamp,
+                    });
+                  });
+
+                  // Product closure edits (diffs with author & reason)
+                  const closureEdits = prod._closureEdits || [];
+                  closureEdits.forEach((ce) => {
+                    const exists = timeline.some((t) => t.type === "closureEdit" && Math.abs(new Date(t.timestamp || 0) - new Date(ce.editedAt || 0)) < 2000);
+                    if (!exists) {
+                      timeline.push({
+                        type: "closureEdit",
+                        status: ce.isPostCompletedEdit ? "Edited after Completed" : "Report Edited",
+                        remark: ce.reason || "Report modified",
+                        adminName: ce.editedByName,
+                        role: ce.role,
+                        diffs: ce.diffs,
+                        isPostCompletedEdit: ce.isPostCompletedEdit,
+                        timestamp: ce.editedAt,
+                      });
+                    }
+                  });
+
+                  // Inward-level edits that modified this product
+                  if (row?.editHistory && Array.isArray(row.editHistory)) {
+                    row.editHistory.forEach((ie) => {
+                      const relevantDiffs = (ie.diffs || []).filter((d) => {
+                        const f = d.field || "";
+                        const prodDesc = prod.productDescription || "";
+                        const prodCode = prod.productCode || "";
+                        const serial = prod.serialNumber || "";
+                        return (
+                          (prodDesc && f.includes(prodDesc)) ||
+                          (prodCode && f.includes(prodCode)) ||
+                          (serial && f.includes(serial)) ||
+                          (!f.includes("Product (") && !f.includes("Product 1") && !f.includes("Product 2") && !f.includes("Product 3") && !f.includes("Product 4") && !f.includes("Product 5") && !f.includes("Product 6") && !f.includes("Product 7"))
+                        );
+                      });
+                      if (relevantDiffs.length > 0) {
                         timeline.push({
-                          type: "assigned",
-                          label: "Assigned",
-                          name: prod.assignedToName || prod.assignedTo,
-                          timestamp:
-                            empHistory.length > 0
-                              ? empHistory[0].timestamp
-                              : null,
+                          type: "adminEdit",
+                          status: "Product Details Edited",
+                          remark: ie.reason || "Inward product record updated",
+                          adminName: ie.editedByName,
+                          role: ie.role || "Admin",
+                          diffs: relevantDiffs,
+                          timestamp: ie.editedAt,
                         });
                       }
+                    });
+                  }
 
-                      // Employee report status changes
-                      empHistory.forEach((h) =>
-                        timeline.push({ type: "report", ...h }),
-                      );
+                  // Admin review changes (final status entries)
+                  finalHistory.forEach((h) => {
+                    const isCompleted = h.status === "Completed";
+                    timeline.push({
+                      type: "admin",
+                      status: isCompleted ? "Approved by Admin" : "Admin Returned",
+                      adminName: h.adminName,
+                      remark: h.remarks,
+                      timestamp: h.timestamp || h.date,
+                    });
+                  });
 
-                      // Admin review changes (final status entries)
-                      finalHistory.forEach((h) => {
-                        const isCompleted = h.status === "Completed";
-                        timeline.push({
-                          type: "admin",
-                          status: isCompleted ? "Approved" : "Admin Returned",
-                          remark: h.remarks,
-                          timestamp: h.timestamp || h.date,
-                        });
-                      });
+                  // Sort chronologically (newest first for clean audit log viewing)
+                  timeline.sort((a, b) => {
+                    const tA = a.timestamp
+                      ? new Date(a.timestamp).getTime()
+                      : 0;
+                    const tB = b.timestamp
+                      ? new Date(b.timestamp).getTime()
+                      : 0;
+                    return tB - tA;
+                  });
 
-                      // Sort chronologically (oldest to newest)
-                      timeline.sort((a, b) => {
-                        const tA = a.timestamp
-                          ? new Date(a.timestamp).getTime()
-                          : 0;
-                        const tB = b.timestamp
-                          ? new Date(b.timestamp).getTime()
-                          : 0;
-                        return tA - tB;
-                      });
+                  // Detect if any event occurred after a Completed status
+                  let foundCompleted = false;
+                  // For after-completed detection, inspect chronological order
+                  const chronoOrder = [...timeline].reverse();
+                  const completedFlags = new Map();
+                  chronoOrder.forEach((item) => {
+                    const isCompletedEvent =
+                      item.status === "Completed" || item.status === "Approved by Admin";
+                    if (foundCompleted && !isCompletedEvent) {
+                      completedFlags.set(item, true);
+                    }
+                    if (isCompletedEvent) foundCompleted = true;
+                  });
 
-                      if (timeline.length === 0) {
+                  const enrichedTimeline = timeline.map((item) => ({
+                    ...item,
+                    occurredAfterCompleted: item.isPostCompletedEdit || completedFlags.get(item),
+                  }));
+
+                  if (enrichedTimeline.length === 0) {
+                    return (
+                      <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-700">
+                        <Clock className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
+                        <span className="text-[0.82vw] font-semibold text-slate-800">
+                          Not yet assigned or updated.
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="relative pl-[1.8vw] space-y-[0.85vw]">
+                      <div className="absolute left-[0.6vw] -translate-x-1/2 top-[0.5vw] bottom-[0.5vw] w-[2px] bg-slate-200 pointer-events-none" />
+
+                      {enrichedTimeline.map((entry, i) => {
+                        let dotColor = "bg-slate-500";
+                        if (entry.type === "assigned") {
+                          dotColor = "bg-blue-600";
+                        } else if (entry.type === "admin" || entry.type === "adminEdit") {
+                          dotColor =
+                            entry.status.includes("Approved")
+                              ? "bg-emerald-600"
+                              : entry.type === "adminEdit"
+                                ? "bg-indigo-600"
+                                : "bg-rose-600";
+                        } else if (entry.type === "closureEdit" || entry.occurredAfterCompleted) {
+                          dotColor = "bg-amber-600";
+                        }
+
+                        const tsLabel = entry.timestamp
+                          ? new Date(entry.timestamp).toLocaleString(
+                              "en-IN",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              },
+                            )
+                          : null;
+
                         return (
-                          <div className="py-[2vw] text-center">
-                            <div className="text-[0.72vw] text-black/40">
-                              Not yet assigned to anyone.
+                          <div key={i} className="relative group">
+                            {/* Dot precisely in the timeline line */}
+                            <div
+                              className={`absolute -left-[1.8vw] top-[0.6vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                            />
+
+                            <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
+                              <div className="flex items-center justify-between gap-[0.5vw] flex-wrap">
+                                {entry.type === "assigned" ? (
+                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-blue-50 text-blue-800 border-blue-200">
+                                    Assigned → {entry.name}
+                                  </span>
+                                ) : entry.type === "admin" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span
+                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                        entry.status.includes("Approved")
+                                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                          : "bg-rose-50 text-rose-800 border-rose-200"
+                                      }`}
+                                    >
+                                      {entry.status}
+                                    </span>
+                                    {entry.adminName && (
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-900 rounded border border-indigo-200 font-semibold">
+                                        Admin: {entry.adminName}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : entry.type === "adminEdit" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-indigo-50 text-indigo-800 border-indigo-200">
+                                      {entry.status}
+                                    </span>
+                                    {entry.adminName && (
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-800 rounded border border-slate-200 font-semibold">
+                                        By: {entry.adminName}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : entry.type === "closureEdit" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-amber-50 text-amber-900 border-amber-300">
+                                      {entry.status}
+                                    </span>
+                                    {entry.adminName && (
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-800 rounded border border-slate-200 font-semibold">
+                                        {entry.adminName}
+                                      </span>
+                                    )}
+                                    {entry.occurredAfterCompleted && (
+                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-800 rounded border border-rose-200 font-bold uppercase tracking-wider">
+                                        Post-Completion Edit
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span
+                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                        entry.status === "Completed"
+                                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                          : entry.status === "Hold"
+                                            ? "bg-rose-50 text-rose-800 border-rose-200"
+                                            : entry.status === "Not Repairable"
+                                              ? "bg-slate-100 text-slate-800 border-slate-300"
+                                              : entry.status === "Under Testing"
+                                                ? "bg-purple-50 text-purple-800 border-purple-200"
+                                                : "bg-amber-50 text-amber-800 border-amber-200"
+                                      }`}
+                                    >
+                                      {entry.status}
+                                    </span>
+                                    {entry.occurredAfterCompleted && (
+                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-800 rounded border border-rose-200 font-bold uppercase tracking-wider">
+                                        Edited After Completed
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+
+                                {tsLabel && (
+                                  <span className="text-[0.68vw] text-slate-700 font-mono font-semibold whitespace-nowrap">
+                                    {tsLabel}
+                                  </span>
+                                )}
+                              </div>
+
+                              {entry.remark && (
+                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-800 leading-relaxed font-normal">
+                                  <span className="text-slate-700 font-semibold mr-[0.3vw]">
+                                    Remarks / Reason:
+                                  </span>
+                                  {entry.remark}
+                                </div>
+                              )}
+
+                              {/* Diffs display for edits */}
+                              {entry.diffs && entry.diffs.length > 0 && (
+                                <div className="mt-[0.5vw] bg-purple-50/40 rounded-[0.4vw] border border-purple-200/80 p-[0.45vw] space-y-[0.35vw]">
+                                  <div className="flex items-center justify-between text-[0.72vw]">
+                                    <span className="font-bold text-purple-900 flex items-center gap-[0.35vw]">
+                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-600" />
+                                      Changed Fields ({entry.diffs.length})
+                                    </span>
+                                  </div>
+                                  <div className="space-y-[0.3vw] pt-[0.2vw]">
+                                    {entry.diffs.map((d, di) => (
+                                      <div
+                                        key={di}
+                                        className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                      >
+                                        <div className="font-bold text-slate-800 text-[0.7vw] mb-[0.2vw]">
+                                          {d.field}
+                                        </div>
+                                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
+                                          <div className="bg-rose-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200">
+                                            <div className="text-[0.6vw] font-bold text-rose-700 uppercase tracking-wider mb-[0.05vw]">
+                                              Previous
+                                            </div>
+                                            <div className="text-rose-800 font-medium text-[0.72vw] line-through break-words">
+                                              {String(d.originalValue || "—")}
+                                            </div>
+                                          </div>
+                                          <div className="text-slate-600 font-bold text-[0.75vw] px-[0.1vw]">
+                                            →
+                                          </div>
+                                          <div className="bg-emerald-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200">
+                                            <div className="text-[0.6vw] font-bold text-emerald-800 uppercase tracking-wider mb-[0.05vw]">
+                                              Updated
+                                            </div>
+                                            <div className="text-emerald-950 font-bold text-[0.72vw] break-words">
+                                              {String(d.editedValue || "—")}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
-                      }
-
-                      return (
-                        <div className="relative pl-[1.2vw]">
-                          <div className="absolute left-[0.45vw] top-[0.5vw] bottom-[0.5vw] w-[0.1vw] bg-gray-200" />
-                          <div className="space-y-[0.7vw]">
-                            {timeline.map((entry, i) => {
-                              const isLast = i === timeline.length - 1;
-
-                              let dotColor = "bg-gray-400";
-                              if (entry.type === "assigned") {
-                                dotColor = "bg-blue-500";
-                              } else if (entry.type === "admin") {
-                                dotColor =
-                                  entry.status === "Approved"
-                                    ? "bg-emerald-500"
-                                    : "bg-amber-500";
-                              } else if (isLast) {
-                                dotColor = "bg-emerald-500";
-                              }
-
-                              const tsLabel = entry.timestamp
-                                ? new Date(entry.timestamp).toLocaleString(
-                                    "en-IN",
-                                    {
-                                      day: "2-digit",
-                                      month: "short",
-                                      year: "2-digit",
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      hour12: true,
-                                    },
-                                  )
-                                : null;
-                              return (
-                                <div
-                                  key={i}
-                                  className="relative flex items-start gap-[0.5vw]"
-                                >
-                                  <div
-                                    className={`absolute left-[-1.05vw] top-[0.25vw] w-[0.55vw] h-[0.55vw] rounded-full border-2 border-white ${dotColor} shadow-sm z-10`}
-                                  />
-                                  <div className="flex-1 bg-slate-50/70 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] border border-slate-200">
-                                    <div className="flex items-center justify-between gap-[0.4vw] flex-wrap">
-                                      {entry.type === "assigned" ? (
-                                        <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
-                                          Assigned → {entry.name}
-                                        </span>
-                                      ) : entry.type === "admin" ? (
-                                        <span
-                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
-                                            entry.status === "Approved"
-                                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                              : "bg-amber-50 text-amber-700 border-amber-200"
-                                          }`}
-                                        >
-                                          {entry.adminName
-                                            ? `${entry.status} → ${entry.adminName}`
-                                            : entry.status}
-                                        </span>
-                                      ) : (
-                                        <span
-                                          className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
-                                            entry.status === "Completed"
-                                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                              : entry.status === "Hold"
-                                                ? "bg-rose-50 text-rose-700 border-rose-200"
-                                                : entry.status ===
-                                                    "Not Repairable"
-                                                  ? "bg-slate-100 text-slate-700 border-slate-300"
-                                                  : entry.status ===
-                                                      "Under Testing"
-                                                    ? "bg-purple-50 text-purple-700 border-purple-200"
-                                                    : "bg-amber-50 text-amber-700 border-amber-200"
-                                          }`}
-                                        >
-                                          {entry.status}
-                                        </span>
-                                      )}
-                                      {tsLabel && (
-                                        <span className="text-[0.65vw] text-slate-400 font-normal whitespace-nowrap">
-                                          {tsLabel}
-                                        </span>
-                                      )}
-                                    </div>
-                                    {entry.remark && (
-                                      <div className="mt-[0.3vw] text-[0.7vw] text-slate-600 font-normal">
-                                        <span className="text-slate-500 font-medium">
-                                          Remarks:{" "}
-                                        </span>
-                                        {entry.remark}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                </motion.div>
+                      })}
+                    </div>
+                  );
+                })()}
               </div>
-            );
-          })(),
+
+              {/* Footer */}
+              <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowHistory(false)}
+                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>,
           document.body,
         )}
     </div>
@@ -2580,7 +2441,7 @@ const AdminTableView = ({
                                       {prod.report ? (
                                         <button
                                           type="button"
-                                          onClick={() => onViewReport(prod)}
+                                          onClick={() => onViewReport({ entry: row, product: prod })}
                                           className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs"
                                         >
                                           View Report
@@ -2632,7 +2493,7 @@ const AdminTableView = ({
 
                                     {/* History */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
-                                      <HistoryCellButton prod={prod} />
+                                      <HistoryCellButton prod={prod} row={row} />
                                     </td>
 
                                     {/* Delay */}
@@ -3175,8 +3036,8 @@ export default function App() {
           />
         )}
         {selectedReportProduct && (
-          <ProductReportModal
-            product={selectedReportProduct}
+          <ServiceMaterialDetailModal
+            data={selectedReportProduct}
             onClose={() => setSelectedReportProduct(null)}
           />
         )}

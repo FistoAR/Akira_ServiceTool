@@ -39,6 +39,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import CustomDropdown from "../../components/CustomDropdown";
+import ServiceMaterialDetailModal from "./ServiceMaterialDetailModal";
 
 // Custom Floating Tooltip (matches ServiceCall modules)
 const CustomTooltip = ({
@@ -287,201 +288,6 @@ const EXPORT_COLUMNS = [
 ];
 
 // ── Detail Modal (Clean ServiceCall Style) ──────────────────────────────────
-const ServiceInfoModal = ({ item, onClose }) => {
-  if (!item) return null;
-  const { entry, product } = item;
-  const report = product.report || {};
-
-  return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-[2vw]">
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 15 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 15 }}
-        className="bg-white w-[54vw] max-h-[88vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200"
-      >
-        {/* Header */}
-        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 flex justify-between items-center bg-white">
-          <div className="flex items-center gap-[0.6vw]">
-            <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200 shadow-2xs">
-              <Package className="w-[0.95vw] h-[0.95vw]" />
-            </div>
-            <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">
-                Service Material Details
-              </h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">
-                {entry.customerName} {entry.customerCode ? `(${entry.customerCode})` : ""}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-[0.35vw] rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-          >
-            <X className="w-[1.1vw] h-[1.1vw]" />
-          </button>
-        </div>
-
-        {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.1vw] bg-[#f8fafd]">
-          {/* Card 1: Inward & Customer Info */}
-          <div className="bg-white rounded-[0.7vw] p-[1vw] border border-slate-200 shadow-2xs">
-            <h4 className="text-[0.8vw] font-bold text-slate-700 mb-[0.7vw] flex items-center gap-[0.4vw]">
-              <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full" />
-              Inward &amp; Customer Information
-            </h4>
-            <div className="grid grid-cols-4 gap-[0.7vw] text-[0.76vw]">
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Inward Date</span>
-                <span className="font-semibold text-slate-800">{fmtDate(entry.date)}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Customer Ref No</span>
-                <span className="font-semibold text-purple-700">{entry.refNoCustomer || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Internal Ref No</span>
-                <span className="font-semibold text-blue-700">{entry.refNoInternal || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Category</span>
-                <span className="font-semibold text-slate-800">{entry.category || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-2">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Customer Name</span>
-                <span className="font-semibold text-slate-800">{entry.customerName}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Unit</span>
-                <span className="font-semibold text-teal-700">{entry.unit || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Site</span>
-                <span className="font-semibold text-slate-800">{entry.site || "—"}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Product & Warranty Details */}
-          <div className="bg-white rounded-[0.7vw] p-[1vw] border border-slate-200 shadow-2xs">
-            <h4 className="text-[0.8vw] font-bold text-slate-700 mb-[0.7vw] flex items-center gap-[0.4vw]">
-              <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full" />
-              Product &amp; Warranty Details
-            </h4>
-            <div className="grid grid-cols-4 gap-[0.7vw] text-[0.76vw]">
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-2">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Product Description</span>
-                <span className="font-semibold text-slate-800">{product.productDescription || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Product Code</span>
-                <span className="font-mono font-semibold text-slate-800">{product.productCode || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Board Type</span>
-                <span className="font-semibold text-slate-800">{product.boardType || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Serial Number</span>
-                <span className="font-mono font-bold text-blue-700">{product.serialNumber || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Warranty Type</span>
-                <span className={`inline-block px-[0.5vw] py-[0.1vw] rounded font-bold text-[0.7vw] ${product.type === "W" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}>
-                  {product.type === "W" ? "Warranty (W)" : "Paid (PW)"}
-                </span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Expected Delivery</span>
-                <span className="font-semibold text-slate-800">{fmtDate(product.expectedDeliveryDate)}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Claimed By</span>
-                <span className="font-bold text-slate-800">{product.assignedToName || "Unassigned"}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: Technical Service Report */}
-          <div className="bg-white rounded-[0.7vw] p-[1vw] border border-slate-200 shadow-2xs">
-            <h4 className="text-[0.8vw] font-bold text-slate-700 mb-[0.7vw] flex items-center gap-[0.4vw]">
-              <span className="w-[0.25vw] h-[0.85vw] bg-indigo-600 rounded-full" />
-              Technical Service Report
-            </h4>
-            <div className="grid grid-cols-3 gap-[0.7vw] text-[0.76vw]">
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Tested By</span>
-                <span className="font-semibold text-slate-800">{report.testedBy || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">4M Category</span>
-                <span className="font-semibold text-slate-800">{report.fourMCategory || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Error Code</span>
-                <span className="font-mono font-semibold text-slate-800">{report.errorCode || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-3">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Problem Description</span>
-                <span className="text-slate-800">{report.problemDescription || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-3">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Root Cause</span>
-                <span className="text-slate-800">{report.rootCause || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-3">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Corrective Action</span>
-                <span className="text-slate-800">{report.correctiveAction || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-2">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Parts Replaced</span>
-                <span className="text-slate-800">{report.partsReplacement || "—"}</span>
-              </div>
-              <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.68vw] text-slate-500 block font-medium">Disposition</span>
-                <span className="font-semibold text-slate-800">{report.disposition || "—"}</span>
-              </div>
-            </div>
-
-            {/* Technical Image if any */}
-            {report.image && (
-              <div className="mt-[0.8vw] pt-[0.8vw] border-t border-slate-200">
-                <span className="text-[0.72vw] text-slate-600 block font-semibold mb-[0.4vw]">Attached Technical Image</span>
-                <img
-                  src={
-                    report.image.startsWith("data:") || report.image.startsWith("http")
-                      ? report.image
-                      : `${API_URL?.replace(/\/$/, "") || ""}${report.image.startsWith("/") ? "" : "/"}${report.image}`
-                  }
-                  alt="Technical Report Attachment"
-                  className="max-w-[14vw] rounded-[0.4vw] border border-slate-300 shadow-sm cursor-pointer hover:scale-105 transition-transform"
-                  onClick={() => {
-                    const url = report.image.startsWith("data:") || report.image.startsWith("http")
-                      ? report.image
-                      : `${API_URL?.replace(/\/$/, "") || ""}${report.image.startsWith("/") ? "" : "/"}${report.image}`;
-                    window.open(url, "_blank");
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
-          <button
-            onClick={onClose}
-            className="px-[1.4vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[0.76vw] rounded-full transition-colors cursor-pointer"
-          >
-            Close
-          </button>
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
 // ── History Modal (Structured timeline matching Service Call & AGENT.md) ──────
 const ProductHistoryModal = ({ item, onClose }) => {
   if (!item) return null;
@@ -490,22 +296,93 @@ const ProductHistoryModal = ({ item, onClose }) => {
   const finalHistory = product.finalStatusHistory || [];
   const timeline = [];
 
-  empHistory.forEach((h) =>
-    timeline.push({ type: "report", ...h })
-  );
+  // Employee report status changes & edits
+  empHistory.forEach((h) => {
+    const isEdit = h.metadata?.isEdit || String(h.status || "").toLowerCase().includes("edit");
+    const isPostCompleted = h.metadata?.isPostCompletedEdit || String(h.status || "").toLowerCase().includes("after completed");
+    timeline.push({
+      type: isEdit ? "closureEdit" : "report",
+      status: h.status,
+      remark: h.remark,
+      diffs: h.metadata?.diffs || [],
+      isPostCompletedEdit: isPostCompleted,
+      timestamp: h.timestamp,
+    });
+  });
 
+  // Closure edits
+  const closureEdits = product._closureEdits || [];
+  closureEdits.forEach((ce) => {
+    const exists = timeline.some((t) => t.type === "closureEdit" && Math.abs(new Date(t.timestamp || 0) - new Date(ce.editedAt || 0)) < 2000);
+    if (!exists) {
+      timeline.push({
+        type: "closureEdit",
+        status: ce.isPostCompletedEdit ? "Edited after Completed" : "Report Edited",
+        remark: ce.reason || "Report modified",
+        adminName: ce.editedByName,
+        role: ce.role,
+        diffs: ce.diffs,
+        isPostCompletedEdit: ce.isPostCompletedEdit,
+        timestamp: ce.editedAt,
+      });
+    }
+  });
+
+  // General inward edits relevant to this product
+  const inwardEdits = entry?.editHistory || [];
+  inwardEdits.forEach((ie) => {
+    const relevantDiffs = (ie.diffs || []).filter((d) => {
+      const f = d.field || "";
+      const prodDesc = product.productDescription || "";
+      const prodCode = product.productCode || "";
+      const serial = product.serialNumber || "";
+      return (
+        (prodDesc && f.includes(prodDesc)) ||
+        (prodCode && f.includes(prodCode)) ||
+        (serial && f.includes(serial))
+      );
+    });
+    if (relevantDiffs.length > 0) {
+      timeline.push({
+        type: "adminEdit",
+        status: "Product Details Edited",
+        remark: ie.reason || "Inward product record updated",
+        adminName: ie.editedByName,
+        role: ie.role || "Admin",
+        diffs: relevantDiffs,
+        timestamp: ie.editedAt,
+      });
+    }
+  });
+
+  // Admin final status review changes
   finalHistory.forEach((h) => {
     const isCompleted = h.status === "Completed";
     timeline.push({
       type: "admin",
-      status: isCompleted ? "Approved" : "Admin Returned",
+      status: isCompleted ? "Approved by Admin" : "Admin Returned",
+      adminName: h.adminName,
       remark: h.remarks,
       timestamp: h.timestamp || h.date,
     });
   });
 
-  // Sort newest first
-  timeline.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+  // Sort chronological (oldest to newest) to detect post-completion events
+  timeline.sort((a, b) => new Date(a.timestamp || 0) - new Date(b.timestamp || 0));
+
+  let foundCompleted = false;
+  const enrichedTimeline = timeline.map((it) => {
+    const isCompletedEvent = it.status === "Completed" || it.status === "Approved by Admin";
+    const occurredAfterCompleted = foundCompleted && !isCompletedEvent;
+    if (isCompletedEvent) foundCompleted = true;
+    return {
+      ...it,
+      occurredAfterCompleted: it.isPostCompletedEdit || occurredAfterCompleted,
+    };
+  });
+
+  // Sort newest first for viewing
+  enrichedTimeline.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
 
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-[2vw]">
@@ -513,7 +390,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[38vw] max-h-[85vh] flex flex-col overflow-hidden"
+        className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
       >
         {/* Header */}
         <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between">
@@ -522,7 +399,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
               <Clock className="w-[0.95vw] h-[0.95vw]" />
             </div>
             <div>
-              <h3 className="text-[1vw] font-semibold text-slate-800">Status History</h3>
+              <h3 className="text-[1vw] font-bold text-slate-800">Status & Edit History</h3>
               <p className="text-[0.7vw] text-slate-500 font-normal">
                 {product.productDescription} {product.serialNumber ? `(${product.serialNumber})` : ""}
               </p>
@@ -538,16 +415,22 @@ const ProductHistoryModal = ({ item, onClose }) => {
 
         {/* Timeline Body */}
         <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1vw] bg-[#f8fafd]">
-          {timeline.length === 0 ? (
+          {enrichedTimeline.length === 0 ? (
             <div className="text-center py-[4vw] text-slate-400 font-medium text-[0.8vw]">
               No status history records found for this product.
             </div>
           ) : (
             <div className="relative pl-[1.5vw] border-l-2 border-slate-200 ml-[0.6vw] space-y-[1.2vw] py-[0.5vw]">
-              {timeline.map((item, index) => {
-                const isAdmin = item.type === "admin";
-                const isApproved = item.status === "Approved" || item.status === "Completed";
-                const dotColor = isApproved ? "bg-emerald-500" : isAdmin ? "bg-amber-500" : "bg-blue-600";
+              {enrichedTimeline.map((item, index) => {
+                const isAdmin = item.type === "admin" || item.type === "adminEdit";
+                const isApproved = item.status === "Approved by Admin" || item.status === "Completed";
+                const dotColor = isApproved
+                  ? "bg-emerald-500"
+                  : item.type === "closureEdit" || item.occurredAfterCompleted
+                    ? "bg-amber-500"
+                    : isAdmin
+                      ? "bg-indigo-500"
+                      : "bg-blue-600";
 
                 return (
                   <div key={index} className="relative group">
@@ -556,16 +439,32 @@ const ProductHistoryModal = ({ item, onClose }) => {
 
                     {/* Content Card */}
                     <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-slate-200 shadow-2xs">
-                      <div className="flex items-center justify-between mb-[0.3vw]">
-                        <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium ${
-                          isApproved
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : isAdmin
-                              ? "bg-amber-50 text-amber-700 border border-amber-200"
-                              : "bg-blue-50 text-blue-700 border border-blue-200"
-                        }`}>
-                          {item.status}
-                        </span>
+                      <div className="flex items-center justify-between mb-[0.3vw] flex-wrap gap-[0.3vw]">
+                        <div className="flex items-center gap-[0.35vw] flex-wrap">
+                          <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-bold ${
+                            isApproved
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : item.type === "admin"
+                                ? "bg-rose-50 text-rose-700 border border-rose-200"
+                                : item.type === "closureEdit"
+                                  ? "bg-amber-50 text-amber-800 border border-amber-300"
+                                  : item.type === "adminEdit"
+                                    ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                                    : "bg-blue-50 text-blue-700 border border-blue-200"
+                          }`}>
+                            {item.status}
+                          </span>
+                          {item.adminName && (
+                            <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-medium">
+                              {item.role ? `${item.role}: ` : ""}{item.adminName}
+                            </span>
+                          )}
+                          {item.occurredAfterCompleted && (
+                            <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-bold uppercase tracking-wider">
+                              Post-Completion Edit
+                            </span>
+                          )}
+                        </div>
                         <span className="text-[0.68vw] text-slate-400 font-normal">
                           {fmtDateTime(item.timestamp)}
                         </span>
@@ -573,8 +472,34 @@ const ProductHistoryModal = ({ item, onClose }) => {
 
                       {item.remark && (
                         <p className="text-[0.75vw] text-slate-600 font-normal mt-[0.3vw] bg-slate-50/80 p-[0.4vw] rounded-[0.35vw] border border-slate-200/70">
+                          <span className="text-slate-500 font-medium">Remarks / Reason: </span>
                           {item.remark}
                         </p>
+                      )}
+
+                      {/* Diffs display */}
+                      {item.diffs && item.diffs.length > 0 && (
+                        <div className="mt-[0.4vw] bg-white rounded-[0.35vw] border border-amber-200/80 p-[0.4vw] space-y-[0.3vw]">
+                          <div className="text-[0.62vw] font-bold text-amber-900 uppercase tracking-wider">
+                            Changed Fields ({item.diffs.length})
+                          </div>
+                          {item.diffs.map((d, di) => (
+                            <div key={di} className="text-[0.68vw] bg-slate-50 p-[0.3vw] rounded border border-slate-200 flex items-center justify-between gap-[0.4vw]">
+                              <span className="font-semibold text-slate-700 truncate max-w-[45%]">
+                                {d.field}
+                              </span>
+                              <span className="flex items-center gap-[0.25vw] text-right truncate">
+                                <span className="text-rose-600 line-through truncate max-w-[8vw]">
+                                  {String(d.originalValue || "—")}
+                                </span>
+                                <span className="text-slate-400">→</span>
+                                <span className="text-emerald-700 font-semibold truncate max-w-[8vw]">
+                                  {String(d.editedValue || "—")}
+                                </span>
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -1143,14 +1068,27 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         minute: "2-digit",
         hour12: true,
       });
+      const lastUpdatedStr = lastUpdated
+        ? new Date(lastUpdated).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })
+        : exportDateStr;
       const exporterName = loggedInUser?.name || loggedInUser?.username || "System User";
       const exporterRole = loggedInUser?.role || loggedInUser?.department || "";
       const exporterInfo = exporterRole ? `${exporterName} (${exporterRole})` : exporterName;
 
-      // Top metadata header block: Title, Exported By & Export Date
+      // Top metadata header block: Title, Exported By & Export Date & Last Updated
       const metaRows = [
         ["SERVICE MATERIAL REPORT"],
-        [`Exported By: ${exporterInfo}`, `Export Date: ${exportDateStr}`],
+        [
+          `Exported By: ${exporterInfo}`,
+          `Last Updated: ${lastUpdatedStr} | Export Date: ${exportDateStr}`,
+        ],
         [], // blank separator row
       ];
 
@@ -1188,7 +1126,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
       // Header, Cell, and Total Styling
       const headerStyle = {
-        font: { bold: true, color: { rgb: "FFFFFF" }, sz: 10, name: "Calibri" },
+        font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11, name: "Calibri" },
         fill: { fgColor: { rgb: "1A73E8" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
         border: {
@@ -1200,11 +1138,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       };
 
       const cellStyle = {
-        font: { sz: 9, name: "Calibri" },
-        alignment: { vertical: "center" },
+        font: { sz: 10.5, name: "Calibri", color: { rgb: "1E293B" } },
+        alignment: { vertical: "center", wrapText: true },
         border: {
           bottom: { style: "thin", color: { rgb: "E2E8F0" } },
           right: { style: "thin", color: { rgb: "E2E8F0" } },
+          left: { style: "thin", color: { rgb: "E2E8F0" } },
+          top: { style: "thin", color: { rgb: "E2E8F0" } },
         },
       };
 
@@ -1219,8 +1159,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         if (s.includes("completed")) {
           return {
             fill: { fgColor: { rgb: "DCFCE7" } }, // light green
-            font: { bold: true, color: { rgb: "15803D" }, sz: 9, name: "Calibri" }, // dark green
-            alignment: { horizontal: "center", vertical: "center" },
+            font: { bold: true, color: { rgb: "15803D" }, sz: 10.5, name: "Calibri" }, // dark green
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
           };
         }
         if (
@@ -1231,8 +1171,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         ) {
           return {
             fill: { fgColor: { rgb: "FEF3C7" } }, // light amber
-            font: { bold: true, color: { rgb: "B45309" }, sz: 9, name: "Calibri" }, // dark amber
-            alignment: { horizontal: "center", vertical: "center" },
+            font: { bold: true, color: { rgb: "B45309" }, sz: 10.5, name: "Calibri" }, // dark amber
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
           };
         }
         if (
@@ -1243,20 +1183,22 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         ) {
           return {
             fill: { fgColor: { rgb: "FEE2E2" } }, // light red
-            font: { bold: true, color: { rgb: "B91C1C" }, sz: 9, name: "Calibri" }, // dark red
-            alignment: { horizontal: "center", vertical: "center" },
+            font: { bold: true, color: { rgb: "B91C1C" }, sz: 10.5, name: "Calibri" }, // dark red
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
           };
         }
         return null;
       };
 
       const totalRowStyle = {
-        font: { bold: true, sz: 10, name: "Calibri", color: { rgb: "0F172A" } },
+        font: { bold: true, sz: 11, name: "Calibri", color: { rgb: "0F172A" } },
         fill: { fgColor: { rgb: "E2E8F0" } },
-        alignment: { vertical: "center" },
+        alignment: { vertical: "center", wrapText: true },
         border: {
           top: { style: "medium", color: { rgb: "64748B" } },
           bottom: { style: "double", color: { rgb: "0F172A" } },
+          left: { style: "thin", color: { rgb: "CBD5E1" } },
+          right: { style: "thin", color: { rgb: "CBD5E1" } },
         },
       };
 
@@ -1307,11 +1249,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         }
       }
 
-      // Set column widths
+      // Set column widths and row heights (larger font size and wrap text)
       ws["!cols"] = Object.keys(rows[0] || {}).map((k) => ({
-        wch: Math.min(Math.max(k.length + 4, 14), 40),
+        wch: Math.min(Math.max(k.length + 5, 16), 42),
       }));
-      ws["!rows"] = [{ hpt: 28 }, { hpt: 20 }, { hpt: 8 }, { hpt: 26 }];
+      const rowHeights = [{ hpt: 28 }, { hpt: 22 }, { hpt: 8 }, { hpt: 28 }];
+      for (let r = 4; r <= range.e.r; r++) {
+        rowHeights.push({ hpt: r === range.e.r ? 26 : 24 });
+      }
+      ws["!rows"] = rowHeights;
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Service Material Reports");
@@ -1676,25 +1622,6 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 </div>
               </>
             )}
-          </div>
-
-          {/* Last Updated indicator & Refresh */}
-          <div className="flex items-center gap-[0.35vw] bg-white border border-slate-200/90 rounded-full h-[2.2vw] px-[0.75vw] text-[0.72vw] text-slate-600 shadow-2xs">
-            <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-slate-400 font-medium">Updated:</span>
-            <span className="font-semibold text-slate-700">
-              {lastUpdated ? lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "—"}
-            </span>
-            <CustomTooltip text="Refresh reports">
-              <button
-                type="button"
-                onClick={fetchData}
-                className="p-[0.2vw] text-slate-400 hover:text-blue-600 rounded-full transition-colors cursor-pointer border-0 bg-transparent flex items-center justify-center ml-[0.1vw]"
-                title="Refresh report data"
-              >
-                <RefreshCw className="w-[0.75vw] h-[0.75vw]" />
-              </button>
-            </CustomTooltip>
           </div>
 
           {/* Export Excel Button (Matches Service Call Report Button) */}
@@ -2446,7 +2373,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       {/* ── Popups: Details & History Modals ── */}
       <AnimatePresence>
         {infoItem && (
-          <ServiceInfoModal
+          <ServiceMaterialDetailModal
             item={infoItem}
             onClose={() => setInfoItem(null)}
           />

@@ -46,6 +46,7 @@ import { useNotification } from "../../components/NotificationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import { processUploadFile } from "../../utils/fileUploadHelper";
 import CustomDropdown from "../../components/CustomDropdown";
+import ServiceMaterialDetailModal from "./ServiceMaterialDetailModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -278,229 +279,6 @@ const ClaimButton = ({ onClaim }) => (
   </button>
 );
 
-// ── Service Info Modal (Read-only) ───────────────────────────────────────────
-const ServiceInfoModal = ({ entry, product, onClose, onPreviewDoc }) => {
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-[2vw]">
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[55vw] max-h-[90vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border-r border-b border-slate-300"
-      >
-        <div className="bg-gray-100 px-[1.5vw] py-[1vw] flex justify-between items-center">
-          <div className="flex items-center gap-[0.8vw]">
-            <Info className="w-[1.2vw] h-[1.2vw] text-gray-700" />
-            <h3 className="text-[1.1vw] font-semibold text-gray-800  tracking-tight">
-              Service Record Details
-            </h3>
-          </div>
-          <button
-            onClick={onClose}
-            className="w-[2vw] h-[2vw] rounded-full bg-white/10 hover:bg-white/30 flex items-center justify-center text-white cursor-pointer transition-all"
-          >
-            <X className="w-[1.1vw] h-[1.1vw]" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-gray-50/50">
-          {/* Inward Information Card */}
-          <div className="space-y-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300">
-            <h4 className="text-[0.85vw] font-semibold text-blue-700 border-b border-blue-100 pb-[0.3vw]">
-              Inward Information
-            </h4>
-            <div className="grid grid-cols-4 gap-[0.8vw]">
-              <RefInput label="Registration Date" value={fmtDate(entry.date)} />
-              <RefInput label="System Ref No" value={entry.refNo || "—"} />
-              <RefInput
-                label="Customer Ref No"
-                value={entry.refNoCustomer || "—"}
-              />
-              <RefInput
-                label="Internal Ref No"
-                value={entry.refNoInternal || "—"}
-              />
-              <RefInput
-                label="Customer"
-                value={`${entry.customerName || "—"}${entry.customerCode ? ` (${entry.customerCode})` : ""}`}
-                span={2}
-              />
-              <RefInput label="Category" value={entry.category || "—"} />
-              <RefInput label="Unit" value={entry.unit || "—"} />
-            </div>
-          </div>
-
-          {/* Product Details Card */}
-          <div className="space-y-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300">
-            <h4 className="text-[0.85vw] font-semibold text-emerald-700 border-b border-emerald-100 pb-[0.3vw]">
-              Product Details
-            </h4>
-            <div className="grid grid-cols-4 gap-[0.8vw]">
-              <div className="col-span-2">
-                <RefInput
-                  label="Description"
-                  value={product.productDescription}
-                />
-              </div>
-              <RefInput label="Code" value={product.productCode} />
-              <RefInput label="Qty" value={product.qty || "1"} />
-              <RefInput label="Serial Number" value={product.serialNumber} />
-              <RefInput label="Board Type" value={product.boardType} />
-              <RefInput
-                label="Warranty Type"
-                value={
-                  product.type === "W"
-                    ? "Warranty (W)"
-                    : product.type === "PW"
-                      ? "Post Warranty (PW)"
-                      : product.type || "—"
-                }
-              />
-              <RefInput
-                label="Expected Delivery Date"
-                value={
-                  product.expectedDeliveryDate
-                    ? fmtDate(product.expectedDeliveryDate)
-                    : "—"
-                }
-              />
-            </div>
-          </div>
-
-          {product.report && (
-            <div className="space-y-[1vw] mt-[1vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-300">
-              <h4 className="text-[0.85vw] font-semibold text-gray-800 border-b border-slate-300 pb-[0.3vw]">
-                Technical Report
-              </h4>
-              <div className="grid grid-cols-2 gap-[1vw]">
-                <RefInput label="Tested By" value={product.report.testedBy} />
-                <RefInput label="FQA By" value={product.report.fqaBy} />
-                <RefInput
-                  label="Designators"
-                  value={product.report.designators}
-                />
-                <RefInput
-                  label="4M Category"
-                  value={product.report.fourMCategory}
-                />
-                <RefInput label="Error Code" value={product.report.errorCode} />
-                <RefInput
-                  label="Problem Description"
-                  value={product.report.problemDescription}
-                  span={2}
-                />
-                <RefInput
-                  label="PV"
-                  value={product.report.pv || (product.report.pvCv ? product.report.pvCv.split(',')[0]?.trim() : "")}
-                />
-                <RefInput
-                  label="CV"
-                  value={product.report.cv || (product.report.pvCv ? product.report.pvCv.split(',')[1]?.trim() : "")}
-                />
-                <RefInput
-                  label="Root Cause"
-                  value={product.report.rootCause}
-                  span={2}
-                />
-                <RefInput
-                  label="Fault Parts"
-                  value={product.report.faultParts}
-                  span={2}
-                />
-                <RefInput
-                  label="Parts Replaced"
-                  value={product.report.partsReplacement}
-                  span={2}
-                />
-                <RefInput
-                  label="Corrective Action"
-                  value={product.report.correctiveAction}
-                  span={2}
-                />
-                <RefInput label="Time (Hours)" value={product.report.timeInHours} />
-                <RefInput label="Material Cost" value={product.report.materialCost} />
-                <RefInput label="Man Power Cost" value={product.report.manpowerCost != null ? `₹${Number(product.report.manpowerCost).toFixed(2)}` : "—"} />
-                <RefInput label="Status" value={product.report.status} />
-                <RefInput
-                  label="Disposition"
-                  value={product.report.disposition}
-                />
-                <div className="col-span-2">
-                  <label className="text-[0.75vw] font-semibold text-black mb-[0.25vw] block">
-                    Technical Attachment (Image / PDF)
-                  </label>
-                  {product.report.image ? (
-                    <div className="mt-[0.5vw]">
-                      {product.report.image.toLowerCase().endsWith(".pdf") ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const url = product.report.image.startsWith("http")
-                              ? product.report.image
-                              : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
-                            if (onPreviewDoc) {
-                              onPreviewDoc({
-                                url,
-                                title: `${product.productDescription || "Product"} - Technical PDF`,
-                                isPdf: true,
-                              });
-                            }
-                          }}
-                          className="inline-flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vw] bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-[0.4vw] text-[0.75vw] font-bold shadow-xs transition-colors cursor-pointer"
-                        >
-                          <FileText className="w-[1vw] h-[1vw] text-red-600" />
-                          <span>View PDF Document</span>
-                        </button>
-                      ) : (
-                        <img
-                          src={
-                            product.report.image.startsWith("data:") ||
-                            product.report.image.startsWith("http")
-                              ? product.report.image
-                              : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
-                          }
-                          alt="Report"
-                          className="max-w-[15vw] rounded-[0.4vw] border-r border-b border-slate-300 shadow-sm cursor-pointer hover:scale-105 transition-transform"
-                          onClick={() => {
-                            const url =
-                              product.report.image.startsWith("data:") ||
-                              product.report.image.startsWith("http")
-                                ? product.report.image
-                                : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`;
-                            if (onPreviewDoc) {
-                              onPreviewDoc({
-                                url,
-                                title: `${product.productDescription || "Product"} - Technical Image`,
-                                isPdf: false,
-                              });
-                            }
-                          }}
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    <div className="text-[0.75vw] text-gray-400 italic">
-                      No document uploaded
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="p-[1vw] border-t border-slate-300 bg-gray-50 text-right">
-          <button
-            onClick={onClose}
-            className="px-[1.5vw] py-[0.5vw] bg-gray-800 text-white rounded-[0.4vw] font-semibold text-[0.8vw] cursor-pointer"
-          >
-            Close View
-          </button>
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function ServiceMaterialInwardResponse({
   currentUser: propUser,
@@ -558,10 +336,11 @@ export default function ServiceMaterialInwardResponse({
   };
 
   const openSerialModal = () => {
-    setTempSerialInput(
-      activeSerials.length > 0 ? activeSerials.join("\n") : ""
-    );
-    setShowSerialFilterModal(true);
+    // If user already typed something into the textarea, retain it; otherwise populate from activeSerials
+    if (!tempSerialInput.trim() && activeSerials.length > 0) {
+      setTempSerialInput(activeSerials.join("\n"));
+    }
+    setShowSerialFilterModal((prev) => !prev);
   };
 
   const applySerialModal = () => {
@@ -3468,7 +3247,7 @@ export default function ServiceMaterialInwardResponse({
 
       <AnimatePresence>
         {infoSelected && (
-          <ServiceInfoModal
+          <ServiceMaterialDetailModal
             entry={infoSelected.entry}
             product={{
               ...infoSelected.product,
@@ -3485,7 +3264,6 @@ export default function ServiceMaterialInwardResponse({
               },
             }}
             onClose={() => setInfoSelected(null)}
-            onPreviewDoc={(doc) => setDocPreviewModal(doc)}
           />
         )}
       </AnimatePresence>
@@ -3652,98 +3430,96 @@ export default function ServiceMaterialInwardResponse({
                               className={`absolute -left-[1.8vw] top-[0.6vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
                             />
 
-                            {/* Card Content */}
-                            <div className="bg-white rounded-[0.6vw] p-[0.85vw] border border-slate-200 shadow-2xs hover:shadow-xs transition-shadow">
-                              <div className="flex items-center justify-between gap-[0.5vw]">
-                                <span
-                                  className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-bold tracking-wide border ${pillClass}`}
-                                >
-                                  {label}
-                                </span>
-                                <span className="text-[0.68vw] text-slate-600 font-mono font-medium whitespace-nowrap">
-                                  {(() => {
-                                    const dt = new Date(item.timestamp);
-                                    if (isNaN(dt.getTime())) return item.timestamp || "—";
-                                    const dStr = dt.toLocaleDateString("en-GB");
-                                    const tStr = dt
-                                      .toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        hour12: true,
-                                      })
-                                      .toLowerCase();
-                                    return `${dStr}, ${tStr}`;
-                                  })()}
-                                </span>
-                              </div>
-
-                              {remarkText && (
-                                <div className="mt-[0.5vw] bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.45vw]">
-                                  <p className="text-[0.76vw] text-slate-800 leading-relaxed font-normal">
-                                    <span className="font-semibold text-slate-700 mr-[0.35vw]">
-                                      Remark:
+                                {/* Timeline Row */}
+                                <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
+                                  <div className="flex items-center justify-between gap-[0.5vw]">
+                                    <span
+                                      className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-bold tracking-wide border ${pillClass}`}
+                                    >
+                                      {label}
                                     </span>
-                                    {remarkText}
-                                  </p>
-                                </div>
-                              )}
-
-                              {item.diffs && item.diffs.length > 0 && (
-                                <div className="mt-[0.6vw] bg-white rounded-[0.45vw] border border-purple-200 shadow-2xs overflow-hidden">
-                                  <div className="bg-purple-50/70 px-[0.6vw] py-[0.3vw] border-b border-purple-100 flex items-center justify-between text-[0.72vw]">
-                                    <span className="font-bold text-purple-900 flex items-center gap-[0.35vw]">
-                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-600" />
-                                      Changed Fields ({item.diffs.length})
+                                    <span className="text-[0.68vw] text-slate-700 font-mono font-semibold whitespace-nowrap">
+                                      {(() => {
+                                        const dt = new Date(item.timestamp);
+                                        if (isNaN(dt.getTime())) return item.timestamp || "—";
+                                        const dStr = dt.toLocaleDateString("en-GB");
+                                        const tStr = dt
+                                          .toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            hour12: true,
+                                          })
+                                          .toLowerCase();
+                                        return `${dStr}, ${tStr}`;
+                                      })()}
                                     </span>
-                                    {item.remark && (
-                                      <span className="font-medium text-slate-600 text-[0.68vw]">
-                                        Reason: <span className="text-slate-800">{item.remark}</span>
+                                  </div>
+
+                                  {remarkText && (
+                                    <div className="mt-[0.35vw] text-[0.76vw] text-slate-800 leading-relaxed font-normal">
+                                      <span className="font-semibold text-slate-700 mr-[0.35vw]">
+                                        Remark:
                                       </span>
-                                    )}
-                                  </div>
+                                      {remarkText}
+                                    </div>
+                                  )}
 
-                                  <div className="p-[0.5vw] space-y-[0.35vw]">
-                                    {item.diffs.map((d, di) => (
-                                      <div
-                                        key={di}
-                                        className="text-[0.74vw] bg-slate-50/80 rounded-[0.35vw] p-[0.45vw] border border-slate-200/70"
-                                      >
-                                        <div className="font-bold text-slate-700 text-[0.7vw] mb-[0.2vw]">
-                                          {d.field}
-                                        </div>
-
-                                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
-                                          {/* Previous Value */}
-                                          <div className="bg-white rounded-[0.3vw] px-[0.45vw] py-[0.3vw] border border-rose-200/80 bg-rose-50/30">
-                                            <div className="text-[0.6vw] font-bold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
-                                              Previous
-                                            </div>
-                                            <div className="text-rose-700 font-medium text-[0.72vw] line-through break-words">
-                                              {d.originalValue || "—"}
-                                            </div>
-                                          </div>
-
-                                          {/* Arrow Indicator */}
-                                          <div className="text-slate-400 font-bold text-[0.75vw] px-[0.1vw]">
-                                            →
-                                          </div>
-
-                                          {/* Updated Value */}
-                                          <div className="bg-emerald-50/40 rounded-[0.3vw] px-[0.45vw] py-[0.3vw] border border-emerald-200/80">
-                                            <div className="text-[0.6vw] font-bold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
-                                              Updated
-                                            </div>
-                                            <div className="text-emerald-900 font-semibold text-[0.72vw] break-words">
-                                              {d.editedValue || "—"}
-                                            </div>
-                                          </div>
-                                        </div>
+                                  {item.diffs && item.diffs.length > 0 && (
+                                    <div className="mt-[0.5vw] bg-purple-50/40 rounded-[0.4vw] border border-purple-200/80 p-[0.45vw] space-y-[0.35vw]">
+                                      <div className="flex items-center justify-between text-[0.72vw]">
+                                        <span className="font-bold text-purple-900 flex items-center gap-[0.35vw]">
+                                          <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-600" />
+                                          Changed Fields ({item.diffs.length})
+                                        </span>
+                                        {item.remark && (
+                                          <span className="font-medium text-slate-700 text-[0.68vw]">
+                                            Reason: <span className="text-slate-900 font-semibold">{item.remark}</span>
+                                          </span>
+                                        )}
                                       </div>
-                                    ))}
-                                  </div>
+
+                                      <div className="space-y-[0.3vw] pt-[0.2vw]">
+                                        {item.diffs.map((d, di) => (
+                                          <div
+                                            key={di}
+                                            className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                          >
+                                            <div className="font-bold text-slate-800 text-[0.7vw] mb-[0.2vw]">
+                                              {d.field}
+                                            </div>
+
+                                            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
+                                              {/* Previous Value */}
+                                              <div className="bg-rose-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200">
+                                                <div className="text-[0.6vw] font-bold text-rose-700 uppercase tracking-wider mb-[0.05vw]">
+                                                  Previous
+                                                </div>
+                                                <div className="text-rose-800 font-medium text-[0.72vw] line-through break-words">
+                                                  {d.originalValue || "—"}
+                                                </div>
+                                              </div>
+
+                                              {/* Arrow Indicator */}
+                                              <div className="text-slate-600 font-bold text-[0.75vw] px-[0.1vw]">
+                                                →
+                                              </div>
+
+                                              {/* Updated Value */}
+                                              <div className="bg-emerald-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200">
+                                                <div className="text-[0.6vw] font-bold text-emerald-800 uppercase tracking-wider mb-[0.05vw]">
+                                                  Updated
+                                                </div>
+                                                <div className="text-emerald-950 font-bold text-[0.72vw] break-words">
+                                                  {d.editedValue || "—"}
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
                           </div>
                         );
                       })}
@@ -3777,28 +3553,28 @@ export default function ServiceMaterialInwardResponse({
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[55vw] max-h-[90vh] flex flex-col overflow-hidden"
             >
-              <div className="px-[1.5vw] py-[1vw] border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+              <div className="px-[1.5vw] py-[1vw] border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1.1vw] font-bold text-slate-800 flex items-center gap-[0.5vw]">
+                  <h3 className="text-[1.1vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
                     <Edit3 className="w-[1.1vw] h-[1.1vw] text-blue-600" />
                     Edit Submitted Report
                   </h3>
-                  <p className="text-[0.72vw] text-slate-500 font-medium">
-                    {editReportModal.product.productDescription} ({editReportModal.product.serialNumber})
+                  <p className="text-[0.74vw] text-slate-700 font-medium">
+                    {editReportModal.product.productDescription} (<span className="font-mono font-semibold text-slate-900">{editReportModal.product.serialNumber}</span>)
                   </p>
                 </div>
                 <button
                   onClick={() => setEditReportModal(null)}
-                  className="p-[0.4vw] rounded-full hover:bg-slate-200 text-gray-400 hover:text-gray-700 transition-all cursor-pointer"
+                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-700 hover:text-slate-950 transition-all cursor-pointer"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-[1.1vw] h-[1.1vw]" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1vw]">
-                <div className="grid grid-cols-3 gap-[0.8vw]">
+              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-white divide-y divide-slate-200">
+                <div className="grid grid-cols-3 gap-[0.8vw] pb-[1vw]">
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Status</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Status</label>
                     <CustomDropdown
                       size="sm"
                       placeholder="Select Status"
@@ -3808,11 +3584,11 @@ export default function ServiceMaterialInwardResponse({
                         draft: { ...prev.draft, status: val }
                       }))}
                       options={STATUS_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] font-semibold"
+                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] font-semibold text-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Tested By</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Tested By</label>
                     <input
                       type="text"
                       value={editReportModal.draft.testedBy || ""}
@@ -3820,11 +3596,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, testedBy: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">FQA By</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">FQA By</label>
                     <input
                       type="text"
                       value={editReportModal.draft.fqaBy || ""}
@@ -3832,11 +3608,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, fqaBy: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">4M Category</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">4M Category</label>
                     <CustomDropdown
                       size="sm"
                       placeholder="Select 4M Category"
@@ -3846,11 +3622,11 @@ export default function ServiceMaterialInwardResponse({
                         draft: { ...prev.draft, fourMCategory: val }
                       }))}
                       options={(fourMCategories || []).map((opt) => ({ value: opt.name, label: opt.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw]"
+                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] text-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Error Code</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Error Code</label>
                     <input
                       type="text"
                       value={editReportModal.draft.errorCode || ""}
@@ -3858,11 +3634,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, errorCode: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">PV</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">PV</label>
                     <input
                       type="text"
                       value={editReportModal.draft.pv !== undefined ? editReportModal.draft.pv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[0]?.trim() : "")}
@@ -3870,11 +3646,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, pv: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">CV</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">CV</label>
                     <input
                       type="text"
                       value={editReportModal.draft.cv !== undefined ? editReportModal.draft.cv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[1]?.trim() : "")}
@@ -3882,14 +3658,14 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, cv: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-[0.8vw]">
+                <div className="grid grid-cols-2 gap-[0.8vw] pt-[1vw] pb-[1vw]">
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Problem Description</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Problem Description</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.problemDescription || ""}
@@ -3897,11 +3673,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, problemDescription: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Root Cause</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Root Cause</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.rootCause || ""}
@@ -3909,11 +3685,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, rootCause: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Fault Parts</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Fault Parts</label>
                     <input
                       type="text"
                       value={editReportModal.draft.faultParts || ""}
@@ -3921,11 +3697,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, faultParts: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Parts Replaced</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Parts Replaced</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.partsReplacement || ""}
@@ -3933,11 +3709,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, partsReplacement: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Corrective Action</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Corrective Action</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.correctiveAction || ""}
@@ -3945,14 +3721,14 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, correctiveAction: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-[0.8vw]">
+                <div className="grid grid-cols-3 gap-[0.8vw] pt-[1vw] pb-[1vw]">
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Time (Hours)</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Time (Hours)</label>
                     <input
                       type="text"
                       value={editReportModal.draft.timeInHours || ""}
@@ -3973,11 +3749,11 @@ export default function ServiceMaterialInwardResponse({
                           }
                         }));
                       }}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Material Cost (₹)</label>
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Material Cost (₹)</label>
                     <input
                       type="text"
                       value={editReportModal.draft.materialCost || ""}
@@ -3985,37 +3761,37 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, materialCost: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-gray-300 rounded p-[0.35vw] outline-none focus:border-blue-500"
+                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.72vw] font-bold text-slate-700 mb-[0.2vw] block">Man Power Cost (₹)</label>
-                    <div className="w-full text-[0.75vw] bg-slate-100 border border-gray-300 rounded p-[0.35vw] font-semibold text-emerald-700">
+                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Man Power Cost (₹)</label>
+                    <div className="w-full text-[0.75vw] bg-slate-50 border border-slate-300 rounded-[0.3vw] p-[0.35vw] font-bold text-emerald-800">
                       ₹{Number(editReportModal.draft.manpowerCost || 0).toFixed(2)}
                     </div>
                   </div>
                 </div>
 
                 {/* Edit Reason input */}
-                <div className="bg-amber-50/60 border border-amber-200 rounded-[0.5vw] p-[0.8vw]">
-                  <label className="text-[0.75vw] font-bold text-amber-900 mb-[0.2vw] block">
-                    Reason for Editing (Required for change tracking)
+                <div className="pt-[1vw]">
+                  <label className="text-[0.75vw] font-bold text-slate-900 mb-[0.25vw] block">
+                    Reason for Editing <span className="text-rose-600">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder="Enter reason for modifying this technical report..."
                     value={editReason}
                     onChange={(e) => setEditReason(e.target.value)}
-                    className="w-full text-[0.75vw] border border-amber-300 rounded p-[0.38vw] bg-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                    className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.45vw] bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 text-slate-800 font-medium"
                   />
                 </div>
               </div>
 
-              <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-[0.8vw]">
+              <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end gap-[0.8vw]">
                 <button
                   type="button"
                   onClick={() => setEditReportModal(null)}
-                  className="px-[1.2vw] py-[0.45vw] bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full font-bold text-[0.75vw] cursor-pointer transition-all border-0"
+                  className="px-[1.2vw] py-[0.45vw] bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full font-bold text-[0.75vw] cursor-pointer transition-all border-0"
                 >
                   Cancel
                 </button>

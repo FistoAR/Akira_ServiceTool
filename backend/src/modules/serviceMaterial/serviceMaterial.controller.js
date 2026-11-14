@@ -313,14 +313,19 @@ exports.updateProductReport = async (req, res) => {
     });
 
     if (reportDiffs.length > 0 && (oldReport.status || oldReport.problemDescription)) {
+      const isPostCompletedEdit = oldReport.status === 'Completed' || product.status === 'Completed';
       const editRecord = {
         editedAt: new Date(),
         editedBy: report._editedBy || req.user?.userId || product.assignedTo || 'Employee',
         editedByName: report._editedByName || req.user?.name || product.assignedToName || 'Employee',
         role: report._editedByRole || req.user?.role || 'Employee',
-        reason: report._editReason || report.currentRemark || 'Report updated',
+        reason: report._editReason || report.currentRemark || (isPostCompletedEdit ? 'Edited after Completed' : 'Report updated'),
+        isPostCompletedEdit,
         diffs: reportDiffs
       };
+
+      if (!product._closureEdits) product._closureEdits = [];
+      product._closureEdits.push(editRecord);
 
       inward.editHistory = [...(inward.editHistory || []), editRecord];
     }
@@ -448,12 +453,14 @@ exports.editProductReport = async (req, res) => {
 
     if (diffs.length > 0) {
       if (!product._closureEdits) product._closureEdits = [];
+      const isPostCompletedEdit = oldStatus === 'Completed' || product.status === 'Completed' || oldReport.status === 'Completed';
       const editRecord = {
         editedAt: new Date(),
         editedBy: userId || req.user?.userId || 'Employee',
         editedByName: name || req.user?.name || 'Employee',
         role: role || req.user?.role || 'Employee',
-        reason: editReason || '',
+        reason: editReason || (isPostCompletedEdit ? 'Edited after Completed' : ''),
+        isPostCompletedEdit,
         diffs
       };
       product._closureEdits.push(editRecord);
@@ -469,12 +476,13 @@ exports.editProductReport = async (req, res) => {
 
       // Append to report history
       const historyItem = {
-        status: `Report Edited (${newStatus || oldStatus})`,
+        status: isPostCompletedEdit ? `Edited After Completed (${newStatus || oldStatus})` : `Report Edited (${newStatus || oldStatus})`,
         disposition: disposition !== undefined ? disposition : oldReport.disposition,
-        remark: editReason ? `Reason: ${editReason}` : `Updated by ${name || 'Employee'}`,
+        remark: editReason ? `Reason: ${editReason}` : `Updated by ${name || 'Employee'}${isPostCompletedEdit ? ' (after completion)' : ''}`,
         timestamp: new Date().toISOString(),
         metadata: {
           isEdit: true,
+          isPostCompletedEdit,
           diffs,
           editReason: editReason || ''
         }
@@ -548,7 +556,22 @@ exports.updateFinalStatus = async (req, res) => {
     if (finalStatus !== undefined) product.finalStatus = finalStatus;
     if (finalStatusRemarks !== undefined) product.finalStatusRemarks = finalStatusRemarks;
     if (finalStatusDate !== undefined) product.finalStatusDate = finalStatusDate;
-    if (finalStatusHistory !== undefined) product.finalStatusHistory = finalStatusHistory;
+    if (finalStatusHistory !== undefined) {
+      product.finalStatusHistory = finalStatusHistory;
+    } else if (finalStatus !== undefined) {
+      // Auto-append to finalStatusHistory if not supplied explicitly
+      const adminUser = req.user || {};
+      const newEntry = {
+        status: finalStatus,
+        remarks: finalStatusRemarks || '',
+        date: finalStatusDate || new Date().toISOString().split('T')[0],
+        timestamp: new Date().toISOString(),
+        adminId: req.body.adminId || adminUser.userId || adminUser.id || 'Admin',
+        adminName: req.body.adminName || adminUser.name || 'Administrator',
+        role: adminUser.role || 'Admin'
+      };
+      product.finalStatusHistory = [...(product.finalStatusHistory || []), newEntry];
+    }
     if (expectedDeliveryDate !== undefined) product.expectedDeliveryDate = expectedDeliveryDate;
     if (report !== undefined) product.report = report;
 
