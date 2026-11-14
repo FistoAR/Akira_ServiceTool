@@ -2159,12 +2159,12 @@ const AdminTableView = ({
                             className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
                               isSelected
                                 ? "bg-[#e0f2fe]"
-                                : "bg-[#F8FAFC] hover:bg-[#F1F5F9]"
+                                : "bg-[#F1F5F9] hover:bg-[#E2E8F0]"
                             }`}
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F8FAFC]"}`}
+                                className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -2193,7 +2193,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F8FAFC]"}`}
+                              className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -2202,7 +2202,7 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F8FAFC]"}`}
+                              className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               <div className="flex items-center gap-[0.6vw] flex-wrap">
