@@ -466,143 +466,155 @@ const ProductReportModal = ({ product, onClose }) => {
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-[2vw]">
       <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 15 }}
+        initial={{ scale: 0.96, opacity: 0, y: 12 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 15 }}
-        transition={{ duration: 0.2 }}
-        className="bg-white w-[42vw] max-h-[85vh] rounded-[1vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200"
+        exit={{ scale: 0.96, opacity: 0, y: 12 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+        className="bg-white w-[42vw] max-h-[85vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200"
       >
         {/* Header */}
-        <div className="bg-slate-900 px-[1.5vw] py-[1.2vw] flex justify-between items-center shadow-md border-b border-slate-800">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="bg-blue-500/10 p-[0.5vw] rounded-lg">
-              <FileText className="w-[1.4vw] h-[1.4vw] text-blue-400" />
+        <div className="bg-slate-900 px-[1.4vw] py-[1vw] flex justify-between items-center shadow-sm border-b border-slate-800">
+          <div className="flex items-center gap-[0.7vw]">
+            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
+              <FileText className="w-[1.1vw] h-[1.1vw] text-blue-400" />
             </div>
             <div>
-              <h3 className="font-bold text-white text-[1vw] leading-tight">
+              <h3 className="font-semibold text-white text-[0.95vw] leading-tight">
                 Technical Report Details
               </h3>
-              <p className="text-[0.68vw] text-slate-400 font-medium mt-[0.1vw]">
-                {product.productDescription}
+              <p className="text-[0.68vw] text-slate-400 font-normal mt-[0.15vw] truncate max-w-[28vw]">
+                {product.productDescription || "Service Report"}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white cursor-pointer transition-all hover:bg-slate-800 p-[0.4vw] rounded-full border-0 bg-transparent"
+            className="text-slate-400 hover:text-white cursor-pointer transition-colors p-[0.35vw] rounded-[0.4vw] hover:bg-slate-800 border-0 bg-transparent"
           >
-            <X className="w-[1.2vw] h-[1.2vw]" />
+            <X className="w-[1.1vw] h-[1.1vw]" />
           </button>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-[1.8vw] space-y-[1.4vw] bg-slate-50/50">
+        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.1vw] bg-slate-50/60">
           {/* Metadata Cards */}
-          <div className="grid grid-cols-2 gap-[1vw]">
-            <div className="bg-white border border-slate-200 p-[0.8vw] rounded-[0.6vw] shadow-sm flex flex-col gap-[0.2vw]">
-              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
-                Product Info
-              </span>
-              <span className="text-[0.78vw] font-bold text-slate-800 leading-snug">
-                {product.productDescription || "—"}
-              </span>
-              <span className="text-[0.68vw] text-slate-500 font-semibold mt-[0.1vw]">
-                SN: {product.serialNumber || "—"} | {product.boardType || "—"}
-              </span>
+          <div className="grid grid-cols-2 gap-[0.9vw]">
+            {/* Product Info Card */}
+            <div className="bg-white border border-slate-200/90 p-[0.85vw] rounded-[0.55vw] shadow-2xs flex flex-col justify-between">
+              <div>
+                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+                  Product Info
+                </span>
+                <span className="text-[0.78vw] font-medium text-slate-800 leading-snug line-clamp-2" title={product.productDescription}>
+                  {product.productDescription || "—"}
+                </span>
+              </div>
+              <div className="flex items-center gap-[0.4vw] text-[0.68vw] text-slate-500 font-normal mt-[0.4vw] pt-[0.4vw] border-t border-slate-100">
+                <span>SN: <strong className="font-medium text-slate-700">{product.serialNumber || "—"}</strong></span>
+                <span className="text-slate-300">•</span>
+                <span>Board: <strong className="font-medium text-slate-700">{product.boardType || "—"}</strong></span>
+              </div>
             </div>
 
-            <div className="bg-white border border-slate-200 p-[0.8vw] rounded-[0.6vw] shadow-sm flex flex-col gap-[0.2vw]">
-              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
-                Service Execution
-              </span>
-              <span className="text-[0.78vw] font-bold text-slate-800 flex items-center gap-[0.3vw]">
-                <User className="w-[0.8vw] h-[0.8vw] text-blue-500" />
-                Tested By: {r.testedBy || "—"}
-              </span>
-              <span className="text-[0.68vw] text-slate-500 font-semibold mt-[0.1vw]">
+            {/* Service Execution Card */}
+            <div className="bg-white border border-slate-200/90 p-[0.85vw] rounded-[0.55vw] shadow-2xs flex flex-col justify-between">
+              <div>
+                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.25vw]">
+                  Service Execution
+                </span>
+                <div className="text-[0.78vw] font-medium text-slate-800 flex items-center gap-[0.35vw]">
+                  <User className="w-[0.85vw] h-[0.85vw] text-blue-600 flex-shrink-0" />
+                  <span>Tested By: <strong className="font-semibold text-slate-900">{r.testedBy || "—"}</strong></span>
+                </div>
+              </div>
+              <div className="text-[0.68vw] text-slate-500 font-normal mt-[0.4vw] pt-[0.4vw] border-t border-slate-100">
                 Completed:{" "}
-                {r.completedDate
-                  ? new Date(r.completedDate).toLocaleDateString()
-                  : "—"}
-              </span>
+                <strong className="font-medium text-slate-700">
+                  {r.completedDate
+                    ? new Date(r.completedDate).toLocaleDateString()
+                    : "—"}
+                </strong>
+              </div>
             </div>
           </div>
 
-          {/* Details Grid */}
-          <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.2vw] shadow-sm space-y-[1vw]">
-            <div className="grid grid-cols-3 gap-[1vw] pb-[1vw] border-b border-slate-100">
-              <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+          {/* Details Card */}
+          <div className="bg-white border border-slate-200/90 rounded-[0.55vw] p-[1.1vw] shadow-2xs space-y-[0.9vw]">
+            {/* Top 3 Metric Pills */}
+            <div className="grid grid-cols-3 gap-[0.8vw] pb-[0.8vw] border-b border-slate-100">
+              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.6vw]">
+                <span className="text-[0.56vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                   4M Category
                 </span>
-                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">
+                <span className="text-[0.76vw] font-medium text-slate-800">
                   {r.fourMCategory || "—"}
                 </span>
               </div>
-              <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.6vw]">
+                <span className="text-[0.56vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                   Error Code
                 </span>
-                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">
+                <span className="text-[0.76vw] font-medium text-slate-800 font-mono">
                   {r.errorCode || "—"}
                 </span>
               </div>
-              <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.4vw] p-[0.6vw]">
+                <span className="text-[0.56vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                   Disposition
                 </span>
-                <span className="text-[0.78vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] inline-block">
+                <span className="text-[0.76vw] font-medium text-emerald-700 bg-emerald-50/80 border border-emerald-200/80 px-[0.4vw] py-[0.08vw] rounded-[0.25vw] inline-block">
                   {r.disposition || "—"}
                 </span>
               </div>
             </div>
 
-            <div className="space-y-[0.8vw]">
+            {/* Structured Text Fields */}
+            <div className="space-y-[0.75vw]">
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                   Problem Description
                 </span>
-                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed">
                   {r.problemDescription || "—"}
-                </p>
+                </div>
               </div>
 
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                   Root Cause
                 </span>
-                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed">
                   {r.rootCause || "—"}
-                </p>
+                </div>
               </div>
 
               <div>
-                <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                   Corrective Action
                 </span>
-                <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed">
                   {r.correctiveAction || "—"}
-                </p>
+                </div>
               </div>
 
               {r.designators && (
                 <div>
-                  <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                  <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
                     Designators
                   </span>
-                  <p className="text-[0.75vw] text-slate-700 font-medium bg-slate-50/50 p-[0.5vw] rounded-[0.4vw] border border-slate-100 leading-relaxed">
+                  <div className="text-[0.75vw] text-slate-700 font-normal bg-slate-50/60 p-[0.55vw] rounded-[0.35vw] border border-slate-200/80 leading-relaxed font-mono">
                     {r.designators}
-                  </p>
+                  </div>
                 </div>
               )}
 
               {/* Parts Replacement List */}
               {r.partsReplacement && (
                 <div>
-                  <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider block mb-[0.4vw]">
+                  <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider block mb-[0.35vw]">
                     Parts Replaced
                   </span>
-                  <div className="flex flex-wrap gap-[0.4vw]">
+                  <div className="flex flex-wrap gap-[0.35vw]">
                     {r.partsReplacement
                       .split(",")
                       .map((s) => s.trim())
@@ -610,9 +622,9 @@ const ProductReportModal = ({ product, onClose }) => {
                       .map((part, i) => (
                         <span
                           key={i}
-                          className="text-[0.7vw] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.25vw] rounded-[0.4vw] flex items-center gap-[0.3vw]"
+                          className="text-[0.7vw] font-medium text-slate-700 bg-slate-50 border border-slate-200 px-[0.5vw] py-[0.18vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
                         >
-                          <span className="w-[0.35vw] h-[0.35vw] rounded-full bg-blue-500" />
+                          <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-500" />
                           {part}
                         </span>
                       ))}
@@ -624,26 +636,26 @@ const ProductReportModal = ({ product, onClose }) => {
 
           {/* Report Attachment */}
           {r.image && (
-            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.2vw] shadow-sm flex flex-col gap-[0.6vw]">
-              <span className="text-[0.6vw] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="bg-white border border-slate-200/90 rounded-[0.55vw] p-[1.1vw] shadow-2xs flex flex-col gap-[0.5vw]">
+              <span className="text-[0.58vw] font-semibold text-slate-400 uppercase tracking-wider">
                 Report Attachment (Image / PDF)
               </span>
-              <div className="rounded-[0.6vw] overflow-hidden border border-slate-200 bg-slate-100 max-h-[25vh] p-[0.6vw] flex justify-center items-center">
+              <div className="rounded-[0.45vw] overflow-hidden border border-slate-200/90 bg-slate-50 max-h-[22vh] p-[0.5vw] flex justify-center items-center">
                 {r.image.toLowerCase().endsWith(".pdf") ? (
                   <a
                     href={`${API_URL.replace("/api", "")}${r.image}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-[0.5vw] px-[1vw] py-[0.6vw] bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-[0.4vw] font-bold text-[0.78vw] shadow-xs cursor-pointer transition-colors"
+                    className="flex items-center gap-[0.45vw] px-[0.9vw] py-[0.5vw] bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-[0.35vw] font-medium text-[0.76vw] cursor-pointer transition-colors"
                   >
-                    <FileText className="w-[1.2vw] h-[1.2vw] text-red-600" />
+                    <FileText className="w-[1.1vw] h-[1.1vw] text-red-600" />
                     <span>Open Attached PDF Document</span>
                   </a>
                 ) : (
                   <img
                     src={`${API_URL.replace("/api", "")}${r.image}`}
                     alt="Report Attachment"
-                    className="max-h-[23vh] w-auto object-contain cursor-pointer hover:scale-105 transition-all"
+                    className="max-h-[20vh] w-auto object-contain cursor-pointer hover:opacity-90 transition-opacity rounded-[0.2vw]"
                     onClick={() =>
                       window.open(
                         `${API_URL.replace("/api", "")}${r.image}`,
