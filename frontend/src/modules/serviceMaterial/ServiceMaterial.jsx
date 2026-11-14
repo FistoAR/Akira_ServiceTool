@@ -2242,7 +2242,7 @@ const AdminTableView = ({
                                   const rowBalance = Math.max(0, rowReceived - rowDispatched);
 
                                   return (
-                                    <div className="flex items-center gap-[0.35vw] text-[0.7vw] text-slate-600 font-normal ml-[0.6vw]">
+                                    <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[1.5vw]">
                                       <span title="Received Qty">
                                         Received: <span className="font-semibold text-slate-800">{rowReceived}</span>
                                       </span>
