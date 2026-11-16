@@ -616,3 +616,28 @@ exports.updateFinalStatus = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// ── POST /api/service-material/log-export ────────────────────────────────────
+exports.logExport = async (req, res) => {
+  try {
+    const ExportLog = require('./exportLog.model');
+    const { module = 'ServiceMaterial', reportType = 'Service Material Reports', exportedBy, exportedByName, exportedByRole, recordCount, filters } = req.body;
+    
+    const logEntry = new ExportLog({
+      module,
+      reportType,
+      exportedBy: exportedBy || req.user?.userId || 'Unknown',
+      exportedByName: exportedByName || req.user?.name || 'System User',
+      exportedByRole: exportedByRole || req.user?.role || 'User',
+      recordCount: Number(recordCount) || 0,
+      filters: filters || {},
+      timestamp: new Date()
+    });
+
+    await logEntry.save();
+    res.status(201).json({ success: true, logId: logEntry._id });
+  } catch (err) {
+    console.error('Error logging export audit:', err);
+    res.status(500).json({ message: err.message });
+  }
+};

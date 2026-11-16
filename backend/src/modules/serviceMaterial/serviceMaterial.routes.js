@@ -13,5 +13,6 @@ router.patch('/:id/unclaim-product', serviceMaterialController.unclaimProduct);
 router.patch('/:id/report', upload.single('image'), serviceMaterialController.updateProductReport);
 router.patch('/:id/product/:productId/edit-report', serviceMaterialController.editProductReport);
 router.patch('/:id/product/:productId/final-status', serviceMaterialController.updateFinalStatus);
+router.post('/log-export', serviceMaterialController.logExport);
 
 module.exports = router;

@@ -207,6 +207,37 @@ const getAgeGroupLabel = (days) => {
   return "Above 15 days";
 };
 
+// Check if material turnaround time crosses warranty SLA days
+const checkWarrantyDaysCrossed = (entry, product, warrantyRules = []) => {
+  if (!entry?.date) return false;
+  const days = calculateTatDays(entry.date, product.report?.completedDate);
+  if (days === null || days === undefined) return false;
+
+  const seg = (product.productSegment || product.segment || "").toLowerCase().trim();
+  const partyType = (entry.category || "").toLowerCase().trim();
+  const type = product.type || "W";
+
+  // Find matching rule
+  let rule = warrantyRules.find(
+    (r) => (r.productSegment || "").toLowerCase().trim() === seg && seg.length > 0
+  );
+  if (!rule && partyType) {
+    rule = warrantyRules.find(
+      (r) => (r.partyType || r.name || "").toLowerCase().trim() === partyType
+    );
+  }
+  if (!rule) {
+    rule = warrantyRules.find(
+      (r) =>
+        (r.productSegment || r.partyType || r.name || "").toLowerCase().trim() === "default"
+    );
+  }
+
+  // SLA allowed days: warrantySLADays for 'W', postWarrantySLADays for 'PW' (default 7/10)
+  const slaDays = type === "PW" ? (rule?.postWarrantySLADays ?? 10) : (rule?.warrantySLADays ?? 7);
+  return days > slaDays;
+};
+
 // Status Configuration: Pending = red, In Progress = amber, Completed = green
 const getMaterialStatusBadge = (status, finalStatus) => {
   let displayStatus = status || "Open";
@@ -527,6 +558,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
 export default function ServiceMaterialReports({ currentUser: propUser }) {
   const [entries, setEntries] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [warrantyRules, setWarrantyRules] = useState([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useNotification();
   const { socket } = useSocket();
@@ -548,6 +580,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   // Filters & State
   const [activeMainView, setActiveMainView] = useState("allProducts"); // "allProducts" | "assignments"
   const [activeStatusTab, setActiveStatusTab] = useState("All");
+  const [quantityFilter, setQuantityFilter] = useState("all"); // "all" | "claimed" | "dispatched" | "balance"
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -602,12 +635,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   // Fetch Data
   const fetchData = async () => {
     try {
-      const [matRes, empRes] = await Promise.all([
+      const [matRes, empRes, rulesRes] = await Promise.all([
         axios.get(`${API_URL}/service-material`),
         axios.get(`${API_URL}/auth/employees`),
+        axios.get(`${API_URL}/master/warranty-rules`).catch(() => ({ data: [] })),
       ]);
       setEntries(matRes.data || []);
       setEmployees(empRes.data || []);
+      setWarrantyRules(rulesRes.data || []);
       setLastUpdated(new Date());
     } catch (err) {
       console.error("Error loading service material data:", err);
@@ -660,82 +695,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     return Array.from(set);
   }, [allProducts]);
 
-  // Status Tab Counts (computed against the current date/search/employee filters)
-  const statusCounts = useMemo(() => {
-    const counts = { All: 0 };
-    STATUS_CHIPS.forEach((c) => {
-      counts[c.label] = 0;
-    });
-
-    allProducts.forEach(({ entry, product }) => {
-      // Apply Search Filter
-      if (search.trim()) {
-        const q = search.toLowerCase();
-        const matches =
-          (entry.customerName || "").toLowerCase().includes(q) ||
-          (entry.customerCode || "").toLowerCase().includes(q) ||
-          (entry.refNoCustomer || "").toLowerCase().includes(q) ||
-          (entry.refNoInternal || "").toLowerCase().includes(q) ||
-          (product.productDescription || "").toLowerCase().includes(q) ||
-          (product.productCode || "").toLowerCase().includes(q) ||
-          (product.serialNumber || "").toLowerCase().includes(q) ||
-          (product.assignedToName || "").toLowerCase().includes(q);
-        if (!matches) return;
-      }
-
-      // Apply Date Filter
-      const entryDateStr = entry.date ? entry.date.slice(0, 10) : "";
-      if (fromDate && !toDate) {
-        if (entryDateStr !== fromDate) return;
-      } else {
-        const entryDate = entryDateStr ? toDateObj(entryDateStr) : null;
-        if (fromDate && entryDate && entryDate < toDateObj(fromDate)) return;
-        if (toDate && entryDate && entryDate > toDateObj(toDate)) return;
-      }
-
-      // Employee Filter
-      if (selectedEmployee !== "All" && product.assignedTo !== selectedEmployee) {
-        return;
-      }
-
-      // Category Filter
-      if (categoryFilter !== "All" && entry.category !== categoryFilter) {
-        return;
-      }
-
-      // Warranty Filter
-      if (warrantyFilter !== "All" && product.type !== warrantyFilter) {
-        return;
-      }
-
-      // Product Segment Filter
-      if (segmentFilter !== "All") {
-        const seg = (product.productSegment || product.segment || "").trim();
-        if (seg.toLowerCase() !== segmentFilter.toLowerCase()) return;
-      }
-
-      counts.All++;
-
-      const rawStatus = product.status || product.report?.status || "Open";
-      let statusKey = rawStatus;
-      if (rawStatus === "Completed") {
-        if (product.finalStatus === "Completed") {
-          statusKey = "Completed";
-        } else {
-          statusKey = "Review Required";
-        }
-      }
-
-      if (counts[statusKey] !== undefined) {
-        counts[statusKey]++;
-      }
-    });
-
-    return counts;
-  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter]);
-
-  // Filtered Products List
-  const filteredProducts = useMemo(() => {
+  // Base Products List matching search, date range, employee, category, warranty, segment filters
+  const baseFilteredProducts = useMemo(() => {
     return allProducts.filter(({ entry, product }) => {
       // 1. Search Filter
       if (search.trim()) {
@@ -783,23 +744,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         if (seg.toLowerCase() !== segmentFilter.toLowerCase()) return false;
       }
 
-      // 7. Status Tab Filter
-      if (activeStatusTab !== "All") {
-        const rawStatus = product.status || product.report?.status || "Open";
-        if (activeStatusTab === "Review Required") {
-          return rawStatus === "Completed" && product.finalStatus !== "Completed";
-        }
-        if (activeStatusTab === "Completed") {
-          return rawStatus === "Completed" && product.finalStatus === "Completed";
-        }
-        return rawStatus === activeStatusTab;
-      }
-
       return true;
     });
-  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter, activeStatusTab]);
+  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter]);
 
-  // Comprehensive Quantity Summary across active filtered inward sets
+  // Overall Quantity Stats across base filtered inward set (constant reference for breakdown buttons)
   const quantityStats = useMemo(() => {
     let receivedQty = 0;
     let claimedInProgressQty = 0;
@@ -808,7 +757,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     let openQty = 0;
     let totalMaterialCost = 0;
 
-    filteredProducts.forEach(({ product }) => {
+    baseFilteredProducts.forEach(({ product }) => {
       const q = Math.max(1, Number(product.qty) || 1);
       receivedQty += q;
 
@@ -851,7 +800,76 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       openQty,
       totalMaterialCost,
     };
-  }, [filteredProducts]);
+  }, [baseFilteredProducts]);
+
+  // Status Tab Counts (computed against the current base filters + quantityFilter)
+  const statusCounts = useMemo(() => {
+    const counts = { All: 0 };
+    STATUS_CHIPS.forEach((c) => {
+      counts[c.label] = 0;
+    });
+
+    baseFilteredProducts.forEach(({ product }) => {
+      // Quantity Filter (from breakdown popover buttons)
+      if (quantityFilter !== "all") {
+        const rawStatus = product.status || product.report?.status || "Open";
+        const isApproved = rawStatus === "Completed" && product.finalStatus === "Completed";
+        const isClaimed = !isApproved && (product.assignedTo || (rawStatus !== "Open" && rawStatus !== ""));
+
+        if (quantityFilter === "claimed" && !isClaimed) return;
+        if (quantityFilter === "dispatched" && !isApproved) return;
+        if (quantityFilter === "balance" && isApproved) return;
+      }
+
+      counts.All++;
+
+      const rawStatus = product.status || product.report?.status || "Open";
+      let statusKey = rawStatus;
+      if (rawStatus === "Completed") {
+        if (product.finalStatus === "Completed") {
+          statusKey = "Completed";
+        } else {
+          statusKey = "Review Required";
+        }
+      }
+
+      if (counts[statusKey] !== undefined) {
+        counts[statusKey]++;
+      }
+    });
+
+    return counts;
+  }, [baseFilteredProducts, quantityFilter]);
+
+  // Filtered Products List
+  const filteredProducts = useMemo(() => {
+    return baseFilteredProducts.filter(({ product }) => {
+      // Quantity Filter (from breakdown popover buttons)
+      if (quantityFilter !== "all") {
+        const rawStatus = product.status || product.report?.status || "Open";
+        const isApproved = rawStatus === "Completed" && product.finalStatus === "Completed";
+        const isClaimed = !isApproved && (product.assignedTo || (rawStatus !== "Open" && rawStatus !== ""));
+
+        if (quantityFilter === "claimed" && !isClaimed) return false;
+        if (quantityFilter === "dispatched" && !isApproved) return false;
+        if (quantityFilter === "balance" && isApproved) return false;
+      }
+
+      // Status Tab Filter
+      if (activeStatusTab !== "All") {
+        const rawStatus = product.status || product.report?.status || "Open";
+        if (activeStatusTab === "Review Required") {
+          return rawStatus === "Completed" && product.finalStatus !== "Completed";
+        }
+        if (activeStatusTab === "Completed") {
+          return rawStatus === "Completed" && product.finalStatus === "Completed";
+        }
+        return rawStatus === activeStatusTab;
+      }
+
+      return true;
+    });
+  }, [baseFilteredProducts, activeStatusTab, quantityFilter]);
 
   // Employee Assignment Summary Data (for View 2: Employee Assignment Report)
   const employeeSummaryData = useMemo(() => {
@@ -1266,6 +1284,32 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         wb,
         `Service_Material_Report_${new Date().toISOString().slice(0, 10)}.xlsx`
       );
+
+      // Log export action for audit compliance
+      try {
+        axios.post(`${API_URL}/service-material/log-export`, {
+          module: "ServiceMaterial",
+          reportType: "Service Material Reports",
+          exportedBy: loggedInUser?.userId || loggedInUser?.id || "Unknown",
+          exportedByName: loggedInUser?.name || loggedInUser?.username || "System User",
+          exportedByRole: loggedInUser?.role || "User",
+          recordCount: rows.length,
+          filters: {
+            search: search || undefined,
+            fromDate: fromDate || undefined,
+            toDate: toDate || undefined,
+            selectedEmployee: selectedEmployee !== "All" ? selectedEmployee : undefined,
+            categoryFilter: categoryFilter !== "All" ? categoryFilter : undefined,
+            warrantyFilter: warrantyFilter !== "All" ? warrantyFilter : undefined,
+            segmentFilter: segmentFilter !== "All" ? segmentFilter : undefined,
+            activeStatusTab: activeStatusTab !== "All" ? activeStatusTab : undefined,
+            quantityFilter: quantityFilter !== "all" ? quantityFilter : undefined,
+          },
+        }).catch((e) => console.warn("Export logging failed:", e));
+      } catch (logErr) {
+        console.warn("Export log trigger error:", logErr);
+      }
+
       toast("Report exported successfully to Excel", "success");
     } catch (err) {
       console.error("Export error:", err);
@@ -1279,7 +1323,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     selectedEmployee !== "All" ||
     categoryFilter !== "All" ||
     warrantyFilter !== "All" ||
-    segmentFilter !== "All";
+    segmentFilter !== "All" ||
+    quantityFilter !== "all";
 
   const clearAllFilters = () => {
     setFromDate("");
@@ -1288,6 +1333,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     setCategoryFilter("All");
     setWarrantyFilter("All");
     setSegmentFilter("All");
+    setQuantityFilter("all");
     setCurrentPage(1);
   };
 
@@ -1724,68 +1770,136 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   </div>
 
                   <div className="flex items-center gap-[0.6vw] text-[0.72vw] text-slate-600 font-medium shrink-0">
-                    {/* View Total Quantities Button */}
+                    {/* View Total Quantities Button with interactive filter popover */}
                     <div className="relative">
                       <button
                         type="button"
                         onClick={() => setShowQuantitiesPopover((p) => !p)}
                         className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.9vw] rounded-full border text-[0.72vw] font-medium transition-all cursor-pointer shadow-2xs ${
-                          showQuantitiesPopover
-                            ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                          quantityFilter !== "all"
+                            ? "bg-blue-600 text-white border-blue-600 shadow-xs font-semibold"
+                            : showQuantitiesPopover
+                            ? "bg-slate-100 text-slate-800 border-slate-300 shadow-xs"
                             : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                         }`}
+                        title="View breakdown and click rows to filter"
                       >
                         <Package className="w-[0.78vw] h-[0.78vw]" />
                         <span>View Total Quantities</span>
                         <span className={`text-[0.64vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
-                          showQuantitiesPopover ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+                          quantityFilter !== "all"
+                            ? "bg-white/20 text-white"
+                            : "bg-slate-100 text-slate-700"
                         }`}>
                           {quantityStats.receivedQty}
                         </span>
                       </button>
 
-                      {/* Tooltip Popover with all 5 quantities */}
+                      {/* Tooltip Popover with all 4 interactive filter buttons + Cost */}
                       {showQuantitiesPopover && (
                         <>
                           <div
                             className="fixed inset-0 z-40"
                             onClick={() => setShowQuantitiesPopover(false)}
                           />
-                          <div className="absolute right-0 top-full mt-[0.4vw] w-[16vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
+                          <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
                             <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
                               <span className="text-[0.72vw] font-semibold text-slate-800">
                                 Total Quantities Breakdown
                               </span>
-                              <button
-                                type="button"
-                                onClick={() => setShowQuantitiesPopover(false)}
-                                className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
-                              >
-                                <X className="w-[0.7vw] h-[0.7vw]" />
-                              </button>
+                              <div className="flex items-center gap-[0.4vw]">
+                                {quantityFilter !== "all" && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setQuantityFilter("all");
+                                      setCurrentPage(1);
+                                    }}
+                                    className="text-[0.66vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                                  >
+                                    Clear Filter
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => setShowQuantitiesPopover(false)}
+                                  className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
+                                >
+                                  <X className="w-[0.7vw] h-[0.7vw]" />
+                                </button>
+                              </div>
                             </div>
 
-                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-slate-50 border border-slate-200 text-[0.72vw]">
-                              <span className="text-slate-600 font-normal">Received Qty:</span>
-                              <span className="text-slate-800 font-semibold">{quantityStats.receivedQty}</span>
-                            </div>
+                            {/* Received Qty (All) Filter Button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setQuantityFilter(quantityFilter === "all" ? "all" : "all");
+                                setCurrentPage(1);
+                              }}
+                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                                quantityFilter === "all"
+                                  ? "bg-slate-800 text-white border-slate-900 font-semibold shadow-xs"
+                                  : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                              }`}
+                            >
+                              <span className="font-normal">Received Qty (All):</span>
+                              <span className="font-semibold">{quantityStats.receivedQty}</span>
+                            </button>
 
-                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-blue-50/70 border border-blue-200 text-[0.72vw]">
-                              <span className="text-blue-700 font-normal">Claimed Qty:</span>
-                              <span className="text-blue-800 font-semibold">{quantityStats.claimedInProgressQty}</span>
-                            </div>
+                            {/* Claimed Qty Filter Button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setQuantityFilter(quantityFilter === "claimed" ? "all" : "claimed");
+                                setCurrentPage(1);
+                              }}
+                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                                quantityFilter === "claimed"
+                                  ? "bg-blue-600 text-white border-blue-600 font-semibold shadow-xs"
+                                  : "bg-blue-50/70 hover:bg-blue-100/70 border-blue-200 text-blue-700"
+                              }`}
+                            >
+                              <span className="font-normal">Claimed Qty:</span>
+                              <span className="font-semibold">{quantityStats.claimedInProgressQty}</span>
+                            </button>
 
-                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-emerald-50/70 border border-emerald-200 text-[0.72vw]">
-                              <span className="text-emerald-700 font-normal">Dispatched Qty:</span>
-                              <span className="text-emerald-800 font-semibold">{quantityStats.dispatchedQty}</span>
-                            </div>
+                            {/* Dispatched Qty Filter Button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setQuantityFilter(quantityFilter === "dispatched" ? "all" : "dispatched");
+                                setCurrentPage(1);
+                              }}
+                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                                quantityFilter === "dispatched"
+                                  ? "bg-emerald-600 text-white border-emerald-600 font-semibold shadow-xs"
+                                  : "bg-emerald-50/70 hover:bg-emerald-100/70 border-emerald-200 text-emerald-700"
+                              }`}
+                            >
+                              <span className="font-normal">Dispatched Qty:</span>
+                              <span className="font-semibold">{quantityStats.dispatchedQty}</span>
+                            </button>
 
-                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-amber-50/70 border border-amber-200 text-[0.72vw]">
-                              <span className="text-amber-800 font-normal">Balance Qty:</span>
-                              <span className="text-amber-900 font-semibold">{quantityStats.balanceQty}</span>
-                            </div>
+                            {/* Balance Qty Filter Button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setQuantityFilter(quantityFilter === "balance" ? "all" : "balance");
+                                setCurrentPage(1);
+                              }}
+                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                                quantityFilter === "balance"
+                                  ? "bg-amber-600 text-white border-amber-600 font-semibold shadow-xs"
+                                  : "bg-amber-50/70 hover:bg-amber-100/70 border-amber-200 text-amber-900"
+                              }`}
+                            >
+                              <span className="font-normal">Balance Qty:</span>
+                              <span className="font-semibold">{quantityStats.balanceQty}</span>
+                            </button>
 
-                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-indigo-50/70 border border-indigo-200 text-[0.72vw]">
+                            {/* Material Cost Display */}
+                            <div className="flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] bg-indigo-50/70 border border-indigo-200 text-[0.72vw]">
                               <span className="text-indigo-700 font-normal">Total Material Cost:</span>
                               <span className="text-indigo-800 font-semibold">₹{quantityStats.totalMaterialCost.toLocaleString()}</span>
                             </div>
@@ -1986,6 +2100,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       ) : (
                         paginatedProducts.map(({ entry, product }, idx) => {
                           const itemIndex = (currentPage - 1) * rowsPerPage + idx + 1;
+                          const isWarrantyCrossed = checkWarrantyDaysCrossed(entry, product, warrantyRules);
                           const statusBadge = getMaterialStatusBadge(
                             product.status || product.report?.status,
                             product.finalStatus
@@ -1994,7 +2109,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           return (
                             <tr
                               key={`${entry.id || entry._id}-${product._pid}`}
-                              className="hover:bg-blue-50/40 transition-colors border-b border-slate-200 last:border-0"
+                              className={`transition-colors border-b border-slate-200 last:border-0 ${
+                                isWarrantyCrossed
+                                  ? "bg-rose-50/60 hover:bg-rose-100/70"
+                                  : "hover:bg-blue-50/40"
+                              }`}
                             >
                               {/* S.No */}
                               <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center text-slate-600 font-normal">
@@ -2162,8 +2281,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* TAT */}
                               <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className="inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-medium border ${
+                                  isWarrantyCrossed
+                                    ? "bg-rose-100 text-rose-700 border-rose-300 font-bold"
+                                    : "bg-blue-50 text-blue-700 border-blue-200"
+                                }`}>
                                   {formatTatText(entry.date, product.report?.completedDate)}
+                                  {isWarrantyCrossed && " (Breached)"}
                                 </span>
                               </td>
 

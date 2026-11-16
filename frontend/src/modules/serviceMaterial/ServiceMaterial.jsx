@@ -2630,9 +2630,11 @@ export default function App() {
   const fromDateRef = useRef(null);
   const toDateRef = useRef(null);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [quantityFilter, setQuantityFilter] = useState("all"); // "all" | "claimed" | "dispatched" | "balance"
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [lastSyncTime, setLastSyncTime] = useState(new Date());
+  const [showQuantitiesPopover, setShowQuantitiesPopover] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -2836,7 +2838,7 @@ export default function App() {
     }
   };
 
-  // Filter by search term, date range AND active status chip
+  // Filter by search term, date range, active status chip AND quantityFilter
   const filteredData = useMemo(() => {
     let data = entries;
 
@@ -2852,6 +2854,22 @@ export default function App() {
             return status === "Completed" && p.finalStatus === "Completed";
           }
           return status === activeFilter;
+        }),
+      );
+    }
+
+    // Apply quantity filter (from breakdown popover buttons)
+    if (quantityFilter !== "all") {
+      data = data.filter((row) =>
+        (row.products || []).some((p) => {
+          const rawStatus = p.status || p.report?.status || "Open";
+          const isApproved = rawStatus === "Completed" && p.finalStatus === "Completed";
+          const isClaimed = !isApproved && (p.assignedTo || (rawStatus !== "Open" && rawStatus !== ""));
+
+          if (quantityFilter === "claimed") return isClaimed;
+          if (quantityFilter === "dispatched") return isApproved;
+          if (quantityFilter === "balance") return !isApproved;
+          return true;
         }),
       );
     }
@@ -2916,11 +2934,11 @@ export default function App() {
     });
 
     return data;
-  }, [entries, searchTerm, activeFilter, dateFrom, dateTo]);
+  }, [entries, searchTerm, activeFilter, dateFrom, dateTo, quantityFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, activeFilter, dateFrom, dateTo]);
+  }, [searchTerm, activeFilter, dateFrom, dateTo, quantityFilter]);
 
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE) || 1;
   const paginatedData = filteredData.slice(
@@ -3196,8 +3214,8 @@ export default function App() {
             </div>
 
             {/* Sleek Connected Segmented Track for Status Tabs & Overall Quantity KPI Capsules */}
-            <div className="flex items-center justify-between gap-[0.8vw] mb-[0.8vw] flex-wrap">
-              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+            <div className="flex items-center justify-between gap-[0.8vw] mb-[0.8vw] flex-nowrap">
+              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
                 {STATUS_CHIPS.map(({ label, dot }) => {
                   const isActive = activeFilter === label;
                   const count = counts[label] ?? 0;
@@ -3230,10 +3248,10 @@ export default function App() {
                 })}
               </div>
 
-              {/* Quantities Summary Capsules: Received, Claimed, Dispatched, Balance */}
+              {/* View Total Quantities Button with Interactive Filter Popover */}
               {(() => {
-                const allProds = filteredData.flatMap((r) => r.products || []);
-                const totalReceived = allProds.reduce((sum, p) => sum + (Math.max(1, Number(p.qty) || 1)), 0);
+                const totalReceived = counts.All ?? 0;
+                const allProds = entries.flatMap((r) => r.products || []);
                 const totalDispatched = allProds.reduce((sum, p) => {
                   const raw = p.status || p.report?.status || "Open";
                   return sum + (raw === "Completed" && p.finalStatus === "Completed" ? Math.max(1, Number(p.qty) || 1) : 0);
@@ -3246,23 +3264,133 @@ export default function App() {
                 const totalBalance = Math.max(0, totalReceived - totalDispatched);
 
                 return (
-                  <div className="flex items-center gap-[0.45vw] text-[0.72vw]">
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-slate-100 border border-slate-200">
-                      <span className="text-slate-500 font-normal">Received Qty:</span>
-                      <span className="text-slate-800 font-semibold">{totalReceived}</span>
-                    </div>
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-blue-50 border border-blue-200">
-                      <span className="text-blue-600 font-normal">Claimed:</span>
-                      <span className="text-blue-700 font-semibold">{totalClaimed}</span>
-                    </div>
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-emerald-50 border border-emerald-200">
-                      <span className="text-emerald-700 font-normal">Dispatched:</span>
-                      <span className="text-emerald-700 font-semibold">{totalDispatched}</span>
-                    </div>
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.2vw] rounded-full bg-amber-50 border border-amber-200">
-                      <span className="text-amber-800 font-normal">Balance:</span>
-                      <span className="text-amber-800 font-semibold">{totalBalance}</span>
-                    </div>
+                  <div className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setShowQuantitiesPopover((p) => !p)}
+                      className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.9vw] rounded-full border text-[0.72vw] font-medium transition-all cursor-pointer shadow-2xs ${
+                        quantityFilter !== "all"
+                          ? "bg-blue-600 text-white border-blue-600 shadow-xs font-semibold"
+                          : showQuantitiesPopover
+                          ? "bg-slate-100 text-slate-800 border-slate-300 shadow-xs"
+                          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+                      }`}
+                      title="View breakdown and click rows to filter"
+                    >
+                      <Package className="w-[0.78vw] h-[0.78vw]" />
+                      <span>View Total Quantities</span>
+                      <span className={`text-[0.64vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                        quantityFilter !== "all" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+                      }`}>
+                        {totalReceived}
+                      </span>
+                    </button>
+
+                    {/* Tooltip Popover with all 4 clickable filter rows */}
+                    {showQuantitiesPopover && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-40"
+                          onClick={() => setShowQuantitiesPopover(false)}
+                        />
+                        <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
+                          <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
+                            <span className="text-[0.72vw] font-semibold text-slate-800">
+                              Total Quantities Breakdown
+                            </span>
+                            <div className="flex items-center gap-[0.4vw]">
+                              {quantityFilter !== "all" && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setQuantityFilter("all");
+                                    setCurrentPage(1);
+                                  }}
+                                  className="text-[0.66vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                                >
+                                  Clear Filter
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => setShowQuantitiesPopover(false)}
+                                className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
+                              >
+                                <X className="w-[0.7vw] h-[0.7vw]" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Received Qty Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setQuantityFilter(quantityFilter === "all" ? "all" : "all");
+                              setCurrentPage(1);
+                            }}
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              quantityFilter === "all"
+                                ? "bg-slate-800 text-white border-slate-900 font-semibold shadow-xs"
+                                : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                            }`}
+                          >
+                            <span className="font-normal">Received Qty (All):</span>
+                            <span className="font-semibold">{totalReceived}</span>
+                          </button>
+
+                          {/* Claimed Qty Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setQuantityFilter(quantityFilter === "claimed" ? "all" : "claimed");
+                              setCurrentPage(1);
+                            }}
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              quantityFilter === "claimed"
+                                ? "bg-blue-600 text-white border-blue-600 font-semibold shadow-xs"
+                                : "bg-blue-50/70 hover:bg-blue-100/70 border-blue-200 text-blue-700"
+                            }`}
+                          >
+                            <span className="font-normal">Claimed Qty:</span>
+                            <span className="font-semibold">{totalClaimed}</span>
+                          </button>
+
+                          {/* Dispatched Qty Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setQuantityFilter(quantityFilter === "dispatched" ? "all" : "dispatched");
+                              setCurrentPage(1);
+                            }}
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              quantityFilter === "dispatched"
+                                ? "bg-emerald-600 text-white border-emerald-600 font-semibold shadow-xs"
+                                : "bg-emerald-50/70 hover:bg-emerald-100/70 border-emerald-200 text-emerald-700"
+                            }`}
+                          >
+                            <span className="font-normal">Dispatched Qty:</span>
+                            <span className="font-semibold">{totalDispatched}</span>
+                          </button>
+
+                          {/* Balance Qty Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setQuantityFilter(quantityFilter === "balance" ? "all" : "balance");
+                              setCurrentPage(1);
+                            }}
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              quantityFilter === "balance"
+                                ? "bg-amber-600 text-white border-amber-600 font-semibold shadow-xs"
+                                : "bg-amber-50/70 hover:bg-amber-100/70 border-amber-200 text-amber-900"
+                            }`}
+                          >
+                            <span className="font-normal">Balance Qty:</span>
+                            <span className="font-semibold">{totalBalance}</span>
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 );
               })()}

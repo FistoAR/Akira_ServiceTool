@@ -361,12 +361,15 @@ const EditableProductTable = ({
         if (newProducts[r] && isClaimedProd(newProducts[r])) continue;
         for (let c = minC; c <= maxC; c++) {
           const field = COLUMN_FIELDS[c];
-          if (field !== 'productCode' && field !== '_pid' && field !== 'type') {
-            // Only allow dragging expectedDeliveryDate if the target row has serialNumber
-            if (field === 'expectedDeliveryDate' && !newProducts[r].serialNumber) {
-              continue;
-            }
-            newProducts[r] = { ...newProducts[r], [field]: sourceRow[field] };
+          if (field === 'productCode') {
+            // Drag and drop fill for Product Code copies code & description & related fields
+            newProducts[r] = {
+              ...newProducts[r],
+              productCode: sourceRow.productCode || "",
+              productDescription: sourceRow.productDescription || newProducts[r].productDescription || "",
+              productSegment: sourceRow.productSegment || newProducts[r].productSegment || "",
+              segment: sourceRow.segment || newProducts[r].segment || ""
+            };
           }
         }
       }
@@ -447,6 +450,8 @@ const EditableProductTable = ({
   };
 
   const renderFillHandle = (rowIndex, colIndex) => {
+    // Drag-and-drop fill handle restricted ONLY to Product Code (colIndex === 1)
+    if (colIndex !== 1) return null;
     if (isReadOnly || !selection) return null;
     const { startRow, startCol, endRow, endCol } = selection;
     const maxR = Math.max(startRow, endRow);
