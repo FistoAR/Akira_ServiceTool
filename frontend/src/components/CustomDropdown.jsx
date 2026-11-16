@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
+import ReactDOM from "react-dom";
 import { Icon } from "@iconify/react";
 
 /**
@@ -41,6 +42,7 @@ const CustomDropdown = ({
   renderValue,
   isOpen: controlledIsOpen,
   onOpenChange,
+  usePortal = false,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const isControlled = controlledIsOpen !== undefined;
@@ -61,28 +63,41 @@ const CustomDropdown = ({
   const optionsListRef = useRef(null);
   const [actualPlacement, setActualPlacement] = useState(placement === "top" ? "top" : "bottom");
 
+  const [menuCoords, setMenuCoords] = useState(null);
+
+  const updatePosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    let place = placement;
+    if (placement === "auto") {
+      place = (spaceBelow < 170 && spaceAbove > spaceBelow) ? "top" : "bottom";
+    }
+    setActualPlacement(place);
+    setMenuCoords({
+      top: place === "top" ? rect.top - 4 : rect.bottom + 4,
+      left: align === "right" ? rect.right : rect.left,
+      width: rect.width,
+      isTop: place === "top"
+    });
+  };
+
   useEffect(() => {
     if (isOpen) {
-      if (placement === "top") {
-        setActualPlacement("top");
-      } else if (placement === "bottom") {
-        setActualPlacement("bottom");
-      } else {
-        // Auto check bounding rect
-        if (triggerRef.current) {
-          const rect = triggerRef.current.getBoundingClientRect();
-          const spaceBelow = window.innerHeight - rect.bottom;
-          const spaceAbove = rect.top;
-          // If less than 170px below and more space above, open upward
-          if (spaceBelow < 170 && spaceAbove > spaceBelow) {
-            setActualPlacement("top");
-          } else {
-            setActualPlacement("bottom");
-          }
-        }
-      }
+      updatePosition();
+      const handleScroll = (e) => {
+        if (e.target && (e.target.closest?.('[data-custom-dropdown-menu]') || e.target.closest?.('.custom-dropdown-menu'))) return;
+        updatePosition();
+      };
+      window.addEventListener("scroll", handleScroll, true);
+      window.addEventListener("resize", updatePosition);
+      return () => {
+        window.removeEventListener("scroll", handleScroll, true);
+        window.removeEventListener("resize", updatePosition);
+      };
     }
-  }, [isOpen, placement]);
+  }, [isOpen, placement, align]);
 
   // Normalize options into `{ value, label, icon, badge, description, image, disabled }`
   const normalizedOptions = useMemo(() => {
@@ -128,9 +143,9 @@ const CustomDropdown = ({
   // Outside click listener
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
+      if (containerRef.current && containerRef.current.contains(e.target)) return;
+      if (e.target.closest && e.target.closest('[data-custom-dropdown-menu]')) return;
+      setIsOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -426,12 +441,21 @@ const CustomDropdown = ({
       )}
 
       {/* Floating Menu Dropdown */}
-      {isOpen && (
-        <div
-          className={`absolute z-50 ${actualPlacement === "top" ? "bottom-full mb-[0.3vw]" : "top-full mt-[0.3vw]"} w-full min-w-[12vw] bg-white border border-gray-200 rounded-[0.45vw] shadow-xl py-[0.3vw] animate-in fade-in-50 zoom-in-95 duration-100 ${
-            align === "right" ? "right-0" : "left-0"
-          } ${menuClassName}`}
-        >
+      {isOpen && (() => {
+        const menuContent = (
+          <div
+            data-custom-dropdown-menu="true"
+            style={usePortal && menuCoords ? {
+              position: "fixed",
+              top: menuCoords.isTop ? undefined : menuCoords.top,
+              bottom: menuCoords.isTop ? (window.innerHeight - menuCoords.top) : undefined,
+              left: align === "right" ? undefined : menuCoords.left,
+              right: align === "right" ? (window.innerWidth - menuCoords.left) : undefined,
+              minWidth: menuCoords.width,
+              zIndex: 99999,
+            } : undefined}
+            className={`${usePortal ? "fixed" : `absolute ${actualPlacement === "top" ? "bottom-full mb-[0.3vw]" : "top-full mt-[0.3vw]"} ${align === "right" ? "right-0" : "left-0"} w-full`} z-[99999] min-w-[12vw] bg-white border border-gray-200 rounded-[0.45vw] shadow-xl py-[0.3vw] animate-in fade-in-50 zoom-in-95 duration-100 ${menuClassName}`}
+          >
           {/* Search Box */}
           {searchable && (
             <div className="px-[0.5vw] py-[0.35vw] border-b border-gray-100">
@@ -589,7 +613,9 @@ const CustomDropdown = ({
             )}
           </div>
         </div>
-      )}
+        );
+        return usePortal ? ReactDOM.createPortal(menuContent, document.body) : menuContent;
+      })()}
     </div>
   );
 };

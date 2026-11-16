@@ -79,6 +79,12 @@ const ProductionEditableProductTable = ({
       if (event.target.closest('.dropdown-container')) return;
       if (event.target.closest('.description-input')) return;
       setActiveDropdown(null);
+
+      // If clicked outside the table container and outside any portal dropdowns, clear cell selection
+      if (tableContainerRef.current && !tableContainerRef.current.contains(event.target)) {
+        if (event.target.closest && (event.target.closest('[data-custom-dropdown-menu]') || event.target.closest('.dropdown-portal-container'))) return;
+        setSelection(null);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);

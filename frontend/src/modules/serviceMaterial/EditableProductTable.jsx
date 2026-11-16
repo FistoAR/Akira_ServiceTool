@@ -113,6 +113,12 @@ const EditableProductTable = ({
       if (event.target.closest('.dropdown-container')) return;
       if (event.target.closest('.description-input')) return;
       setActiveDropdown(null);
+
+      // If clicked outside the table container and outside any portal dropdowns, clear cell selection
+      if (tableContainerRef.current && !tableContainerRef.current.contains(event.target)) {
+        if (event.target.closest && (event.target.closest('[data-custom-dropdown-menu]') || event.target.closest('.dropdown-portal-container'))) return;
+        setSelection(null);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -596,6 +602,8 @@ const EditableProductTable = ({
                             placeholder="Select"
                             size="sm"
                             options={boardTypeOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isRowDisabled
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
