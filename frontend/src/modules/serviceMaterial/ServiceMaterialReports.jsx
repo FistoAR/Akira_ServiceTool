@@ -584,6 +584,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
   // Popover Toggles
   const [showFilterPopover, setShowFilterPopover] = useState(false);
+  const [showQuantitiesPopover, setShowQuantitiesPopover] = useState(false);
   const [showColPicker, setShowColPicker] = useState(false);
   const [selectedExportCols, setSelectedExportCols] = useState(
     EXPORT_COLUMNS.map((c) => c.key)
@@ -1704,13 +1705,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                           }`}
                         >
-                          {label !== "All" && (
-                            <span
-                              className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
-                                isActive ? "bg-white" : dot
-                              }`}
-                            />
-                          )}
+                          
                           <span className={isActive ? "text-white" : "text-slate-700 font-medium"}>
                             {label}
                           </span>
@@ -1729,34 +1724,74 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   </div>
 
                   <div className="flex items-center gap-[0.6vw] text-[0.72vw] text-slate-600 font-medium shrink-0">
-                    {/* Received Qty */}
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-slate-100 border border-slate-200">
-                      <span className="text-slate-500 font-normal">Received Qty:</span>
-                      <span className="text-slate-800 font-medium">{quantityStats.receivedQty}</span>
-                    </div>
+                    {/* View Total Quantities Button */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setShowQuantitiesPopover((p) => !p)}
+                        className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.9vw] rounded-full border text-[0.72vw] font-medium transition-all cursor-pointer shadow-2xs ${
+                          showQuantitiesPopover
+                            ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
+                        }`}
+                      >
+                        <Package className="w-[0.78vw] h-[0.78vw]" />
+                        <span>View Total Quantities</span>
+                        <span className={`text-[0.64vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                          showQuantitiesPopover ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+                        }`}>
+                          {quantityStats.receivedQty}
+                        </span>
+                      </button>
 
-                    {/* Claimed / In Progress Qty */}
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-blue-50 border border-blue-200">
-                      <span className="text-blue-600 font-normal">Claimed:</span>
-                      <span className="text-blue-700 font-medium">{quantityStats.claimedInProgressQty}</span>
-                    </div>
+                      {/* Tooltip Popover with all 5 quantities */}
+                      {showQuantitiesPopover && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setShowQuantitiesPopover(false)}
+                          />
+                          <div className="absolute right-0 top-full mt-[0.4vw] w-[16vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
+                            <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
+                              <span className="text-[0.72vw] font-semibold text-slate-800">
+                                Total Quantities Breakdown
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setShowQuantitiesPopover(false)}
+                                className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
+                              >
+                                <X className="w-[0.7vw] h-[0.7vw]" />
+                              </button>
+                            </div>
 
-                    {/* Dispatched Qty */}
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-emerald-50 border border-emerald-200">
-                      <span className="text-emerald-700 font-normal">Dispatched:</span>
-                      <span className="text-emerald-700 font-medium">{quantityStats.dispatchedQty}</span>
-                    </div>
+                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-slate-50 border border-slate-200 text-[0.72vw]">
+                              <span className="text-slate-600 font-normal">Received Qty:</span>
+                              <span className="text-slate-800 font-semibold">{quantityStats.receivedQty}</span>
+                            </div>
 
-                    {/* Balance Qty */}
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-amber-50 border border-amber-200">
-                      <span className="text-amber-800 font-normal">Balance:</span>
-                      <span className="text-amber-800 font-medium">{quantityStats.balanceQty}</span>
-                    </div>
+                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-blue-50/70 border border-blue-200 text-[0.72vw]">
+                              <span className="text-blue-700 font-normal">Claimed Qty:</span>
+                              <span className="text-blue-800 font-semibold">{quantityStats.claimedInProgressQty}</span>
+                            </div>
 
-                    {/* Material Cost Total */}
-                    <div className="flex items-center gap-[0.3vw] px-[0.55vw] py-[0.18vw] rounded-full bg-indigo-50 border border-indigo-200">
-                      <span className="text-indigo-700 font-normal">Total Cost:</span>
-                      <span className="text-indigo-800 font-medium">₹{quantityStats.totalMaterialCost.toLocaleString()}</span>
+                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-emerald-50/70 border border-emerald-200 text-[0.72vw]">
+                              <span className="text-emerald-700 font-normal">Dispatched Qty:</span>
+                              <span className="text-emerald-800 font-semibold">{quantityStats.dispatchedQty}</span>
+                            </div>
+
+                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-amber-50/70 border border-amber-200 text-[0.72vw]">
+                              <span className="text-amber-800 font-normal">Balance Qty:</span>
+                              <span className="text-amber-900 font-semibold">{quantityStats.balanceQty}</span>
+                            </div>
+
+                            <div className="flex items-center justify-between px-[0.5vw] py-[0.3vw] rounded-[0.3vw] bg-indigo-50/70 border border-indigo-200 text-[0.72vw]">
+                              <span className="text-indigo-700 font-normal">Total Material Cost:</span>
+                              <span className="text-indigo-800 font-semibold">₹{quantityStats.totalMaterialCost.toLocaleString()}</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Reset Sort Button (if user changed sort) */}
@@ -2238,16 +2273,22 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 {/* Table Footer with Pagination Controls */}
                 <div className="bg-slate-50 border-t border-slate-200 px-[1vw] py-[0.55vw] flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-[1.2vw]">
-                    <span className="text-[0.72vw] text-slate-600 font-normal">
+                    <span className="text-[0.75vw] text-slate-600 font-medium">
                       Showing{" "}
-                      <span className="text-slate-700 font-medium">
+                      <span className="font-semibold text-slate-800">
                         {filteredProducts.length === 0
                           ? 0
                           : (currentPage - 1) * rowsPerPage + 1}
-                        -
+                      </span>{" "}
+                      to{" "}
+                      <span className="font-semibold text-slate-800">
                         {Math.min(currentPage * rowsPerPage, filteredProducts.length)}
                       </span>{" "}
-                      of <span className="text-slate-700 font-medium">{filteredProducts.length}</span> products
+                      of{" "}
+                      <span className="font-semibold text-slate-800">
+                        {filteredProducts.length}
+                      </span>{" "}
+                      entries
                     </span>
                   </div>
 

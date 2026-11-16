@@ -1929,8 +1929,8 @@ const AdminTableView = ({
   let animDelay = 0;
 
   return (
-    <div className="bg-white rounded-[0.6vw] shadow-sm border border-slate-300 flex flex-col">
-      <div className="overflow-auto max-h-[65vh] min-h-[65vh] w-full rounded-t-[0.6vw]">
+    <div className="bg-white rounded-[0.6vw] shadow-sm border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="overflow-auto flex-1 min-h-0 w-full rounded-t-[0.6vw]">
         <table className="w-full text-left border-collapse border-spacing-0">
           {/* ── THEAD ─────────────────────────────────────────────────────── */}
           <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-xs">
@@ -2528,21 +2528,21 @@ const AdminTableView = ({
       </div>
 
       {/* ── PAGINATION ──────────────────────────────────────────────────── */}
-      <div className="border-t border-slate-300 px-[1.2vw] py-[0.85vw] bg-white flex justify-between items-center rounded-b-[0.6vw]">
-        <div className="text-[0.78vw] font-medium text-slate-600">
+      <div className="border-t border-slate-300 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
+        <div className="text-[0.75vw] text-slate-600 font-medium">
           Showing{" "}
-          <strong className="text-slate-800">
+          <span className="font-semibold text-slate-800">
             {recordsPaginationInfo.startIdx}
-          </strong>{" "}
+          </span>{" "}
           to{" "}
-          <strong className="text-slate-800">
+          <span className="font-semibold text-slate-800">
             {recordsPaginationInfo.endIdx}
-          </strong>{" "}
+          </span>{" "}
           of{" "}
-          <strong className="text-slate-800">
+          <span className="font-semibold text-slate-800">
             {recordsPaginationInfo.totalRecords}
-          </strong>{" "}
-          records
+          </span>{" "}
+          entries
         </div>
 
         <div className="flex items-center gap-[0.6vw]">
@@ -3017,7 +3017,7 @@ export default function App() {
   }, [entries]);
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw]">
+    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <AnimatePresence>
         {isBoardTypeMasterOpen && (
           <BoardTypeMasterModal
@@ -3066,6 +3066,7 @@ export default function App() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
+            className="flex flex-col flex-1 min-h-0 w-full overflow-hidden"
           >
                         {/* Top bar - Standard Service Call Pill Toolbar */}
             <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] mb-[0.8vw] shrink-0">
@@ -3211,13 +3212,7 @@ export default function App() {
                           : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                       }`}
                     >
-                      {label !== "All" && (
-                        <span
-                          className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
-                            isActive ? "bg-white" : dot
-                          }`}
-                        />
-                      )}
+                      
                       <span className={isActive ? "text-white" : "text-slate-700"}>
                         {label}
                       </span>

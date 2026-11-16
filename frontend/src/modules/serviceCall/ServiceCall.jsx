@@ -1897,13 +1897,7 @@ export default function ServiceCall() {
                             : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                         }`}
                       >
-                        {label !== "All" && (
-                          <span
-                            className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
-                              isActive ? "bg-white" : dot
-                            }`}
-                          />
-                        )}
+                        
                         <span className={isActive ? "text-white" : "text-slate-700"}>
                           {label}
                         </span>

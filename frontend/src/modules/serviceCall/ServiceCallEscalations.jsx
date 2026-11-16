@@ -531,7 +531,7 @@ const ServiceCallEscalations = () => {
                         : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
                     }`}
                   >
-                    <span className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${isActive ? "bg-white" : dot}`} />
+                    
                     <span>{label}</span>
                     <span className={`text-[0.66vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
                       isActive ? "bg-white/25 text-white" : "bg-slate-200/80 text-slate-700"

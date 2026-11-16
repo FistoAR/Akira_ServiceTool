@@ -38,6 +38,8 @@ import {
   ListFilter,
   Trash2,
   Undo2,
+  Copy,
+  Check,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -217,13 +219,7 @@ const StatsBar = ({
                   : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
               }`}
             >
-              {label !== "All" && (
-                <span
-                  className={`w-[0.4vw] h-[0.4vw] rounded-full shrink-0 ${
-                    isActive ? "bg-white" : dot
-                  }`}
-                />
-              )}
+              
               <span className={isActive ? "text-white" : "text-slate-700"}>
                 {label}
               </span>
@@ -315,6 +311,14 @@ export default function ServiceMaterialInwardResponse({
   const [showSerialFilterModal, setShowSerialFilterModal] = useState(false);
   const [tempSerialInput, setTempSerialInput] = useState("");
   const [showOnlyUnsaved, setShowOnlyUnsaved] = useState(false);
+  const [copiedSerial, setCopiedSerial] = useState(null);
+
+  const handleCopySerial = (sn) => {
+    if (!sn) return;
+    navigator.clipboard.writeText(sn);
+    setCopiedSerial(sn);
+    setTimeout(() => setCopiedSerial(null), 1500);
+  };
 
   // Parsed array of active serial tokens for badges/filtering
   const activeSerials = useMemo(() => {
@@ -1720,12 +1724,7 @@ export default function ServiceMaterialInwardResponse({
 
               {/* Anchored Popover directly below the button */}
               {showSerialFilterModal && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setShowSerialFilterModal(false)}
-                  />
-                  <div className="absolute left-0 top-full mt-[0.4vw] w-[19vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute left-0 top-full mt-[0.4vw] w-[19vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-[0.3vw]">
                         <span className="text-[0.72vw] font-bold text-slate-800">
@@ -1790,48 +1789,10 @@ export default function ServiceMaterialInwardResponse({
                       </div>
                     </div>
                   </div>
-                </>
               )}
             </div>
 
-            {/* Show active serial chips for quick removal right in toolbar */}
-            {activeSerials.length > 0 && (
-              <div className="flex items-center gap-[0.25vw] max-w-[14vw] overflow-x-auto scrollbar-none py-[0.1vw]">
-                {activeSerials.slice(0, 2).map((sn) => (
-                  <span
-                    key={sn}
-                    className="inline-flex items-center gap-[0.2vw] px-[0.4vw] py-[0.18vw] rounded-[0.3vw] bg-indigo-50 border border-indigo-200 text-indigo-800 text-[0.65vw] font-semibold shadow-2xs whitespace-nowrap"
-                  >
-                    <span>{sn}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeSerialToken(sn)}
-                      className="text-indigo-400 hover:text-indigo-700 cursor-pointer ml-[0.1vw]"
-                      title={`Remove ${sn}`}
-                    >
-                      <X className="w-[0.55vw] h-[0.55vw]" />
-                    </button>
-                  </span>
-                ))}
-                {activeSerials.length > 2 && (
-                  <button
-                    type="button"
-                    onClick={openSerialModal}
-                    className="text-[0.62vw] text-indigo-600 font-bold bg-indigo-50 px-[0.35vw] py-[0.18vw] rounded-[0.3vw] border border-indigo-200 hover:bg-indigo-100 cursor-pointer whitespace-nowrap"
-                  >
-                    +{activeSerials.length - 2} more
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={clearAllSerials}
-                  className="text-[0.62vw] text-red-500 hover:text-red-700 font-semibold px-[0.25vw] cursor-pointer whitespace-nowrap"
-                  title="Clear serial filter"
-                >
-                  Clear
-                </button>
-              </div>
-            )}
+
 
             {/* Filters Popover Button (Popup View) */}
             <div className="relative flex-shrink-0">
@@ -1932,7 +1893,7 @@ export default function ServiceMaterialInwardResponse({
                                 showOnlyUnsaved ? "bg-white animate-pulse" : "bg-slate-400"
                               }`}
                             />
-                            <span>Unsaved Records Only</span>
+                            <span>Claimed Records Only</span>
                           </button>
                         </div>
                       ) : (
@@ -1972,48 +1933,7 @@ export default function ServiceMaterialInwardResponse({
               )}
             </div>
 
-            {/* Quick Active Filter Badges */}
-            <div className="flex items-center gap-[0.3vw] flex-wrap overflow-hidden">
-              {showOnlyUnclaimed && (
-                <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.15vw] rounded-[0.3vw] bg-blue-50 border border-blue-200 text-blue-700 text-[0.65vw] font-bold shadow-2xs whitespace-nowrap">
-                  Unclaimed Only
-                  <button
-                    type="button"
-                    onClick={() => setShowOnlyUnclaimed(false)}
-                    className="hover:text-blue-900 cursor-pointer"
-                  >
-                    <X className="w-[0.55vw] h-[0.55vw]" />
-                  </button>
-                </span>
-              )}
-              {showOnlyUnsaved && (
-                <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.15vw] rounded-[0.3vw] bg-purple-50 border border-purple-200 text-purple-700 text-[0.65vw] font-bold shadow-2xs whitespace-nowrap">
-                  Unsaved Only
-                  <button
-                    type="button"
-                    onClick={() => setShowOnlyUnsaved(false)}
-                    className="hover:text-purple-900 cursor-pointer"
-                  >
-                    <X className="w-[0.55vw] h-[0.55vw]" />
-                  </button>
-                </span>
-              )}
-              {(dateFrom || dateTo) && (
-                <span className="inline-flex items-center gap-[0.25vw] px-[0.45vw] py-[0.15vw] rounded-[0.3vw] bg-amber-50 border border-amber-200 text-amber-700 text-[0.65vw] font-bold shadow-2xs whitespace-nowrap">
-                  📅 {dateFrom || "Start"} → {dateTo || "End"}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDateFrom("");
-                      setDateTo("");
-                    }}
-                    className="hover:text-amber-900 cursor-pointer"
-                  >
-                    <X className="w-[0.55vw] h-[0.55vw]" />
-                  </button>
-                </span>
-              )}
-            </div>
+
           </div>
         </div>
       </div>
@@ -2187,28 +2107,28 @@ export default function ServiceMaterialInwardResponse({
 
                                 {/* Ref No (Customer) */}
                                 {entry.refNoCustomer && (
-                                  <span className="text-[0.7vw] font-bold bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                                  <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                                     Cust Ref: {entry.refNoCustomer}
                                   </span>
                                 )}
 
                                 {/* Ref No (Internal) */}
                                 {entry.refNoInternal && (
-                                  <span className="text-[0.7vw] font-bold bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                                  <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                                     Int Ref: {entry.refNoInternal}
                                   </span>
                                 )}
 
                                 {/* Category (Cus Type) */}
                                 {entry.category && (
-                                  <span className="text-[0.7vw] font-semibold text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                                  <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                                     Type: {entry.category}
                                   </span>
                                 )}
 
                                 {/* Unit */}
                                 {entry.unit && (
-                                  <span className="text-[0.7vw] font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
+                                  <span className="text-[0.7vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
                                     Unit: {entry.unit}
                                   </span>
                                 )}
@@ -2329,9 +2249,25 @@ export default function ServiceMaterialInwardResponse({
 
                           {/* Serial No */}
                           <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <span className="text-[0.78vw] font-normal text-slate-700 whitespace-nowrap">
-                              {product.serialNumber || "—"}
-                            </span>
+                            <div className="flex items-center justify-between gap-[0.35vw] whitespace-nowrap group/sn w-full">
+                              <span className="text-[0.78vw] font-normal text-slate-700 truncate">
+                                {product.serialNumber || "—"}
+                              </span>
+                              {product.serialNumber && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopySerial(product.serialNumber)}
+                                  className="p-[0.2vw] text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.2vw] transition-all cursor-pointer shrink-0 opacity-70 group-hover/sn:opacity-100 ml-auto"
+                                  title="Copy Serial Number"
+                                >
+                                  {copiedSerial === product.serialNumber ? (
+                                    <Check className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
+                                  ) : (
+                                    <Copy className="w-[0.75vw] h-[0.75vw]" />
+                                  )}
+                                </button>
+                              )}
+                            </div>
                           </td>
 
                           {/* Tested By */}
@@ -3163,13 +3099,20 @@ export default function ServiceMaterialInwardResponse({
           {/* Table Footer */}
           <div className="bg-gray-50 border-t border-slate-300 px-[1.2vw] py-[0.6vw] flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-[1.5vw]">
-              <span className="text-[0.72vw] text-gray-500 font-medium">
+              <span className="text-[0.75vw] text-slate-600 font-medium">
                 Showing{" "}
-                <strong className="text-gray-800">
-                  {paginatedItems.length}
-                </strong>{" "}
-                of <strong className="text-gray-800">{myItems.length}</strong>{" "}
-                products
+                <span className="font-semibold text-slate-800">
+                  {myItems.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}
+                </span>{" "}
+                to{" "}
+                <span className="font-semibold text-slate-800">
+                  {Math.min(currentPage * itemsPerPage, myItems.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-slate-800">
+                  {myItems.length}
+                </span>{" "}
+                entries
               </span>
 
               {/* Pagination Controls */}
