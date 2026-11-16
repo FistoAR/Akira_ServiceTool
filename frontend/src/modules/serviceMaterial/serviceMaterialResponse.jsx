@@ -931,11 +931,13 @@ export default function ServiceMaterialInwardResponse({
     isSavingRef.current = true;
     setIsBulkSaving(true);
     try {
-      const results = await Promise.all(
-        productsToSave.map(({ entry, product, draft }) =>
-          saveRow(entry, product, draft, false),
-        ),
-      );
+      // Execute saves sequentially to avoid Mongoose version/concurrency conflicts (__v VersionError)
+      // when multiple products belong to the same parent ServiceMaterial document
+      const results = [];
+      for (const item of productsToSave) {
+        const res = await saveRow(item.entry, item.product, item.draft, false);
+        results.push(res);
+      }
       const allSuccess = results.every((res) => res);
       if (allSuccess) {
         toast(`Bulk save completed! ${productsToSave.length} items updated.`);
@@ -2136,18 +2138,18 @@ export default function ServiceMaterialInwardResponse({
                             </td>
                           </tr>
                         )}
-                        {/* Admin Returned Banner Row */}
-                        {isAdminReturnedProduct &&
-                          filterStatus === "Admin Returned" && (
-                            <tr className="bg-amber-50 border border-amber-300">
+                        {/* Admin Returned Banner Row - shown whenever product is returned by Admin, in both 'All' and 'Admin Returned' views */}
+                        {isAdminReturnedProduct && (
+                            <tr className="bg-amber-50/90 border-t-2 border-b border-amber-300">
                               <td
                                 colSpan={columns.length}
                                 className="p-0 border-b border-amber-300 bg-amber-50"
                               >
-                                <div className="flex items-center gap-[1.2vw] flex-wrap sticky left-0 w-fit px-[1vw] py-[0.6vw] bg-amber-50 z-10">
+                                <div className="flex items-center gap-[1.2vw] flex-wrap sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-amber-50 z-10">
                                   <div className="flex items-center gap-[0.4vw]">
-                                    <span className="inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.68vw] font-bold">
-                                      ↩ Admin Returned
+                                    <span className="inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.18vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.68vw] font-bold shadow-2xs">
+                                      <AlertTriangle className="w-[0.7vw] h-[0.7vw] text-amber-600" />
+                                      ↩ Admin Returned / Declined
                                     </span>
                                     <span
                                       className={`inline-flex items-center px-[0.5vw] py-[0.15vw] rounded-full border text-[0.65vw] font-semibold ${
@@ -2183,12 +2185,12 @@ export default function ServiceMaterialInwardResponse({
                                     </span>
                                   )}
                                   {product.finalStatusRemarks && (
-                                    <span className="text-[0.7vw] text-gray-800 font-semibold bg-white border border-amber-200 px-[0.6vw] py-[0.2vw] rounded-[0.3vw]">
-                                      💬 {product.finalStatusRemarks}
+                                    <span className="text-[0.7vw] text-gray-800 font-semibold bg-white border border-amber-200 px-[0.6vw] py-[0.18vw] rounded-[0.3vw] shadow-2xs">
+                                      💬 Admin Reason: {product.finalStatusRemarks}
                                     </span>
                                   )}
-                                  <span className="text-[0.65vw] text-amber-700 font-medium italic ml-auto">
-                                    Update status below and save to re-submit
+                                  <span className="text-[0.65vw] text-amber-800 font-semibold ml-auto">
+                                    Please edit and click Re-Submit to return to Admin
                                   </span>
                                 </div>
                               </td>
@@ -2356,7 +2358,7 @@ export default function ServiceMaterialInwardResponse({
                             {draft ? (
                               <input
                                 type="text"
-                                list="errorCodeList"
+                                autoComplete="off"
                                 value={draft.errorCode}
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
@@ -2381,7 +2383,7 @@ export default function ServiceMaterialInwardResponse({
                             {draft ? (
                               <input
                                 type="text"
-                                list="problemDescList"
+                                autoComplete="off"
                                 value={draft.problemDescription}
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
@@ -3033,12 +3035,22 @@ export default function ServiceMaterialInwardResponse({
                               </div>
                             ) : isClaimedByMe && isProductCompleted ? (
                               <div className="flex items-center justify-center gap-[0.4vw]">
-                                <span
-                                  className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
-                                >
-                                  <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
-                                  {pStatus}
-                                </span>
+                                {isAdminReturnedProduct ? (
+                                  <span
+                                    className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
+                                    title={`Admin Declined: ${product.finalStatusRemarks || "Needs correction"}`}
+                                  >
+                                    <AlertTriangle className="w-[0.65vw] h-[0.65vw] text-rose-600" />
+                                    Denied / Returned
+                                  </span>
+                                ) : (
+                                  <span
+                                    className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
+                                  >
+                                    <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
+                                    {pStatus}
+                                  </span>
+                                )}
                                 <button
                                   onClick={() => {
                                     setEditingCompletedPids((prev) => ({
@@ -3046,11 +3058,15 @@ export default function ServiceMaterialInwardResponse({
                                       [product._pid]: true,
                                     }));
                                   }}
-                                  className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer"
-                                  title="Edit Completed Row Directly"
+                                  className={`flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer ${
+                                    isAdminReturnedProduct
+                                      ? "bg-amber-500 hover:bg-amber-600 text-white"
+                                      : "bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300"
+                                  }`}
+                                  title={isAdminReturnedProduct ? "Fix and re-submit this returned report" : "Edit Completed Row Directly"}
                                 >
                                   <Edit3 className="w-[0.65vw] h-[0.65vw]" />
-                                  <span>Edit</span>
+                                  <span>{isAdminReturnedProduct ? "Fix & Re-Submit" : "Edit"}</span>
                                 </button>
                               </div>
                             ) : !product.assignedTo ? (

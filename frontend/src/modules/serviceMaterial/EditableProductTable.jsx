@@ -361,8 +361,8 @@ const EditableProductTable = ({
         if (newProducts[r] && isClaimedProd(newProducts[r])) continue;
         for (let c = minC; c <= maxC; c++) {
           const field = COLUMN_FIELDS[c];
-          if (field === 'productCode') {
-            // Drag and drop fill for Product Code copies code & description & related fields
+          if (field === 'productCode' || field === 'productDescription') {
+            // Drag and drop fill copies code & description & related fields
             newProducts[r] = {
               ...newProducts[r],
               productCode: sourceRow.productCode || "",
@@ -370,6 +370,12 @@ const EditableProductTable = ({
               productSegment: sourceRow.productSegment || newProducts[r].productSegment || "",
               segment: sourceRow.segment || newProducts[r].segment || ""
             };
+          } else if (field !== '_pid' && field !== 'type') {
+            // For other fields (boardType, expectedDeliveryDate if valid), fill from sourceRow
+            if (field === 'expectedDeliveryDate' && !newProducts[r].serialNumber) {
+              continue;
+            }
+            newProducts[r] = { ...newProducts[r], [field]: sourceRow[field] };
           }
         }
       }
@@ -450,24 +456,29 @@ const EditableProductTable = ({
   };
 
   const renderFillHandle = (rowIndex, colIndex) => {
-    // Drag-and-drop fill handle restricted ONLY to Product Code (colIndex === 1)
-    if (colIndex !== 1) return null;
+    // Show fill handle on colIndex 1 (Product Code) OR on the last column of the current selection (e.g. when entire row/range is selected)
     if (isReadOnly || !selection) return null;
     const { startRow, startCol, endRow, endCol } = selection;
     const maxR = Math.max(startRow, endRow);
     const maxC = Math.max(startCol, endCol);
-    if (rowIndex === maxR && colIndex === maxC) {
-      const handleProd = products[maxR];
-      if (handleProd && isClaimedProd(handleProd)) return null;
-      return (
-        <div 
-          data-fill-handle="true"
-          onMouseDown={handleFillHandleMouseDown}
-          className="absolute bottom-[-5px] right-[-5px] w-[0.6vw] h-[0.6vw] bg-blue-600 border-2 border-white cursor-crosshair z-[60] shadow-sm rounded-sm"
-        />
-      );
-    }
-    return null;
+
+    // Only render on the bottom-rightmost cell of the current selection, OR specifically on Product Code if only Product Code is selected
+    const isBottomRightOfSelection = (rowIndex === maxR && colIndex === maxC);
+    const isSingleProductCode = (startCol === 1 && endCol === 1 && rowIndex === maxR && colIndex === 1);
+
+    if (!isBottomRightOfSelection && !isSingleProductCode) return null;
+
+    const handleProd = products[maxR];
+    if (handleProd && isClaimedProd(handleProd)) return null;
+
+    return (
+      <div 
+        data-fill-handle="true"
+        onMouseDown={handleFillHandleMouseDown}
+        className="absolute bottom-[-5px] right-[-5px] w-[0.6vw] h-[0.6vw] bg-blue-600 border-2 border-white cursor-crosshair z-[60] shadow-sm rounded-sm"
+        title="Drag down to copy / create duplicate rows"
+      />
+    );
   };
 
   const openDropdown = (id, target) => {

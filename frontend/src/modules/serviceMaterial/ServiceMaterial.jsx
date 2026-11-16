@@ -1223,7 +1223,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
       <button
         type="button"
         onClick={handleToggle}
-        className={`text-[0.7vw] px-[0.6vw] py-[0.3vw] rounded-[0.4vw] border font-bold flex items-center justify-between gap-[0.35vw] cursor-pointer ${cls}`}
+        className={`text-[0.7vw] px-[0.6vw] py-[0.3vw] rounded-[0.4vw] border font-medium flex items-center justify-between gap-[0.35vw] cursor-pointer ${cls}`}
       >
         {status === "Pending"
           ? "Review Required"
@@ -1254,7 +1254,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                 <button
                   type="button"
                   onClick={() => setStatus("Completed")}
-                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.72vw] font-bold cursor-pointer transition-all ${
+                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.72vw] font-medium cursor-pointer transition-all ${
                     status === "Completed"
                       ? "bg-emerald-50 text-emerald-700 border-emerald-400 ring-2 ring-emerald-100"
                       : "bg-gray-50 text-slate-600 border-gray-300 hover:bg-gray-100"
@@ -1265,7 +1265,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                 <button
                   type="button"
                   onClick={() => setStatus("Admin Returned")}
-                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.72vw] font-bold cursor-pointer transition-all ${
+                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.72vw] font-medium cursor-pointer transition-all ${
                     status === "Admin Returned"
                       ? "bg-rose-50 text-rose-700 border-rose-400 ring-2 ring-rose-100"
                       : "bg-gray-50 text-slate-600 border-gray-300 hover:bg-gray-100"
@@ -1287,7 +1287,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="px-[0.8vw] py-[0.3vw] text-[0.68vw] border border-gray-400 rounded-[0.3vw] text-black/80 hover:bg-gray-50 cursor-pointer"
+                  className="px-[0.8vw] py-[0.3vw] text-[0.68vw] border border-gray-400 rounded-[0.3vw] text-black/80 hover:bg-gray-50 cursor-pointer font-medium"
                 >
                   Cancel
                 </button>
@@ -1297,7 +1297,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                   disabled={
                     status !== "Completed" && status !== "Admin Returned"
                   }
-                  className={`px-[0.8vw] py-[0.3vw] text-[0.68vw] rounded-[0.3vw] font-semibold flex items-center gap-[0.3vw] ${
+                  className={`px-[0.8vw] py-[0.3vw] text-[0.68vw] rounded-[0.3vw] font-medium flex items-center gap-[0.3vw] ${
                     status === "Completed" || status === "Admin Returned"
                       ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-sm"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -1918,7 +1918,7 @@ const AdminTableView = ({
   const actionCols = [
     "Emp Status",
     "Emp Report",
-    ...(activeFilter === "Review Required" ? ["Final Status"] : []),
+    "Final Status",
     "History",
     ...(activeFilter === "Completed" ? ["Delay"] : []),
   ];
@@ -2481,15 +2481,13 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Final Status */}
-                                    {activeFilter === "Review Required" && (
-                                      <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
-                                        <FinalStatusCell
-                                          row={row}
-                                          prod={prod}
-                                          onUpdateProduct={onUpdateProduct}
-                                        />
-                                      </td>
-                                    )}
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
+                                      <FinalStatusCell
+                                        row={row}
+                                        prod={prod}
+                                        onUpdateProduct={onUpdateProduct}
+                                      />
+                                    </td>
 
                                     {/* History */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">

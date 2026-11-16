@@ -361,9 +361,6 @@ const ServiceCallForm = ({
     if (!formData.contactPerson || !formData.contactPerson.trim()) {
       newErrors.contactPerson = "Please enter Contact Person.";
     }
-    if (!formData.contactNumber || !formData.contactNumber.trim()) {
-      newErrors.contactNumber = "Please enter Contact Number.";
-    }
     if (!formData.site || !formData.site.trim()) {
       newErrors.site = "Please select Site.";
     }
@@ -811,7 +808,7 @@ const ServiceCallForm = ({
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="contactNumber">
               <label className="text-[0.76vw] font-semibold text-slate-700">
-                Contact Number <span className="text-rose-500">*</span>
+                Contact Number
               </label>
               <input
                 value={formData.contactNumber}

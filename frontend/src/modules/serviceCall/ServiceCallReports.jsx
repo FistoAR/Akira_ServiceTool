@@ -43,6 +43,11 @@ import {
   PauseCircle,
   MapPin,
   LifeBuoy,
+  Bookmark,
+  BookmarkCheck,
+  Plus,
+  Trash2,
+  Edit2,
 } from "lucide-react";
 import akiraLogo from "../../assets/Akira_logo.webp";
 import * as XLSX from "xlsx-js-style";
@@ -159,6 +164,61 @@ const EXPORT_CONFIGS = {
 };
 
 const LOCAL_STORAGE_EXPORT_COLS_KEY = "service_call_reports_export_columns";
+const LOCAL_STORAGE_COL_TEMPLATES_KEY = "service_call_reports_column_templates";
+
+// Default templates for quick column selection (4-5 useful presets)
+const DEFAULT_SERVICE_CALL_TEMPLATES = [
+  {
+    id: "tpl_standard",
+    name: "Standard Overview",
+    isDefault: true,
+    columnsByMode: {
+      registered: ["S.No", "Call Number", "Origin Type", "Registered Date", "Priority", "Customer Name", "Customer Type", "Product Model", "Serial Number", "Status"],
+      escalations: ["S.No", "Call Number", "Priority", "Customer Name", "Customer Type", "Product Model", "Escalated Level", "Current Assignee", "Reason", "Status"],
+      assignments_overview: ["S.No", "Employee Name", "Department", "Total Calls", "Open Calls", "Closed Calls", "Completion Rate (%)"],
+      assignments_drilldown: ["S.No", "Registered Date", "Call Number", "Customer Name", "Product Model", "Status"],
+    },
+  },
+  {
+    id: "tpl_customer",
+    name: "Customer & Site",
+    isDefault: true,
+    columnsByMode: {
+      registered: ["S.No", "Call Number", "Customer Name", "Party Code", "Customer Type", "Contact Person", "Contact Number", "Location / Site", "Status"],
+      escalations: ["S.No", "Call Number", "Customer Name", "Customer Type", "Product Model", "Current Assignee", "Status"],
+      assignments_overview: ["S.No", "Employee Name", "Department", "Total Calls"],
+      assignments_drilldown: ["S.No", "Call Number", "Customer Name", "Product Model", "Status"],
+    },
+  },
+  {
+    id: "tpl_tech",
+    name: "Technical & Warranty",
+    isDefault: true,
+    columnsByMode: {
+      registered: ["S.No", "Call Number", "Product Model", "Serial Number", "Segment", "Error Code", "Warranty Status", "Status", "Turnaround Time (TAT)"],
+      escalations: ["S.No", "Call Number", "Product Model", "Serial Number", "Error Code", "Escalated Level", "Reason", "Open Duration", "Status"],
+      assignments_overview: ["S.No", "Employee Name", "Department", "Total Calls", "Average Response Time"],
+      assignments_drilldown: ["S.No", "Call Number", "Product Model", "Serial Number", "Status"],
+    },
+  },
+  {
+    id: "tpl_audit",
+    name: "Audit & Escalations",
+    isDefault: true,
+    columnsByMode: {
+      registered: ["S.No", "Call Number", "Registered By", "Assigned To", "Assigned Department", "Escalation History", "Status", "Closed By", "Closed Date", "Turnaround Time (TAT)", "Last Edited"],
+      escalations: ["S.No", "Call Number", "Initial Assignee", "Escalated Level", "Escalated At", "Escalated By", "Current Assignee", "Reason", "Full Escalation Chain", "Open Duration", "Status", "Closed By", "Closed Date"],
+      assignments_overview: ["S.No", "Employee Name", "User ID", "Department", "Total Calls", "Self Assigned Calls", "Escalated Calls", "Open Calls", "Closed Calls", "Completion Rate (%)", "Average Response Time"],
+      assignments_drilldown: ["S.No", "Registered Date", "Call Number", "Customer Name", "Product Model", "Status", "Closed Date", "Turnaround Time (TAT)"],
+    },
+  },
+  {
+    id: "tpl_all",
+    name: "All Columns",
+    isDefault: true,
+    columnsByMode: {}, // Empty means all columns
+  },
+];
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -499,6 +559,134 @@ export default function ServiceCallReports() {
     }
     setSelectedExportColsForCurrentMode(updated);
   };
+
+  // Column Templates management (stored in localStorage)
+  const [colTemplates, setColTemplates] = useState(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_COL_TEMPLATES_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return DEFAULT_SERVICE_CALL_TEMPLATES;
+  });
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
+  const [newTemplateName, setNewTemplateName] = useState("");
+  const [showSaveTplInput, setShowSaveTplInput] = useState(false);
+  const [editingTemplateName, setEditingTemplateName] = useState("");
+  const [showRenameInput, setShowRenameInput] = useState(false);
+
+  const saveCurrentAsTemplate = (name) => {
+    const trimmed = (name || "").trim();
+    if (!trimmed) {
+      toast("Please enter a template name", "warning");
+      return;
+    }
+    const newTpl = {
+      id: "tpl_" + Date.now(),
+      name: trimmed,
+      isDefault: false,
+      columnsByMode: {
+        ...((colTemplates.find((t) => t.name.toLowerCase() === trimmed.toLowerCase()) || {}).columnsByMode || {}),
+        [currentExportMode]: [...selectedExportCols],
+      },
+    };
+    const updated = [...colTemplates.filter((t) => t.name.toLowerCase() !== trimmed.toLowerCase()), newTpl];
+    setColTemplates(updated);
+    setSelectedTemplateId(newTpl.id);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_COL_TEMPLATES_KEY, JSON.stringify(updated));
+    } catch (e) {}
+    toast(`Saved template "${trimmed}"`, "success");
+    setNewTemplateName("");
+    setShowSaveTplInput(false);
+  };
+
+  const updateCurrentTemplateColumns = (tplId) => {
+    if (!tplId) return;
+    const target = colTemplates.find((t) => t.id === tplId);
+    if (!target) return;
+    const updated = colTemplates.map((t) => {
+      if (t.id === tplId) {
+        return {
+          ...t,
+          columnsByMode: {
+            ...(t.columnsByMode || {}),
+            [currentExportMode]: [...selectedExportCols],
+          },
+        };
+      }
+      return t;
+    });
+    setColTemplates(updated);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_COL_TEMPLATES_KEY, JSON.stringify(updated));
+    } catch (e) {}
+    toast(`Updated "${target.name}" with current columns`, "success");
+  };
+
+  const renameTemplate = (tplId, newName) => {
+    const trimmed = (newName || "").trim();
+    if (!trimmed) {
+      toast("Please enter a template name", "warning");
+      return;
+    }
+    const updated = colTemplates.map((t) => (t.id === tplId ? { ...t, name: trimmed } : t));
+    setColTemplates(updated);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_COL_TEMPLATES_KEY, JSON.stringify(updated));
+    } catch (e) {}
+    toast(`Renamed template to "${trimmed}"`, "success");
+    setShowRenameInput(false);
+    setEditingTemplateName("");
+  };
+
+  const deleteCustomTemplate = (id, e) => {
+    if (e) e.stopPropagation();
+    const updated = colTemplates.filter((t) => t.id !== id);
+    setColTemplates(updated);
+    if (selectedTemplateId === id) setSelectedTemplateId("");
+    try {
+      localStorage.setItem(LOCAL_STORAGE_COL_TEMPLATES_KEY, JSON.stringify(updated));
+    } catch (e) {}
+    toast("Template deleted", "info");
+  };
+
+  const applyTemplate = (tpl) => {
+    setSelectedTemplateId(tpl.id);
+    const allKeys = activeExportConfig.map((c) => c.key);
+    if (!tpl.columnsByMode || !tpl.columnsByMode[currentExportMode] || tpl.columnsByMode[currentExportMode].length === 0) {
+      // Default to all columns if template is 'All' or not specified for mode
+      setSelectedExportColsForCurrentMode(allKeys);
+      toast(`Applied "${tpl.name}" (${allKeys.length} cols)`, "info");
+      return;
+    }
+    // Filter to keys that exist in current mode
+    const valid = tpl.columnsByMode[currentExportMode].filter((k) => allKeys.includes(k));
+    const target = valid.length > 0 ? valid : allKeys;
+    setSelectedExportColsForCurrentMode(target);
+    toast(`Applied "${tpl.name}" (${target.length} cols)`, "info");
+  };
+
+  const activeTemplateMatch = useMemo(() => {
+    const allKeys = activeExportConfig.map((c) => c.key);
+    for (const tpl of colTemplates) {
+      let tplCols = tpl.columnsByMode?.[currentExportMode];
+      if (!tplCols || tplCols.length === 0) {
+        tplCols = allKeys;
+      } else {
+        tplCols = tplCols.filter((k) => allKeys.includes(k));
+      }
+      if (
+        tplCols.length === selectedExportCols.length &&
+        tplCols.every((k) => selectedExportCols.includes(k))
+      ) {
+        return tpl.id;
+      }
+    }
+    return null;
+  }, [colTemplates, currentExportMode, selectedExportCols, activeExportConfig]);
 
   const selectAllExportCols = () => {
     const all = activeExportConfig.map((c) => c.key);
@@ -1364,21 +1552,26 @@ const buildEscalationHistoryString = (call, prod) => {
         <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
           <button
             onClick={() => {
+              if (selectedEmployee) return;
               setActiveMainView("registered");
               setSelectedEmployee(null);
               setCurrentPage(1);
             }}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
-              activeMainView === "registered"
-                ? "bg-blue-600 text-white shadow-xs font-semibold"
-                : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
+            disabled={!!selectedEmployee}
+            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+              selectedEmployee
+                ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                : activeMainView === "registered"
+                ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
+                : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
             }`}
+            title={selectedEmployee ? "Exit employee drilldown view first" : "All Calls"}
           >
             <Layers className="w-[0.85vw] h-[0.85vw]" />
             <span>All Calls</span>
             <span
               className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
-                activeMainView === "registered"
+                !selectedEmployee && activeMainView === "registered"
                   ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                   : "text-slate-400"
               }`}
@@ -1389,21 +1582,26 @@ const buildEscalationHistoryString = (call, prod) => {
 
           <button
             onClick={() => {
+              if (selectedEmployee) return;
               setActiveMainView("escalations");
               setSelectedEmployee(null);
               setCurrentPage(1);
             }}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
-              activeMainView === "escalations"
-                ? "bg-blue-600 text-white shadow-xs font-semibold"
-                : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
+            disabled={!!selectedEmployee}
+            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+              selectedEmployee
+                ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                : activeMainView === "escalations"
+                ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
+                : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
             }`}
+            title={selectedEmployee ? "Exit employee drilldown view first" : "Escalation View"}
           >
             <Flame className="w-[0.85vw] h-[0.85vw]" />
             <span>Escalation View</span>
             <span
               className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
-                activeMainView === "escalations"
+                !selectedEmployee && activeMainView === "escalations"
                   ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                   : "text-slate-400"
               }`}
@@ -1415,21 +1613,26 @@ const buildEscalationHistoryString = (call, prod) => {
           {isAdmin && (
             <button
               onClick={() => {
+                if (selectedEmployee) return;
                 setActiveMainView("assignments");
                 setSelectedEmployee(null);
                 setCurrentPage(1);
               }}
-              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
-                activeMainView === "assignments"
-                  ? "bg-blue-600 text-white shadow-xs font-semibold"
-                  : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
+              disabled={!!selectedEmployee}
+              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+                selectedEmployee
+                  ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                  : activeMainView === "assignments"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
+                  : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
               }`}
+              title={selectedEmployee ? "Exit employee drilldown view first" : "Employee & Assignment Report"}
             >
               <UserCheck className="w-[0.85vw] h-[0.85vw]" />
               <span>Employee & Assignment Report</span>
               <span
                 className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
-                  activeMainView === "assignments"
+                  !selectedEmployee && activeMainView === "assignments"
                     ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                     : "text-slate-400"
                 }`}
@@ -1646,31 +1849,192 @@ const buildEscalationHistoryString = (call, prod) => {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowColPicker(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[18vw] max-h-[24vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-                  <div className="p-[0.7vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
-                    <div>
-                      <div className="text-[0.78vw] font-medium text-slate-800">
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[21vw] max-h-[30vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                  {/* Header */}
+                  <div className="p-[0.65vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+                    <div className="flex items-center gap-[0.35vw]">
+                      <Columns className="w-[0.85vw] h-[0.85vw] text-slate-600" />
+                      <span className="text-[0.78vw] font-bold text-slate-800">
                         Export Columns
-                      </div>
+                      </span>
                     </div>
                     <div className="flex items-center gap-[0.4vw]">
                       <button
                         onClick={selectAllExportCols}
-                        className="text-[0.7vw] font-normal text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                        className="text-[0.7vw] font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer"
                       >
                         Select All
                       </button>
                       <span className="text-slate-300 text-[0.7vw]">|</span>
                       <button
                         onClick={unselectAllExportCols}
-                        className="text-[0.7vw] font-normal text-slate-500 hover:text-slate-700 cursor-pointer"
+                        className="text-[0.7vw] font-medium text-slate-500 hover:text-slate-700 cursor-pointer"
                       >
                         Unselect All
                       </button>
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-[0.4vw] space-y-[0.15vw] max-h-[17vw]">
+                  {/* Template Dropdown Selector */}
+                  <div className="px-[0.65vw] py-[0.5vw] bg-slate-50/90 border-b border-slate-100 flex flex-col gap-[0.35vw]">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[0.68vw] font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                        <Bookmark className="w-[0.7vw] h-[0.7vw] text-indigo-500" />
+                        Template Presets
+                      </label>
+                      <button
+                        onClick={() => setShowSaveTplInput(!showSaveTplInput)}
+                        className="text-[0.68vw] font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer flex items-center gap-[0.15vw]"
+                        title="Save current selection as a new template"
+                      >
+                        <Plus className="w-[0.68vw] h-[0.68vw]" />
+                        <span>Save Current</span>
+                      </button>
+                    </div>
+
+                    {/* Inline Save Template Input */}
+                    {showSaveTplInput && (
+                      <div className="flex items-center gap-[0.3vw] p-[0.3vw] bg-white rounded-[0.4vw] border border-indigo-200">
+                        <input
+                          type="text"
+                          value={newTemplateName}
+                          onChange={(e) => setNewTemplateName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") saveCurrentAsTemplate(newTemplateName);
+                          }}
+                          placeholder="New template name..."
+                          className="flex-1 text-[0.7vw] px-[0.4vw] py-[0.2vw] border border-slate-200 rounded-[0.25vw] outline-none focus:border-indigo-500 text-slate-800 placeholder-slate-400"
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => saveCurrentAsTemplate(newTemplateName)}
+                          className="px-[0.55vw] py-[0.2vw] bg-indigo-600 hover:bg-indigo-700 text-white text-[0.68vw] font-semibold rounded-[0.25vw] cursor-pointer"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowSaveTplInput(false);
+                            setNewTemplateName("");
+                          }}
+                          className="text-slate-400 hover:text-slate-600 p-[0.1vw] cursor-pointer"
+                        >
+                          <X className="w-[0.7vw] h-[0.7vw]" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Native / Clean Select for Templates */}
+                    <div className="relative flex items-center">
+                      <select
+                        value={selectedTemplateId || activeTemplateMatch || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (!val) return;
+                          const tpl = colTemplates.find((t) => t.id === val);
+                          if (tpl) applyTemplate(tpl);
+                        }}
+                        className="w-full appearance-none bg-white border border-slate-200 hover:border-indigo-300 rounded-[0.4vw] px-[0.55vw] py-[0.3vw] pr-[1.5vw] text-[0.72vw] text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
+                      >
+                        <option value="" disabled>
+                          {selectedTemplateId ? "Select a template..." : "Custom selection active"}
+                        </option>
+                        {colTemplates.map((tpl) => (
+                          <option key={tpl.id} value={tpl.id}>
+                            {tpl.name} {!tpl.isDefault ? "(Custom)" : ""}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronRight className="w-[0.75vw] h-[0.75vw] text-slate-500 absolute right-[0.5vw] pointer-events-none rotate-90" />
+                    </div>
+
+                    {/* Template Actions Toolbar: Update Columns, Rename, Delete */}
+                    {(selectedTemplateId || activeTemplateMatch) && (() => {
+                      const curTpl = colTemplates.find((t) => t.id === (selectedTemplateId || activeTemplateMatch));
+                      if (!curTpl) return null;
+                      const isExactMatch = activeTemplateMatch === curTpl.id;
+                      return (
+                        <div className="flex flex-col gap-[0.25vw] pt-[0.1vw]">
+                          {/* Rename Input if triggered */}
+                          {showRenameInput ? (
+                            <div className="flex items-center gap-[0.3vw] p-[0.25vw] bg-white rounded-[0.35vw] border border-indigo-200">
+                              <input
+                                type="text"
+                                value={editingTemplateName}
+                                onChange={(e) => setEditingTemplateName(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") renameTemplate(curTpl.id, editingTemplateName);
+                                }}
+                                placeholder="Rename template..."
+                                className="flex-1 text-[0.7vw] px-[0.35vw] py-[0.15vw] border border-slate-200 rounded-[0.2vw] outline-none focus:border-indigo-500 text-slate-800"
+                                autoFocus
+                              />
+                              <button
+                                onClick={() => renameTemplate(curTpl.id, editingTemplateName)}
+                                className="px-[0.45vw] py-[0.18vw] bg-indigo-600 hover:bg-indigo-700 text-white text-[0.66vw] font-semibold rounded-[0.2vw] cursor-pointer"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowRenameInput(false);
+                                  setEditingTemplateName("");
+                                }}
+                                className="text-slate-400 hover:text-slate-600 p-[0.1vw] cursor-pointer"
+                              >
+                                <X className="w-[0.65vw] h-[0.65vw]" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-between text-[0.66vw] text-slate-500 px-[0.1vw]">
+                              <span className="flex items-center gap-[0.25vw] truncate">
+                                <span className={`w-[0.35vw] h-[0.35vw] rounded-full inline-block shrink-0 ${isExactMatch ? "bg-emerald-500" : "bg-amber-400"}`}></span>
+                                <span className="truncate">
+                                  {isExactMatch ? "Active: " : "Modified: "}
+                                  <strong className="text-slate-700">{curTpl.name}</strong>
+                                </span>
+                              </span>
+                              <div className="flex items-center gap-[0.35vw] shrink-0">
+                                {/* Update Existing Template with Current Selection */}
+                                <button
+                                  onClick={() => updateCurrentTemplateColumns(curTpl.id)}
+                                  className="text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer flex items-center gap-[0.1vw] bg-indigo-50 hover:bg-indigo-100/70 px-[0.3vw] py-[0.05vw] rounded border border-indigo-200"
+                                  title={`Update "${curTpl.name}" to match the current checkboxes`}
+                                >
+                                  <Check className="w-[0.6vw] h-[0.6vw]" />
+                                  <span>Update</span>
+                                </button>
+                                {/* Rename */}
+                                <button
+                                  onClick={() => {
+                                    setEditingTemplateName(curTpl.name);
+                                    setShowRenameInput(true);
+                                  }}
+                                  className="text-slate-600 hover:text-indigo-600 cursor-pointer p-[0.1vw]"
+                                  title="Rename this template"
+                                >
+                                  <Edit2 className="w-[0.6vw] h-[0.6vw]" />
+                                </button>
+                                {/* Delete (Custom only) */}
+                                {!curTpl.isDefault && (
+                                  <button
+                                    onClick={(e) => deleteCustomTemplate(curTpl.id, e)}
+                                    className="text-rose-500 hover:text-rose-700 cursor-pointer p-[0.1vw]"
+                                    title="Delete template"
+                                  >
+                                    <Trash2 className="w-[0.6vw] h-[0.6vw]" />
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Columns List */}
+                  <div className="flex-1 overflow-y-auto p-[0.4vw] space-y-[0.15vw] max-h-[16vw]">
                     {activeExportConfig.map((col) => {
                       const isChecked = selectedExportCols.includes(col.key);
                       return (
@@ -1692,6 +2056,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     })}
                   </div>
 
+                  {/* Footer */}
                   <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
                     <span className="text-[0.7vw] text-slate-500">
                       {selectedExportCols.length} of {activeExportConfig.length} selected
