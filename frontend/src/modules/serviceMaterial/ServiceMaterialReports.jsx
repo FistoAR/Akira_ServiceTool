@@ -618,6 +618,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     }
   }, [propUser]);
 
+  const isAdmin = useMemo(() => {
+    if (!loggedInUser) return false;
+    const r = (loggedInUser.role || "").toLowerCase();
+    const d = (loggedInUser.department || "").toLowerCase();
+    return r === "admin" || d === "admin" || r === "supervisor";
+  }, [loggedInUser]);
+
   // Filters & State
   const [activeMainView, setActiveMainView] = useState("allProducts"); // "allProducts" | "assignments"
   const [activeStatusTab, setActiveStatusTab] = useState("All");
@@ -833,15 +840,26 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   }, [socket]);
 
   // Flatten all products across all inward entries with parent context
+  // If admin/supervisor: shows all records. If user/employee: shows only products claimed by them
   const allProducts = useMemo(() => {
     const list = [];
+    const uid = loggedInUser?.userId || loggedInUser?.id;
+    const uName = loggedInUser?.name;
+
     entries.forEach((entry) => {
       (entry.products || []).forEach((prod) => {
+        if (!isAdmin && loggedInUser) {
+          const isMyRecord =
+            (prod.assignedTo && (prod.assignedTo === uid || prod.assignedTo === String(uid))) ||
+            (prod.assignedToName && uName && prod.assignedToName.toLowerCase() === uName.toLowerCase()) ||
+            (prod.report?.testedBy && uName && prod.report.testedBy.toLowerCase() === uName.toLowerCase());
+          if (!isMyRecord) return;
+        }
         list.push({ entry, product: prod });
       });
     });
     return list;
-  }, [entries]);
+  }, [entries, isAdmin, loggedInUser]);
 
   // Distinct Categories
   const categoriesList = useMemo(() => {
@@ -1543,66 +1561,76 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
       {/* ── Top Header Toolbar (Service Call Capsule Style) ──────────────── */}
       <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
-        {/* Main View Capsule: All Material vs Employee Assignment */}
-        <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
-          <button
-            onClick={() => {
-              if (drilldownEmployee) return;
-              setActiveMainView("allProducts");
-              setCurrentPage(1);
-            }}
-            disabled={!!drilldownEmployee}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
-              drilldownEmployee
-                ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
-                : activeMainView === "allProducts"
-                ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
-                : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
-            }`}
-            title={drilldownEmployee ? "Exit drilldown view first" : "All Material Inwards"}
-          >
-            <Layers className="w-[0.85vw] h-[0.85vw]" />
-            <span>All Material Inwards</span>
-            <span
-              className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
-                !drilldownEmployee && activeMainView === "allProducts"
-                  ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                  : "text-slate-500"
+        {/* Main View Capsule: All Material vs Employee Assignment (Employee Assignment is Admin-only) */}
+        {isAdmin ? (
+          <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
+            <button
+              onClick={() => {
+                if (drilldownEmployee) return;
+                setActiveMainView("allProducts");
+                setCurrentPage(1);
+              }}
+              disabled={!!drilldownEmployee}
+              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+                drilldownEmployee
+                  ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                  : activeMainView === "allProducts"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
+                  : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
               }`}
+              title={drilldownEmployee ? "Exit drilldown view first" : "All Material Inwards"}
             >
+              <Layers className="w-[0.85vw] h-[0.85vw]" />
+              <span>All Material Inwards</span>
+              <span
+                className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                  !drilldownEmployee && activeMainView === "allProducts"
+                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                    : "text-slate-500"
+                }`}
+              >
+                {filteredProducts.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (drilldownEmployee) return;
+                setActiveMainView("assignments");
+                setCurrentPage(1);
+              }}
+              disabled={!!drilldownEmployee}
+              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+                drilldownEmployee
+                  ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                  : activeMainView === "assignments"
+                  ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
+                  : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
+              }`}
+              title={drilldownEmployee ? "Exit drilldown view first" : "Employee Assignment View"}
+            >
+              <Users className="w-[0.85vw] h-[0.85vw]" />
+              <span>Employee Assignment View</span>
+              <span
+                className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                  !drilldownEmployee && activeMainView === "assignments"
+                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                    : "text-slate-500"
+                }`}
+              >
+                {employeeSummaryData.length}
+              </span>
+            </button>
+          </div>
+        ) : (
+          <div className="inline-flex items-center gap-[0.45vw] px-[0.9vw] py-[0.38vw] bg-white rounded-full border border-slate-300/80 shadow-2xs text-[0.76vw] font-medium text-slate-800">
+            <Layers className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+            <span>My Claimed Records</span>
+            <span className="bg-blue-100 text-blue-800 px-[0.45vw] py-[0.02vw] rounded-full text-[0.66vw] font-bold">
               {filteredProducts.length}
             </span>
-          </button>
-
-          <button
-            onClick={() => {
-              if (drilldownEmployee) return;
-              setActiveMainView("assignments");
-              setCurrentPage(1);
-            }}
-            disabled={!!drilldownEmployee}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
-              drilldownEmployee
-                ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
-                : activeMainView === "assignments"
-                ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
-                : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
-            }`}
-            title={drilldownEmployee ? "Exit drilldown view first" : "Employee Assignment View"}
-          >
-            <Users className="w-[0.85vw] h-[0.85vw]" />
-            <span>Employee Assignment View</span>
-            <span
-              className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
-                !drilldownEmployee && activeMainView === "assignments"
-                  ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                  : "text-slate-500"
-              }`}
-            >
-              {employeeSummaryData.length}
-            </span>
-          </button>
-        </div>
+          </div>
+        )}
 
         {/* Global Controls & Filters */}
         <div className="flex items-center gap-[0.6vw]">
@@ -1690,29 +1718,31 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     </div>
                   </div>
 
-                  {/* Assigned Employee */}
-                  <div>
-                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
-                      Assigned Employee
-                    </label>
-                    <CustomDropdown
-                      size="sm"
-                      searchable={true}
-                      value={selectedEmployee}
-                      onChange={(val) => {
-                        setSelectedEmployee(val);
-                        setCurrentPage(1);
-                      }}
-                      options={[
-                        { value: "All", label: "All Employees" },
-                        ...employees.map((emp) => ({
-                          value: emp.userId || emp._id,
-                          label: `${emp.name} (${emp.department || "No Dept"})`,
-                        })),
-                      ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
-                    />
-                  </div>
+                  {/* Assigned Employee (Admin/Supervisor only) */}
+                  {isAdmin && (
+                    <div>
+                      <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
+                        Assigned Employee
+                      </label>
+                      <CustomDropdown
+                        size="sm"
+                        searchable={true}
+                        value={selectedEmployee}
+                        onChange={(val) => {
+                          setSelectedEmployee(val);
+                          setCurrentPage(1);
+                        }}
+                        options={[
+                          { value: "All", label: "All Employees" },
+                          ...employees.map((emp) => ({
+                            value: emp.userId || emp._id,
+                            label: `${emp.name} (${emp.department || "No Dept"})`,
+                          })),
+                        ]}
+                        triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                      />
+                    </div>
+                  )}
 
                   {/* Customer Category */}
                   <div>

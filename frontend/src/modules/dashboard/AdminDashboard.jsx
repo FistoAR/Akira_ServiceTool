@@ -298,7 +298,8 @@ export default function AdminDashboard({
 }) {
   const matTotal =
     stats.unclaimedMaterials +
-    stats.claimedMaterials +
+    stats.inProgressMaterials +
+    stats.completedMaterials +
     stats.approvedMaterials +
     stats.deniedMaterials;
 
@@ -342,12 +343,12 @@ export default function AdminDashboard({
       color: "#94a3b8", // Slate
     },
     {
-      label: "Claimed & Pending",
-      value: Math.max(0, stats.claimedMaterials - stats.completedMaterials),
+      label: "Claimed & In Progress",
+      value: stats.inProgressMaterials || 0,
       color: "#3b82f6", // Blue
     },
     {
-      label: "Resolved (Review Needed)",
+      label: "Completed (Review Needed)",
       value: stats.completedMaterials || 0,
       color: "#8b5cf6", // Violet
     },
@@ -357,7 +358,7 @@ export default function AdminDashboard({
       color: "#10b981", // Green
     },
     {
-      label: "Denied by Admin",
+      label: "Returned by Admin",
       value: stats.deniedMaterials || 0,
       color: "#ef4444", // Red
     },

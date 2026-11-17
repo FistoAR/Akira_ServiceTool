@@ -719,6 +719,38 @@ const ReportsModal = ({ row, onClose }) => {
                                   {r.errorCode || "—"}
                                 </span>
                               </div>
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                  Material Cost
+                                </span>
+                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                  {r.materialCost != null && r.materialCost !== "" ? `₹${r.materialCost}` : "—"}
+                                </span>
+                              </div>
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                  Man Power Cost
+                                </span>
+                                <span className="font-semibold text-emerald-800 text-[0.78vw] mt-[0.1vw] block">
+                                  {r.manpowerCost != null ? `₹${Number(r.manpowerCost).toFixed(2)}` : "—"}
+                                </span>
+                              </div>
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                  Time (Hours)
+                                </span>
+                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                  {r.timeInHours ? `${r.timeInHours} hrs` : "—"}
+                                </span>
+                              </div>
+                              <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
+                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                  Disposition
+                                </span>
+                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                  {r.disposition || "—"}
+                                </span>
+                              </div>
                             </div>
 
                             {/* Details: Problems, Root Cause, Corrective Action */}

@@ -107,7 +107,7 @@ export default function Dashboard() {
     };
 
     let unclaimedMaterials = 0;
-    let claimedMaterials = 0;
+    let inProgressMaterials = 0;
     let completedMaterials = 0;
     let approvedMaterials = 0;
     let deniedMaterials = 0;
@@ -118,22 +118,38 @@ export default function Dashboard() {
       (entry.products || []).forEach((p) => {
         const rawStatus = p.status || p.report?.status || "Open";
         const finalStatus = p.finalStatus || "Pending";
+        const isDoneByEmp = rawStatus === "Completed";
+        const isApprovedByAdmin = isDoneByEmp && finalStatus === "Completed";
+        const isReturnedByAdmin =
+          isDoneByEmp &&
+          (p.finalStatusHistory?.length ?? 0) > 0 &&
+          finalStatus !== "Completed";
 
         if (!p.assignedTo) {
           unclaimedMaterials++;
         } else {
-          claimedMaterials++;
-          if (p.assignedTo === userId && rawStatus !== "Completed") {
-            myClaimedProducts.push({ entry, product: p });
+          // Claimed by an employee
+          if (p.assignedTo === userId) {
+            // Include active work or admin-returned work requiring employee attention
+            if (!isDoneByEmp || isReturnedByAdmin) {
+              myClaimedProducts.push({ entry, product: p });
+            }
           }
         }
 
-        if (rawStatus === "Completed" && finalStatus === "Pending") {
+        // Categorize into mutually-exclusive pipeline stages:
+        if (isApprovedByAdmin) {
+          approvedMaterials++;
+        } else if (isReturnedByAdmin) {
+          deniedMaterials++;
+        } else if (isDoneByEmp) {
+          // Employee marked completed, waiting for Admin review
           completedMaterials++;
           pendingAdminReviews.push({ entry, product: p });
+        } else if (p.assignedTo) {
+          // Claimed and actively in progress (Testing, Repair, Hold, Pending, etc.)
+          inProgressMaterials++;
         }
-        if (finalStatus === "Completed") approvedMaterials++;
-        else if (finalStatus === "Admin Returned") deniedMaterials++;
       });
     });
 
@@ -184,7 +200,7 @@ export default function Dashboard() {
       criticalCalls,
       activeEscalated,
       unclaimedMaterials,
-      claimedMaterials,
+      inProgressMaterials,
       completedMaterials,
       approvedMaterials,
       deniedMaterials,
@@ -193,11 +209,15 @@ export default function Dashboard() {
       myPendingCalls,
       myClaimedProducts,
       myCompletedMaterials: materials.reduce((acc, entry) => {
-        const count = (entry.products || []).filter(
-          (p) =>
-            p.assignedTo === userId &&
-            (p.status === "Completed" || p.report?.status === "Completed")
-        ).length;
+        const count = (entry.products || []).filter((p) => {
+          const rawStatus = p.status || p.report?.status || "Open";
+          const isDoneByEmp = rawStatus === "Completed";
+          const isReturnedByAdmin =
+            isDoneByEmp &&
+            (p.finalStatusHistory?.length ?? 0) > 0 &&
+            p.finalStatus !== "Completed";
+          return p.assignedTo === userId && isDoneByEmp && !isReturnedByAdmin;
+        }).length;
         return acc + count;
       }, 0),
     };
