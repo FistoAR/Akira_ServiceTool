@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search, X, Trash2, Save, ArrowLeft, Plus, User, Package, ChevronDown,
   ChevronUp, Eye, Target, ClipboardList, Edit3, Clock, History, FileText, AlertCircle, CheckCircle, Wrench,
@@ -2187,6 +2188,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
 
 // --- Main List Screen ---
 export default function ProductionMaterial() {
+  const navigate = useNavigate();
   const { toast } = useNotification();
   const [data, setData] = useState([]);
   const [view, setView] = useState("list");

@@ -37,6 +37,7 @@ import {
   Plus,
   Trash2,
   Edit2,
+  SlidersHorizontal,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -44,6 +45,26 @@ import { useNotification } from "../../components/NotificationContext";
 import { useSocket } from "../../contexts/SocketContext";
 import CustomDropdown from "../../components/CustomDropdown";
 import ServiceMaterialDetailModal from "./ServiceMaterialDetailModal";
+
+// Available filterable fields for custom dynamic filters
+const MATERIAL_CUSTOM_FILTER_FIELDS = [
+  { key: "customerName", label: "Customer Name" },
+  { key: "customerCode", label: "Customer Code" },
+  { key: "category", label: "Customer Category" },
+  { key: "refNoCustomer", label: "Ref No (Customer)" },
+  { key: "refNoInternal", label: "Ref No (Internal)" },
+  { key: "productDescription", label: "Product Description" },
+  { key: "productCode", label: "Product Code" },
+  { key: "productSegment", label: "Product Segment" },
+  { key: "boardType", label: "Board Type" },
+  { key: "serialNumber", label: "Serial Number" },
+  { key: "unit", label: "Unit" },
+  { key: "site", label: "Site" },
+  { key: "assignedToName", label: "Claimed By" },
+  { key: "testedBy", label: "Tested By" },
+  { key: "errorCode", label: "Error Code" },
+  { key: "rootCause", label: "Root Cause" },
+];
 
 // Custom Floating Tooltip (matches ServiceCall modules)
 const CustomTooltip = ({
@@ -632,11 +653,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [customerFilter, setCustomerFilter] = useState("All");
   const [selectedEmployee, setSelectedEmployee] = useState("All");
   const [drilldownEmployee, setDrilldownEmployee] = useState(null); // when clicked "View" on an employee row
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [warrantyFilter, setWarrantyFilter] = useState("All");
   const [segmentFilter, setSegmentFilter] = useState("All");
+  const [customFilters, setCustomFilters] = useState([]); // [{ id, field, value }]
+  const [showCustomFilterBar, setShowCustomFilterBar] = useState(false);
 
   // Sorting: Users can change sort; resets to default order when report is opened
   const [sortField, setSortField] = useState(null); // null = default chronological order
@@ -861,6 +885,16 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     return list;
   }, [entries, isAdmin, loggedInUser]);
 
+  // Distinct Customers
+  const customerList = useMemo(() => {
+    const set = new Set();
+    entries.forEach((e) => {
+      const name = (e.customerName || "").trim();
+      if (name) set.add(name);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [entries]);
+
   // Distinct Categories
   const categoriesList = useMemo(() => {
     const set = new Set();
@@ -908,30 +942,99 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         if (toDate && entryDate && entryDate > toDateObj(toDate)) return false;
       }
 
-      // 3. Employee Filter
+      // 3. Customer Filter
+      if (customerFilter !== "All") {
+        const cName = (entry.customerName || "").trim();
+        if (cName.toLowerCase() !== customerFilter.trim().toLowerCase()) return false;
+      }
+
+      // 4. Employee Filter
       if (selectedEmployee !== "All" && product.assignedTo !== selectedEmployee) {
         return false;
       }
 
-      // 4. Category Filter
+      // 5. Category Filter
       if (categoryFilter !== "All" && entry.category !== categoryFilter) {
         return false;
       }
 
-      // 5. Warranty Filter
+      // 6. Warranty Filter
       if (warrantyFilter !== "All" && product.type !== warrantyFilter) {
         return false;
       }
 
-      // 6. Product Segment Filter
+      // 7. Product Segment Filter
       if (segmentFilter !== "All") {
         const seg = (product.productSegment || product.segment || "").trim();
         if (seg.toLowerCase() !== segmentFilter.toLowerCase()) return false;
       }
 
+      // 8. Custom Dynamic Filters
+      for (const cf of customFilters) {
+        if (!cf.field || !cf.value || !cf.value.trim()) continue;
+        const targetVal = cf.value.trim().toLowerCase();
+        let fieldMatched = false;
+
+        switch (cf.field) {
+          case "customerName":
+            fieldMatched = (entry.customerName || "").toLowerCase().includes(targetVal);
+            break;
+          case "customerCode":
+            fieldMatched = (entry.customerCode || "").toLowerCase().includes(targetVal);
+            break;
+          case "category":
+            fieldMatched = (entry.category || "").toLowerCase().includes(targetVal);
+            break;
+          case "refNoCustomer":
+            fieldMatched = (entry.refNoCustomer || "").toLowerCase().includes(targetVal);
+            break;
+          case "refNoInternal":
+            fieldMatched = (entry.refNoInternal || "").toLowerCase().includes(targetVal);
+            break;
+          case "productDescription":
+            fieldMatched = (product.productDescription || "").toLowerCase().includes(targetVal);
+            break;
+          case "productCode":
+            fieldMatched = (product.productCode || "").toLowerCase().includes(targetVal);
+            break;
+          case "productSegment":
+            fieldMatched = (product.productSegment || product.segment || "").toLowerCase().includes(targetVal);
+            break;
+          case "boardType":
+            fieldMatched = (product.boardType || "").toLowerCase().includes(targetVal);
+            break;
+          case "serialNumber":
+            fieldMatched = (product.serialNumber || "").toLowerCase().includes(targetVal);
+            break;
+          case "unit":
+            fieldMatched = (entry.unit || "").toLowerCase().includes(targetVal);
+            break;
+          case "site":
+            fieldMatched = (entry.site || "").toLowerCase().includes(targetVal);
+            break;
+          case "assignedToName":
+            fieldMatched = (product.assignedToName || "").toLowerCase().includes(targetVal);
+            break;
+          case "testedBy":
+            fieldMatched = (product.report?.testedBy || "").toLowerCase().includes(targetVal);
+            break;
+          case "errorCode":
+            fieldMatched = (product.report?.errorCode || product.errorCode || "").toLowerCase().includes(targetVal);
+            break;
+          case "rootCause":
+            fieldMatched = (product.report?.rootCause || "").toLowerCase().includes(targetVal);
+            break;
+          default:
+            fieldMatched = String(entry[cf.field] || product[cf.field] || "").toLowerCase().includes(targetVal);
+            break;
+        }
+
+        if (!fieldMatched) return false;
+      }
+
       return true;
     });
-  }, [allProducts, search, fromDate, toDate, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter]);
+  }, [allProducts, search, fromDate, toDate, customerFilter, selectedEmployee, categoryFilter, warrantyFilter, segmentFilter, customFilters]);
 
   // Overall Quantity Stats across base filtered inward set (constant reference for breakdown buttons)
   const quantityStats = useMemo(() => {
@@ -1540,20 +1643,24 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   const hasActiveFilters =
     Boolean(fromDate) ||
     Boolean(toDate) ||
+    customerFilter !== "All" ||
     selectedEmployee !== "All" ||
     categoryFilter !== "All" ||
     warrantyFilter !== "All" ||
     segmentFilter !== "All" ||
-    quantityFilter !== "all";
+    quantityFilter !== "all" ||
+    customFilters.some((cf) => cf.field && cf.value.trim());
 
   const clearAllFilters = () => {
     setFromDate("");
     setToDate("");
+    setCustomerFilter("All");
     setSelectedEmployee("All");
     setCategoryFilter("All");
     setWarrantyFilter("All");
     setSegmentFilter("All");
     setQuantityFilter("all");
+    setCustomFilters([]);
     setCurrentPage(1);
   };
 
@@ -1664,18 +1771,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
           {/* Filter Popover Button */}
           <div className="relative">
-            <CustomTooltip text="Filter by dates, employee, category, or warranty">
+            <CustomTooltip text="Filter by Date, Employee & Customer Category">
               <button
                 onClick={() => setShowFilterPopover(!showFilterPopover)}
                 className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
-                  showFilterPopover || hasActiveFilters
+                  showFilterPopover || fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All"
                     ? "bg-blue-50 border-blue-300 text-blue-700"
                     : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
                 }`}
               >
                 <Filter className="w-[0.85vw] h-[0.85vw]" />
                 <span>Filters</span>
-                {hasActiveFilters && (
+                {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
                   <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-blue-600" />
                 )}
               </button>
@@ -1688,7 +1795,26 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowFilterPopover(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-lg z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[17.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                  {/* Header */}
+                  <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
+                    <span className="text-[0.76vw] font-bold text-slate-800">Quick Filters</span>
+                    {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
+                      <button
+                        onClick={() => {
+                          setFromDate("");
+                          setToDate("");
+                          setSelectedEmployee("All");
+                          setCategoryFilter("All");
+                          setCurrentPage(1);
+                        }}
+                        className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
                   {/* Date Range */}
                   <div>
                     <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
@@ -1767,60 +1893,21 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     />
                   </div>
 
-                  {/* Warranty Type (W/PW) */}
-                  <div>
-                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
-                      Warranty Type
-                    </label>
-                    <CustomDropdown
-                      size="sm"
-                      value={warrantyFilter}
-                      onChange={(val) => {
-                        setWarrantyFilter(val);
-                        setCurrentPage(1);
-                      }}
-                      options={[
-                        { value: "All", label: "All Types" },
-                        { value: "W", label: "Warranty (W)" },
-                        { value: "PW", label: "Paid (PW)" },
-                      ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
-                    />
-                  </div>
-
-                  {/* Product Segment */}
-                  <div>
-                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
-                      Product Segment
-                    </label>
-                    <CustomDropdown
-                      size="sm"
-                      searchable={true}
-                      value={segmentFilter}
-                      onChange={(val) => {
-                        setSegmentFilter(val);
-                        setCurrentPage(1);
-                      }}
-                      options={[
-                        { value: "All", label: "All Segments" },
-                        ...segmentsList.map((seg) => ({
-                          value: seg,
-                          label: seg,
-                        })),
-                      ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
-                    />
-                  </div>
-
                   {/* Clear Filter Button */}
-                  {hasActiveFilters && (
+                  {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
                     <div className="pt-[0.3vw] border-t border-slate-200 mt-[0.1vw]">
                       <button
-                        onClick={clearAllFilters}
+                        onClick={() => {
+                          setFromDate("");
+                          setToDate("");
+                          setSelectedEmployee("All");
+                          setCategoryFilter("All");
+                          setCurrentPage(1);
+                        }}
                         className="inline-flex items-center gap-[0.3vw] text-[0.7vw] font-medium text-slate-700 hover:text-rose-600 transition-colors cursor-pointer py-[0.1vw]"
                       >
                         <Filter className="w-[0.75vw] h-[0.75vw] text-slate-700" />
-                        <span>Clear All Filters</span>
+                        <span>Clear Filters</span>
                       </button>
                     </div>
                   )}
@@ -1828,6 +1915,33 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
               </>
             )}
           </div>
+
+          {/* Custom Filters Toggle Button */}
+          <button
+            onClick={() => {
+              const nextState = !showCustomFilterBar;
+              setShowCustomFilterBar(nextState);
+              if (nextState && customFilters.length === 0) {
+                setCustomFilters([
+                  { id: Date.now(), field: "customerName", value: "" },
+                ]);
+              }
+            }}
+            className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+              showCustomFilterBar || customFilters.some((cf) => cf.field && cf.value.trim())
+                ? "bg-indigo-50 border-indigo-300 text-indigo-700"
+                : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+            }`}
+            title="Toggle custom field filter rows"
+          >
+            <SlidersHorizontal className="w-[0.8vw] h-[0.8vw]" />
+            <span>Custom Filters</span>
+            {customFilters.some((cf) => cf.field && cf.value.trim()) && (
+              <span className="px-[0.35vw] py-[0.02vw] rounded-full bg-indigo-600 text-white text-[0.62vw] font-bold">
+                {customFilters.filter((cf) => cf.field && cf.value.trim()).length}
+              </span>
+            )}
+          </button>
 
           {/* Select Export Columns Button */}
           <div className="relative">
@@ -2089,6 +2203,117 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
           </CustomTooltip>
         </div>
       </div>
+
+      {/* ── Dynamic Custom Filters Row (Appears below toolbar when Custom Filters is clicked) ── */}
+      {showCustomFilterBar && (
+        <div className="mb-[0.6vw] bg-white border border-slate-300 rounded-[0.6vw] p-[0.6vw] shadow-2xs flex flex-col gap-[0.45vw] shrink-0 animate-in fade-in slide-in-from-top-1 duration-150">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-[0.4vw]">
+              <SlidersHorizontal className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
+              <span className="text-[0.76vw] font-bold text-slate-800">Custom Filters</span>
+              <span className="text-[0.68vw] text-slate-500">
+                (Select field and type search query to filter table records)
+              </span>
+            </div>
+            <div className="flex items-center gap-[0.5vw]">
+              <button
+                type="button"
+                onClick={() => {
+                  const unused = MATERIAL_CUSTOM_FILTER_FIELDS.find(
+                    (f) => !customFilters.some((cf) => cf.field === f.key)
+                  );
+                  setCustomFilters((prev) => [
+                    ...prev,
+                    { id: Date.now() + Math.random(), field: unused?.key || "customerName", value: "" },
+                  ]);
+                }}
+                className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.2vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-md text-[0.7vw] font-bold cursor-pointer transition-colors shadow-2xs"
+              >
+                <Plus className="w-[0.75vw] h-[0.75vw]" />
+                <span>Add Filter</span>
+              </button>
+              {customFilters.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomFilters([]);
+                    setCurrentPage(1);
+                  }}
+                  className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer px-[0.3vw]"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Filter Rows */}
+          {customFilters.length === 0 ? (
+            <div className="py-[0.5vw] text-center text-slate-400 text-[0.7vw] italic bg-slate-50 border border-dashed border-slate-200 rounded-md">
+              No custom filters active. Click &quot;Add Filter&quot; above to select any column header and enter a value.
+            </div>
+          ) : (
+            <div className="flex items-center gap-[0.5vw] overflow-x-auto pb-[0.35vw] pt-[0.1vw] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+              {customFilters.map((cf, idx) => (
+                <div
+                  key={cf.id}
+                  className="flex items-center gap-[0.3vw] bg-slate-50/90 border border-slate-300 rounded-md px-[0.4vw] py-[0.25vw] shadow-2xs shrink-0"
+                >
+                  {/* Field Selector */}
+                  <div className="relative">
+                    <select
+                      value={cf.field}
+                      onChange={(e) => {
+                        const newField = e.target.value;
+                        setCustomFilters((prev) =>
+                          prev.map((item, i) => (i === idx ? { ...item, field: newField } : item))
+                        );
+                        setCurrentPage(1);
+                      }}
+                      className="h-[1.8vw] pl-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 font-bold outline-none cursor-pointer appearance-none hover:border-slate-400"
+                    >
+                      {MATERIAL_CUSTOM_FILTER_FIELDS.map((f) => (
+                        <option key={f.key} value={f.key}>
+                          {f.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronRight className="w-[0.65vw] h-[0.65vw] text-slate-600 absolute right-[0.35vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                  </div>
+
+                  {/* Value Input */}
+                  <input
+                    type="text"
+                    value={cf.value}
+                    onChange={(e) => {
+                      const newVal = e.target.value;
+                      setCustomFilters((prev) =>
+                        prev.map((item, i) => (i === idx ? { ...item, value: newVal } : item))
+                      );
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Type value..."
+                    className="h-[1.8vw] w-[11vw] px-[0.5vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                  />
+
+                  {/* Delete button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomFilters((prev) => prev.filter((_, i) => i !== idx));
+                      setCurrentPage(1);
+                    }}
+                    className="text-slate-400 hover:text-rose-600 p-[0.2vw] cursor-pointer transition-colors"
+                    title="Remove this filter"
+                  >
+                    <Trash2 className="w-[0.75vw] h-[0.75vw]" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Main Report Display Card ────────────────────────────────────── */}
       <div className="flex-1 min-h-0 bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col overflow-hidden">

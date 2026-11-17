@@ -1681,9 +1681,16 @@ export default function ServiceMaterialInwardResponse({
     const minR = Math.min(startRow, endRow);
     const maxR = Math.max(startRow, endRow);
     if (rowIndex >= minR && rowIndex <= maxR) {
-      cls += " bg-blue-50/40 border-blue-500 z-10";
-      if (rowIndex === minR) cls += " border-t-2";
-      if (rowIndex === maxR) cls += " border-b-2";
+      cls += " bg-blue-50/30 z-10 before:content-[''] before:pointer-events-none before:absolute before:inset-0 ";
+      if (rowIndex === minR && rowIndex === maxR) {
+        cls += " before:border-2 before:border-blue-600";
+      } else if (rowIndex === minR) {
+        cls += " before:border-t-2 before:border-l-2 before:border-r-2 before:border-blue-600";
+      } else if (rowIndex === maxR) {
+        cls += " before:border-b-2 before:border-l-2 before:border-r-2 before:border-blue-600";
+      } else {
+        cls += " before:border-l-2 before:border-r-2 before:border-blue-600";
+      }
     }
     return cls;
   };
@@ -2352,6 +2359,9 @@ export default function ServiceMaterialInwardResponse({
                               <div className="min-w-[8vw]">
                                 <CustomDropdown
                                   size="sm"
+                                  usePortal={true}
+                                  searchable={true}
+                                  searchPlaceholder="Search employee..."
                                   placeholder="Select"
                                   value={draft.testedBy || ""}
                                   onChange={(val) => hc("testedBy", val)}
@@ -2376,13 +2386,21 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "fqaBy")}
                           >
                             {draft ? (
-                              <input
-                                type="text"
-                                value={draft.fqaBy || ""}
-                                onChange={(e) => hc("fqaBy", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
-                                placeholder="FQA By..."
-                              />
+                              <div className="min-w-[8vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  usePortal={true}
+                                  searchable={true}
+                                  searchPlaceholder="Search employee..."
+                                  placeholder="Select"
+                                  value={draft.fqaBy || ""}
+                                  onChange={(val) => hc("fqaBy", val)}
+                                  options={employees
+                                    .filter((emp) => emp.role === "User")
+                                    .map((e) => ({ value: e.name, label: e.name }))}
+                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                />
+                              </div>
                             ) : (
                               <span className="text-[0.75vw] whitespace-nowrap">
                                 {product.report?.fqaBy || "—"}
@@ -2401,6 +2419,7 @@ export default function ServiceMaterialInwardResponse({
                               <div className="min-w-[8vw]">
                                 <CustomDropdown
                                   size="sm"
+                                  usePortal={true}
                                   placeholder="Select"
                                   value={draft.fourMCategory || ""}
                                   onChange={(val) => hc("fourMCategory", val)}
@@ -2696,6 +2715,7 @@ export default function ServiceMaterialInwardResponse({
                               <div className="min-w-[8vw]">
                                 <CustomDropdown
                                   size="sm"
+                                  usePortal={true}
                                   placeholder="Select"
                                   value={draft.disposition || ""}
                                   onChange={(val) => hc("disposition", val)}
@@ -2724,6 +2744,7 @@ export default function ServiceMaterialInwardResponse({
                               <div className="min-w-[9vw]">
                                 <CustomDropdown
                                   size="sm"
+                                  usePortal={true}
                                   placeholder="Select"
                                   value={draft.status || ""}
                                   onChange={(val) => hc("status", val)}
@@ -3675,26 +3696,38 @@ export default function ServiceMaterialInwardResponse({
                   </div>
                   <div>
                     <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Tested By</label>
-                    <input
-                      type="text"
+                    <CustomDropdown
+                      size="sm"
+                      searchable={true}
+                      searchPlaceholder="Search employee..."
+                      placeholder="Select Tested By"
                       value={editReportModal.draft.testedBy || ""}
-                      onChange={(e) => setEditReportModal((prev) => ({
+                      onChange={(val) => setEditReportModal((prev) => ({
                         ...prev,
-                        draft: { ...prev.draft, testedBy: e.target.value }
+                        draft: { ...prev.draft, testedBy: val }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      options={employees
+                        .filter((emp) => emp.role === "User")
+                        .map((e) => ({ value: e.name, label: e.name }))}
+                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
                     />
                   </div>
                   <div>
                     <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">FQA By</label>
-                    <input
-                      type="text"
+                    <CustomDropdown
+                      size="sm"
+                      searchable={true}
+                      searchPlaceholder="Search employee..."
+                      placeholder="Select FQA By"
                       value={editReportModal.draft.fqaBy || ""}
-                      onChange={(e) => setEditReportModal((prev) => ({
+                      onChange={(val) => setEditReportModal((prev) => ({
                         ...prev,
-                        draft: { ...prev.draft, fqaBy: e.target.value }
+                        draft: { ...prev.draft, fqaBy: val }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      options={employees
+                        .filter((emp) => emp.role === "User")
+                        .map((e) => ({ value: e.name, label: e.name }))}
+                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
                     />
                   </div>
                   <div>

@@ -345,11 +345,11 @@ const ProductionEditableProductTable = ({
     const minC = Math.min(startCol, endCol);
     const maxC = Math.max(startCol, endCol);
     if (rowIndex < minR || rowIndex > maxR || colIndex < minC || colIndex > maxC) return "border-r border-b border-slate-300";
-    let cls = "border border-blue-500 bg-blue-50/20 z-10";
-    if (rowIndex === minR) cls += " border-t-2";
-    if (rowIndex === maxR) cls += " border-b-2";
-    if (colIndex === minC) cls += " border-l-2";
-    if (colIndex === maxC) cls += " border-r-2";
+    let cls = "bg-blue-50/25 z-10 relative before:content-[''] before:pointer-events-none before:absolute before:inset-0";
+    if (rowIndex === minR) cls += " before:border-t-2 before:border-t-blue-600";
+    if (rowIndex === maxR) cls += " before:border-b-2 before:border-b-blue-600";
+    if (colIndex === minC) cls += " before:border-l-2 before:border-l-blue-600";
+    if (colIndex === maxC) cls += " before:border-r-2 before:border-r-blue-600";
     return cls;
   };
 

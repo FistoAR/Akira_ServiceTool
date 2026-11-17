@@ -48,6 +48,7 @@ import {
   Plus,
   Trash2,
   Edit2,
+  SlidersHorizontal,
 } from "lucide-react";
 import akiraLogo from "../../assets/Akira_logo.webp";
 import * as XLSX from "xlsx-js-style";
@@ -60,6 +61,24 @@ import {
   PRIORITIES,
   CallSummaryModal,
 } from "./ServiceCall";
+
+// Available filterable fields for custom dynamic filters
+const SERVICE_CALL_CUSTOM_FILTER_FIELDS = [
+  { key: "customerName", label: "Customer Name" },
+  { key: "contactPerson", label: "Contact Person" },
+  { key: "contactNumber", label: "Contact Number" },
+  { key: "callNumber", label: "Call Number" },
+  { key: "partyCode", label: "Party Code" },
+  { key: "customerType", label: "Customer Type" },
+  { key: "location", label: "Location / Site" },
+  { key: "productModel", label: "Product Model" },
+  { key: "itemCode", label: "Item Code" },
+  { key: "serialNumber", label: "Serial Number" },
+  { key: "segment", label: "Product Segment" },
+  { key: "errorCode", label: "Error Code" },
+  { key: "registeredBy", label: "Registered By" },
+  { key: "assignedTo", label: "Assigned To" },
+];
 
 const getCustomerTypeBadgeStyle = (type) => {
   switch (type) {
@@ -487,10 +506,27 @@ export default function ServiceCallReports() {
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [customerFilter, setCustomerFilter] = useState("All");
+  const [contactPersonFilter, setContactPersonFilter] = useState("All");
   const [callTypeFilter, setCallTypeFilter] = useState("All"); // "All" | "Self Assigned" | "Admin Registered"
   const [statusFilter, setStatusFilter] = useState("All"); // "All" | "Registered" | "Assigned" | "Supporting" | "Field Visit" | "Pending" | "Escalating" | "Resolved" | "Critical"
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [customFilters, setCustomFilters] = useState([]); // [{ id, field, value }]
+  const [showCustomFilterBar, setShowCustomFilterBar] = useState(false);
   const [showFilterPopover, setShowFilterPopover] = useState(false);
+
+  const hasActiveFilters = Boolean(
+    fromDate ||
+    toDate ||
+    customerFilter !== "All" ||
+    contactPersonFilter !== "All" ||
+    callTypeFilter !== "All" ||
+    statusFilter !== "All" ||
+    priorityFilter !== "All" ||
+    categoryFilter !== "All" ||
+    customFilters.some((cf) => cf.field && cf.value.trim())
+  );
 
   // Data
   const [calls, setCalls] = useState([]);
@@ -761,7 +797,30 @@ export default function ServiceCallReports() {
     });
   }, [calls, isAdmin, currentUser]);
 
-  // Date, Priority, Call Type & Search Filtering
+  // Distinct Customers for Filter
+  const customerList = useMemo(() => {
+    const set = new Set();
+    scopedCalls.forEach((c) => {
+      const name = (c.customerName || "").trim();
+      if (name) set.add(name);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [scopedCalls]);
+
+  // Distinct Contact Persons (optionally dependent on selected customer)
+  const contactPersonsList = useMemo(() => {
+    const set = new Set();
+    scopedCalls.forEach((c) => {
+      const custMatch = customerFilter === "All" || (c.customerName || "").trim().toLowerCase() === customerFilter.trim().toLowerCase();
+      if (custMatch) {
+        const cp = (c.contactPerson || "").trim();
+        if (cp) set.add(cp);
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [scopedCalls, customerFilter]);
+
+  // Date, Customer, Contact Person, Priority, Call Type & Search Filtering
   const filteredCalls = useMemo(() => {
     let start = null;
     if (fromDate) {
@@ -785,6 +844,18 @@ export default function ServiceCallReports() {
       if (start && callDate < start) return false;
       if (end && callDate > end) return false;
 
+      // Customer Filter
+      if (customerFilter !== "All") {
+        const custName = (c.customerName || "").trim();
+        if (custName.toLowerCase() !== customerFilter.trim().toLowerCase()) return false;
+      }
+
+      // Contact Person Filter
+      if (contactPersonFilter !== "All") {
+        const cp = (c.contactPerson || "").trim();
+        if (cp.toLowerCase() !== contactPersonFilter.trim().toLowerCase()) return false;
+      }
+
       // Call Type filter
       const isSelf = c.noEscalation === true;
       if (callTypeFilter === "Self Assigned" && !isSelf) return false;
@@ -792,6 +863,12 @@ export default function ServiceCallReports() {
 
       // Priority filter
       if (priorityFilter !== "All" && c.priority !== priorityFilter) return false;
+
+      // Customer Category (customerType) filter
+      if (categoryFilter !== "All") {
+        const cat = (c.customerType || c.category || "").trim().toLowerCase();
+        if (cat !== categoryFilter.trim().toLowerCase()) return false;
+      }
 
       // Status filter
       if (statusFilter !== "All") {
@@ -808,6 +885,64 @@ export default function ServiceCallReports() {
         } else if (derived.toLowerCase() !== statusFilter.toLowerCase()) {
           return false;
         }
+      }
+
+      // Dynamic Custom Filters
+      for (const cf of customFilters) {
+        if (!cf.field || !cf.value || !cf.value.trim()) continue;
+        const targetVal = cf.value.trim().toLowerCase();
+        let fieldMatched = false;
+
+        switch (cf.field) {
+          case "customerName":
+            fieldMatched = (c.customerName || "").toLowerCase().includes(targetVal);
+            break;
+          case "contactPerson":
+            fieldMatched = (c.contactPerson || "").toLowerCase().includes(targetVal);
+            break;
+          case "contactNumber":
+            fieldMatched = (c.contactNumber || "").toLowerCase().includes(targetVal);
+            break;
+          case "callNumber":
+            fieldMatched = (c.callNumber || "").toLowerCase().includes(targetVal);
+            break;
+          case "partyCode":
+            fieldMatched = (c.partyCode || "").toLowerCase().includes(targetVal);
+            break;
+          case "customerType":
+            fieldMatched = (c.customerType || "").toLowerCase().includes(targetVal);
+            break;
+          case "location":
+            fieldMatched = (c.location || c.siteLocation || c.address || "").toLowerCase().includes(targetVal);
+            break;
+          case "productModel":
+            fieldMatched = (c.products || []).some((p) => (p.productModel || "").toLowerCase().includes(targetVal));
+            break;
+          case "itemCode":
+            fieldMatched = (c.products || []).some((p) => (p.itemCode || "").toLowerCase().includes(targetVal));
+            break;
+          case "serialNumber":
+            fieldMatched = (c.products || []).some((p) => (p.serialNumber || "").toLowerCase().includes(targetVal));
+            break;
+          case "segment":
+            fieldMatched = (c.products || []).some((p) => (p.productSegment || p.segment || "").toLowerCase().includes(targetVal));
+            break;
+          case "errorCode":
+            fieldMatched = (c.products || []).some((p) => (p.errorCode || "").toLowerCase().includes(targetVal));
+            break;
+          case "registeredBy":
+            fieldMatched = (c.registeredByName || c.registeredBy || "").toLowerCase().includes(targetVal);
+            break;
+          case "assignedTo":
+            fieldMatched = (c.currentEngineerName || c.assignedTo || "").toLowerCase().includes(targetVal) ||
+              (c.products || []).some((p) => (p._assignedEngineerName || p._supportPersonName || "").toLowerCase().includes(targetVal));
+            break;
+          default:
+            fieldMatched = String(c[cf.field] || "").toLowerCase().includes(targetVal);
+            break;
+        }
+
+        if (!fieldMatched) return false;
       }
 
       // Text search
@@ -830,7 +965,7 @@ export default function ServiceCallReports() {
 
       return true;
     });
-  }, [scopedCalls, fromDate, toDate, callTypeFilter, statusFilter, priorityFilter, search]);
+  }, [scopedCalls, fromDate, toDate, customerFilter, contactPersonFilter, callTypeFilter, statusFilter, priorityFilter, customFilters, search]);
 
   // Escalation View Items: Calls with escalation events
   const escalationItems = useMemo(() => {
@@ -1677,15 +1812,15 @@ const buildEscalationHistoryString = (call, prod) => {
             <button
               onClick={() => setShowFilterPopover(!showFilterPopover)}
               className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
-                showFilterPopover || fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All"
+                showFilterPopover || fromDate || toDate || selectedEmployee || categoryFilter !== "All"
                   ? "bg-blue-50 border-blue-300 text-blue-700"
                   : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
               }`}
-              title="Filter reports by date, origin, status, and priority"
+              title="Filter by Date, Employee & Customer Category"
             >
               <Filter className="w-[0.85vw] h-[0.85vw]" />
               <span>Filters</span>
-              {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
+              {(fromDate || toDate || selectedEmployee || categoryFilter !== "All") && (
                 <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-blue-600" />
               )}
             </button>
@@ -1697,10 +1832,29 @@ const buildEscalationHistoryString = (call, prod) => {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowFilterPopover(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[16.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-lg z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[17.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                  {/* Header */}
+                  <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
+                    <span className="text-[0.76vw] font-bold text-slate-800">Quick Filters</span>
+                    {(fromDate || toDate || selectedEmployee || categoryFilter !== "All") && (
+                      <button
+                        onClick={() => {
+                          setFromDate("");
+                          setToDate("");
+                          setSelectedEmployee(null);
+                          setCategoryFilter("All");
+                          setCurrentPage(1);
+                        }}
+                        className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
                   {/* Date Range */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
+                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
                       Date Range
                     </label>
                     <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[1.9vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
@@ -1727,95 +1881,71 @@ const buildEscalationHistoryString = (call, prod) => {
                     </div>
                   </div>
 
-                  {/* Call Origin */}
-                  <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
-                      Call Origin
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={callTypeFilter}
-                        onChange={(e) => {
-                          setCallTypeFilter(e.target.value);
+                  {/* Assigned Employee (Admin only) */}
+                  {isAdmin && (
+                    <div>
+                      <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                        Assigned Employee
+                      </label>
+                      <CustomDropdown
+                        size="sm"
+                        searchable={true}
+                        searchPlaceholder="Search employee..."
+                        value={selectedEmployee || "All"}
+                        onChange={(val) => {
+                          setSelectedEmployee(val === "All" ? null : val);
                           setCurrentPage(1);
                         }}
-                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
-                      >
-                        <option value="All">All Origins</option>
-                        <option value="Self Assigned">Self Assigned</option>
-                        <option value="Admin Registered">Registered Calls</option>
-                      </select>
-                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                        options={[
+                          { value: "All", label: "All Employees" },
+                          ...employees.map((emp) => ({
+                            value: emp.userId || emp._id,
+                            label: `${emp.name} (${emp.department || "No Dept"})`,
+                          })),
+                        ]}
+                        triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                      />
                     </div>
-                  </div>
+                  )}
 
-                  {/* Status */}
+                  {/* Customer Category */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
-                      Status
+                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                      Customer Category
                     </label>
-                    <div className="relative">
-                      <select
-                        value={statusFilter}
-                        onChange={(e) => {
-                          setStatusFilter(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
-                      >
-                        <option value="All">All Status</option>
-                        <option value="Registered">Registered</option>
-                        <option value="Assigned">Assigned</option>
-                        <option value="Supporting">Supporting</option>
-                        <option value="Field Visit">Field Visit</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Escalating">Escalating</option>
-                        <option value="Critical">Critical</option>
-                        <option value="Resolved">Resolved / Closed</option>
-                      </select>
-                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
-                    </div>
-                  </div>
-
-                  {/* Priority */}
-                  <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-normal mb-[0.2vw]">
-                      Priority
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={priorityFilter}
-                        onChange={(e) => {
-                          setPriorityFilter(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                        className="w-full h-[1.9vw] px-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded-[0.35vw] text-[0.72vw] text-slate-800 font-normal outline-none appearance-none cursor-pointer hover:border-slate-400 transition-colors"
-                      >
-                        <option value="All">All Priorities</option>
-                        {PRIORITIES.map((p) => (
-                          <option key={p} value={p}>{p}</option>
-                        ))}
-                      </select>
-                      <ChevronRight className="w-[0.7vw] h-[0.7vw] text-slate-600 absolute right-[0.45vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
-                    </div>
+                    <CustomDropdown
+                      size="sm"
+                      value={categoryFilter}
+                      onChange={(val) => {
+                        setCategoryFilter(val);
+                        setCurrentPage(1);
+                      }}
+                      options={[
+                        { value: "All", label: "All Categories" },
+                        { value: "OEM", label: "OEM" },
+                        { value: "End Customer", label: "End Customer" },
+                        { value: "Distributor", label: "Distributor" },
+                        { value: "Dealer", label: "Dealer" },
+                      ]}
+                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                    />
                   </div>
 
                   {/* Clear All Filters */}
-                  {(fromDate || toDate || callTypeFilter !== "All" || statusFilter !== "All" || priorityFilter !== "All") && (
+                  {(fromDate || toDate || selectedEmployee || categoryFilter !== "All") && (
                     <div className="pt-[0.3vw] border-t border-slate-200 mt-[0.1vw]">
                       <button
                         onClick={() => {
                           setFromDate("");
                           setToDate("");
-                          setCallTypeFilter("All");
-                          setStatusFilter("All");
-                          setPriorityFilter("All");
+                          setSelectedEmployee(null);
+                          setCategoryFilter("All");
                           setCurrentPage(1);
                         }}
                         className="inline-flex items-center gap-[0.3vw] text-[0.7vw] font-normal text-slate-800 hover:text-rose-600 transition-colors cursor-pointer py-[0.1vw]"
                       >
                         <Filter className="w-[0.75vw] h-[0.75vw] text-slate-800" />
-                        <span>Clear All Filters</span>
+                        <span>Clear Filters</span>
                       </button>
                     </div>
                   )}
@@ -1823,6 +1953,33 @@ const buildEscalationHistoryString = (call, prod) => {
               </>
             )}
           </div>
+
+          {/* Custom Filters Toggle Button */}
+          <button
+            onClick={() => {
+              const nextState = !showCustomFilterBar;
+              setShowCustomFilterBar(nextState);
+              if (nextState && customFilters.length === 0) {
+                setCustomFilters([
+                  { id: Date.now(), field: "customerName", value: "" },
+                ]);
+              }
+            }}
+            className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+              showCustomFilterBar || customFilters.some((cf) => cf.field && cf.value.trim())
+                ? "bg-indigo-50 border-indigo-300 text-indigo-700"
+                : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+            }`}
+            title="Toggle custom field filter rows"
+          >
+            <SlidersHorizontal className="w-[0.8vw] h-[0.8vw]" />
+            <span>Custom Filters</span>
+            {customFilters.some((cf) => cf.field && cf.value.trim()) && (
+              <span className="px-[0.35vw] py-[0.02vw] rounded-full bg-indigo-600 text-white text-[0.62vw] font-bold">
+                {customFilters.filter((cf) => cf.field && cf.value.trim()).length}
+              </span>
+            )}
+          </button>
 
           {/* Select Columns Button & Popover */}
           <div className="relative">
@@ -2084,6 +2241,117 @@ const buildEscalationHistoryString = (call, prod) => {
           </button>
         </div>
       </div>
+
+      {/* ── Dynamic Custom Filters Row (Appears below when Custom Filters is toggled) ── */}
+      {showCustomFilterBar && (
+        <div className="mb-[0.6vw] bg-white border border-slate-300 rounded-[0.6vw] p-[0.6vw] shadow-2xs flex flex-col gap-[0.45vw] shrink-0 animate-in fade-in slide-in-from-top-1 duration-150">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-[0.4vw]">
+              <SlidersHorizontal className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
+              <span className="text-[0.76vw] font-bold text-slate-800">Custom Filters</span>
+              <span className="text-[0.68vw] text-slate-500">
+                (Select field and type search query to filter table records)
+              </span>
+            </div>
+            <div className="flex items-center gap-[0.5vw]">
+              <button
+                type="button"
+                onClick={() => {
+                  const unused = SERVICE_CALL_CUSTOM_FILTER_FIELDS.find(
+                    (f) => !customFilters.some((cf) => cf.field === f.key)
+                  );
+                  setCustomFilters((prev) => [
+                    ...prev,
+                    { id: Date.now() + Math.random(), field: unused?.key || "customerName", value: "" },
+                  ]);
+                }}
+                className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.2vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-md text-[0.7vw] font-bold cursor-pointer transition-colors shadow-2xs"
+              >
+                <Plus className="w-[0.75vw] h-[0.75vw]" />
+                <span>Add Filter</span>
+              </button>
+              {customFilters.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomFilters([]);
+                    setCurrentPage(1);
+                  }}
+                  className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer px-[0.3vw]"
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Filter Rows */}
+          {customFilters.length === 0 ? (
+            <div className="py-[0.5vw] text-center text-slate-400 text-[0.7vw] italic bg-slate-50 border border-dashed border-slate-200 rounded-md">
+              No custom filters active. Click &quot;Add Filter&quot; above to select any column header and enter a value.
+            </div>
+          ) : (
+            <div className="flex items-center gap-[0.5vw] overflow-x-auto pb-[0.35vw] pt-[0.1vw] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+              {customFilters.map((cf, idx) => (
+                <div
+                  key={cf.id}
+                  className="flex items-center gap-[0.3vw] bg-slate-50/90 border border-slate-300 rounded-md px-[0.4vw] py-[0.25vw] shadow-2xs shrink-0"
+                >
+                  {/* Field Selector */}
+                  <div className="relative">
+                    <select
+                      value={cf.field}
+                      onChange={(e) => {
+                        const newField = e.target.value;
+                        setCustomFilters((prev) =>
+                          prev.map((item, i) => (i === idx ? { ...item, field: newField } : item))
+                        );
+                        setCurrentPage(1);
+                      }}
+                      className="h-[1.8vw] pl-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 font-bold outline-none cursor-pointer appearance-none hover:border-slate-400"
+                    >
+                      {SERVICE_CALL_CUSTOM_FILTER_FIELDS.map((f) => (
+                        <option key={f.key} value={f.key}>
+                          {f.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronRight className="w-[0.65vw] h-[0.65vw] text-slate-600 absolute right-[0.35vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                  </div>
+
+                  {/* Value Input */}
+                  <input
+                    type="text"
+                    value={cf.value}
+                    onChange={(e) => {
+                      const newVal = e.target.value;
+                      setCustomFilters((prev) =>
+                        prev.map((item, i) => (i === idx ? { ...item, value: newVal } : item))
+                      );
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Type value..."
+                    className="h-[1.8vw] w-[11vw] px-[0.5vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                  />
+
+                  {/* Delete button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomFilters((prev) => prev.filter((_, i) => i !== idx));
+                      setCurrentPage(1);
+                    }}
+                    className="text-slate-400 hover:text-rose-600 p-[0.2vw] cursor-pointer transition-colors"
+                    title="Remove this filter"
+                  >
+                    <Trash2 className="w-[0.75vw] h-[0.75vw]" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Main Report Display Container ────────────────────────────── */}
       <div className="flex-1 min-h-0 bg-white rounded-lg shadow-sm border border-slate-300 flex flex-col overflow-hidden">
