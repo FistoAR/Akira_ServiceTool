@@ -307,6 +307,7 @@ const EXPORT_COLUMNS = [
   { key: "assignedToName", label: "Claimed By" },
   { key: "testedBy", label: "Tested By" },
   { key: "materialCost", label: "Material Cost" },
+  { key: "manpowerCost", label: "Man Power Cost" },
   { key: "tat", label: "Turnaround Time (TAT)" },
   { key: "ageGroup", label: "Age Group" },
   { key: "fourMCategory", label: "4M Category" },
@@ -320,6 +321,7 @@ const EXPORT_COLUMNS = [
   { key: "status", label: "Status" },
   { key: "finalStatus", label: "Final Status" },
   { key: "remarks", label: "Action Remark" },
+  { key: "total", label: "Total Row (Summary)" },
 ];
 
 const LOCAL_STORAGE_MATERIAL_EXPORT_COLS_KEY = "service_material_reports_export_columns";
@@ -331,13 +333,13 @@ const DEFAULT_MATERIAL_COL_TEMPLATES = [
     id: "tpl_mat_standard",
     name: "Standard Overview",
     isDefault: true,
-    columns: ["sno", "date", "customerName", "customerCode", "productDescription", "productCode", "serialNumber", "qty", "type", "status", "finalStatus"],
+    columns: ["sno", "date", "customerName", "customerCode", "productDescription", "productCode", "serialNumber", "qty", "type", "status", "finalStatus", "total"],
   },
   {
     id: "tpl_mat_customer",
     name: "Customer & Site",
     isDefault: true,
-    columns: ["sno", "date", "customerName", "customerCode", "category", "unit", "site", "refNoCustomer", "refNoInternal", "productCode", "status"],
+    columns: ["sno", "date", "customerName", "customerCode", "category", "unit", "site", "refNoCustomer", "refNoInternal", "productCode", "status", "total"],
   },
   {
     id: "tpl_mat_tech",
@@ -349,7 +351,7 @@ const DEFAULT_MATERIAL_COL_TEMPLATES = [
     id: "tpl_mat_turnaround",
     name: "TAT & Operations",
     isDefault: true,
-    columns: ["sno", "date", "customerName", "productCode", "expectedDeliveryDate", "assignedToName", "testedBy", "materialCost", "tat", "ageGroup", "completedDate", "status"],
+    columns: ["sno", "date", "customerName", "productCode", "expectedDeliveryDate", "assignedToName", "testedBy", "materialCost", "manpowerCost", "tat", "ageGroup", "completedDate", "status", "total"],
   },
   {
     id: "tpl_mat_all",
@@ -921,6 +923,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     let reviewRequiredQty = 0;
     let openQty = 0;
     let totalMaterialCost = 0;
+    let totalManpowerCost = 0;
 
     baseFilteredProducts.forEach(({ product }) => {
       const q = Math.max(1, Number(product.qty) || 1);
@@ -929,6 +932,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       const costNum = Number(product.report?.materialCost || product.materialCost || 0);
       if (!isNaN(costNum) && costNum > 0) {
         totalMaterialCost += costNum;
+      }
+
+      const mpNum = Number(product.report?.manpowerCost || product.manpowerCost || 0);
+      if (!isNaN(mpNum) && mpNum > 0) {
+        totalManpowerCost += mpNum;
       }
 
       const rawStatus = product.status || product.report?.status || "Open";
@@ -964,6 +972,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       reviewRequiredQty,
       openQty,
       totalMaterialCost,
+      totalManpowerCost,
     };
   }, [baseFilteredProducts]);
 
@@ -1123,6 +1132,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
           valA = Number(rA.materialCost || a.product.materialCost || 0);
           valB = Number(rB.materialCost || b.product.materialCost || 0);
           break;
+        case "manpowerCost":
+          valA = Number(rA.manpowerCost || a.product.manpowerCost || 0);
+          valB = Number(rB.manpowerCost || b.product.manpowerCost || 0);
+          break;
         case "tat":
           valA = calculateTatDays(a.entry.date, rA.completedDate) ?? -1;
           valB = calculateTatDays(b.entry.date, rB.completedDate) ?? -1;
@@ -1194,9 +1207,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
     }
 
     try {
-      const activeCols = EXPORT_COLUMNS.filter((c) => selectedExportCols.includes(c.key));
+      const includeTotalRow = selectedExportCols.includes("total");
+      const activeCols = EXPORT_COLUMNS.filter(
+        (c) => c.key !== "total" && selectedExportCols.includes(c.key)
+      );
       let totalQty = 0;
       let totalCost = 0;
+      let totalManpowerCost = 0;
 
       const rows = sortedProducts.map(({ entry, product }, idx) => {
         const report = product.report || {};
@@ -1206,6 +1223,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         const cNum = Number(report.materialCost || product.materialCost || 0);
         if (!isNaN(cNum) && cNum > 0) {
           totalCost += cNum;
+        }
+
+        const mpNum = Number(report.manpowerCost || product.manpowerCost || 0);
+        if (!isNaN(mpNum) && mpNum > 0) {
+          totalManpowerCost += mpNum;
         }
 
         const tatDays = calculateTatDays(entry.date, report.completedDate);
@@ -1233,6 +1255,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
           assignedToName: product.assignedToName || "Unassigned",
           testedBy: report.testedBy || "",
           materialCost: cNum > 0 ? cNum : 0,
+          manpowerCost: mpNum > 0 ? mpNum : 0,
           tat: tatText,
           ageGroup: ageGroup,
           fourMCategory: report.fourMCategory || "",
@@ -1290,14 +1313,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       const ws = XLSX.utils.aoa_to_sheet(metaRows);
       XLSX.utils.sheet_add_json(ws, rows, { origin: "A4" });
 
-      // Append Total Row for Material Cost and Qty
-      const totalRowAoa = activeCols.map((col, cIdx) => {
-        if (cIdx === 0) return "Total";
-        if (col.key === "qty") return totalQty;
-        if (col.key === "materialCost") return totalCost;
-        return "";
-      });
-      XLSX.utils.sheet_add_aoa(ws, [totalRowAoa], { origin: -1 });
+      // Append Total Row for Material Cost, Man Power Cost and Qty if selected in template/columns
+      if (includeTotalRow) {
+        const totalRowAoa = activeCols.map((col, cIdx) => {
+          if (cIdx === 0) return "Total";
+          if (col.key === "qty") return totalQty;
+          if (col.key === "materialCost") return totalCost;
+          if (col.key === "manpowerCost") return totalManpowerCost;
+          return "";
+        });
+        XLSX.utils.sheet_add_aoa(ws, [totalRowAoa], { origin: -1 });
+      }
 
       const totalCols = activeCols.length;
       ws["!merges"] = [
@@ -1405,7 +1431,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
         const isMetaRow = R === 1;
         const isBlankRow = R === 2;
         const isHeader = R === 3;
-        const isTotalRow = R === range.e.r;
+        const isTotalRow = includeTotalRow && R === range.e.r;
 
         if (isBlankRow) continue;
 
@@ -1450,7 +1476,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       }));
       const rowHeights = [{ hpt: 28 }, { hpt: 22 }, { hpt: 8 }, { hpt: 28 }];
       for (let r = 4; r <= range.e.r; r++) {
-        rowHeights.push({ hpt: r === range.e.r ? 26 : 24 });
+        rowHeights.push({ hpt: includeTotalRow && r === range.e.r ? 26 : 24 });
       }
       ws["!rows"] = rowHeights;
 
@@ -2373,11 +2399,24 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         </th>
                         <th
                           onClick={() => handleSort("materialCost")}
+                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right w-[5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                        >
+                          <div className="flex items-center justify-end gap-[0.2vw]">
+                            <span>Material</span>
+                            {sortField === "materialCost" ? (
+                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                            ) : (
+                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                            )}
+                          </div>
+                        </th>
+                        <th
+                          onClick={() => handleSort("manpowerCost")}
                           className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
                           <div className="flex items-center justify-end gap-[0.2vw]">
-                            <span>Cost</span>
-                            {sortField === "materialCost" ? (
+                            <span>Man Power</span>
+                            {sortField === "manpowerCost" ? (
                               sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
                             ) : (
                               <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
@@ -2625,6 +2664,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 )}
                               </td>
 
+                              {/* Man Power Cost */}
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-right font-medium text-slate-800">
+                                {Number(product.report?.manpowerCost || product.manpowerCost) > 0 ? (
+                                  <span>₹{Number(product.report?.manpowerCost || product.manpowerCost).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                                ) : (
+                                  <span className="text-slate-300 font-normal">—</span>
+                                )}
+                              </td>
+
                               {/* TAT */}
                               <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
                                 <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-normal border ${
@@ -2718,7 +2766,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         })
                       )}
                     </tbody>
-                    {/* Total Row for Material Cost and Qty */}
+                    {/* Total Row for Material Cost, Man Power Cost and Qty */}
                     {sortedProducts.length > 0 && (
                       <tfoot className="sticky bottom-0 bg-[#F1F5F9] border-t-2 border-slate-300 font-bold text-[0.74vw] text-slate-800 shadow-[0_-2px_6px_rgba(0,0,0,0.04)] z-10">
                         <tr>
@@ -2731,6 +2779,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           <td className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right font-bold text-indigo-900">
                             {quantityStats.totalMaterialCost > 0
                               ? `₹${quantityStats.totalMaterialCost.toLocaleString()}`
+                              : "—"}
+                          </td>
+                          <td className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right font-bold text-indigo-900">
+                            {quantityStats.totalManpowerCost > 0
+                              ? `₹${quantityStats.totalManpowerCost.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
                               : "—"}
                           </td>
                           <td colSpan={6} className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 bg-[#F1F5F9]"></td>
