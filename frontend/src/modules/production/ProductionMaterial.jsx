@@ -58,7 +58,7 @@ const fmtDate = (s) => {
 const emptyProduct = () => ({
   _pid: `p-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
   productCode: "", productDescription: "", category: "", boardType: "", productType: "", productSegment: "", problemType: "", ncType: "Internal", problem: "", problemDescription: "",
-  repeatability: "No", delayTime: "", designators: "", boardImage: "",
+  repeatability: "0", delayTime: "", designators: "", boardImage: "",
   qty: "1", stage: DEFAULT_STAGE_OPTIONS[0],
   serialNumber: "", identification: "", inspectedBy: "", inspectedByName: "",
   assignedTo: "", assignedToName: "", assembledBy: "", assembledByName: "", testedBy: "", testedByName: "", fiBy: "", fiByName: "",
@@ -1264,6 +1264,14 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
       category: newCustomer.partyType || p.category,
     }));
     setCustSearch(newCustomer.partyDescription);
+    setProducts((prev) =>
+      prev.map((p) => ({
+        ...p,
+        productCode: "",
+        productDescription: "",
+        productSegment: "",
+      })),
+    );
     toast("Customer added successfully!", "success");
     setShowAddCustModal(false);
   };
@@ -1287,6 +1295,14 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
     }));
     setCustSearch(c.name);
     setShowCustDrop(false);
+    setProducts((prev) =>
+      prev.map((p) => ({
+        ...p,
+        productCode: "",
+        productDescription: "",
+        productSegment: "",
+      })),
+    );
   };
 
   const onCustKeyDown = (e) => {
@@ -1421,6 +1437,14 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                           setCustSearch("");
                           setBase(p => ({ ...p, customerName: "", customerCode: "", category: "" }));
                           setShowCustDrop(false);
+                          setProducts((prev) =>
+                            prev.map((p) => ({
+                              ...p,
+                              productCode: "",
+                              productDescription: "",
+                              productSegment: "",
+                            })),
+                          );
                         }}
                         className="absolute right-[0.5vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
                         title="Clear customer"
@@ -2414,13 +2438,8 @@ export default function ProductionMaterial() {
                               : h === "Actions"
                               ? "6.5vw"
                               : "8vw",
-                          ...(h === "Actions" ? { right: 0 } : {}),
                         }}
-                        className={`px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7] ${
-                          h === "Actions"
-                            ? "border-l sticky right-0 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]"
-                            : ""
-                        }`}
+                        className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
                       >
                         {h}
                       </th>
@@ -2790,7 +2809,13 @@ export default function ProductionMaterial() {
 
                                           {/* Repeatability */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.74vw]">
-                                            {prod.repeatability || "No"}
+                                            <span className={`inline-block px-[0.5vw] py-[0.08vw] rounded-[0.25vw] font-mono text-[0.72vw] ${
+                                              Number(prod.repeatability) > 0 
+                                                ? "bg-amber-50 text-amber-700 border border-amber-200 font-semibold" 
+                                                : "text-slate-600"
+                                            }`}>
+                                              {prod.repeatability !== undefined && prod.repeatability !== "" ? prod.repeatability : "0"}
+                                            </span>
                                           </td>
 
                                           {/* Serial Number */}
@@ -2833,9 +2858,9 @@ export default function ProductionMaterial() {
                                             {prod.finalStatusRemarks || "—"}
                                           </td>
 
-                                          {/* Actions (Sticky Right) */}
+                                          {/* Actions */}
                                           <td
-                                            className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-l border-b border-slate-300 sticky right-0 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${
+                                            className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-b border-slate-300 ${
                                               isSelected ? "bg-blue-50/70" : "bg-white"
                                             }`}
                                           >

@@ -154,6 +154,46 @@ const ProductionEditableProductTable = ({
     setSelectedIndex(-1);
   }, [filteredProds]);
 
+  // Recalculate repeatability dynamically whenever products combination changes
+  // Combination: Product Segment + Board Type + Problem Type + NC Type + Problem Description
+  useEffect(() => {
+    if (isReadOnly) return;
+    const seenCounts = {};
+    let needsUpdate = false;
+
+    const updated = products.map((prod) => {
+      const seg = (prod.productSegment || prod.productType || "").trim().toLowerCase();
+      const bType = (prod.boardType || "").trim().toLowerCase();
+      const pType = (prod.problemType || "").trim().toLowerCase();
+      const nType = (prod.ncType || "Internal").trim().toLowerCase();
+      const desc = (prod.problemDescription !== undefined ? prod.problemDescription : (prod.problem || "")).trim().toLowerCase();
+
+      // If key combo has values, calculate repeatability count
+      let currentCount = 0;
+      if (seg || bType || pType || desc) {
+        const comboKey = `${seg}|${bType}|${pType}|${nType}|${desc}`;
+        if (seenCounts[comboKey] === undefined) {
+          seenCounts[comboKey] = 0;
+          currentCount = 0;
+        } else {
+          seenCounts[comboKey] += 1;
+          currentCount = seenCounts[comboKey];
+        }
+      }
+
+      const countStr = String(currentCount);
+      if (prod.repeatability !== countStr) {
+        needsUpdate = true;
+        return { ...prod, repeatability: countStr };
+      }
+      return prod;
+    });
+
+    if (needsUpdate) {
+      setProducts(updated);
+    }
+  }, [products, isReadOnly, setProducts]);
+
   const onDragEnd = (result) => {
     if (!result.destination || isReadOnly) return;
     const items = Array.from(products);
@@ -252,7 +292,14 @@ const ProductionEditableProductTable = ({
         if (r === startRow) continue; 
         for (let c = minC; c <= maxC; c++) {
           const field = COLUMN_FIELDS[c];
-          if (field && field !== 'productCode' && field !== '_pid') {
+          if (field === 'productCode' || field === 'productDescription') {
+            newProducts[r] = {
+              ...newProducts[r],
+              productCode: sourceRow.productCode || "",
+              productDescription: sourceRow.productDescription || newProducts[r].productDescription || "",
+              productSegment: sourceRow.productSegment || newProducts[r].productSegment || "",
+            };
+          } else if (field && field !== '_pid') {
             newProducts[r] = { ...newProducts[r], [field]: sourceRow[field] };
           }
         }
@@ -392,7 +439,7 @@ const ProductionEditableProductTable = ({
             {!isReadOnly && <th className="w-[3vw] py-[0.7vw] px-[0.4vw] border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
             <th className="w-[3.5vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
             <th className="min-w-[18vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
+            <th className="min-w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
             <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
@@ -404,8 +451,8 @@ const ProductionEditableProductTable = ({
             <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
-            <th className="w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
+            <th className="w-[8vw] min-w-[7.5vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
+            <th className="w-[14vw] min-w-[13vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
             {!isReadOnly && <th className="sticky right-0 w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
@@ -498,16 +545,14 @@ const ProductionEditableProductTable = ({
                           )}
                         </td>
 
-                        {/* 1. Code */}
+                        {/* 1. Code (Read-only, auto applied from DB) */}
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
-                          <input
-                            type="text"
-                            value={prod.productCode || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "productCode", e.target.value)}
-                            disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-mono text-[0.8vw] disabled:bg-transparent"
-                            placeholder="Code"
-                          />
+                          <div 
+                            className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-mono font-medium text-[0.78vw] truncate select-text cursor-default" 
+                            title={prod.productCode || ""}
+                          >
+                            {prod.productCode || "—"}
+                          </div>
                           {renderFillHandle(index, 1)}
                         </td>
 
@@ -607,24 +652,20 @@ const ProductionEditableProductTable = ({
                           {renderFillHandle(index, 6)}
                         </td>
 
-                        {/* 7. Repeatability */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
-                          <CustomDropdown
-                            value={prod.repeatability || "No"}
-                            onChange={(val) => handleUpdate(prod._pid, "repeatability", val)}
-                            disabled={isReadOnly}
-                            placeholder="Select"
-                            size="sm"
-                            options={repeatabilityOptions}
-                            usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
-                              isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
-                            }`}
-                            className="w-full"
-                          />
+                        {/* 7. Repeatability (Auto-calculated number based on Segment + Board Type + Problem Type + NC Type + Problem Description) */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all text-center ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
+                          <div 
+                            className="text-slate-800 font-medium text-[0.78vw] py-[0.4vw] px-[0.4vw] text-center select-text cursor-default"
+                            title="Auto-calculated repeatability count for matching Segment, Board Type, Problem Type, NC Type & Description"
+                          >
+                            <span className={`inline-block px-[0.55vw] py-[0.1vw] rounded-[0.3vw] font-mono ${
+                              Number(prod.repeatability) > 0 
+                                ? "bg-amber-50 text-amber-700 border border-amber-200 font-semibold" 
+                                : "bg-slate-50 text-slate-600 border border-slate-200"
+                            }`}>
+                              {prod.repeatability !== undefined && prod.repeatability !== "" ? prod.repeatability : "0"}
+                            </span>
+                          </div>
                           {renderFillHandle(index, 7)}
                         </td>
 
@@ -734,8 +775,10 @@ const ProductionEditableProductTable = ({
                             placeholder="Select"
                             size="sm"
                             options={employeeDropdownOptions}
+                            searchable={true}
+                            searchPlaceholder="Search employee..."
                             usePortal={true}
-                            maxHeight="10.5vw"
+                            maxHeight="12vw"
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
@@ -817,8 +860,10 @@ const ProductionEditableProductTable = ({
                             placeholder="Select Employee"
                             size="sm"
                             options={employeeDropdownOptions}
+                            searchable={true}
+                            searchPlaceholder="Search employee..."
                             usePortal={true}
-                            maxHeight="10.5vw"
+                            maxHeight="12vw"
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
