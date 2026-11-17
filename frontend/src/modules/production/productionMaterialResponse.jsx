@@ -4,9 +4,11 @@ import {
   FileText, Calendar, Hash, Tag, Wrench,
   AlertTriangle, Info, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Plus, Search, Check, Edit3, RotateCcw
 } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -52,6 +54,7 @@ const STATUS_CONFIG = {
   "Pending":            { color: "slate",  icon: Clock,          bg: "bg-slate-100",  border: "border-slate-300",  text: "text-slate-800" },
   "Completed":          { color: "green",  icon: CheckCircle,    bg: "bg-green-100",  border: "border-green-300",  text: "text-green-800" },
   "Not Repairable":     { color: "red",    icon: AlertTriangle,  bg: "bg-red-100",    border: "border-red-300",    text: "text-red-800" },
+  "Admin Returned":     { color: "purple", icon: AlertTriangle,  bg: "bg-purple-100", border: "border-purple-300", text: "text-purple-800" },
 };
 
 // ── Read-only Input Field ─────────────────────────────────────────────────────
@@ -139,11 +142,11 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
                       className={`px-[0.8vw] py-[0.5vw] text-[0.78vw] cursor-pointer flex items-center justify-between hover:bg-blue-50 transition-colors ${value === opt.value ? "bg-blue-50 text-blue-700 font-bold" : "text-gray-700"}`}
                     >
                       <span>{opt.label}</span>
-                      {value === opt.value && <Check className="w-[0.9vw] h-[0.9vw]" />}
+                      {value === opt.value && <Check className="w-[0.9vw] h-[0.9vw] text-blue-600" />}
                     </div>
                   ))
                 ) : (
-                  <div className="px-[0.8vw] py-[1vw] text-[0.75vw] text-gray-400 text-center italic">No results found</div>
+                  <div className="p-[0.6vw] text-center text-gray-400 text-[0.75vw]">No options found</div>
                 )}
               </div>
             </motion.div>
@@ -157,11 +160,11 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
 // ── Production Response Modal ──────────────────────────────────────────────────
 const ProductionResponseModal = ({ entry, product, employees, fourMCategories, onSave, onClose, caeHistory }) => {
   const [formData, setFormData] = useState({
-    startDate: product.report?.startDate?.split("T")[0] || todayDateStr(),
+    startDate: product.report?.startDate ? product.report.startDate.split('T')[0] : todayDateStr(),
     fourMCategory: product.report?.fourMCategory || "",
-    rootCause: product.report?.rootCause || "",
-    correctiveAction: product.report?.correctiveAction || "",
-    closedDate: product.report?.closedDate?.split("T")[0] || "",
+    rootCause: product.report?.rootCause || product.initialRootCause || "",
+    correctiveAction: product.report?.correctiveAction || product.correction || "",
+    closedDate: product.report?.closedDate ? product.report.closedDate.split('T')[0] : "",
     assembledBy: product.report?.assembledBy || "",
     assembledByName: product.report?.assembledByName || "",
     testedBy: product.report?.testedBy || "",
@@ -176,31 +179,32 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
   const STATUS_OPTIONS = ["Under Testing", "Repair in Progress", "Pending", "Completed", "Not Repairable"];
   
   const employeeOptions = useMemo(() => 
-    employees.map(e => ({ value: e.userId || e.id, label: e.name })), 
+    employees.map(e => ({ value: e.userId || e.id || e._id, label: e.name })), 
   [employees]);
+
+  const { toast } = useNotification();
 
   const sp = (k, v) => setFormData(p => ({ ...p, [k]: v }));
 
   const handleSave = () => {
-    if (!formData.startDate) return alert("Start Date is mandatory.");
-    if (!formData.fourMCategory) return alert("4M Category is mandatory.");
-    if (!formData.rootCause.trim()) return alert("Root Cause Analysis is mandatory.");
-    if (!formData.correctiveAction.trim()) return alert("Corrective Action is mandatory.");
-    if (formData.status === "Completed" && !formData.closedDate) return alert("Closed Date is mandatory for 'Completed' status.");
+    if (!formData.fourMCategory) return toast("4M Category is mandatory", "error");
+    if (!formData.rootCause) return toast("Root Cause is mandatory", "error");
+    if (!formData.correctiveAction) return toast("Corrective Action is mandatory", "error");
+    if (formData.status === "Completed" && !formData.closedDate) return toast("Closed Date is mandatory on Completion", "error");
 
     const historyEntry = {
       status: formData.status,
-      remark: formData.currentRemark,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      remark: formData.currentRemark || `Status set to ${formData.status}`
     };
 
-    const updatedReport = {
+    const finalReport = {
       ...formData,
-      lastUpdated: new Date().toISOString(),
+      lastUpdated: new Date(),
       history: [...(product.report?.history || []), historyEntry]
     };
 
-    onSave(updatedReport);
+    onSave(finalReport);
   };
 
   const currentStatus = STATUS_CONFIG[formData.status] || STATUS_CONFIG["Open"];
@@ -247,12 +251,12 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               
               <RefInput label="Product Description" value={product.productDescription} span={2} />
               <RefInput label="Product Code" value={product.productCode} />
-              <RefInput label="Product Type" value={product.productType} />
+              <RefInput label="Product Segment" value={product.productSegment || product.productType} />
 
-              <RefInput label="Stage" value={product.stage} />
+              <RefInput label="Detection Stage" value={product.stage} />
               <RefInput label="NC Type" value={product.ncType} />
               <RefInput label="Problem Type" value={product.problemType} />
-              <RefInput label="Problem Reported" value={product.problem} />
+              <RefInput label="Problem Reported" value={product.problem || product.problemDescription} />
               <RefInput label="Qty" value={product.qty} />
               <RefInput label="Inspected By" value={product.inspectedByName} />
               <RefInput label="Designators" value={product.designators} />
@@ -285,10 +289,15 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                 </div>
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.76vw] font-semibold text-slate-700">4M Category <span className="text-rose-500">*</span></label>
-                  <select value={formData.fourMCategory} onChange={e => sp("fourMCategory", e.target.value)} className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer">
-                    <option value="">Select Category</option>
-                    {fourMCategories?.map(c => <option key={c._id || c.id} value={c.name || c}>{c.name || c}</option>)}
-                  </select>
+                  <CustomDropdown
+                    value={formData.fourMCategory}
+                    onChange={val => sp("fourMCategory", val)}
+                    options={(fourMCategories || []).map(c => ({ value: c.name || c._id || c, label: c.name || c }))}
+                    placeholder="Select Category"
+                    size="sm"
+                    usePortal={true}
+                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+                  />
                 </div>
               </div>
 
@@ -308,10 +317,58 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                 <textarea rows="2" value={formData.partsReplacement} onChange={e => sp("partsReplacement", e.target.value)} placeholder="Enter parts replaced (comma separated)..." className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all w-full" />
               </div>
 
-              <div className="grid grid-cols-4 gap-[1vw]">
-                <SearchableSelect label="Assembled By" value={formData.assembledBy} options={employeeOptions} onSelect={(val, lbl) => { sp("assembledBy", val); sp("assembledByName", lbl); }} placeholder="Search employee..." />
-                <SearchableSelect label="Tested By" value={formData.testedBy} options={employeeOptions} onSelect={(val, lbl) => { sp("testedBy", val); sp("testedByName", lbl); }} placeholder="Search employee..." />
-                <SearchableSelect label="FI By" value={formData.fiBy} options={employeeOptions} onSelect={(val, lbl) => { sp("fiBy", val); sp("fiByName", lbl); }} placeholder="Search employee..." />
+              <div className="grid grid-cols-3 gap-[1vw]">
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.8vw] font-semibold text-black">Assembled By</label>
+                  <CustomDropdown
+                    value={formData.assembledBy}
+                    onChange={(val) => {
+                      const opt = employeeOptions.find(e => e.value === val);
+                      sp("assembledBy", val);
+                      sp("assembledByName", opt?.label || "");
+                    }}
+                    options={employeeOptions}
+                    placeholder="Search employee..."
+                    searchable={true}
+                    size="sm"
+                    usePortal={true}
+                    triggerClassName="!h-[2.3vw] !rounded-[0.4vw] text-[0.78vw] font-medium text-slate-800 border-slate-300 bg-white"
+                  />
+                </div>
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.8vw] font-semibold text-black">Tested By</label>
+                  <CustomDropdown
+                    value={formData.testedBy}
+                    onChange={(val) => {
+                      const opt = employeeOptions.find(e => e.value === val);
+                      sp("testedBy", val);
+                      sp("testedByName", opt?.label || "");
+                    }}
+                    options={employeeOptions}
+                    placeholder="Search employee..."
+                    searchable={true}
+                    size="sm"
+                    usePortal={true}
+                    triggerClassName="!h-[2.3vw] !rounded-[0.4vw] text-[0.78vw] font-medium text-slate-800 border-slate-300 bg-white"
+                  />
+                </div>
+                <div className="flex flex-col gap-[0.3vw]">
+                  <label className="text-[0.8vw] font-semibold text-black">FI By</label>
+                  <CustomDropdown
+                    value={formData.fiBy}
+                    onChange={(val) => {
+                      const opt = employeeOptions.find(e => e.value === val);
+                      sp("fiBy", val);
+                      sp("fiByName", opt?.label || "");
+                    }}
+                    options={employeeOptions}
+                    placeholder="Search employee..."
+                    searchable={true}
+                    size="sm"
+                    usePortal={true}
+                    triggerClassName="!h-[2.3vw] !rounded-[0.4vw] text-[0.78vw] font-medium text-slate-800 border-slate-300 bg-white"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-4 gap-[1vw]">
@@ -321,9 +378,15 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                 </div>
                 <div className="flex flex-col gap-[0.3vw]">
                   <label className="text-[0.76vw] font-semibold text-slate-700">Current Status <span className="text-rose-500">*</span></label>
-                  <select value={formData.status} onChange={e => sp("status", e.target.value)} className={`border rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none shadow-2xs cursor-pointer ${currentStatus.bg} ${currentStatus.border} ${currentStatus.text} font-semibold`}>
-                    {STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                  </select>
+                  <CustomDropdown
+                    value={formData.status}
+                    onChange={val => sp("status", val)}
+                    options={STATUS_OPTIONS.map(opt => ({ value: opt, label: opt }))}
+                    placeholder="Select Status"
+                    size="sm"
+                    usePortal={true}
+                    triggerClassName={`!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-semibold border ${currentStatus.bg} ${currentStatus.border} ${currentStatus.text}`}
+                  />
                 </div>
                 <div className="flex flex-col gap-[0.3vw] col-span-2">
                   <label className="text-[0.76vw] font-semibold text-slate-700">Action Remark</label>
@@ -381,7 +444,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
           <div className="grid grid-cols-2 gap-[1.2vw]">
             <div className="space-y-[0.8vw]">
                <h4 className="text-[0.8vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
-                 <Target className="w-[0.9vw] h-[0.9vw]" /> Inward Information
+                 <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" /> Inward Information
                </h4>
                <div className="grid grid-cols-1 gap-[0.6vw]">
                  <RefInput label="Registration Date" value={fmtDate(entry.date)} />
@@ -399,7 +462,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
                  <RefInput label="Code" value={product.productCode} />
                  <RefInput label="NC Type" value={product.ncType || "Internal"} />
                  <RefInput label="Qty" value={product.qty || "1"} />
-                 <RefInput label="Serial Number" value={product.serialNumber} />
+                 <RefInput label="Serial Number" value={product.serialNumber || product.identification} />
                  <RefInput label="Current Status" value={product.report?.status || "Open"} />
                </div>
             </div>
@@ -453,6 +516,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
     </div>
   );
 };
+
 export default function ProductionMaterialResponse() {
   const { toast } = useNotification();
   const [entries, setEntries] = useState([]);
@@ -470,6 +534,15 @@ export default function ProductionMaterialResponse() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [expandedCustomerDetails, setExpandedCustomerDetails] = useState({});
+
+  const toggleCustomerDetails = (custName, e) => {
+    if (e) e.stopPropagation();
+    setExpandedCustomerDetails(prev => ({
+      ...prev,
+      [custName]: !prev[custName]
+    }));
+  };
 
   // Reset pagination when filter changes
   useEffect(() => {
@@ -552,17 +625,75 @@ export default function ProductionMaterialResponse() {
   }, [entries, currentUser]);
 
   const counts = useMemo(() => {
-    const c = { All: myProducts.length };
-    ["Open", "Under Testing", "Repair in Progress", "Pending", "Completed", "Not Repairable"].forEach(s => {
-      c[s] = myProducts.filter(p => (p.product.report?.status || "Open") === s).length;
+    const c = { 
+      All: myProducts.length,
+      "Repair in Progress": 0,
+      Pending: 0,
+      "Not Repairable": 0,
+      "Under Testing": 0,
+      Completed: 0,
+      "Admin Returned": 0
+    };
+    myProducts.forEach(({ product }) => {
+      const rawStatus = product.report?.status || "Open";
+      const isAdminReturned =
+        rawStatus === "Completed" &&
+        (product.finalStatusHistory?.length ?? 0) > 0 &&
+        product.finalStatus !== "Completed";
+
+      if (isAdminReturned) {
+        c["Admin Returned"]++;
+      } else {
+        const s = rawStatus === "Open" ? "Pending" : rawStatus;
+        if (c[s] !== undefined) {
+          c[s]++;
+        }
+      }
     });
     return c;
   }, [myProducts]);
 
+  const STATUS_CHIPS = [
+    { label: "All" },
+    { label: "Repair in Progress" },
+    { label: "Pending" },
+    { label: "Not Repairable" },
+    { label: "Under Testing" },
+    { label: "Completed" },
+    { label: "Admin Returned" }
+  ];
+
   const allProducts = useMemo(() => {
     let filtered = myProducts;
     if (filterStatus !== "All") {
-      filtered = filtered.filter(p => (p.product.report?.status || "Open") === filterStatus);
+      if (filterStatus === "Admin Returned") {
+        filtered = filtered.filter(({ product }) => {
+          const rawStatus = product.report?.status || "Open";
+          return (
+            rawStatus === "Completed" &&
+            (product.finalStatusHistory?.length ?? 0) > 0 &&
+            product.finalStatus !== "Completed"
+          );
+        });
+      } else if (filterStatus === "Pending") {
+        filtered = filtered.filter(({ product }) => {
+          const rawStatus = product.report?.status || "Open";
+          const isAdminReturned =
+            rawStatus === "Completed" &&
+            (product.finalStatusHistory?.length ?? 0) > 0 &&
+            product.finalStatus !== "Completed";
+          return !isAdminReturned && (rawStatus === "Pending" || rawStatus === "Open");
+        });
+      } else {
+        filtered = filtered.filter(({ product }) => {
+          const rawStatus = product.report?.status || "Open";
+          const isAdminReturned =
+            rawStatus === "Completed" &&
+            (product.finalStatusHistory?.length ?? 0) > 0 &&
+            product.finalStatus !== "Completed";
+          return !isAdminReturned && rawStatus === filterStatus;
+        });
+      }
     }
     if (dateFrom) {
       filtered = filtered.filter(p => (p.entry.date || "").slice(0, 10) >= dateFrom);
@@ -624,7 +755,7 @@ export default function ProductionMaterialResponse() {
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
               >
                 <X className="w-[0.7vw] h-[0.7vw]" />
               </button>
@@ -724,16 +855,8 @@ export default function ProductionMaterialResponse() {
         <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
           {/* Integrated Header: Segment Track on left, Result count on right */}
           <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.35vw] max-w-full overflow-x-auto">
-              {[
-                { label: "All", dot: "bg-blue-600" },
-                { label: "Open", dot: "bg-slate-400" },
-                { label: "Under Testing", dot: "bg-blue-500" },
-                { label: "Repair in Progress", dot: "bg-amber-500" },
-                { label: "Pending", dot: "bg-orange-500" },
-                { label: "Completed", dot: "bg-emerald-600" },
-                { label: "Not Repairable", dot: "bg-rose-600" }
-              ].map(({ label, dot }) => {
+            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
+              {STATUS_CHIPS.map(({ label }) => {
                 const isActive = filterStatus === label;
                 const count = counts[label] ?? 0;
                 return (
@@ -741,27 +864,20 @@ export default function ProductionMaterialResponse() {
                     key={label}
                     type="button"
                     onClick={() => setFilterStatus(label)}
-                    className={`flex items-center gap-[0.55vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                    className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                       isActive
                         ? "bg-blue-600 text-white shadow-xs font-semibold"
                         : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                     }`}
                   >
-                    {label !== "All" && (
-                      <span
-                        className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${
-                          isActive ? "bg-white" : dot
-                        }`}
-                      />
-                    )}
                     <span className={isActive ? "text-white" : "text-slate-700"}>
                       {label}
                     </span>
                     <span
-                      className={`text-[0.68vw] font-medium ml-[0.25vw] transition-all ${
+                      className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
                         isActive
-                          ? "bg-white/20 text-white px-[0.42vw] py-[0.05vw] rounded-full"
-                          : "text-slate-400 bg-slate-200/60 px-[0.42vw] py-[0.05vw] rounded-full"
+                          ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                          : "text-slate-400"
                       }`}
                     >
                       {count}
@@ -810,26 +926,96 @@ export default function ProductionMaterialResponse() {
                       const isNewCustomer = entry.customerName !== lastCustomer;
                       lastCustomer = entry.customerName;
 
-                      const status = product.report?.status || "Open";
+                      const rawStatus = product.report?.status || "Open";
+                      const isAdminReturned =
+                        rawStatus === "Completed" &&
+                        (product.finalStatusHistory?.length ?? 0) > 0 &&
+                        product.finalStatus !== "Completed";
+                      
+                      const status = isAdminReturned ? "Admin Returned" : rawStatus;
                       const cfg = STATUS_CONFIG[status] || STATUS_CONFIG["Open"];
+                      const isExpanded = !!expandedCustomerDetails[entry.customerName];
                       
                       return (
                         <React.Fragment key={`${entry.id}-${product._pid}`}>
                           {isNewCustomer && (
-                            <tr className="bg-slate-50/70 border-y border-slate-200 sticky top-[2.2vw] z-10">
-                              <td colSpan={9} className="px-[0.9vw] py-[0.35vw] border-b border-slate-200 border-r border-slate-300">
-                                <div className="flex items-center gap-[0.5vw]">
-                                  <div className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full" />
-                                  <span className="text-[0.78vw] font-bold text-slate-800">
+                            <tr className="bg-slate-50/80 border-y border-slate-300">
+                              <td colSpan={9} className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[2.2vw] z-20 shadow-2xs">
+                                <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
+                                  <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
+                                  <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
                                     {entry.customerName}
                                   </span>
-                                  <span className="text-[0.65vw] font-mono text-slate-500 bg-white px-[0.45vw] py-[0.05vw] rounded-full border border-slate-200 ml-[0.3vw]">
-                                    {entry.customerCode || "N/A"}
+
+                                  {/* Toggle button to reveal / hide customer details */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => toggleCustomerDetails(entry.customerName, e)}
+                                    title={isExpanded ? "Collapse customer details" : "Expand customer details"}
+                                    className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.2vw] shadow-2xs"
+                                  >
+                                    <Icon
+                                      icon={isExpanded ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
+                                      className="w-[0.75vw] h-[0.75vw]"
+                                    />
+                                  </button>
+
+                                  {/* Customer metadata badges: hidden by default, revealed on clicking chevron */}
+                                  {isExpanded && (
+                                    <div className="flex items-center gap-[0.4vw] flex-wrap animate-in fade-in duration-200">
+                                      {entry.customerCode && (
+                                        <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.3vw]">
+                                          Code: {entry.customerCode}
+                                        </span>
+                                      )}
+                                      {entry.jobOrderNo && (
+                                        <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                          Cust Ref: {entry.jobOrderNo}
+                                        </span>
+                                      )}
+                                      {entry.refNoInternal && (
+                                        <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                          Int Ref: {entry.refNoInternal}
+                                        </span>
+                                      )}
+                                      {entry.category && (
+                                        <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                          Type: {entry.category}
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+
+                          {/* Admin Returned Banner Row if returned */}
+                          {isAdminReturned && (
+                            <tr className="bg-amber-50/90 border-t-2 border-b border-amber-300">
+                              <td colSpan={9} className="p-0 border-b border-amber-300 bg-amber-50">
+                                <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.45vw] flex-wrap">
+                                  <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.74vw] font-semibold shadow-2xs">
+                                    <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
+                                    Admin Returned / Declined
+                                  </span>
+                                  <span className="inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.7vw] font-medium bg-amber-50 text-amber-700 border-amber-300">
+                                    {product.finalStatus || "Admin Returned"}
+                                  </span>
+                                  {product.finalStatusRemarks && (
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-800 font-normal bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
+                                      <Icon icon="solar:chat-round-dots-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                                      <span className="font-medium text-slate-900">Admin Reason:</span> {product.finalStatusRemarks}
+                                    </span>
+                                  )}
+                                  <span className="text-[0.72vw] text-amber-800 italic ml-[0.3vw]">
+                                    Please edit and click Update Report to re-submit to Admin
                                   </span>
                                 </div>
                               </td>
                             </tr>
                           )}
+
                           <tr className="hover:bg-slate-50/70 transition-colors bg-white">
                             {/* SNo */}
                             <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 font-bold text-slate-800 text-[0.76vw]">
@@ -856,7 +1042,7 @@ export default function ProductionMaterialResponse() {
                             {/* Product */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
                               <div className="text-[0.76vw] font-medium text-slate-800 leading-tight">{product.productDescription}</div>
-                              <div className="text-[0.68vw] text-slate-500 mt-[0.1vw] font-mono">S/N: {product.serialNumber || "—"}</div>
+                              <div className="text-[0.68vw] text-slate-500 mt-[0.1vw] font-mono">S/N: {product.serialNumber || product.identification || "—"}</div>
                             </td>
 
                             {/* Qty */}
@@ -912,78 +1098,105 @@ export default function ProductionMaterialResponse() {
                 </div>
                 <div className="flex items-center gap-[0.4vw]">
                   <span className="text-[0.72vw] text-slate-500 font-medium">Rows:</span>
-                  <select 
-                    value={itemsPerPage} 
-                    onChange={(e) => {
-                      setItemsPerPage(Number(e.target.value));
-                      setCurrentPage(1);
-                    }}
-                    className="bg-white border border-slate-200 rounded-full px-[0.5vw] py-[0.1vw] text-[0.72vw] font-semibold text-slate-700 outline-none focus:border-blue-500 cursor-pointer shadow-2xs"
-                  >
-                    {[10, 20, 50, 100].map(v => <option key={v} value={v}>{v}</option>)}
-                  </select>
+                  <div className="w-[5vw]">
+                    <CustomDropdown
+                      value={itemsPerPage}
+                      onChange={val => { setItemsPerPage(Number(val)); setCurrentPage(1); }}
+                      options={[
+                        { value: 10, label: "10" },
+                        { value: 20, label: "20" },
+                        { value: 50, label: "50" }
+                      ]}
+                      size="sm"
+                      usePortal={true}
+                      placement="top"
+                      triggerClassName="!h-[1.8vw] !rounded-full !px-[0.5vw] text-[0.72vw] font-semibold text-slate-700 border-slate-200 bg-white shadow-2xs"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-[0.5vw]">
+              {/* Bottom Pagination Controls */}
+              <div className="flex items-center gap-[0.35vw]">
                 <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(1)}
+                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.7vw]"
+                  title="First Page"
+                >
+                  «
+                </button>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
                 >
                   <ChevronDown className="w-[0.85vw] h-[0.85vw] rotate-90" />
                 </button>
-                <div className="flex gap-[0.3vw]">
+                <div className="flex items-center gap-[0.2vw] px-[0.3vw]">
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))
-                    .map(pNum => (
-                      <button
-                        key={pNum}
-                        onClick={() => setCurrentPage(pNum)}
-                        className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
-                      >
-                        {pNum}
-                      </button>
-                    ))}
+                    .filter(pNum => pNum === 1 || pNum === totalPages || Math.abs(pNum - currentPage) <= 1)
+                    .map((pNum, pIdx, arr) => {
+                      const prev = arr[pIdx - 1];
+                      return (
+                        <React.Fragment key={pNum}>
+                          {prev && pNum - prev > 1 && <span className="text-[0.7vw] text-slate-400 px-[0.1vw]">...</span>}
+                          <button
+                            onClick={() => setCurrentPage(pNum)}
+                            className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+                          >
+                            {pNum}
+                          </button>
+                        </React.Fragment>
+                      );
+                    })}
                 </div>
                 <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages || totalPages === 0}
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
                 >
                   <ChevronUp className="w-[0.85vw] h-[0.85vw] rotate-90" />
+                </button>
+                <button
+                  disabled={currentPage === totalPages || totalPages === 0}
+                  onClick={() => setCurrentPage(totalPages)}
+                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.7vw]"
+                  title="Last Page"
+                >
+                  »
                 </button>
               </div>
             </div>
           )}
         </div>
+
+        {/* Modal: Update Technical Report */}
+        <AnimatePresence>
+          {selected && (
+            <ProductionResponseModal
+              entry={selected.entry}
+              product={selected.product}
+              employees={employees}
+              fourMCategories={fourMCategories}
+              caeHistory={caeHistory}
+              onSave={handleSaveReport}
+              onClose={() => setSelected(null)}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Modal: View Details */}
+        <AnimatePresence>
+          {infoSelected && (
+            <ProductionInfoModal
+              entry={infoSelected.entry}
+              product={infoSelected.product}
+              onClose={() => setInfoSelected(null)}
+            />
+          )}
+        </AnimatePresence>
       </div>
-
-      {/* Response Modal */}
-      <AnimatePresence>
-        {selected && (
-          <ProductionResponseModal
-            entry={selected.entry}
-            product={selected.product}
-            employees={employees}
-            fourMCategories={fourMCategories}
-            onClose={() => setSelected(null)}
-            onSave={handleSaveReport}
-            caeHistory={caeHistory}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Info Modal */}
-      <AnimatePresence>
-        {infoSelected && (
-          <ProductionInfoModal
-            entry={infoSelected.entry}
-            product={infoSelected.product}
-            onClose={() => setInfoSelected(null)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

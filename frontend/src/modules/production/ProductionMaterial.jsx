@@ -3,13 +3,15 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Search, X, Trash2, Save, ArrowLeft, Plus, User, Package, ChevronDown,
   ChevronUp, Eye, Target, ClipboardList, Edit3, Clock, History, FileText, AlertCircle, CheckCircle, Wrench,
-  Calendar, RotateCcw
+  Calendar, RotateCcw, UserPlus, PlusCircle, MinusCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import ProductionEditableProductTable from "./ProductionEditableProductTable";
 import useModulePermissions from "../../components/useModulePermissions";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -55,11 +57,12 @@ const fmtDate = (s) => {
 
 const emptyProduct = () => ({
   _pid: `p-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-  productCode: "", productDescription: "", category: "", boardType: "", productType: "", problemType: "", ncType: "Internal", problem: "", 
-  inspectedBy: "", inspectedByName: "", designators: "", boardImage: "",
+  productCode: "", productDescription: "", category: "", boardType: "", productType: "", productSegment: "", problemType: "", ncType: "Internal", problem: "", problemDescription: "",
+  repeatability: "No", delayTime: "", designators: "", boardImage: "",
   qty: "1", stage: DEFAULT_STAGE_OPTIONS[0],
-  serialNumber: "", assignedTo: "", assignedToName: "", assembledBy: "", assembledByName: "", testedBy: "", testedByName: "", fiBy: "", fiByName: "",
-  disposition: DEFAULT_DISPOSITION_OPTIONS[0], raisedTo: DEFAULT_STAGE_OPTIONS[0],
+  serialNumber: "", identification: "", inspectedBy: "", inspectedByName: "",
+  assignedTo: "", assignedToName: "", assembledBy: "", assembledByName: "", testedBy: "", testedByName: "", fiBy: "", fiByName: "",
+  disposition: DEFAULT_DISPOSITION_OPTIONS[0], raisedTo: "", raisedToName: "",
   report: null, finalStatus: "Pending", finalStatusRemarks: "", finalStatusDate: todayDateStr(), finalStatusHistory: []
 });
 
@@ -348,17 +351,17 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
           <div className="space-y-[0.9vw]">
             <div className="flex flex-col gap-[0.3vw]">
               <label className="text-[0.76vw] font-semibold text-slate-700">Verified By <span className="text-rose-500">*</span></label>
-              <select
+              <CustomDropdown
                 value={formData.verifiedBy}
-                onChange={e => {
-                  const emp = employees.find(emp => emp.userId === e.target.value);
-                  setFormData(p => ({ ...p, verifiedBy: e.target.value, verifiedByName: emp?.name || "" }));
+                onChange={val => {
+                  const emp = employees.find(emp => (emp.userId || emp._id) === val);
+                  setFormData(p => ({ ...p, verifiedBy: val, verifiedByName: emp?.name || "" }));
                 }}
-                className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.78vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all"
-              >
-                <option value="">Select Employee</option>
-                {employees.map(e => <option key={e.userId} value={e.userId}>{e.name}</option>)}
-              </select>
+                options={employees.map(e => ({ value: e.userId || e._id, label: e.name }))}
+                placeholder="Select Employee"
+                usePortal={true}
+                triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+              />
             </div>
 
             <div className="flex flex-col gap-[0.3vw]">
@@ -1097,16 +1100,38 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
   const [custSearch, setCustSearch] = useState(initialData.customerName || "");
   const [custSelectedIndex, setCustSelectedIndex] = useState(-1);
   const custRef = useRef(null);
+  const [partyTypes, setPartyTypes] = useState([]);
+  const [showAddCustModal, setShowAddCustModal] = useState(false);
+  const [newCustomer, setNewCustomer] = useState({
+    partyCode: "",
+    partyType: "OEM",
+    partyDescription: "",
+    state: "",
+    districtCity: "",
+    items: [
+      {
+        productSegment: "",
+        itemCode: "",
+        itemDescription: "",
+        warrantyPeriodDays: "",
+      },
+    ],
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [custRes, boardRes] = await Promise.all([
+        const [custRes, boardRes, ptRes] = await Promise.all([
           axios.get(`${API_URL}/master/customers`),
-          axios.get(`${API_URL}/master/board-types`)
+          axios.get(`${API_URL}/master/board-types`),
+          axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] }))
         ]);
         setCustomerDb(custRes.data);
         setBoardTypes(boardRes.data);
+        if (ptRes?.data?.length > 0) {
+          setPartyTypes(ptRes.data);
+          setNewCustomer(prev => ({ ...prev, partyType: ptRes.data[0].name || "OEM" }));
+        }
       } catch (err) {
         console.error("Master data fetch failed:", err);
       }
@@ -1141,6 +1166,107 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
     });
     return Array.from(map.values());
   }, [customerDbFlat]);
+
+  const uniqueStates = useMemo(
+    () => Array.from(new Set(customerDbFlat.map((c) => c.state).filter(Boolean))),
+    [customerDbFlat],
+  );
+  const uniqueDistricts = useMemo(
+    () => Array.from(new Set(customerDbFlat.map((c) => c.districtCity).filter(Boolean))),
+    [customerDbFlat],
+  );
+  const uniqueSegments = useMemo(
+    () => Array.from(new Set(customerDbFlat.map((c) => c.productSegment).filter(Boolean))),
+    [customerDbFlat],
+  );
+
+  const handleAddCustItemRow = () => {
+    setNewCustomer({
+      ...newCustomer,
+      items: [
+        ...newCustomer.items,
+        {
+          productSegment: "",
+          itemCode: "",
+          itemDescription: "",
+          warrantyPeriodDays: "",
+        },
+      ],
+    });
+  };
+
+  const handleRemoveCustItemRow = (idx) => {
+    if (newCustomer.items.length === 1) return;
+    setNewCustomer({
+      ...newCustomer,
+      items: newCustomer.items.filter((_, i) => i !== idx),
+    });
+  };
+
+  const handleCustItemChange = (idx, field, val) => {
+    setNewCustomer({
+      ...newCustomer,
+      items: newCustomer.items.map((item, i) =>
+        i === idx ? { ...item, [field]: val } : item,
+      ),
+    });
+  };
+
+  const handleAddCustomerSubmit = (e) => {
+    e.preventDefault();
+    const cleanStr = (str) =>
+      String(str || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    const dups = newCustomer.items.filter((ni) =>
+      customerDbFlat.some((d) => cleanStr(d.itemCode) === cleanStr(ni.itemCode)),
+    );
+    if (dups.length > 0) {
+      toast(`Item Code "${dups[0].itemCode}" already exists!`, "error");
+      return;
+    }
+
+    const invalidWarranty = newCustomer.items.find((item) => {
+      const val = Number(item.warrantyPeriodDays);
+      return item.warrantyPeriodDays === "" || isNaN(val) || val < 0;
+    });
+
+    if (invalidWarranty) {
+      toast(
+        `Please enter a valid non-negative numeric Warranty Period for item "${invalidWarranty.itemCode || "unnamed"}".`,
+        "warning",
+      );
+      return;
+    }
+
+    const newRows = newCustomer.items.map((item) => ({
+      partyCode: newCustomer.partyCode,
+      partyDescription: newCustomer.partyDescription,
+      partyType: newCustomer.partyType,
+      state: newCustomer.state,
+      districtCity: newCustomer.districtCity,
+      productSegment: item.productSegment,
+      itemCode: item.itemCode,
+      itemDescription: item.itemDescription,
+      warrantyPeriodDays: item.warrantyPeriodDays,
+    }));
+
+    const updated = [...newRows, ...customerDbFlat].sort((a, b) =>
+      (a.partyCode || "").localeCompare(b.partyCode || ""),
+    );
+    localStorage.setItem(CUSTOMER_DB_KEY, JSON.stringify(updated));
+    setCustomerDb(updated);
+    setBase((p) => ({
+      ...p,
+      customerCode: newCustomer.partyCode,
+      customerName: newCustomer.partyDescription,
+      category: newCustomer.partyType || p.category,
+    }));
+    setCustSearch(newCustomer.partyDescription);
+    toast("Customer added successfully!", "success");
+    setShowAddCustModal(false);
+  };
 
   const filteredCustomers = useMemo(() => {
     const s = custSearch.toLowerCase();
@@ -1196,6 +1322,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!base.jobOrderNo) { toast("Job Order Number is mandatory", "error"); return; }
+    if (!base.customerName || !base.customerCode) { toast("Customer Name is mandatory. Please select a customer.", "error"); return; }
     if (products.length === 0) { toast("At least one product is required", "warning"); return; }
     if (products.some(p => !p.productDescription)) { toast("All products must have a description", "error"); return; }
     if (products.some(p => !p.problemType)) { toast("All products must have a Problem Type", "error"); return; }
@@ -1239,8 +1366,8 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 Primary Order Details
               </h3>
             </div>
-            <div className="grid grid-cols-5 gap-[1.2vw]">
-              <div className="flex flex-col gap-[0.35vw]">
+            <div className="grid grid-cols-12 gap-[1.2vw]">
+              <div className="col-span-2 flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Registration Date</label>
                 <input
                   type="date"
@@ -1250,7 +1377,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
-              <div className="flex flex-col gap-[0.35vw]">
+              <div className="col-span-2 flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Job Order Number <span className="text-rose-500">*</span></label>
                 <input
                   value={base.jobOrderNo}
@@ -1260,19 +1387,76 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
-              <div className="flex flex-col gap-[0.35vw] relative" ref={custRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Customer Name</label>
-                <div className="relative">
-                  <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.9vw] h-[0.9vw] text-slate-400" />
-                  <input
-                    value={custSearch}
-                    onChange={e => { setCustSearch(e.target.value); setShowCustDrop(true); }}
-                    onFocus={() => setShowCustDrop(true)}
-                    onKeyDown={onCustKeyDown}
-                    placeholder="Search & select customer..."
-                    disabled={isReadOnly}
-                    className="w-full bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] pl-[2.2vw] pr-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
-                  />
+              <div className="col-span-4 flex flex-col gap-[0.35vw] relative" ref={custRef}>
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
+                  <span>
+                    Customer Name <span className="text-rose-500">*</span>
+                  </span>
+                  <span className="text-[0.68vw] text-slate-400 font-normal">
+                    ({filteredCustomers.length})
+                  </span>
+                </label>
+                <div className="flex gap-[0.4vw]">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.9vw] h-[0.9vw] text-slate-400" />
+                    <input
+                      value={custSearch}
+                      onChange={e => {
+                        if (!isReadOnly) {
+                          setCustSearch(e.target.value);
+                          setBase(p => ({ ...p, customerName: e.target.value, customerCode: "" }));
+                          setShowCustDrop(true);
+                        }
+                      }}
+                      onFocus={() => !isReadOnly && setShowCustDrop(true)}
+                      onKeyDown={onCustKeyDown}
+                      placeholder="Search & select customer..."
+                      disabled={isReadOnly}
+                      className="w-full bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] pl-[2.2vw] pr-[2vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                    />
+                    {custSearch && !isReadOnly && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCustSearch("");
+                          setBase(p => ({ ...p, customerName: "", customerCode: "", category: "" }));
+                          setShowCustDrop(false);
+                        }}
+                        className="absolute right-[0.5vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                        title="Clear customer"
+                      >
+                        <X className="w-[0.75vw] h-[0.75vw]" />
+                      </button>
+                    )}
+                  </div>
+                  {!isReadOnly && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewCustomer({
+                          partyCode: "",
+                          partyType: partyTypes[0]?.name || "OEM",
+                          partyDescription: custSearch || "",
+                          state: "",
+                          districtCity: "",
+                          items: [
+                            {
+                              productSegment: "",
+                              itemCode: "",
+                              itemDescription: "",
+                              warrantyPeriodDays: "",
+                            },
+                          ],
+                        });
+                        setShowAddCustModal(true);
+                      }}
+                      className="flex items-center gap-[0.3vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[0.75vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.74vw] font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
+                      title="Add New Customer"
+                    >
+                      <UserPlus className="w-[0.85vw] h-[0.85vw]" />
+                      <span>New</span>
+                    </button>
+                  )}
                 </div>
                 <AnimatePresence>
                   {showCustDrop && filteredCustomers.length > 0 && (
@@ -1296,7 +1480,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   )}
                 </AnimatePresence>
               </div>
-              <div className="flex flex-col gap-[0.35vw]">
+              <div className="col-span-2 flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Customer Code</label>
                 <input
                   value={base.customerCode}
@@ -1304,7 +1488,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] font-mono text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
-              <div className="flex flex-col gap-[0.35vw]">
+              <div className="col-span-2 flex flex-col gap-[0.35vw]">
                 <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Category</label>
                 <input
                   value={base.category}
@@ -1376,6 +1560,285 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
           )}
         </div>
       </form>
+
+      {/* Add Customer Modal (matches Service Material) */}
+      <AnimatePresence>
+        {showAddCustModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-[1vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            >
+              <div className="px-[1.2vw] py-[0.8vw] border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <div className="flex items-center gap-[0.5vw]">
+                  <UserPlus className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                  <h2 className="text-[1vw] font-bold text-slate-800">
+                    Add Customer &amp; Items
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAddCustModal(false)}
+                  className="text-slate-400 hover:text-rose-500 cursor-pointer p-[0.2vw] transition-colors rounded-full hover:bg-slate-200/60"
+                >
+                  <X className="w-[1vw] h-[1vw]" />
+                </button>
+              </div>
+              <form
+                onSubmit={handleAddCustomerSubmit}
+                className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto custom-scrollbar"
+              >
+                <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-200">
+                  <h3 className="text-[0.82vw] font-bold text-slate-700 mb-[0.8vw] uppercase tracking-wider">
+                    Party Details
+                  </h3>
+                  <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
+                    <div className="flex flex-col gap-[0.35vw]">
+                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                        Party Code <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        required
+                        value={newCustomer.partyCode}
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            partyCode: e.target.value,
+                          })
+                        }
+                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        placeholder="e.g. CUS-001"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-[0.35vw]">
+                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                        Party Type
+                      </label>
+                      <CustomDropdown
+                        value={newCustomer.partyType}
+                        onChange={(val) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            partyType: val,
+                          })
+                        }
+                        options={(partyTypes.length > 0 ? partyTypes : [{ name: "OEM" }, { name: "End Customer" }]).map((t) => ({ value: t.name, label: t.name }))}
+                        triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-300 text-[0.8vw]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-[0.35vw] mb-[0.8vw]">
+                    <label className="text-[0.76vw] text-slate-700 font-semibold">
+                      Party Description / Customer Name <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      required
+                      value={newCustomer.partyDescription}
+                      onChange={(e) =>
+                        setNewCustomer({
+                          ...newCustomer,
+                          partyDescription: e.target.value,
+                        })
+                      }
+                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      placeholder="Company Name"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-[1.2vw]">
+                    <div className="flex flex-col gap-[0.35vw]">
+                      <label className="text-[0.76vw] text-slate-700 font-semibold">State</label>
+                      <input
+                        value={newCustomer.state}
+                        list="prod-cust-states-datalist"
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            state: e.target.value,
+                          })
+                        }
+                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        placeholder="e.g. Tamil Nadu"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-[0.35vw]">
+                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                        District / City
+                      </label>
+                      <input
+                        value={newCustomer.districtCity}
+                        list="prod-cust-districts-datalist"
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            districtCity: e.target.value,
+                          })
+                        }
+                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        placeholder="e.g. Coimbatore"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[1vw]">
+                  <div className="flex justify-between items-center mb-[0.6vw]">
+                    <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+                      Product Items
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={handleAddCustItemRow}
+                      className="text-blue-600 hover:text-blue-800 text-[0.76vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer"
+                    >
+                      <PlusCircle className="w-[0.85vw] h-[0.85vw]" />
+                      Add Another Item
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-[0.6vw]">
+                    {newCustomer.items.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex gap-[0.6vw] items-center border border-slate-100 p-[0.6vw] rounded-[0.4vw] bg-slate-50/50"
+                      >
+                        <div className="flex-1 flex flex-col gap-[0.3vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                              Product Segment
+                            </label>
+                          )}
+                          <input
+                            required
+                            value={item.productSegment}
+                            list="prod-cust-segments-datalist"
+                            onChange={(e) =>
+                              handleCustItemChange(
+                                idx,
+                                "productSegment",
+                                e.target.value,
+                              )
+                            }
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            placeholder="Segment"
+                          />
+                        </div>
+                        <div className="flex-1 flex flex-col gap-[0.3vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                              Item Code
+                            </label>
+                          )}
+                          <input
+                            required
+                            value={item.itemCode}
+                            onChange={(e) =>
+                              handleCustItemChange(
+                                idx,
+                                "itemCode",
+                                e.target.value,
+                              )
+                            }
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            placeholder="Code"
+                          />
+                        </div>
+                        <div className="flex-[2] flex flex-col gap-[0.3vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                              Description
+                            </label>
+                          )}
+                          <input
+                            required
+                            value={item.itemDescription}
+                            onChange={(e) =>
+                              handleCustItemChange(
+                                idx,
+                                "itemDescription",
+                                e.target.value,
+                              )
+                            }
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            placeholder="Description"
+                          />
+                        </div>
+                        <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                              Warranty (days)
+                            </label>
+                          )}
+                          <input
+                            required
+                            type="number"
+                            min="0"
+                            value={item.warrantyPeriodDays}
+                            onChange={(e) =>
+                              handleCustItemChange(
+                                idx,
+                                "warrantyPeriodDays",
+                                e.target.value,
+                              )
+                            }
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            placeholder="Days"
+                          />
+                        </div>
+                        <div className="flex flex-col justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCustItemRow(idx)}
+                            disabled={newCustomer.items.length === 1}
+                            className={`text-slate-400 hover:text-rose-500 disabled:opacity-30 cursor-pointer p-[0.2vw] ${
+                              idx === 0 ? "mt-[1.3vw]" : ""
+                            }`}
+                          >
+                            <MinusCircle className="w-[1vw] h-[1vw]" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-[0.8vw] pt-[0.4vw]">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddCustModal(false)}
+                    className="px-[1.4vw] h-[2.2vw] border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.76vw] font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.76vw] font-semibold transition-colors shadow-xs"
+                  >
+                    Save All
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Datalists for Autocomplete */}
+      <datalist id="prod-cust-states-datalist">
+        {uniqueStates.map((s) => (
+          <option key={s} value={s} />
+        ))}
+      </datalist>
+      <datalist id="prod-cust-districts-datalist">
+        {uniqueDistricts.map((d) => (
+          <option key={d} value={d} />
+        ))}
+      </datalist>
+      <datalist id="prod-cust-segments-datalist">
+        {uniqueSegments.map((seg) => (
+          <option key={seg} value={seg} />
+        ))}
+      </datalist>
     </motion.div>
   );
 };
@@ -1402,6 +1865,25 @@ export default function ProductionMaterial() {
   const [employeeFilter, setEmployeeFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState(new Set());
+  const [collapsedCustomers, setCollapsedCustomers] = useState({});
+  const [collapsedEntries, setCollapsedEntries] = useState({});
+  const [expandedCustomerDetails, setExpandedCustomerDetails] = useState({});
+  const [expandedEntryDetails, setExpandedEntryDetails] = useState({});
+
+  const toggleCustomer = (name) =>
+    setCollapsedCustomers((p) => ({ ...p, [name]: !p[name] }));
+  const toggleEntry = (id) =>
+    setCollapsedEntries((p) => ({ ...p, [id]: !p[id] }));
+
+  const toggleCustomerDetails = (name, e) => {
+    e.stopPropagation();
+    setExpandedCustomerDetails((p) => ({ ...p, [name]: !p[name] }));
+  };
+
+  const toggleEntryDetails = (id, e) => {
+    e.stopPropagation();
+    setExpandedEntryDetails((p) => ({ ...p, [id]: !p[id] }));
+  };
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSupervisor, setIsSupervisor] = useState(false);
@@ -1572,6 +2054,40 @@ export default function ProductionMaterial() {
 
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE) || 1;
   const paginatedData = filteredData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  // Group paginated data by customer like ServiceMaterial
+  const groups = useMemo(() => {
+    const map = new Map();
+    paginatedData.forEach((row) => {
+      const key = row.customerName || "—";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(row);
+    });
+    return Array.from(map.entries()).map(([customerName, rows]) => ({
+      customerName,
+      rows: [...rows].sort((a, b) => {
+        const parseDateStr = (dateStr) => {
+          if (!dateStr) return 0;
+          const parts = dateStr.split("-");
+          if (parts.length === 3) {
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+            return new Date(year, month, day).getTime();
+          }
+          const parsed = new Date(dateStr).getTime();
+          return isNaN(parsed) ? 0 : parsed;
+        };
+        const dA = a.createdAt
+          ? new Date(a.createdAt).getTime()
+          : parseDateStr(a.date);
+        const dB = b.createdAt
+          ? new Date(b.createdAt).getTime()
+          : parseDateStr(b.date);
+        return dB - dA;
+      }),
+    }));
+  }, [paginatedData]);
 
   const toggleSelect = (id) => { const s = new Set(selectedItems); s.has(id) ? s.delete(id) : s.add(id); setSelectedItems(s); };
   const toggleSelectPage = () => { const s = new Set(selectedItems); const pageSelected = paginatedData.length > 0 && paginatedData.every(r => s.has(r.id)); if (pageSelected) paginatedData.forEach(r => s.delete(r.id)); else paginatedData.forEach(r => s.add(r.id)); setSelectedItems(s); };
@@ -1793,13 +2309,13 @@ export default function ProductionMaterial() {
           <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
             {/* Integrated Header: Segment Track on left, Result count on right */}
             <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
                 {[
-                  { label: "All", dot: "bg-blue-600" },
-                  { label: "Pending", dot: "bg-amber-500" },
-                  { label: "Rejected", dot: "bg-slate-400" },
-                  { label: "Completed", dot: "bg-emerald-600" }
-                ].map(({ label, dot }) => {
+                  { label: "All" },
+                  { label: "Pending" },
+                  { label: "Rejected" },
+                  { label: "Completed" }
+                ].map(({ label }) => {
                   const isActive = activeFilter === label;
                   const count = counts[label] ?? 0;
                   return (
@@ -1807,27 +2323,20 @@ export default function ProductionMaterial() {
                       key={label}
                       type="button"
                       onClick={() => setActiveFilter(label)}
-                      className={`flex items-center gap-[0.55vw] px-[0.9vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                         isActive
                           ? "bg-blue-600 text-white shadow-xs font-semibold"
                           : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                       }`}
                     >
-                      {label !== "All" && (
-                        <span
-                          className={`w-[0.45vw] h-[0.45vw] rounded-full shrink-0 ${
-                            isActive ? "bg-white" : dot
-                          }`}
-                        />
-                      )}
                       <span className={isActive ? "text-white" : "text-slate-700"}>
                         {label}
                       </span>
                       <span
-                        className={`text-[0.68vw] font-medium ml-[0.25vw] transition-all ${
+                        className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
                           isActive
-                            ? "bg-white/20 text-white px-[0.42vw] py-[0.05vw] rounded-full"
-                            : "text-slate-400 bg-slate-200/60 px-[0.42vw] py-[0.05vw] rounded-full"
+                            ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                            : "text-slate-400"
                         }`}
                       >
                         {count}
@@ -1848,146 +2357,545 @@ export default function ProductionMaterial() {
             </div>
 
             <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
-              <table className="w-full text-left border-collapse">
-                <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
-                  <tr>
+              <table className="w-full text-left border-collapse border-spacing-0">
+                {/* ── THEAD (Sticky 0 & 1.8vw) ── */}
+                <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-xs">
+                  <tr className="bg-[#E9EDF7]">
                     {canDelete && !isSupervisor && (
-                      <th rowSpan={2} className="py-[0.6vw] px-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[3%] bg-[#E9EDF7] sticky top-0 left-0 z-50">
-                        <button onClick={toggleSelectPage} className="flex items-center justify-center w-full cursor-pointer">
-                          {isPageSelected ? <CheckCircle className="w-[1vw] h-[1vw] text-blue-600" /> : <div className="w-[0.9vw] h-[0.9vw] border border-slate-400 rounded"></div>}
+                      <th
+                        rowSpan={2}
+                        className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-40 bg-[#E9EDF7]"
+                      >
+                        <button
+                          type="button"
+                          onClick={toggleSelectPage}
+                          className="flex items-center justify-center w-full cursor-pointer"
+                        >
+                          <div
+                            className={`w-[1.1vw] h-[1.1vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
+                              isPageSelected
+                                ? "bg-[#1a73e8] border-[#1a73e8] text-white"
+                                : "bg-white border-slate-400 text-transparent"
+                            }`}
+                          >
+                            {isPageSelected && (
+                              <span className="text-[0.75vw] leading-none font-bold text-white">
+                                ✓
+                              </span>
+                            )}
+                          </div>
                         </button>
                       </th>
                     )}
-                    {["S.No", "Date", "Job Order No", "Customer", "Cus Code", "Category"].map(h => {
-                      const minW = h === "Customer" ? "11vw" : (h === "Job Order No" ? "8.5vw" : "5vw");
-                      return (
-                        <th key={h} rowSpan={2} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.5vw] font-bold text-slate-700 text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle bg-[#E9EDF7] sticky top-0 z-20">{h}</th>
-                      );
-                    })}
-                    <th colSpan={12} className="px-[0.6vw] py-[0.4vw] font-bold text-slate-700 border-b border-r border-slate-300 text-center text-[0.74vw] bg-[#dfe6f5] sticky top-0 z-20">Product Manifest Details</th>
-                    <th rowSpan={2} style={{ right: 0 }} className="px-[0.7vw] py-[0.5vw] font-bold text-slate-700 text-center border-b border-l border-slate-300 whitespace-nowrap text-[0.74vw] align-middle bg-[#E9EDF7] sticky right-0 top-0 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">Actions</th>
+                    <th
+                      rowSpan={2}
+                      className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3.5%] sticky top-0 z-40 bg-[#E9EDF7]"
+                    >
+                      S. No
+                    </th>
+                    <th
+                      colSpan={8}
+                      className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-40 bg-[#E9EDF7]"
+                    >
+                      Product Manifest Details
+                    </th>
+                    {["Assigned To", "Resolution Verification", "Final Status", "Final Remarks", "Actions"].map((h) => (
+                      <th
+                        key={h}
+                        rowSpan={2}
+                        style={{
+                          minWidth:
+                            h === "Final Status"
+                              ? "9.5vw"
+                              : h === "Resolution Verification"
+                              ? "11vw"
+                              : h === "Final Remarks"
+                              ? "10vw"
+                              : h === "Actions"
+                              ? "6.5vw"
+                              : "8vw",
+                          ...(h === "Actions" ? { right: 0 } : {}),
+                        }}
+                        className={`px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7] ${
+                          h === "Actions"
+                            ? "border-l sticky right-0 z-50 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]"
+                            : ""
+                        }`}
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                  <tr>
-                    {["Item Code", "Description", "NC Type", "Stage", "Qty", "Serial/Batch", "Assigned To", "Verified By", "Verified Date", "CAE", "Final Status", "Final Remarks"].map((h) => {
-                      const minW = h === "Description" ? "13vw" : (h === "Final Remarks" ? "10vw" : (h === "Qty" ? "4.5vw" : (h === "Verified By" ? "8vw" : (h === "Verified Date" ? "6.5vw" : (h === "CAE" ? "9vw" : "6.5vw")))));
-                      return (
-                        <th key={h} style={{ minWidth: minW }} className="px-[0.6vw] py-[0.4vw] font-semibold text-slate-600 border-b border-r border-slate-300 whitespace-nowrap text-[0.7vw] bg-[#E9EDF7] text-center sticky top-[1.8vw] z-20">{h}</th>
-                      );
-                    })}
+                  <tr className="bg-[#E9EDF7]">
+                    {[
+                      { name: "Item Code", minW: "8vw" },
+                      { name: "Description", minW: "14vw" },
+                      { name: "Segment", minW: "6.5vw" },
+                      { name: "NC Type", minW: "6.5vw" },
+                      { name: "Stage", minW: "6.5vw" },
+                      { name: "Qty", minW: "4.5vw" },
+                      { name: "Repeatability", minW: "6.5vw" },
+                      { name: "Serial/Batch", minW: "8vw" },
+                    ].map(({ name, minW }) => (
+                      <th
+                        key={name}
+                        style={{ minWidth: minW }}
+                        className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
+                      >
+                        {name}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {paginatedData.length > 0 ? (
-                    paginatedData.flatMap((row, i) => {
-                      const isSelected = selectedItems.has(row.id);
-                      const products = row.products || [];
-                      const span = products.length;
-                      return products.map((prod, pi) => {
-                        const isTechCompleted = prod.report?.status === "Completed";
-                        const isVerified = !!prod.report?.verifiedBy;
-                        const showReadyHighlight = isTechCompleted && !isVerified;
-                        const bgClass = isSelected ? "bg-blue-50/70" : showReadyHighlight ? "bg-emerald-50/40" : "bg-white hover:bg-slate-50/70";
-                        const cellBg = isSelected ? "bg-blue-50/70" : "bg-white";
-                        
-                        return (
-                          <tr 
-                            key={`${row.id}-${pi}`} 
-                            className={`transition-colors ${bgClass}`}
+                  {groups.length > 0 ? (
+                    groups.flatMap(({ customerName, rows }) => {
+                      const isCustomerCollapsed = collapsedCustomers[customerName];
+                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 5;
+
+                      return [
+                        // ── STICKY HEADER 1: CUSTOMER HEADER ROW (sticky top-[3.6vw]) ──
+                        <tr
+                          key={`cust-${customerName}`}
+                          className="cursor-pointer select-none border-b border-slate-300 bg-[#EEF2F6] hover:bg-[#E2E8F0] transition-colors sticky top-[3.6vw] z-30 shadow-xs"
+                          onClick={() => toggleCustomer(customerName)}
+                        >
+                          <td
+                            colSpan={totalCols}
+                            className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
                           >
-                          {pi === 0 && (
-                            <>
-                              {canDelete && !isSupervisor && (
-                                <td rowSpan={span} className={`p-[0.7vw] border-r border-b border-slate-300 text-center align-middle ${cellBg}`}>
-                                  <button onClick={() => toggleSelect(row.id)} className="flex items-center justify-center w-full cursor-pointer">
-                                    {isSelected ? <CheckCircle className="w-[1vw] h-[1vw] text-blue-600" /> : <div className="w-[0.9vw] h-[0.9vw] border border-slate-300 rounded hover:border-blue-500"></div>}
-                                  </button>
-                                </td>
+                            <div className="flex items-center gap-[0.5vw]">
+                              {isCustomerCollapsed ? (
+                                <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0 -rotate-90 transition-transform" />
+                              ) : (
+                                <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0 transition-transform" />
                               )}
-                              <td rowSpan={span} className={`px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw] whitespace-nowrap ${cellBg}`}>{(currentPage - 1) * ITEMS_PER_PAGE + i + 1}</td>
-                              <td rowSpan={span} className={`px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw] whitespace-nowrap ${cellBg}`}>{fmtDate(row.date)}</td>
-                              <td rowSpan={span} className={`px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center text-[0.76vw] font-mono font-normal text-blue-600 hover:underline cursor-pointer ${cellBg}`} onClick={() => setReportsRow(row)}>{row.jobOrderNo || "—"}</td>
-                              <td rowSpan={span} className={`px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-800 text-[0.76vw] ${cellBg}`}>{row.customerName || "—"}</td>
-                              <td rowSpan={span} className={`px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-center align-middle font-mono text-slate-500 text-[0.72vw] font-normal ${cellBg}`}>{row.customerCode || "—"}</td>
-                              <td rowSpan={span} className={`px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-center align-middle ${cellBg}`}>
-                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
-                                  row.category === "OEM"
-                                    ? "bg-blue-50 text-blue-700 border-blue-200"
-                                    : row.category === "End Customer"
-                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                    : "bg-slate-50 text-slate-700 border-slate-200"
-                                }`}>
-                                  {row.category || "—"}
-                                </span>
-                              </td>
-                            </>
-                          )}
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-center align-middle font-normal">
-                            {showReadyHighlight && (
-                              <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
-                                <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
-                                <span className="text-[0.6vw] font-medium text-emerald-700 whitespace-nowrap">Completed</span>
-                              </div>
-                            )}
-                            <div className="font-mono text-slate-700 text-[0.72vw] font-normal">{prod.productCode || "—"}</div>
-                          </td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-left font-normal text-slate-800 text-[0.76vw] truncate max-w-[14vw]" title={prod.productDescription}>{prod.productDescription || "—"}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-center align-middle font-normal">
-                            <span className={`inline-flex items-center justify-center text-[0.68vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${prod.ncType === "External" ? "bg-orange-50 text-orange-700 border-orange-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}>
-                              {prod.ncType || "Internal"}
-                            </span>
-                          </td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-center align-middle font-normal"><span className="text-[0.76vw] font-normal text-slate-700">{prod.stage || "Assembly"}</span></td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.76vw]">{prod.qty || "1"}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-mono text-slate-600 text-[0.72vw] font-normal">{prod.serialNumber || "—"}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw]">{prod.assignedToName || "Unassigned"}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-emerald-700 text-[0.76vw]">{prod.report?.verifiedByName || "—"}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-500 text-[0.72vw]">{fmtDate(prod.report?.verifiedDate)}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-blue-600 text-[0.74vw] truncate max-w-[10vw]" title={prod.report?.cae}>{prod.report?.cae || "—"}</td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal">
-                            <FinalStatusCell row={row} prod={prod} onUpdateProduct={onUpdateProduct} isSupervisor={isSupervisor} />
-                          </td>
-                          <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-600 text-[0.72vw] truncate max-w-[10vw]" title={prod.finalStatusRemarks}>{prod.finalStatusRemarks || "—"}</td>
-                          <td className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-l border-b border-slate-300 sticky right-0 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-blue-50/70" : "bg-white"}`}>
-                            <div className="flex items-center justify-center gap-[0.4vw]">
+
+                              <span className="font-semibold text-slate-800 text-[0.76vw] tracking-wide">
+                                {customerName}
+                              </span>
+
+                              {/* Toggle button to reveal / hide customer details */}
                               <button
-                                onClick={() => setReportsRow(row)}
-                                className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
-                                title="View Report"
+                                type="button"
+                                onClick={(e) => toggleCustomerDetails(customerName, e)}
+                                title={expandedCustomerDetails[customerName] ? "Collapse customer details" : "Expand customer details"}
+                                className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.3vw] shadow-2xs"
                               >
-                                <Eye className="w-[0.9vw] h-[0.9vw]" />
-                              </button>
-                              
-                              <button
-                                onClick={() => setShowVerify({ row, prod })}
-                                className={`p-[0.35vw] rounded-full transition-all cursor-pointer ${prod.report?.verifiedBy ? "text-emerald-600 hover:bg-emerald-50" : "text-slate-400 hover:text-emerald-600 hover:bg-slate-100"}`}
-                                title={prod.report?.verifiedBy ? "Update Verification" : "Verify Resolution"}
-                              >
-                                <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
+                                <Icon
+                                  icon={expandedCustomerDetails[customerName] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
+                                  className="w-[0.75vw] h-[0.75vw]"
+                                />
                               </button>
 
-                              {canUpdate && !isSupervisor && pi === 0 && (
-                                <button
-                                  onClick={() => { setSelectedRow(row); setView("form"); }}
-                                  className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
-                                  title="Edit Registration"
-                                >
-                                  <Edit3 className="w-[0.9vw] h-[0.9vw]" />
-                                </button>
+                              {/* Customer metadata: revealed on clicking chevron */}
+                              {expandedCustomerDetails[customerName] && (
+                                <div className="flex items-center gap-[0.35vw] flex-wrap animate-in fade-in duration-200">
+                                  {rows[0]?.customerCode && (
+                                    <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.2vw]">
+                                      Code: {rows[0].customerCode}
+                                    </span>
+                                  )}
+                                  {rows[0]?.category && (
+                                    <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                      Category: {rows[0].category}
+                                    </span>
+                                  )}
+                                  {rows[0]?.refNoInternal && (
+                                    <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                      Ref: {rows[0].refNoInternal}
+                                    </span>
+                                  )}
+                                </div>
                               )}
+
+                              <div className="ml-auto flex items-center gap-[0.5vw]">
+                                <span className="text-[0.68vw] text-slate-500 font-medium bg-white px-[0.5vw] py-[0.1vw] rounded-full border border-slate-200">
+                                  {rows.length} {rows.length === 1 ? "order" : "orders"}
+                                </span>
+                              </div>
                             </div>
                           </td>
-                        </tr>
-                        );
-                      });
+                        </tr>,
+
+                        // ── ENTRIES (Sticky Header 2: Entry / Job Order Sub-Header) ──
+                        ...(isCustomerCollapsed
+                          ? []
+                          : rows.flatMap((row, rowIdx) => {
+                              const globalSn = (currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1;
+                              const isSelected = selectedItems.has(row.id);
+                              const isEntryCollapsed = collapsedEntries[row.id];
+                              const prods = (row.products || []).filter((p) => {
+                                if (activeFilter === "All") return true;
+                                return (p.finalStatus || "Pending") === activeFilter;
+                              });
+
+                              return [
+                                // ── STICKY HEADER 2: JOB ORDER / REGISTRATION ROW (sticky top-[5.6vw]) ──
+                                <tr
+                                  key={`entry-hdr-${row.id}`}
+                                  className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
+                                    isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9] hover:bg-[#E2E8F0]"
+                                  }`}
+                                >
+                                  {canDelete && !isSupervisor && (
+                                    <td
+                                      className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${
+                                        isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
+                                      }`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleSelect(row.id);
+                                      }}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="flex items-center justify-center w-full cursor-pointer"
+                                      >
+                                        <div
+                                          className={`w-[0.95vw] h-[0.95vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
+                                            isSelected
+                                              ? "bg-blue-600 border-blue-600 text-white"
+                                              : "border-slate-300 hover:border-slate-400 bg-white"
+                                          }`}
+                                        >
+                                          {isSelected && (
+                                            <span className="text-[0.65vw] leading-none font-bold">
+                                              ✓
+                                            </span>
+                                          )}
+                                        </div>
+                                      </button>
+                                    </td>
+                                  )}
+
+                                  {/* S.No */}
+                                  <td
+                                    className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${
+                                      isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
+                                    }`}
+                                    onClick={() => toggleEntry(row.id)}
+                                  >
+                                    {globalSn}
+                                  </td>
+
+                                  {/* Date + Job Order No + Summary Spanning remaining columns */}
+                                  <td
+                                    colSpan={8 + 5}
+                                    className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${
+                                      isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
+                                    }`}
+                                    onClick={() => toggleEntry(row.id)}
+                                  >
+                                    <div className="flex items-center gap-[0.6vw] flex-wrap">
+                                      {/* Chevron */}
+                                      <span
+                                        className="text-slate-400 flex-shrink-0 transition-transform duration-200"
+                                        style={{
+                                          display: "inline-flex",
+                                          transform: isEntryCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                                        }}
+                                      >
+                                        <ChevronDown className="w-[0.75vw] h-[0.75vw]" />
+                                      </span>
+
+                                      {/* Date */}
+                                      <div className="flex items-center gap-[0.35vw] ml-[0.3vw]">
+                                        <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-500 flex-shrink-0" />
+                                        <span className="text-[0.72vw] font-medium text-slate-700 whitespace-nowrap">
+                                          {fmtDate(row.date)}
+                                        </span>
+                                      </div>
+
+                                      {/* Job Order Number Badge */}
+                                      <div className="flex items-center gap-[0.35vw] ml-[0.4vw]">
+                                        <span className="text-[0.68vw] text-slate-500 font-semibold">JO:</span>
+                                        <span
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setReportsRow(row);
+                                          }}
+                                          className="text-[0.74vw] font-mono font-semibold text-blue-600 hover:underline cursor-pointer bg-blue-50/80 px-[0.45vw] py-[0.05vw] rounded border border-blue-200"
+                                        >
+                                          {row.jobOrderNo || "—"}
+                                        </span>
+                                      </div>
+
+                                      {/* Toggle button to reveal / hide Inward Quantities Summary */}
+                                      <button
+                                        type="button"
+                                        onClick={(e) => toggleEntryDetails(row.id, e)}
+                                        title={expandedEntryDetails[row.id] ? "Collapse summary" : "Expand summary"}
+                                        className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.3vw] shadow-2xs"
+                                      >
+                                        <Icon
+                                          icon={expandedEntryDetails[row.id] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
+                                          className="w-[0.75vw] h-[0.75vw]"
+                                        />
+                                      </button>
+
+                                      {/* Inward Quantities Summary (Revealed on click) */}
+                                      {expandedEntryDetails[row.id] && (() => {
+                                        const rowTotal = (row.products || []).reduce((sum, p) => sum + (Math.max(1, Number(p.qty) || 1)), 0);
+                                        const rowCompleted = (row.products || []).reduce((sum, p) => {
+                                          const isDone = (p.finalStatus || "Pending") === "Completed";
+                                          return sum + (isDone ? Math.max(1, Number(p.qty) || 1) : 0);
+                                        }, 0);
+                                        const rowPending = Math.max(0, rowTotal - rowCompleted);
+
+                                        return (
+                                          <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[0.6vw] animate-in fade-in duration-200">
+                                            <span>Total Qty: <strong className="text-slate-800">{rowTotal}</strong></span>
+                                            <span className="text-slate-300">|</span>
+                                            <span>Completed: <strong className="text-emerald-700">{rowCompleted}</strong></span>
+                                            <span className="text-slate-300">|</span>
+                                            <span>Pending: <strong className="text-amber-700">{rowPending}</strong></span>
+                                          </div>
+                                        );
+                                      })()}
+
+                                      {/* Actions — right side */}
+                                      <div
+                                        className="ml-auto flex items-center gap-[0.4vw]"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={() => setReportsRow(row)}
+                                          title="View Full Report"
+                                          className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                        >
+                                          <Eye className="w-[0.8vw] h-[0.8vw]" />
+                                        </button>
+
+                                        {canUpdate && !isSupervisor && (
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setSelectedRow(row);
+                                              setView("form");
+                                            }}
+                                            title="Edit Registration"
+                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                          >
+                                            <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                          </button>
+                                        )}
+
+                                        {canDelete && !isSupervisor && (
+                                          <button
+                                            type="button"
+                                            onClick={async () => {
+                                              if (window.confirm("Delete this registration?")) {
+                                                try {
+                                                  await axios.delete(`${API_URL}/production-material/${row.id}`);
+                                                  setData((prev) => prev.filter((e) => e.id !== row.id));
+                                                  toast("Registration deleted", "success");
+                                                } catch {
+                                                  toast("Delete failed", "error");
+                                                }
+                                              }
+                                            }}
+                                            title="Delete Registration"
+                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-300 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                          >
+                                            <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>,
+
+                                // ── PRODUCT ROWS ──
+                                ...(isEntryCollapsed
+                                  ? []
+                                  : prods.map((prod, pi) => {
+                                      const isTechCompleted = prod.report?.status === "Completed";
+                                      const isVerified = !!prod.report?.verifiedBy;
+                                      const showReadyHighlight = isTechCompleted && !isVerified;
+                                      const bgClass = isSelected
+                                        ? "bg-blue-50/70"
+                                        : showReadyHighlight
+                                        ? "bg-emerald-50/40"
+                                        : pi % 2 === 0
+                                        ? "bg-white hover:bg-slate-50/80"
+                                        : "bg-slate-50/30 hover:bg-slate-50/80";
+
+                                      return (
+                                        <tr
+                                          key={`${row.id}-p-${pi}`}
+                                          className={`transition-colors duration-100 border-b border-slate-300 ${bgClass}`}
+                                        >
+                                          {/* Checkbox spacer */}
+                                          {canDelete && !isSupervisor && (
+                                            <td className="border-r border-slate-300" style={{ background: "transparent" }} />
+                                          )}
+
+                                          {/* S.No sub-number */}
+                                          <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
+                                            <span className="text-[0.72vw] font-semibold text-slate-400">
+                                              {globalSn}.{pi + 1}
+                                            </span>
+                                          </td>
+
+                                          {/* Product Code */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal">
+                                            {showReadyHighlight && (
+                                              <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
+                                                <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
+                                                <span className="text-[0.6vw] font-medium text-emerald-700 whitespace-nowrap">Completed</span>
+                                              </div>
+                                            )}
+                                            <div className="font-mono text-slate-700 text-[0.72vw] font-normal">
+                                              {prod.productCode || "—"}
+                                            </div>
+                                          </td>
+
+                                          {/* Product Description */}
+                                          <td
+                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-normal text-slate-800 text-[0.76vw] truncate max-w-[14vw]"
+                                            title={prod.productDescription}
+                                          >
+                                            {prod.productDescription || "—"}
+                                          </td>
+
+                                          {/* Product Segment */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.74vw] text-slate-700 font-normal align-middle text-center">
+                                            {prod.productSegment || "—"}
+                                          </td>
+
+                                          {/* NC Type */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal">
+                                            <span
+                                              className={`inline-flex items-center justify-center text-[0.68vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${
+                                                prod.ncType === "External"
+                                                  ? "bg-orange-50 text-orange-700 border-orange-200"
+                                                  : "bg-blue-50 text-blue-700 border-blue-200"
+                                              }`}
+                                            >
+                                              {prod.ncType || "Internal"}
+                                            </span>
+                                          </td>
+
+                                          {/* Detection Stage */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.76vw]">
+                                            {prod.stage || "Assembly"}
+                                          </td>
+
+                                          {/* Qty */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.76vw]">
+                                            {prod.qty || "1"}
+                                          </td>
+
+                                          {/* Repeatability */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.74vw]">
+                                            {prod.repeatability || "No"}
+                                          </td>
+
+                                          {/* Serial Number */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-mono text-slate-600 text-[0.72vw] font-normal">
+                                            {prod.serialNumber || "—"}
+                                          </td>
+
+                                          {/* Assigned To */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw]">
+                                            {prod.assignedToName || "Unassigned"}
+                                          </td>
+
+                                          {/* Resolution Verification */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
+                                            {prod.report?.verifiedByName ? (
+                                              <div className="flex flex-col items-center">
+                                                <span className="text-[0.74vw] font-semibold text-emerald-700">{prod.report.verifiedByName}</span>
+                                                <span className="text-[0.62vw] text-slate-400">{fmtDate(prod.report.verifiedDate)}</span>
+                                              </div>
+                                            ) : (
+                                              <span className="text-slate-400 text-[0.72vw]">—</span>
+                                            )}
+                                          </td>
+
+                                          {/* Final Status */}
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
+                                            <FinalStatusCell
+                                              row={row}
+                                              prod={prod}
+                                              onUpdateProduct={onUpdateProduct}
+                                              isSupervisor={isSupervisor}
+                                            />
+                                          </td>
+
+                                          {/* Final Remarks */}
+                                          <td
+                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-600 text-[0.72vw] truncate max-w-[10vw]"
+                                            title={prod.finalStatusRemarks}
+                                          >
+                                            {prod.finalStatusRemarks || "—"}
+                                          </td>
+
+                                          {/* Actions (Sticky Right) */}
+                                          <td
+                                            className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-l border-b border-slate-300 sticky right-0 z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${
+                                              isSelected ? "bg-blue-50/70" : "bg-white"
+                                            }`}
+                                          >
+                                            <div className="flex items-center justify-center gap-[0.4vw]">
+                                              <button
+                                                type="button"
+                                                onClick={() => setReportsRow(row)}
+                                                className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                                title="View Report"
+                                              >
+                                                <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                              </button>
+
+                                              <button
+                                                type="button"
+                                                onClick={() => setShowVerify({ row, prod })}
+                                                className={`p-[0.35vw] rounded-full transition-all cursor-pointer ${
+                                                  prod.report?.verifiedBy
+                                                    ? "text-emerald-600 hover:bg-emerald-50"
+                                                    : "text-slate-400 hover:text-emerald-600 hover:bg-slate-100"
+                                                }`}
+                                                title={prod.report?.verifiedBy ? "Update Verification" : "Verify Resolution"}
+                                              >
+                                                <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
+                                              </button>
+
+                                              {canUpdate && !isSupervisor && (
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    setSelectedRow(row);
+                                                    setView("form");
+                                                  }}
+                                                  className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                                  title="Edit Registration"
+                                                >
+                                                  <Edit3 className="w-[0.9vw] h-[0.9vw]" />
+                                                </button>
+                                              )}
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })),
+                              ];
+                            })),
+                      ];
                     })
                   ) : (
-                    <tr><td colSpan={20} className="py-[6vw] text-center text-slate-400 text-[0.85vw] font-medium">No records found.</td></tr>
+                    <tr>
+                      <td colSpan={20} className="py-[6vw] text-center text-slate-400 text-[0.85vw] font-medium">
+                        No records found.
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
             </div>
 
-            {/* Pagination Footer */}
+                        {/* Pagination Footer */}
             <div className="border-t border-slate-200 px-[1vw] py-[0.55vw] bg-slate-50/70 flex justify-between items-center rounded-b-[0.8vw] shrink-0">
               <div className="text-[0.74vw] font-medium text-slate-500">
                 Showing <strong className="text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</strong> to <strong className="text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</strong> of <strong className="text-slate-800">{filteredData.length}</strong> entries

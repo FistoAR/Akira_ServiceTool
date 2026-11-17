@@ -12,24 +12,26 @@ import {
   X
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import CustomDropdown from "../../components/CustomDropdown";
 
 const COLUMN_FIELDS = [
   "productDescription",
   "productCode",
-  "productType",
+  "productSegment",
   "boardType",
   "problemType",
   "ncType",
   "problem",
-  "inspectedBy",
+  "repeatability",
+  "delayTime",
   "designators",
   "boardImage",
   "stage",
+  "inspectedBy",
   "qty",
   "serialNumber",
   "disposition",
-  "raisedTo",
-  "assignedTo"
+  "raisedTo"
 ];
 
 const DropdownPortal = ({ children, targetRect }) => {
@@ -98,20 +100,42 @@ const ProductionEditableProductTable = ({
         const { startRow, endRow } = selection;
         const minR = Math.min(startRow, endRow);
         const maxR = Math.min(Math.max(startRow, endRow), products.length - 1);
-        const newProducts = products.filter((_, idx) => idx < minR || idx > maxR);
-        setProducts(newProducts);
-        setSelection(null);
-        e.preventDefault();
+        
+        setProducts(prev => prev.map((p, idx) => {
+          if (idx >= minR && idx <= maxR) {
+            return {
+              ...p,
+              productDescription: "",
+              productCode: "",
+              productSegment: "",
+              boardType: "",
+              problemType: "",
+              ncType: "Internal",
+              problem: "",
+              repeatability: "No",
+              delayTime: "",
+              designators: "",
+              boardImage: "",
+              stage: stageOptions[0] || "",
+              inspectedBy: "",
+              inspectedByName: "",
+              qty: "1",
+              serialNumber: "",
+              disposition: dispositionOptions[0] || "",
+              raisedTo: ""
+            };
+          }
+          return p;
+        }));
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selection, products, isReadOnly]);
+  }, [selection, isReadOnly, products.length, stageOptions, dispositionOptions]);
 
   const productsForCustomer = useMemo(() => {
     if (!customerCode || !customerDb) return [];
-    const codeStr = String(customerCode);
-    if (customerDb[codeStr]) return customerDb[codeStr];
+    const codeStr = String(customerCode).trim();
     const flat = Array.isArray(customerDb) ? customerDb : Object.values(customerDb).flat();
     return flat.filter((r) => String(r.partyCode || r.party_code).toLowerCase() === codeStr.toLowerCase());
   }, [customerDb, customerCode]);
@@ -152,6 +176,7 @@ const ProductionEditableProductTable = ({
         ...prod,
         productCode: p.itemCode || p.productCode || "",
         productDescription: p.itemDescription || p.productDescription || "",
+        productSegment: p.productSegment || prod.productSegment || prod.productType || "",
       } : prod
     ));
     setActiveDropdown(null);
@@ -161,6 +186,7 @@ const ProductionEditableProductTable = ({
   const handleCellMouseDown = (rowIndex, colIndex, e) => {
     if (isReadOnly) return;
     if (e.target.closest('.dropdown-container')) return;
+    if (e.target.closest('[data-custom-dropdown-menu]')) return;
 
     if (e.shiftKey && selection) {
       setSelection(prev => ({ ...prev, endCol: colIndex, endRow: rowIndex }));
@@ -324,32 +350,64 @@ const ProductionEditableProductTable = ({
     }
   };
 
+  // Options memoized for CustomDropdown
+  const boardTypeOptions = useMemo(() => 
+    boardTypes.map(bt => ({ value: bt.name || bt.id, label: bt.name || bt.id })), 
+  [boardTypes]);
+
+  const problemTypeDropdownOptions = useMemo(() => 
+    problemTypeOptions.map(pt => ({ value: pt, label: pt })), 
+  [problemTypeOptions]);
+
+  const ncTypeOptions = useMemo(() => [
+    { value: "Internal", label: "Internal" },
+    { value: "External", label: "External" }
+  ], []);
+
+  const repeatabilityOptions = useMemo(() => [
+    { value: "No", label: "No" },
+    { value: "Yes", label: "Yes" }
+  ], []);
+
+  const stageDropdownOptions = useMemo(() => 
+    stageOptions.map(s => ({ value: s, label: s })), 
+  [stageOptions]);
+
+  const dispositionDropdownOptions = useMemo(() => 
+    dispositionOptions.map(opt => ({ value: opt, label: opt })), 
+  [dispositionOptions]);
+
+  const employeeDropdownOptions = useMemo(() => 
+    employees.map(e => ({ value: e.userId || e._id, label: e.name })), 
+  [employees]);
+
   return (
     <div 
       ref={tableContainerRef}
-      className="w-full overflow-x-auto border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw]"
+      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
     >
       <table className="w-full border-collapse text-[0.8vw]">
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
           <tr>
-            {!isReadOnly && <th className="w-[4vw] py-[0.7vw] px-[0.5vw] border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
-            <th className="w-[4vw] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
-            <th className="min-w-[30vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Type</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
+            {!isReadOnly && <th className="w-[3vw] py-[0.7vw] px-[0.4vw] border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
+            <th className="w-[3.5vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
+            <th className="min-w-[18vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
+            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
             <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
-            <th className="w-[15vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Stage</th>
-            <th className="w-[7vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To (Stage)</th>
-            <th className="w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Assigned To</th>
+            <th className="w-[14vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
+            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
+            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
+            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
+            <th className="w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
             {!isReadOnly && <th className="sticky right-0 w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
           </tr>
         </thead>
@@ -375,10 +433,11 @@ const ProductionEditableProductTable = ({
                             <GripVertical className="w-[1vw] h-[1vw] text-gray-700 cursor-grab active:cursor-grabbing" />
                           </td>
                         )}
-                        <td className="py-[0.6vw] px-[0.5vw] text-center align-middle font-regular  text-black border-r border-b border-slate-300">
+                        <td className="py-[0.6vw] px-[0.5vw] text-center align-middle font-medium text-black border-r border-b border-slate-300">
                           {index + 1}
                         </td>
                         
+                        {/* 0. Product Description */}
                         <td 
                           className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 0)}`}
                           onMouseDown={(e) => handleCellMouseDown(index, 0, e)}
@@ -389,7 +448,7 @@ const ProductionEditableProductTable = ({
                             <input
                               type="text"
                               autoComplete="off"
-                              value={activeDropdown?.id === prod._pid ? searchTerm : prod.productDescription}
+                              value={activeDropdown?.id === prod._pid ? searchTerm : (prod.productDescription || "")}
                               onChange={(e) => {
                                 if (activeDropdown?.id === prod._pid) {
                                   setSearchTerm(e.target.value);
@@ -403,7 +462,7 @@ const ProductionEditableProductTable = ({
                               onKeyDown={(e) => handleDropdownKeyDown(e, prod._pid)}
                               placeholder={customerCode ? "Search or enter description..." : "Select customer first"}
                               disabled={!customerCode || isReadOnly}
-                              className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-regular  disabled:bg-transparent cursor-text description-input`}
+                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal disabled:bg-transparent cursor-text description-input text-[0.8vw]"
                             />
                             {!isReadOnly && customerCode && (
                               <Search className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none group-focus-within:text-blue-500" />
@@ -415,7 +474,7 @@ const ProductionEditableProductTable = ({
                             <DropdownPortal targetRect={activeDropdown.rect}>
                               <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto dropdown-container">
                                 {!customerCode ? (
-                                    <div className="p-[1vw] text-center text-red-500 font-regular  text-[0.8vw]">Please select a customer first.</div>
+                                    <div className="p-[1vw] text-center text-red-500 font-normal text-[0.8vw]">Please select a customer first.</div>
                                 ) : filteredProds.length > 0 ? (
                                   filteredProds.map((p, i) => (
                                     <div
@@ -428,128 +487,183 @@ const ProductionEditableProductTable = ({
                                       className={`p-[0.6vw] cursor-pointer border-b border-slate-300 last:border-0 transition-colors ${selectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-blue-100"}`}
                                     >
                                       <div className={`font-semibold text-[0.8vw] ${selectedIndex === i ? "text-white" : "text-gray-900"}`}>{p.itemDescription || p.productDescription}</div>
-                                      <div className={`text-[0.7vw] flex items-center gap-[0.4vw] mt-[0.1vw] ${selectedIndex === i ? "text-white/80" : "text-gray-700"}`}>
-                                        <span className={`px-[0.3vw] rounded font-mono border ${selectedIndex === i ? "bg-white/20 border-white/30" : "bg-gray-100 border-slate-300"}`}>{p.itemCode || p.productCode}</span>
-                                      </div>
+                                      <div className={`text-[0.7vw] ${selectedIndex === i ? "text-blue-100" : "text-gray-500"}`}>{p.itemCode || p.productCode} {p.productSegment ? `· ${p.productSegment}` : ''}</div>
                                     </div>
                                   ))
                                 ) : (
-                                  <div className="p-[1vw] text-center text-gray-700 font-medium italic">No products found for {customerCode}</div>
+                                  <div className="p-[1vw] text-center text-gray-500 font-normal text-[0.8vw]">No products found for this customer</div>
                                 )}
                               </div>
                             </DropdownPortal>
                           )}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
-                          <div className="text-black px-[0.6vw] py-[0.4vw] rounded-[0.3vw] font-regular  text-[0.75vw]">{prod.productCode || "—"}</div>
+                        {/* 1. Code */}
+                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
+                          <input
+                            type="text"
+                            value={prod.productCode || ""}
+                            onChange={(e) => handleUpdate(prod._pid, "productCode", e.target.value)}
+                            disabled={isReadOnly}
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-mono text-[0.8vw] disabled:bg-transparent"
+                            placeholder="Code"
+                          />
                           {renderFillHandle(index, 1)}
                         </td>
 
+                        {/* 2. Product Segment */}
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
-                          <select
-                            value={prod.productType || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "productType", e.target.value)}
+                          <input
+                            type="text"
+                            value={prod.productSegment || prod.productType || ""}
+                            onChange={(e) => {
+                              handleUpdate(prod._pid, "productSegment", e.target.value);
+                              handleUpdate(prod._pid, "productType", e.target.value);
+                            }}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {productTypeOptions.map(pt => (
-                              <option key={pt} value={pt}>{pt}</option>
-                            ))}
-                          </select>
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent"
+                            placeholder="Segment..."
+                          />
                           {renderFillHandle(index, 2)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
-                          <select
+                        {/* 3. Board Type */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
+                          <CustomDropdown
                             value={prod.boardType || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "boardType", e.target.value)}
+                            onChange={(val) => handleUpdate(prod._pid, "boardType", val)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {boardTypes.map(bt => (
-                              <option key={bt.id || bt._id} value={bt.name}>{bt.name}</option>
-                            ))}
-                          </select>
+                            placeholder="Select"
+                            size="sm"
+                            options={boardTypeOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
                           {renderFillHandle(index, 3)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <select
+                        {/* 4. Problem Type */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
+                          <CustomDropdown
                             value={prod.problemType || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "problemType", e.target.value)}
+                            onChange={(val) => handleUpdate(prod._pid, "problemType", val)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {problemTypeOptions.map(pt => (
-                              <option key={pt} value={pt}>{pt}</option>
-                            ))}
-                          </select>
+                            placeholder="Select"
+                            size="sm"
+                            options={problemTypeDropdownOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
                           {renderFillHandle(index, 4)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
-                          <select
+                        {/* 5. NC Type */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
+                          <CustomDropdown
                             value={prod.ncType || "Internal"}
-                            onChange={(e) => handleUpdate(prod._pid, "ncType", e.target.value)}
+                            onChange={(val) => handleUpdate(prod._pid, "ncType", val)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-bold text-blue-600 disabled:bg-transparent"
-                          >
-                            <option value="Internal">Internal</option>
-                            <option value="External">External</option>
-                          </select>
+                            placeholder="Select"
+                            size="sm"
+                            options={ncTypeOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-semibold text-blue-600"
+                            }`}
+                            className="w-full"
+                          />
                           {renderFillHandle(index, 5)}
                         </td>
 
+                        {/* 6. Problem Description */}
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 6)}`} onMouseDown={(e) => handleCellMouseDown(index, 6, e)} onMouseEnter={() => handleCellMouseEnter(index, 6)}>
-                          <div className="relative flex items-center group">
-                            <input type="text" autoComplete="off" value={prod.problem || ""} onChange={(e) => handleUpdate(prod._pid, "problem", e.target.value)} placeholder="Problem Description" disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-regular  disabled:bg-transparent" />
-                          </div>
+                          <input 
+                            type="text" 
+                            autoComplete="off" 
+                            value={prod.problemDescription !== undefined ? prod.problemDescription : (prod.problem || "")} 
+                            onChange={(e) => {
+                              handleUpdate(prod._pid, "problemDescription", e.target.value);
+                              handleUpdate(prod._pid, "problem", e.target.value);
+                            }} 
+                            placeholder="Problem Description" 
+                            disabled={isReadOnly} 
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent" 
+                          />
                           {renderFillHandle(index, 6)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
-                          <select
-                            value={prod.inspectedBy || ""}
-                            onChange={(e) => {
-                              const emp = employees.find(emp => emp.userId === e.target.value);
-                              handleUpdate(prod._pid, "inspectedBy", e.target.value);
-                              handleUpdate(prod._pid, "inspectedByName", emp?.name || "");
-                            }}
+                        {/* 7. Repeatability */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
+                          <CustomDropdown
+                            value={prod.repeatability || "No"}
+                            onChange={(val) => handleUpdate(prod._pid, "repeatability", val)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {employees.map(e => (
-                              <option key={e.userId} value={e.userId}>{e.name}</option>
-                            ))}
-                          </select>
+                            placeholder="Select"
+                            size="sm"
+                            options={repeatabilityOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
                           {renderFillHandle(index, 7)}
                         </td>
 
+                        {/* 8. Delay Time(in mins) */}
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 8)}`} onMouseDown={(e) => handleCellMouseDown(index, 8, e)} onMouseEnter={() => handleCellMouseEnter(index, 8)}>
+                          <input
+                            type="number"
+                            min="0"
+                            value={prod.delayTime !== undefined ? prod.delayTime : ""}
+                            onChange={(e) => handleUpdate(prod._pid, "delayTime", e.target.value)}
+                            disabled={isReadOnly}
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-normal text-[0.8vw] text-center disabled:bg-transparent"
+                            placeholder="0"
+                          />
+                          {renderFillHandle(index, 8)}
+                        </td>
+
+                        {/* 9. Designators */}
+                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 9)}`} onMouseDown={(e) => handleCellMouseDown(index, 9, e)} onMouseEnter={() => handleCellMouseEnter(index, 9)}>
                           <input
                             type="text"
                             value={prod.designators || ""}
                             onChange={(e) => handleUpdate(prod._pid, "designators", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent"
                             placeholder="Designator..."
                           />
-                          {renderFillHandle(index, 8)}
+                          {renderFillHandle(index, 9)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 9)}`} onMouseDown={(e) => handleCellMouseDown(index, 9, e)} onMouseEnter={() => handleCellMouseEnter(index, 9)}>
-                           <div className="flex flex-col items-center gap-[0.4vw]">
+                        {/* 10. Board Image */}
+                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 10)}`} onMouseDown={(e) => handleCellMouseDown(index, 10, e)} onMouseEnter={() => handleCellMouseEnter(index, 10)}>
+                           <div className="flex flex-col items-center justify-center gap-[0.4vw]">
                              {prod.boardImage && (
                                <div className="relative group">
                                  <img 
                                    src={prod.boardImage.startsWith('data:') || prod.boardImage.startsWith('blob:') ? prod.boardImage : `${import.meta.env.VITE_API_URL}${prod.boardImage}`} 
                                    alt="Board" 
-                                   className="w-[2.5vw] h-[2.5vw] object-cover rounded-[0.3vw] border-r border-b border-slate-300"
+                                   className="w-[2.2vw] h-[2.2vw] object-cover rounded-[0.3vw] border border-slate-300"
                                  />
                                  {!isReadOnly && (
                                    <button 
@@ -562,8 +676,8 @@ const ProductionEditableProductTable = ({
                                </div>
                              )}
                              {!isReadOnly && !prod.boardImage && (
-                               <label className="cursor-pointer hover:text-blue-600 transition-colors">
-                                 <Plus className="w-[1.2vw] h-[1.2vw]" />
+                               <label className="cursor-pointer hover:text-blue-600 transition-colors flex items-center justify-center p-[0.2vw]">
+                                 <Plus className="w-[1.1vw] h-[1.1vw] text-slate-500 hover:text-blue-600" />
                                  <input 
                                    type="file" 
                                    className="hidden" 
@@ -583,39 +697,82 @@ const ProductionEditableProductTable = ({
                                </label>
                              )}
                            </div>
-                           {renderFillHandle(index, 9)}
+                           {renderFillHandle(index, 10)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 10)}`} onMouseDown={(e) => handleCellMouseDown(index, 10, e)} onMouseEnter={() => handleCellMouseEnter(index, 10)}>
-                          <select
+                        {/* 11. Detection Stage */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 11)}`} onMouseDown={(e) => handleCellMouseDown(index, 11, e)} onMouseEnter={() => handleCellMouseEnter(index, 11)}>
+                          <CustomDropdown
                             value={prod.stage || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "stage", e.target.value)}
+                            onChange={(val) => handleUpdate(prod._pid, "stage", val)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {stageOptions.map(s => (
-                              <option key={s} value={s}>{s}</option>
-                            ))}
-                          </select>
-                          {renderFillHandle(index, 10)}
-                        </td>
-
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 11)}`} onMouseDown={(e) => handleCellMouseDown(index, 11, e)} onMouseEnter={() => handleCellMouseEnter(index, 11)}>
-                          <input type="number" min="1" value={prod.qty} onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} disabled={isReadOnly} className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-regular  text-center disabled:bg-transparent" />
+                            placeholder="Select"
+                            size="sm"
+                            options={stageDropdownOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
                           {renderFillHandle(index, 11)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 12)}`} onMouseDown={(e) => handleCellMouseDown(index, 12, e)} onMouseEnter={() => handleCellMouseEnter(index, 12)}>
+                        {/* 12. Inspected By */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 12)}`} onMouseDown={(e) => handleCellMouseDown(index, 12, e)} onMouseEnter={() => handleCellMouseEnter(index, 12)}>
+                          <CustomDropdown
+                            value={prod.inspectedBy || ""}
+                            onChange={(val) => {
+                              const emp = employees.find(emp => (emp.userId || emp._id) === val);
+                              handleUpdate(prod._pid, "inspectedBy", val);
+                              handleUpdate(prod._pid, "inspectedByName", emp?.name || "");
+                            }}
+                            disabled={isReadOnly}
+                            placeholder="Select"
+                            size="sm"
+                            options={employeeDropdownOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
+                          {renderFillHandle(index, 12)}
+                        </td>
+
+                        {/* 13. Qty */}
+                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 13)}`} onMouseDown={(e) => handleCellMouseDown(index, 13, e)} onMouseEnter={() => handleCellMouseEnter(index, 13)}>
+                          <input 
+                            type="number" 
+                            min="1" 
+                            value={prod.qty} 
+                            onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} 
+                            disabled={isReadOnly} 
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal text-[0.8vw] text-center disabled:bg-transparent" 
+                          />
+                          {renderFillHandle(index, 13)}
+                        </td>
+
+                        {/* 14. Batch / SN */}
+                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 14)}`} onMouseDown={(e) => handleCellMouseDown(index, 14, e)} onMouseEnter={() => handleCellMouseEnter(index, 14)}>
                           <div className="relative flex items-center group">
                             <input 
                               type="text" 
                               autoComplete="off" 
-                              value={prod.serialNumber || ""} 
-                              onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} 
-                              placeholder="SN-XXXX" 
+                              value={prod.serialNumber || prod.identification || ""} 
+                              onChange={(e) => {
+                                handleUpdate(prod._pid, "serialNumber", e.target.value);
+                                handleUpdate(prod._pid, "identification", e.target.value);
+                              }} 
+                              placeholder="Batch / SN" 
                               disabled={isReadOnly} 
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent" 
+                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent" 
                             />
                             {!isReadOnly && (
                               <button type="button" className="absolute right-[0.4vw] p-[0.3vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all">
@@ -623,63 +780,60 @@ const ProductionEditableProductTable = ({
                               </button>
                             )}
                           </div>
-                          {renderFillHandle(index, 12)}
-                        </td>
-
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 13)}`} onMouseDown={(e) => handleCellMouseDown(index, 13, e)} onMouseEnter={() => handleCellMouseEnter(index, 13)}>
-                          <select
-                            value={prod.disposition || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "disposition", e.target.value)}
-                            disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {dispositionOptions.map(opt => (
-                              <option key={opt} value={opt}>{opt}</option>
-                            ))}
-                          </select>
-                          {renderFillHandle(index, 13)}
-                        </td>
-
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 14)}`} onMouseDown={(e) => handleCellMouseDown(index, 14, e)} onMouseEnter={() => handleCellMouseEnter(index, 14)}>
-                          <select
-                            value={prod.raisedTo || ""}
-                            onChange={(e) => handleUpdate(prod._pid, "raisedTo", e.target.value)}
-                            disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select Stage</option>
-                            {stageOptions.map(s => (
-                              <option key={s} value={s}>{s}</option>
-                            ))}
-                          </select>
                           {renderFillHandle(index, 14)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 15)}`} onMouseDown={(e) => handleCellMouseDown(index, 15, e)} onMouseEnter={() => handleCellMouseEnter(index, 15)}>
-                          <select
-                            value={prod.assignedTo || ""}
-                            onChange={(e) => {
-                              const emp = employees.find(emp => emp.userId === e.target.value);
-                              handleUpdate(prod._pid, "assignedTo", e.target.value);
-                              handleUpdate(prod._pid, "assignedToName", emp?.name || "");
+                        {/* 15. Disposition */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 15)}`} onMouseDown={(e) => handleCellMouseDown(index, 15, e)} onMouseEnter={() => handleCellMouseEnter(index, 15)}>
+                          <CustomDropdown
+                            value={prod.disposition || ""}
+                            onChange={(val) => handleUpdate(prod._pid, "disposition", val)}
+                            disabled={isReadOnly}
+                            placeholder="Select"
+                            size="sm"
+                            options={dispositionDropdownOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
+                          {renderFillHandle(index, 15)}
+                        </td>
+
+                        {/* 16. Raised To */}
+                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 16)}`} onMouseDown={(e) => handleCellMouseDown(index, 16, e)} onMouseEnter={() => handleCellMouseEnter(index, 16)}>
+                          <CustomDropdown
+                            value={prod.raisedTo || ""}
+                            onChange={(val) => {
+                              const emp = employees.find(emp => (emp.userId || emp._id) === val);
+                              handleUpdate(prod._pid, "raisedTo", val);
+                              handleUpdate(prod._pid, "raisedToName", emp?.name || val);
                             }}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-regular  disabled:bg-transparent"
-                          >
-                            <option value="">Select</option>
-                            {employees.filter(e => e.role === "User").map(e => (
-                              <option key={e.userId} value={e.userId}>{e.name}</option>
-                            ))}
-                          </select>
-                          {renderFillHandle(index, 15)}
+                            placeholder="Select Employee"
+                            size="sm"
+                            options={employeeDropdownOptions}
+                            usePortal={true}
+                            maxHeight="10.5vw"
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                              isReadOnly
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                            }`}
+                            className="w-full"
+                          />
+                          {renderFillHandle(index, 16)}
                         </td>
 
                         {!isReadOnly && (
                           <td className="sticky right-0 py-[0.6vw] px-[0.8vw] border-r border-b border-slate-300 bg-white z-10 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">
                             <div className="flex items-center justify-start gap-[0.5vw]">
-                              <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.4vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors"><Copy className="w-[1vw] h-[1vw]" /></button>
-                              <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.4vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors"><Trash2 className="w-[1vw] h-[1vw]" /></button>
+                              <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.4vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors" title="Duplicate row"><Copy className="w-[1vw] h-[1vw]" /></button>
+                              <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.4vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors" title="Delete row"><Trash2 className="w-[1vw] h-[1vw]" /></button>
                             </div>
                           </td>
                         )}
@@ -690,7 +844,7 @@ const ProductionEditableProductTable = ({
                 
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={10} className="py-[1vw] text-center text-blue-700 font-bold italic text-[0.8vw] bg-blue-100/50">
+                     <td colSpan={19} className="py-[1vw] text-center text-blue-700 font-bold italic text-[0.8vw] bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>
