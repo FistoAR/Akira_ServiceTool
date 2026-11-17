@@ -14,11 +14,39 @@ export default function useEscalationWorker() {
   const intervalRef = useRef(null);
   const notifiedTimersRef = useRef({ reminder: new Set(), expired: new Set() });
 
+  const playBeep = useCallback((volume = 0.06, duration = 150, freq = 880) => {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g);
+      g.connect(ctx.destination);
+      g.gain.value = volume;
+      o.frequency.value = freq;
+      o.type = "sine";
+      o.start();
+      setTimeout(() => {
+        try {
+          o.stop();
+          ctx.close();
+        } catch {
+          // Ignore
+        }
+      }, duration);
+    } catch {
+      // Audio autoplay policy or not supported
+    }
+  }, []);
+
   // Load old notifications
   useEffect(() => {
     const stored = localStorage.getItem(NOTIFICATIONS_KEY);
     if (stored) {
-      try { setNotifications(JSON.parse(stored)); } catch (e) {}
+      try { setNotifications(JSON.parse(stored)); } catch {
+        // Ignore JSON error
+      }
     }
   }, []);
 
@@ -116,23 +144,7 @@ export default function useEscalationWorker() {
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
-  }, [activeCalls]);
-
-  const playBeep = (volume = 0.06, duration = 150, freq = 880) => {
-    try {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      const ctx = new Ctx();
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.connect(g);
-      g.connect(ctx.destination);
-      g.gain.value = volume;
-      o.frequency.value = freq;
-      o.type = "sine";
-      o.start();
-      setTimeout(() => { o.stop(); ctx.close(); }, duration);
-    } catch (e) {}
-  };
+  }, [activeCalls, playBeep]);
 
   const resolveCall = useCallback((callId) => {
     // Left for backwards compatibility, actual resolution handled via API

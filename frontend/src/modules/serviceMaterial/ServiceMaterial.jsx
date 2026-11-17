@@ -32,6 +32,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Icon } from "@iconify/react";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import EditableProductTable from "./EditableProductTable";
@@ -241,6 +242,8 @@ const BoardTypeMasterModal = ({ onClose }) => {
   const [newItem, setNewItem] = useState({ name: "" });
   const [editingId, setEditingId] = useState(null);
   const [editItem, setEditItem] = useState({ name: "" });
+  const [deleteConfirmItem, setDeleteConfirmItem] = useState(null); // { id, name }
+  const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useNotification();
 
   useEffect(() => {
@@ -283,15 +286,18 @@ const BoardTypeMasterModal = ({ onClose }) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this Board Type?"))
-      return;
+  const handleDelete = async () => {
+    if (!deleteConfirmItem) return;
+    setIsDeleting(true);
     try {
-      await axios.delete(`${API_URL}/master/board-types/${id}`);
+      await axios.delete(`${API_URL}/master/board-types/${deleteConfirmItem.id}`);
       toast("Deleted successfully", "success");
+      setDeleteConfirmItem(null);
       fetchItems();
     } catch (err) {
       toast("Failed to delete", "error");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -436,7 +442,8 @@ const BoardTypeMasterModal = ({ onClose }) => {
                                   <Edit3 className="w-[0.85vw] h-[0.85vw]" />
                                 </button>
                                 <button
-                                  onClick={() => handleDelete(item._id)}
+                                  type="button"
+                                  onClick={() => setDeleteConfirmItem({ id: item._id, name: item.name })}
                                   className="text-slate-600 hover:text-rose-600 p-[0.3vw] hover:bg-rose-50 rounded-full cursor-pointer transition-colors"
                                   title="Delete"
                                 >
@@ -454,6 +461,71 @@ const BoardTypeMasterModal = ({ onClose }) => {
             </div>
           )}
         </div>
+
+        {/* Delete Confirmation Modal for Board Type */}
+        <AnimatePresence>
+          {deleteConfirmItem && (
+            <div className="fixed inset-0 z-[250] flex items-center justify-center p-[1vw]">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
+                onClick={() => {
+                  if (!isDeleting) setDeleteConfirmItem(null);
+                }}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-[24vw] min-w-[320px] bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 overflow-hidden z-10 flex flex-col font-sans"
+              >
+                <div className="p-[1.2vw] pb-[0.8vw] flex items-start gap-[0.8vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
+                    <Trash2 className="w-[1vw] h-[1vw] text-rose-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-[0.9vw] font-semibold text-slate-800 leading-snug">
+                      Delete Board Type
+                    </h4>
+                    <p className="text-[0.74vw] text-slate-500 mt-[0.2vw] font-normal leading-relaxed">
+                      Are you sure you want to delete <strong className="font-semibold text-slate-700">"{deleteConfirmItem.name}"</strong>?
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteConfirmItem(null)}
+                    disabled={isDeleting}
+                    className="p-[0.25vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                  >
+                    <X className="w-[0.9vw] h-[0.9vw]" />
+                  </button>
+                </div>
+
+                <div className="p-[0.9vw] bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-[0.5vw]">
+                  <button
+                    type="button"
+                    onClick={() => setDeleteConfirmItem(null)}
+                    disabled={isDeleting}
+                    className="px-[0.8vw] py-[0.35vw] text-[0.72vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded-[0.35vw] shadow-2xs transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className="inline-flex items-center gap-[0.3vw] px-[0.85vw] py-[0.35vw] text-[0.72vw] font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-[0.35vw] shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
@@ -1167,13 +1239,13 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
       console.error(e);
     }
 
-    const autoDate = todayDateStr();
+    const autoDate = new Date().toISOString();
 
     const newHistoryEntry = {
       status,
       remarks,
       date: autoDate,
-      timestamp: new Date().toISOString(),
+      timestamp: autoDate,
       adminId,
       adminName,
     };
@@ -1343,19 +1415,19 @@ const HistoryCellButton = ({ prod, row }) => {
               {/* Header */}
               <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
                 <div>
-                  <h3 className="text-[1.05vw] font-bold text-slate-900 flex items-center gap-[0.45vw]">
+                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
                     <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-700 font-medium mt-[0.15vw]">
+                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
                     {prod.productDescription || "Product"} (
-                    <span className="font-mono font-semibold text-slate-900">{prod.serialNumber || "—"}</span>)
+                    <span className="font-mono font-medium text-slate-800">{prod.serialNumber || "—"}</span>)
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowHistory(false)}
-                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
                 >
                   <X className="w-[1.1vw] h-[1.1vw]" />
                 </button>
@@ -1537,49 +1609,49 @@ const HistoryCellButton = ({ prod, row }) => {
                             <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
                               <div className="flex items-center justify-between gap-[0.5vw] flex-wrap">
                                 {entry.type === "assigned" ? (
-                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-blue-50 text-blue-800 border-blue-200">
+                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
                                     Assigned → {entry.name}
                                   </span>
                                 ) : entry.type === "admin" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                         entry.status.includes("Approved")
-                                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                                          : "bg-rose-50 text-rose-800 border-rose-200"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          : "bg-rose-50 text-rose-700 border-rose-200"
                                       }`}
                                     >
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-900 rounded border border-indigo-200 font-semibold">
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-normal">
                                         Admin: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "adminEdit" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-indigo-50 text-indigo-800 border-indigo-200">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-800 rounded border border-slate-200 font-semibold">
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
                                         By: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "closureEdit" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border bg-amber-50 text-amber-900 border-amber-300">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-800 rounded border border-slate-200 font-semibold">
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
                                         {entry.adminName}
                                       </span>
                                     )}
                                     {entry.occurredAfterCompleted && (
-                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-800 rounded border border-rose-200 font-bold uppercase tracking-wider">
+                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
                                         Post-Completion Edit
                                       </span>
                                     )}
@@ -1587,22 +1659,22 @@ const HistoryCellButton = ({ prod, row }) => {
                                 ) : (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-bold border ${
+                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                         entry.status === "Completed"
-                                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : entry.status === "Hold"
-                                            ? "bg-rose-50 text-rose-800 border-rose-200"
+                                            ? "bg-rose-50 text-rose-700 border-rose-200"
                                             : entry.status === "Not Repairable"
-                                              ? "bg-slate-100 text-slate-800 border-slate-300"
+                                              ? "bg-slate-100 text-slate-700 border-slate-300"
                                               : entry.status === "Under Testing"
-                                                ? "bg-purple-50 text-purple-800 border-purple-200"
-                                                : "bg-amber-50 text-amber-800 border-amber-200"
+                                                ? "bg-purple-50 text-purple-700 border-purple-200"
+                                                : "bg-amber-50 text-amber-750 border-amber-200"
                                       }`}
                                     >
                                       {entry.status}
                                     </span>
                                     {entry.occurredAfterCompleted && (
-                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-800 rounded border border-rose-200 font-bold uppercase tracking-wider">
+                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
                                         Edited After Completed
                                       </span>
                                     )}
@@ -1610,15 +1682,15 @@ const HistoryCellButton = ({ prod, row }) => {
                                 )}
 
                                 {tsLabel && (
-                                  <span className="text-[0.68vw] text-slate-700 font-mono font-semibold whitespace-nowrap">
+                                  <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
                                     {tsLabel}
                                   </span>
                                 )}
                               </div>
 
                               {entry.remark && (
-                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-800 leading-relaxed font-normal">
-                                  <span className="text-slate-700 font-semibold mr-[0.3vw]">
+                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
+                                  <span className="text-slate-500 font-medium mr-[0.3vw]">
                                     Remarks / Reason:
                                   </span>
                                   {entry.remark}
@@ -1627,10 +1699,10 @@ const HistoryCellButton = ({ prod, row }) => {
 
                               {/* Diffs display for edits */}
                               {entry.diffs && entry.diffs.length > 0 && (
-                                <div className="mt-[0.5vw] bg-purple-50/40 rounded-[0.4vw] border border-purple-200/80 p-[0.45vw] space-y-[0.35vw]">
+                                <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
                                   <div className="flex items-center justify-between text-[0.72vw]">
-                                    <span className="font-bold text-purple-900 flex items-center gap-[0.35vw]">
-                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-600" />
+                                    <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
+                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
                                       Changed Fields ({entry.diffs.length})
                                     </span>
                                   </div>
@@ -1640,26 +1712,26 @@ const HistoryCellButton = ({ prod, row }) => {
                                         key={di}
                                         className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
                                       >
-                                        <div className="font-bold text-slate-800 text-[0.7vw] mb-[0.2vw]">
+                                        <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
                                           {d.field}
                                         </div>
                                         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
-                                          <div className="bg-rose-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200">
-                                            <div className="text-[0.6vw] font-bold text-rose-700 uppercase tracking-wider mb-[0.05vw]">
+                                          <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
+                                            <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
                                               Previous
                                             </div>
-                                            <div className="text-rose-800 font-medium text-[0.72vw] line-through break-words">
+                                            <div className="text-rose-700 font-normal text-[0.72vw] break-words">
                                               {String(d.originalValue || "—")}
                                             </div>
                                           </div>
-                                          <div className="text-slate-600 font-bold text-[0.75vw] px-[0.1vw]">
+                                          <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
                                             →
                                           </div>
-                                          <div className="bg-emerald-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200">
-                                            <div className="text-[0.6vw] font-bold text-emerald-800 uppercase tracking-wider mb-[0.05vw]">
+                                          <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
+                                            <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
                                               Updated
                                             </div>
-                                            <div className="text-emerald-950 font-bold text-[0.72vw] break-words">
+                                            <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
                                               {String(d.editedValue || "—")}
                                             </div>
                                           </div>
@@ -1835,11 +1907,23 @@ const AdminTableView = ({
 }) => {
   const [collapsedCustomers, setCollapsedCustomers] = useState({});
   const [collapsedEntries, setCollapsedEntries] = useState({});
+  const [expandedCustomerDetails, setExpandedCustomerDetails] = useState({});
+  const [expandedEntryDetails, setExpandedEntryDetails] = useState({});
 
   const toggleCustomer = (name) =>
     setCollapsedCustomers((p) => ({ ...p, [name]: !p[name] }));
   const toggleEntry = (id) =>
     setCollapsedEntries((p) => ({ ...p, [id]: !p[id] }));
+
+  const toggleCustomerDetails = (name, e) => {
+    e.stopPropagation();
+    setExpandedCustomerDetails((p) => ({ ...p, [name]: !p[name] }));
+  };
+
+  const toggleEntryDetails = (id, e) => {
+    e.stopPropagation();
+    setExpandedEntryDetails((p) => ({ ...p, [id]: !p[id] }));
+  };
 
   // Group paginated data by customer
   const groups = useMemo(() => {
@@ -2068,46 +2152,64 @@ const AdminTableView = ({
                           {customerName}
                         </span>
 
-                        {/* Customer Code if available on the first row */}
-                        {rows[0]?.customerCode && (
-                          <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.3vw]">
-                            Code: {rows[0].customerCode}
-                          </span>
-                        )}
+                        {/* Toggle button to reveal / hide customer details */}
+                        <button
+                          type="button"
+                          onClick={(e) => toggleCustomerDetails(customerName, e)}
+                          title={expandedCustomerDetails[customerName] ? "Collapse customer details" : "Expand customer details"}
+                          className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.3vw] shadow-2xs"
+                        >
+                          <Icon
+                            icon={expandedCustomerDetails[customerName] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
+                            className="w-[0.75vw] h-[0.75vw]"
+                          />
+                        </button>
 
-                        {/* Ref No (Customer) */}
-                        {rows[0]?.refNoCustomer && (
-                          <span className="text-[0.65vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
-                            Cust Ref: {rows[0].refNoCustomer}
-                          </span>
-                        )}
+                        {/* Customer metadata: revealed on clicking chevron */}
+                        {expandedCustomerDetails[customerName] && (
+                          <div className="flex items-center gap-[0.35vw] flex-wrap animate-in fade-in duration-200">
+                            {/* Customer Code if available on the first row */}
+                            {rows[0]?.customerCode && (
+                              <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.2vw]">
+                                Code: {rows[0].customerCode}
+                              </span>
+                            )}
 
-                        {/* Ref No (Internal) */}
-                        {rows[0]?.refNoInternal && (
-                          <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
-                            Int Ref: {rows[0].refNoInternal}
-                          </span>
-                        )}
+                            {/* Ref No (Customer) */}
+                            {rows[0]?.refNoCustomer && (
+                              <span className="text-[0.65vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                Cust Ref: {rows[0].refNoCustomer}
+                              </span>
+                            )}
 
-                        {/* Category (Cus Type) */}
-                        {rows[0]?.category && (
-                          <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
-                            Type: {rows[0].category}
-                          </span>
-                        )}
+                            {/* Ref No (Internal) */}
+                            {rows[0]?.refNoInternal && (
+                              <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                Int Ref: {rows[0].refNoInternal}
+                              </span>
+                            )}
 
-                        {/* Unit */}
-                        {rows[0]?.unit && (
-                          <span className="text-[0.65vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
-                            Unit: {rows[0].unit}
-                          </span>
-                        )}
+                            {/* Category (Cus Type) */}
+                            {rows[0]?.category && (
+                              <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                Type: {rows[0].category}
+                              </span>
+                            )}
 
-                        {/* Site */}
-                        {rows[0]?.site && (
-                          <span className="text-[0.65vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.3vw]">
-                            Site: {rows[0].site}
-                          </span>
+                            {/* Unit */}
+                            {rows[0]?.unit && (
+                              <span className="text-[0.65vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                Unit: {rows[0].unit}
+                              </span>
+                            )}
+
+                            {/* Site */}
+                            {rows[0]?.site && (
+                              <span className="text-[0.65vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                Site: {rows[0].site}
+                              </span>
+                            )}
+                          </div>
                         )}
 
                         <div className="ml-auto flex items-center gap-[0.8vw]" />
@@ -2240,8 +2342,21 @@ const AdminTableView = ({
                                   </span>
                                 </div>
 
-                                {/* Inward Quantities Summary: Received, Claimed, Dispatched, Balance */}
-                                {(() => {
+                                {/* Toggle button to reveal / hide Inward Quantities Summary */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => toggleEntryDetails(row.id, e)}
+                                  title={expandedEntryDetails[row.id] ? "Collapse summary" : "Expand summary"}
+                                  className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.3vw] shadow-2xs"
+                                >
+                                  <Icon
+                                    icon={expandedEntryDetails[row.id] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
+                                    className="w-[0.75vw] h-[0.75vw]"
+                                  />
+                                </button>
+
+                                {/* Inward Quantities Summary: Received, Claimed, Dispatched, Balance (Revealed on click) */}
+                                {expandedEntryDetails[row.id] && (() => {
                                   const rowReceived = prods.reduce((sum, p) => sum + (Math.max(1, Number(p.qty) || 1)), 0);
                                   const rowDispatched = prods.reduce((sum, p) => {
                                     const raw = p.status || p.report?.status || "Open";
@@ -2255,7 +2370,7 @@ const AdminTableView = ({
                                   const rowBalance = Math.max(0, rowReceived - rowDispatched);
 
                                   return (
-                                    <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[1.5vw]">
+                                    <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[0.8vw] animate-in fade-in duration-200">
                                       <span title="Received Qty">
                                         Received: <span className="font-semibold text-slate-800">{rowReceived}</span>
                                       </span>
@@ -2482,11 +2597,17 @@ const AdminTableView = ({
 
                                     {/* Final Status */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
-                                      <FinalStatusCell
-                                        row={row}
-                                        prod={prod}
-                                        onUpdateProduct={onUpdateProduct}
-                                      />
+                                      {prod.status === "Completed" || prod.report?.status === "Completed" ? (
+                                        <FinalStatusCell
+                                          row={row}
+                                          prod={prod}
+                                          onUpdateProduct={onUpdateProduct}
+                                        />
+                                      ) : (
+                                        <span className="text-slate-400 font-medium text-[0.8vw] select-none">
+                                          —
+                                        </span>
+                                      )}
                                     </td>
 
                                     {/* History */}

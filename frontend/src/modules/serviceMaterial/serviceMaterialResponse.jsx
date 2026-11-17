@@ -41,6 +41,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -312,6 +313,12 @@ export default function ServiceMaterialInwardResponse({
   const [tempSerialInput, setTempSerialInput] = useState("");
   const [showOnlyUnsaved, setShowOnlyUnsaved] = useState(false);
   const [copiedSerial, setCopiedSerial] = useState(null);
+  const [expandedCustomerDetails, setExpandedCustomerDetails] = useState({});
+
+  const toggleCustomerDetails = (name, e) => {
+    e.stopPropagation();
+    setExpandedCustomerDetails((p) => ({ ...p, [name]: !p[name] }));
+  };
 
   const handleCopySerial = (sn) => {
     if (!sn) return;
@@ -362,6 +369,8 @@ export default function ServiceMaterialInwardResponse({
   const [editReportModal, setEditReportModal] = useState(null);
   const [editReason, setEditReason] = useState("");
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+  const [dragOverPid, setDragOverPid] = useState(null);
+  const [unclaimConfirmModal, setUnclaimConfirmModal] = useState(null); // { id, productId, productDescription, serialNumber }
 
   // Drag-and-fill states
   const [selection, setSelection] = useState(null);
@@ -763,10 +772,8 @@ export default function ServiceMaterialInwardResponse({
     });
   };
 
-  const handleImageChange = async (productId, product, e) => {
-    const file = e.target.files?.[0];
+  const processAndSetImage = async (productId, product, file) => {
     if (!file) return;
-
     try {
       const processed = await processUploadFile(file);
       if (!processed) return;
@@ -793,10 +800,16 @@ export default function ServiceMaterialInwardResponse({
           "The uploaded document is too large. Please compress and upload under 5MB.",
         "error"
       );
-    } finally {
-      // Clear input so user can re-select same file if needed
-      e.target.value = "";
     }
+  };
+
+  const handleImageChange = async (productId, product, e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      await processAndSetImage(productId, product, file);
+    }
+    // Clear input so user can re-select same file if needed
+    e.target.value = "";
   };
 
   const saveRow = async (entry, product, draft, showToastMsg = true) => {
@@ -917,7 +930,9 @@ export default function ServiceMaterialInwardResponse({
 
   const handleBulkSave = async () => {
     const productsToSave = [];
-    for (const { entry, product } of myItems) {
+    for (const item of myItems) {
+      const { entry, product } = item;
+      if (!isItemEditable(item)) continue;
       const draft = drafts[product._pid];
       if (draft && draft.hasChanges) {
         productsToSave.push({ entry, product, draft });
@@ -1091,10 +1106,7 @@ export default function ServiceMaterialInwardResponse({
         let matchesAllFilter = false;
         if (isUnclaimed || isAssignedToMe) {
           if (showOnlyUnsaved) {
-            if (
-              isAssignedToMe &&
-              (rawStatus === "Open" || rawStatus === "Assigned")
-            ) {
+            if (isAssignedToMe) {
               matchesAllFilter = true;
             }
           } else if (showOnlyUnclaimed) {
@@ -1160,13 +1172,7 @@ export default function ServiceMaterialInwardResponse({
 
           // In All tab, apply sub-filters
           if (showOnlyUnsaved) {
-            if (
-              !(
-                isAssignedToMe &&
-                (rawStatus === "Open" || rawStatus === "Assigned")
-              )
-            )
-              return;
+            if (!isAssignedToMe) return;
           }
           if (showOnlyUnclaimed) {
             if (!isUnclaimed) return;
@@ -1339,9 +1345,6 @@ export default function ServiceMaterialInwardResponse({
   };
 
   const unclaimProduct = async (id, productId) => {
-    if (!window.confirm("Are you sure you want to unclaim this product? It will be released back to Open queue.")) {
-      return;
-    }
     setUnclaimingStates((prev) => ({ ...prev, [productId]: true }));
     try {
       const res = await axios.patch(
@@ -1367,6 +1370,7 @@ export default function ServiceMaterialInwardResponse({
       );
     } finally {
       setUnclaimingStates((prev) => ({ ...prev, [productId]: false }));
+      setUnclaimConfirmModal(null);
     }
   };
 
@@ -1527,12 +1531,6 @@ export default function ServiceMaterialInwardResponse({
       minW: "min-w-[10vw]",
     },
     {
-      key: "completionDate",
-      label: "Completion Date",
-      align: "text-left",
-      minW: "min-w-[10vw]",
-    },
-    {
       key: "status",
       label: (
         <span>
@@ -1540,6 +1538,12 @@ export default function ServiceMaterialInwardResponse({
         </span>
       ),
       align: "text-center",
+      minW: "min-w-[10vw]",
+    },
+    {
+      key: "completionDate",
+      label: "Completion Date",
+      align: "text-left",
       minW: "min-w-[10vw]",
     },
     {
@@ -1564,8 +1568,41 @@ export default function ServiceMaterialInwardResponse({
     },
   ];
 
+  const isItemEditable = (item) => {
+    if (!item || !item.product) return false;
+    const { product } = item;
+    const pStatus = product.status || product.report?.status || "Open";
+    const isAdminReturnedProduct =
+      pStatus === "Completed" &&
+      (product.finalStatusHistory?.length ?? 0) > 0 &&
+      product.finalStatus !== "Completed";
+    const isClaimedByMe =
+      product.assignedTo === (currentUser?.userId || currentUser?.id) &&
+      !isAdminReturnedProduct;
+    const isResubmitting =
+      filterStatus === "Admin Returned" &&
+      isAdminReturnedProduct &&
+      product.assignedTo === (currentUser?.userId || currentUser?.id);
+    const isProductCompleted = pStatus === "Completed";
+    const isEditingCompleted = Boolean(editingCompletedPids[product._pid]);
+    return (isClaimedByMe && (!isProductCompleted || isEditingCompleted)) || isResubmitting;
+  };
+
+  const isCellEditable = (item, colKey) => {
+    if (!isItemEditable(item)) return false;
+    if (colKey === "completionDate") {
+      const pid = item.product._pid;
+      const d = drafts[pid] || getDraft(pid, item.product);
+      const curStatus = d?.status || item.product.status || item.product.report?.status || "";
+      if (curStatus !== "Completed") return false;
+    }
+    return true;
+  };
+
   const handleCellMouseDown = (rowIndex, colKey, e) => {
     if (!EDITABLE_COL_FIELDS[colKey]) return;
+    const targetItem = paginatedItems[rowIndex];
+    if (!isCellEditable(targetItem, colKey)) return;
     setSelection({
       startRow: rowIndex,
       endRow: rowIndex,
@@ -1577,6 +1614,8 @@ export default function ServiceMaterialInwardResponse({
   const handleFillHandleMouseDown = (e, rowIndex, colKey) => {
     e.stopPropagation();
     e.preventDefault();
+    const targetItem = paginatedItems[rowIndex];
+    if (!isCellEditable(targetItem, colKey)) return;
     setSelection({
       startRow: rowIndex,
       endRow: rowIndex,
@@ -1600,22 +1639,27 @@ export default function ServiceMaterialInwardResponse({
       const field = EDITABLE_COL_FIELDS[colKey];
       if (field) {
         const sourceItem = paginatedItems[startRow];
-        if (sourceItem) {
+        if (sourceItem && isCellEditable(sourceItem, colKey)) {
           const sourceDraft = drafts[sourceItem.product._pid] || getDraft(sourceItem.product._pid, sourceItem.product);
           const sourceValue = sourceDraft[field];
 
           const minR = Math.min(startRow, endRow);
           const maxR = Math.max(startRow, endRow);
 
+          let filledCount = 0;
           for (let r = minR; r <= maxR; r++) {
             if (r === startRow) continue;
             const targetItem = paginatedItems[r];
-            if (targetItem) {
+            // ONLY fill into records that are editable and valid for this specific column (e.g. completionDate requires status === Completed)
+            if (targetItem && isCellEditable(targetItem, colKey)) {
               const pid = targetItem.product._pid;
               handleDraftChange(pid, targetItem.product, field, sourceValue);
+              filledCount++;
             }
           }
-          toast(`Filled ${field} down from row ${minR + 1} to ${maxR + 1}`);
+          if (filledCount > 0) {
+            toast(`Filled ${field} down across ${filledCount} eligible row(s)`);
+          }
         }
       }
     }
@@ -1648,7 +1692,8 @@ export default function ServiceMaterialInwardResponse({
     if (!selection || selection.colKey !== colKey) return null;
     const { startRow, endRow } = selection;
     const maxR = Math.max(startRow, endRow);
-    if (rowIndex === maxR) {
+    const item = paginatedItems[rowIndex];
+    if (rowIndex === maxR && isCellEditable(item, colKey)) {
       return (
         <div
           data-fill-handle="true"
@@ -2100,39 +2145,57 @@ export default function ServiceMaterialInwardResponse({
                                   {entry.customerName}
                                 </span>
 
-                                {/* Customer Code */}
-                                {entry.customerCode && (
-                                  <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.5vw]">
-                                    Code: {entry.customerCode}
-                                  </span>
-                                )}
+                                {/* Toggle button to reveal / hide customer details */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => toggleCustomerDetails(entry.customerName, e)}
+                                  title={expandedCustomerDetails[entry.customerName] ? "Collapse customer details" : "Expand customer details"}
+                                  className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.2vw] shadow-2xs"
+                                >
+                                  <Icon
+                                    icon={expandedCustomerDetails[entry.customerName] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
+                                    className="w-[0.75vw] h-[0.75vw]"
+                                  />
+                                </button>
 
-                                {/* Ref No (Customer) */}
-                                {entry.refNoCustomer && (
-                                  <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
-                                    Cust Ref: {entry.refNoCustomer}
-                                  </span>
-                                )}
+                                {/* Customer metadata badges: hidden by default, revealed on clicking chevron */}
+                                {expandedCustomerDetails[entry.customerName] && (
+                                  <div className="flex items-center gap-[0.4vw] flex-wrap animate-in fade-in duration-200">
+                                    {/* Customer Code */}
+                                    {entry.customerCode && (
+                                      <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.3vw]">
+                                        Code: {entry.customerCode}
+                                      </span>
+                                    )}
 
-                                {/* Ref No (Internal) */}
-                                {entry.refNoInternal && (
-                                  <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
-                                    Int Ref: {entry.refNoInternal}
-                                  </span>
-                                )}
+                                    {/* Ref No (Customer) */}
+                                    {entry.refNoCustomer && (
+                                      <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        Cust Ref: {entry.refNoCustomer}
+                                      </span>
+                                    )}
 
-                                {/* Category (Cus Type) */}
-                                {entry.category && (
-                                  <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
-                                    Type: {entry.category}
-                                  </span>
-                                )}
+                                    {/* Ref No (Internal) */}
+                                    {entry.refNoInternal && (
+                                      <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        Int Ref: {entry.refNoInternal}
+                                      </span>
+                                    )}
 
-                                {/* Unit */}
-                                {entry.unit && (
-                                  <span className="text-[0.7vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.5vw]">
-                                    Unit: {entry.unit}
-                                  </span>
+                                    {/* Category (Cus Type) */}
+                                    {entry.category && (
+                                      <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        Type: {entry.category}
+                                      </span>
+                                    )}
+
+                                    {/* Unit */}
+                                    {entry.unit && (
+                                      <span className="text-[0.7vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        Unit: {entry.unit}
+                                      </span>
+                                    )}
+                                  </div>
                                 )}
                               </div>
                             </td>
@@ -2145,14 +2208,14 @@ export default function ServiceMaterialInwardResponse({
                                 colSpan={columns.length}
                                 className="p-0 border-b border-amber-300 bg-amber-50"
                               >
-                                <div className="flex items-center gap-[1.2vw] flex-wrap sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-amber-50 z-10">
-                                  <div className="flex items-center gap-[0.4vw]">
-                                    <span className="inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.18vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.68vw] font-bold shadow-2xs">
-                                      <AlertTriangle className="w-[0.7vw] h-[0.7vw] text-amber-600" />
-                                      ↩ Admin Returned / Declined
+                                <div className="flex items-center gap-[1.2vw] flex-wrap sticky left-0 w-fit px-[1vw] py-[0.55vw] bg-amber-50 z-10">
+                                  <div className="flex items-center gap-[0.45vw]">
+                                    <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.74vw] font-semibold shadow-2xs">
+                                      <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
+                                      Admin Returned / Declined
                                     </span>
                                     <span
-                                      className={`inline-flex items-center px-[0.5vw] py-[0.15vw] rounded-full border text-[0.65vw] font-semibold ${
+                                      className={`inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.7vw] font-medium ${
                                         product.finalStatus === "Hold"
                                           ? "bg-rose-100 text-rose-800 border-rose-300"
                                           : product.finalStatus ===
@@ -2164,32 +2227,39 @@ export default function ServiceMaterialInwardResponse({
                                       {product.finalStatus}
                                     </span>
                                   </div>
-                                  {product.finalStatusDate && (
-                                    <span className="text-[0.68vw] text-gray-600 font-semibold bg-white border border-amber-200 px-[0.5vw] py-[0.1vw] rounded">
-                                      📅{" "}
-                                      {(() => {
-                                        const dt = new Date(
-                                          product.finalStatusDate,
-                                        );
-                                        if (Number.isNaN(dt.getTime()))
-                                          return product.finalStatusDate;
-                                        return dt.toLocaleString("en-IN", {
-                                          day: "2-digit",
-                                          month: "short",
-                                          year: "numeric",
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                          hour12: true,
-                                        });
-                                      })()}
-                                    </span>
-                                  )}
+                                  {(() => {
+                                    const latestReturnHistory = (product.finalStatusHistory || [])
+                                      .slice()
+                                      .reverse()
+                                      .find((h) => h.status === "Admin Returned" || h.status === "Declined");
+                                    const rawTimestamp = latestReturnHistory?.timestamp || latestReturnHistory?.date || product.finalStatusDate;
+                                    if (!rawTimestamp) return null;
+
+                                    return (
+                                      <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-700 font-medium bg-white border border-amber-200 px-[0.6vw] py-[0.2vw] rounded shadow-2xs">
+                                        <Icon icon="solar:calendar-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                                        {(() => {
+                                          const dt = new Date(rawTimestamp);
+                                          if (Number.isNaN(dt.getTime())) return rawTimestamp;
+                                          return dt.toLocaleString("en-IN", {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            hour12: true,
+                                          });
+                                        })()}
+                                      </span>
+                                    );
+                                  })()}
                                   {product.finalStatusRemarks && (
-                                    <span className="text-[0.7vw] text-gray-800 font-semibold bg-white border border-amber-200 px-[0.6vw] py-[0.18vw] rounded-[0.3vw] shadow-2xs">
-                                      💬 Admin Reason: {product.finalStatusRemarks}
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-800 font-normal bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
+                                      <Icon icon="solar:chat-round-dots-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                                      <span className="font-medium text-slate-900">Admin Reason:</span> {product.finalStatusRemarks}
                                     </span>
                                   )}
-                                  <span className="text-[0.65vw] text-amber-800 font-semibold ml-auto">
+                                  <span className="text-[0.72vw] text-amber-900 font-normal ml-auto">
                                     Please edit and click Re-Submit to return to Admin
                                   </span>
                                 </div>
@@ -2263,9 +2333,9 @@ export default function ServiceMaterialInwardResponse({
                                   title="Copy Serial Number"
                                 >
                                   {copiedSerial === product.serialNumber ? (
-                                    <Check className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
+                                    <Icon icon="solar:check-read-bold" className="w-[0.85vw] h-[0.85vw] text-emerald-600" />
                                   ) : (
-                                    <Copy className="w-[0.75vw] h-[0.75vw]" />
+                                    <Icon icon="solar:copy-linear" className="w-[0.85vw] h-[0.85vw]" />
                                   )}
                                 </button>
                               )}
@@ -2310,7 +2380,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.fqaBy || ""}
                                 onChange={(e) => hc("fqaBy", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="FQA By..."
                               />
                             ) : (
@@ -2338,7 +2408,7 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt.name,
                                     label: opt.name,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-normal text-slate-800"
                                 />
                               </div>
                             ) : (
@@ -2363,7 +2433,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="Code..."
                               />
                             ) : (
@@ -2388,7 +2458,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
                                 placeholder="Problem..."
                               />
                             ) : (
@@ -2410,7 +2480,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
                                 onChange={(e) => hc("pv", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="PV..."
                               />
                             ) : (
@@ -2432,7 +2502,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
                                 onChange={(e) => hc("cv", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="CV..."
                               />
                             ) : (
@@ -2456,7 +2526,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="Designator..."
                               />
                             ) : (
@@ -2480,7 +2550,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
@@ -2502,7 +2572,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.faultParts || ""}
                                 onChange={(e) => hc("faultParts", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[9vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[9vw]"
                                 placeholder="Fault Parts..."
                               />
                             ) : (
@@ -2526,7 +2596,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Parts..."
                               />
                             ) : (
@@ -2550,7 +2620,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Action..."
                               />
                             ) : (
@@ -2572,11 +2642,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.timeInHours || ""}
                                 onChange={(e) => hc("timeInHours", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-center min-w-[5vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs text-center min-w-[5vw]"
                                 placeholder="Hrs e.g. 2.5"
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium whitespace-nowrap">
+                              <span className="text-[0.75vw] font-normal whitespace-nowrap">
                                 {product.report?.timeInHours ? `${product.report.timeInHours} hrs` : "—"}
                               </span>
                             )}
@@ -2594,11 +2664,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.materialCost || ""}
                                 onChange={(e) => hc("materialCost", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-right min-w-[6vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs text-right min-w-[6vw]"
                                 placeholder="Cost e.g. 1500"
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium whitespace-nowrap">
+                              <span className="text-[0.75vw] font-normal whitespace-nowrap">
                                 {product.report?.materialCost ? `₹${product.report.materialCost}` : "—"}
                               </span>
                             )}
@@ -2644,31 +2714,6 @@ export default function ServiceMaterialInwardResponse({
                             {renderFillHandle(idx, "disposition")}
                           </td>
 
-                          {/* Completion Date */}
-                          <td
-                            className={getCellClass(idx, "completionDate")}
-                            onMouseDown={(e) => handleCellMouseDown(idx, "completionDate", e)}
-                            onMouseEnter={() => handleCellMouseEnter(idx, "completionDate")}
-                          >
-                            {draft ? (
-                              <input
-                                type="date"
-                                value={toInputDate(draft.completedDate)}
-                                onChange={(e) =>
-                                  hc("completedDate", e.target.value)
-                                }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
-                              />
-                            ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap">
-                                {product.report?.completedDate
-                                  ? fmtDate(product.report.completedDate)
-                                  : "—"}
-                              </span>
-                            )}
-                            {renderFillHandle(idx, "completionDate")}
-                          </td>
-
                           {/* Status */}
                           <td
                             className={getCellClass(idx, "status")}
@@ -2700,6 +2745,35 @@ export default function ServiceMaterialInwardResponse({
                             {renderFillHandle(idx, "status")}
                           </td>
 
+                          {/* Completion Date (moved after status, shown only when status is Completed) */}
+                          <td
+                            className={getCellClass(idx, "completionDate")}
+                            onMouseDown={(e) => handleCellMouseDown(idx, "completionDate", e)}
+                            onMouseEnter={() => handleCellMouseEnter(idx, "completionDate")}
+                          >
+                            {(draft ? draft.status === "Completed" : pStatus === "Completed") ? (
+                              draft ? (
+                                <input
+                                  type="date"
+                                  value={toInputDate(draft.completedDate)}
+                                  onChange={(e) =>
+                                    hc("completedDate", e.target.value)
+                                  }
+                                  className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                />
+                              ) : (
+                                <span className="text-[0.75vw] whitespace-nowrap">
+                                  {product.report?.completedDate
+                                    ? fmtDate(product.report.completedDate)
+                                    : "—"}
+                                </span>
+                              )
+                            ) : (
+                              <span className="text-slate-400 text-[0.75vw] select-none">—</span>
+                            )}
+                            {renderFillHandle(idx, "completionDate")}
+                          </td>
+
                           {/* Remarks */}
                           <td
                             className={getCellClass(idx, "remarks")}
@@ -2713,18 +2787,55 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-normal placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="Remark..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] text-gray-700 font-semibold">
+                              <span className="text-[0.75vw] text-gray-700 font-normal">
                                 {pRemark}
                               </span>
                             )}
                             {renderFillHandle(idx, "remarks")}
                           </td>
 
-                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 text-center min-w-[8vw]">
+                          <td
+                            className={`py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 text-center min-w-[8vw] transition-colors ${
+                              dragOverPid === product._pid ? "bg-blue-100/60 ring-2 ring-blue-500 ring-inset" : ""
+                            }`}
+                            onDragOver={(e) => {
+                              if (draft) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (dragOverPid !== product._pid) setDragOverPid(product._pid);
+                              }
+                            }}
+                            onDragLeave={(e) => {
+                              if (draft) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (dragOverPid === product._pid) setDragOverPid(null);
+                              }
+                            }}
+                            onDrop={(e) => {
+                              if (draft) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setDragOverPid(null);
+                                const file = e.dataTransfer?.files?.[0];
+                                if (file) {
+                                  const isAllowed =
+                                    file.type?.startsWith("image/") ||
+                                    file.type === "application/pdf" ||
+                                    file.name?.toLowerCase().endsWith(".pdf");
+                                  if (!isAllowed) {
+                                    toast("Please drop a valid image or PDF document.", "error");
+                                    return;
+                                  }
+                                  processAndSetImage(product._pid, product, file);
+                                }
+                              }
+                            }}
+                          >
                             {draft ? (
                               <div className="flex items-center justify-center gap-[0.5vw]">
                                 <input
@@ -2738,11 +2849,15 @@ export default function ServiceMaterialInwardResponse({
                                 />
                                 <label
                                   htmlFor={`file-${product._pid}`}
-                                  className="flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] bg-blue-50 border border-blue-200 text-blue-600 rounded-[0.4vw] cursor-pointer hover:bg-blue-600 hover:text-white transition-all shadow-sm text-[0.7vw] font-semibold"
-                                  title="Upload Image or PDF"
+                                  className={`flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] cursor-pointer transition-all shadow-sm text-[0.7vw] font-medium border ${
+                                    dragOverPid === product._pid
+                                      ? "bg-blue-600 text-white border-blue-600 ring-2 ring-blue-300 animate-pulse"
+                                      : "bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white"
+                                  }`}
+                                  title="Click to Upload or Drag & Drop Image/PDF here"
                                 >
                                   <Upload className="w-[0.8vw] h-[0.8vw]" />
-                                  <span>Upload</span>
+                                  <span>{dragOverPid === product._pid ? "Drop here" : "Upload"}</span>
                                 </label>
                                 {(draft.imagePreview || draft.imageFile || draft.image) && (
                                   <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-300 flex-shrink-0 relative group shadow-sm flex items-center justify-center bg-white overflow-hidden">
@@ -2765,7 +2880,7 @@ export default function ServiceMaterialInwardResponse({
                                         title={draft.fileName || "PDF Document"}
                                       >
                                         <FileText className="w-[1.1vw] h-[1.1vw]" />
-                                        <span className="text-[0.45vw] font-bold">PDF</span>
+                                        <span className="text-[0.45vw] font-normal">PDF</span>
                                       </button>
                                     ) : (
                                       <>
@@ -2828,7 +2943,7 @@ export default function ServiceMaterialInwardResponse({
                                     title="View PDF"
                                   >
                                     <FileText className="w-[1.1vw] h-[1.1vw]" />
-                                    <span className="text-[0.45vw] font-bold">PDF</span>
+                                    <span className="text-[0.45vw] font-normal">PDF</span>
                                   </button>
                                 ) : (
                                   <>
@@ -2877,13 +2992,15 @@ export default function ServiceMaterialInwardResponse({
                           {/* Info */}
                           <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
                             <button
+                              type="button"
                               onClick={() =>
                                 setInfoSelected({ entry, product })
                               }
-                              className="text-[0.72vw] text-blue-600 underline hover:text-blue-800 font-semibold transition-all cursor-pointer bg-transparent border-0"
+                              className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.7vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
                               title="View Details"
                             >
-                              View
+                              <Info className="w-[0.75vw] h-[0.75vw] text-slate-500 group-hover:text-blue-600" />
+                              <span>View</span>
                             </button>
                           </td>
 
@@ -2891,16 +3008,18 @@ export default function ServiceMaterialInwardResponse({
                           <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
                             {product.report?.history && product.report.history.length > 0 ? (
                               <button
+                                type="button"
                                 onClick={() =>
                                   setHistorySelected({ entry, product })
                                 }
-                                className="text-[0.72vw] text-blue-600 underline hover:text-blue-800 font-semibold transition-all cursor-pointer bg-transparent border-0"
+                                className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.7vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
                                 title="View History"
                               >
-                                View
+                                <Clock className="w-[0.75vw] h-[0.75vw] text-slate-500 group-hover:text-blue-600" />
+                                <span>View</span>
                               </button>
                             ) : (
-                              <span className="text-[0.75vw] text-gray-400">
+                              <span className="text-[0.75vw] text-slate-400 select-none">
                                 —
                               </span>
                             )}
@@ -3019,9 +3138,17 @@ export default function ServiceMaterialInwardResponse({
                                 )}
                                 {canUnclaim && (
                                   <button
-                                    onClick={() => unclaimProduct(entry.id, product._pid)}
+                                    type="button"
+                                    onClick={() =>
+                                      setUnclaimConfirmModal({
+                                        id: entry.id,
+                                        productId: product._pid,
+                                        productDescription: product.productDescription,
+                                        serialNumber: product.serialNumber,
+                                      })
+                                    }
                                     disabled={unclaimingStates[product._pid]}
-                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-sm cursor-pointer"
+                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-[0.35vw] text-[0.72vw] font-medium transition-all shadow-sm cursor-pointer"
                                     title="Unclaim item and return to open queue"
                                   >
                                     {unclaimingStates[product._pid] ? (
@@ -3240,13 +3367,13 @@ export default function ServiceMaterialInwardResponse({
               {/* Header */}
               <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1.05vw] font-bold text-slate-900 flex items-center gap-[0.45vw]">
+                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
                     <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-600 font-medium mt-[0.15vw]">
+                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
                     {historySelected.product.productDescription} (
-                    <span className="font-mono font-semibold text-slate-800">{historySelected.product.serialNumber}</span>)
+                    <span className="font-mono font-medium text-slate-800">{historySelected.product.serialNumber}</span>)
                   </p>
                 </div>
                 <button
@@ -3393,11 +3520,11 @@ export default function ServiceMaterialInwardResponse({
                                 <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
                                   <div className="flex items-center justify-between gap-[0.5vw]">
                                     <span
-                                      className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-bold tracking-wide border ${pillClass}`}
+                                      className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-medium tracking-normal border ${pillClass}`}
                                     >
                                       {label}
                                     </span>
-                                    <span className="text-[0.68vw] text-slate-700 font-mono font-semibold whitespace-nowrap">
+                                    <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
                                       {(() => {
                                         const dt = new Date(item.timestamp);
                                         if (isNaN(dt.getTime())) return item.timestamp || "—";
@@ -3415,8 +3542,8 @@ export default function ServiceMaterialInwardResponse({
                                   </div>
 
                                   {remarkText && (
-                                    <div className="mt-[0.35vw] text-[0.76vw] text-slate-800 leading-relaxed font-normal">
-                                      <span className="font-semibold text-slate-700 mr-[0.35vw]">
+                                    <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
+                                      <span className="font-medium text-slate-500 mr-[0.35vw]">
                                         Remark:
                                       </span>
                                       {remarkText}
@@ -3424,15 +3551,15 @@ export default function ServiceMaterialInwardResponse({
                                   )}
 
                                   {item.diffs && item.diffs.length > 0 && (
-                                    <div className="mt-[0.5vw] bg-purple-50/40 rounded-[0.4vw] border border-purple-200/80 p-[0.45vw] space-y-[0.35vw]">
+                                    <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
                                       <div className="flex items-center justify-between text-[0.72vw]">
-                                        <span className="font-bold text-purple-900 flex items-center gap-[0.35vw]">
-                                          <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-600" />
+                                        <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
+                                          <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
                                           Changed Fields ({item.diffs.length})
                                         </span>
                                         {item.remark && (
-                                          <span className="font-medium text-slate-700 text-[0.68vw]">
-                                            Reason: <span className="text-slate-900 font-semibold">{item.remark}</span>
+                                          <span className="font-normal text-slate-500 text-[0.68vw]">
+                                            Reason: <span className="text-slate-700 font-medium">{item.remark}</span>
                                           </span>
                                         )}
                                       </div>
@@ -3443,32 +3570,32 @@ export default function ServiceMaterialInwardResponse({
                                             key={di}
                                             className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
                                           >
-                                            <div className="font-bold text-slate-800 text-[0.7vw] mb-[0.2vw]">
+                                            <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
                                               {d.field}
                                             </div>
 
                                             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
                                               {/* Previous Value */}
-                                              <div className="bg-rose-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200">
-                                                <div className="text-[0.6vw] font-bold text-rose-700 uppercase tracking-wider mb-[0.05vw]">
+                                              <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
+                                                <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
                                                   Previous
                                                 </div>
-                                                <div className="text-rose-800 font-medium text-[0.72vw] line-through break-words">
+                                                <div className="text-rose-700 font-normal text-[0.72vw] break-words">
                                                   {d.originalValue || "—"}
                                                 </div>
                                               </div>
 
                                               {/* Arrow Indicator */}
-                                              <div className="text-slate-600 font-bold text-[0.75vw] px-[0.1vw]">
+                                              <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
                                                 →
                                               </div>
 
                                               {/* Updated Value */}
-                                              <div className="bg-emerald-50/50 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200">
-                                                <div className="text-[0.6vw] font-bold text-emerald-800 uppercase tracking-wider mb-[0.05vw]">
+                                              <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
+                                                <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
                                                   Updated
                                                 </div>
-                                                <div className="text-emerald-950 font-bold text-[0.72vw] break-words">
+                                                <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
                                                   {d.editedValue || "—"}
                                                 </div>
                                               </div>
@@ -3882,6 +4009,106 @@ export default function ServiceMaterialInwardResponse({
                     />
                   </div>
                 )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Custom Confirmation Modal for Unclaiming Product */}
+      <AnimatePresence>
+        {unclaimConfirmModal && (
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-[1vw]">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
+              onClick={() => {
+                if (!unclaimingStates[unclaimConfirmModal.productId]) {
+                  setUnclaimConfirmModal(null);
+                }
+              }}
+            />
+
+            {/* Modal Dialog */}
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-[26vw] min-w-[340px] bg-white rounded-[0.9vw] shadow-2xl border border-slate-200 overflow-hidden z-10 flex flex-col font-sans"
+            >
+              {/* Header Banner */}
+              <div className="p-[1.2vw] pb-[0.8vw] flex items-start gap-[0.8vw]">
+                <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 shadow-2xs">
+                  <AlertCircle className="w-[1.2vw] h-[1.2vw] text-amber-600" />
+                </div>
+                <div className="flex-1 min-w-0 pr-[0.4vw]">
+                  <h3 className="text-[0.95vw] font-semibold text-slate-800 leading-snug">
+                    Unclaim Product
+                  </h3>
+                  <p className="text-[0.74vw] text-slate-500 mt-[0.2vw] leading-relaxed font-normal">
+                    Are you sure you want to unclaim this product? It will be released back to the Open queue.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setUnclaimConfirmModal(null)}
+                  disabled={unclaimingStates[unclaimConfirmModal.productId]}
+                  className="p-[0.3vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  <X className="w-[1vw] h-[1vw]" />
+                </button>
+              </div>
+
+              {/* Product Info Box */}
+              {(unclaimConfirmModal.productDescription || unclaimConfirmModal.serialNumber) && (
+                <div className="mx-[1.2vw] p-[0.6vw] bg-slate-50 rounded-[0.5vw] border border-slate-200 text-[0.72vw]">
+                  <div className="text-slate-700 font-medium truncate">
+                    {unclaimConfirmModal.productDescription || "Product"}
+                  </div>
+                  {unclaimConfirmModal.serialNumber && (
+                    <div className="text-slate-500 font-mono text-[0.68vw] mt-[0.1vw]">
+                      S/N: {unclaimConfirmModal.serialNumber}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="p-[1vw] bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-[0.6vw] mt-[0.8vw]">
+                <button
+                  type="button"
+                  onClick={() => setUnclaimConfirmModal(null)}
+                  disabled={unclaimingStates[unclaimConfirmModal.productId]}
+                  className="px-[0.9vw] py-[0.4vw] text-[0.74vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 hover:border-slate-400 rounded-[0.4vw] shadow-2xs transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => unclaimProduct(unclaimConfirmModal.id, unclaimConfirmModal.productId)}
+                  disabled={unclaimingStates[unclaimConfirmModal.productId]}
+                  className="inline-flex items-center gap-[0.35vw] px-[0.95vw] py-[0.4vw] text-[0.74vw] font-medium text-white bg-rose-600 hover:bg-rose-700 border border-rose-600 rounded-[0.4vw] shadow-xs transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                >
+                  {unclaimingStates[unclaimConfirmModal.productId] ? (
+                    <>
+                      <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                      <span>Unclaiming...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Undo2 className="w-[0.75vw] h-[0.75vw]" />
+                      <span>Unclaim</span>
+                    </>
+                  )}
+                </button>
               </div>
             </motion.div>
           </div>

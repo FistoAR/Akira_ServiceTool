@@ -242,30 +242,30 @@ const checkWarrantyDaysCrossed = (entry, product, warrantyRules = []) => {
   return days > slaDays;
 };
 
-// Status Configuration: Pending = red, In Progress = amber, Completed = green
+// Status Configuration: Soft, readable light tints with colored text and borders
 const getMaterialStatusBadge = (status, finalStatus) => {
   let displayStatus = status || "Open";
   if (displayStatus === "Completed" && finalStatus !== "Completed") {
     displayStatus = "Review Required";
   }
 
-  let badgeStyle = "bg-slate-100 text-slate-700 border-slate-300";
+  let badgeStyle = "bg-slate-50 text-slate-700 border-slate-200 border";
   if (displayStatus === "Completed") {
-    badgeStyle = "bg-emerald-600 text-white border-emerald-600";
+    badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-200 border";
   } else if (
     displayStatus === "Under Testing" ||
     displayStatus === "Repair in Progress" ||
     displayStatus === "Assigned"
   ) {
-    badgeStyle = "bg-amber-500 text-white border-amber-500";
+    badgeStyle = "bg-amber-50 text-amber-700 border-amber-200 border";
   } else if (
     displayStatus === "Pending" ||
     displayStatus === "Hold" ||
     displayStatus === "Not Repairable"
   ) {
-    badgeStyle = "bg-rose-600 text-white border-rose-600";
+    badgeStyle = "bg-rose-50 text-rose-700 border-rose-200 border";
   } else if (displayStatus === "Review Required") {
-    badgeStyle = "bg-indigo-600 text-white border-indigo-600";
+    badgeStyle = "bg-indigo-50 text-indigo-700 border-indigo-200 border";
   }
 
   return { label: displayStatus, style: badgeStyle };
@@ -469,7 +469,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
               <Clock className="w-[0.95vw] h-[0.95vw]" />
             </div>
             <div>
-              <h3 className="text-[1vw] font-bold text-slate-800">Status & Edit History</h3>
+              <h3 className="text-[1vw] font-semibold text-slate-800">Status & Edit History</h3>
               <p className="text-[0.7vw] text-slate-500 font-normal">
                 {product.productDescription} {product.serialNumber ? `(${product.serialNumber})` : ""}
               </p>
@@ -511,7 +511,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
                     <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-slate-200 shadow-2xs">
                       <div className="flex items-center justify-between mb-[0.3vw] flex-wrap gap-[0.3vw]">
                         <div className="flex items-center gap-[0.35vw] flex-wrap">
-                          <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-bold ${
+                          <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium ${
                             isApproved
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : item.type === "admin"
@@ -525,12 +525,12 @@ const ProductHistoryModal = ({ item, onClose }) => {
                             {item.status}
                           </span>
                           {item.adminName && (
-                            <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-medium">
+                            <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
                               {item.role ? `${item.role}: ` : ""}{item.adminName}
                             </span>
                           )}
                           {item.occurredAfterCompleted && (
-                            <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-bold uppercase tracking-wider">
+                            <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
                               Post-Completion Edit
                             </span>
                           )}
@@ -550,20 +550,20 @@ const ProductHistoryModal = ({ item, onClose }) => {
                       {/* Diffs display */}
                       {item.diffs && item.diffs.length > 0 && (
                         <div className="mt-[0.4vw] bg-white rounded-[0.35vw] border border-amber-200/80 p-[0.4vw] space-y-[0.3vw]">
-                          <div className="text-[0.62vw] font-bold text-amber-900 uppercase tracking-wider">
+                          <div className="text-[0.62vw] font-semibold text-amber-900 uppercase tracking-wider">
                             Changed Fields ({item.diffs.length})
                           </div>
                           {item.diffs.map((d, di) => (
                             <div key={di} className="text-[0.68vw] bg-slate-50 p-[0.3vw] rounded border border-slate-200 flex items-center justify-between gap-[0.4vw]">
-                              <span className="font-semibold text-slate-700 truncate max-w-[45%]">
+                              <span className="font-medium text-slate-700 truncate max-w-[45%]">
                                 {d.field}
                               </span>
                               <span className="flex items-center gap-[0.25vw] text-right truncate">
-                                <span className="text-rose-600 line-through truncate max-w-[8vw]">
+                                <span className="text-rose-600 truncate max-w-[8vw] font-normal">
                                   {String(d.originalValue || "—")}
                                 </span>
-                                <span className="text-slate-400">→</span>
-                                <span className="text-emerald-700 font-semibold truncate max-w-[8vw]">
+                                <span className="text-slate-400 font-normal">→</span>
+                                <span className="text-emerald-700 font-medium truncate max-w-[8vw]">
                                   {String(d.editedValue || "—")}
                                 </span>
                               </span>
@@ -2459,11 +2459,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           return (
                             <tr
                               key={`${entry.id || entry._id}-${product._pid}`}
-                              className={`transition-colors border-b border-slate-200 last:border-0 ${
-                                isWarrantyCrossed
-                                  ? "bg-rose-50/60 hover:bg-rose-100/70"
-                                  : "hover:bg-blue-50/40"
-                              }`}
+                              className="transition-colors border-b border-slate-200 last:border-0 hover:bg-slate-50/70"
                             >
                               {/* S.No */}
                               <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center text-slate-600 font-normal">
@@ -2631,9 +2627,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                               {/* TAT */}
                               <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-medium border ${
+                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-normal border ${
                                   isWarrantyCrossed
-                                    ? "bg-rose-100 text-rose-700 border-rose-300 font-bold"
+                                    ? "bg-rose-100 text-rose-700 border-rose-300"
                                     : "bg-blue-50 text-blue-700 border-blue-200"
                                 }`}>
                                   {formatTatText(entry.date, product.report?.completedDate)}
@@ -2660,7 +2656,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   return days === null ? (
                                     <span className="text-slate-300 font-normal">—</span>
                                   ) : (
-                                    <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.66vw] font-medium border ${badgeClass}`}>
+                                    <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.66vw] font-normal border ${badgeClass}`}>
                                       {label}
                                     </span>
                                   );
