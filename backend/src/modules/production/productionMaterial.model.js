@@ -76,7 +76,19 @@ const productionMaterialSchema = new mongoose.Schema({
   category: String,
   creatorUserId: String,
   creatorName: String,
-  products: [productSchema]
+  products: [productSchema],
+  editHistory: [{
+    editedAt: { type: Date, default: Date.now },
+    editedBy: String,
+    editedByName: String,
+    role: String,
+    reason: String,
+    diffs: [{
+      field: String,
+      originalValue: mongoose.Schema.Types.Mixed,
+      editedValue: mongoose.Schema.Types.Mixed
+    }]
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('ProductionMaterial', productionMaterialSchema);

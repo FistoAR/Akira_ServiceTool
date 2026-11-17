@@ -612,12 +612,23 @@ export default function ProductionMaterialResponse() {
 
   // Load User
   useEffect(() => {
-    const raw = sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser");
-    if (raw) {
-      try { 
-        setCurrentUser(JSON.parse(raw)); 
-      } catch (err) {
-        console.error("Failed to parse loggedInUser:", err);
+    const KEYS = [
+      "loggedInUser",
+      "currentUser",
+      "user",
+      "akira_user",
+      "auth_user",
+    ];
+    for (const k of KEYS) {
+      const raw = sessionStorage.getItem(k) || localStorage.getItem(k);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed?.userId || parsed?.id) {
+            setCurrentUser(parsed);
+            return;
+          }
+        } catch {}
       }
     }
   }, []);
@@ -675,13 +686,20 @@ export default function ProductionMaterialResponse() {
 
   const myProducts = useMemo(() => {
     const list = [];
+    const myId = currentUser?.userId || currentUser?.id;
     entries.forEach(entry => {
       entry.products?.forEach(product => {
-        list.push({ entry, product });
+        // Only include items assigned to the current user (by ID or matching name)
+        const isAssignedToMe = myId 
+          ? (product.assignedTo === myId || (currentUser?.name && product.assignedToName === currentUser.name))
+          : false;
+        if (isAssignedToMe) {
+          list.push({ entry, product });
+        }
       });
     });
     return list;
-  }, [entries]);
+  }, [entries, currentUser]);
 
   const counts = useMemo(() => {
     const c = { 

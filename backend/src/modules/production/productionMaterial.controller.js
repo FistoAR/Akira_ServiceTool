@@ -58,6 +58,9 @@ exports.createInward = async (req, res) => {
 // --- PUT /api/production-material/:id ---
 exports.updateInward = async (req, res) => {
   try {
+    const existingInward = await ProductionMaterial.findById(req.params.id);
+    if (!existingInward) return res.status(404).json({ message: 'Inward not found' });
+
     let data = req.body;
 
     // Parse products if sent as a string (FormData)
@@ -75,19 +78,79 @@ exports.updateInward = async (req, res) => {
         const match = file.fieldname.match(/^boardImage_(\d+)$/);
         if (match) {
           const idx = parseInt(match[1]);
-          if (data.products[idx]) {
+          if (data.products && data.products[idx]) {
             data.products[idx].boardImage = `/uploads/${file.filename}`;
           }
         }
       });
     }
 
+    // Audit diff tracking like ServiceMaterial
+    const auditedFields = ['jobOrderNo', 'customerName', 'customerCode', 'category', 'date'];
+    const diffs = [];
+    auditedFields.forEach(f => {
+      if (data[f] !== undefined) {
+        let oldVal = existingInward[f];
+        let newVal = data[f];
+        if (f === 'date') {
+          oldVal = oldVal ? new Date(oldVal).toISOString().split('T')[0] : '';
+          newVal = newVal ? new Date(newVal).toISOString().split('T')[0] : '';
+        }
+        const strOld = oldVal === null || oldVal === undefined ? '' : String(oldVal).trim();
+        const strNew = newVal === null || newVal === undefined ? '' : String(newVal).trim();
+        if (strOld !== strNew) {
+          diffs.push({
+            field: f,
+            originalValue: existingInward[f] || null,
+            editedValue: data[f]
+          });
+        }
+      }
+    });
+
+    if (data.products && Array.isArray(data.products) && existingInward.products) {
+      data.products.forEach((p, idx) => {
+        const ep = p._pid ? existingInward.products.find(ex => ex._pid === p._pid) : existingInward.products[idx];
+        if (ep) {
+          ['productCode', 'productDescription', 'productSegment', 'boardType', 'problemType', 'ncType', 'problemDescription', 'qty', 'serialNumber', 'identification', 'disposition', 'raisedTo'].forEach(pf => {
+            if (p[pf] !== undefined) {
+              const oldPf = ep[pf] === null || ep[pf] === undefined ? '' : String(ep[pf]).trim();
+              const newPf = p[pf] === null || p[pf] === undefined ? '' : String(p[pf]).trim();
+              if (oldPf !== newPf) {
+                diffs.push({
+                  field: `Product ${idx + 1} (${p.productDescription || ep.productDescription || 'Item'}): ${pf}`,
+                  originalValue: ep[pf] || null,
+                  editedValue: p[pf]
+                });
+              }
+            }
+          });
+        }
+      });
+    }
+
+    if (diffs.length > 0) {
+      const editRecord = {
+        editedAt: new Date(),
+        editedBy: data._editedBy || req.user?.userId || 'Admin',
+        editedByName: data._editedByName || req.user?.name || 'Administrator',
+        role: data._editedByRole || req.user?.role || 'Admin',
+        reason: data._editReason || 'Inward updated',
+        diffs
+      };
+      data.editHistory = [...(existingInward.editHistory || []), editRecord];
+    }
+
+    delete data._editedBy;
+    delete data._editedByName;
+    delete data._editedByRole;
+    delete data._editReason;
+
     const inward = await ProductionMaterial.findByIdAndUpdate(
       req.params.id,
       { $set: data },
       { new: true }
     );
-    if (!inward) return res.status(404).json({ message: 'Inward not found' });
     res.json(inward);
   } catch (err) {
     res.status(500).json({ message: err.message });

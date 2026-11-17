@@ -991,20 +991,353 @@ const EmpSelectCell = ({ val, employees, onSelect }) => {
   );
 };
 
+// --- HistoryCellButton (Full Status & Edit History Modal like ServiceMaterial) ---
+const HistoryCellButton = ({ prod, row }) => {
+  const [showHistory, setShowHistory] = useState(false);
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setShowHistory(true)}
+        title="View History"
+        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
+      >
+        View
+      </button>
+
+      {showHistory &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 z-[99999] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-[2vw]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] max-w-[650px] min-w-[360px] max-h-[85vh] flex flex-col overflow-hidden text-left"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+                <div>
+                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
+                    <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
+                    Status & Edit History
+                  </h3>
+                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
+                    {prod.productDescription || "Product"} (
+                    <span className="font-mono font-medium text-slate-800">{prod.serialNumber || prod.identification || "—"}</span>)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowHistory(false)}
+                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                >
+                  <X className="w-[1.1vw] h-[1.1vw]" />
+                </button>
+              </div>
+
+              {/* Timeline Area */}
+              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-[#f8fafd]">
+                {(() => {
+                  const empHistory = prod.report?.history || [];
+                  const finalHistory = prod.finalStatusHistory || [];
+                  const timeline = [];
+
+                  if (prod.assignedTo || prod.raisedTo) {
+                    timeline.push({
+                      type: "assigned",
+                      label: "Assigned / Raised To",
+                      name: prod.assignedToName || prod.raisedToName || prod.assignedTo || prod.raisedTo,
+                      timestamp: empHistory.length > 0 ? empHistory[0].timestamp : null,
+                    });
+                  }
+
+                  // Employee report status changes & edits
+                  empHistory.forEach((h) => {
+                    const isEdit = h.metadata?.isEdit || String(h.status || "").toLowerCase().includes("edit");
+                    timeline.push({
+                      type: isEdit ? "closureEdit" : "report",
+                      status: h.status || "Report Updated",
+                      remark: h.remark || h.currentRemark || "",
+                      diffs: h.metadata?.diffs || [],
+                      timestamp: h.timestamp,
+                    });
+                  });
+
+                  // Inward-level edits that modified this product
+                  if (row?.editHistory && Array.isArray(row.editHistory)) {
+                    row.editHistory.forEach((ie) => {
+                      const relevantDiffs = (ie.diffs || []).filter((d) => {
+                        const f = d.field || "";
+                        const prodDesc = prod.productDescription || "";
+                        const prodCode = prod.productCode || "";
+                        const serial = prod.serialNumber || prod.identification || "";
+                        return (
+                          (prodDesc && f.includes(prodDesc)) ||
+                          (prodCode && f.includes(prodCode)) ||
+                          (serial && f.includes(serial)) ||
+                          (!f.includes("Product (") && !f.includes("Product 1") && !f.includes("Product 2") && !f.includes("Product 3") && !f.includes("Product 4") && !f.includes("Product 5") && !f.includes("Product 6") && !f.includes("Product 7"))
+                        );
+                      });
+                      if (relevantDiffs.length > 0) {
+                        timeline.push({
+                          type: "adminEdit",
+                          status: "Product Details Edited",
+                          remark: ie.reason || "Inward product record updated",
+                          adminName: ie.editedByName,
+                          role: ie.role || "Admin",
+                          diffs: relevantDiffs,
+                          timestamp: ie.editedAt,
+                        });
+                      }
+                    });
+                  }
+
+                  // Verification events
+                  if (prod.report?.verifiedBy || prod.report?.verifiedByName) {
+                    timeline.push({
+                      type: "verification",
+                      status: "Resolution Verified",
+                      adminName: prod.report?.verifiedByName,
+                      remark: prod.report?.cae ? `CAE: ${prod.report.cae}` : "Verified",
+                      timestamp: prod.report?.verifiedDate,
+                    });
+                  }
+
+                  // Admin review changes (final status entries)
+                  finalHistory.forEach((h) => {
+                    const isCompleted = h.status === "Completed";
+                    timeline.push({
+                      type: "admin",
+                      status: isCompleted ? "Approved by Admin" : (h.status || "Admin Status Update"),
+                      adminName: h.adminName,
+                      remark: h.remarks,
+                      timestamp: h.timestamp || h.date,
+                    });
+                  });
+
+                  // Sort chronologically (newest first)
+                  timeline.sort((a, b) => {
+                    const tA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                    const tB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                    return tB - tA;
+                  });
+
+                  if (timeline.length === 0) {
+                    return (
+                      <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-700">
+                        <Clock className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
+                        <span className="text-[0.82vw] font-semibold text-slate-800">
+                          Not yet updated or assigned.
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="relative pl-[1.8vw] space-y-[0.85vw]">
+                      <div className="absolute left-[0.6vw] -translate-x-1/2 top-[0.5vw] bottom-[0.5vw] w-[2px] bg-slate-200 pointer-events-none" />
+
+                      {timeline.map((entry, i) => {
+                        let dotColor = "bg-slate-500";
+                        if (entry.type === "assigned") {
+                          dotColor = "bg-blue-600";
+                        } else if (entry.type === "verification") {
+                          dotColor = "bg-emerald-600";
+                        } else if (entry.type === "admin" || entry.type === "adminEdit") {
+                          dotColor = entry.status.includes("Approved")
+                            ? "bg-emerald-600"
+                            : entry.type === "adminEdit"
+                              ? "bg-indigo-600"
+                              : "bg-rose-600";
+                        } else if (entry.type === "closureEdit") {
+                          dotColor = "bg-amber-600";
+                        }
+
+                        const tsLabel = entry.timestamp
+                          ? new Date(entry.timestamp).toLocaleString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })
+                          : null;
+
+                        return (
+                          <div key={i} className="relative group">
+                            <div
+                              className={`absolute -left-[1.8vw] top-[0.6vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                            />
+
+                            <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
+                              <div className="flex items-center justify-between gap-[0.5vw] flex-wrap">
+                                {entry.type === "assigned" ? (
+                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                                    {entry.label} → {entry.name}
+                                  </span>
+                                ) : entry.type === "verification" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+                                      {entry.status}
+                                    </span>
+                                    {entry.adminName && (
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                        Verified By: {entry.adminName}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : entry.type === "admin" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span
+                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                        entry.status.includes("Approved")
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          : "bg-rose-50 text-rose-700 border-rose-200"
+                                      }`}
+                                    >
+                                      {entry.status}
+                                    </span>
+                                    {entry.adminName && (
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-normal">
+                                        Admin: {entry.adminName}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : entry.type === "adminEdit" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
+                                      {entry.status}
+                                    </span>
+                                    {entry.adminName && (
+                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                        By: {entry.adminName}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : entry.type === "closureEdit" ? (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
+                                      {entry.status}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                    <span
+                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                        entry.status === "Completed"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          : entry.status === "Under Testing"
+                                            ? "bg-purple-50 text-purple-700 border-purple-200"
+                                            : "bg-amber-50 text-amber-700 border-amber-200"
+                                      }`}
+                                    >
+                                      {entry.status}
+                                    </span>
+                                  </div>
+                                )}
+
+                                {tsLabel && (
+                                  <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
+                                    {tsLabel}
+                                  </span>
+                                )}
+                              </div>
+
+                              {entry.remark && (
+                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
+                                  <span className="text-slate-500 font-medium mr-[0.3vw]">
+                                    Remarks / Reason:
+                                  </span>
+                                  {entry.remark}
+                                </div>
+                              )}
+
+                              {/* Diffs display for edits */}
+                              {entry.diffs && entry.diffs.length > 0 && (
+                                <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
+                                  <div className="flex items-center justify-between text-[0.72vw]">
+                                    <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
+                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
+                                      Changed Fields ({entry.diffs.length})
+                                    </span>
+                                  </div>
+
+                                  <div className="space-y-[0.3vw] pt-[0.2vw]">
+                                    {entry.diffs.map((d, di) => (
+                                      <div
+                                        key={di}
+                                        className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                      >
+                                        <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
+                                          {d.field}
+                                        </div>
+                                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
+                                          <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
+                                            <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                              Previous
+                                            </div>
+                                            <div className="text-rose-700 font-normal text-[0.72vw] break-words">
+                                              {String(d.originalValue || "—")}
+                                            </div>
+                                          </div>
+                                          <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                            →
+                                          </div>
+                                          <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
+                                            <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                              Updated
+                                            </div>
+                                            <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
+                                              {String(d.editedValue || "—")}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Footer */}
+              <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowHistory(false)}
+                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>,
+          document.body,
+        )}
+    </div>
+  );
+};
+
 // --- Final Status Cell ---
 const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
   const [open, setOpen] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
   const [remarks, setRemarks] = useState(prod.finalStatusRemarks || "");
   const [status, setStatus] = useState(prod.finalStatus || "Pending");
   const [statusDate, setStatusDate] = useState(prod.finalStatusDate || todayDateStr());
   const ref = useRef(null);
-  const historyRef = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-      if (historyRef.current && !historyRef.current.contains(e.target)) setShowHistory(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -1036,7 +1369,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
         </button>
         <AnimatePresence>
           {open && (
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-200 shadow-xl rounded-[0.7vw] z-40 w-[17vw] p-[0.9vw]">
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-200 shadow-xl rounded-[0.7vw] z-40 w-[17vw] p-[0.9vw] text-left">
               <div className="text-[0.74vw] font-bold text-slate-800 mb-[0.5vw]">Update Final Status</div>
               <div className="grid grid-cols-3 gap-[0.35vw] mb-[0.7vw]">
                 {FINAL_STATUS_OPTIONS.map((opt) => (
@@ -1048,21 +1381,6 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
               <div className="mb-[0.6vw]"><label className="text-[0.65vw] font-semibold text-slate-700 block mb-[0.25vw]">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-slate-200 rounded-[0.4vw] px-[0.5vw] py-[0.35vw] text-[0.72vw] outline-none focus:border-blue-500 font-normal text-slate-700" /></div>
               <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-slate-200 rounded-[0.4vw] p-[0.5vw] text-[0.72vw] outline-none focus:border-blue-500 resize-none mb-[0.6vw] font-normal text-slate-700" />
               <div className="flex justify-end gap-[0.4vw]"><button onClick={() => setOpen(false)} className="px-[0.85vw] py-[0.3vw] text-[0.7vw] border border-slate-200 rounded-full text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">Cancel</button><button onClick={handleSave} className="px-[0.9vw] py-[0.3vw] text-[0.7vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium flex items-center gap-[0.3vw] shadow-2xs cursor-pointer"><Save className="w-[0.7vw] h-[0.7vw]" />Save</button></div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      <div className="relative" ref={historyRef}>
-        <button onClick={() => setShowHistory(!showHistory)} title="Status History" className="p-[0.25vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer"><Clock className="w-[0.85vw] h-[0.85vw]" /></button>
-        <AnimatePresence>
-          {showHistory && (
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-200 shadow-2xl rounded-[0.7vw] z-40 w-[22vw] p-[1vw]">
-              <div className="flex items-center justify-between mb-[0.8vw] pb-[0.4vw] border-b border-slate-200"><div className="text-[0.78vw] font-bold text-slate-800 flex items-center gap-[0.4vw]"><Clock className="w-[0.85vw] h-[0.85vw] text-blue-600" />Status History</div><button onClick={() => setShowHistory(false)} className="text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 p-[0.2vw] transition-colors"><X className="w-[0.8vw] h-[0.8vw]" /></button></div>
-              <div className="max-h-[15vw] overflow-y-auto space-y-[0.6vw] pr-[0.3vw]">
-                {(prod.finalStatusHistory || []).length > 0 ? [...(prod.finalStatusHistory || [])].reverse().map((h, i) => (
-                  <div key={i} className="bg-slate-50/70 rounded-[0.5vw] p-[0.6vw] border border-slate-200"><div className="flex items-center justify-between mb-[0.2vw]"><span className={`text-[0.65vw] px-[0.45vw] py-[0.08vw] rounded-full font-normal border ${FINAL_STATUS_COLORS[h.status] || "bg-slate-100 text-slate-700 border-slate-200"}`}>{h.status}</span><div className="text-right">{h.date && <div className="text-[0.62vw] font-medium text-blue-600">{fmtDate(h.date)}</div>}<div className="text-[0.6vw] text-slate-400">{fmtDate(h.timestamp)}</div></div></div><div className="text-[0.72vw] text-slate-700 italic leading-tight">"{h.remarks || <span className="text-slate-400">No remarks</span>}"</div></div>
-                )) : <div className="py-[2vw] text-center text-[0.72vw] text-slate-400">No history available yet.</div>}
-              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -2423,7 +2741,7 @@ export default function ProductionMaterial() {
                     >
                       Product Manifest Details
                     </th>
-                    {["Assigned To", "Resolution Verification", "Final Status", "Final Remarks", "Actions"].map((h) => (
+                    {["Assigned To", "Resolution Verification", "Final Status", "Final Remarks", "History", "Actions"].map((h) => (
                       <th
                         key={h}
                         rowSpan={2}
@@ -2435,6 +2753,8 @@ export default function ProductionMaterial() {
                               ? "11vw"
                               : h === "Final Remarks"
                               ? "10vw"
+                              : h === "History"
+                              ? "5.5vw"
                               : h === "Actions"
                               ? "6.5vw"
                               : "8vw",
@@ -2470,7 +2790,7 @@ export default function ProductionMaterial() {
                   {groups.length > 0 ? (
                     groups.flatMap(({ customerName, rows }) => {
                       const isCustomerCollapsed = collapsedCustomers[customerName];
-                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 5;
+                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 6;
 
                       return [
                         // ── STICKY HEADER 1: CUSTOMER HEADER ROW (sticky top-[3.6vw]) ──
@@ -2600,7 +2920,7 @@ export default function ProductionMaterial() {
 
                                   {/* Date + Job Order No + Summary Spanning remaining columns */}
                                   <td
-                                    colSpan={8 + 5}
+                                    colSpan={8 + 6}
                                     className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
@@ -2825,7 +3145,20 @@ export default function ProductionMaterial() {
 
                                           {/* Assigned To */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw]">
-                                            {prod.assignedToName || "Unassigned"}
+                                            {canUpdate && !isSupervisor ? (
+                                              <EmpSelectCell
+                                                val={prod.assignedTo}
+                                                employees={employees}
+                                                onSelect={(emp) => {
+                                                  onUpdateProduct(row.id, prod._pid, {
+                                                    assignedTo: emp ? emp.userId : "",
+                                                    assignedToName: emp ? emp.name : "",
+                                                  });
+                                                }}
+                                              />
+                                            ) : (
+                                              prod.assignedToName || "Unassigned"
+                                            )}
                                           </td>
 
                                           {/* Resolution Verification */}
@@ -2856,6 +3189,11 @@ export default function ProductionMaterial() {
                                             title={prod.finalStatusRemarks}
                                           >
                                             {prod.finalStatusRemarks || "—"}
+                                          </td>
+
+                                          {/* History */}
+                                          <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
+                                            <HistoryCellButton prod={prod} row={row} />
                                           </td>
 
                                           {/* Actions */}
