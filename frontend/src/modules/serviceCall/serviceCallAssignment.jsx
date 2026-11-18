@@ -378,41 +378,41 @@ export default function ServiceCallAssignment() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
+    <div className="w-full h-full flex flex-col gap-2.5 font-sans text-xs">
 
       {/* ── FILTER & SEARCH TOOLBAR ── */}
-      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
         {/* Left side: Soft Pill Search Box */}
-        <div className="relative w-[18vw]">
-          <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+        <div className="relative w-[259px]">
+          <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
           <input
             type="text"
             placeholder="Search customer, call no, engineer..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full pl-9 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+              className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
             >
-              <X className="w-[0.7vw] h-[0.7vw]" />
+              <X className="w-2.5 h-2.5" />
             </button>
           )}
         </div>
 
         {/* Right cluster: Date Range, Clear, Count & Priority */}
-        <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+        <div className="flex items-center gap-2.5 flex-shrink-0">
           {/* Unified Date Range Capsule */}
-          <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-            <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+          <div className="flex items-center gap-1.5 border border-slate-200 rounded-full h-8 px-3 bg-white text-xs shadow-2xs hover:border-slate-300 transition-all">
+            <span className="text-slate-700 font-medium text-xs">From</span>
             <input
               ref={fromDateRef}
               type="date"
               value={filterFromDate || ""}
               onChange={(e) => setFilterFromDate(e.target.value)}
-              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -421,20 +421,20 @@ export default function ServiceCallAssignment() {
                   try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
                 }
               }}
-              className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+              className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center mr-0.5"
               title="Choose from date"
             >
-              <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+              <Calendar className="w-3 h-3 shrink-0 text-slate-700" />
             </button>
-            <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-            <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+            <span className="text-slate-700 mx-0.5 text-sm">→</span>
+            <span className="text-slate-700 font-medium text-xs">To</span>
             <input
               ref={toDateRef}
               type="date"
               value={filterToDate || ""}
               min={filterFromDate || undefined}
               onChange={(e) => setFilterToDate(e.target.value)}
-              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -443,10 +443,10 @@ export default function ServiceCallAssignment() {
                   try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
                 }
               }}
-              className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+              className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center ml-px"
               title="Choose to date"
             >
-              <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+              <Calendar className="w-3 h-3 shrink-0 text-slate-700" />
             </button>
           </div>
 
@@ -457,16 +457,16 @@ export default function ServiceCallAssignment() {
                 setFilterFromDate("");
                 setFilterToDate("");
               }}
-              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1 h-8 px-3 rounded-full text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
-              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+              <RotateCcw className="w-3 h-3" />
               <span>Clear</span>
             </button>
           )}
 
           {/* Customer Type Dropdown */}
-          <div className="w-[9.5vw]">
+          <div className="w-[137px]">
             <CustomDropdown
               size="sm"
               align="right"
@@ -476,12 +476,12 @@ export default function ServiceCallAssignment() {
                 { value: "All", label: "All Types" },
                 ...availableCustomerTypes.map((t) => ({ value: t, label: t })),
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-8 !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-xs"
             />
           </div>
 
           {/* Priority Dropdown (Pill shaped) */}
-          <div className="w-[9.5vw]">
+          <div className="w-[137px]">
             <CustomDropdown
               size="sm"
               align="right"
@@ -494,7 +494,7 @@ export default function ServiceCallAssignment() {
                 { value: "Medium", label: "Medium Priority" },
                 { value: "Low", label: "Low Priority" },
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-8 !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-xs"
             />
           </div>
 
@@ -503,62 +503,62 @@ export default function ServiceCallAssignment() {
             type="button"
             onClick={fetchData}
             disabled={isLoading}
-            className="flex items-center gap-[0.35vw] h-[2.2vw] px-[0.85vw] rounded-full text-[0.75vw] font-bold text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 border border-slate-200 transition-all cursor-pointer shadow-2xs shrink-0 disabled:opacity-50"
+            className="flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 border border-slate-200 transition-all cursor-pointer shadow-2xs shrink-0 disabled:opacity-50"
             title="Refresh pending calls"
           >
-            <RefreshCw className={`w-[0.8vw] h-[0.8vw] text-slate-500 ${isLoading ? "animate-spin text-blue-600" : ""}`} />
+            <RefreshCw className={`w-3 h-3 text-slate-700 ${isLoading ? "animate-spin text-blue-600" : ""}`} />
             <span>Refresh</span>
           </button>
         </div>
       </div>
       {/* ── TABLE CARD ── */}
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+      <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
               <tr>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[158px]">
                   Call Ref & Date
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[18vw] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[259px] whitespace-nowrap">
                   Customer & Site
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap min-w-[8vw]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[115px]">
                   Customer Type
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[17vw] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[245px] whitespace-nowrap">
                   Product & Segment
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap min-w-[7vw]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[101px]">
                   Priority
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[8vw]">
+                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[115px]">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody className="text-[0.8vw]">
+            <tbody className="text-xs">
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="py-[12vh] text-center border-b border-slate-300">
-                    <div className="flex flex-col items-center justify-center gap-[0.8vw]">
-                      <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-[#1a73e8]" />
-                      <span className="text-[0.85vw] font-normal text-slate-700">Loading assignments queue...</span>
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <Loader2 className="w-9 h-9 animate-spin text-[#1a73e8]" />
+                      <span className="text-sm font-normal text-slate-700">Loading assignments queue...</span>
                     </div>
                   </td>
                 </tr>
               ) : paginatedGroups.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-[12vh] text-center border-b border-slate-300">
-                    <div className="flex flex-col items-center justify-center gap-[0.6vw]">
-                      <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                        <CheckCircle2 className="w-[1.8vw] h-[1.8vw] text-emerald-500" />
+                    <div className="flex flex-col items-center justify-center gap-2.5">
+                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-700">
+                        <CheckCircle2 className="w-6.5 h-6.5 text-emerald-500" />
                       </div>
-                      <div className="text-[0.95vw] font-medium text-slate-700">All Calls Assigned!</div>
-                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw]">
+                      <div className="text-sm font-medium text-slate-700">All Calls Assigned!</div>
+                      <div className="text-xs text-slate-700 max-w-[288px]">
                         There are no pending service calls requiring allocation right now.
                       </div>
                     </div>
@@ -579,20 +579,20 @@ export default function ServiceCallAssignment() {
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-black font-medium text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle text-black font-medium text-sm border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
                           {/* 2. Call Ref & Date */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             <button
                               onClick={() => setSelectedInfoCall(g.rawCall || g)}
-                              className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
+                              className="font-mono text-left text-sm font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                               title="View Call Details"
                             >
                               {g.callNumber}
                             </button>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-1.5 text-sm text-slate-700 font-medium leading-normal mt-1">
                               {(() => {
                                 try {
                                   const d = new Date(g.timestamp || g.dateTime);
@@ -610,7 +610,7 @@ export default function ServiceCallAssignment() {
                                   return (
                                     <>
                                       <span>{datePart}</span>
-                                      <span className="text-slate-300 font-normal">|</span>
+                                      <span className="text-slate-600 font-normal">|</span>
                                       <span className="text-slate-600 font-medium">{timePart}</span>
                                     </>
                                   );
@@ -622,25 +622,25 @@ export default function ServiceCallAssignment() {
                           </td>
 
                           {/* 3. Customer & Site */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white max-w-[18vw]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white max-w-[259px]">
                             <CustomerInfoCell
                               customerName={g.customerName}
                               contactNumber={g.contactNumber}
                               partyCode={g.partyCode}
                             />
                             {(g.location || g.site) && (
-                              <div className="text-[0.68vw] text-slate-600 font-medium flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
-                                <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
+                              <div className="text-sm text-slate-600 font-medium flex items-center gap-1 mt-0.5 truncate max-w-[245px]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
+                                <MapPin className="w-2.5 h-2.5 text-slate-700 shrink-0" />
                                 <span className="truncate font-medium text-slate-700">{g.site ? `${g.site} • ` : ""}{g.location}</span>
                               </div>
                             )}
                           </td>
 
                           {/* 4. Customer Type */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-medium">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-xs font-medium">
                             {g.customerType && g.customerType !== "All" ? (
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border shadow-2xs whitespace-nowrap ${
+                                className={`inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-medium border shadow-2xs whitespace-nowrap ${
                                   g.customerType === "OEM"
                                     ? "bg-blue-50 text-blue-700 border-blue-200"
                                     : g.customerType === "End Customer"
@@ -655,58 +655,58 @@ export default function ServiceCallAssignment() {
                                 {g.customerType}
                               </span>
                             ) : (
-                              <span className="text-slate-400 font-medium">—</span>
+                              <span className="text-slate-700 font-medium">—</span>
                             )}
                           </td>
                         </>
                       )}
 
                       {/* 4. Product & Segment */}
-                      <td className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 max-w-[17vw]">
+                      <td className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 max-w-[245px]">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"
                           content={
-                            <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                            <div className="flex flex-col gap-0.5 text-left py-px">
                               <div className="font-normal text-slate-200">
                                 {item.p.productModel || item.p.itemCode || "—"}
                               </div>
                               {item.p.serialNumber && (
-                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
-                                  <span className="text-slate-400 font-sans">SN: </span>
+                                <div className="text-xs text-sky-300 font-mono border-t border-slate-700/80 pt-0.5 mt-px">
+                                  <span className="text-slate-700 font-sans">SN: </span>
                                   <span>{item.p.serialNumber}</span>
                                 </div>
                               )}
                               {item.p.errorCode && (
-                                <div className="text-[0.64vw] text-rose-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-xs text-rose-300 font-mono border-t border-slate-700/80 pt-0.5 mt-px">
                                   <span>Error: {item.p.errorCode}</span>
                                 </div>
                               )}
                             </div>
                           }
                         >
-                          <div className="font-medium text-black text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-black text-sm truncate cursor-default">
                             {item.p.productModel || item.p.itemCode}
                           </div>
                         </CustomTooltip>
-                        <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
+                        <div className="flex items-center gap-1 mt-0.5 flex-wrap">
                           {g.segment && g.segment !== "—" && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-medium">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-1.5 py-px rounded text-xs font-medium">
                               {g.segment}
                             </span>
                           )}
                           {item.p.serialNumber && (
-                            <span className="text-[0.66vw] text-slate-700 font-medium font-mono">
+                            <span className="text-sm text-slate-700 font-medium font-mono">
                               SN: {item.p.serialNumber}
                             </span>
                           )}
                           {item.p.errorCode && (
-                            <span className="text-[0.66vw] text-rose-700 font-medium font-mono">
+                            <span className="text-sm text-rose-700 font-medium font-mono">
                               Err: {item.p.errorCode}
                             </span>
                           )}
                           {g.products.length > 1 && (
-                            <span className="text-[0.64vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                            <span className="text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-px rounded-full">
                               +{g.products.length - 1} more
                             </span>
                           )}
@@ -716,7 +716,7 @@ export default function ServiceCallAssignment() {
                       {pIdx === 0 && (
                         <>
                           {/* 5. Priority */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(() => {
                               const p = g.priority || "Medium";
                               let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
@@ -724,7 +724,7 @@ export default function ServiceCallAssignment() {
                               else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                               else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                               return (
-                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                <span className={`inline-flex items-center justify-center px-2 py-px rounded-full text-xs font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                   {p}
                                 </span>
                               );
@@ -732,27 +732,27 @@ export default function ServiceCallAssignment() {
                           </td>
 
                           {/* 6. Action */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-300 whitespace-nowrap">
-                            <div className="flex items-center justify-center gap-[0.4vw]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-300 whitespace-nowrap">
+                            <div className="flex items-center justify-center gap-1.5">
                               {/* Direct 1-Click Info Modal Button */}
                               <button
                                 onClick={() => setSelectedInfoCall(g.rawCall || g)}
-                                className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                className="p-1.5 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                 title="View Call Details"
                               >
-                                <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                <Eye className="w-3.5 h-3.5" />
                               </button>
 
                               {canAssign ? (
                                 <button
                                   onClick={() => setSelectedGroup(g)}
-                                  className="cursor-pointer inline-flex items-center gap-[0.25vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.75vw] py-[0.3vw] rounded-full font-medium text-[0.7vw] transition-all shadow-xs"
+                                  className="cursor-pointer inline-flex items-center gap-1 bg-[#1a73e8] hover:bg-[#1557b0] text-white px-3 py-1 rounded-full font-medium text-sm transition-all shadow-xs"
                                 >
                                   <span>Assign</span>
-                                  <ArrowRight className="w-[0.7vw] h-[0.7vw]" />
+                                  <ArrowRight className="w-2.5 h-2.5" />
                                 </button>
                               ) : (
-                                <span className="text-[0.68vw] text-slate-600 italic font-medium px-[0.5vw] py-[0.15vw] bg-slate-50 border border-slate-200 rounded-full">
+                                <span className="text-sm text-slate-600 italic font-medium px-2 py-0.5 bg-slate-50 border border-slate-200 rounded-full">
                                   View Only
                                 </span>
                               )}
@@ -769,24 +769,24 @@ export default function ServiceCallAssignment() {
         </div>
 
         {/* ── PAGINATION CONTROLS ── */}
-        <div className="py-[0.6vw] px-[1vw] border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
-          <p className="text-[0.75vw] text-slate-600 font-medium">
+        <div className="py-2.5 px-3.5 border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
+          <p className="text-xs text-slate-600 font-medium">
             Showing <span className="font-semibold text-slate-800">{filteredGroups.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredGroups.length)}</span> of <span className="font-semibold text-slate-800">{filteredGroups.length}</span> records
           </p>
-          <div className="flex items-center gap-[0.5vw]">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <div className="flex gap-[0.3vw]">
+            <div className="flex gap-1">
               {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map(p => (
                 <button
                   key={p}
                   onClick={() => setCurrentPage(p)}
-                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                  className={`w-6 h-6 flex items-center justify-center rounded-md text-xs font-medium transition-all cursor-pointer ${
                     currentPage === p
                       ? "bg-[#1a73e8] text-white shadow-2xs"
                       : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
@@ -799,9 +799,9 @@ export default function ServiceCallAssignment() {
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage >= totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -810,7 +810,7 @@ export default function ServiceCallAssignment() {
       {/* ── MODERN ASSIGNMENT MODAL ── */}
       <AnimatePresence>
         {selectedGroup && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-[2vw]">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-7">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -822,102 +822,102 @@ export default function ServiceCallAssignment() {
               initial={{ scale: 0.96, opacity: 0, y: 10 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.96, opacity: 0, y: 10 }}
-              className="relative w-[72vw] max-h-[88vh] bg-white rounded-[1vw] flex flex-col overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200"
+              className="relative w-[1037px] max-h-[88vh] bg-white rounded-2xl flex flex-col overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200"
             >
               {/* Modal Top Header */}
-              <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-blue-50/50 via-white to-slate-50">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.4vw] h-[2.4vw] bg-blue-600 rounded-[0.6vw] flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]">
-                    <UserPlus className="w-[1.2vw] h-[1.2vw]" />
+              <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-blue-50/50 via-white to-slate-50">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]">
+                    <UserPlus className="w-4 h-4" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-[0.6vw]">
-                      <h2 className="text-[1.1vw] font-bold text-slate-800 leading-tight">
+                    <div className="flex items-center gap-2.5">
+                      <h2 className="text-xs font-bold text-slate-800 leading-tight">
                         Allocate Field Engineer
                       </h2>
-                      <span className="text-[0.68vw] bg-blue-100 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
+                      <span className="text-sm bg-blue-100 text-blue-700 px-1.5 py-px rounded font-semibold border border-blue-200">
                         {selectedGroup.callNumber}
                       </span>
                     </div>
-                    <div className="text-[0.72vw] text-slate-500 font-medium">
+                    <div className="text-sm text-slate-700 font-medium">
                       Assign engineer and define initial SLA response window
                     </div>
                   </div>
                 </div>
                 <button
                   onClick={() => { setSelectedGroup(null); setSelectedEngineer(null); }}
-                  className="p-[0.4vw] hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  className="p-1.5 hover:bg-slate-100 rounded-full text-slate-700 hover:text-slate-600 transition-colors cursor-pointer"
                 >
-                  <X className="w-[1.1vw] h-[1.1vw]" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* SLA warning ribbon */}
               {!slaLoading && !slaIsConfigured && selectedGroup && (
-                <div className="mx-[1.4vw] mt-[0.8vw] flex items-center gap-[0.6vw] bg-amber-50 border border-amber-200/90 rounded-[0.5vw] px-[0.8vw] py-[0.4vw]">
-                  <AlertTriangle className="w-[0.9vw] h-[0.9vw] text-amber-600 shrink-0" />
-                  <span className="text-[0.72vw] text-amber-800 font-medium">
+                <div className="mx-5 mt-3 flex items-center gap-2.5 bg-amber-50 border border-amber-200/90 rounded-lg px-3 py-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span className="text-sm text-amber-800 font-medium">
                     No custom SLA registered for {selectedGroup.customerType} / {selectedGroup.segment} — using standard Level-1 flow default.
                   </span>
                 </div>
               )}
 
               {/* Call Details Bar */}
-              <div className="px-[1.4vw] py-[0.8vw] bg-slate-50/80 border-b border-slate-200 grid grid-cols-5 gap-[1vw]">
+              <div className="px-5 py-3 bg-slate-50/80 border-b border-slate-200 grid grid-cols-5 gap-3.5">
                 <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <User className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Customer
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                    <User className="w-2.5 h-2.5 text-blue-600" /> Customer
                   </span>
-                  <span className="text-[0.8vw] text-slate-800 font-bold truncate mt-[0.1vw]" title={selectedGroup.customerName}>
+                  <span className="text-xs text-slate-800 font-bold truncate mt-px" title={selectedGroup.customerName}>
                     {selectedGroup.customerName}
                   </span>
-                  <span className="text-[0.64vw] text-blue-600 font-mono font-medium">{selectedGroup.partyCode}</span>
+                  <span className="text-xs text-blue-600 font-mono font-medium">{selectedGroup.partyCode}</span>
                 </div>
 
                 <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <MapPin className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Location &amp; Site
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                    <MapPin className="w-2.5 h-2.5 text-blue-600" /> Location &amp; Site
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
+                  <span className="text-xs text-slate-800 font-semibold truncate mt-px">
                     {selectedGroup.location || "—"}
                   </span>
                   {selectedGroup.site && (
-                    <span className="text-[0.64vw] text-slate-500 font-medium">Site: {selectedGroup.site}</span>
+                    <span className="text-xs text-slate-700 font-medium">Site: {selectedGroup.site}</span>
                   )}
                 </div>
 
                 <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <Phone className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Contact
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                    <Phone className="w-2.5 h-2.5 text-blue-600" /> Contact
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
+                  <span className="text-xs text-slate-800 font-semibold truncate mt-px">
                     {selectedGroup.contactPerson || "—"}
                   </span>
-                  <span className="text-[0.64vw] text-slate-500 font-mono">{selectedGroup.contactNumber || "—"}</span>
+                  <span className="text-xs text-slate-700 font-mono">{selectedGroup.contactNumber || "—"}</span>
                 </div>
 
                 <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <Tag className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Segment
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                    <Tag className="w-2.5 h-2.5 text-blue-600" /> Segment
                   </span>
-                  <span className="text-[0.78vw] text-indigo-700 font-bold truncate mt-[0.1vw]">
+                  <span className="text-xs text-indigo-700 font-bold truncate mt-px">
                     {selectedGroup.segment}
                   </span>
-                  <span className="text-[0.64vw] text-slate-400 font-medium">Type: {selectedGroup.customerType}</span>
+                  <span className="text-xs text-slate-700 font-medium">Type: {selectedGroup.customerType}</span>
                 </div>
 
                 <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <AlertCircle className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Priority Level
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                    <AlertCircle className="w-2.5 h-2.5 text-blue-600" /> Priority Level
                   </span>
-                  <span className={`text-[0.78vw] font-bold truncate mt-[0.1vw] ${
+                  <span className={`text-xs font-bold truncate mt-px ${
                     selectedGroup.priority === 'Critical' ? 'text-rose-600' :
                     selectedGroup.priority === 'High' ? 'text-amber-600' :
                     'text-blue-600'
                   }`}>
                     {selectedGroup.priority}
                   </span>
-                  <span className="text-[0.64vw] text-slate-400 font-medium">{selectedGroup.products.length} product(s)</span>
+                  <span className="text-xs text-slate-700 font-medium">{selectedGroup.products.length} product(s)</span>
                 </div>
               </div>
 
@@ -925,38 +925,38 @@ export default function ServiceCallAssignment() {
               <div className="flex-1 flex overflow-hidden min-h-0">
                 {/* Left Side: Eligible Engineer Roster */}
                 <div className="w-[44%] flex flex-col border-r border-slate-200 overflow-hidden bg-slate-50/40">
-                  <div className="p-[0.9vw] border-b border-slate-200 bg-white">
+                  <div className="p-3.5 border-b border-slate-200 bg-white">
                     <div className="relative">
-                      <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-gray-400" />
+                      <Search className="absolute left-[10px] top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
                       <input 
                         type="text" 
                         placeholder="Search qualified engineers..." 
                         value={engSearch} 
                         onChange={e => setEngSearch(e.target.value)} 
-                        className="w-full pl-[2vw] pr-[2vw] h-[2vw] bg-slate-50 border border-gray-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.74vw] text-slate-800 font-normal transition-all" 
+                        className="w-full pl-7 pr-7 h-7 bg-slate-50 border border-gray-200 rounded-md outline-none focus:border-blue-500 focus:bg-white text-xs text-slate-800 font-normal transition-all" 
                       />
                       {engSearch && (
                         <button 
                           onClick={() => setEngSearch("")} 
-                          className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                          className="absolute right-[9px] top-1/2 -translate-y-1/2 text-gray-700 hover:text-gray-600 cursor-pointer"
                         >
-                          <X className="w-[0.8vw] h-[0.8vw]" />
+                          <X className="w-3 h-3" />
                         </button>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto custom-scrollbar p-[0.8vw] space-y-[0.5vw]">
+                  <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
                     {employeeListLoading ? (
-                      <div className="h-full flex flex-col items-center justify-center gap-[0.8vw] text-center py-[6vh]">
-                        <Loader2 className="w-[2vw] h-[2vw] animate-spin text-blue-600" />
-                        <div className="text-[0.82vw] font-semibold text-slate-700">Checking SLA eligible engineers...</div>
-                        <div className="text-[0.68vw] text-slate-400 font-normal max-w-[15vw]">
+                      <div className="h-full flex flex-col items-center justify-center gap-3 text-center py-[6vh]">
+                        <Loader2 className="w-7 h-7 animate-spin text-blue-600" />
+                        <div className="text-xs font-semibold text-slate-700">Checking SLA eligible engineers...</div>
+                        <div className="text-sm text-slate-700 font-normal max-w-[216px]">
                           Matching against department requirements &amp; current active queue.
                         </div>
                       </div>
                     ) : filteredEmployees.length === 0 ? (
-                      <div className="text-center py-[6vh] text-slate-400 text-[0.76vw]">
+                      <div className="text-center py-[6vh] text-slate-700 text-xs">
                         No eligible engineers found matching query.
                       </div>
                     ) : (
@@ -966,27 +966,27 @@ export default function ServiceCallAssignment() {
                           <div 
                             key={emp.userId} 
                             onClick={() => setSelectedEngineer(emp)} 
-                            className={`flex items-center gap-[0.7vw] p-[0.65vw] rounded-[0.6vw] border transition-all cursor-pointer ${
+                            className={`flex items-center gap-2.5 p-2.5 rounded-lg border transition-all cursor-pointer ${
                               isSelected
                                 ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
                                 : 'bg-white border-slate-200/90 hover:border-blue-300 hover:bg-blue-50/30'
                             }`}
                           >
-                            <div className={`w-[2.2vw] h-[2.2vw] rounded-full flex items-center justify-center font-bold text-[0.85vw] bg-gradient-to-br ${
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-gradient-to-br ${
                               isSelected ? 'from-white/30 to-white/10' : avatarColor(emp.name)
                             } text-white shadow-2xs shrink-0`}>
                               {initials(emp.name)}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className={`font-bold text-[0.8vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
+                              <div className={`font-bold text-xs leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
                                 {emp.name}
                               </div>
-                              <div className="flex items-center gap-[0.35vw] mt-[0.2vw]">
-                                <span className={`text-[0.65vw] font-medium ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>
+                              <div className="flex items-center gap-1.5 mt-1">
+                                <span className={`text-xs font-medium ${isSelected ? 'text-blue-100' : 'text-slate-700'}`}>
                                   {emp.department || "Engineer"}
                                 </span>
                                 {emp.activeTasks > 0 ? (
-                                  <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.58vw] font-bold border ${
+                                  <span className={`px-1.5 py-px rounded-full text-xs font-bold border ${
                                     isSelected 
                                       ? 'bg-amber-400/20 text-amber-100 border-amber-300/30' 
                                       : 'bg-amber-50 text-amber-700 border-amber-200'
@@ -994,7 +994,7 @@ export default function ServiceCallAssignment() {
                                     {emp.activeTasks} Active
                                   </span>
                                 ) : (
-                                  <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.58vw] font-bold border ${
+                                  <span className={`px-1.5 py-px rounded-full text-xs font-bold border ${
                                     isSelected 
                                       ? 'bg-emerald-400/20 text-emerald-100 border-emerald-300/30' 
                                       : 'bg-emerald-50 text-emerald-700 border-emerald-200'
@@ -1005,7 +1005,7 @@ export default function ServiceCallAssignment() {
                               </div>
                             </div>
                             {isSelected && (
-                              <CheckCircle className="w-[1.1vw] h-[1.1vw] text-white shrink-0" />
+                              <CheckCircle className="w-4 h-4 text-white shrink-0" />
                             )}
                           </div>
                         );
@@ -1017,24 +1017,24 @@ export default function ServiceCallAssignment() {
                 {/* Right Side: Assignment Details & Confirmation */}
                 <div className="flex-1 bg-white flex flex-col overflow-hidden">
                   {selectedEngineer ? (
-                    <div className="p-[1.4vw] flex flex-col h-full overflow-y-auto custom-scrollbar justify-between">
-                      <div className="space-y-[1.2vw]">
+                    <div className="p-5 flex flex-col h-full overflow-y-auto custom-scrollbar justify-between">
+                      <div className="space-y-4">
                         {/* Selected Engineer Banner */}
-                        <div className="bg-slate-50 rounded-[0.7vw] p-[0.9vw] border border-slate-200 flex items-center justify-between">
-                          <div className="flex items-center gap-[0.8vw]">
-                            <div className={`w-[2.6vw] h-[2.6vw] rounded-full flex items-center justify-center text-[0.9vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
+                        <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-[37px] h-[37px] rounded-full flex items-center justify-center text-sm font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
                               {initials(selectedEngineer.name)}
                             </div>
                             <div>
-                              <div className="text-[0.95vw] font-bold text-slate-800 leading-tight">
+                              <div className="text-sm font-bold text-slate-800 leading-tight">
                                 {selectedEngineer.name}
                               </div>
-                              <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.1vw]">
+                              <div className="text-sm text-slate-700 font-medium mt-px">
                                 {selectedEngineer.department} &bull; {selectedEngineer.role || "Specialist"}
                               </div>
                             </div>
                           </div>
-                          <span className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.66vw] font-bold border ${
+                          <span className={`px-2.5 py-0.5 rounded-full text-sm font-bold border ${
                             selectedEngineer.activeTasks > 0 
                               ? 'bg-amber-50 text-amber-700 border-amber-200' 
                               : 'bg-emerald-50 text-emerald-700 border-emerald-200'
@@ -1045,20 +1045,20 @@ export default function ServiceCallAssignment() {
 
                         {/* Units Included */}
                         <div>
-                          <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.5vw]">
-                            <Package className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+                          <div className="flex items-center gap-1.5 text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            <Package className="w-3 h-3 text-blue-600" />
                             <span>Allocated Products ({selectedGroup.products.length})</span>
                           </div>
-                          <div className="space-y-[0.35vw] max-h-[12vw] overflow-y-auto custom-scrollbar pr-[0.3vw]">
+                          <div className="space-y-1.5 max-h-[173px] overflow-y-auto custom-scrollbar pr-1">
                             {selectedGroup.products.map(({ p, productIdx }) => (
-                              <div key={productIdx} className="bg-slate-50/70 p-[0.65vw] rounded-[0.5vw] border border-slate-200 flex items-center justify-between text-[0.76vw]">
+                              <div key={productIdx} className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
                                 <div>
                                   <div className="text-slate-800 font-bold">{p.productModel || p.itemCode}</div>
                                   {p.errorCode && (
-                                    <div className="text-[0.64vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
+                                    <div className="text-xs text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
                                   )}
                                 </div>
-                                <span className="text-slate-500 font-mono text-[0.7vw] bg-white px-[0.4vw] py-[0.1vw] rounded border border-slate-200">
+                                <span className="text-slate-700 font-mono text-sm bg-white px-1.5 py-px rounded border border-slate-200">
                                   SN: {p.serialNumber || "—"}
                                 </span>
                               </div>
@@ -1068,36 +1068,36 @@ export default function ServiceCallAssignment() {
 
                         {/* SLA Resolution Target */}
                         <div>
-                          <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.5vw]">
-                            <Clock className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+                          <div className="flex items-center gap-1.5 text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            <Clock className="w-3 h-3 text-blue-600" />
                             <span>SLA Delivery Window</span>
                           </div>
-                          <div className="grid grid-cols-2 gap-[0.8vw]">
-                            <div className="flex flex-col gap-[0.2vw]">
-                              <span className="text-[0.64vw] font-bold text-slate-600 uppercase">Target Hours</span>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="flex flex-col gap-1">
+                              <span className="text-xs font-bold text-slate-600 uppercase">Target Hours</span>
                               <input 
                                 type="number" 
                                 min="0"
                                 value={resHours} 
                                 onChange={e => setResHours(e.target.value)} 
-                                className="w-full px-[0.7vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.85vw] font-bold text-slate-800 transition-all" 
+                                className="w-full px-2.5 h-8 bg-slate-50 border border-slate-200 rounded-md outline-none focus:border-blue-500 focus:bg-white text-sm font-bold text-slate-800 transition-all" 
                               />
                             </div>
-                            <div className="flex flex-col gap-[0.2vw]">
-                              <span className="text-[0.64vw] font-bold text-slate-600 uppercase">Target Minutes</span>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-xs font-bold text-slate-600 uppercase">Target Minutes</span>
                               <input 
                                 type="number" 
                                 min="0"
                                 max="59"
                                 value={resMins} 
                                 onChange={e => setResMins(e.target.value)} 
-                                className="w-full px-[0.7vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.85vw] font-bold text-slate-800 transition-all" 
+                                className="w-full px-2.5 h-8 bg-slate-50 border border-slate-200 rounded-md outline-none focus:border-blue-500 focus:bg-white text-sm font-bold text-slate-800 transition-all" 
                               />
                             </div>
                           </div>
-                          <div className="flex items-center gap-[0.4vw] p-[0.6vw] bg-blue-50/70 rounded-[0.5vw] border border-blue-200/60 mt-[0.6vw]">
-                            <Info className="w-[0.8vw] h-[0.8vw] text-blue-600 shrink-0" />
-                            <span className="text-[0.68vw] text-blue-800 font-medium">
+                          <div className="flex items-center gap-1.5 p-2.5 bg-blue-50/70 rounded-lg border border-blue-200/60 mt-2.5">
+                            <Info className="w-3 h-3 text-blue-600 shrink-0" />
+                            <span className="text-sm text-blue-800 font-medium">
                               Resolution target starts counting upon assignment confirmation.
                             </span>
                           </div>
@@ -1105,40 +1105,40 @@ export default function ServiceCallAssignment() {
                       </div>
 
                       {/* Confirm Action Button */}
-                      <div className="pt-[1.2vw] border-t border-slate-200 flex justify-end gap-[0.6vw] mt-[1vw]">
+                      <div className="pt-4 border-t border-slate-200 flex justify-end gap-2.5 mt-3.5">
                         <button
                           type="button"
                           onClick={() => setSelectedEngineer(null)}
-                          className="px-[1vw] h-[2.2vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.76vw] cursor-pointer transition-colors"
+                          className="px-3.5 h-8 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg font-semibold text-xs cursor-pointer transition-colors"
                         >
                           Change Engineer
                         </button>
                         <button 
                           onClick={handleAssign}
                           disabled={isAssigning}
-                          className="px-[1.2vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-bold text-[0.76vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-60"
+                          className="px-4 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-60"
                         >
                           {isAssigning ? (
                             <>
-                              <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" />
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
                               <span>Allocating...</span>
                             </>
                           ) : (
                             <>
                               <span>Confirm Assignment</span>
-                              <ArrowRight className="w-[0.9vw] h-[0.9vw]" />
+                              <ArrowRight className="w-3.5 h-3.5" />
                             </>
                           )}
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center text-center p-[2vw]">
-                      <div className="w-[3.8vw] h-[3.8vw] bg-blue-50 rounded-full flex items-center justify-center mb-[0.8vw] text-blue-500">
-                        <UserPlus className="w-[1.8vw] h-[1.8vw]" />
+                    <div className="flex-1 flex flex-col items-center justify-center text-center p-7">
+                      <div className="w-[55px] h-[55px] bg-blue-50 rounded-full flex items-center justify-center mb-3 text-blue-500">
+                        <UserPlus className="w-6.5 h-6.5" />
                       </div>
-                      <div className="text-[1vw] font-bold text-slate-700">Select an Eligible Engineer</div>
-                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw] mt-[0.3vw]">
+                      <div className="text-xs font-bold text-slate-700">Select an Eligible Engineer</div>
+                      <div className="text-xs text-slate-700 max-w-[288px] mt-1">
                         Pick a qualified engineer from the list on the left to set SLA deadlines and confirm allocation.
                       </div>
                     </div>

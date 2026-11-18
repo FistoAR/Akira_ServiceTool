@@ -1,37 +1,237 @@
 @import "tailwindcss";
 
-/* Base HTML/Body reset: strictly lock viewport to 100% without parent page scrollbars */
+/* ── Base HTML/Body reset: fully responsive viewport ── */
 html,
 body,
 #root {
   width: 100%;
   height: 100%;
-  max-width: 100vw;
-  max-height: 100vh;
   margin: 0;
   padding: 0;
-  overflow: hidden !important;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Base font scaling: boosted font sizes and comfortable button/control sizing across all screens */
+/* ── Fluid Root Scaling for Consistent Sizing Across All Displays ── */
+/* 
+   Small Laptops (1024px–1366px): 15px - 15.5px
+   Full HD Desktop (1600px–1920px): 17px - 17.5px
+   2K / 4K Displays (2000px+): 19px - 21px
+*/
 html {
-  font-size: 16px;
+  font-size: 15px;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1024px) {
   html {
-    font-size: 16px;
+    font-size: 15.5px;
   }
 }
 
-@media (min-width: 1920px) {
+@media (min-width: 1600px) {
   html {
-    font-size: 16px;
+    font-size: 17px;
   }
 }
 
-/* index.css - Add these animations */
+@media (min-width: 2000px) {
+  html {
+    font-size: 19px;
+  }
+}
 
+@media (min-width: 2560px) {
+  html {
+    font-size: 21px;
+  }
+}
+
+/* ── Theme Definitions: Light and Dark ── */
+:root,
+html.theme-light,
+[data-theme="light"] {
+  --bg-app: #f2f8ff;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-hover: #f1f5f9;
+  --border-main: #cbd5e1;
+  --border-subtle: #e2e8f0;
+  --text-main: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  color-scheme: light;
+}
+
+html.theme-dark,
+html.dark,
+[data-theme="dark"] {
+  --bg-app: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-card: #1e293b;
+  --bg-subtle: #0f172a;
+  --bg-hover: #334155;
+  --border-main: #475569;
+  --border-subtle: #334155;
+  --text-main: #f8fafc;
+  --text-secondary: #f1f5f9;
+  --text-muted: #cbd5e1;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  color-scheme: dark;
+}
+
+/* ── Table Typography Defaults (Cleanly overrideable without !important collisions) ── */
+thead th,
+table th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+table td {
+  font-size: 0.8125rem;
+}
+
+/* Responsive Table Padding */
+table td,
+table th {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+@media (max-width: 1366px) {
+  table td,
+  table th {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+  }
+}
+
+/* ── Standalone Input Boundaries ── */
+input[type="text"]:not(.bg-transparent):not([class*="border-none"]),
+input[type="number"]:not(.bg-transparent):not([class*="border-none"]),
+input[type="email"]:not(.bg-transparent):not([class*="border-none"]),
+input[type="password"]:not(.bg-transparent):not([class*="border-none"]),
+input[type="search"]:not(.bg-transparent):not([class*="border-none"]),
+textarea:not(.bg-transparent):not([class*="border-none"]) {
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:not(.bg-transparent):focus,
+input[type="number"]:not(.bg-transparent):focus,
+input[type="email"]:not(.bg-transparent):focus,
+input[type="password"]:not(.bg-transparent):focus,
+input[type="search"]:not(.bg-transparent):focus,
+textarea:not(.bg-transparent):focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+/* Date inputs inside capsule filters remain transparent and borderless */
+input[type="date"].bg-transparent,
+input.bg-transparent {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+/* Dark mode inputs */
+html.dark input[type="text"]:not(.bg-transparent),
+html.dark input[type="number"]:not(.bg-transparent),
+html.dark input[type="email"]:not(.bg-transparent),
+html.dark input[type="password"]:not(.bg-transparent),
+html.dark input[type="search"]:not(.bg-transparent),
+html.dark textarea:not(.bg-transparent) {
+  background-color: #1e293b;
+  border-color: #475569;
+  color: #f8fafc;
+}
+
+/* ── Global Dark Mode Surface Adapters ── */
+html.dark body,
+html.dark #root {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+}
+
+html.dark main {
+  background-color: var(--bg-app);
+}
+
+html.dark aside {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+html.dark aside .bg-slate-50\/70,
+html.dark aside .bg-slate-50,
+html.dark aside .bg-slate-100 {
+  background-color: #0f172a;
+  border-color: #334155;
+}
+
+html.dark aside .text-slate-600,
+html.dark aside .text-slate-700 {
+  color: #cbd5e1;
+}
+
+html.dark aside .hover\:bg-slate-50:hover,
+html.dark aside .hover\:bg-white\/80:hover {
+  background-color: #334155;
+  color: #ffffff;
+}
+
+html.dark .bg-white {
+  background-color: #1e293b;
+  color: var(--text-main);
+}
+
+html.dark .bg-\[\#f2f8ff\] {
+  background-color: var(--bg-app);
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-gray-50 {
+  background-color: #182234;
+}
+
+html.dark .bg-slate-100,
+html.dark .bg-gray-100 {
+  background-color: #243247;
+}
+
+html.dark .text-black,
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+  color: #f8fafc;
+}
+
+html.dark .text-slate-700,
+html.dark .text-slate-600,
+html.dark .text-gray-700,
+html.dark .text-gray-600 {
+  color: #e2e8f0;
+}
+
+html.dark .border-slate-200,
+html.dark .border-slate-300,
+html.dark .border-gray-200,
+html.dark .border-gray-300 {
+  border-color: #334155;
+}
+
+/* Animations */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -55,7 +255,7 @@ html {
 @keyframes tooltipIn {
   from {
     opacity: 0;
-    transform: translateX(-0.5vw) translateY(-50%);
+    transform: translateX(-8px) translateY(-50%);
   }
   to {
     opacity: 1;
@@ -75,9 +275,10 @@ html {
   animation: tooltipIn 0.2s ease-out forwards;
 }
 
-/* Custom scrollbar for sidebar */
+/* Custom scrollbars */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 3px;
+  width: 5px;
+  height: 5px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -85,20 +286,20 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(100, 116, 139, 0.35);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(100, 116, 139, 0.55);
 }
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
 }
 
-/* Tab Running Border Animation based on user request */
+/* Tab Running Border Animation */
 .tab-running-border {
   position: relative;
   overflow: hidden;
@@ -126,14 +327,14 @@ html {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: calc(100% - 0.25vw);
-  height: calc(100% - 0.25vw);
+  width: calc(100% - 3px);
+  height: calc(100% - 3px);
   background: 
     linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.6) 45%, rgba(255, 255, 255, 0.6) 55%, transparent 80%) no-repeat,
-    #059669; /* Emerald 600 for strong contrast with white text */
+    #059669;
   background-size: 200% 100%, 100% 100%;
   transform: translate(-50%, -50%);
-  border-radius: calc(0.5vw - 0.1vw);
+  border-radius: 6px;
   z-index: -1;
   animation: shimmer 2.5s infinite linear;
 }

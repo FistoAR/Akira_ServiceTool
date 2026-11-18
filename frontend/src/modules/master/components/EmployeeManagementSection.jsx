@@ -58,43 +58,43 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[2vw]">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-200 w-full max-w-[28vw] overflow-hidden flex flex-col max-h-[80vh]">
-        <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-200 flex items-center justify-between bg-slate-50/70">
-          <h3 className="text-[0.92vw] font-bold text-gray-900 flex items-center gap-[0.5vw]">
-            <Briefcase className="w-[1vw] h-[1vw] text-blue-600" />
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-7">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-[403px] overflow-hidden flex flex-col max-h-[80vh]">
+        <div className="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between bg-slate-50/70">
+          <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+            <Briefcase className="w-3.5 h-3.5 text-blue-600" />
             Manage Departments
           </h3>
-          <button onClick={onClose} className="p-[0.35vw] hover:bg-gray-100 rounded-full transition-colors text-gray-500 hover:text-gray-700 cursor-pointer"><X className="w-[1vw] h-[1vw]" /></button>
+          <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-700 hover:text-gray-700 cursor-pointer"><X className="w-3.5 h-3.5" /></button>
         </div>
 
-        <div className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
-          <div className="flex gap-[0.5vw]">
+        <div className="p-4 flex flex-col gap-3.5 overflow-y-auto">
+          <div className="flex gap-2">
             <input
               type="text"
               value={newDept}
               onChange={(e) => setNewDept(e.target.value)}
               placeholder="Enter department name..."
-              className="flex-1 border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw]"
+              className="flex-1 border border-gray-300 p-2 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs"
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             />
-            <button onClick={handleAdd} className="bg-blue-600 text-white px-[0.9vw] rounded-[0.4vw] hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center"><Plus className="w-[1vw] h-[1vw]" /></button>
+            <button onClick={handleAdd} className="bg-blue-600 text-white px-3.5 rounded-md hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center"><Plus className="w-3.5 h-3.5" /></button>
           </div>
 
-          <div className="flex flex-col gap-[0.4vw]">
+          <div className="flex flex-col gap-1.5">
             {localDepts.map((dept, idx) => (
-              <div key={idx} className="flex items-center justify-between px-[0.7vw] py-[0.5vw] bg-gray-50 border border-gray-200 rounded-[0.4vw] hover:bg-blue-50/40 hover:border-blue-200 transition-colors group">
-                <span className="text-[0.8vw] font-medium text-gray-700">{dept}</span>
-                <button onClick={() => handleRemove(dept)} className="text-gray-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"><Trash2 className="w-[0.85vw] h-[0.85vw]" /></button>
+              <div key={idx} className="flex items-center justify-between px-2.5 py-2 bg-gray-50 border border-gray-200 rounded-md hover:bg-blue-50/40 hover:border-blue-200 transition-colors group">
+                <span className="text-xs font-medium text-gray-700">{dept}</span>
+                <button onClick={() => handleRemove(dept)} className="text-gray-700 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"><Trash2 className="w-3 h-3" /></button>
               </div>
             ))}
-            {localDepts.length === 0 && <p className="text-center text-gray-400 py-[2vw] text-[0.78vw]">No departments defined</p>}
+            {localDepts.length === 0 && <p className="text-center text-gray-700 py-7 text-xs">No departments defined</p>}
           </div>
         </div>
 
-        <div className="px-[1.2vw] py-[0.8vw] border-t border-gray-200 bg-slate-50/70 flex justify-end gap-[0.6vw]">
-          <button onClick={onClose} className="px-[1vw] py-[0.45vw] text-gray-600 hover:bg-gray-200/60 rounded-[0.4vw] text-[0.8vw] font-semibold transition-colors cursor-pointer">Cancel</button>
-          <button onClick={handleSave} className="bg-blue-600 text-white px-[1.1vw] py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer">Save Changes</button>
+        <div className="px-4 py-3 border-t border-gray-200 bg-slate-50/70 flex justify-end gap-2.5">
+          <button onClick={onClose} className="px-3.5 py-1.5 text-gray-600 hover:bg-gray-200/60 rounded-md text-xs font-semibold transition-colors cursor-pointer">Cancel</button>
+          <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-1.5 rounded-md text-xs font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer">Save Changes</button>
         </div>
       </motion.div>
     </div>
@@ -255,7 +255,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
         if (roleChanged && canEditRoleAccess) {
           toast(
-            <div className="space-y-[0.35vw]">
+            <div className="space-y-1.5">
               <p>
                 Role changed from <span className="font-semibold text-gray-700">{oldRole}</span> to <span className="font-bold text-gray-900">{newRole}</span>. Permissions have been reset to {newRole} defaults.
               </p>
@@ -264,9 +264,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 onClick={() => {
                   setSearchParams({ tab: "role-access", userId: editingEmp.userId });
                 }}
-                className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
               >
-                <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
+                <Icon icon="solar:shield-user-bold-duotone" className="w-3.5 h-3.5" />
                 Customize permissions in Role Access &rarr;
               </button>
             </div>,
@@ -295,7 +295,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
         if (canEditRoleAccess && newUserId) {
           toast(
-            <div className="space-y-[0.35vw]">
+            <div className="space-y-1.5">
               <p>
                 Employee registered successfully. Default <span className="font-bold text-gray-900">{createdRole}</span> permissions enabled.
               </p>
@@ -304,9 +304,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 onClick={() => {
                   setSearchParams({ tab: "role-access", userId: newUserId });
                 }}
-                className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
               >
-                <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
+                <Icon icon="solar:shield-user-bold-duotone" className="w-3.5 h-3.5" />
                 To update role access click here &rarr;
               </button>
             </div>,
@@ -381,12 +381,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         const setInactiveOk = await confirm({
           title: "Records Exist for Employee",
           message: (
-            <div className="space-y-[0.5vw]">
-              <p className="text-[0.82vw] text-slate-800">
+            <div className="space-y-2">
+              <p className="text-xs text-slate-800">
                 Records exist for <span className="font-bold">{emp.name}</span> in the system ({res.data.totalRecordCount} total across Service Call, Material, or Production).
               </p>
-              <div className="p-[0.6vw] bg-amber-50 border border-amber-200 rounded-[0.4vw] text-[0.76vw] text-amber-900">
-                <span className="font-semibold block mb-[0.2vw]">Cannot permanently delete operational history.</span>
+              <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-900">
+                <span className="font-semibold block mb-1">Cannot permanently delete operational history.</span>
                 Would you like to set their status to <span className="font-bold underline text-amber-950">Inactive</span> instead to disable access while preserving records?
               </div>
             </div>
@@ -458,76 +458,76 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
   }, [searchTerm]);
 
   return (
-    <div className="p-[0.8vw] flex flex-col gap-[0.7vw] flex-1 min-h-0 overflow-hidden">
-      <div className="flex items-center justify-between gap-[1vw] flex-shrink-0">
-        <div className="relative flex-1 max-w-[25vw]">
-          <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[1vw] h-[1vw] text-gray-400" />
+    <div className="p-3 flex flex-col gap-2.5 flex-1 min-h-0 overflow-hidden">
+      <div className="flex items-center justify-between gap-3.5 flex-shrink-0">
+        <div className="relative flex-1 max-w-[360px]">
+          <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-700" />
           <input
             type="text"
             placeholder="Search employees by name, ID or department..."
-            className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-gray-300 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+            className="w-full pl-9 pr-3.5 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex gap-[0.6vw]">
+        <div className="flex gap-2.5">
           {canWrite && (
             <button
               onClick={() => setShowDeptModal(true)}
-              className="flex items-center gap-[0.45vw] border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.8vw] cursor-pointer transition-all shadow-none"
+              className="flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-3.5 py-2 rounded-lg font-semibold text-xs cursor-pointer transition-all shadow-none"
             >
-              <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw] text-gray-500" /> Dept Master
+              <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-3.5 h-3.5 text-gray-700" /> Dept Master
             </button>
           )}
           {canWrite && (
             <button
               onClick={() => openRegModal()}
-              className="flex items-center gap-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all shadow-xs"
+              className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-xs cursor-pointer transition-all shadow-xs"
             >
-              <Icon icon="solar:user-plus-bold-duotone" className="w-[1.05vw] h-[1.05vw]" /> Register Employee
+              <Icon icon="solar:user-plus-bold-duotone" className="w-4 h-4" /> Register Employee
             </button>
           )}
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-[0.6vw] overflow-hidden shadow-none flex-1 min-h-0 flex flex-col">
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none flex-1 min-h-0 flex flex-col">
         <div className="flex-1 min-h-0 overflow-auto">
           <table className="w-full text-left border-collapse">
             <thead className="sticky top-0 z-20 bg-gray-50/90 backdrop-blur-xs">
               <tr className="border-b border-gray-200">
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">Employee</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">ID</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">Department</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">Designation</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">Role</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                <th className="px-3.5 py-2.5 text-sm font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {paginatedData.map((emp, idx) => (
                 <tr key={emp._id || idx} className="hover:bg-blue-50/20 transition-colors group">
-                  <td className="px-[1vw] py-[0.7vw] text-[0.78vw] text-gray-500 font-medium">
+                  <td className="px-3.5 py-2.5 text-xs text-gray-700 font-medium">
                     {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                   </td>
-                  <td className="px-[1vw] py-[0.7vw]">
-                    <div className="flex items-center gap-[0.75vw]">
-                      <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[0.85vw] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
+                  <td className="px-3.5 py-2.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-sm flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
                         {emp.profilePicture ? <img src={emp.profilePicture} className="w-full h-full object-cover" /> : emp.name?.charAt(0)?.toUpperCase()}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-[0.82vw] font-bold text-gray-900 truncate">{emp.name}</div>
-                        <div className="text-[0.7vw] text-gray-500 truncate">{emp.email}</div>
+                        <div className="text-xs font-bold text-gray-900 truncate">{emp.name}</div>
+                        <div className="text-sm text-gray-700 truncate">{emp.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] font-semibold text-gray-700">{emp.userId}</td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700">
+                  <td className="px-3.5 py-2.5 text-xs font-semibold text-gray-700">{emp.userId}</td>
+                  <td className="px-3.5 py-2.5 text-xs text-gray-700">
                     {emp.department || "—"}
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw]">
+                  <td className="px-3.5 py-2.5 text-xs text-gray-700 font-medium">{emp.designation || "—"}</td>
+                  <td className="px-3.5 py-2.5 text-xs">
                     <span className={`font-semibold ${emp.role === "Admin"
                         ? "text-purple-700"
                         : emp.role === "Supervisor"
@@ -537,41 +537,41 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       {emp.role || "User"}
                     </span>
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.78vw]">
-                    <span className="inline-flex items-center gap-[0.35vw] font-medium">
-                      <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+                  <td className="px-3.5 py-2.5 text-xs">
+                    <span className="inline-flex items-center gap-1.5 font-medium">
+                      <span className={`w-1.5 h-1.5 rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
                       <span className={emp.workingStatus === "Active" ? "text-emerald-700" : "text-amber-700"}>
                         {emp.workingStatus}
                       </span>
                     </span>
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-right">
+                  <td className="px-3.5 py-2.5 text-right">
                     {((emp.role === "Admin" || emp.department === "Admin") && !isCurrentRequesterAdmin) ? (
-                      <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
-                        <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
+                      <span className="inline-flex items-center gap-1 text-sm font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full" title="Protected Admin profile">
+                        <Icon icon="solar:lock-keyhole-bold-duotone" className="w-3 h-3" /> Protected
                       </span>
                     ) : (
-                      <div className="flex items-center justify-end gap-[0.3vw]">
+                      <div className="flex items-center justify-end gap-1">
                         {canUpdate && (
                           <button
                             onClick={() => openRegModal(emp)}
-                            className="p-[0.35vw] hover:bg-blue-50 rounded-full transition-colors text-gray-400 hover:text-blue-600 cursor-pointer"
+                            className="p-1.5 hover:bg-blue-50 rounded-full transition-colors text-gray-700 hover:text-blue-600 cursor-pointer"
                             title="Edit Employee Details"
                           >
-                            <Icon icon="solar:pen-new-square-linear" className="w-[0.95vw] h-[0.95vw]" />
+                            <Icon icon="solar:pen-new-square-linear" className="w-3.5 h-3.5" />
                           </button>
                         )}
                         {canDelete && (
                           <button
                             onClick={() => handleDeleteEmployee(emp)}
-                            className="p-[0.35vw] hover:bg-rose-50 rounded-full transition-colors text-gray-400 hover:text-rose-600 cursor-pointer"
+                            className="p-1.5 hover:bg-rose-50 rounded-full transition-colors text-gray-700 hover:text-rose-600 cursor-pointer"
                             title="Delete Employee"
                           >
-                            <Icon icon="solar:trash-bin-trash-linear" className="w-[0.95vw] h-[0.95vw]" />
+                            <Icon icon="solar:trash-bin-trash-linear" className="w-3.5 h-3.5" />
                           </button>
                         )}
                         {!canUpdate && !canDelete && (
-                          <span className="text-[0.68vw] text-gray-400 italic">View only</span>
+                          <span className="text-sm text-gray-700 italic">View only</span>
                         )}
                       </div>
                     )}
@@ -582,38 +582,38 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           </table>
         </div>
         {paginatedData.length === 0 && (
-          <div className="p-[4vw] text-center flex flex-col items-center gap-[1vw]">
-            <Users className="w-[3vw] h-[3vw] text-gray-200" />
-            <p className="text-gray-400 text-[0.85vw]">No employees found matching your search</p>
+          <div className="p-14 text-center flex flex-col items-center gap-3.5">
+            <Users className="w-[43px] h-[43px] text-gray-200" />
+            <p className="text-gray-700 text-sm">No employees found matching your search</p>
           </div>
         )}
 
         {/* Pagination UI */}
-        <div className="border-t border-gray-200 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center flex-shrink-0">
-          <div className="text-[0.74vw] text-gray-500 font-medium">
+        <div className="border-t border-gray-200 px-3.5 py-2.5 bg-white flex justify-between items-center flex-shrink-0">
+          <div className="text-xs text-gray-700 font-medium">
             Showing <span className="text-gray-900 font-semibold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-semibold">{filtered.length}</span> employees
           </div>
-          <div className="flex items-center gap-[0.6vw]">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+              className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
-              <ChevronLeft className="w-[0.95vw] h-[0.95vw]" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <div className="flex gap-[0.3vw]">
+            <div className="flex gap-1">
               {[...Array(totalPages)].map((_, i) => {
                 const pNum = i + 1;
                 // Basic logic to show only few pages if there are many
                 if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                  if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
+                  if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-700 text-xs">...</span>;
                   return null;
                 }
                 return (
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
+                    className={`w-6 h-6 flex items-center justify-center rounded-md text-xs font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
                   >
                     {pNum}
                   </button>
@@ -623,9 +623,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+              className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
-              <ChevronRight className="w-[0.95vw] h-[0.95vw]" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -634,19 +634,19 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       {/* Registration & Edit Modal */}
       <AnimatePresence>
         {showRegModal && (
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[1.5vw]">
-            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-200 w-full max-w-[50vw] overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-5.5">
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="bg-white rounded-xl shadow-2xl border border-gray-200 w-full max-w-[720px] overflow-hidden flex flex-col max-h-[90vh]">
               {/* Modal Header */}
-              <div className="px-[1.4vw] py-[0.9vw] border-b border-gray-200 flex items-center justify-between bg-slate-50/70 flex-shrink-0">
-                <div className="flex items-center gap-[0.7vw]">
-                  <div className="w-[2vw] h-[2vw] rounded-[0.45vw] bg-blue-600 text-white flex items-center justify-center shadow-xs">
-                    {editingEmp ? <Icon icon="solar:user-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> : <UserPlus className="w-[1.05vw] h-[1.05vw]" />}
+              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center justify-between bg-slate-50/70 flex-shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-blue-600 text-white flex items-center justify-center shadow-xs">
+                    {editingEmp ? <Icon icon="solar:user-bold-duotone" className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
                   </div>
                   <div>
-                    <h3 className="text-[0.95vw] font-bold text-gray-900 leading-tight">
+                    <h3 className="text-sm font-bold text-gray-900 leading-tight">
                       {editingEmp ? "Edit Employee Profile" : "Register New Employee"}
                     </h3>
-                    <p className="text-[0.72vw] text-gray-500">
+                    <p className="text-sm text-gray-700">
                       {editingEmp ? `Updating profile details for ${editingEmp.name}` : "Create a new user profile and credentials"}
                     </p>
                   </div>
@@ -654,9 +654,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 <button
                   type="button"
                   onClick={() => setShowRegModal(false)}
-                  className="p-[0.35vw] text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+                  className="p-1.5 text-gray-700 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                 >
-                  <X className="w-[1.05vw] h-[1.05vw]" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -664,23 +664,23 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
               <form
                 onSubmit={handleRegSubmit}
                 autoComplete="off"
-                className="flex-1 overflow-y-auto px-[1.4vw] py-[1.2vw] flex flex-col gap-[1.2vw]"
+                className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-4"
               >
                 {/* Hidden dummy inputs to prevent browser autofill heuristics from injecting credentials */}
                 <input type="text" style={{ display: "none" }} aria-hidden="true" />
                 <input type="password" style={{ display: "none" }} aria-hidden="true" />
 
                 {/* 1. Personal Details Section */}
-                <div className="space-y-[0.8vw]">
-                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
-                    <User className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Personal Details</span>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-1.5 pb-1.5 border-b border-gray-200">
+                    <User className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">Personal Details</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Full Name *
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Users className="w-3 h-3 text-gray-700" /> Full Name *
                       </label>
                       <input
                         type="text"
@@ -689,13 +689,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.name}
                         onChange={e => setRegData({ ...regData, name: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="John Doe"
                       />
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Employee ID *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-gray-700" /> Employee ID *
                       </label>
                       <input
                         type="text"
@@ -705,16 +705,16 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         value={regData.userId}
                         onChange={e => setRegData({ ...regData, userId: e.target.value })}
                         disabled={!!editingEmp}
-                        className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.78vw] transition-colors ${editingEmp
-                            ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed"
+                        className={`w-full h-7.5 min-h-[30px] border px-3 rounded-md outline-none text-xs transition-colors ${editingEmp
+                            ? "bg-gray-100 text-gray-700 border-gray-200 cursor-not-allowed"
                             : "border-gray-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
                           }`}
                         placeholder="EMP001"
                       />
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Mail className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Email Address *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Mail className="w-3 h-3 text-gray-700" /> Email Address *
                       </label>
                       <input
                         type="email"
@@ -723,13 +723,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="new-email"
                         value={regData.email}
                         onChange={e => setRegData({ ...regData, email: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="john@akira.com"
                       />
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Phone className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Phone Number
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Phone className="w-3 h-3 text-gray-700" /> Phone Number
                       </label>
                       <input
                         type="tel"
@@ -737,13 +737,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.phoneNumber}
                         onChange={e => setRegData({ ...regData, phoneNumber: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="+91 ..."
                       />
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Birth *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-gray-700" /> Date of Birth *
                       </label>
                       <input
                         type="date"
@@ -751,12 +751,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.dob}
                         onChange={e => setRegData({ ...regData, dob: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white transition-colors"
                       />
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Gender *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Users className="w-3 h-3 text-gray-700" /> Gender *
                       </label>
                       <CustomDropdown
                         options={["Male", "Female", "Other"]}
@@ -771,18 +771,18 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
 
                 {/* 2. Professional Details Section */}
-                <div className="space-y-[0.8vw]">
-                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
-                    <Briefcase className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Professional Details</span>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-1.5 pb-1.5 border-b border-gray-200">
+                    <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">Professional Details</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Briefcase className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Department *
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Briefcase className="w-3 h-3 text-gray-700" /> Department *
                       </label>
-                      <div className="flex items-center gap-[0.4vw]">
+                      <div className="flex items-center gap-1.5">
                         <div className="flex-1 min-w-0">
                           <CustomDropdown
                             searchable
@@ -796,30 +796,30 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <button
                           type="button"
                           onClick={() => setShowDeptModal(true)}
-                          className="h-[2.1vw] min-h-[2.1vw] px-[0.6vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.35vw] transition-colors cursor-pointer border border-gray-200 flex items-center justify-center flex-shrink-0"
+                          className="h-7.5 min-h-[30px] px-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors cursor-pointer border border-gray-200 flex items-center justify-center flex-shrink-0"
                           title="Manage Departments"
                         >
-                          <Settings className="w-[0.95vw] h-[0.95vw]" />
+                          <Settings className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Tag className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Designation *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Tag className="w-3 h-3 text-gray-700" /> Designation *
                       </label>
                       <input
                         type="text"
                         required
                         value={regData.designation}
                         onChange={e => setRegData({ ...regData, designation: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Senior Engineer"
                       />
                     </div>
 
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Role *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-gray-700" /> Role *
                       </label>
                       <CustomDropdown
                         options={isCurrentRequesterAdmin ? ["User", "Supervisor", "Admin"] : ["User", "Supervisor"]}
@@ -831,17 +831,17 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                       {/* Notice when role is modified in edit mode */}
                       {editingEmp && regData.role !== (editingEmp.role || "User") && (
-                        <div className="text-[0.69vw] text-amber-800 bg-amber-50 border border-amber-200 rounded-[0.35vw] p-[0.45vw] flex items-start gap-[0.3vw] leading-relaxed animate-in fade-in">
-                          <Icon icon="solar:info-circle-bold" className="w-[0.85vw] h-[0.85vw] text-amber-600 flex-shrink-0 mt-[0.08vw]" />
+                        <div className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-1.5 flex items-start gap-1 leading-relaxed animate-in fade-in">
+                          <Icon icon="solar:info-circle-bold" className="w-3 h-3 text-amber-600 flex-shrink-0 mt-px" />
                           <span>
                             It will reset the current permission of the user and overwrite with <strong>{regData.role}</strong> permissions. If you want to update permissions, please use <strong>Role Access</strong> module.
                           </span>
                         </div>
                       )}
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <IndianRupee className="w-[0.85vw] h-[0.85vw] text-gray-400" /> CTC (Monthly)
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <IndianRupee className="w-3 h-3 text-gray-700" /> CTC (Monthly)
                       </label>
                       <input
                         type="number"
@@ -853,26 +853,26 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             setRegData({ ...regData, ctc: val });
                           }
                         }}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Enter monthly CTC"
                       />
                     </div>
 
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Joining *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-gray-700" /> Date of Joining *
                       </label>
                       <input
                         type="date"
                         required
                         value={regData.dateOfJoining}
                         onChange={e => setRegData({ ...regData, dateOfJoining: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
+                        className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white transition-colors"
                       />
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Activity className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Working Status *
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Activity className="w-3 h-3 text-gray-700" /> Working Status *
                       </label>
                       <CustomDropdown
                         options={["Active", "Inactive", "On Leave"]}
@@ -888,7 +888,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                 {/* 3. Profile Picture Section */}
                 <div
-                  className={`space-y-[0.5vw] p-[0.9vw] rounded-[0.6vw] border-2 transition-all ${isDraggingFile
+                  className={`space-y-2 p-3.5 rounded-lg border-2 transition-all ${isDraggingFile
                       ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/30"
                       : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
                     }`}
@@ -919,39 +919,39 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.35vw]">
-                      <ImageIcon className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Profile Picture
+                    <label className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5 text-blue-600" /> Profile Picture
                     </label>
-                    <span className="text-[0.68vw] text-gray-400">Optional: Max 2MB</span>
+                    <span className="text-sm text-gray-700">Optional: Max 2MB</span>
                   </div>
 
-                  <div className="flex items-center gap-[1.2vw]">
+                  <div className="flex items-center gap-4">
                     <div
-                      className="w-[3.6vw] h-[3.6vw] rounded-full bg-white border border-gray-300 flex items-center justify-center overflow-hidden shadow-2xs cursor-pointer flex-shrink-0"
+                      className="w-[52px] h-[52px] rounded-full bg-white border border-gray-300 flex items-center justify-center overflow-hidden shadow-2xs cursor-pointer flex-shrink-0"
                       onClick={() => fileInputRef.current?.click()}
                       title="Click to select image"
                     >
                       {regData.profilePicture ? (
                         <img src={regData.profilePicture} alt="Profile preview" className="w-full h-full object-cover" />
                       ) : (
-                        <Users className="w-[1.6vw] h-[1.6vw] text-gray-300" />
+                        <Users className="w-6 h-6 text-gray-600" />
                       )}
                     </div>
 
                     <div className="flex-1">
                       <div
                         onClick={() => fileInputRef.current?.click()}
-                        className={`flex items-center justify-between px-[0.8vw] py-[0.55vw] border border-dashed rounded-[0.45vw] cursor-pointer transition-all ${isDraggingFile
+                        className={`flex items-center justify-between px-3 py-2 border border-dashed rounded-md cursor-pointer transition-all ${isDraggingFile
                             ? "border-blue-500 bg-blue-100/50"
                             : "border-gray-300 hover:border-blue-400 hover:bg-white bg-white/70"
                           }`}
                       >
-                        <div className="flex items-center gap-[0.6vw]">
-                          <span className="py-[0.25vw] px-[0.7vw] rounded-[0.35vw] text-[0.74vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-[0.3vw]">
-                            <UploadCloud className="w-[0.85vw] h-[0.85vw]" />
+                        <div className="flex items-center gap-2.5">
+                          <span className="py-1 px-2.5 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-1">
+                            <UploadCloud className="w-3 h-3" />
                             Choose File
                           </span>
-                          <span className="text-[0.74vw] text-gray-500">
+                          <span className="text-xs text-gray-700">
                             {isDraggingFile ? (
                               <span className="font-semibold text-blue-600">Drop image here...</span>
                             ) : (
@@ -959,7 +959,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             )}
                           </span>
                         </div>
-                        <span className="text-[0.68vw] text-gray-400 font-medium">PNG, JPG, WebP</span>
+                        <span className="text-sm text-gray-700 font-medium">PNG, JPG, WebP</span>
                       </div>
 
                       <input
@@ -980,9 +980,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <button
                           type="button"
                           onClick={() => setRegData((prev) => ({ ...prev, profilePicture: null }))}
-                          className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold mt-[0.3vw] flex items-center gap-[0.2vw] transition-colors cursor-pointer"
+                          className="text-sm text-rose-500 hover:text-rose-700 font-semibold mt-1 flex items-center gap-1 transition-colors cursor-pointer"
                         >
-                          <X className="w-[0.75vw] h-[0.75vw]" /> Remove Photo
+                          <X className="w-3 h-3" /> Remove Photo
                         </button>
                       )}
                     </div>
@@ -990,15 +990,15 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
 
                 {/* 4. Security Section */}
-                <div className="space-y-[0.8vw]">
-                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
-                    <Lock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Security</span>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-1.5 pb-1.5 border-b border-gray-200">
+                    <Lock className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">Security</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Password {!editingEmp && "*"}
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-gray-700" /> Password {!editingEmp && "*"}
                       </label>
                       <div className="relative">
                         <input
@@ -1014,20 +1014,20 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.password}
                           onChange={e => setRegData({ ...regData, password: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Enter password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                          className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 pr-8 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                          className="absolute right-[10px] top-1/2 -translate-y-1/2 text-gray-700 hover:text-gray-600 transition-colors cursor-pointer"
                         >
-                          {showPassword ? <EyeOff className="w-[0.95vw] h-[0.95vw]" /> : <Eye className="w-[0.95vw] h-[0.95vw]" />}
+                          {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
                       </div>
                     </div>
-                    <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Confirm Password {!editingEmp && "*"}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-gray-700" /> Confirm Password {!editingEmp && "*"}
                       </label>
                       <div className="relative">
                         <input
@@ -1043,14 +1043,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.confirmPassword}
                           onChange={e => setRegData({ ...regData, confirmPassword: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Confirm password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                          className="w-full h-7.5 min-h-[30px] border border-gray-300 px-3 pr-8 rounded-md outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-xs text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                          className="absolute right-[10px] top-1/2 -translate-y-1/2 text-gray-700 hover:text-gray-600 transition-colors cursor-pointer"
                         >
-                          {showConfirmPassword ? <EyeOff className="w-[0.95vw] h-[0.95vw]" /> : <Eye className="w-[0.95vw] h-[0.95vw]" />}
+                          {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
                       </div>
                     </div>
@@ -1058,17 +1058,17 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
 
                 {/* Form Action Buttons (Sticky Footer) */}
-                <div className="pt-[1vw] border-t border-gray-200 flex justify-end gap-[0.6vw] flex-shrink-0">
+                <div className="pt-3.5 border-t border-gray-200 flex justify-end gap-2.5 flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => setShowRegModal(false)}
-                    className="px-[1.2vw] py-[0.5vw] text-gray-600 hover:bg-gray-100 rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer"
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-xs font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.6vw] py-[0.5vw] bg-blue-600 text-white rounded-[0.4vw] text-[0.82vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-md text-xs font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
                   >
                     {editingEmp ? "Update Profile" : "Complete Registration"}
                   </button>

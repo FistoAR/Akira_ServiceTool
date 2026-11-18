@@ -24,7 +24,7 @@ const Badge = ({ label, color = "gray" }) => {
     gray:   "bg-slate-50 text-slate-600 border-slate-300",
   };
   return (
-    <span className={`text-[0.68vw] px-[0.5vw] py-[0.15vw] rounded-full border font-bold shadow-sm whitespace-nowrap ${map[color] || map.gray}`}>
+    <span className={`text-sm px-2 py-0.5 rounded-full border font-bold shadow-sm whitespace-nowrap ${map[color] || map.gray}`}>
       {label}
     </span>
   );
@@ -137,40 +137,40 @@ const TrackingModal = ({ entry, onClose }) => {
   pastEvents.reverse();
 
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-[2vw]">
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-7">
       <motion.div 
         initial={{ scale: 0.96, opacity: 0, y: 10 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="bg-white w-[42vw] rounded-[0.8vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[85vh] flex flex-col border border-slate-200"
+        className="bg-white w-[605px] rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[85vh] flex flex-col border border-slate-200"
       >
-        <div className="bg-white px-[1.2vw] py-[0.85vw] flex justify-between items-center border-b border-slate-200">
-          <div className="flex items-center gap-[0.55vw]">
-            <div className="w-[2vw] h-[2vw] rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a73e8]">
-              <History className="w-[1vw] h-[1vw]" />
+        <div className="bg-white px-4 py-3 flex justify-between items-center border-b border-slate-200">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a73e8]">
+              <History className="w-3.5 h-3.5" />
             </div>
-            <h3 className="text-[0.95vw] font-semibold text-slate-800 tracking-tight">Escalation History</h3>
+            <h3 className="text-sm font-semibold text-slate-800 tracking-tight">Escalation History</h3>
           </div>
           <button 
             onClick={onClose} 
-            className="text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-[0.3vw] hover:bg-slate-100 rounded-full"
+            className="text-slate-700 hover:text-slate-600 cursor-pointer transition-colors p-1 hover:bg-slate-100 rounded-full"
             title="Close"
           >
-             <X className="w-[1.1vw] h-[1.1vw]" />
+             <X className="w-4 h-4" />
           </button>
         </div>
         
-        <div className="p-[1.2vw] overflow-y-auto flex-1 bg-white">
-           <div className="flex items-center justify-between pb-[0.8vw] mb-[1.1vw] border-b border-slate-100">
-             <div className="flex items-center gap-[0.45vw] text-[0.8vw]">
+        <div className="p-4 overflow-y-auto flex-1 bg-white">
+           <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+             <div className="flex items-center gap-1.5 text-xs">
                <span className="font-semibold text-[#1a73e8] font-mono">{entry.callNumber}</span>
-               <span className="text-slate-300">•</span>
-               <span className="font-medium text-slate-700 truncate max-w-[22vw]" title={entry.customerName}>
+               <span className="text-slate-600">•</span>
+               <span className="font-medium text-slate-700 truncate max-w-[317px]" title={entry.customerName}>
                  {entry.customerName}
                </span>
              </div>
-             <span className={`inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.68vw] font-medium border shadow-2xs ${
+             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border shadow-2xs ${
                entry.status === "Critical"
                  ? "bg-rose-50 text-rose-700 border-rose-200"
                  : entry.status === "Resolved" || entry.status === "Closed"
@@ -182,9 +182,9 @@ const TrackingModal = ({ entry, onClose }) => {
            </div>
            
            {events.length === 0 ? (
-             <div className="text-center text-slate-400 font-normal text-[0.76vw] py-[3vw]">No escalation history found for this call.</div>
+             <div className="text-center text-slate-700 font-normal text-xs py-[43px]">No escalation history found for this call.</div>
            ) : (
-             <div className="space-y-[0.75vw] pl-[0.4vw]">
+             <div className="space-y-3 pl-1.5">
                {pastEvents.map((ev, i) => {
                  const isCancelled = ev.status === "Escalation Cancelled";
                  const isHighlightedEvent = ev.status === "SLA Breached" || ev.status === "Critical Escalation";
@@ -204,20 +204,20 @@ const TrackingModal = ({ entry, onClose }) => {
                  }
                  
                  return (
-                   <div key={i} className="flex gap-[0.8vw] relative group">
+                   <div key={i} className="flex gap-3 relative group">
                      <div className="flex flex-col items-center">
-                       <div className={`w-[0.55vw] h-[0.55vw] rounded-full mt-[0.35vw] z-10 ${dotColor} ring-4 ring-white shadow-2xs`} />
+                       <div className={`w-2 h-2 rounded-full mt-1.5 z-10 ${dotColor} ring-4 ring-white shadow-2xs`} />
                        {i !== pastEvents.length - 1 && (
-                         <div className="w-[1.5px] h-full bg-slate-200 absolute top-[0.6vw] bottom-[-0.75vw] left-[0.24vw]" />
+                         <div className="w-[1.5px] h-full bg-slate-200 absolute top-[9px] bottom-[-11px] left-[3px]" />
                        )}
                      </div>
-                     <div className={`flex-1 rounded-[0.5vw] p-[0.65vw] border shadow-2xs transition-colors ${cardClasses}`}>
-                       <div className="flex justify-between items-center mb-[0.2vw]">
-                         <div className="flex items-center gap-[0.35vw]">
-                           <span className={`text-[0.82vw] font-medium flex items-center gap-[0.35vw] ${titleColor}`}>
+                     <div className={`flex-1 rounded-lg p-2.5 border shadow-2xs transition-colors ${cardClasses}`}>
+                       <div className="flex justify-between items-center mb-1">
+                         <div className="flex items-center gap-1.5">
+                           <span className={`text-xs font-medium flex items-center gap-1.5 ${titleColor}`}>
                              {isCancelled ? (
-                               <span className="inline-flex items-center gap-[0.25vw]">
-                                 <Ban className="w-[0.85vw] h-[0.85vw] text-amber-600 inline" />
+                               <span className="inline-flex items-center gap-1">
+                                 <Ban className="w-3 h-3 text-amber-600 inline" />
                                  Escalation Cancelled
                                </span>
                              ) : (
@@ -225,7 +225,7 @@ const TrackingModal = ({ entry, onClose }) => {
                              )}
                            </span>
                            {ev.scope && (
-                             <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-normal border ${
+                             <span className={`px-1.5 py-px rounded-full text-xs font-normal border ${
                                isCancelled
                                  ? 'bg-amber-100/70 border-amber-200 text-amber-800'
                                  : isHighlightedEvent 
@@ -236,7 +236,7 @@ const TrackingModal = ({ entry, onClose }) => {
                              </span>
                            )}
                          </div>
-                         <span className="text-[0.7vw] text-slate-400 font-mono font-normal">
+                         <span className="text-sm text-slate-700 font-mono font-normal">
                            {new Date(ev.time).toLocaleString('en-US', {
                              month: '2-digit', day: '2-digit', year: 'numeric',
                              hour: '2-digit', minute: '2-digit', hour12: true
@@ -244,12 +244,12 @@ const TrackingModal = ({ entry, onClose }) => {
                          </span>
                        </div>
 
-                       <div className="text-[0.74vw] text-slate-500 font-normal mb-[0.2vw]">
+                       <div className="text-xs text-slate-700 font-normal mb-1">
                          {isCancelled ? (
                            <>
                              Assigned to: <span className="font-medium text-slate-700">{ev.person || "N/A"}</span>
                              {ev.cancelledBy && (
-                               <span className="text-amber-700 font-normal ml-[0.4vw]">
+                               <span className="text-amber-700 font-normal ml-1.5">
                                  (Cancelled by: {ev.cancelledBy})
                                </span>
                              )}
@@ -257,14 +257,14 @@ const TrackingModal = ({ entry, onClose }) => {
                          ) : (
                            <>
                              By: <span className="font-medium text-slate-700">{ev.person || "System / Auto"}</span> 
-                             <span className="text-slate-400 ml-[0.3vw]">({ev.dept || "N/A"}) • Level {ev.level + 1}</span>
+                             <span className="text-slate-700 ml-1">({ev.dept || "N/A"}) • Level {ev.level + 1}</span>
                            </>
                          )}
                        </div>
                        
                        {ev.deadline && (
-                         <div className="text-[0.72vw] text-slate-500 font-normal mb-[0.2vw] flex items-center gap-[0.25vw]">
-                           <Clock className="w-[0.75vw] h-[0.75vw] text-slate-400" />
+                         <div className="text-sm text-slate-700 font-normal mb-1 flex items-center gap-1">
+                           <Clock className="w-3 h-3 text-slate-700" />
                            <span>Deadline:</span>
                            <span className="font-medium text-slate-700">
                              {new Date(ev.deadline).toLocaleString('en-US', {
@@ -275,7 +275,7 @@ const TrackingModal = ({ entry, onClose }) => {
                        )}
                        
                        {ev.remarks && (
-                         <div className={`text-[0.74vw] font-normal leading-relaxed border rounded-[0.4vw] p-[0.5vw] px-[0.6vw] mt-[0.35vw] ${
+                         <div className={`text-xs font-normal leading-relaxed border rounded-md p-2 px-2.5 mt-1.5 ${
                            isCancelled
                              ? 'bg-white/80 text-amber-800/90 border-amber-200/70'
                              : isHighlightedEvent 
@@ -488,33 +488,33 @@ const ServiceCallEscalations = () => {
 
   return (
     <div className="w-full h-full flex flex-col font-sans min-h-0">
-      <div className="flex flex-col gap-[0.55vw] mb-[0.6vw] shrink-0">
+      <div className="flex flex-col gap-2 mb-2.5 shrink-0">
         {/* Top Level Scoping Toolbar: Soft Pill Search, Date Range, Status & Priority */}
-        <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+        <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
           {/* Left side: Soft Pill Search Box */}
-          <div className="relative w-[18vw]">
-            <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+          <div className="relative w-[259px]">
+            <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
             <input
               type="text"
               placeholder="Search escalations, customer, engineer..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+              className="w-full pl-9 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm("")}
-                className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
               >
-                <X className="w-[0.7vw] h-[0.7vw]" />
+                <X className="w-2.5 h-2.5" />
               </button>
             )}
           </div>
 
           {/* Right cluster: Status Pills, Date Range Capsule, Clear & Priority */}
-          <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+          <div className="flex items-center gap-2.5 flex-shrink-0">
             {/* Status Segmented Buttons */}
-            <div className="flex items-center gap-[0.3vw] bg-slate-100/80 p-[0.2vw] rounded-full border border-slate-200">
+            <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-full border border-slate-200">
               {[
                 { label: "All", count: counts.All, dot: "bg-blue-600" },
                 { label: "Escalating", count: counts.Escalating, dot: "bg-amber-500" },
@@ -525,7 +525,7 @@ const ServiceCallEscalations = () => {
                   <button
                     key={label}
                     onClick={() => setStatusFilter(label)}
-                    className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.8vw] rounded-full text-[0.72vw] font-medium cursor-pointer transition-all ${
+                    className={`flex items-center gap-1.5 px-3 h-6.5 rounded-full text-sm font-medium cursor-pointer transition-all ${
                       isActive
                         ? (label === "Critical" ? "bg-rose-600 text-white shadow-xs" : "bg-blue-600 text-white shadow-xs")
                         : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
@@ -533,7 +533,7 @@ const ServiceCallEscalations = () => {
                   >
                     
                     <span>{label}</span>
-                    <span className={`text-[0.66vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                    <span className={`text-sm px-1.5 py-0 rounded-full font-bold ml-px ${
                       isActive ? "bg-white/25 text-white" : "bg-slate-200/80 text-slate-700"
                     }`}>
                       {count}
@@ -544,14 +544,14 @@ const ServiceCallEscalations = () => {
             </div>
 
             {/* Unified Date Range Capsule */}
-            <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-              <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+            <div className="flex items-center gap-1.5 border border-slate-200 rounded-full h-8 px-3 bg-white text-xs shadow-2xs hover:border-slate-300 transition-all">
+              <span className="text-slate-700 font-medium text-xs">From</span>
               <input
                 ref={fromDateRef}
                 type="date"
                 value={filterFromDate || ""}
                 onChange={(e) => setFilterFromDate(e.target.value)}
-                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
               <button
                 type="button"
@@ -560,20 +560,20 @@ const ServiceCallEscalations = () => {
                     try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
                   }
                 }}
-                className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+                className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center mr-0.5"
                 title="Choose from date"
               >
-                <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+                <Calendar className="w-3 h-3 shrink-0 text-slate-700" />
               </button>
-              <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-              <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+              <span className="text-slate-700 mx-0.5 text-sm">→</span>
+              <span className="text-slate-700 font-medium text-xs">To</span>
               <input
                 ref={toDateRef}
                 type="date"
                 value={filterToDate || ""}
                 min={filterFromDate || undefined}
                 onChange={(e) => setFilterToDate(e.target.value)}
-                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
               <button
                 type="button"
@@ -582,10 +582,10 @@ const ServiceCallEscalations = () => {
                     try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
                   }
                 }}
-                className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+                className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center ml-px"
                 title="Choose to date"
               >
-                <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
+                <Calendar className="w-3 h-3 shrink-0 text-slate-700" />
               </button>
             </div>
 
@@ -596,16 +596,16 @@ const ServiceCallEscalations = () => {
                   setFilterFromDate("");
                   setFilterToDate("");
                 }}
-                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                className="flex items-center gap-1 h-8 px-3 rounded-full text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
                 title="Clear date filter"
               >
-                <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                <RotateCcw className="w-3 h-3" />
                 <span>Clear</span>
               </button>
             )}
 
             {/* Priority Dropdown (Pill shaped) */}
-            <div className="w-[9.5vw]">
+            <div className="w-[137px]">
               <CustomDropdown
                 size="sm"
                 align="right"
@@ -618,63 +618,63 @@ const ServiceCallEscalations = () => {
                   { value: "Medium", label: "Medium Priority" },
                   { value: "Low", label: "Low Priority" },
                 ]}
-                triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+                triggerClassName="h-8 !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-xs"
               />
             </div>
           </div>
         </div>
       </div>
       {/* ── TABLE CONTAINER ── */}
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+      <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
               <tr>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[158px]">
                   Call Ref & Started
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[18vw] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[259px] whitespace-nowrap">
                   Customer & Site
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap min-w-[8vw]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[115px]">
                   Customer Type
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[18vw] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[259px] whitespace-nowrap">
                   Escalated Equipment
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap min-w-[9vw]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[130px]">
                   SLA Status
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 min-w-[12vw] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[173px] whitespace-nowrap">
                   Escalated To
                 </th>
-                <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[9vw]">
+                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[130px]">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody className="text-[0.8vw]">
+            <tbody className="text-xs">
               {loading || !isWorkerReady ? (
                 <tr>
                   <td colSpan={8} className="py-[12vh] text-center border-b border-slate-300">
-                    <div className="flex flex-col items-center justify-center gap-[0.8vw]">
-                      <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-[#1a73e8]" />
-                      <span className="text-[0.85vw] font-normal text-slate-700">Loading Escalations Queue...</span>
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <Loader2 className="w-9 h-9 animate-spin text-[#1a73e8]" />
+                      <span className="text-sm font-normal text-slate-700">Loading Escalations Queue...</span>
                     </div>
                   </td>
                 </tr>
               ) : escalatingCalls.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-[12vh] text-center border-b border-slate-300">
-                    <div className="flex flex-col items-center justify-center gap-[0.6vw]">
-                      <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-                        <Shield className="w-[1.8vw] h-[1.8vw] text-emerald-600" />
+                    <div className="flex flex-col items-center justify-center gap-2.5">
+                      <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+                        <Shield className="w-6.5 h-6.5 text-emerald-600" />
                       </div>
-                      <div className="text-[0.95vw] font-medium text-slate-800">All Clear! No Escalations</div>
-                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw]">
+                      <div className="text-sm font-medium text-slate-800">All Clear! No Escalations</div>
+                      <div className="text-xs text-slate-700 max-w-[288px]">
                         There are no critical or active SLA escalations requiring attention right now.
                       </div>
                     </div>
@@ -705,21 +705,21 @@ const ServiceCallEscalations = () => {
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-800 font-medium text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle text-slate-800 font-medium text-xs border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
                           {/* 2. Call Ref & Started */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
-                            <div className="flex items-center gap-[0.4vw]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                            <div className="flex items-center gap-1.5">
                               <button
                                 onClick={() => setSelectedInfoCall(call)}
-                                className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
+                                className="font-mono text-left text-sm font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                                 title="View Call Details"
                               >
                                 {call.callNumber}
                               </button>
-                              <span className={`inline-flex items-center justify-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-semibold border shadow-2xs whitespace-nowrap ${
+                              <span className={`inline-flex items-center justify-center px-1.5 py-px rounded-full text-xs font-semibold border shadow-2xs whitespace-nowrap ${
                                 call.priority === 'Critical'
                                   ? 'bg-rose-50 text-rose-700 border-rose-200'
                                   : call.priority === 'High'
@@ -729,7 +729,7 @@ const ServiceCallEscalations = () => {
                                 {call.priority || 'Normal'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-1.5 text-sm text-slate-700 font-medium leading-normal mt-1">
                               {(() => {
                                 try {
                                   const dateVal = escalationStartTime || call.dateTime;
@@ -749,7 +749,7 @@ const ServiceCallEscalations = () => {
                                   return (
                                     <>
                                       <span>{datePart}</span>
-                                      <span className="text-slate-400 font-normal">|</span>
+                                      <span className="text-slate-700 font-normal">|</span>
                                       <span className="text-slate-600">{timePart}</span>
                                     </>
                                   );
@@ -761,25 +761,25 @@ const ServiceCallEscalations = () => {
                           </td>
 
                           {/* 3. Customer & Site */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white max-w-[18vw]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white max-w-[259px]">
                             <CustomerInfoCell
                               customerName={call.customerName}
                               contactNumber={call.contactNumber}
                               partyCode={call.partyCode}
                             />
                             {(call.location || call.site) && (
-                              <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
-                                <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
+                              <div className="text-sm text-slate-700 flex items-center gap-1 mt-0.5 truncate max-w-[245px]" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
+                                <MapPin className="w-2.5 h-2.5 text-slate-700 shrink-0" />
                                 <span className="truncate font-normal">{call.site ? `${call.site} • ` : ""}{call.location}</span>
                               </div>
                             )}
                           </td>
 
                           {/* 4. Customer Type */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-normal">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-xs font-normal">
                             {call.customerType && call.customerType !== "All" ? (
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                className={`inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-normal border shadow-2xs whitespace-nowrap ${
                                   call.customerType === "OEM"
                                     ? "bg-blue-50 text-blue-700 border-blue-200"
                                     : call.customerType === "End Customer"
@@ -794,53 +794,53 @@ const ServiceCallEscalations = () => {
                                 {call.customerType}
                               </span>
                             ) : (
-                              <span className="text-slate-400 font-normal">—</span>
+                              <span className="text-slate-700 font-normal">—</span>
                             )}
                           </td>
                         </>
                       )}
 
                       {/* 5. Product & Segment */}
-                      <td className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 max-w-[18vw]">
+                      <td className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 max-w-[259px]">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"
                           content={
-                            <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                            <div className="flex flex-col gap-0.5 text-left py-px">
                               <div className="font-normal text-slate-200">
                                 {p.productModel || p.productDescription || p.itemCode || "Equipment"}
                               </div>
                               {p.serialNumber && (
-                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
-                                  <span className="text-slate-400 font-sans">SN: </span>
+                                <div className="text-xs text-sky-300 font-mono border-t border-slate-700/80 pt-0.5 mt-px">
+                                  <span className="text-slate-700 font-sans">SN: </span>
                                   <span>{p.serialNumber}</span>
                                 </div>
                               )}
                               {p.productCode && (
-                                <div className="text-[0.64vw] text-slate-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-xs text-slate-600 font-mono border-t border-slate-700/80 pt-0.5 mt-px">
                                   <span>Code: {p.productCode}</span>
                                 </div>
                               )}
                             </div>
                           }
                         >
-                          <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-slate-900 text-sm truncate cursor-default">
                             {p.productModel || p.productDescription || p.itemCode || "Equipment"}
                           </div>
                         </CustomTooltip>
-                        <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
+                        <div className="flex items-center gap-1 mt-0.5 flex-wrap">
                           {p.productSegment && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-medium">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-1.5 py-px rounded text-xs font-medium">
                               {p.productSegment}
                             </span>
                           )}
                           {p.serialNumber && (
-                            <span className="text-[0.66vw] text-slate-600 font-semibold font-mono">
+                            <span className="text-sm text-slate-600 font-semibold font-mono">
                               SN: {p.serialNumber}
                             </span>
                           )}
                           {(p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName) && (
-                            <span className="text-[0.64vw] text-slate-500 font-normal">
+                            <span className="text-xs text-slate-700 font-normal">
                               Init: {p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName}
                             </span>
                           )}
@@ -850,57 +850,57 @@ const ServiceCallEscalations = () => {
                       {pIdx === 0 && (
                         <>
                           {/* 6. SLA Status */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {timer ? (
-                              <div className={`inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.7vw] font-normal border shadow-2xs ${
+                              <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono text-sm font-normal border shadow-2xs ${
                                 timer.isExpired
                                   ? "bg-rose-50 text-rose-700 border-rose-200"
                                   : "bg-amber-50 text-amber-800 border-amber-200"
                               }`}>
-                                <Clock className={`w-[0.7vw] h-[0.7vw] ${timer.isExpired ? "text-rose-600" : "text-amber-600"}`} />
+                                <Clock className={`w-2.5 h-2.5 ${timer.isExpired ? "text-rose-600" : "text-amber-600"}`} />
                                 <span>{timer.remainingFormatted}</span>
                               </div>
                             ) : (call.status === "Critical_Unresolved" || call.status === "Critical") ? (
-                              <span className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.66vw] font-normal uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
-                                <AlertTriangle className="w-[0.65vw] h-[0.65vw] text-rose-600" />
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono text-sm font-normal uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                                <AlertTriangle className="w-2.5 h-2.5 text-rose-600" />
                                 No SLA
                               </span>
                             ) : (
-                              <span className="text-[0.72vw] text-slate-400 font-normal">—</span>
+                              <span className="text-sm text-slate-700 font-normal">—</span>
                             )}
                           </td>
 
                           {/* 7. Escalated To */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white">
-                            <div className="font-normal text-[0.78vw] text-indigo-700 truncate max-w-[12vw]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white">
+                            <div className="font-normal text-xs text-indigo-700 truncate max-w-[173px]">
                               {timer?.currentEngineerName || call.currentEngineerName || 'Unassigned'}
                             </div>
-                            <div className="text-slate-400 text-[0.66vw] font-normal truncate mt-[0.05vw]">
+                            <div className="text-slate-700 text-sm font-normal truncate mt-px">
                               {timer?.currentDepartment || call.currentDepartment || 'Support Engineers'}
                             </div>
                           </td>
 
                           {/* 8. Action */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-300 whitespace-nowrap">
-                            <div className="flex items-center justify-center gap-[0.35vw]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 text-center align-middle sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] border-b border-r border-slate-300 whitespace-nowrap">
+                            <div className="flex items-center justify-center gap-1.5">
                               {/* 1-Click Details Modal */}
                               <button
                                 type="button"
                                 onClick={() => setSelectedInfoCall(call)}
-                                className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                className="p-1.5 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                 title="View Call Details"
                               >
-                                <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                <Eye className="w-3.5 h-3.5" />
                               </button>
 
                               {/* View History */}
                               <button
                                 type="button"
                                 onClick={() => setTrackingEntry(call)}
-                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full text-[0.68vw] font-normal border border-slate-300 hover:bg-slate-50 text-slate-700 transition-all cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-normal border border-slate-300 hover:bg-slate-50 text-slate-700 transition-all cursor-pointer"
                                 title="View Escalation History"
                               >
-                                <History className="w-[0.7vw] h-[0.7vw]" />
+                                <History className="w-2.5 h-2.5" />
                                 <span>History</span>
                               </button>
 
@@ -921,10 +921,10 @@ const ServiceCallEscalations = () => {
                                   setCancelReason("");
                                   setNewAssignee("");
                                 }}
-                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-normal text-[0.68vw] transition-all cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-normal text-sm transition-all cursor-pointer"
                                 title="Cancel Escalation"
                               >
-                                <Ban className="w-[0.7vw] h-[0.7vw] text-rose-600" />
+                                <Ban className="w-2.5 h-2.5 text-rose-600" />
                                 <span>Cancel</span>
                               </button>
                             </div>
@@ -940,24 +940,24 @@ const ServiceCallEscalations = () => {
         </div>
 
         {/* ── PAGINATION CONTROLS ── */}
-        <div className="py-[0.6vw] px-[1vw] border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
-          <p className="text-[0.75vw] text-slate-600 font-medium">
+        <div className="py-2.5 px-3.5 border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
+          <p className="text-xs text-slate-600 font-medium">
             Showing <span className="font-semibold text-slate-800">{escalatingCalls.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, escalatingCalls.length)}</span> of <span className="font-semibold text-slate-800">{escalatingCalls.length}</span> records
           </p>
-          <div className="flex items-center gap-[0.5vw]">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <div className="flex gap-[0.3vw]">
+            <div className="flex gap-1">
               {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map(p => (
                 <button
                   key={p}
                   onClick={() => setCurrentPage(p)}
-                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                  className={`w-6 h-6 flex items-center justify-center rounded-md text-xs font-medium transition-all cursor-pointer ${
                     currentPage === p
                       ? "bg-[#1a73e8] text-white shadow-2xs"
                       : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
@@ -970,9 +970,9 @@ const ServiceCallEscalations = () => {
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage >= totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -994,7 +994,7 @@ const ServiceCallEscalations = () => {
       {/* Cancel Escalation Modal */}
       <AnimatePresence>
         {cancelModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-[1vw]">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1006,64 +1006,64 @@ const ServiceCallEscalations = () => {
               initial={{ scale: 0.95, opacity: 0, y: 12 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 12 }}
-              className="relative bg-white rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200/90 w-full max-w-[34vw] overflow-hidden flex flex-col font-sans"
+              className="relative bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200/90 w-full max-w-[490px] overflow-hidden flex flex-col font-sans"
             >
               {/* Modal Header */}
-              <div className="px-[1.4vw] py-[1vw] border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-rose-50/40 via-white to-slate-50">
-                <div className="flex items-center gap-[0.75vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.55vw] bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
-                    <Ban className="w-[1vw] h-[1vw]" />
+              <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-rose-50/40 via-white to-slate-50">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
+                    <Ban className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <h3 className="text-[1vw] font-semibold text-slate-800 leading-tight">
+                    <h3 className="text-xs font-semibold text-slate-800 leading-tight">
                       Cancel Escalation & Re-assign
                     </h3>
-                    <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.15vw] flex items-center gap-[0.35vw]">
+                    <div className="text-sm text-slate-700 font-normal mt-0.5 flex items-center gap-1.5">
                       <span className="font-normal text-[#6e000a] font-mono">{cancelModal.callNumber}</span>
-                      <span className="text-slate-300">•</span>
-                      <span className="truncate max-w-[18vw] text-slate-600">{cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Equipment'}</span>
+                      <span className="text-slate-600">•</span>
+                      <span className="truncate max-w-[259px] text-slate-600">{cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Equipment'}</span>
                     </div>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setCancelModal(null)}
-                  className="p-[0.35vw] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+                  className="p-1.5 text-slate-700 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
                 >
-                  <X className="w-[1.05vw] h-[1.05vw]" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Modal Form */}
               <form
                 onSubmit={handleCancelEscalationSubmit}
-                className="p-[1.4vw] flex flex-col gap-[1.1vw]"
+                className="p-5 flex flex-col gap-4"
               >
                 {/* Info Callout */}
-                <div className="bg-slate-50/70 border border-slate-200/70 rounded-[0.55vw] p-[0.8vw] flex items-start gap-[0.75vw]">
-                  <div className="w-[1.9vw] h-[1.9vw] rounded-full bg-blue-50/80 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-[0.05vw]">
-                    <User className="w-[0.9vw] h-[0.9vw]" />
+                <div className="bg-slate-50/70 border border-slate-200/70 rounded-lg p-3 flex items-start gap-3">
+                  <div className="w-7 h-7 rounded-full bg-blue-50/80 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-px">
+                    <User className="w-3.5 h-3.5" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-[0.68vw] font-medium text-slate-500 uppercase tracking-wider">
+                      <span className="text-sm font-medium text-slate-700 uppercase tracking-wider">
                         Current Assignee
                       </span>
-                      <span className="text-[0.72vw] font-medium text-blue-700 bg-blue-50 border border-blue-200/60 px-[0.45vw] py-[0.08vw] rounded-full">
+                      <span className="text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200/60 px-1.5 py-px rounded-full">
                         {cancelModal.currentAssignee || "Unassigned"}
                       </span>
                     </div>
-                    <p className="text-[0.72vw] text-slate-500 font-normal leading-relaxed mt-[0.25vw]">
+                    <p className="text-sm text-slate-700 font-normal leading-relaxed mt-1">
                       Cancelling stops the SLA countdown timer and returns this call to the <span className="font-medium text-slate-700">Call Assignment</span> queue.
                     </p>
                   </div>
                 </div>
 
                 {/* Reason Textarea */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-slate-700 flex items-center justify-between">
                     <span>Reason for Stopping Escalation <span className="text-rose-500">*</span></span>
-                    <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
+                    <span className="text-sm text-slate-700 font-normal">Required for audit trail</span>
                   </label>
                   <textarea
                     rows={3}
@@ -1071,21 +1071,21 @@ const ServiceCallEscalations = () => {
                     value={cancelReason}
                     onChange={(e) => setCancelReason(e.target.value)}
                     placeholder="e.g. Wrongly assigned to this engineer, handled directly over phone, customer unavailable..."
-                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 text-slate-800 font-normal resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
+                    className="w-full px-3 py-2 text-xs border border-slate-200 rounded-md outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 text-slate-800 font-normal resize-none placeholder:text-slate-700 transition-all bg-white hover:border-slate-300"
                   />
                 </div>
 
                 {/* Re-assign Target Dropdown */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
-                    <span>Re-assign To <span className="text-slate-400 font-normal">(Optional)</span></span>
-                    <span className="text-[0.68vw] text-slate-400 font-normal">Choose immediate replacement</span>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-medium text-slate-700 flex items-center justify-between">
+                    <span>Re-assign To <span className="text-slate-700 font-normal">(Optional)</span></span>
+                    <span className="text-sm text-slate-700 font-normal">Choose immediate replacement</span>
                   </label>
                   <div className="relative">
                     <select
                       value={newAssignee}
                       onChange={(e) => setNewAssignee(e.target.value)}
-                      className="w-full px-[0.85vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 text-slate-700 font-normal bg-white cursor-pointer transition-all hover:border-slate-300 appearance-none pr-[2.2vw]"
+                      className="w-full px-3 py-2 text-xs border border-slate-200 rounded-md outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 text-slate-700 font-normal bg-white cursor-pointer transition-all hover:border-slate-300 appearance-none pr-8"
                     >
                       <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
                       {(employees || []).map((emp) => (
@@ -1094,26 +1094,26 @@ const ServiceCallEscalations = () => {
                         </option>
                       ))}
                     </select>
-                    <ChevronRight className="w-[0.85vw] h-[0.85vw] text-slate-400 absolute right-[0.8vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                    <ChevronRight className="w-3 h-3 text-slate-700 absolute right-[12px] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
                   </div>
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="pt-[0.8vw] flex items-center justify-end gap-[0.6vw] border-t border-slate-100">
+                <div className="pt-3 flex items-center justify-end gap-2.5 border-t border-slate-100">
                   <button
                     type="button"
                     disabled={isSubmittingCancel}
                     onClick={() => setCancelModal(null)}
-                    className="px-[0.95vw] py-[0.45vw] text-[0.75vw] font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-[0.4vw] transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-md transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmittingCancel || !cancelReason.trim()}
-                    className="px-[1.1vw] py-[0.45vw] text-[0.75vw] font-semibold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-[0_2px_8px_-1px_rgba(225,29,72,0.3)] disabled:opacity-50 active:scale-98"
+                    className="px-4 py-1.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-md transition-all cursor-pointer flex items-center gap-1.5 shadow-[0_2px_8px_-1px_rgba(225,29,72,0.3)] disabled:opacity-50 active:scale-98"
                   >
-                    <Ban className="w-[0.8vw] h-[0.8vw]" />
+                    <Ban className="w-3 h-3" />
                     <span>{isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}</span>
                   </button>
                 </div>

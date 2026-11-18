@@ -194,13 +194,13 @@ export function initials(name = "") {
 // ─────────────────────────────────────────────────────────────────────────────
 // HelpTooltip
 // ─────────────────────────────────────────────────────────────────────────────
-export const HelpTooltip = ({ content, position = "right", width = "16vw" }) => {
+export const HelpTooltip = ({ content, position = "right", width = "230px" }) => {
   const [visible, setVisible] = useState(false);
   const posMap = {
-    right: "left-full top-1/2 -translate-y-1/2 ml-[0.6vw]",
-    left: "right-full top-1/2 -translate-y-1/2 mr-[0.6vw]",
-    top: "bottom-full left-1/2 -translate-x-1/2 mb-[0.6vw]",
-    bottom: "top-full left-1/2 -translate-x-1/2 mt-[0.6vw]",
+    right: "left-full top-1/2 -translate-y-1/2 ml-2.5",
+    left: "right-full top-1/2 -translate-y-1/2 mr-2.5",
+    top: "bottom-full left-1/2 -translate-x-1/2 mb-2.5",
+    bottom: "top-full left-1/2 -translate-x-1/2 mt-2.5",
   };
   const arrowMap = {
     right:
@@ -216,18 +216,18 @@ export const HelpTooltip = ({ content, position = "right", width = "16vw" }) => 
         type="button"
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
-        className="flex items-center justify-center text-slate-400 hover:text-blue-500 transition-colors duration-150 cursor-help"
+        className="flex items-center justify-center text-slate-700 hover:text-blue-500 transition-colors duration-150 cursor-help"
       >
-        <HelpCircle className="w-[1vw] h-[1vw]" />
+        <HelpCircle className="w-3.5 h-3.5" />
       </button>
       {visible && (
         <div className={`absolute z-50 ${posMap[position]}`} style={{ width }}>
           <div
-            className={`absolute w-0 h-0 border-[0.35vw] ${arrowMap[position]}`}
+            className={`absolute w-0 h-0 border-[5px] ${arrowMap[position]}`}
           />
-          <div className="bg-slate-700 text-white rounded-[0.4vw] shadow-xl px-[0.8vw] py-[0.6vw]">
+          <div className="bg-slate-700 text-white rounded-md shadow-xl px-3 py-2.5">
             {typeof content === "string" ? (
-              <p className="text-[0.7vw] leading-relaxed">{content}</p>
+              <p className="text-sm leading-relaxed">{content}</p>
             ) : (
               content
             )}

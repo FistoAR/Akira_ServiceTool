@@ -152,7 +152,7 @@ const RegisterPage = () => {
           {[...Array(30)].map((_, i) => (
             <div
               key={i}
-              className={`absolute w-[0.5vw] h-[0.5vw] bg-white bg-opacity-20 rounded-full transition-all duration-[6000ms] ${
+              className={`absolute w-2 h-2 bg-white bg-opacity-20 rounded-full transition-all duration-[6000ms] ${
                 mounted ? "animate-pulse" : ""
               }`}
               style={{
@@ -174,138 +174,138 @@ const RegisterPage = () => {
               : "transform translate-y-8 opacity-0"
           }`}
         >
-          <div className="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl shadow-2xl p-[2vw] border border-white border-opacity-20">
-            <div className="flex items-center justify-between mb-[1vw]">
+          <div className="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl shadow-2xl p-7 border border-white border-opacity-20">
+            <div className="flex items-center justify-between mb-3.5">
                <button 
                 onClick={() => navigate("/")}
-                className="flex items-center gap-[0.3vw] text-[0.85vw] text-gray-500 hover:text-blue-600 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-700 hover:text-blue-600 transition-colors"
                >
-                 <ArrowLeft size={"1vw"} /> Back to Login
+                 <ArrowLeft size="14px" /> Back to Login
                </button>
-               <img src={logo} alt="App Logo" className="w-[6vw]" />
+               <img src={logo} alt="App Logo" className="w-[86px]" />
             </div>
 
-            <div className="text-center mb-[1.5vw]">
-              <h1 className="text-[1.8vw] md:text-[1.5vw] font-bold text-gray-800">Employee Registration</h1>
-              <p className="text-[1vw] md:text-[0.8vw] text-gray-500 mt-1">
+            <div className="text-center mb-5.5">
+              <h1 className="text-xl md:text-lg font-bold text-gray-800">Employee Registration</h1>
+              <p className="text-xs md:text-xs text-gray-700 mt-1">
                 Step {step} of 2: {step === 1 ? "Personal Details" : "Professional Details"}
               </p>
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="mb-[1vw] px-[1vw] py-[0.5vw] bg-red-50 border border-red-300 rounded-lg flex items-center gap-[0.5vw]">
-                <div className="w-[0.5vw] h-[0.5vw] bg-red-500 rounded-full flex-shrink-0"></div>
-                <p className="text-red-600 text-[0.85vw] font-medium">{error}</p>
+              <div className="mb-3.5 px-3.5 py-2 bg-red-50 border border-red-300 rounded-lg flex items-center gap-2">
+                <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
+                <p className="text-red-600 text-sm font-medium">{error}</p>
               </div>
             )}
 
             {/* Success Message */}
             {success && (
-              <div className="mb-[1vw] px-[1vw] py-[0.5vw] bg-green-50 border border-green-300 rounded-lg flex items-center gap-[0.5vw]">
-                <div className="w-[0.5vw] h-[0.5vw] bg-green-500 rounded-full flex-shrink-0"></div>
-                <p className="text-green-600 text-[0.85vw] font-medium">{success}</p>
+              <div className="mb-3.5 px-3.5 py-2 bg-green-50 border border-green-300 rounded-lg flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                <p className="text-green-600 text-sm font-medium">{success}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-[1.5vw] gap-y-[1.2vw]">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-5.5 gap-y-4">
               {step === 1 ? (
                 <>
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Full Name *
                     </label>
                     <div className="relative">
-                      <Users size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Users size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Enter full name"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Employee ID / User ID *
                     </label>
                     <div className="relative">
-                      <ShieldCheck size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <ShieldCheck size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="text"
                         name="userId"
                         value={formData.userId}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="e.g. Fisto9"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Email Address *
                     </label>
                     <div className="relative">
-                      <Mail size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Mail size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="example@akira.com"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Phone Number *
                     </label>
                     <div className="relative">
-                      <Phone size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Phone size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="tel"
                         name="phoneNumber"
                         value={formData.phoneNumber}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Enter phone number"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Date of Birth *
                     </label>
                     <div className="relative">
-                      <Calendar size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Calendar size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="date"
                         name="dob"
                         value={formData.dob}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Gender *
                     </label>
                     <div className="relative">
-                      <Users size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Users size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <select
                         name="gender"
                         value={formData.gender}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="">Select Gender</option>
                         <option value="Male">Male</option>
@@ -316,49 +316,49 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Password *
                     </label>
                     <div className="relative">
-                      <Lock size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Lock size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[3vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-[43px] py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Create password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-400 hover:text-blue-500 transition-colors focus:outline-none"
+                        className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700 hover:text-blue-500 transition-colors focus:outline-none"
                       >
-                        {showPassword ? <EyeOff size={"1.2vw"} /> : <Eye size={"1.2vw"} />}
+                        {showPassword ? <EyeOff size="17px" /> : <Eye size="17px" />}
                       </button>
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Confirm Password *
                     </label>
                     <div className="relative">
-                      <Lock size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Lock size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type={showConfirmPassword ? "text" : "password"}
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[3vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-[43px] py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Confirm password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-400 hover:text-blue-500 transition-colors focus:outline-none"
+                        className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700 hover:text-blue-500 transition-colors focus:outline-none"
                       >
-                        {showConfirmPassword ? <EyeOff size={"1.2vw"} /> : <Eye size={"1.2vw"} />}
+                        {showConfirmPassword ? <EyeOff size="17px" /> : <Eye size="17px" />}
                       </button>
                     </div>
                   </div>
@@ -366,7 +366,7 @@ const RegisterPage = () => {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="col-span-1 md:col-span-2 mt-[1vw] text-[1.1vw] md:text-[1vw] w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
+                    className="col-span-1 md:col-span-2 mt-3.5 text-xs md:text-xs w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 md:py-2.5 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
                   >
                     Next Step
                   </button>
@@ -374,16 +374,16 @@ const RegisterPage = () => {
               ) : (
                 <>
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Role *
                     </label>
                     <div className="relative">
-                      <ShieldCheck size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <ShieldCheck size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <select
                         name="role"
                         value={formData.role}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="User">User</option>
                         <option value="Admin">Admin</option>
@@ -392,16 +392,16 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Department *
                     </label>
                     <div className="relative">
-                      <Briefcase size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Briefcase size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <select
                         name="department"
                         value={formData.department}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="">Select Department</option>
                         {departments.map(dept => (
@@ -412,67 +412,67 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Designation *
                     </label>
                     <div className="relative">
-                      <Tag size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Tag size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="text"
                         name="designation"
                         value={formData.designation}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="e.g. Senior Engineer"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       CTC (Monthly) *
                     </label>
                     <div className="relative">
-                      <IndianRupee size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <IndianRupee size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="number"
                         name="ctc"
                         min="0"
                         value={formData.ctc}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Enter monthly CTC"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Date of Joining *
                     </label>
                     <div className="relative">
-                      <Calendar size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Calendar size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="date"
                         name="dateOfJoining"
                         value={formData.dateOfJoining}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Working Status *
                     </label>
                     <div className="relative">
-                      <Activity size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Activity size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <select
                         name="workingStatus"
                         value={formData.workingStatus}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-9 md:pl-8 text-xs md:text-sm pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
@@ -482,17 +482,17 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group md:col-span-2">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-sm md:text-xs font-medium text-gray-700 mb-1.5">
                       Profile Picture
                     </label>
                     <div className="relative">
-                      <Image size={"1.2vw"} className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                      <Image size="17px" className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-700 group-focus-within:text-blue-500 transition-colors" />
                       <input
                         type="file"
                         accept="image/*"
                         name="profilePicture"
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[0.9vw] md:text-[0.75vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[0.8vw] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        className="w-full pl-9 md:pl-8 text-sm md:text-xs pr-3.5 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                       />
                     </div>
                     {formData.profilePicture && (
@@ -500,7 +500,7 @@ const RegisterPage = () => {
                         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500">
                           <img src={formData.profilePicture} alt="Preview" className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-xs text-gray-500">Image Preview</span>
+                        <span className="text-xs text-gray-700">Image Preview</span>
                       </div>
                     )}
                   </div>
@@ -509,13 +509,13 @@ const RegisterPage = () => {
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="text-[1.1vw] md:text-[1vw] w-full bg-gray-200 text-gray-700 py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow hover:bg-gray-300 transition-all duration-300"
+                      className="text-xs md:text-xs w-full bg-gray-200 text-gray-700 py-3 md:py-2.5 rounded-lg font-semibold shadow hover:bg-gray-300 transition-all duration-300"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
-                      className="text-[1.1vw] md:text-[1vw] w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
+                      className="text-xs md:text-xs w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 md:py-2.5 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
                     >
                       Complete Registration
                     </button>

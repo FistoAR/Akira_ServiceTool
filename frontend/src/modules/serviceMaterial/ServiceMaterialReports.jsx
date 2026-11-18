@@ -136,19 +136,19 @@ const CustomTooltip = ({
                   : "translate(-50%, -100%)",
               zIndex: 99999,
             }}
-            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+            className="flex items-center bg-slate-900 text-white rounded-md px-2 py-1 text-sm font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
           >
             {tooltipContent ? tooltipContent : <span>{text}</span>}
             <div
-              className={`absolute w-0 h-0 border-[0.25vw] ${
+              className={`absolute w-0 h-0 border-[4px] ${
                 coords.side === "bottom"
                   ? "bottom-full border-transparent border-b-slate-900"
                   : "top-full border-transparent border-t-slate-900"
               } ${
                 coords.align === "top-start"
-                  ? "left-[0.6vw]"
+                  ? "left-[9px]"
                   : coords.align === "top-end"
-                  ? "right-[0.6vw]"
+                  ? "right-[9px]"
                   : "left-1/2 -translate-x-1/2"
               }`}
             />
@@ -478,42 +478,42 @@ const ProductHistoryModal = ({ item, onClose }) => {
   enrichedTimeline.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-[2vw]">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-7">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="bg-white rounded-[1vw] shadow-2xl border border-slate-300 w-[42vw] min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-300 w-[605px] min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
       >
         {/* Header */}
-        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-300 bg-white flex items-center justify-between">
-          <div className="flex items-center gap-[0.5vw]">
-            <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200">
-              <Clock className="w-[0.95vw] h-[0.95vw]" />
+        <div className="px-5 py-3.5 border-b border-slate-300 bg-white flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6.5 h-6.5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200">
+              <Clock className="w-3.5 h-3.5" />
             </div>
             <div>
-              <h3 className="text-[1vw] font-semibold text-slate-800">Status & Edit History</h3>
-              <p className="text-[0.7vw] text-slate-500 font-normal">
+              <h3 className="text-xs font-semibold text-slate-800">Status & Edit History</h3>
+              <p className="text-sm text-slate-700 font-normal">
                 {product.productDescription} {product.serialNumber ? `(${product.serialNumber})` : ""}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-[0.35vw] rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 hover:text-slate-700 transition-colors cursor-pointer"
           >
-            <X className="w-[1vw] h-[1vw]" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Timeline Body */}
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1vw] bg-[#f8fafd]">
+        <div className="flex-1 overflow-y-auto p-5 space-y-3.5 bg-[#f8fafd]">
           {enrichedTimeline.length === 0 ? (
-            <div className="text-center py-[4vw] text-slate-400 font-medium text-[0.8vw]">
+            <div className="text-center py-14 text-slate-700 font-medium text-xs">
               No status history records found for this product.
             </div>
           ) : (
-            <div className="relative pl-[1.5vw] border-l-2 border-slate-300 ml-[0.6vw] space-y-[1.2vw] py-[0.5vw]">
+            <div className="relative pl-5.5 border-l-2 border-slate-300 ml-2.5 space-y-4 py-2">
               {enrichedTimeline.map((item, index) => {
                 const isAdmin = item.type === "admin" || item.type === "adminEdit";
                 const isApproved = item.status === "Approved by Admin" || item.status === "Completed";
@@ -528,13 +528,13 @@ const ProductHistoryModal = ({ item, onClose }) => {
                 return (
                   <div key={index} className="relative group">
                     {/* Node Dot */}
-                    <div className={`absolute -left-[1.85vw] top-[0.4vw] w-[0.7vw] h-[0.7vw] rounded-full ${dotColor} ring-4 ring-white shadow-xs`} />
+                    <div className={`absolute -left-[27px] top-[6px] w-2.5 h-2.5 rounded-full ${dotColor} ring-4 ring-white shadow-xs`} />
 
                     {/* Content Card */}
-                    <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-slate-300 shadow-2xs">
-                      <div className="flex items-center justify-between mb-[0.3vw] flex-wrap gap-[0.3vw]">
-                        <div className="flex items-center gap-[0.35vw] flex-wrap">
-                          <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium ${
+                    <div className="bg-white rounded-lg p-3 border border-slate-300 shadow-2xs">
+                      <div className="flex items-center justify-between mb-1 flex-wrap gap-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`inline-flex items-center px-2 py-px rounded-full text-sm font-medium ${
                             isApproved
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : item.type === "admin"
@@ -548,45 +548,45 @@ const ProductHistoryModal = ({ item, onClose }) => {
                             {item.status}
                           </span>
                           {item.adminName && (
-                            <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-300 font-normal">
+                            <span className="text-xs px-1.5 py-px bg-slate-100 text-slate-700 rounded border border-slate-300 font-normal">
                               {item.role ? `${item.role}: ` : ""}{item.adminName}
                             </span>
                           )}
                           {item.occurredAfterCompleted && (
-                            <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
+                            <span className="text-xs px-1.5 py-px bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
                               Post-Completion Edit
                             </span>
                           )}
                         </div>
-                        <span className="text-[0.68vw] text-slate-400 font-normal">
+                        <span className="text-sm text-slate-700 font-normal">
                           {fmtDateTime(item.timestamp)}
                         </span>
                       </div>
 
                       {item.remark && (
-                        <p className="text-[0.75vw] text-slate-600 font-normal mt-[0.3vw] bg-slate-50/80 p-[0.4vw] rounded-[0.35vw] border border-slate-300/70">
-                          <span className="text-slate-500 font-medium">Remarks / Reason: </span>
+                        <p className="text-xs text-slate-600 font-normal mt-1 bg-slate-50/80 p-1.5 rounded-md border border-slate-300/70">
+                          <span className="text-slate-700 font-medium">Remarks / Reason: </span>
                           {item.remark}
                         </p>
                       )}
 
                       {/* Diffs display */}
                       {item.diffs && item.diffs.length > 0 && (
-                        <div className="mt-[0.4vw] bg-white rounded-[0.35vw] border border-amber-200/80 p-[0.4vw] space-y-[0.3vw]">
-                          <div className="text-[0.62vw] font-semibold text-amber-900 uppercase tracking-wider">
+                        <div className="mt-1.5 bg-white rounded-md border border-amber-200/80 p-1.5 space-y-1">
+                          <div className="text-xs font-semibold text-amber-900 uppercase tracking-wider">
                             Changed Fields ({item.diffs.length})
                           </div>
                           {item.diffs.map((d, di) => (
-                            <div key={di} className="text-[0.68vw] bg-slate-50 p-[0.3vw] rounded border border-slate-300 flex items-center justify-between gap-[0.4vw]">
+                            <div key={di} className="text-sm bg-slate-50 p-1 rounded border border-slate-300 flex items-center justify-between gap-1.5">
                               <span className="font-medium text-slate-700 truncate max-w-[45%]">
                                 {d.field}
                               </span>
-                              <span className="flex items-center gap-[0.25vw] text-right truncate">
-                                <span className="text-rose-600 truncate max-w-[8vw] font-normal">
+                              <span className="flex items-center gap-1 text-right truncate">
+                                <span className="text-rose-600 truncate max-w-[115px] font-normal">
                                   {String(d.originalValue || "—")}
                                 </span>
-                                <span className="text-slate-400 font-normal">→</span>
-                                <span className="text-emerald-700 font-medium truncate max-w-[8vw]">
+                                <span className="text-slate-700 font-normal">→</span>
+                                <span className="text-emerald-700 font-medium truncate max-w-[115px]">
                                   {String(d.editedValue || "—")}
                                 </span>
                               </span>
@@ -603,10 +603,10 @@ const ProductHistoryModal = ({ item, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-300 bg-white flex items-center justify-end shrink-0">
+        <div className="px-5 py-3 border-t border-slate-300 bg-white flex items-center justify-end shrink-0">
           <button
             onClick={onClose}
-            className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[0.76vw] rounded-full transition-colors cursor-pointer"
+            className="px-[19px] h-7.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-full transition-colors cursor-pointer"
           >
             Close
           </button>
@@ -1665,12 +1665,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
+    <div className="flex flex-col flex-1 min-h-0 w-full text-sm bg-slate-100/70 p-2.5 overflow-hidden">
       {/* ── Top Header Toolbar (Service Call Capsule Style) ──────────────── */}
-      <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
+      <div className="flex items-center justify-between gap-3 mb-2.5 shrink-0">
         {/* Main View Capsule: All Material vs Employee Assignment (Employee Assignment is Admin-only) */}
         {isAdmin ? (
-          <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
+          <div className="inline-flex items-center p-1 bg-slate-200/70 rounded-full border border-slate-300/80 gap-1.5 shadow-2xs">
             <button
               onClick={() => {
                 if (drilldownEmployee) return;
@@ -1678,22 +1678,22 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 setCurrentPage(1);
               }}
               disabled={!!drilldownEmployee}
-              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
                 drilldownEmployee
-                  ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                  ? "opacity-50 cursor-not-allowed text-slate-700 bg-slate-100"
                   : activeMainView === "allProducts"
                   ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
                   : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
               }`}
               title={drilldownEmployee ? "Exit drilldown view first" : "All Material Inwards"}
             >
-              <Layers className="w-[0.85vw] h-[0.85vw]" />
+              <Layers className="w-3 h-3" />
               <span>All Material Inwards</span>
               <span
-                className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                className={`text-sm font-medium ml-0.5 transition-all ${
                   !drilldownEmployee && activeMainView === "allProducts"
-                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                    : "text-slate-500"
+                    ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                    : "text-slate-700"
                 }`}
               >
                 {filteredProducts.length}
@@ -1707,22 +1707,22 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 setCurrentPage(1);
               }}
               disabled={!!drilldownEmployee}
-              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
                 drilldownEmployee
-                  ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
+                  ? "opacity-50 cursor-not-allowed text-slate-700 bg-slate-100"
                   : activeMainView === "assignments"
                   ? "bg-blue-600 text-white shadow-xs font-semibold cursor-pointer"
                   : "text-slate-700 hover:text-slate-900 hover:bg-white/80 cursor-pointer"
               }`}
               title={drilldownEmployee ? "Exit drilldown view first" : "Employee Assignment View"}
             >
-              <Users className="w-[0.85vw] h-[0.85vw]" />
+              <Users className="w-3 h-3" />
               <span>Employee Assignment View</span>
               <span
-                className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                className={`text-sm font-medium ml-0.5 transition-all ${
                   !drilldownEmployee && activeMainView === "assignments"
-                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                    : "text-slate-500"
+                    ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                    : "text-slate-700"
                 }`}
               >
                 {employeeSummaryData.length}
@@ -1730,20 +1730,20 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             </button>
           </div>
         ) : (
-          <div className="inline-flex items-center gap-[0.45vw] px-[0.9vw] py-[0.38vw] bg-white rounded-full border border-slate-300/80 shadow-2xs text-[0.76vw] font-medium text-slate-800">
-            <Layers className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white rounded-full border border-slate-300/80 shadow-2xs text-xs font-medium text-slate-800">
+            <Layers className="w-3 h-3 text-blue-600" />
             <span>My Claimed Records</span>
-            <span className="bg-blue-100 text-blue-800 px-[0.45vw] py-[0.02vw] rounded-full text-[0.66vw] font-bold">
+            <span className="bg-blue-100 text-blue-800 px-1.5 py-0 rounded-full text-sm font-bold">
               {filteredProducts.length}
             </span>
           </div>
         )}
 
         {/* Global Controls & Filters */}
-        <div className="flex items-center gap-[0.6vw]">
+        <div className="flex items-center gap-2.5">
           {/* Soft Pill Search Box */}
           <div className="relative">
-            <Search className="w-[0.85vw] h-[0.85vw] absolute left-[0.8vw] top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-3 h-3 absolute left-[12px] top-1/2 -translate-y-1/2 text-slate-700" />
             <input
               type="text"
               value={search}
@@ -1752,7 +1752,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 setCurrentPage(1);
               }}
               placeholder="Search product, customer, ref no, serial..."
-              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[17vw] rounded-full border border-slate-300/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
+              className="pl-8 pr-7 h-8 w-[245px] rounded-full border border-slate-300/90 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
               <CustomTooltip text="Clear search">
@@ -1761,9 +1761,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     setSearch("");
                     setCurrentPage(1);
                   }}
-                  className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-[0.2vw] cursor-pointer transition-colors"
+                  className="absolute right-[10px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600 p-1 cursor-pointer transition-colors"
                 >
-                  <X className="w-[0.8vw] h-[0.8vw]" />
+                  <X className="w-3 h-3" />
                 </button>
               </CustomTooltip>
             )}
@@ -1774,16 +1774,16 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             <CustomTooltip text="Filter by Date, Employee & Customer Category">
               <button
                 onClick={() => setShowFilterPopover(!showFilterPopover)}
-                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+                className={`flex items-center gap-1.5 px-3 h-8 rounded-full border font-medium text-xs transition-all cursor-pointer shadow-2xs ${
                   showFilterPopover || fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All"
                     ? "bg-blue-50 border-blue-300 text-blue-700"
                     : "bg-white border-slate-300/90 text-slate-700 hover:bg-slate-50"
                 }`}
               >
-                <Filter className="w-[0.85vw] h-[0.85vw]" />
+                <Filter className="w-3 h-3" />
                 <span>Filters</span>
                 {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
-                  <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-blue-600" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
                 )}
               </button>
             </CustomTooltip>
@@ -1795,10 +1795,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowFilterPopover(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[17.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-1.5 w-[252px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
                   {/* Header */}
-                  <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-300">
-                    <span className="text-[0.76vw] font-bold text-slate-800">Quick Filters</span>
+                  <div className="flex items-center justify-between pb-1 border-b border-slate-300">
+                    <span className="text-xs font-bold text-slate-800">Quick Filters</span>
                     {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
                       <button
                         onClick={() => {
@@ -1808,7 +1808,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           setCategoryFilter("All");
                           setCurrentPage(1);
                         }}
-                        className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
+                        className="text-sm text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
                       >
                         Reset
                       </button>
@@ -1817,10 +1817,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                   {/* Date Range */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
+                    <label className="block text-sm text-slate-600 font-medium mb-1">
                       Date Range
                     </label>
-                    <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[1.9vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
+                    <div className="flex items-center justify-between bg-white border border-slate-300 rounded-md h-7 px-2 text-sm hover:border-slate-400 transition-colors">
                       <input
                         type="date"
                         value={fromDate}
@@ -1830,7 +1830,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         }}
                         className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
                       />
-                      <span className="text-slate-400 mx-[0.25vw] shrink-0">—</span>
+                      <span className="text-slate-700 mx-1 shrink-0">—</span>
                       <input
                         type="date"
                         value={toDate}
@@ -1847,7 +1847,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   {/* Assigned Employee (Admin/Supervisor only) */}
                   {isAdmin && (
                     <div>
-                      <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
+                      <label className="block text-sm text-slate-600 font-medium mb-1">
                         Assigned Employee
                       </label>
                       <CustomDropdown
@@ -1865,14 +1865,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             label: `${emp.name} (${emp.department || "No Dept"})`,
                           })),
                         ]}
-                        triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                        triggerClassName="!h-7 !text-sm border-slate-300 rounded-md font-normal !text-slate-700"
                       />
                     </div>
                   )}
 
                   {/* Customer Category */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-600 font-medium mb-[0.2vw]">
+                    <label className="block text-sm text-slate-600 font-medium mb-1">
                       Customer Category
                     </label>
                     <CustomDropdown
@@ -1889,13 +1889,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           label: cat,
                         })),
                       ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                      triggerClassName="!h-7 !text-sm border-slate-300 rounded-md font-normal !text-slate-700"
                     />
                   </div>
 
                   {/* Clear Filter Button */}
                   {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
-                    <div className="pt-[0.3vw] border-t border-slate-300 mt-[0.1vw]">
+                    <div className="pt-1 border-t border-slate-300 mt-px">
                       <button
                         onClick={() => {
                           setFromDate("");
@@ -1904,9 +1904,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           setCategoryFilter("All");
                           setCurrentPage(1);
                         }}
-                        className="inline-flex items-center gap-[0.3vw] text-[0.7vw] font-medium text-slate-700 hover:text-rose-600 transition-colors cursor-pointer py-[0.1vw]"
+                        className="inline-flex items-center gap-1 text-sm font-medium text-slate-700 hover:text-rose-600 transition-colors cursor-pointer py-px"
                       >
-                        <Filter className="w-[0.75vw] h-[0.75vw] text-slate-700" />
+                        <Filter className="w-3 h-3 text-slate-700" />
                         <span>Clear Filters</span>
                       </button>
                     </div>
@@ -1927,17 +1927,17 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 ]);
               }
             }}
-            className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+            className={`flex items-center gap-1.5 px-3 h-8 rounded-full border font-medium text-xs transition-all cursor-pointer shadow-2xs ${
               showCustomFilterBar || customFilters.some((cf) => cf.field && cf.value.trim())
                 ? "bg-indigo-50 border-indigo-300 text-indigo-700"
                 : "bg-white border-slate-300/90 text-slate-700 hover:bg-slate-50"
             }`}
             title="Toggle custom field filter rows"
           >
-            <SlidersHorizontal className="w-[0.8vw] h-[0.8vw]" />
+            <SlidersHorizontal className="w-3 h-3" />
             <span>Custom Filters</span>
             {customFilters.some((cf) => cf.field && cf.value.trim()) && (
-              <span className="px-[0.35vw] py-[0.02vw] rounded-full bg-indigo-600 text-white text-[0.62vw] font-bold">
+              <span className="px-1.5 py-0 rounded-full bg-indigo-600 text-white text-xs font-bold">
                 {customFilters.filter((cf) => cf.field && cf.value.trim()).length}
               </span>
             )}
@@ -1948,15 +1948,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             <CustomTooltip text="Select columns to export">
               <button
                 onClick={() => setShowColPicker(!showColPicker)}
-                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+                className={`flex items-center gap-1.5 px-3 h-8 rounded-full border font-medium text-xs transition-all cursor-pointer shadow-2xs ${
                   showColPicker
                     ? "bg-blue-50 border-blue-300 text-blue-700"
                     : "bg-white border-slate-300/90 text-slate-700 hover:bg-slate-50"
                 }`}
               >
-                <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
+                <Columns className="w-3 h-3 text-slate-700" />
                 <span>Columns</span>
-                <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-300">
+                <span className="ml-px px-1.5 py-0 text-sm rounded-full bg-slate-100 text-slate-600 border border-slate-300">
                   {selectedExportCols.length}/{EXPORT_COLUMNS.length}
                 </span>
               </button>
@@ -1969,24 +1969,24 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowColPicker(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[21vw] max-h-[30vw] bg-white border border-slate-300 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-1.5 w-[302px] max-h-[432px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
                   {/* Header */}
-                  <div className="p-[0.65vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
-                    <div className="flex items-center gap-[0.35vw]">
-                      <Columns className="w-[0.85vw] h-[0.85vw] text-slate-600" />
-                      <span className="text-[0.78vw] font-bold text-slate-800">Export Columns</span>
+                  <div className="p-2.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+                    <div className="flex items-center gap-1.5">
+                      <Columns className="w-3 h-3 text-slate-600" />
+                      <span className="text-xs font-bold text-slate-800">Export Columns</span>
                     </div>
-                    <div className="flex items-center gap-[0.4vw]">
+                    <div className="flex items-center gap-1.5">
                       <button
                         onClick={selectAllExportCols}
-                        className="text-[0.7vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer"
                       >
                         Select All
                       </button>
-                      <span className="text-slate-300 text-[0.7vw]">|</span>
+                      <span className="text-slate-600 text-sm">|</span>
                       <button
                         onClick={unselectAllExportCols}
-                        className="text-[0.7vw] font-medium text-slate-500 hover:text-slate-700 cursor-pointer"
+                        className="text-sm font-medium text-slate-700 hover:text-slate-700 cursor-pointer"
                       >
                         Unselect All
                       </button>
@@ -1994,25 +1994,25 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   </div>
 
                   {/* Template Dropdown Selector */}
-                  <div className="px-[0.65vw] py-[0.5vw] bg-slate-50/90 border-b border-slate-100 flex flex-col gap-[0.35vw]">
+                  <div className="px-2.5 py-2 bg-slate-50/90 border-b border-slate-100 flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-[0.68vw] font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                        <Bookmark className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                      <label className="text-sm font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                        <Bookmark className="w-2.5 h-2.5 text-blue-600" />
                         Template Presets
                       </label>
                       <button
                         onClick={() => setShowSaveTplInput(!showSaveTplInput)}
-                        className="text-[0.68vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer flex items-center gap-[0.15vw]"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer flex items-center gap-0.5"
                         title="Save current selection as a new template"
                       >
-                        <Plus className="w-[0.68vw] h-[0.68vw]" />
+                        <Plus className="w-2.5 h-2.5" />
                         <span>Save Current</span>
                       </button>
                     </div>
 
                     {/* Inline Save Template Input */}
                     {showSaveTplInput && (
-                      <div className="flex items-center gap-[0.3vw] p-[0.3vw] bg-white rounded-[0.4vw] border border-blue-200">
+                      <div className="flex items-center gap-1 p-1 bg-white rounded-md border border-blue-200">
                         <input
                           type="text"
                           value={newTemplateName}
@@ -2021,12 +2021,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             if (e.key === "Enter") saveCurrentAsTemplate(newTemplateName);
                           }}
                           placeholder="New template name..."
-                          className="flex-1 text-[0.7vw] px-[0.4vw] py-[0.2vw] border border-slate-300 rounded-[0.25vw] outline-none focus:border-blue-500 text-slate-800 placeholder-slate-400"
+                          className="flex-1 text-sm px-1.5 py-1 border border-slate-300 rounded-sm outline-none focus:border-blue-500 text-slate-800 placeholder-slate-400"
                           autoFocus
                         />
                         <button
                           onClick={() => saveCurrentAsTemplate(newTemplateName)}
-                          className="px-[0.55vw] py-[0.2vw] bg-blue-600 hover:bg-blue-700 text-white text-[0.68vw] font-semibold rounded-[0.25vw] cursor-pointer"
+                          className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-sm cursor-pointer"
                         >
                           Save
                         </button>
@@ -2035,9 +2035,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             setShowSaveTplInput(false);
                             setNewTemplateName("");
                           }}
-                          className="text-slate-400 hover:text-slate-600 p-[0.1vw] cursor-pointer"
+                          className="text-slate-700 hover:text-slate-600 p-px cursor-pointer"
                         >
-                          <X className="w-[0.7vw] h-[0.7vw]" />
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </div>
                     )}
@@ -2052,7 +2052,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           const tpl = colTemplates.find((t) => t.id === val);
                           if (tpl) applyTemplate(tpl);
                         }}
-                        className="w-full appearance-none bg-white border border-slate-300 hover:border-blue-300 rounded-[0.4vw] px-[0.55vw] py-[0.3vw] pr-[1.5vw] text-[0.72vw] text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
+                        className="w-full appearance-none bg-white border border-slate-300 hover:border-blue-300 rounded-md px-2 py-1 pr-5.5 text-sm text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
                       >
                         <option value="" disabled>
                           {selectedTemplateId ? "Select a template..." : "Custom selection active"}
@@ -2063,7 +2063,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           </option>
                         ))}
                       </select>
-                      <ChevronRight className="w-[0.75vw] h-[0.75vw] text-slate-500 absolute right-[0.5vw] pointer-events-none rotate-90" />
+                      <ChevronRight className="w-3 h-3 text-slate-700 absolute right-[7px] pointer-events-none rotate-90" />
                     </div>
 
                     {/* Template Actions Toolbar: Update Columns, Rename, Delete */}
@@ -2072,10 +2072,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       if (!curTpl) return null;
                       const isExactMatch = activeTemplateMatch === curTpl.id;
                       return (
-                        <div className="flex flex-col gap-[0.25vw] pt-[0.1vw]">
+                        <div className="flex flex-col gap-1 pt-px">
                           {/* Rename Input if triggered */}
                           {showRenameInput ? (
-                            <div className="flex items-center gap-[0.3vw] p-[0.25vw] bg-white rounded-[0.35vw] border border-blue-200">
+                            <div className="flex items-center gap-1 p-1 bg-white rounded-md border border-blue-200">
                               <input
                                 type="text"
                                 value={editingTemplateName}
@@ -2084,12 +2084,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   if (e.key === "Enter") renameTemplate(curTpl.id, editingTemplateName);
                                 }}
                                 placeholder="Rename template..."
-                                className="flex-1 text-[0.7vw] px-[0.35vw] py-[0.15vw] border border-slate-300 rounded-[0.2vw] outline-none focus:border-blue-500 text-slate-800"
+                                className="flex-1 text-sm px-1.5 py-0.5 border border-slate-300 rounded-sm outline-none focus:border-blue-500 text-slate-800"
                                 autoFocus
                               />
                               <button
                                 onClick={() => renameTemplate(curTpl.id, editingTemplateName)}
-                                className="px-[0.45vw] py-[0.18vw] bg-blue-600 hover:bg-blue-700 text-white text-[0.66vw] font-semibold rounded-[0.2vw] cursor-pointer"
+                                className="px-1.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-sm cursor-pointer"
                               >
                                 Save
                               </button>
@@ -2098,28 +2098,28 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   setShowRenameInput(false);
                                   setEditingTemplateName("");
                                 }}
-                                className="text-slate-400 hover:text-slate-600 p-[0.1vw] cursor-pointer"
+                                className="text-slate-700 hover:text-slate-600 p-px cursor-pointer"
                               >
-                                <X className="w-[0.65vw] h-[0.65vw]" />
+                                <X className="w-2.5 h-2.5" />
                               </button>
                             </div>
                           ) : (
-                            <div className="flex items-center justify-between text-[0.66vw] text-slate-500 px-[0.1vw]">
-                              <span className="flex items-center gap-[0.25vw] truncate">
-                                <span className={`w-[0.35vw] h-[0.35vw] rounded-full inline-block shrink-0 ${isExactMatch ? "bg-emerald-500" : "bg-amber-400"}`}></span>
+                            <div className="flex items-center justify-between text-sm text-slate-700 px-px">
+                              <span className="flex items-center gap-1 truncate">
+                                <span className={`w-1.5 h-1.5 rounded-full inline-block shrink-0 ${isExactMatch ? "bg-emerald-500" : "bg-amber-400"}`}></span>
                                 <span className="truncate">
                                   {isExactMatch ? "Active: " : "Modified: "}
                                   <strong className="text-slate-700">{curTpl.name}</strong>
                                 </span>
                               </span>
-                              <div className="flex items-center gap-[0.35vw] shrink-0">
+                              <div className="flex items-center gap-1.5 shrink-0">
                                 {/* Update Existing Template with Current Selection */}
                                 <button
                                   onClick={() => updateCurrentTemplateColumns(curTpl.id)}
-                                  className="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer flex items-center gap-[0.1vw] bg-blue-50 hover:bg-blue-100/70 px-[0.3vw] py-[0.05vw] rounded border border-blue-200"
+                                  className="text-blue-600 hover:text-blue-800 font-semibold cursor-pointer flex items-center gap-px bg-blue-50 hover:bg-blue-100/70 px-1 py-px rounded border border-blue-200"
                                   title={`Update "${curTpl.name}" to match the current checkboxes`}
                                 >
-                                  <Check className="w-[0.6vw] h-[0.6vw]" />
+                                  <Check className="w-2.5 h-2.5" />
                                   <span>Update</span>
                                 </button>
                                 {/* Rename */}
@@ -2128,19 +2128,19 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                     setEditingTemplateName(curTpl.name);
                                     setShowRenameInput(true);
                                   }}
-                                  className="text-slate-600 hover:text-blue-600 cursor-pointer p-[0.1vw]"
+                                  className="text-slate-600 hover:text-blue-600 cursor-pointer p-px"
                                   title="Rename this template"
                                 >
-                                  <Edit2 className="w-[0.6vw] h-[0.6vw]" />
+                                  <Edit2 className="w-2.5 h-2.5" />
                                 </button>
                                 {/* Delete (Custom only) */}
                                 {!curTpl.isDefault && (
                                   <button
                                     onClick={(e) => deleteCustomTemplate(curTpl.id, e)}
-                                    className="text-rose-500 hover:text-rose-700 cursor-pointer p-[0.1vw]"
+                                    className="text-rose-500 hover:text-rose-700 cursor-pointer p-px"
                                     title="Delete template"
                                   >
-                                    <Trash2 className="w-[0.6vw] h-[0.6vw]" />
+                                    <Trash2 className="w-2.5 h-2.5" />
                                   </button>
                                 )}
                               </div>
@@ -2152,21 +2152,21 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   </div>
 
                   {/* Columns List */}
-                  <div className="flex-1 overflow-y-auto p-[0.4vw] space-y-[0.15vw] max-h-[16vw]">
+                  <div className="flex-1 overflow-y-auto p-1.5 space-y-0.5 max-h-[230px]">
                     {EXPORT_COLUMNS.map((col) => {
                       const isChecked = selectedExportCols.includes(col.key);
                       return (
                         <div
                           key={col.key}
                           onClick={() => toggleExportCol(col.key)}
-                          className="flex items-center gap-[0.5vw] px-[0.6vw] py-[0.3vw] rounded-[0.35vw] cursor-pointer text-[0.75vw] text-slate-700 hover:bg-slate-50 transition-colors select-none"
+                          className="flex items-center gap-2 px-2.5 py-1 rounded-md cursor-pointer text-xs text-slate-700 hover:bg-slate-50 transition-colors select-none"
                         >
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => toggleExportCol(col.key)}
                             onClick={(e) => e.stopPropagation()}
-                            className="w-[0.85vw] h-[0.85vw] rounded text-blue-600 border-slate-300 focus:ring-0 cursor-pointer"
+                            className="w-3 h-3 rounded text-blue-600 border-slate-300 focus:ring-0 cursor-pointer"
                           />
                           <span className="truncate">{col.label}</span>
                         </div>
@@ -2175,13 +2175,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   </div>
 
                   {/* Footer */}
-                  <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
-                    <span className="text-[0.7vw] text-slate-500">
+                  <div className="p-2 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                    <span className="text-sm text-slate-700">
                       {selectedExportCols.length} of {EXPORT_COLUMNS.length} selected
                     </span>
                     <button
                       onClick={() => setShowColPicker(false)}
-                      className="px-[0.6vw] py-[0.25vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.72vw] rounded-[0.35vw] cursor-pointer shadow-2xs"
+                      className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-md cursor-pointer shadow-2xs"
                     >
                       Done
                     </button>
@@ -2195,9 +2195,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
           <CustomTooltip text="Export filtered reports to styled Excel sheet">
             <button
               onClick={handleExportExcel}
-              className="flex items-center gap-[0.35vw] px-[1vw] h-[2.2vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-[0.76vw] transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 h-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-xs transition-all cursor-pointer shadow-sm"
             >
-              <Download className="w-[0.85vw] h-[0.85vw]" />
+              <Download className="w-3 h-3" />
               <span>Export Excel</span>
             </button>
           </CustomTooltip>
@@ -2206,16 +2206,16 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
       {/* ── Dynamic Custom Filters Row (Appears below toolbar when Custom Filters is clicked) ── */}
       {showCustomFilterBar && (
-        <div className="mb-[0.6vw] bg-white border border-slate-300 rounded-[0.6vw] p-[0.6vw] shadow-2xs flex flex-col gap-[0.45vw] shrink-0 animate-in fade-in slide-in-from-top-1 duration-150">
+        <div className="mb-2.5 bg-white border border-slate-300 rounded-lg p-2.5 shadow-2xs flex flex-col gap-1.5 shrink-0 animate-in fade-in slide-in-from-top-1 duration-150">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[0.4vw]">
-              <SlidersHorizontal className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
-              <span className="text-[0.76vw] font-bold text-slate-800">Custom Filters</span>
-              <span className="text-[0.68vw] text-slate-500">
+            <div className="flex items-center gap-1.5">
+              <SlidersHorizontal className="w-3 h-3 text-indigo-600" />
+              <span className="text-xs font-bold text-slate-800">Custom Filters</span>
+              <span className="text-sm text-slate-700">
                 (Select field and type search query to filter table records)
               </span>
             </div>
-            <div className="flex items-center gap-[0.5vw]">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => {
@@ -2227,9 +2227,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     { id: Date.now() + Math.random(), field: unused?.key || "customerName", value: "" },
                   ]);
                 }}
-                className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.2vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-md text-[0.7vw] font-bold cursor-pointer transition-colors shadow-2xs"
+                className="flex items-center gap-1 px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-md text-sm font-bold cursor-pointer transition-colors shadow-2xs"
               >
-                <Plus className="w-[0.75vw] h-[0.75vw]" />
+                <Plus className="w-3 h-3" />
                 <span>Add Filter</span>
               </button>
               {customFilters.length > 0 && (
@@ -2239,7 +2239,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     setCustomFilters([]);
                     setCurrentPage(1);
                   }}
-                  className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer px-[0.3vw]"
+                  className="text-sm text-rose-600 hover:text-rose-700 font-medium cursor-pointer px-1"
                 >
                   Clear All
                 </button>
@@ -2249,15 +2249,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
           {/* Filter Rows */}
           {customFilters.length === 0 ? (
-            <div className="py-[0.5vw] text-center text-slate-400 text-[0.7vw] italic bg-slate-50 border border-dashed border-slate-300 rounded-md">
+            <div className="py-2 text-center text-slate-700 text-sm italic bg-slate-50 border border-dashed border-slate-300 rounded-md">
               No custom filters active. Click &quot;Add Filter&quot; above to select any column header and enter a value.
             </div>
           ) : (
-            <div className="flex items-center gap-[0.5vw] overflow-x-auto pb-[0.35vw] pt-[0.1vw] scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-px scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
               {customFilters.map((cf, idx) => (
                 <div
                   key={cf.id}
-                  className="flex items-center gap-[0.3vw] bg-slate-50/90 border border-slate-300 rounded-md px-[0.4vw] py-[0.25vw] shadow-2xs shrink-0"
+                  className="flex items-center gap-1 bg-slate-50/90 border border-slate-300 rounded-md px-1.5 py-1 shadow-2xs shrink-0"
                 >
                   {/* Field Selector */}
                   <div className="relative">
@@ -2270,7 +2270,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         );
                         setCurrentPage(1);
                       }}
-                      className="h-[1.8vw] pl-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 font-bold outline-none cursor-pointer appearance-none hover:border-slate-400"
+                      className="h-6.5 pl-2 pr-5 bg-white border border-slate-300 rounded text-sm text-slate-800 font-bold outline-none cursor-pointer appearance-none hover:border-slate-400"
                     >
                       {MATERIAL_CUSTOM_FILTER_FIELDS.map((f) => (
                         <option key={f.key} value={f.key}>
@@ -2278,7 +2278,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         </option>
                       ))}
                     </select>
-                    <ChevronRight className="w-[0.65vw] h-[0.65vw] text-slate-600 absolute right-[0.35vw] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
+                    <ChevronRight className="w-2.5 h-2.5 text-slate-600 absolute right-[5px] top-1/2 -translate-y-1/2 rotate-90 pointer-events-none" />
                   </div>
 
                   {/* Value Input */}
@@ -2293,7 +2293,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       setCurrentPage(1);
                     }}
                     placeholder="Type value..."
-                    className="h-[1.8vw] w-[11vw] px-[0.5vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                    className="h-6.5 w-[158px] px-2 bg-white border border-slate-300 rounded text-sm text-slate-800 outline-none placeholder:text-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
                   />
 
                   {/* Delete button */}
@@ -2303,10 +2303,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       setCustomFilters((prev) => prev.filter((_, i) => i !== idx));
                       setCurrentPage(1);
                     }}
-                    className="text-slate-400 hover:text-rose-600 p-[0.2vw] cursor-pointer transition-colors"
+                    className="text-slate-700 hover:text-rose-600 p-1 cursor-pointer transition-colors"
                     title="Remove this filter"
                   >
-                    <Trash2 className="w-[0.75vw] h-[0.75vw]" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </div>
               ))}
@@ -2316,11 +2316,11 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       )}
 
       {/* ── Main Report Display Card ────────────────────────────────────── */}
-      <div className="flex-1 min-h-0 bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col overflow-hidden">
         {loading ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-[0.8vw] text-slate-500">
-            <Loader2 className="w-[2.2vw] h-[2.2vw] text-blue-600 animate-spin" />
-            <span className="text-[0.85vw] font-bold">Loading comprehensive reports...</span>
+          <div className="flex-1 flex flex-col items-center justify-center gap-3 text-slate-700">
+            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            <span className="text-sm font-bold">Loading comprehensive reports...</span>
           </div>
         ) : (
           <>
@@ -2329,8 +2329,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 {/* Active Drilldown Banner when viewing an employee's data */}
                 {drilldownEmployee && (
-                  <div className="px-[0.8vw] py-[0.35vw] border-b border-blue-200 bg-blue-50/70 flex items-center justify-between shrink-0">
-                    <div className="flex items-center gap-[0.5vw]">
+                  <div className="px-3 py-1.5 border-b border-blue-200 bg-blue-50/70 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => {
                           setDrilldownEmployee(null);
@@ -2338,14 +2338,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           setActiveMainView("assignments");
                           setCurrentPage(1);
                         }}
-                        className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.18vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-medium text-[0.7vw] cursor-pointer shadow-2xs transition-colors"
+                        className="flex items-center gap-1 px-2 py-1 bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-medium text-sm cursor-pointer shadow-2xs transition-colors"
                       >
-                        <ArrowLeft className="w-[0.75vw] h-[0.75vw]" />
+                        <ArrowLeft className="w-3 h-3" />
                         <span>Back to Assignment View</span>
                       </button>
-                      <div className="flex items-center gap-[0.35vw] text-[0.74vw]">
-                        <span className="text-slate-500 font-normal">Engineer:</span>
-                        <span className="font-medium text-blue-900 bg-blue-100/70 px-[0.45vw] py-[0.08vw] rounded-full border border-blue-200">
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <span className="text-slate-700 font-normal">Engineer:</span>
+                        <span className="font-medium text-blue-900 bg-blue-100/70 px-1.5 py-px rounded-full border border-blue-200">
                           {drilldownEmployee.name} ({drilldownEmployee.department})
                         </span>
                       </div>
@@ -2356,7 +2356,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         setSelectedEmployee("All");
                         setCurrentPage(1);
                       }}
-                      className="text-[0.7vw] font-medium text-slate-500 hover:text-rose-600 cursor-pointer transition-colors"
+                      className="text-sm font-medium text-slate-700 hover:text-rose-600 cursor-pointer transition-colors"
                     >
                       Clear Filter
                     </button>
@@ -2364,8 +2364,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 )}
 
                 {/* Status Segmented Track Bar (Header Integrated) */}
-                <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
-                  <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-300/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
+                <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-300 bg-slate-50/50 shrink-0">
+                  <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-slate-300/90 gap-1.5 max-w-full overflow-x-auto no-scrollbar shrink-0">
                     {STATUS_CHIPS.map(({ label, dot }) => {
                       const isActive = activeStatusTab === label;
                       const count = statusCounts[label] ?? 0;
@@ -2376,7 +2376,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             setActiveStatusTab(label);
                             setCurrentPage(1);
                           }}
-                          className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.74vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all whitespace-nowrap ${
                             isActive
                               ? "bg-blue-600 text-white shadow-xs font-medium"
                               : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -2387,10 +2387,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             {label}
                           </span>
                           <span
-                            className={`text-[0.66vw] font-medium ml-[0.1vw] transition-all ${
+                            className={`text-sm font-medium ml-px transition-all ${
                               isActive
-                                ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                                : "text-slate-400"
+                                ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                                : "text-slate-700"
                             }`}
                           >
                             {count}
@@ -2400,13 +2400,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     })}
                   </div>
 
-                  <div className="flex items-center gap-[0.6vw] text-[0.72vw] text-slate-600 font-medium shrink-0">
+                  <div className="flex items-center gap-2.5 text-sm text-slate-600 font-medium shrink-0">
                     {/* View Total Quantities Button with interactive filter popover */}
                     <div className="relative">
                       <button
                         type="button"
                         onClick={() => setShowQuantitiesPopover((p) => !p)}
-                        className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.9vw] rounded-full border text-[0.72vw] font-medium transition-all cursor-pointer shadow-2xs ${
+                        className={`flex items-center gap-1.5 px-3 h-7 rounded-full border text-sm font-medium transition-all cursor-pointer shadow-2xs ${
                           quantityFilter !== "all"
                             ? "bg-blue-600 text-white border-blue-600 shadow-xs font-semibold"
                             : showQuantitiesPopover
@@ -2415,9 +2415,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         }`}
                         title="View breakdown and click rows to filter"
                       >
-                        <Package className="w-[0.78vw] h-[0.78vw]" />
+                        <Package className="w-3 h-3" />
                         <span>View Total Quantities</span>
-                        <span className={`text-[0.64vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                        <span className={`text-xs px-1.5 py-0 rounded-full font-bold ml-px ${
                           quantityFilter !== "all"
                             ? "bg-white/20 text-white"
                             : "bg-slate-100 text-slate-700"
@@ -2433,12 +2433,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             className="fixed inset-0 z-40"
                             onClick={() => setShowQuantitiesPopover(false)}
                           />
-                          <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
-                            <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-300">
-                              <span className="text-[0.72vw] font-semibold text-slate-800">
+                          <div className="absolute right-0 top-full mt-1.5 w-[245px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-1.5 animate-in fade-in zoom-in-95 duration-100">
+                            <div className="flex items-center justify-between pb-1 border-b border-slate-300">
+                              <span className="text-sm font-semibold text-slate-800">
                                 Total Quantities Breakdown
                               </span>
-                              <div className="flex items-center gap-[0.4vw]">
+                              <div className="flex items-center gap-1.5">
                                 {quantityFilter !== "all" && (
                                   <button
                                     type="button"
@@ -2446,7 +2446,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                       setQuantityFilter("all");
                                       setCurrentPage(1);
                                     }}
-                                    className="text-[0.66vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                                    className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
                                   >
                                     Clear Filter
                                   </button>
@@ -2454,9 +2454,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 <button
                                   type="button"
                                   onClick={() => setShowQuantitiesPopover(false)}
-                                  className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
+                                  className="p-0.5 text-slate-700 hover:text-slate-600 cursor-pointer"
                                 >
-                                  <X className="w-[0.7vw] h-[0.7vw]" />
+                                  <X className="w-2.5 h-2.5" />
                                 </button>
                               </div>
                             </div>
@@ -2468,7 +2468,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 setQuantityFilter(quantityFilter === "all" ? "all" : "all");
                                 setCurrentPage(1);
                               }}
-                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-all cursor-pointer border ${
                                 quantityFilter === "all"
                                   ? "bg-slate-800 text-white border-slate-900 font-semibold shadow-xs"
                                   : "bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-700"
@@ -2485,7 +2485,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 setQuantityFilter(quantityFilter === "claimed" ? "all" : "claimed");
                                 setCurrentPage(1);
                               }}
-                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-all cursor-pointer border ${
                                 quantityFilter === "claimed"
                                   ? "bg-blue-600 text-white border-blue-600 font-semibold shadow-xs"
                                   : "bg-blue-50/70 hover:bg-blue-100/70 border-blue-200 text-blue-700"
@@ -2502,7 +2502,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 setQuantityFilter(quantityFilter === "dispatched" ? "all" : "dispatched");
                                 setCurrentPage(1);
                               }}
-                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-all cursor-pointer border ${
                                 quantityFilter === "dispatched"
                                   ? "bg-emerald-600 text-white border-emerald-600 font-semibold shadow-xs"
                                   : "bg-emerald-50/70 hover:bg-emerald-100/70 border-emerald-200 text-emerald-700"
@@ -2519,7 +2519,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                 setQuantityFilter(quantityFilter === "balance" ? "all" : "balance");
                                 setCurrentPage(1);
                               }}
-                              className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-all cursor-pointer border ${
                                 quantityFilter === "balance"
                                   ? "bg-amber-600 text-white border-amber-600 font-semibold shadow-xs"
                                   : "bg-amber-50/70 hover:bg-amber-100/70 border-amber-200 text-amber-900"
@@ -2530,7 +2530,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             </button>
 
                             {/* Material Cost Display */}
-                            <div className="flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] bg-indigo-50/70 border border-indigo-200 text-[0.72vw]">
+                            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-md bg-indigo-50/70 border border-indigo-200 text-sm">
                               <span className="text-indigo-700 font-normal">Total Material Cost:</span>
                               <span className="text-indigo-800 font-semibold">₹{quantityStats.totalMaterialCost.toLocaleString()}</span>
                             </div>
@@ -2544,9 +2544,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       <button
                         onClick={resetSort}
                         title="Reset to default report sort"
-                        className="flex items-center gap-[0.25vw] px-[0.5vw] py-[0.15vw] rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-slate-800 font-normal cursor-pointer transition-colors shadow-2xs"
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-600 hover:text-slate-800 font-normal cursor-pointer transition-colors shadow-2xs"
                       >
-                        <RotateCcw className="w-[0.7vw] h-[0.7vw]" />
+                        <RotateCcw className="w-2.5 h-2.5" />
                         <span>Reset Sort</span>
                       </button>
                     )}
@@ -2556,188 +2556,188 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 {/* Table Container */}
                 <div className="flex-1 overflow-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                       <tr>
-                        <th className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[2.6vw] whitespace-nowrap">S.No</th>
+                        <th className="py-2.5 px-2 border-r border-slate-300 text-center w-[37px] whitespace-nowrap">S.No</th>
                         <th
                           onClick={() => handleSort("date")}
-                          className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 w-[86px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center gap-[0.2vw]">
+                          <div className="flex items-center gap-1">
                             <span>Date</span>
                             {sortField === "date" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("customerName")}
-                          className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[11vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2.5 border-r border-slate-300 w-[158px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center gap-[0.2vw]">
+                          <div className="flex items-center gap-1">
                             <span>Customer Name &amp; Code</span>
                             {sortField === "customerName" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("category")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-center w-[79px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-center gap-[0.2vw]">
+                          <div className="flex items-center justify-center gap-1">
                             <span>Category</span>
                             {sortField === "category" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
-                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap">Ref No</th>
+                        <th className="py-2.5 px-2 border-r border-slate-300 w-[86px] whitespace-nowrap">Ref No</th>
                         <th
                           onClick={() => handleSort("productDescription")}
-                          className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[11.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2.5 border-r border-slate-300 w-[166px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center gap-[0.2vw]">
+                          <div className="flex items-center gap-1">
                             <span>Product Description</span>
                             {sortField === "productDescription" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("productSegment")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[6vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-center w-[86px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-center gap-[0.2vw]">
+                          <div className="flex items-center justify-center gap-1">
                             <span>Segment</span>
                             {sortField === "productSegment" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("boardType")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 w-[5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 w-18 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center gap-[0.2vw]">
+                          <div className="flex items-center gap-1">
                             <span>Board</span>
                             {sortField === "boardType" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
-                        <th className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6vw] whitespace-nowrap font-mono">Serial No</th>
+                        <th className="py-2.5 px-2 border-r border-slate-300 w-[86px] whitespace-nowrap font-mono">Serial No</th>
                         <th
                           onClick={() => handleSort("qty")}
-                          className="py-[0.6vw] px-[0.4vw] border-r border-slate-300 text-center w-[3.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-1.5 border-r border-slate-300 text-center w-12 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-center gap-[0.2vw]">
+                          <div className="flex items-center justify-center gap-1">
                             <span>Qty</span>
                             {sortField === "qty" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("materialCost")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right w-[5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-right w-18 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-end gap-[0.2vw]">
+                          <div className="flex items-center justify-end gap-1">
                             <span>Material</span>
                             {sortField === "materialCost" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("manpowerCost")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-right w-[79px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-end gap-[0.2vw]">
+                          <div className="flex items-center justify-end gap-1">
                             <span>Man Power</span>
                             {sortField === "manpowerCost" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("tat")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-center w-18 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-center gap-[0.2vw]">
+                          <div className="flex items-center justify-center gap-1">
                             <span>TAT</span>
                             {sortField === "tat" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("ageGroup")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[5.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-center w-[79px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-center gap-[0.2vw]">
+                          <div className="flex items-center justify-center gap-1">
                             <span>Age Group</span>
                             {sortField === "ageGroup" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
-                        <th className="py-[0.6vw] px-[0.45vw] border-r border-slate-300 text-center w-[3.2vw] whitespace-nowrap">Type</th>
+                        <th className="py-2.5 px-1.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">Type</th>
                         <th
                           onClick={() => handleSort("assignedToName")}
-                          className="py-[0.6vw] px-[0.55vw] border-r border-slate-300 w-[6.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 w-[94px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center gap-[0.2vw]">
+                          <div className="flex items-center gap-1">
                             <span>Claimed</span>
                             {sortField === "assignedToName" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
                         <th
                           onClick={() => handleSort("status")}
-                          className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-center w-[6.5vw] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-center w-[94px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
-                          <div className="flex items-center justify-center gap-[0.2vw]">
+                          <div className="flex items-center justify-center gap-1">
                             <span>Status</span>
                             {sortField === "status" ? (
-                              sortDirection === "asc" ? <ArrowUp className="w-[0.7vw] h-[0.7vw] text-blue-600" /> : <ArrowDown className="w-[0.7vw] h-[0.7vw] text-blue-600" />
+                              sortDirection === "asc" ? <ArrowUp className="w-2.5 h-2.5 text-blue-600" /> : <ArrowDown className="w-2.5 h-2.5 text-blue-600" />
                             ) : (
-                              <ArrowUpDown className="w-[0.65vw] h-[0.65vw] text-slate-400" />
+                              <ArrowUpDown className="w-2.5 h-2.5 text-slate-700" />
                             )}
                           </div>
                         </th>
-                        <th className="py-[0.6vw] px-[0.5vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[4.5vw]">Actions</th>
+                        <th className="py-2.5 px-2 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[65px]">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="text-[0.78vw]">
+                    <tbody className="text-xs">
                       {paginatedProducts.length === 0 ? (
                         <tr>
-                          <td colSpan={17} className="py-[8vh] text-center text-slate-400 font-semibold">
+                          <td colSpan={17} className="py-[8vh] text-center text-slate-700 font-semibold">
                             No service material records match the selected criteria.
                           </td>
                         </tr>
@@ -2756,18 +2756,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               className="transition-colors border-b border-slate-300 last:border-0 hover:bg-slate-50/70"
                             >
                               {/* S.No */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center text-slate-800 font-medium">
+                              <td className="py-2 px-2 border-r border-slate-300 text-center text-slate-800 font-medium">
                                 {itemIndex}
                               </td>
 
                               {/* Date */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap text-slate-800 font-medium">
+                              <td className="py-2 px-2 border-r border-slate-300 whitespace-nowrap text-slate-800 font-medium">
                                 {fmtDate(entry.date)}
                               </td>
 
                               {/* Customer Name & Code */}
-                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-300 max-w-[11.5vw]">
-                                <div className="flex items-center gap-[0.35vw] max-w-full">
+                              <td className="py-2 px-2.5 border-r border-slate-300 max-w-[166px]">
+                                <div className="flex items-center gap-1.5 max-w-full">
                                   <CustomTooltip text={entry.customerName} position="top-start" className="min-w-0 flex-1">
                                     <span className="font-semibold text-slate-900 truncate block">
                                       {entry.customerName || "—"}
@@ -2777,25 +2777,25 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                     <CustomTooltip
                                       position="top-start"
                                       content={
-                                        <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
-                                          <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+                                        <div className="flex flex-col gap-1 text-left py-px">
+                                          <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-1 mb-px">
                                             {entry.customerName || "Customer Details"}
                                           </div>
                                           {entry.customerCode && (
-                                            <div className="flex items-center gap-[0.3vw] text-slate-300 font-mono text-[0.64vw]">
-                                              <span className="text-slate-400 font-sans">Code:</span>
+                                            <div className="flex items-center gap-1 text-slate-600 font-mono text-xs">
+                                              <span className="text-slate-700 font-sans">Code:</span>
                                               <span>{entry.customerCode}</span>
                                             </div>
                                           )}
                                           {entry.unit && (
-                                            <div className="flex items-center gap-[0.3vw] text-teal-300 text-[0.64vw]">
-                                              <span className="text-slate-400">Unit:</span>
+                                            <div className="flex items-center gap-1 text-teal-300 text-xs">
+                                              <span className="text-slate-700">Unit:</span>
                                               <span>{entry.unit}</span>
                                             </div>
                                           )}
                                           {entry.site && (
-                                            <div className="flex items-center gap-[0.3vw] text-sky-300 text-[0.64vw]">
-                                              <span className="text-slate-400">Site:</span>
+                                            <div className="flex items-center gap-1 text-sky-300 text-xs">
+                                              <span className="text-slate-700">Site:</span>
                                               <span>{entry.site}</span>
                                             </div>
                                           )}
@@ -2805,9 +2805,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                       <button
                                         type="button"
                                         tabIndex={-1}
-                                        className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+                                        className="p-0.5 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
                                       >
-                                        <Info className="w-[0.75vw] h-[0.75vw]" />
+                                        <Info className="w-3 h-3" />
                                       </button>
                                     </CustomTooltip>
                                   )}
@@ -2815,19 +2815,19 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Category */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
+                              <td className="py-2 px-2 border-r border-slate-300 text-center whitespace-nowrap">
                                 {entry.category ? (
-                                  <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium border shadow-2xs ${getCustomerTypeBadgeStyle(entry.category)}`}>
+                                  <span className={`inline-flex items-center px-2 py-px rounded-full text-sm font-medium border shadow-2xs ${getCustomerTypeBadgeStyle(entry.category)}`}>
                                     {entry.category}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-400 font-normal">—</span>
+                                  <span className="text-slate-700 font-normal">—</span>
                                 )}
                               </td>
 
                               {/* Ref No */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap">
-                                <div className="text-[0.72vw] font-medium text-purple-900 truncate">
+                              <td className="py-2 px-2 border-r border-slate-300 whitespace-nowrap">
+                                <div className="text-sm font-medium text-purple-900 truncate">
                                   {entry.refNoCustomer ? (
                                     <CustomTooltip text={`Customer Ref: ${entry.refNoCustomer}`}>
                                       <span>Cust: {entry.refNoCustomer}</span>
@@ -2835,20 +2835,20 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   ) : null}
                                 </div>
                                 {entry.refNoInternal && (
-                                  <div className="text-[0.66vw] text-blue-800 font-medium truncate">
+                                  <div className="text-sm text-blue-800 font-medium truncate">
                                     <CustomTooltip text={`Internal Ref: ${entry.refNoInternal}`}>
                                       <span>Int: {entry.refNoInternal}</span>
                                     </CustomTooltip>
                                   </div>
                                 )}
                                 {!entry.refNoCustomer && !entry.refNoInternal && (
-                                  <span className="text-slate-400">—</span>
+                                  <span className="text-slate-700">—</span>
                                 )}
                               </td>
 
                               {/* Product Description */}
-                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-300 max-w-[11.5vw]">
-                                <div className="flex items-center gap-[0.35vw] max-w-full">
+                              <td className="py-2 px-2.5 border-r border-slate-300 max-w-[166px]">
+                                <div className="flex items-center gap-1.5 max-w-full">
                                   <CustomTooltip text={product.productDescription} position="top-start" className="min-w-0 flex-1">
                                     <span className="font-medium text-slate-900 truncate block">
                                       {product.productDescription || "—"}
@@ -2858,15 +2858,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                     <CustomTooltip
                                       position="top-start"
                                       content={
-                                        <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
-                                          <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+                                        <div className="flex flex-col gap-1 text-left py-px">
+                                          <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-1 mb-px">
                                             Product Details
                                           </div>
-                                          <div className="text-slate-300 text-[0.66vw] max-w-[14vw] leading-tight mb-[0.1vw]">
+                                          <div className="text-slate-600 text-sm max-w-[202px] leading-tight mb-px">
                                             {product.productDescription}
                                           </div>
-                                          <div className="flex items-center gap-[0.3vw] text-slate-300 font-mono text-[0.64vw]">
-                                            <span className="text-slate-400 font-sans">Item Code:</span>
+                                          <div className="flex items-center gap-1 text-slate-600 font-mono text-xs">
+                                            <span className="text-slate-700 font-sans">Item Code:</span>
                                             <span className="text-amber-300">{product.productCode}</span>
                                           </div>
                                         </div>
@@ -2875,9 +2875,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                       <button
                                         type="button"
                                         tabIndex={-1}
-                                        className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+                                        className="p-0.5 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
                                       >
-                                        <Info className="w-[0.75vw] h-[0.75vw]" />
+                                        <Info className="w-3 h-3" />
                                       </button>
                                     </CustomTooltip>
                                   )}
@@ -2885,52 +2885,52 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Segment */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap text-slate-800 font-medium">
+                              <td className="py-2 px-2 border-r border-slate-300 text-center whitespace-nowrap text-slate-800 font-medium">
                                 {product.productSegment || product.segment ? (
-                                  <span className="inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] bg-slate-100 text-slate-800 border border-slate-300 font-medium">
+                                  <span className="inline-block px-1.5 py-px rounded text-sm bg-slate-100 text-slate-800 border border-slate-300 font-medium">
                                     {product.productSegment || product.segment}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-400">—</span>
+                                  <span className="text-slate-700">—</span>
                                 )}
                               </td>
 
                               {/* Board Type */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 whitespace-nowrap text-slate-800 font-medium">
+                              <td className="py-2 px-2 border-r border-slate-300 whitespace-nowrap text-slate-800 font-medium">
                                 {product.boardType || "—"}
                               </td>
 
                               {/* Serial No */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap font-mono font-medium text-black">
+                              <td className="py-2 px-2 border-r border-slate-300 whitespace-nowrap font-mono font-medium text-black">
                                 {product.serialNumber || "—"}
                               </td>
 
                               {/* Qty */}
-                              <td className="py-[0.55vw] px-[0.4vw] border-r border-slate-300 text-center font-medium text-black">
+                              <td className="py-2 px-1.5 border-r border-slate-300 text-center font-medium text-black">
                                 {Math.max(1, Number(product.qty) || 1)}
                               </td>
 
                               {/* Material Cost */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-right font-medium text-black">
+                              <td className="py-2 px-2 border-r border-slate-300 text-right font-medium text-black">
                                 {Number(product.report?.materialCost || product.materialCost) > 0 ? (
                                   <span>₹{Number(product.report?.materialCost || product.materialCost).toLocaleString()}</span>
                                 ) : (
-                                  <span className="text-slate-400 font-normal">—</span>
+                                  <span className="text-slate-700 font-normal">—</span>
                                 )}
                               </td>
 
                               {/* Man Power Cost */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-right font-medium text-black">
+                              <td className="py-2 px-2 border-r border-slate-300 text-right font-medium text-black">
                                 {Number(product.report?.manpowerCost || product.manpowerCost) > 0 ? (
                                   <span>₹{Number(product.report?.manpowerCost || product.manpowerCost).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                                 ) : (
-                                  <span className="text-slate-400 font-normal">—</span>
+                                  <span className="text-slate-700 font-normal">—</span>
                                 )}
                               </td>
 
                               {/* TAT */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
-                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-medium border ${
+                              <td className="py-2 px-2 border-r border-slate-300 text-center whitespace-nowrap">
+                                <span className={`inline-block px-1.5 py-px rounded text-sm font-medium border ${
                                   isWarrantyCrossed
                                     ? "bg-rose-100 text-rose-700 border-rose-300 font-semibold"
                                     : "bg-blue-50 text-blue-700 border-blue-200"
@@ -2941,13 +2941,13 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Age Group */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
+                              <td className="py-2 px-2 border-r border-slate-300 text-center whitespace-nowrap">
                                 {(() => {
                                   const days = calculateTatDays(entry.date, product.report?.completedDate);
                                   const label = getAgeGroupLabel(days);
                                   const badgeClass =
                                     days === null
-                                      ? "text-slate-300"
+                                      ? "text-slate-600"
                                       : days <= 3
                                       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                       : days <= 7
@@ -2957,9 +2957,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                       : "bg-rose-50 text-rose-700 border-rose-200";
 
                                   return days === null ? (
-                                    <span className="text-slate-300 font-normal">—</span>
+                                    <span className="text-slate-600 font-normal">—</span>
                                   ) : (
-                                    <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.66vw] font-normal border ${badgeClass}`}>
+                                    <span className={`inline-block px-1.5 py-px rounded text-sm font-normal border ${badgeClass}`}>
                                       {label}
                                     </span>
                                   );
@@ -2967,8 +2967,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Type (W / PW) */}
-                              <td className="py-[0.55vw] px-[0.45vw] border-r border-slate-300 text-center whitespace-nowrap">
-                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-normal ${
+                              <td className="py-2 px-1.5 border-r border-slate-300 text-center whitespace-nowrap">
+                                <span className={`inline-block px-1.5 py-px rounded text-sm font-normal ${
                                   product.type === "W"
                                     ? "bg-green-100 text-green-700 border border-green-200"
                                     : "bg-blue-100 text-blue-700 border border-blue-200"
@@ -2978,40 +2978,40 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Claimed By */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap font-normal">
+                              <td className="py-2 px-2 border-r border-slate-300 whitespace-nowrap font-normal">
                                 {product.assignedToName ? (
                                   <div className="font-normal text-slate-800">
                                     {product.assignedToName}
                                   </div>
                                 ) : (
-                                  <span className="text-slate-400 italic text-[0.72vw]">Unassigned</span>
+                                  <span className="text-slate-700 italic text-sm">Unassigned</span>
                                 )}
                               </td>
 
                               {/* Status */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
-                                <span className={`inline-flex items-center justify-center px-[0.7vw] py-[0.2vw] rounded-lg text-[0.7vw] font-normal tracking-wide ${statusBadge.style}`}>
+                              <td className="py-2 px-2 border-r border-slate-300 text-center whitespace-nowrap">
+                                <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-sm font-normal tracking-wide ${statusBadge.style}`}>
                                   {statusBadge.label}
                                 </span>
                               </td>
 
                               {/* Actions */}
-                              <td className="py-[0.55vw] px-[0.5vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
-                                <div className="flex items-center justify-center gap-[0.4vw]">
+                              <td className="py-2 px-2 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                                <div className="flex items-center justify-center gap-1.5">
                                   <CustomTooltip text="View Details">
                                     <button
                                       onClick={() => setInfoItem({ entry, product })}
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
+                                      className="w-6 h-6 flex items-center justify-center bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-blue-200 hover:border-blue-600"
                                     >
-                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                      <Eye className="w-3.5 h-3.5" />
                                     </button>
                                   </CustomTooltip>
                                   <CustomTooltip text="View Lifecycle History">
                                     <button
                                       onClick={() => setHistoryItem({ entry, product })}
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-300 hover:border-slate-700"
+                                      className="w-6 h-6 flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-300 hover:border-slate-700"
                                     >
-                                      <History className="w-[0.9vw] h-[0.9vw]" />
+                                      <History className="w-3.5 h-3.5" />
                                     </button>
                                   </CustomTooltip>
                                 </div>
@@ -3023,25 +3023,25 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     </tbody>
                     {/* Total Row for Material Cost, Man Power Cost and Qty */}
                     {sortedProducts.length > 0 && (
-                      <tfoot className="sticky bottom-0 bg-[#F1F5F9] border-t-2 border-slate-300 font-bold text-[0.74vw] text-slate-800 shadow-[0_-2px_6px_rgba(0,0,0,0.04)] z-10">
+                      <tfoot className="sticky bottom-0 bg-[#F1F5F9] border-t-2 border-slate-300 font-bold text-xs text-slate-800 shadow-[0_-2px_6px_rgba(0,0,0,0.04)] z-10">
                         <tr>
-                          <td colSpan={9} className="py-[0.6vw] px-[0.7vw] border-r border-slate-300 text-right uppercase tracking-wider text-slate-600">
+                          <td colSpan={9} className="py-2.5 px-2.5 border-r border-slate-300 text-right uppercase tracking-wider text-slate-600">
                             Total
                           </td>
-                          <td className="py-[0.6vw] px-[0.4vw] border-r border-slate-300 text-center font-bold text-slate-900">
+                          <td className="py-2.5 px-1.5 border-r border-slate-300 text-center font-bold text-slate-900">
                             {quantityStats.receivedQty}
                           </td>
-                          <td className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right font-bold text-indigo-900">
+                          <td className="py-2.5 px-2 border-r border-slate-300 text-right font-bold text-indigo-900">
                             {quantityStats.totalMaterialCost > 0
                               ? `₹${quantityStats.totalMaterialCost.toLocaleString()}`
                               : "—"}
                           </td>
-                          <td className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 text-right font-bold text-indigo-900">
+                          <td className="py-2.5 px-2 border-r border-slate-300 text-right font-bold text-indigo-900">
                             {quantityStats.totalManpowerCost > 0
                               ? `₹${quantityStats.totalManpowerCost.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
                               : "—"}
                           </td>
-                          <td colSpan={6} className="py-[0.6vw] px-[0.5vw] border-r border-slate-300 bg-[#F1F5F9]"></td>
+                          <td colSpan={6} className="py-2.5 px-2 border-r border-slate-300 bg-[#F1F5F9]"></td>
                         </tr>
                       </tfoot>
                     )}
@@ -3049,9 +3049,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 </div>
 
                 {/* Table Footer with Pagination Controls */}
-                <div className="bg-slate-50 border-t border-slate-300 px-[1vw] py-[0.55vw] flex items-center justify-between shrink-0">
-                  <div className="flex items-center gap-[1.2vw]">
-                    <span className="text-[0.75vw] text-slate-600 font-medium">
+                <div className="bg-slate-50 border-t border-slate-300 px-3.5 py-2 flex items-center justify-between shrink-0">
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs text-slate-600 font-medium">
                       Showing{" "}
                       <span className="font-semibold text-slate-800">
                         {filteredProducts.length === 0
@@ -3071,18 +3071,18 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   </div>
 
                   {/* Pagination Prev/Next Buttons */}
-                  <div className="flex items-center gap-[0.4vw]">
+                  <div className="flex items-center gap-1.5">
                     <CustomTooltip text="Previous Page">
                       <button
                         disabled={currentPage <= 1}
                         onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                        className="p-[0.35vw] rounded-[0.4vw] border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
+                        className="p-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
                       >
-                        <ChevronLeft className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                        <ChevronLeft className="w-3.5 h-3.5 text-slate-600" />
                       </button>
                     </CustomTooltip>
 
-                    <span className="text-[0.72vw] font-medium text-slate-600 px-[0.5vw]">
+                    <span className="text-sm font-medium text-slate-600 px-2">
                       {currentPage} / {totalPages}
                     </span>
 
@@ -3090,9 +3090,9 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       <button
                         disabled={currentPage >= totalPages}
                         onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                        className="p-[0.35vw] rounded-[0.4vw] border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
+                        className="p-1.5 rounded-md border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
                       >
-                        <ChevronRight className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
                       </button>
                     </CustomTooltip>
                   </div>
@@ -3106,23 +3106,23 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 {!drilldownEmployee ? (
                   <div className="flex-1 overflow-auto">
                     <table className="w-full text-left border-collapse">
-                      <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+                      <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                         <tr>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Engineer Name</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 w-[12vw] whitespace-nowrap">Department</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Total Assigned</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">In Progress / Testing</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Review Required</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Pending / Hold</th>
-                          <th className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center w-[9vw] whitespace-nowrap">Completed</th>
-                          <th className="py-[0.6vw] px-[0.6vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Action</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">S.No</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Engineer Name</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-[173px] whitespace-nowrap">Department</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Total Assigned</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">In Progress / Testing</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Review Required</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Pending / Hold</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Completed</th>
+                          <th className="py-2.5 px-2.5 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-18">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="text-[0.78vw]">
+                      <tbody className="text-xs">
                         {employeeSummaryData.length === 0 ? (
                           <tr>
-                            <td colSpan={9} className="py-[8vh] text-center text-slate-400 font-semibold">
+                            <td colSpan={9} className="py-[8vh] text-center text-slate-700 font-semibold">
                               No employees configured.
                             </td>
                           </tr>
@@ -3132,31 +3132,31 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               key={emp.id}
                               className="hover:bg-blue-50/40 transition-colors border-b border-slate-300 last:border-0"
                             >
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center text-slate-600">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-center text-slate-600">
                                 {index + 1}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 font-medium text-slate-800">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 font-medium text-slate-800">
                                 {emp.name}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-slate-600 font-normal">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-slate-600 font-normal">
                                 {emp.department}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-800">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-center font-normal text-slate-800">
                                 {emp.assignedCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.inProgressCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.reviewCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.pendingCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
+                              <td className="py-2.5 px-2.5 border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.completedCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
+                              <td className="py-2.5 px-2.5 text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">
                                 <CustomTooltip text={emp.assignedCount > 0 ? "View Assigned Material" : "No Material Assigned"}>
                                   <button
                                     onClick={() => {
@@ -3166,10 +3166,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                       setCurrentPage(1);
                                     }}
                                     disabled={emp.assignedCount === 0}
-                                    className={`px-[0.65vw] py-[0.22vw] rounded-full text-[0.7vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                                    className={`px-2.5 py-1 rounded-full text-sm font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap ${
                                       emp.assignedCount > 0
                                         ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                        : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
+                                        : "bg-slate-200 text-slate-700 cursor-not-allowed opacity-50"
                                     }`}
                                   >
                                     View

@@ -161,7 +161,7 @@ function AutocompleteInput({ value, onChange, suggestions, placeholder, classNam
         placeholder={placeholder}
       />
       {showDropdown && (
-        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-slate-400 rounded-[0.4vw] shadow-lg max-h-[14vw] overflow-y-auto">
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-slate-400 rounded-md shadow-lg max-h-[202px] overflow-y-auto">
           {filtered.map((s, i) => (
             <div
               key={i}
@@ -173,7 +173,7 @@ function AutocompleteInput({ value, onChange, suggestions, placeholder, classNam
                 setSelectedIndex(-1);
               }}
               onMouseEnter={() => setSelectedIndex(i)}
-              className={`px-[0.8vw] py-[0.5vw] cursor-pointer text-[0.85vw] text-gray-800 border-b border-gray-50 last:border-0 ${
+              className={`px-3 py-2 cursor-pointer text-sm text-gray-800 border-b border-gray-50 last:border-0 ${
                 selectedIndex === i ? "bg-blue-100" : "hover:bg-blue-50"
               }`}
             >
@@ -1120,8 +1120,8 @@ const CustomerDatabase = () => {
   const renderHeaderCell = (col) => (
     <th
       key={col.key}
-      className={`py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-300 whitespace-nowrap ${
-        col.key === "state" ? "min-w-[8vw] w-[8vw]" : ""
+      className={`py-2.5 px-2.5 font-semibold text-slate-700 uppercase tracking-wider text-sm border-r border-slate-300 whitespace-nowrap ${
+        col.key === "state" ? "min-w-[115px] w-[115px]" : ""
       }`}
     >
       {col.label}
@@ -1133,13 +1133,13 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-[0.77vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `py-2.5 px-2.5 border-r border-b border-slate-300 text-xs font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
         return (
           <td key={col.key} {...spanProps} className={baseClass + " text-center"}>
-            <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+            <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-normal border shadow-2xs whitespace-nowrap ${
               row.partyType === "OEM"
                 ? "bg-blue-50 text-blue-700 border-blue-200"
                 : row.partyType === "End Customer"
@@ -1158,7 +1158,7 @@ const CustomerDatabase = () => {
         return (
           <td key={col.key} className={baseClass}>
             {row.productSegment ? (
-              <span className="inline-block bg-indigo-50 text-indigo-700 px-[0.45vw] py-[0.08vw] rounded text-[0.68vw] border border-indigo-200/80 font-normal">
+              <span className="inline-block bg-indigo-50 text-indigo-700 px-1.5 py-px rounded text-sm border border-indigo-200/80 font-normal">
                 {row.productSegment}
               </span>
             ) : "—"}
@@ -1172,15 +1172,15 @@ const CustomerDatabase = () => {
         );
       case "partyDescription":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-normal truncate max-w-[14vw]"} title={row.partyDescription}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-normal truncate max-w-[202px]"} title={row.partyDescription}>
             {row.partyDescription}
           </td>
         );
       case "itemCode":
-        return <td key={col.key} className={baseClass + " text-slate-700 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
+        return <td key={col.key} className={baseClass + " text-slate-700 font-mono text-xs"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
-          <td key={col.key} className={baseClass + " text-slate-700 truncate max-w-[16vw] text-[0.74vw]"} title={row.itemDescription}>
+          <td key={col.key} className={baseClass + " text-slate-700 truncate max-w-[230px] text-xs"} title={row.itemDescription}>
             {row.itemDescription}
           </td>
         );
@@ -1192,7 +1192,7 @@ const CustomerDatabase = () => {
         );
       case "state":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700 min-w-[8vw] w-[8vw] whitespace-nowrap"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700 min-w-[115px] w-[115px] whitespace-nowrap"}>
             {row.state || "—"}
           </td>
         );
@@ -1223,32 +1223,32 @@ const CustomerDatabase = () => {
   };
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-sm flex flex-col gap-2 min-h-0 overflow-hidden">
       {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel (Matching Service Call Entry page) ── */}
-      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
         {/* Soft Pill Search Box */}
-        <div className="relative w-[22vw]">
-          <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+        <div className="relative w-[317px]">
+          <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
           <input
             type="text"
             placeholder="Search by party code, description or item code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full pl-9 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+              className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
             >
-              <X className="w-[0.7vw] h-[0.7vw]" />
+              <X className="w-2.5 h-2.5" />
             </button>
           )}
         </div>
 
         {/* Right Action Controls */}
-        <div className="flex items-center gap-[0.6vw] flex-shrink-0">
-          <div className="w-[10.5vw]">
+        <div className="flex items-center gap-2.5 flex-shrink-0">
+          <div className="w-[151px]">
             <CustomDropdown
               size="sm"
               value={filterType}
@@ -1257,7 +1257,7 @@ const CustomerDatabase = () => {
                 { value: "All", label: "All Types" },
                 ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-8 !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-xs"
             />
           </div>
 
@@ -1266,18 +1266,18 @@ const CustomerDatabase = () => {
               {canWrite && (
                 <button
                   onClick={openAddModal}
-                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-2xs"
+                  className="cursor-pointer shrink-0 flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-4 h-8 rounded-full font-bold text-xs transition-all shadow-2xs"
                 >
-                  <Plus className="w-[0.85vw] h-[0.85vw] text-slate-600" />
+                  <Plus className="w-3 h-3 text-slate-600" />
                   <span>Add Party</span>
                 </button>
               )}
               {canWrite && (
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-[#1a73e8] hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(26,115,232,0.5)]"
+                  className="cursor-pointer shrink-0 flex items-center gap-1.5 bg-[#1a73e8] hover:bg-blue-700 active:bg-blue-800 text-white px-4 h-8 rounded-full font-bold text-xs transition-all shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(26,115,232,0.5)]"
                 >
-                  <UploadCloud className="w-[0.9vw] h-[0.9vw]" />
+                  <UploadCloud className="w-3.5 h-3.5" />
                   <span>Upload Excel</span>
                 </button>
               )}
@@ -1289,37 +1289,37 @@ const CustomerDatabase = () => {
       {/* ── Table Controls Bar: Count, Bulk Delete, Sort Dropdown & Layout Mode Icons ── */}
       <div className="flex items-center justify-between shrink-0">
         {/* Left Side: Clean, subtle counter (no loud highlight pill) */}
-        <div className="flex items-center gap-[0.4vw]">
-          <span className="text-[0.76vw] font-semibold text-slate-700">
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-semibold text-slate-700">
             {filterType !== "All" || searchTerm.trim() ? "Filtered Customers" : "All Customers"}
           </span>
-          <span className="text-[0.7vw] font-bold text-slate-500 bg-slate-200/80 px-[0.45vw] py-[0.05vw] rounded-full">
+          <span className="text-sm font-bold text-slate-700 bg-slate-200/80 px-1.5 py-px rounded-full">
             {filteredPartyCount}
           </span>
           {(filterType !== "All" || searchTerm.trim()) && (
-            <span className="text-[0.68vw] text-slate-400 font-normal">
+            <span className="text-sm text-slate-700 font-normal">
               (of {partyStats.total})
             </span>
           )}
         </div>
 
         {/* Right Side: Bulk Delete, Sort Dropdown & Layout Mode Icons */}
-        <div className="flex items-center gap-[0.6vw]">
+        <div className="flex items-center gap-2.5">
           {/* Bulk Delete */}
           <AnimatePresence>
             {selectedItems.size > 0 && !isSupervisor && canDelete && (
-              <div className="flex items-center gap-[0.4vw]">
+              <div className="flex items-center gap-1.5">
                 <motion.button
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={handleSelectAllOverall}
-                  className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
+                  className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-2.5 h-7 rounded-md font-semibold text-sm cursor-pointer"
                 >
                   {filteredData.length > 0 && filteredData.every((i) => selectedItems.has(getRowId(i))) ? (
-                    <CheckSquare className="w-[0.85vw] h-[0.85vw]" />
+                    <CheckSquare className="w-3 h-3" />
                   ) : (
-                    <Square className="w-[0.85vw] h-[0.85vw]" />
+                    <Square className="w-3 h-3" />
                   )}
                   Select All ({filteredData.length})
                 </motion.button>
@@ -1328,9 +1328,9 @@ const CustomerDatabase = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={handleBulkDelete}
-                  className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
+                  className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-2.5 h-7 rounded-md font-semibold text-sm cursor-pointer"
                 >
-                  <Trash2 className="w-[0.85vw] h-[0.85vw]" /> Delete ({selectedItems.size})
+                  <Trash2 className="w-3 h-3" /> Delete ({selectedItems.size})
                 </motion.button>
               </div>
             )}
@@ -1341,44 +1341,44 @@ const CustomerDatabase = () => {
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="appearance-none bg-white font-medium text-slate-700 border border-slate-200 hover:border-slate-300 pl-[0.8vw] pr-[2vw] rounded-full outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+              className="appearance-none bg-white font-medium text-slate-700 border border-slate-200 hover:border-slate-300 pl-3 pr-7 rounded-full outline-none cursor-pointer h-7 text-xs transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
             >
               <option value="latest">Sort by: Latest First</option>
               <option value="oldest">Sort by: Oldest First</option>
               <option value="nameAsc">Sort by: Name (A-Z)</option>
               <option value="nameDesc">Sort by: Name (Z-A)</option>
             </select>
-            <ChevronRight className="w-[0.8vw] h-[0.8vw] text-gray-400 pointer-events-none absolute right-[0.6vw] top-1/2 -translate-y-1/2 rotate-90" />
+            <ChevronRight className="w-3 h-3 text-gray-700 pointer-events-none absolute right-[9px] top-1/2 -translate-y-1/2 rotate-90" />
           </div>
         </div>
       </div>
 
       {/* ── Table Card ── */}
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 overflow-hidden min-h-0">
+      <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 overflow-hidden min-h-0">
         <div className="overflow-x-auto overflow-y-auto flex-1 w-full min-h-0">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] tracking-wider uppercase">
+            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-xs tracking-wider uppercase">
               <tr className="bg-[#E9EDF7]">
                 {!isSupervisor && (
-                  <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[3%] text-center bg-[#E9EDF7]">
+                  <th className="py-2.5 px-2.5 border-r border-slate-300 w-[3%] text-center bg-[#E9EDF7]">
                     <button
                       onClick={() => handleSelectAllPage(paginatedData)}
                       className="flex items-center justify-center w-full cursor-pointer"
                     >
                       {isPageSelected ? (
-                        <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
+                        <CheckSquare className="w-3.5 h-3.5 text-[#1a73e8]" />
                       ) : (
-                        <Square className="w-[1vw] h-[1vw] text-slate-400 hover:text-slate-500" />
+                        <Square className="w-3.5 h-3.5 text-slate-700 hover:text-slate-700" />
                       )}
                     </button>
                   </th>
                 )}
-                <th className="py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-300 w-[3.5%] text-center bg-[#E9EDF7]">
+                <th className="py-2.5 px-2.5 font-semibold text-slate-700 uppercase tracking-wider text-sm border-r border-slate-300 w-[3.5%] text-center bg-[#E9EDF7]">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-slate-300 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                  <th className="py-2.5 px-2.5 font-bold text-slate-700 uppercase tracking-wider text-xs border-slate-300 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
                     Actions
                   </th>
                 )}
@@ -1387,10 +1387,10 @@ const CustomerDatabase = () => {
             <tbody className="divide-y divide-slate-200">
               {isLoading ? (
                 <tr>
-                  <td colSpan={totalCols} className="py-[10vw]">
-                    <div className="flex flex-col items-center justify-center gap-[1vw] text-gray-500">
-                      <Loader2 className="w-[3vw] h-[3vw] animate-spin text-[#1a73e8]" />
-                      <p className="text-[1vw] font-medium text-[#1a73e8]">Loading customer data...</p>
+                  <td colSpan={totalCols} className="py-[144px]">
+                    <div className="flex flex-col items-center justify-center gap-3.5 text-gray-700">
+                      <Loader2 className="w-[43px] h-[43px] animate-spin text-[#1a73e8]" />
+                      <p className="text-xs font-medium text-[#1a73e8]">Loading customer data...</p>
                     </div>
                   </td>
                 </tr>
@@ -1413,20 +1413,20 @@ const CustomerDatabase = () => {
                       className={`transition-colors border-b border-slate-300 ${isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/70"}`}
                     >
                       {!isSupervisor && (
-                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center">
+                        <td className="py-2.5 px-2.5 border-r border-b border-slate-300 text-center">
                           <button
                             onClick={() => handleSelectItem(row)}
                             className="flex items-center justify-center w-full cursor-pointer"
                           >
                             {isSelected ? (
-                              <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
+                              <CheckSquare className="w-3.5 h-3.5 text-[#1a73e8]" />
                             ) : (
-                              <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
+                              <Square className="w-3.5 h-3.5 text-slate-600 hover:text-slate-700" />
                             )}
                           </button>
                         </td>
                       )}
-                      <td className="py-[0.7vw] px-[0.7vw] text-slate-700 font-normal border-r border-b border-slate-300 text-center text-[0.76vw]">
+                      <td className="py-2.5 px-2.5 text-slate-700 font-normal border-r border-b border-slate-300 text-center text-xs">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
@@ -1436,31 +1436,31 @@ const CustomerDatabase = () => {
                       {!isSameParty && !isSupervisor ? (
                         <td
                           rowSpan={rowSpan}
-                          className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
+                          className="py-2.5 px-2.5 border-b border-r border-slate-300 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
                         >
                           {(canUpdate || canDelete) ? (
-                            <div className="flex items-center justify-center gap-[0.4vw] px-[0.4vw]">
+                            <div className="flex items-center justify-center gap-1.5 px-1.5">
                               {canUpdate && (
                                 <button
                                   onClick={() => openEditModal(row.partyCode)}
-                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-blue-50 text-slate-500 hover:text-[#1a73e8] transition-colors cursor-pointer"
+                                  className="inline-flex items-center justify-center p-1.5 rounded-full hover:bg-blue-50 text-slate-700 hover:text-[#1a73e8] transition-colors cursor-pointer"
                                   title="Edit Customer"
                                 >
-                                  <Edit2 className="w-[0.9vw] h-[0.9vw]" />
+                                  <Edit2 className="w-3.5 h-3.5" />
                                 </button>
                               )}
                               {canDelete && (
                                 <button
                                   onClick={() => handleDeleteParty(row.partyCode)}
-                                  className="inline-flex items-center justify-center p-[0.35vw] rounded-full hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer"
+                                  className="inline-flex items-center justify-center p-1.5 rounded-full hover:bg-rose-50 text-slate-700 hover:text-rose-600 transition-colors cursor-pointer"
                                   title="Delete Customer"
                                 >
-                                  <Trash2 className="w-[0.9vw] h-[0.9vw]" />
+                                  <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               )}
                             </div>
                           ) : (
-                            <span className="text-[0.68vw] text-slate-400 italic">View only</span>
+                            <span className="text-sm text-slate-700 italic">View only</span>
                           )}
                         </td>
                       ) : null}
@@ -1469,7 +1469,7 @@ const CustomerDatabase = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={totalCols} className="py-[5vw] text-center text-slate-400 font-normal">
+                  <td colSpan={totalCols} className="py-18 text-center text-slate-700 font-normal">
                     No customer data found.
                   </td>
                 </tr>
@@ -1479,19 +1479,19 @@ const CustomerDatabase = () => {
         </div>
 
         {/* Pagination */}
-        <div className="border-t border-slate-300 px-[1vw] py-[0.7vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
-          <div className="text-[0.74vw] text-slate-500 font-medium">
+        <div className="border-t border-slate-300 px-3.5 py-2.5 bg-white flex justify-between items-center rounded-b-[12px]">
+          <div className="text-xs text-slate-700 font-medium">
             Showing <span className="font-semibold text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</span> of <span className="font-semibold text-slate-800">{filteredData.length}</span> entries
           </div>
-          <div className="flex items-center gap-[0.5vw]">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <div className="flex gap-[0.3vw]">
+            <div className="flex gap-1">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pNum = i + 1;
                 if (totalPages > 5 && currentPage > 3) pNum = currentPage - 2 + i;
@@ -1500,7 +1500,7 @@ const CustomerDatabase = () => {
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`min-w-[1.6vw] h-[1.6vw] px-[0.35vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold cursor-pointer transition-all ${
+                    className={`min-w-[23px] h-6 px-1.5 flex items-center justify-center rounded-md text-xs font-semibold cursor-pointer transition-all ${
                       currentPage === pNum ? "bg-[#1a73e8] text-white shadow-2xs" : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                     }`}
                   >
@@ -1512,9 +1512,9 @@ const CustomerDatabase = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
-              <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -1523,56 +1523,56 @@ const CustomerDatabase = () => {
       {/* ── Manual Add Modal ───────────────────────────────────────────────────── */}
       <AnimatePresence>
         {showAddModal && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-[1vw]">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-3.5">
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ duration: 0.2 }}
-              className="bg-white w-[54vw] rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
+              className="bg-white w-[778px] rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
             >
               {/* Modal Header */}
-              <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-100 flex justify-between items-center bg-white">
-                <div className="flex items-center gap-[0.5vw]">
-                  <div className="w-[2vw] h-[2vw] rounded-[0.5vw] bg-blue-50 flex items-center justify-center text-blue-600">
-                    <UserPlus className="w-[1vw] h-[1vw]" />
+              <div className="px-4 py-3.5 border-b border-gray-100 flex justify-between items-center bg-white">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                    <UserPlus className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <h2 className="text-[1.05vw] font-bold text-gray-900 leading-none">Add Customer & Items</h2>
-                    <p className="text-[0.68vw] text-gray-400 font-medium mt-[0.15vw]">Register a new party and catalog item details</p>
+                    <h2 className="text-xs font-bold text-gray-900 leading-none">Add Customer & Items</h2>
+                    <p className="text-sm text-gray-700 font-medium mt-0.5">Register a new party and catalog item details</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="w-[1.8vw] h-[1.8vw] rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-6.5 h-6.5 rounded-full hover:bg-gray-100 text-gray-700 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
               {/* Form Content */}
-              <form onSubmit={handleManualSubmit} className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
+              <form onSubmit={handleManualSubmit} className="p-4 flex flex-col gap-3.5 overflow-y-auto">
                 {/* Party Details Card */}
-                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-gray-200/80">
-                  <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
-                    <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
-                    <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
+                <div className="bg-slate-50/60 p-3.5 rounded-xl border border-gray-200/80">
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <span className="w-1 h-3 bg-blue-600 rounded-full inline-block" />
+                    <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
+                  <div className="grid grid-cols-2 gap-3.5 mb-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
                       <AutocompleteInput
                         required
                         value={newEntry.partyCode}
                         onChange={handleAddPartyCodeChange}
                         suggestions={uniquePartyCodes}
                         placeholder="e.g. CUS-001"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Type</label>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">Party Type</label>
                       <CustomDropdown
                         options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={newEntry.partyType}
@@ -1583,113 +1583,113 @@ const CustomerDatabase = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
-                    <label className="text-[0.74vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
+                  <div className="flex flex-col gap-1 mb-3">
+                    <label className="text-xs font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
                     <AutocompleteInput
                       required
                       value={newEntry.partyDescription}
                       onChange={handleAddPartyDescChange}
                       suggestions={uniquePartyDescriptions}
                       placeholder="Company / Customer Name"
-                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-[1vw]">
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">State</label>
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">State</label>
                       <AutocompleteInput
                         value={newEntry.state}
                         onChange={(val) => setNewEntry({ ...newEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">District / City</label>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">District / City</label>
                       <AutocompleteInput
                         value={newEntry.districtCity}
                         onChange={(val) => setNewEntry({ ...newEntry, districtCity: val })}
                         suggestions={addModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Items Section Card */}
-                <div className="bg-white border border-gray-200/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
-                  <div className="flex justify-between items-center mb-[0.6vw]">
-                    <div className="flex items-center gap-[0.4vw]">
-                      <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
-                      <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
+                <div className="bg-white border border-gray-200/90 rounded-xl p-3.5 shadow-2xs">
+                  <div className="flex justify-between items-center mb-2.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1 h-3 bg-indigo-600 rounded-full inline-block" />
+                      <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
                     </div>
                     <button
                       type="button"
                       onClick={handleAddItemRow}
-                      className="text-blue-600 hover:text-blue-700 text-[0.74vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
+                      className="text-blue-600 hover:text-blue-700 text-xs font-semibold flex items-center gap-1 cursor-pointer hover:underline"
                     >
-                      <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
+                      <PlusCircle className="w-3 h-3" /> Add Item
                     </button>
                   </div>
 
-                  <div className="space-y-[0.6vw]">
+                  <div className="space-y-2.5">
                     {newEntry.items.map((item, idx) => {
                       const isExisting = item._existing;
                       return (
                         <div
                           key={idx}
-                          className={`flex gap-[0.5vw] items-center border-b border-gray-100 pb-[0.6vw] last:border-0 ${isExisting ? "bg-blue-50/40 rounded-[0.4vw] p-[0.4vw]" : ""}`}
+                          className={`flex gap-2 items-center border-b border-gray-100 pb-2.5 last:border-0 ${isExisting ? "bg-blue-50/40 rounded-md p-1.5" : ""}`}
                         >
                           {isExisting && (
                             <div className="flex flex-col justify-end shrink-0">
-                              <span className="text-[0.62vw] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Existing</span>
+                              <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Existing</span>
                             </div>
                           )}
-                          <div className="flex-1 flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Segment</label>}
+                          <div className="flex-1 flex flex-col gap-1">
+                            {idx === 0 && <label className="text-sm font-semibold text-gray-700">Segment</label>}
                             <AutocompleteInput
                               required={!isExisting}
                               value={item.productSegment}
                               onChange={(val) => handleItemChange(idx, "productSegment", val)}
                               suggestions={uniqueSegments}
                               placeholder="Segment"
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                              className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
-                          <div className="flex-1 flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Item Code</label>}
+                          <div className="flex-1 flex flex-col gap-1">
+                            {idx === 0 && <label className="text-sm font-semibold text-gray-700">Item Code</label>}
                             <input
                               required={!isExisting}
                               value={item.itemCode}
                               readOnly={isExisting}
                               onChange={(e) => handleItemChange(idx, "itemCode", e.target.value)}
-                              className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
+                              className={`w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-700 cursor-not-allowed" : ""}`}
                               placeholder="Item Code"
                             />
                           </div>
-                          <div className="flex-[2] flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Description</label>}
+                          <div className="flex-[2] flex flex-col gap-1">
+                            {idx === 0 && <label className="text-sm font-semibold text-gray-700">Description</label>}
                             <AutocompleteInput
                               required={!isExisting}
                               value={item.itemDescription}
                               onChange={(val) => handleItemChange(idx, "itemDescription", val)}
                               suggestions={uniqueItemDescriptions}
                               placeholder="Item Description"
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                              className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
-                          <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Warranty (days)</label>}
+                          <div className="flex-[0.8] flex flex-col gap-1">
+                            {idx === 0 && <label className="text-sm font-semibold text-gray-700">Warranty (days)</label>}
                             <input
                               required={!isExisting}
                               type="number"
                               min="0"
                               value={item.warrantyPeriodDays}
                               onChange={(e) => handleItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                              className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                               placeholder="Days"
                             />
                           </div>
@@ -1699,9 +1699,9 @@ const CustomerDatabase = () => {
                               type="button"
                               onClick={() => handleRemoveItemRow(idx)}
                               disabled={newEntry.items.length === 1 && !isExisting}
-                              className={`p-[0.35vw] text-gray-400 hover:text-rose-600 disabled:opacity-20 cursor-pointer transition-colors ${idx === 0 ? "mt-[1.1vw]" : ""}`}
+                              className={`p-1.5 text-gray-700 hover:text-rose-600 disabled:opacity-20 cursor-pointer transition-colors ${idx === 0 ? "mt-4" : ""}`}
                             >
-                              <MinusCircle className="w-[1vw] h-[1vw]" />
+                              <MinusCircle className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
@@ -1711,17 +1711,17 @@ const CustomerDatabase = () => {
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="flex justify-end gap-[0.6vw] pt-[0.4vw]">
+                <div className="flex justify-end gap-2.5 pt-1.5">
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-[1.2vw] h-[2.2vw] border border-gray-200 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
+                    className="px-4 h-8 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 text-xs font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.76vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
+                    className="px-5 h-8 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
                   >
                     Save All
                   </button>
@@ -1735,57 +1735,57 @@ const CustomerDatabase = () => {
       {/* ── Edit Modal ──────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {editingPartyCode && editEntry && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-[1vw]">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-3.5">
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ duration: 0.2 }}
-              className="bg-white w-[54vw] rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
+              className="bg-white w-[778px] rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
             >
               {/* Modal Header */}
-              <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-100 flex justify-between items-center bg-white">
-                <div className="flex items-center gap-[0.5vw]">
-                  <div className="w-[2vw] h-[2vw] rounded-[0.5vw] bg-blue-50 flex items-center justify-center text-blue-600">
-                    <Edit2 className="w-[1vw] h-[1vw]" />
+              <div className="px-4 py-3.5 border-b border-gray-100 flex justify-between items-center bg-white">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                    <Edit2 className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <h2 className="text-[1.05vw] font-bold text-gray-900 leading-none flex items-center gap-[0.4vw]">
-                      Edit Customer <span className="text-gray-400 font-normal">—</span> <span className="text-blue-600 font-mono font-bold">{editingPartyCode}</span>
+                    <h2 className="text-xs font-bold text-gray-900 leading-none flex items-center gap-1.5">
+                      Edit Customer <span className="text-gray-700 font-normal">—</span> <span className="text-blue-600 font-mono font-bold">{editingPartyCode}</span>
                     </h2>
-                    <p className="text-[0.68vw] text-gray-400 font-medium mt-[0.15vw]">Modify party metadata and catalog line items</p>
+                    <p className="text-sm text-gray-700 font-medium mt-0.5">Modify party metadata and catalog line items</p>
                   </div>
                 </div>
                 <button
                   onClick={() => { setEditingPartyCode(null); setEditEntry(null); }}
-                  className="w-[1.8vw] h-[1.8vw] rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-6.5 h-6.5 rounded-full hover:bg-gray-100 text-gray-700 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
               {/* Edit Form */}
-              <form onSubmit={handleEditSubmit} className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
+              <form onSubmit={handleEditSubmit} className="p-4 flex flex-col gap-3.5 overflow-y-auto">
                 {/* Party Details Card */}
-                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-gray-200/80">
-                  <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
-                    <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
-                    <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
+                <div className="bg-slate-50/60 p-3.5 rounded-xl border border-gray-200/80">
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <span className="w-1 h-3 bg-blue-600 rounded-full inline-block" />
+                    <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
+                  <div className="grid grid-cols-2 gap-3.5 mb-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
                       <input
                         required
                         value={editEntry.partyCode}
                         onChange={(e) => setEditEntry({ ...editEntry, partyCode: e.target.value })}
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
+                        className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
                         placeholder="e.g. CUS-001"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Type</label>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">Party Type</label>
                       <CustomDropdown
                         options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={editEntry.partyType}
@@ -1796,112 +1796,112 @@ const CustomerDatabase = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
-                    <label className="text-[0.74vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
+                  <div className="flex flex-col gap-1 mb-3">
+                    <label className="text-xs font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
                     <input
                       required
                       value={editEntry.partyDescription}
                       onChange={(e) => setEditEntry({ ...editEntry, partyDescription: e.target.value })}
-                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
+                      className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
                       placeholder="Company Name"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-[1vw]">
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">State</label>
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">State</label>
                       <AutocompleteInput
                         value={editEntry.state}
                         onChange={(val) => setEditEntry({ ...editEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">District / City</label>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">District / City</label>
                       <AutocompleteInput
                         value={editEntry.districtCity}
                         onChange={(val) => setEditEntry({ ...editEntry, districtCity: val })}
                         suggestions={editModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Items Section Card */}
-                <div className="bg-white border border-gray-200/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
-                  <div className="flex justify-between items-center mb-[0.6vw]">
-                    <div className="flex items-center gap-[0.4vw]">
-                      <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
-                      <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
+                <div className="bg-white border border-gray-200/90 rounded-xl p-3.5 shadow-2xs">
+                  <div className="flex justify-between items-center mb-2.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1 h-3 bg-indigo-600 rounded-full inline-block" />
+                      <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
                     </div>
                     <button
                       type="button"
                       onClick={handleEditAddItemRow}
-                      className="text-blue-600 hover:text-blue-700 text-[0.74vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
+                      className="text-blue-600 hover:text-blue-700 text-xs font-semibold flex items-center gap-1 cursor-pointer hover:underline"
                     >
-                      <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
+                      <PlusCircle className="w-3 h-3" /> Add Item
                     </button>
                   </div>
 
-                  <div className="space-y-[0.6vw]">
+                  <div className="space-y-2.5">
                     {editEntry.items.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex gap-[0.5vw] items-center border-b border-gray-100 pb-[0.6vw] last:border-0"
+                        className="flex gap-2 items-center border-b border-gray-100 pb-2.5 last:border-0"
                       >
-                        <div className="flex-1 flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Item Code</label>}
+                        <div className="flex-1 flex flex-col gap-1">
+                          {idx === 0 && <label className="text-sm font-semibold text-gray-700">Item Code</label>}
                           <input
                             required
                             value={item.itemCode}
                             onChange={(e) => handleEditItemChange(idx, "itemCode", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
+                            className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
                             placeholder="Code"
                           />
                         </div>
-                        <div className="flex-[2] flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Description</label>}
+                        <div className="flex-[2] flex flex-col gap-1">
+                          {idx === 0 && <label className="text-sm font-semibold text-gray-700">Description</label>}
                           <input
                             required
                             value={item.itemDescription}
                             onChange={(e) => handleEditItemChange(idx, "itemDescription", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                            className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             placeholder="Description"
                           />
                         </div>
-                        <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Warranty (days)</label>}
+                        <div className="flex-[0.8] flex flex-col gap-1">
+                          {idx === 0 && <label className="text-sm font-semibold text-gray-700">Warranty (days)</label>}
                           <input
                             required
                             type="number"
                             min="0"
                             value={item.warrantyPeriodDays}
                             onChange={(e) => handleEditItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                            className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                             placeholder="Days"
                           />
                         </div>
-                        <div className="flex-1 flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Product Segment</label>}
+                        <div className="flex-1 flex flex-col gap-1">
+                          {idx === 0 && <label className="text-sm font-semibold text-gray-700">Product Segment</label>}
                           <AutocompleteInput
                             value={item.productSegment}
                             onChange={(val) => handleEditItemChange(idx, "productSegment", val)}
                             suggestions={uniqueSegments}
                             placeholder="Segment"
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                            className="w-full h-7.5 px-2.5 rounded-md border border-gray-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                           />
                         </div>
                         <div className="flex flex-col justify-end">
                           <button
                             type="button"
                             onClick={() => handleEditRemoveItemRow(idx)}
-                            className={`p-[0.35vw] text-gray-400 hover:text-rose-600 cursor-pointer transition-colors ${idx === 0 ? "mt-[1.1vw]" : ""}`}
+                            className={`p-1.5 text-gray-700 hover:text-rose-600 cursor-pointer transition-colors ${idx === 0 ? "mt-4" : ""}`}
                           >
-                            <MinusCircle className="w-[1vw] h-[1vw]" />
+                            <MinusCircle className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
@@ -1910,19 +1910,19 @@ const CustomerDatabase = () => {
                 </div>
 
                 {/* Footer Actions */}
-                <div className="flex justify-end gap-[0.6vw] pt-[0.4vw]">
+                <div className="flex justify-end gap-2.5 pt-1.5">
                   <button
                     type="button"
                     onClick={() => { setEditingPartyCode(null); setEditEntry(null); }}
-                    className="px-[1.2vw] h-[2.2vw] border border-gray-200 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
+                    className="px-4 h-8 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 text-xs font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.76vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
+                    className="px-5 h-8 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
                   >
-                    <Save className="w-[0.9vw] h-[0.9vw]" /> Update
+                    <Save className="w-3.5 h-3.5" /> Update
                   </button>
                 </div>
               </form>
@@ -1939,90 +1939,90 @@ const CustomerDatabase = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white w-[55vw] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+              className="bg-white w-[792px] rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
             >
-              <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-                <h2 className="text-[1.2vw] font-semibold text-gray-900">Upload client data</h2>
-                <button onClick={resetUpload} className="text-gray-400 hover:text-red-500 cursor-pointer">
-                  <X className="w-[1.4vw] h-[1.4vw]" />
+              <div className="px-3.5 py-2.5 border-b border-slate-400 flex justify-between items-center bg-gray-50">
+                <h2 className="text-base font-semibold text-gray-900">Upload client data</h2>
+                <button onClick={resetUpload} className="text-gray-700 hover:text-red-500 cursor-pointer">
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="px-[2vw] py-[1.2vw] flex-1 flex flex-col justify-center min-h-[25vw]">
+              <div className="px-7 py-4 flex-1 flex flex-col justify-center min-h-[360px]">
                 {uploadStep === 1 && (
                   <div
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                     onClick={() => fileInputRef.current.click()}
-                    className={`flex flex-col items-center justify-center h-[20vw] border-[0.2vw] border-dashed rounded-[1vw] cursor-pointer group ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-400 bg-gray-50 hover:bg-blue-50"}`}
+                    className={`flex flex-col items-center justify-center h-[288px] border-[3px] border-dashed rounded-2xl cursor-pointer group ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-400 bg-gray-50 hover:bg-blue-50"}`}
                   >
                     <input type="file" ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept=".xlsx,.xls" />
-                    <UploadCloud className="w-[2.5vw] h-[2.5vw] text-blue-500 mb-[1vw]" />
-                    <p className="text-[1.1vw] font-semibold text-gray-800 mb-[0.4vw]">
+                    <UploadCloud className="w-9 h-9 text-blue-500 mb-3.5" />
+                    <p className="text-xs font-semibold text-gray-800 mb-1.5">
                       {isDragging ? "Drop file here" : "Click to upload or Drag & Drop"}
                     </p>
-                    <p className="text-gray-700 text-[0.9vw] mb-[0.5vw] text-center px-[10%]">
+                    <p className="text-gray-700 text-sm mb-2 text-center px-[10%]">
                       <span className="font-semibold">Expected Columns: </span>
                       Party Type, Product Segment, Party Code, Party Description, Item Code, Item Description, Warranty Period,{" "}
                       <span className="text-blue-600 font-semibold">State, District/City</span>
                     </p>
-                    <p className="text-blue-600 text-[0.85vw] bg-blue-50 px-[1vw] py-[0.4vw] rounded-[0.3vw] border border-blue-200">
+                    <p className="text-blue-600 text-sm bg-blue-50 px-3.5 py-1.5 rounded-md border border-blue-200">
                       <span className="font-semibold">Note:</span> Multiple items per customer = new row with same Party Code
                     </p>
                   </div>
                 )}
                 {uploadStep === 2 && (
-                  <div className="flex flex-col items-center justify-center w-full max-w-[30vw] mx-auto">
-                    <div className="w-full flex justify-between font-semibold text-gray-600 mb-[0.5vw]">
+                  <div className="flex flex-col items-center justify-center w-full max-w-[432px] mx-auto">
+                    <div className="w-full flex justify-between font-semibold text-gray-600 mb-2">
                       <span>Processing...</span>
                       <span>{uploadProgress}%</span>
                     </div>
-                    <div className="w-full h-[0.8vw] bg-gray-100 rounded-full overflow-hidden">
+                    <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-600 transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                     </div>
                   </div>
                 )}
                 {uploadStep === 3 && (
-                  <div className="flex gap-[2vw] h-full items-stretch">
-                    <div className="w-[18vw] flex flex-col gap-[1vw]">
-                      <div className="bg-gray-50 p-[1.5vw] rounded-[0.6vw] border border-slate-400 space-y-[0.8vw]">
-                        <h4 className="font-bold text-gray-500 uppercase tracking-wider mb-[1vw]">Summary</h4>
+                  <div className="flex gap-7 h-full items-stretch">
+                    <div className="w-[259px] flex flex-col gap-3.5">
+                      <div className="bg-gray-50 p-5.5 rounded-lg border border-slate-400 space-y-3">
+                        <h4 className="font-bold text-gray-700 uppercase tracking-wider mb-3.5">Summary</h4>
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Total</span>
+                          <span className="text-gray-700">Total</span>
                           <span className="font-bold">{validationResult.total}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Valid</span>
+                          <span className="text-gray-700">Valid</span>
                           <span className="font-bold text-green-600">{validationResult.valid}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Duplicates</span>
+                          <span className="text-gray-700">Duplicates</span>
                           <span className="font-bold text-blue-600">{validationResult.duplicates}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Errors</span>
+                          <span className="text-gray-700">Errors</span>
                           <span className="font-bold text-red-600">{validationResult.errors}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 border border-slate-400 rounded-[0.6vw] flex flex-col overflow-hidden">
-                      <div className="bg-gray-100 px-[1.5vw] py-[0.8vw] border-b border-slate-400 font-semibold text-gray-700 flex justify-between items-center">
+                    <div className="flex-1 border border-slate-400 rounded-lg flex flex-col overflow-hidden">
+                      <div className="bg-gray-100 px-5.5 py-3 border-b border-slate-400 font-semibold text-gray-700 flex justify-between items-center">
                         <span>Issues Found ({validationResult.issues.length})</span>
                         {validationResult.issues.length > 0 && (
                           <button 
                             onClick={exportIssues} 
-                            className="flex items-center gap-[0.4vw] text-[0.8vw] text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded cursor-pointer transition-colors"
+                            className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded cursor-pointer transition-colors"
                           >
-                            <Download className="w-[0.9vw] h-[0.9vw]"/> Export Issues
+                            <Download className="w-3.5 h-3.5"/> Export Issues
                           </button>
                         )}
                       </div>
-                      <div className="overflow-y-auto flex-1 p-[1vw] space-y-[0.8vw] max-h-[20vw] bg-white">
+                      <div className="overflow-y-auto flex-1 p-3.5 space-y-3 max-h-[288px] bg-white">
                         {validationResult.issues.length > 0 ? (
                           validationResult.issues.map((issue, idx) => (
                             <div
                               key={idx}
-                              className={`flex items-start gap-[0.8vw] p-[0.8vw] rounded-[0.4vw] border ${issue.type === "error" ? "bg-red-50 border-red-100" : "bg-blue-50 border-orange-100"}`}
+                              className={`flex items-start gap-3 p-3 rounded-md border ${issue.type === "error" ? "bg-red-50 border-red-100" : "bg-blue-50 border-orange-100"}`}
                             >
                               <div>
                                 <p className={`font-bold ${issue.type === "error" ? "text-red-700" : "text-blue-500"}`}>
@@ -2033,8 +2033,8 @@ const CustomerDatabase = () => {
                             </div>
                           ))
                         ) : (
-                          <div className="h-full flex flex-col items-center justify-center text-gray-400">
-                            <Check className="w-[3vw] h-[3vw] mb-[0.5vw]" />
+                          <div className="h-full flex flex-col items-center justify-center text-gray-700">
+                            <Check className="w-[43px] h-[43px] mb-2" />
                             <p>No Issues Found</p>
                           </div>
                         )}
@@ -2044,39 +2044,39 @@ const CustomerDatabase = () => {
                 )}
                 {uploadStep === 4 && (
                   <div className="flex flex-col items-center justify-center h-full w-full">
-                    <h3 className="text-[1.6vw] font-bold text-gray-800 mb-[0.5vw]">Import Summary</h3>
-                    <p className="text-[0.9vw] text-gray-500 mb-[2.5vw]">The import process is complete.</p>
-                    <div className="grid grid-cols-3 gap-[1.5vw] w-full max-w-[35vw] mb-[2vw]">
-                      <div className="bg-green-50 border border-green-100 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center">
-                        <span className="text-[1.8vw] font-bold text-green-700">
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Import Summary</h3>
+                    <p className="text-sm text-gray-700 mb-9">The import process is complete.</p>
+                    <div className="grid grid-cols-3 gap-5.5 w-full max-w-[504px] mb-7">
+                      <div className="bg-green-50 border border-green-100 rounded-lg p-4 flex flex-col items-center">
+                        <span className="text-xl font-bold text-green-700">
                           {uploadResult?.insertedCount || 0}
                         </span>
-                        <span className="text-[0.75vw] font-semibold text-green-600 uppercase tracking-wide">New Records</span>
+                        <span className="text-xs font-semibold text-green-600 uppercase tracking-wide">New Records</span>
                       </div>
-                      <div className="bg-blue-50 border border-blue-100 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center">
-                        <span className="text-[1.8vw] font-bold text-blue-600">
+                      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 flex flex-col items-center">
+                        <span className="text-xl font-bold text-blue-600">
                           {uploadResult 
                             ? (validationResult.duplicates + (uploadResult.duplicateCount || 0))
                             : validationResult.duplicates
                           }
                         </span>
-                        <span className="text-[0.75vw] font-semibold text-blue-500 uppercase tracking-wide">Already in DB</span>
+                        <span className="text-xs font-semibold text-blue-500 uppercase tracking-wide">Already in DB</span>
                       </div>
-                      <div className="bg-red-50 border border-red-100 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center">
-                        <span className="text-[1.8vw] font-bold text-red-600">{validationResult.errors}</span>
-                        <span className="text-[0.75vw] font-semibold text-red-500 uppercase tracking-wide">Errors</span>
+                      <div className="bg-red-50 border border-red-100 rounded-lg p-4 flex flex-col items-center">
+                        <span className="text-xl font-bold text-red-600">{validationResult.errors}</span>
+                        <span className="text-xs font-semibold text-red-500 uppercase tracking-wide">Errors</span>
                       </div>
                     </div>
 
                     {uploadResult?.insertedCount === 0 && (uploadResult?.duplicateCount > 0 || validationResult.duplicates > 0) && (
-                      <p className="text-[0.85vw] text-blue-600 mb-[2vw] bg-blue-50 px-[1.5vw] py-[0.5vw] rounded-full border border-blue-100">
+                      <p className="text-sm text-blue-600 mb-7 bg-blue-50 px-5.5 py-2 rounded-full border border-blue-100">
                         Notice: All uploaded records already exist in the database.
                       </p>
                     )}
 
                     <button
                       onClick={resetUpload}
-                      className="px-[3vw] py-[0.8vw] text-[0.9vw] font-medium border border-gray-400 rounded-[0.4vw] hover:bg-gray-50 cursor-pointer"
+                      className="px-[43px] py-3 text-sm font-medium border border-gray-400 rounded-md hover:bg-gray-50 cursor-pointer"
                     >
                       Exit
                     </button>
@@ -2084,19 +2084,19 @@ const CustomerDatabase = () => {
                 )}
               </div>
               {uploadStep === 3 && (
-                <div className="px-[1.5vw] py-[1vw] border-t border-slate-400 bg-gray-50 flex justify-end gap-[1vw]">
+                <div className="px-5.5 py-3.5 border-t border-slate-400 bg-gray-50 flex justify-end gap-3.5">
                   <button
                     onClick={resetUpload}
-                    className="px-[2vw] py-[0.6vw] border border-gray-400 rounded-[0.4vw] bg-white hover:bg-gray-50 cursor-pointer"
+                    className="px-7 py-2.5 border border-gray-400 rounded-md bg-white hover:bg-gray-50 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={commitData}
                     disabled={validationResult.valid === 0}
-                    className={`px-[1vw] py-[0.6vw] rounded-[0.4vw] text-white flex items-center cursor-pointer gap-[0.5vw] ${validationResult.valid > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"}`}
+                    className={`px-3.5 py-2.5 rounded-md text-white flex items-center cursor-pointer gap-2 ${validationResult.valid > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"}`}
                   >
-                    <Save className="w-[1vw] h-[1vw]" /> Import Records
+                    <Save className="w-3.5 h-3.5" /> Import Records
                   </button>
                 </div>
               )}

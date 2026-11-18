@@ -70,19 +70,19 @@ export const CustomTooltip = ({
                   : "translate(-50%, -100%)",
               zIndex: 99999,
             }}
-            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+            className="flex items-center bg-slate-900 text-white rounded-md px-2 py-1 text-sm font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
           >
             {tooltipContent ? tooltipContent : <span>{text}</span>}
             <div
-              className={`absolute w-0 h-0 border-[0.25vw] ${
+              className={`absolute w-0 h-0 border-[4px] ${
                 coords.side === "bottom"
                   ? "bottom-full border-transparent border-b-slate-900"
                   : "top-full border-transparent border-t-slate-900"
               } ${
                 coords.align === "top-start"
-                  ? "left-[0.6vw]"
+                  ? "left-[9px]"
                   : coords.align === "top-end"
-                  ? "right-[0.6vw]"
+                  ? "right-[9px]"
                   : "left-1/2 -translate-x-1/2"
               }`}
             />
@@ -97,9 +97,9 @@ export const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => 
   const hasExtra = Boolean(contactNumber || partyCode);
 
   return (
-    <div className="flex items-center gap-[0.35vw] max-w-full">
+    <div className="flex items-center gap-1.5 max-w-full">
       <CustomTooltip text={customerName} position="top-start" className="min-w-0 flex-1">
-        <span className="font-medium text-black text-[0.82vw] truncate block">
+        <span className="font-medium text-black text-sm truncate block">
           {customerName || "—"}
         </span>
       </CustomTooltip>
@@ -108,19 +108,19 @@ export const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => 
         <CustomTooltip
           position="top-start"
           content={
-            <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
-              <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw]">
+            <div className="flex flex-col gap-1 text-left py-px">
+              <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-1 mb-px">
                 {customerName || "Customer Details"}
               </div>
               {contactNumber && (
-                <div className="flex items-center gap-[0.3vw] text-sky-300">
-                  <Phone className="w-[0.65vw] h-[0.65vw] text-sky-400 shrink-0" />
+                <div className="flex items-center gap-1 text-sky-300">
+                  <Phone className="w-2.5 h-2.5 text-sky-400 shrink-0" />
                   <span>{contactNumber}</span>
                 </div>
               )}
               {partyCode && (
-                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.64vw]">
-                  <span className="text-slate-500 font-sans">ID:</span>
+                <div className="flex items-center gap-1 text-slate-700 font-mono text-xs">
+                  <span className="text-slate-700 font-sans">ID:</span>
                   <span>{partyCode}</span>
                 </div>
               )}
@@ -130,9 +130,9 @@ export const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => 
           <button
             type="button"
             tabIndex={-1}
-            className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+            className="p-0.5 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
           >
-            <Info className="w-[0.78vw] h-[0.78vw]" />
+            <Info className="w-3 h-3" />
           </button>
         </CustomTooltip>
       )}

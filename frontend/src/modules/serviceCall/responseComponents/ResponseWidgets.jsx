@@ -19,7 +19,7 @@ export const Badge = ({ label, color = "gray" }) => {
   };
   return (
     <span
-      className={`text-[0.68vw] px-[0.6vw] py-[0.2vw] rounded-full border font-bold whitespace-nowrap shadow-sm transition-all duration-300 ${map[color] || map.gray}`}
+      className={`text-sm px-2.5 py-1 rounded-full border font-bold whitespace-nowrap shadow-sm transition-all duration-300 ${map[color] || map.gray}`}
     >
       {label}
     </span>
@@ -38,41 +38,41 @@ export const ContactInfoBar = ({ entry }) => {
     <motion.div
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mx-[0.9vw] mb-[0.6vw] bg-slate-50/85 backdrop-blur-sm border border-slate-400 rounded-[0.6vw] px-[0.7vw] py-[0.6vw] flex items-center gap-[1.6vw] flex-wrap shadow-inner"
+      className="mx-3.5 mb-2.5 bg-slate-50/85 backdrop-blur-sm border border-slate-400 rounded-lg px-2.5 py-2.5 flex items-center gap-6 flex-wrap shadow-inner"
     >
       {entry.contactPerson && (
-        <div className="flex items-center gap-[0.4vw] text-[0.85vw] text-slate-800 font-bold hover:text-slate-950 transition-colors">
-          <User className="w-[1vw] h-[1vw] text-slate-650 flex-shrink-0" />
+        <div className="flex items-center gap-1.5 text-sm text-slate-800 font-bold hover:text-slate-950 transition-colors">
+          <User className="w-3.5 h-3.5 text-slate-650 flex-shrink-0" />
           <span>{entry.contactPerson}</span>
         </div>
       )}
       {entry.contactNumber && (
         <a
           href={`tel:${entry.contactNumber}`}
-          className="flex items-center gap-[0.4vw] text-[0.85vw] text-slate-850 font-bold hover:text-indigo-700 transition-colors"
+          className="flex items-center gap-1.5 text-sm text-slate-850 font-bold hover:text-indigo-700 transition-colors"
         >
-          <Phone className="w-[1vw] h-[1vw] text-slate-650 flex-shrink-0" />
+          <Phone className="w-3.5 h-3.5 text-slate-650 flex-shrink-0" />
           <span className="font-mono">{entry.contactNumber}</span>
         </a>
       )}
       {entry.emailId && (
         <a
           href={`mailto:${entry.emailId}`}
-          className="flex items-center gap-[0.4vw] text-[0.85vw] text-slate-850 font-bold hover:text-indigo-700 transition-colors"
+          className="flex items-center gap-1.5 text-sm text-slate-850 font-bold hover:text-indigo-700 transition-colors"
         >
-          <Mail className="w-[1vw] h-[1vw] text-slate-650 flex-shrink-0" />
+          <Mail className="w-3.5 h-3.5 text-slate-650 flex-shrink-0" />
           <span className="font-mono">{entry.emailId}</span>
         </a>
       )}
       {entry.location && (
-        <div className="flex items-center gap-[0.4vw] text-[0.85vw] text-slate-800 font-bold">
-          <MapPin className="w-[1vw] h-[1vw] text-slate-650 flex-shrink-0" />
+        <div className="flex items-center gap-1.5 text-sm text-slate-800 font-bold">
+          <MapPin className="w-3.5 h-3.5 text-slate-650 flex-shrink-0" />
           <span>{entry.location}</span>
         </div>
       )}
       {entry.site && (
-        <div className="flex items-center gap-[0.4vw] text-[0.85vw] text-slate-800 font-bold">
-          <span className="text-[0.7vw] uppercase font-bold text-slate-500">Site:</span>
+        <div className="flex items-center gap-1.5 text-sm text-slate-800 font-bold">
+          <span className="text-sm uppercase font-bold text-slate-700">Site:</span>
           <span>{entry.site}</span>
         </div>
       )}
@@ -115,8 +115,8 @@ export const ProductSLATimer = ({ product, globalTimer }) => {
 
   if (product._attended) {
     return (
-      <div className="flex items-center gap-[0.25vw] px-[0.5vw] py-[0.2vw] rounded-[0.4vw] bg-emerald-50 text-emerald-700 border border-emerald-350 font-bold text-[0.68vw] shadow-sm">
-        <CheckSquare className="w-[0.7vw] h-[0.7vw]" />
+      <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-350 font-bold text-sm shadow-sm">
+        <CheckSquare className="w-2.5 h-2.5" />
         Attended
       </div>
     );
@@ -126,9 +126,9 @@ export const ProductSLATimer = ({ product, globalTimer }) => {
   if (!lastEsc && globalTimer) {
     return (
       <div
-        className={`flex items-center gap-[0.25vw] px-[0.5vw] py-[0.2vw] rounded-[0.4vw] font-mono text-[0.68vw] font-bold shadow-sm ${globalTimer.isExpired ? "bg-red-55 text-red-700 border border-red-350 animate-pulse" : globalTimer.isUrgent ? "bg-amber-55 text-amber-800 border border-amber-350" : "bg-blue-55 text-blue-700 border border-blue-350"}`}
+        className={`flex items-center gap-1 px-2 py-1 rounded-md font-mono text-sm font-bold shadow-sm ${globalTimer.isExpired ? "bg-red-55 text-red-700 border border-red-350 animate-pulse" : globalTimer.isUrgent ? "bg-amber-55 text-amber-800 border border-amber-350" : "bg-blue-55 text-blue-700 border border-blue-350"}`}
       >
-        <Clock className="w-[0.7vw] h-[0.7vw]" />
+        <Clock className="w-2.5 h-2.5" />
         {globalTimer.isExpired ? "Escalating" : globalTimer.remainingFormatted}
       </div>
     );
@@ -137,9 +137,9 @@ export const ProductSLATimer = ({ product, globalTimer }) => {
   const isOverdue = timeLeft === "overdue";
   return (
     <div
-      className={`flex items-center gap-[0.25vw] px-[0.5vw] py-[0.2vw] rounded-[0.4vw] font-mono text-[0.68vw] font-bold shadow-sm ${isOverdue ? "bg-red-55 text-red-700 border border-red-350 animate-pulse" : "bg-blue-55 text-blue-700 border border-blue-350"}`}
+      className={`flex items-center gap-1 px-2 py-1 rounded-md font-mono text-sm font-bold shadow-sm ${isOverdue ? "bg-red-55 text-red-700 border border-red-350 animate-pulse" : "bg-blue-55 text-blue-700 border border-blue-350"}`}
     >
-      <Clock className="w-[0.7vw] h-[0.7vw]" />
+      <Clock className="w-2.5 h-2.5" />
       {isOverdue ? "SLA Breached" : timeLeft}
     </div>
   );

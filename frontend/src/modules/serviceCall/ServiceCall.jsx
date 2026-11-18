@@ -356,14 +356,14 @@ const avatarColor = (name = "") => {
 
 const Avatar = ({ name, size = "md", ring = false, title }) => {
   const sz = {
-    sm: "w-[1.4vw] h-[1.4vw] text-[0.52vw]",
-    md: "w-[1.8vw] h-[1.8vw] text-[0.65vw]",
-    lg: "w-[2.4vw] h-[2.4vw] text-[0.82vw]",
+    sm: "w-5 h-5 text-xs",
+    md: "w-6.5 h-6.5 text-xs",
+    lg: "w-9 h-9 text-xs",
   };
   return (
     <div
       title={title || name}
-      className={`rounded-full bg-gradient-to-br ${avatarColor(name)} flex items-center justify-center font-bold text-white flex-shrink-0 ${sz[size]} ${ring ? "ring-[0.12vw] ring-white" : ""}`}
+      className={`rounded-full bg-gradient-to-br ${avatarColor(name)} flex items-center justify-center font-bold text-white flex-shrink-0 ${sz[size]} ${ring ? "ring-[2px] ring-white" : ""}`}
     >
       {initials(name)}
     </div>
@@ -760,61 +760,61 @@ const CallSummaryModal = ({ row, employees, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-[2vw] bg-black/60 backdrop-blur-sm">
-      <div className="bg-white rounded-[0.5vw] w-[50vw] max-h-[85vh] flex flex-col overflow-hidden shadow-2xl relative border border-gray-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-7 bg-black/60 backdrop-blur-sm">
+      <div className="bg-white rounded-lg w-[720px] max-h-[85vh] flex flex-col overflow-hidden shadow-2xl relative border border-gray-200">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-[1.5vw] py-[1vw] flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="p-[0.5vw] bg-gray-100 border border-gray-200 rounded-[0.5vw]">
-              <ClipboardList className="w-[1.2vw] h-[1.2vw] text-gray-600" />
+        <div className="bg-white border-b border-gray-200 px-5.5 py-3.5 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gray-100 border border-gray-200 rounded-lg">
+              <ClipboardList className="w-4 h-4 text-gray-600" />
             </div>
             <div>
-              <h2 className="text-gray-900 text-[1.1vw] font-bold leading-tight">
+              <h2 className="text-gray-900 text-xs font-bold leading-tight">
                 Call Summary
               </h2>
-              <p className="text-gray-500 text-[0.7vw] font-medium mt-[0.1vw]">
+              <p className="text-gray-700 text-sm font-medium mt-px">
                 {row.callNumber}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-[1vw]">
-            <div className="flex bg-gray-100 rounded-[0.4vw] p-[0.2vw] border border-gray-200 shadow-inner">
+          <div className="flex items-center gap-3.5">
+            <div className="flex bg-gray-100 rounded-md p-1 border border-gray-200 shadow-inner">
               <button
                 onClick={() => setSummaryType("latest")}
-                className={`px-[1vw] py-[0.35vw] text-[0.7vw] font-bold rounded-[0.3vw] transition-all cursor-pointer ${summaryType === "latest" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-700"}`}
+                className={`px-3.5 py-1.5 text-sm font-bold rounded-md transition-all cursor-pointer ${summaryType === "latest" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-700 hover:text-gray-700"}`}
               >
                 Latest Summary
               </button>
               <button
                 onClick={() => setSummaryType("full")}
-                className={`px-[1vw] py-[0.35vw] text-[0.7vw] font-bold rounded-[0.3vw] transition-all cursor-pointer ${summaryType === "full" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-700"}`}
+                className={`px-3.5 py-1.5 text-sm font-bold rounded-md transition-all cursor-pointer ${summaryType === "full" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-700 hover:text-gray-700"}`}
               >
                 Full Summary
               </button>
             </div>
             <button
               onClick={handleCopy}
-              className="flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vw] bg-white hover:bg-gray-50 transition-colors rounded-[0.4vw] text-gray-700 text-[0.75vw] font-semibold border border-gray-300 shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 transition-colors rounded-md text-gray-700 text-xs font-semibold border border-gray-300 shadow-sm"
             >
               {copied ? (
-                <Check className="w-[0.9vw] h-[0.9vw] text-green-600" />
+                <Check className="w-3.5 h-3.5 text-green-600" />
               ) : (
-                <Copy className="w-[0.9vw] h-[0.9vw] text-gray-500" />
+                <Copy className="w-3.5 h-3.5 text-gray-700" />
               )}
               {copied ? "Copied!" : "Copy"}
             </button>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer p-[0.4vw] rounded-full"
+              className="text-gray-700 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer p-1.5 rounded-full"
             >
-              <X className="w-[1.1vw] h-[1.1vw]" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-[1.5vw] bg-gray-50/50">
-          <pre className="whitespace-pre-wrap text-[0.82vw] font-mono text-gray-800 bg-white p-[1.2vw] rounded-[0.5vw] border border-gray-200 shadow-sm leading-relaxed">
+        <div className="flex-1 overflow-auto p-5.5 bg-gray-50/50">
+          <pre className="whitespace-pre-wrap text-xs font-mono text-gray-800 bg-white p-4 rounded-lg border border-gray-200 shadow-sm leading-relaxed">
             {generateSummary()}
           </pre>
         </div>
@@ -862,15 +862,15 @@ const EscalationTimer = ({ target, isCritical }) => {
 
   if (isCritical) {
     return (
-      <div className="flex items-center gap-[0.8vw] bg-red-600 border border-red-700 px-[1.2vw] py-[0.6vw] rounded-[0.6vw] shadow-lg animate-in fade-in zoom-in duration-300">
-        <div className="p-[0.4vw] bg-white/20 rounded-full">
-          <AlertCircle className="w-[1.2vw] h-[1.2vw] text-white animate-pulse" />
+      <div className="flex items-center gap-3 bg-red-600 border border-red-700 px-4 py-2.5 rounded-lg shadow-lg animate-in fade-in zoom-in duration-300">
+        <div className="p-1.5 bg-white/20 rounded-full">
+          <AlertCircle className="w-4 h-4 text-white animate-pulse" />
         </div>
         <div className="flex flex-col">
-          <span className="text-[0.65vw] text-red-100 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
+          <span className="text-xs text-red-100 font-extrabold uppercase tracking-widest leading-none mb-1">
             System Priority
           </span>
-          <span className="text-[1.1vw] font-black text-white leading-none uppercase tracking-tight">
+          <span className="text-xs font-black text-white leading-none uppercase tracking-tight">
             Moved to Critical Zone
           </span>
         </div>
@@ -879,24 +879,24 @@ const EscalationTimer = ({ target, isCritical }) => {
   }
 
   return (
-    <div className="flex items-center gap-[0.8vw] bg-amber-50/80 border border-amber-200 px-[1vw] py-[0.5vw] rounded-[0.5vw] shadow-sm">
-      <div className="p-[0.35vw] bg-amber-100 rounded-full">
-        <Clock className="w-[1.1vw] h-[1.1vw] text-amber-600 animate-pulse" />
+    <div className="flex items-center gap-3 bg-amber-50/80 border border-amber-200 px-3.5 py-2 rounded-lg shadow-sm">
+      <div className="p-1.5 bg-amber-100 rounded-full">
+        <Clock className="w-4 h-4 text-amber-600 animate-pulse" />
       </div>
       <div className="flex flex-col">
-        <span className="text-[0.6vw] text-amber-600 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
+        <span className="text-xs text-amber-600 font-extrabold uppercase tracking-widest leading-none mb-1">
           Next Escalation In
         </span>
-        <span className="text-[1vw] font-mono font-black text-amber-700 leading-none">
+        <span className="text-xs font-mono font-black text-amber-700 leading-none">
           {timeLeft}
         </span>
       </div>
       {target.dept && (
-        <div className="ml-auto flex flex-col items-end border-l border-amber-200 pl-[1vw]">
-          <span className="text-[0.6vw] text-amber-500 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
+        <div className="ml-auto flex flex-col items-end border-l border-amber-200 pl-3.5">
+          <span className="text-xs text-amber-500 font-extrabold uppercase tracking-widest leading-none mb-1">
             To Department
           </span>
-          <span className="text-[0.85vw] font-bold text-slate-700 leading-none">
+          <span className="text-sm font-bold text-slate-700 leading-none">
             {target.dept}
           </span>
         </div>
@@ -965,45 +965,45 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
   };
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-white w-[32vw] rounded-[0.6vw] shadow-2xl flex flex-col max-h-[80vh]">
-        <div className="px-[1.2vw] py-[0.8vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-          <h2 className="text-[1vw] font-semibold text-gray-800 flex items-center gap-[0.5vw]">
-            <Icon className="w-[1.1vw] h-[1.1vw]" />
+      <div className="bg-white w-[461px] rounded-lg shadow-2xl flex flex-col max-h-[80vh]">
+        <div className="px-4 py-3 border-b border-slate-400 flex justify-between items-center bg-gray-50">
+          <h2 className="text-xs font-semibold text-gray-800 flex items-center gap-2">
+            <Icon className="w-4 h-4" />
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-700 cursor-pointer"
+            className="text-gray-700 hover:text-gray-700 cursor-pointer"
           >
-            <X className="w-[1.1vw] h-[1.1vw]" />
+            <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="px-[1.2vw] pt-[1vw] pb-[0.6vw]">
-          <div className="flex gap-[0.5vw]">
+        <div className="px-4 pt-3.5 pb-2.5">
+          <div className="flex gap-2">
             <input
               ref={inputRef}
               type="text"
               value={newValue}
               onChange={(e) => setNewValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              className="flex-1 border border-gray-400 rounded-[0.4vw] px-[0.7vw] py-[0.55vw] text-[0.85vw] outline-none focus:border-gray-400"
+              className="flex-1 border border-gray-400 rounded-md px-2.5 py-2 text-sm outline-none focus:border-gray-400"
             />
             <button
               type="button"
               onClick={handleAdd}
               disabled={!newValue.trim()}
-              className="px-[0.9vw] py-[0.55vw] bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-[0.4vw] flex items-center gap-[0.3vw] text-[0.8vw] font-medium cursor-pointer"
+              className="px-3.5 py-2 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-md flex items-center gap-1 text-xs font-medium cursor-pointer"
             >
-              <Plus className="w-[0.9vw] h-[0.9vw]" />
+              <Plus className="w-3.5 h-3.5" />
               Add
             </button>
           </div>
         </div>
-        <div className="px-[1.2vw] pb-[0.8vw] flex-1 overflow-y-auto space-y-[0.4vw]">
+        <div className="px-4 pb-3 flex-1 overflow-y-auto space-y-1.5">
           {localItems.map((item, idx) => (
             <div
               key={idx}
-              className={`flex items-center gap-[0.5vw] rounded-[0.4vw] border p-[0.5vw] ${editingIdx === idx ? "border-gray-400 bg-gray-50" : "border-slate-400 bg-white"}`}
+              className={`flex items-center gap-2 rounded-md border p-2 ${editingIdx === idx ? "border-gray-400 bg-gray-50" : "border-slate-400 bg-white"}`}
             >
               {editingIdx === idx ? (
                 <>
@@ -1016,29 +1016,29 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
                       if (e.key === "Enter") handleSaveEdit(idx);
                       if (e.key === "Escape") setEditingIdx(null);
                     }}
-                    className="flex-1 border border-gray-400 rounded-[0.3vw] px-[0.6vw] py-[0.4vw] text-[0.85vw] outline-none"
+                    className="flex-1 border border-gray-400 rounded-md px-2.5 py-1.5 text-sm outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => handleSaveEdit(idx)}
-                    className="text-gray-700 hover:text-gray-900 cursor-pointer p-[0.3vw]"
+                    className="text-gray-700 hover:text-gray-900 cursor-pointer p-1"
                   >
-                    <CheckCircle className="w-[1vw] h-[1vw]" />
+                    <CheckCircle className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditingIdx(null)}
-                    className="text-gray-400 hover:text-gray-600 cursor-pointer p-[0.3vw]"
+                    className="text-gray-700 hover:text-gray-600 cursor-pointer p-1"
                   >
-                    <X className="w-[1vw] h-[1vw]" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </>
               ) : (
                 <>
-                  <div className="w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 flex items-center justify-center text-[0.65vw] text-gray-500 font-bold">
+                  <div className="w-5.5 h-5.5 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-700 font-bold">
                     {idx + 1}
                   </div>
-                  <span className="flex-1 text-[0.85vw] text-gray-800 font-medium">
+                  <span className="flex-1 text-sm text-gray-800 font-medium">
                     {item}
                   </span>
                   <button
@@ -1047,28 +1047,28 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
                       setEditingIdx(idx);
                       setEditValue(item);
                     }}
-                    className="text-gray-400 hover:text-gray-700 cursor-pointer p-[0.3vw]"
+                    className="text-gray-700 hover:text-gray-700 cursor-pointer p-1"
                   >
-                    <Edit3 className="w-[0.85vw] h-[0.85vw]" />
+                    <Edit3 className="w-3 h-3" />
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(idx)}
                     disabled={localItems.length <= 1}
-                    className="text-gray-400 hover:text-red-600 disabled:text-gray-200 cursor-pointer p-[0.3vw]"
+                    className="text-gray-700 hover:text-red-600 disabled:text-gray-200 cursor-pointer p-1"
                   >
-                    <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </>
               )}
             </div>
           ))}
         </div>
-        <div className="px-[1.2vw] py-[0.8vw] border-t border-slate-400 flex justify-end gap-[0.7vw] bg-gray-50">
+        <div className="px-4 py-3 border-t border-slate-400 flex justify-end gap-2.5 bg-gray-50">
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white text-gray-700 rounded-[0.4vw] cursor-pointer text-[0.85vw] font-medium"
+            className="px-4 py-2 border border-gray-400 bg-white text-gray-700 rounded-md cursor-pointer text-sm font-medium"
           >
             Cancel
           </button>
@@ -1078,9 +1078,9 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
               onSave(localItems);
               onClose();
             }}
-            className="px-[1.2vw] py-[0.5vw] bg-gray-800 hover:bg-gray-900 text-white rounded-[0.4vw] cursor-pointer flex items-center gap-[0.4vw] text-[0.85vw] font-medium"
+            className="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-md cursor-pointer flex items-center gap-1.5 text-sm font-medium"
           >
-            <Save className="w-[0.9vw] h-[0.9vw]" />
+            <Save className="w-3.5 h-3.5" />
             Save Changes
           </button>
         </div>
@@ -1108,7 +1108,7 @@ const AvatarStack = ({ people, onClick }) => {
             key={i}
             style={{
               zIndex: shown.length - i,
-              marginLeft: i === 0 ? 0 : "-0.45vw",
+              marginLeft: i === 0 ? 0 : "-6px",
             }}
           >
             <Avatar name={p.name} size="sm" ring />
@@ -1116,14 +1116,14 @@ const AvatarStack = ({ people, onClick }) => {
         ))}
         {extra > 0 && (
           <div
-            style={{ zIndex: 0, marginLeft: "-0.45vw" }}
-            className="w-[1.4vw] h-[1.4vw] rounded-full bg-gray-200 border-[0.12vw] border-white flex items-center justify-center text-[0.52vw] font-bold text-gray-600 flex-shrink-0"
+            style={{ zIndex: 0, marginLeft: "-6px" }}
+            className="w-5 h-5 rounded-full bg-gray-200 border-[2px] border-white flex items-center justify-center text-xs font-bold text-gray-600 flex-shrink-0"
           >
             +{extra}
           </div>
         )}
       </div>
-      <span className="text-[0.62vw] text-gray-400 ml-[0.3vw] group-hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100">
+      <span className="text-xs text-gray-700 ml-1 group-hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100">
         View flow
       </span>
     </button>
@@ -1136,10 +1136,10 @@ const ProductStatusCell = ({ prod, callStatus }) => {
   const cfg = getStatusCfg(status);
   return (
     <span
-      className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.2vw] rounded text-[0.7vw] font-semibold border ${cfg.cls}`}
+      className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-semibold border ${cfg.cls}`}
     >
       <span
-        className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`}
+        className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${cfg.dot}`}
       />
       {cfg.label}
     </span>
@@ -1693,7 +1693,7 @@ export default function ServiceCall() {
   }, [enrichedCalls, filterFromDate, filterToDate, searchTerm, filterPriority]);
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-sm flex flex-col flex-1 min-h-0 overflow-hidden">
       <AnimatePresence mode="wait">
         {view === "form" ? (
           <ServiceCallForm
@@ -1720,41 +1720,41 @@ export default function ServiceCall() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
+            className="flex flex-col gap-2 h-full flex-1 min-h-0"
           >
             {/* ── 1. Top Level Scoping Toolbar: Search, Date Range, Priority & Action ── */}
-            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+            <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
               {/* Left side: Soft Pill Search Box */}
-              <div className="relative w-[18vw]">
-                <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+              <div className="relative w-[259px]">
+                <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
                 <input
                   type="text"
                   placeholder="Search customer, call no, engineer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  className="w-full pl-9 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+                    className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
                   >
-                    <X className="w-[0.7vw] h-[0.7vw]" />
+                    <X className="w-2.5 h-2.5" />
                   </button>
                 )}
               </div>
 
               {/* Right cluster: Date Range, Clear, Priority & Register Call */}
-              <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+              <div className="flex items-center gap-2.5 flex-shrink-0">
                 {/* Unified Date Range Capsule */}
-                <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-                  <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+                <div className="flex items-center gap-1.5 border border-slate-200 rounded-full h-8 px-3 bg-white text-xs shadow-2xs hover:border-slate-300 transition-all">
+                  <span className="text-slate-700 font-medium text-xs">From</span>
                   <input
                     ref={fromDateRef}
                     type="date"
                     value={filterFromDate || ""}
                     onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                    className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
                   <button
                     type="button"
@@ -1763,20 +1763,20 @@ export default function ServiceCall() {
                         try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
                       }
                     }}
-                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center mr-0.5"
                     title="Choose from date"
                   >
-                    <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                    <Calendar className="w-3 h-3 shrink-0" />
                   </button>
-                  <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-                  <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+                  <span className="text-slate-700 mx-0.5 text-sm">→</span>
+                  <span className="text-slate-700 font-medium text-xs">To</span>
                   <input
                     ref={toDateRef}
                     type="date"
                     value={filterToDate || ""}
                     min={filterFromDate || undefined}
                     onChange={(e) => setFilterToDate(e.target.value)}
-                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                    className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
                   <button
                     type="button"
@@ -1785,10 +1785,10 @@ export default function ServiceCall() {
                         try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
                       }
                     }}
-                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+                    className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center ml-px"
                     title="Choose to date"
                   >
-                    <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                    <Calendar className="w-3 h-3 shrink-0" />
                   </button>
                 </div>
 
@@ -1799,10 +1799,10 @@ export default function ServiceCall() {
                       setFilterFromDate("");
                       setFilterToDate("");
                     }}
-                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-1 h-8 px-3 rounded-full text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
                     title="Clear date filter"
                   >
-                    <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                    <RotateCcw className="w-3 h-3" />
                     <span>Clear</span>
                   </button>
                 )}
@@ -1815,10 +1815,10 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={clearAllSelected}
-                      className="flex items-center gap-[0.35vw] bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/90 px-[0.8vw] h-[2.2vw] rounded-full font-medium text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                      className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/90 px-3 h-8 rounded-full font-medium text-xs transition-all cursor-pointer shadow-2xs"
                       title="Unselect all selected calls"
                     >
-                      <X className="w-[0.8vw] h-[0.8vw] text-slate-500" />
+                      <X className="w-3 h-3 text-slate-700" />
                       <span>Unselect All</span>
                     </motion.button>
                   )}
@@ -1832,16 +1832,16 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.8vw] h-[2.2vw] rounded-full font-semibold text-[0.72vw] transition-all cursor-pointer shadow-2xs"
+                      className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-3 h-8 rounded-full font-semibold text-sm transition-all cursor-pointer shadow-2xs"
                     >
-                      <Trash2 className="w-[0.85vw] h-[0.85vw]" />
+                      <Trash2 className="w-3 h-3" />
                       Delete ({selectedItems.size})
                     </motion.button>
                   )}
                 </AnimatePresence>
 
                 {/* Priority Dropdown (Pill shaped) */}
-                <div className="w-[9.5vw]">
+                <div className="w-[137px]">
                   <CustomDropdown
                     size="sm"
                     value={filterPriority}
@@ -1850,7 +1850,7 @@ export default function ServiceCall() {
                       { value: "All", label: "All Priorities" },
                       ...PRIORITIES.map((p) => ({ value: p, label: p })),
                     ]}
-                    triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+                    triggerClassName="h-8 !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-xs"
                   />
                 </div>
 
@@ -1858,9 +1858,9 @@ export default function ServiceCall() {
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
-                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
+                    className="cursor-pointer shrink-0 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 h-8 rounded-full font-bold text-xs transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
                   >
-                    <Plus className="w-[0.9vw] h-[0.9vw]" />
+                    <Plus className="w-3.5 h-3.5" />
                     Register Call
                   </button>
                 )}
@@ -1868,11 +1868,11 @@ export default function ServiceCall() {
             </div>
 
             {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
-            <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+            <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
-              <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-200 bg-slate-50/50 shrink-0">
                 {/* Sleek Connected Segmented Track for Status Tabs */}
-                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+                <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-slate-200/90 gap-1.5 max-w-full overflow-x-auto">
                   {[
                     { label: "All", dot: "bg-blue-600" },
                     { label: "Registered", dot: "bg-blue-500" },
@@ -1891,7 +1891,7 @@ export default function ServiceCall() {
                       <button
                         key={label}
                         onClick={() => setFilterStatus(label === "All" ? "All" : label)}
-                        className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all whitespace-nowrap ${
                           isActive
                             ? "bg-blue-600 text-white shadow-xs font-semibold"
                             : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -1902,10 +1902,10 @@ export default function ServiceCall() {
                           {label}
                         </span>
                         <span
-                          className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                          className={`text-sm font-medium ml-px transition-all ${
                             isActive
-                              ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                              : "text-slate-400"
+                              ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                              : "text-slate-700"
                           }`}
                         >
                           {count}
@@ -1916,9 +1916,9 @@ export default function ServiceCall() {
                 </div>
 
                 {/* Scoped Result Count */}
-                <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+                <div className="text-xs text-slate-700 font-medium whitespace-nowrap pl-2 flex items-center gap-1">
                   <span>Showing</span>
-                  <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+                  <span className="font-bold text-slate-800 bg-slate-100 px-1.5 py-px rounded text-sm">
                     {filteredData.length}
                   </span>
                   <span>calls</span>
@@ -1927,44 +1927,44 @@ export default function ServiceCall() {
 
               <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
                 <table className="w-full text-left border-collapse">
-                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
                     <tr>
                       {canDelete && !isSupervisor && (
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[3%] text-center">
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[3%] text-center">
                           <button
                             onClick={toggleSelectPage}
                             className="flex items-center justify-center w-full cursor-pointer"
                           >
                             {isPageSelected ? (
-                              <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
+                              <CheckSquare className="w-3.5 h-3.5 text-[#1a73e8]" />
                             ) : (
-                              <Square className="w-[1vw] h-[1vw] text-slate-400 hover:text-slate-500" />
+                              <Square className="w-3.5 h-3.5 text-slate-700 hover:text-slate-700" />
                             )}
                           </button>
                         </th>
                       )}
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap w-[3.5vw]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap w-12">
                         S.No
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[158px]">
                         Call No & Date
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[216px]">
                         Customer
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[7vw]">
+                      <th className="py-2.5 px-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-[101px]">
                         Customer Type
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[216px]">
                         Product / System
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                      <th className="py-2.5 px-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-[94px]">
                         Priority
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[8vw]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[115px]">
                         Status
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[6vw]">
+                      <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[86px]">
                         Actions
                       </th>
                     </tr>
@@ -1975,10 +1975,10 @@ export default function ServiceCall() {
                       <tr>
                         <td
                           colSpan={canDelete && !isSupervisor ? 9 : 8}
-                          className="bg-blue-50/80 border-b border-blue-200 px-[1.2vw] py-[0.45vw] text-center text-[0.76vw] text-slate-700 font-medium"
+                          className="bg-blue-50/80 border-b border-blue-200 px-4 py-1.5 text-center text-xs text-slate-700 font-medium"
                         >
                           {!isAllFilteredSelected ? (
-                            <div className="flex items-center justify-center gap-[0.5vw]">
+                            <div className="flex items-center justify-center gap-2">
                               <span>
                                 All <strong className="text-slate-900">{paginatedData.length}</strong> calls on this page are selected.
                               </span>
@@ -1991,14 +1991,14 @@ export default function ServiceCall() {
                               </button>
                             </div>
                           ) : (
-                            <div className="flex items-center justify-center gap-[0.5vw]">
+                            <div className="flex items-center justify-center gap-2">
                               <span className="text-blue-900 font-semibold">
                                 ✓ All {filteredData.length} calls are selected across all pages.
                               </span>
                               <button
                                 type="button"
                                 onClick={clearAllSelected}
-                                className="font-bold text-rose-600 hover:text-rose-800 underline hover:no-underline cursor-pointer transition-colors ml-[0.3vw]"
+                                className="font-bold text-rose-600 hover:text-rose-800 underline hover:no-underline cursor-pointer transition-colors ml-1"
                               >
                                 Clear selection
                               </button>
@@ -2010,9 +2010,9 @@ export default function ServiceCall() {
                     {isLoading ? (
                       <tr>
                         <td colSpan={9} className="py-[10vh] text-center border-b border-slate-300">
-                          <div className="flex flex-col items-center justify-center gap-[1vw]">
-                            <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
-                            <span className="text-[1vw] font-medium text-blue-600">
+                          <div className="flex flex-col items-center justify-center gap-3.5">
+                            <Loader2 className="w-[43px] h-[43px] animate-spin text-blue-600" />
+                            <span className="text-xs font-medium text-blue-600">
                               Loading Service Calls...
                             </span>
                           </div>
@@ -2070,16 +2070,16 @@ export default function ServiceCall() {
                                   {canDelete && !isSupervisor && (
                                     <td
                                       rowSpan={rowCount}
-                                      className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle ${cellBg}`}
+                                      className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center align-middle ${cellBg}`}
                                     >
                                       <button
                                         onClick={() => toggleSelect(rowId)}
                                         className="flex items-center justify-center w-full cursor-pointer"
                                       >
                                         {isSelected ? (
-                                          <CheckSquare className="w-[1vw] h-[1vw] text-[#1a73e8]" />
+                                          <CheckSquare className="w-3.5 h-3.5 text-[#1a73e8]" />
                                         ) : (
-                                          <Square className="w-[1vw] h-[1vw] text-slate-300 hover:text-slate-400" />
+                                          <Square className="w-3.5 h-3.5 text-slate-600 hover:text-slate-700" />
                                         )}
                                       </button>
                                     </td>
@@ -2091,7 +2091,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap font-medium text-slate-800 text-[0.76vw] ${cellBg}`}
+                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center align-middle whitespace-nowrap font-medium text-slate-800 text-sm ${cellBg}`}
                                 >
                                   {(currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1}
                                 </td>
@@ -2101,15 +2101,15 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-sm font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
+                                  <div className="flex items-center gap-1.5 text-sm text-slate-700 font-medium leading-normal mt-1">
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
@@ -2127,7 +2127,7 @@ export default function ServiceCall() {
                                         return (
                                           <>
                                             <span>{datePart}</span>
-                                            <span className="text-slate-400 font-normal">|</span>
+                                            <span className="text-slate-700 font-normal">|</span>
                                             <span className="text-slate-600">{timePart}</span>
                                           </>
                                         );
@@ -2143,7 +2143,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[15vw] ${cellBg}`}
+                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[216px] ${cellBg}`}
                                 >
                                   <CustomerInfoCell
                                     customerName={row.customerName}
@@ -2157,11 +2157,11 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap text-[0.78vw] font-normal ${cellBg}`}
+                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center align-middle whitespace-nowrap text-xs font-normal ${cellBg}`}
                                 >
                                   {row.customerType && row.customerType !== "All" ? (
                                     <span
-                                      className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                      className={`inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-normal border shadow-2xs whitespace-nowrap ${
                                         row.customerType === "OEM"
                                           ? "bg-blue-50 text-blue-700 border-blue-200"
                                           : row.customerType === "End Customer"
@@ -2176,52 +2176,52 @@ export default function ServiceCall() {
                                       {row.customerType}
                                     </span>
                                   ) : (
-                                    <span className="text-slate-400 font-normal">—</span>
+                                    <span className="text-slate-700 font-normal">—</span>
                                   )}
                                 </td>
                               )}
 
                               {/* 3. Product / System */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[15vw]">
+                              <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[216px]">
                                 <CustomTooltip
                                   position="top-start"
                                   className="max-w-full"
                                   content={
-                                    <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
+                                    <div className="flex flex-col gap-0.5 text-left py-px">
                                       <div className="font-normal text-slate-200">
                                         {prod?.productModel || prod?.itemCode || "—"}
                                       </div>
                                       {prod?.serialNumber && (
-                                        <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
-                                          <span className="text-slate-400 font-sans">SN: </span>
+                                        <div className="text-xs text-sky-300 font-mono border-t border-slate-700/80 pt-0.5 mt-px">
+                                          <span className="text-slate-700 font-sans">SN: </span>
                                           <span>{prod.serialNumber}</span>
                                         </div>
                                       )}
                                       {prod?.callDescription && (
-                                        <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                        <div className="text-xs text-slate-600 italic border-t border-slate-700/80 pt-0.5 mt-px">
                                           {prod.callDescription}
                                         </div>
                                       )}
                                     </div>
                                   }
                                 >
-                                  <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
+                                  <div className="font-medium text-slate-900 text-sm truncate cursor-default">
                                     {prod?.productModel || prod?.itemCode || "—"}
                                   </div>
                                 </CustomTooltip>
-                                <div className="flex items-center gap-[0.3vw] mt-[0.1vw] flex-wrap">
+                                <div className="flex items-center gap-1 mt-px flex-wrap">
                                   {prod?.serialNumber && (
-                                    <span className="text-[0.66vw] text-black font-medium font-mono">
+                                    <span className="text-sm text-black font-medium font-mono">
                                       SN: {prod.serialNumber}
                                     </span>
                                   )}
                                   {prod?.errorCode && (
-                                    <span className="text-[0.66vw] text-rose-600 font-mono">
+                                    <span className="text-sm text-rose-600 font-mono">
                                       Err: {prod.errorCode}
                                     </span>
                                   )}
                                   {allProducts.length > 1 && (
-                                    <span className="text-[0.64vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                                    <span className="text-xs font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-px rounded-full">
                                       +{allProducts.length - 1} more
                                     </span>
                                   )}
@@ -2232,7 +2232,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   {(() => {
                                     const p = row.priority || "Medium";
@@ -2241,7 +2241,7 @@ export default function ServiceCall() {
                                     else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                                     else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                                     return (
-                                      <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                      <span className={`inline-flex items-center justify-center px-2 py-px rounded-full text-xs font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                         {p}
                                       </span>
                                     );
@@ -2250,7 +2250,7 @@ export default function ServiceCall() {
                               )}
 
                               {/* 5. Status & Assignee */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
+                              <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle whitespace-nowrap">
                                 {(() => {
                                   const status = getProductStatus(prod, effectiveStatus);
                                   const cfg = getStatusCfg(status);
@@ -2264,11 +2264,11 @@ export default function ServiceCall() {
                                     (row.assignedTo ? employees?.find(e => e.userId === row.assignedTo || e._id === row.assignedTo)?.name : null);
                                   return (
                                     <div>
-                                      <div className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-medium text-black">
-                                        <span className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
+                                      <div className="inline-flex items-center gap-1.5 text-xs font-medium text-black">
+                                        <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${cfg.dot}`} />
                                         <span>{cfg.label}</span>
                                       </div>
-                                      <div className="mt-[0.1vw] text-[0.68vw] text-slate-700 font-medium">
+                                      <div className="mt-px text-sm text-slate-700 font-medium">
                                         {engineerName ? (
                                           <span>to: <span className="text-black font-medium">{engineerName}</span></span>
                                         ) : (
@@ -2284,19 +2284,19 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : "bg-white"}`}
+                                  className={`py-2.5 px-2.5 border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : "bg-white"}`}
                                 >
-                                  <div className="flex items-center justify-center gap-[0.3vw] action-menu-container">
+                                  <div className="flex items-center justify-center gap-1 action-menu-container">
                                     {/* Direct 1-click Info modal */}
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         setSelectedInfoCall(row);
                                       }}
-                                      className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                      className="p-1.5 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       title="View Call Details"
                                     >
-                                      <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                      <Eye className="w-3.5 h-3.5" />
                                     </button>
 
                                     {/* 3-Dot Menu */}
@@ -2315,10 +2315,10 @@ export default function ServiceCall() {
                                           setActiveActionMenuId(rowId);
                                         }
                                       }}
-                                      className="p-[0.35vw] text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                      className="p-1.5 text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                       title="More Actions"
                                     >
-                                      <MoreVertical className="w-[0.9vw] h-[0.9vw]" />
+                                      <MoreVertical className="w-3.5 h-3.5" />
                                     </button>
                                   </div>
 
@@ -2337,16 +2337,16 @@ export default function ServiceCall() {
                                           animate={{ opacity: 1, scale: 1, y: 0 }}
                                           exit={{ opacity: 0, scale: 0.95, y: -5 }}
                                           transition={{ duration: 0.12 }}
-                                          className="min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-2xl border border-slate-300 py-[0.4vw] text-left"
+                                          className="min-w-[144px] w-max whitespace-nowrap bg-white rounded-lg shadow-2xl border border-slate-300 py-1.5 text-left"
                                         >
                                           <button
                                             onClick={() => {
                                               setActiveActionMenuId(null);
                                               setSummaryModalRow(row);
                                             }}
-                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                            className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
                                           >
-                                            <ClipboardList className="w-[0.9vw] h-[0.9vw] shrink-0" />
+                                            <ClipboardList className="w-3.5 h-3.5 shrink-0" />
                                             <span>View Summary</span>
                                           </button>
 
@@ -2356,9 +2356,9 @@ export default function ServiceCall() {
                                                 setActiveActionMenuId(null);
                                                 goToEdit(row);
                                               }}
-                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                              className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
                                             >
-                                              <Edit3 className="w-[0.9vw] h-[0.9vw] shrink-0" />
+                                              <Edit3 className="w-3.5 h-3.5 shrink-0" />
                                               <span>Edit Call</span>
                                             </button>
                                           )}
@@ -2368,9 +2368,9 @@ export default function ServiceCall() {
                                               setActiveActionMenuId(null);
                                               setHistoryModalProduct(row);
                                             }}
-                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                                            className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
                                           >
-                                            <History className="w-[0.9vw] h-[0.9vw] shrink-0" />
+                                            <History className="w-3.5 h-3.5 shrink-0" />
                                             <span>Call History</span>
                                           </button>
 
@@ -2384,9 +2384,9 @@ export default function ServiceCall() {
                                                   isBulk: false,
                                                 });
                                               }}
-                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer border-t border-slate-100"
+                                              className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer border-t border-slate-100"
                                             >
-                                              <Trash2 className="w-[0.9vw] h-[0.9vw] shrink-0 text-rose-500" />
+                                              <Trash2 className="w-3.5 h-3.5 shrink-0 text-rose-500" />
                                               <span>Delete Call</span>
                                             </button>
                                           )}
@@ -2404,14 +2404,14 @@ export default function ServiceCall() {
                       <tr>
                         <td
                           colSpan={9}
-                          className="py-[6vw] text-center border-b border-slate-300"
+                          className="py-[86px] text-center border-b border-slate-300"
                         >
-                          <div className="flex flex-col items-center justify-center gap-[0.8vw]">
-                            <div className="w-[3.6vw] h-[3.6vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                              <PhoneCall className="w-[1.8vw] h-[1.8vw]" />
+                          <div className="flex flex-col items-center justify-center gap-3">
+                            <div className="w-[52px] h-[52px] rounded-full bg-slate-100 flex items-center justify-center text-slate-700">
+                              <PhoneCall className="w-6.5 h-6.5" />
                             </div>
-                            <span className="text-[0.9vw] font-bold text-slate-700">No service calls found</span>
-                            <span className="text-[0.76vw] text-slate-400 max-w-[22vw]">
+                            <span className="text-sm font-bold text-slate-700">No service calls found</span>
+                            <span className="text-xs text-slate-700 max-w-[317px]">
                               {searchTerm || filterFromDate || filterToDate || filterStatus !== "All" || filterPriority !== "All"
                                 ? "No records match your active filters. Try adjusting your dates, search query or status tab."
                                 : "Click 'Register Call' to create your first service ticket."}
@@ -2425,8 +2425,8 @@ export default function ServiceCall() {
               </div>
 
               {/* Pagination */}
-              <div className="border-t border-slate-300 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
-                <div className="text-[0.75vw] text-slate-600 font-medium">
+              <div className="border-t border-slate-300 px-3.5 py-2.5 bg-white flex justify-between items-center rounded-b-[12px]">
+                <div className="text-xs text-slate-600 font-medium">
                   Showing{" "}
                   <span className="font-semibold text-slate-800">
                     {paginatedData.length > 0
@@ -2446,26 +2446,26 @@ export default function ServiceCall() {
                   </span>{" "}
                   entries
                 </div>
-                <div className="flex items-center gap-[0.5vw]">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+                    className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
                   >
-                    <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+                    <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
-                  <div className="flex gap-[0.3vw]">
+                  <div className="flex gap-1">
                     {[...Array(totalPages)].map((_, i) => {
                       const pNum = i + 1;
                       if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-slate-400 text-[0.75vw]">...</span>;
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-slate-700 text-xs">...</span>;
                         return null;
                       }
                       return (
                         <button
                           key={pNum}
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                          className={`w-6 h-6 flex items-center justify-center rounded-md text-xs font-medium transition-all cursor-pointer ${
                             currentPage === pNum
                               ? "bg-[#1a73e8] text-white shadow-2xs"
                               : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
@@ -2481,9 +2481,9 @@ export default function ServiceCall() {
                       setCurrentPage((p) => Math.min(totalPages, p + 1))
                     }
                     disabled={currentPage === totalPages || totalPages === 0}
-                    className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+                    className="p-1.5 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
                   >
-                    <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>

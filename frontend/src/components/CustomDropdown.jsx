@@ -37,7 +37,7 @@ const CustomDropdown = ({
   size = "md", // "sm" | "md" | "lg"
   align = "left", // "left" | "right"
   placement = "auto", // "bottom" | "top" | "auto"
-  maxHeight = "16vw",
+  maxHeight = "230px",
   renderOption,
   renderValue,
   isOpen: controlledIsOpen,
@@ -251,32 +251,32 @@ const CustomDropdown = ({
   // Size variations
   const sizeClasses = {
     sm: {
-      trigger: "py-[0.25vw] px-[0.55vw] text-[0.72vw] rounded-[0.3vw] min-h-[1.7vw]",
-      icon: "w-[0.8vw] h-[0.8vw]",
-      arrow: "w-[0.75vw] h-[0.75vw]",
-      option: "py-[0.25vw] px-[0.55vw] text-[0.72vw]",
-      badge: "text-[0.62vw] px-[0.3vw] py-[0.05vw]",
+      trigger: "py-1 px-2 text-sm rounded-md min-h-[24px]",
+      icon: "w-3 h-3",
+      arrow: "w-3 h-3",
+      option: "py-1 px-2 text-sm",
+      badge: "text-xs px-1 py-px",
     },
     md: {
-      trigger: "py-[0.38vw] px-[0.75vw] text-[0.78vw] rounded-[0.35vw] min-h-[2.1vw]",
-      icon: "w-[0.95vw] h-[0.95vw]",
-      arrow: "w-[0.85vw] h-[0.85vw]",
-      option: "py-[0.38vw] px-[0.65vw] text-[0.78vw]",
-      badge: "text-[0.66vw] px-[0.4vw] py-[0.08vw]",
+      trigger: "py-1.5 px-3 text-xs rounded-md min-h-[30px]",
+      icon: "w-3.5 h-3.5",
+      arrow: "w-3 h-3",
+      option: "py-1.5 px-2.5 text-xs",
+      badge: "text-sm px-1.5 py-px",
     },
     lg: {
-      trigger: "py-[0.5vw] px-[0.9vw] text-[0.85vw] rounded-[0.4vw] min-h-[2.5vw]",
-      icon: "w-[1.1vw] h-[1.1vw]",
-      arrow: "w-[1vw] h-[1vw]",
-      option: "py-[0.5vw] px-[0.8vw] text-[0.85vw]",
-      badge: "text-[0.72vw] px-[0.5vw] py-[0.1vw]",
+      trigger: "py-2 px-3.5 text-sm rounded-md min-h-[36px]",
+      icon: "w-4 h-4",
+      arrow: "w-3.5 h-3.5",
+      option: "py-2 px-3 text-sm",
+      badge: "text-sm px-2 py-px",
     },
   }[size] || {
-    trigger: "py-[0.38vw] px-[0.75vw] text-[0.78vw] rounded-[0.35vw]",
-    icon: "w-[0.95vw] h-[0.95vw]",
-    arrow: "w-[0.85vw] h-[0.85vw]",
-    option: "py-[0.38vw] px-[0.65vw] text-[0.78vw]",
-    badge: "text-[0.66vw] px-[0.4vw] py-[0.08vw]",
+    trigger: "py-1.5 px-3 text-xs rounded-md",
+    icon: "w-3.5 h-3.5",
+    arrow: "w-3 h-3",
+    option: "py-1.5 px-2.5 text-xs",
+    badge: "text-sm px-1.5 py-px",
   };
 
   const handleSelect = (opt) => {
@@ -319,13 +319,13 @@ const CustomDropdown = ({
     <div className={`relative flex flex-col ${className}`} ref={containerRef}>
       {/* Optional Label */}
       {label && (
-        <label className="text-[0.76vw] font-medium text-gray-700 mb-[0.25vw] flex items-center justify-between">
+        <label className="text-xs font-medium text-gray-700 mb-1 flex items-center justify-between">
           <span>{label}</span>
           {multiple && clearable && Array.isArray(value) && value.length > 0 && (
             <button
               type="button"
               onClick={handleClear}
-              className="text-[0.68vw] text-blue-600 hover:text-blue-800 cursor-pointer font-normal underline"
+              className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer font-normal underline"
             >
               Clear
             </button>
@@ -340,11 +340,11 @@ const CustomDropdown = ({
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
-        className={`w-full bg-white border flex items-center justify-between gap-[0.5vw] text-left transition-all shadow-none select-none cursor-pointer ${
+        className={`w-full bg-white border flex items-center justify-between gap-2 text-left transition-all shadow-none select-none cursor-pointer ${
           sizeClasses.trigger
         } ${
           disabled
-            ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+            ? "bg-gray-100 text-gray-700 border-gray-200 cursor-not-allowed"
             : error
             ? "border-rose-400 focus:border-rose-500 ring-2 ring-rose-100"
             : isOpen
@@ -352,12 +352,12 @@ const CustomDropdown = ({
             : "border-gray-300 hover:border-gray-400 text-gray-800"
         } ${triggerClassName}`}
       >
-        <div className="flex items-center gap-[0.45vw] truncate flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 truncate flex-1 min-w-0">
           {/* Leading Icon */}
           {icon && (
             <Icon
               icon={icon}
-              className={`${sizeClasses.icon} text-gray-400 flex-shrink-0`}
+              className={`${sizeClasses.icon} text-gray-700 flex-shrink-0`}
             />
           )}
 
@@ -373,16 +373,16 @@ const CustomDropdown = ({
                     : `${selectedOptions.length} items selected`}
                 </span>
               ) : (
-                <span className="text-gray-400 font-normal">{placeholder}</span>
+                <span className="text-gray-700 font-normal">{placeholder}</span>
               )}
             </span>
           ) : selectedOptions ? (
-            <div className="flex items-center gap-[0.4vw] truncate">
+            <div className="flex items-center gap-1.5 truncate">
               {selectedOptions.image && (
                 <img
                   src={selectedOptions.image}
                   alt=""
-                  className="w-[1.2vw] h-[1.2vw] rounded-full object-cover border border-gray-200 flex-shrink-0"
+                  className="w-4 h-4 rounded-full object-cover border border-gray-200 flex-shrink-0"
                 />
               )}
               {selectedOptions.icon && (
@@ -405,24 +405,24 @@ const CustomDropdown = ({
               )}
             </div>
           ) : (
-            <span className="text-gray-400 font-normal truncate">{placeholder}</span>
+            <span className="text-gray-700 font-normal truncate">{placeholder}</span>
           )}
         </div>
 
         {/* Trailing Controls: Clear button and Caret */}
-        <div className="flex items-center gap-[0.3vw] flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
           {clearable && !disabled && (multiple ? (value && value.length > 0) : (value !== undefined && value !== "" && value !== null)) && (
             <span
               onClick={handleClear}
-              className="p-[0.1vw] hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+              className="p-px hover:bg-gray-100 rounded-full text-gray-700 hover:text-gray-600 transition-colors"
               title="Clear selection"
             >
-              <Icon icon="solar:close-circle-bold" className="w-[0.85vw] h-[0.85vw]" />
+              <Icon icon="solar:close-circle-bold" className="w-3 h-3" />
             </span>
           )}
           <Icon
             icon="solar:alt-arrow-down-linear"
-            className={`${sizeClasses.arrow} text-gray-400 transition-transform duration-200 ${
+            className={`${sizeClasses.arrow} text-gray-700 transition-transform duration-200 ${
               isOpen ? "rotate-180 text-blue-600" : ""
             }`}
           />
@@ -432,8 +432,8 @@ const CustomDropdown = ({
       {/* Helper / Error Text */}
       {(error || helperText) && (
         <span
-          className={`text-[0.7vw] mt-[0.2vw] ${
-            error ? "text-rose-500 font-medium" : "text-gray-500"
+          className={`text-sm mt-1 ${
+            error ? "text-rose-500 font-medium" : "text-gray-700"
           }`}
         >
           {error || helperText}
@@ -454,15 +454,15 @@ const CustomDropdown = ({
               minWidth: menuCoords.width,
               zIndex: 99999,
             } : undefined}
-            className={`${usePortal ? "fixed" : `absolute ${actualPlacement === "top" ? "bottom-full mb-[0.3vw]" : "top-full mt-[0.3vw]"} ${align === "right" ? "right-0" : "left-0"} w-full`} z-[99999] min-w-[12vw] bg-white border border-gray-200 rounded-[0.45vw] shadow-xl py-[0.3vw] animate-in fade-in-50 zoom-in-95 duration-100 ${menuClassName}`}
+            className={`${usePortal ? "fixed" : `absolute ${actualPlacement === "top" ? "bottom-full mb-1" : "top-full mt-1"} ${align === "right" ? "right-0" : "left-0"} w-full`} z-[99999] min-w-[173px] bg-white border border-gray-200 rounded-md shadow-xl py-1 animate-in fade-in-50 zoom-in-95 duration-100 ${menuClassName}`}
           >
           {/* Search Box */}
           {searchable && (
-            <div className="px-[0.5vw] py-[0.35vw] border-b border-gray-100">
+            <div className="px-2 py-1.5 border-b border-gray-100">
               <div className="relative flex items-center">
                 <Icon
                   icon="solar:magnifer-linear"
-                  className="w-[0.9vw] h-[0.9vw] text-gray-400 absolute left-[0.55vw] pointer-events-none"
+                  className="w-3.5 h-3.5 text-gray-700 absolute left-[8px] pointer-events-none"
                 />
                 <input
                   ref={searchInputRef}
@@ -471,23 +471,23 @@ const CustomDropdown = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={searchPlaceholder}
-                  className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.3vw] text-[0.76vw] border border-gray-200 rounded-[0.3vw] outline-none focus:border-blue-500 bg-gray-50/50"
+                  className="w-full pl-6.5 pr-2.5 py-1 text-xs border border-gray-200 rounded-md outline-none focus:border-blue-500 bg-gray-50/50"
                   onClick={(e) => e.stopPropagation()}
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-[0.4vw] text-gray-400 hover:text-gray-600"
+                    className="absolute right-[6px] text-gray-700 hover:text-gray-600"
                   >
-                    <Icon icon="solar:close-circle-bold" className="w-[0.75vw] h-[0.75vw]" />
+                    <Icon icon="solar:close-circle-bold" className="w-3 h-3" />
                   </button>
                 )}
               </div>
 
               {/* Multi-select Quick Actions */}
               {multiple && (
-                <div className="flex items-center justify-between pt-[0.3vw] px-[0.2vw] text-[0.7vw]">
+                <div className="flex items-center justify-between pt-1 px-1 text-sm">
                   <button
                     type="button"
                     onClick={handleSelectAll}
@@ -499,7 +499,7 @@ const CustomDropdown = ({
                     <button
                       type="button"
                       onClick={handleClear}
-                      className="text-gray-500 hover:text-rose-600 cursor-pointer"
+                      className="text-gray-700 hover:text-rose-600 cursor-pointer"
                     >
                       Clear ({value.length})
                     </button>
@@ -512,7 +512,7 @@ const CustomDropdown = ({
           {/* Options List */}
           <div
             ref={optionsListRef}
-            className="overflow-y-auto space-y-[0.1vw] px-[0.3vw]"
+            className="overflow-y-auto space-y-px px-1"
             style={{ maxHeight }}
           >
             {filteredOptions.length > 0 ? (
@@ -526,11 +526,11 @@ const CustomDropdown = ({
                     data-dropdown-item
                     onClick={() => handleSelect(opt)}
                     onMouseEnter={() => setHighlightedIndex(idx)}
-                    className={`flex items-center justify-between gap-[0.4vw] rounded-[0.3vw] transition-colors cursor-pointer ${
+                    className={`flex items-center justify-between gap-1.5 rounded-md transition-colors cursor-pointer ${
                       sizeClasses.option
                     } ${
                       opt.disabled
-                        ? "opacity-40 cursor-not-allowed bg-gray-50 text-gray-400"
+                        ? "opacity-40 cursor-not-allowed bg-gray-50 text-gray-700"
                         : selected
                         ? "bg-blue-50 text-blue-700 font-medium"
                         : isHighlighted
@@ -542,14 +542,14 @@ const CustomDropdown = ({
                       renderOption(opt, { selected, isHighlighted })
                     ) : (
                       <>
-                        <div className="flex items-center gap-[0.45vw] truncate flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 truncate flex-1 min-w-0">
                           {/* Checkbox for multi-select */}
                           {multiple && (
                             <input
                               type="checkbox"
                               checked={selected}
                               onChange={() => {}}
-                              className="w-[0.85vw] h-[0.85vw] rounded border-gray-300 text-blue-600 pointer-events-none cursor-pointer"
+                              className="w-3 h-3 rounded border-gray-300 text-blue-600 pointer-events-none cursor-pointer"
                             />
                           )}
 
@@ -558,7 +558,7 @@ const CustomDropdown = ({
                             <img
                               src={opt.image}
                               alt=""
-                              className="w-[1.25vw] h-[1.25vw] rounded-full object-cover border border-gray-200 flex-shrink-0"
+                              className="w-4.5 h-4.5 rounded-full object-cover border border-gray-200 flex-shrink-0"
                             />
                           )}
 
@@ -566,7 +566,7 @@ const CustomDropdown = ({
                           {opt.icon && (
                             <Icon
                               icon={opt.icon}
-                              className={`${sizeClasses.icon} text-gray-500 flex-shrink-0`}
+                              className={`${sizeClasses.icon} text-gray-700 flex-shrink-0`}
                             />
                           )}
 
@@ -574,7 +574,7 @@ const CustomDropdown = ({
                           <div className="flex flex-col truncate">
                             <span className="truncate">{opt.label}</span>
                             {opt.description && (
-                              <span className="text-[0.66vw] text-gray-400 font-normal truncate">
+                              <span className="text-sm text-gray-700 font-normal truncate">
                                 {opt.description}
                               </span>
                             )}
@@ -582,7 +582,7 @@ const CustomDropdown = ({
                         </div>
 
                         {/* Trailing: Badge or Checkmark */}
-                        <div className="flex items-center gap-[0.3vw] flex-shrink-0">
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           {opt.badge && (
                             <span
                               className={`rounded font-medium ${sizeClasses.badge} ${
@@ -607,7 +607,7 @@ const CustomDropdown = ({
                 );
               })
             ) : (
-              <div className="py-[0.8vw] px-[0.6vw] text-center text-gray-400 text-[0.76vw]">
+              <div className="py-3 px-2.5 text-center text-gray-700 text-xs">
                 No options found
               </div>
             )}

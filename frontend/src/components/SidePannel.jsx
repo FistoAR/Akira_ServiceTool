@@ -14,8 +14,21 @@ import AkiraLogo from "../assets/Akira_logo.webp";
 export const SidebarContext = createContext();
 
 export function SidebarProvider({ children }) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    return window.innerWidth < 1280;
+  });
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // Auto-collapse on smaller desktop/tablet screens (< 1280px) and expand on large screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1280) {
+        setIsCollapsed(true);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Sync state if user exits or enters fullscreen via Esc or browser shortcut (e.g. F11)
   useEffect(() => {
@@ -305,27 +318,31 @@ export default function Sidebar() {
         flex flex-col bg-white relative
         transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         border-r border-slate-300 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.08)]
-        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[16vw] max-w-[16vw]"}
+        ${
+          isCollapsed
+            ? "min-w-[58px] max-w-[58px] 2xl:min-w-[68px] 2xl:max-w-[68px]"
+            : "min-w-[260px] max-w-[260px] xl:min-w-[285px] xl:max-w-[285px] 2xl:min-w-[310px] 2xl:max-w-[310px]"
+        }
       `}
       style={{ height: "100vh" }}
     >
       {/* Logo */}
       <div
         className={`flex items-center justify-center border-b border-gray-50 transition-all duration-500 ease-out ${
-          isCollapsed ? "h-[10vh] px-[0.5vw]" : "h-[12vh] px-[1vw]"
+          isCollapsed ? "h-[10vh] px-2" : "h-[12vh] px-3.5"
         }`}
       >
         <img
           src={AkiraLogo}
           alt="Logo"
           className={`transition-all duration-500 ease-out object-contain ${
-            isCollapsed ? "w-auto h-[4vw] ml-[0.2vw]" : "w-auto h-[7vh]"
+            isCollapsed ? "w-auto h-14 ml-1" : "w-auto h-[7vh]"
           }`}
         />
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-[2vh] px-[0.3vw] custom-scrollbar">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden py-[2vh] px-1 custom-scrollbar">
         <ul className="space-y-[1.5vh]">
           {navItems
             .filter((item) => item.show)
@@ -352,8 +369,8 @@ export default function Sidebar() {
                       transition-all duration-200 ease-out overflow-hidden
                       ${
                         isCollapsed
-                          ? "justify-center px-[0.6vw] py-[1.2vh]"
-                          : "px-[1vw] py-[1.2vh] gap-[1vw]"
+                          ? "justify-center px-2.5 py-[1.2vh]"
+                          : "px-3.5 py-[1.2vh] gap-3.5"
                       }
                       ${
                         active
@@ -369,8 +386,8 @@ export default function Sidebar() {
                     <div
                       className={`relative flex-shrink-0 flex items-center justify-center transition-all duration-200 ${
                         isCollapsed
-                          ? "w-[1.8vw] h-[1.8vw]"
-                          : "w-[1.4vw] h-[1.4vw]"
+                          ? "w-6.5 h-6.5"
+                          : "w-5 h-5"
                       }`}
                     >
                       {item.iconify ? (
@@ -381,7 +398,7 @@ export default function Sidebar() {
                               ? "text-blue-600"
                               : hoveredItem === item.path
                                 ? "text-blue-600"
-                                : "text-slate-500"
+                                : "text-slate-700"
                           }`}
                         />
                       ) : (
@@ -399,9 +416,9 @@ export default function Sidebar() {
                     </div>
 
                     <span
-                      className={`whitespace-nowrap flex-1 text-[0.85vw] transition-all duration-500 ease-out ${
+                      className={`whitespace-nowrap flex-1 text-sm 2xl:text-sm font-medium transition-all duration-500 ease-out ${
                         isCollapsed
-                          ? "w-0 opacity-0 translate-x-[-1vw] pointer-events-none"
+                          ? "w-0 opacity-0 translate-x-[-14px] pointer-events-none"
                           : "w-auto opacity-100 translate-x-0"
                       }`}
                     >
@@ -409,20 +426,20 @@ export default function Sidebar() {
                     </span>
 
                     {hasSubItems && !isCollapsed && (
-                      <div className="flex items-center gap-[0.3vw] flex-shrink-0">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <span
-                          className={`text-[0.6vw] rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
+                          className={`text-xs rounded-full w-4 h-4 flex items-center justify-center transition-all duration-200 ${
                             active
                               ? "bg-blue-200/80 text-blue-800 font-medium"
-                              : "bg-slate-100 text-slate-400 font-normal"
+                              : "bg-slate-100 text-slate-700 font-normal"
                           }`}
                         >
                           {item.subItems.length}
                         </span>
                         <svg
-                          className={`w-[0.8vw] h-[0.8vw] transition-transform duration-300 ${
+                          className={`w-3 h-3 transition-transform duration-300 ${
                             isSubMenuOpen ? "rotate-180" : ""
-                          } ${active ? "text-blue-600" : "text-slate-400"}`}
+                          } ${active ? "text-blue-600" : "text-slate-700"}`}
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -438,7 +455,7 @@ export default function Sidebar() {
                     )}
 
                     {active && (
-                      <div className="absolute left-0 top-[14%] bottom-[14%] w-[0.32vw] bg-blue-600 rounded-r-full shadow-xs" />
+                      <div className="absolute left-0 top-[14%] bottom-[14%] w-1.5 bg-blue-600 rounded-r-full shadow-xs" />
                     )}
                   </Link>
 
@@ -451,8 +468,8 @@ export default function Sidebar() {
                           : "max-h-0 opacity-0"
                       }`}
                     >
-                      <div className="mx-[0.5vw] mt-[0.6vh] mb-[0.3vh]">
-                        <div className="bg-slate-50/70 rounded-xl border border-slate-200/80 p-[0.5vw]">
+                      <div className="mx-2 mt-[0.6vh] mb-[0.3vh]">
+                        <div className="bg-slate-50/70 rounded-xl border border-slate-200/80 p-2">
                           <ul className="flex flex-col gap-[0.4vh]">
                             {item.subItems.map((subItem, subIndex) => {
                               const isSubActive = (location.pathname + location.search) === subItem.path || (location.pathname === subItem.path);
@@ -476,42 +493,42 @@ export default function Sidebar() {
                                   <Link
                                     to={subItem.path}
                                     className={`
-                                      relative flex items-center gap-[0.6vw] px-[0.7vw] py-[0.8vh] rounded-lg text-[0.76vw]
+                                      relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm 2xl:text-[13.5px]
                                       transition-all duration-200 ease-out
                                       ${
                                         isSubActive
-                                          ? "bg-white text-blue-600 font-normal shadow-xs border border-blue-200"
-                                          : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-normal"
+                                          ? "bg-white text-blue-600 font-semibold shadow-xs border border-blue-200"
+                                          : "text-slate-700 hover:bg-white/80 hover:text-slate-900 font-medium"
                                       }
                                     `}
                                   >
                                     <div
                                       className={`
-                                        flex-shrink-0 rounded-md flex items-center justify-center text-[0.6vw] font-medium
-                                        transition-all duration-200 w-[1.4vw] h-[1.4vw]
+                                        flex-shrink-0 rounded-md flex items-center justify-center text-xs 2xl:text-xs font-semibold
+                                        transition-all duration-200 w-5.5 h-5.5
                                         ${
                                           isSubActive
                                             ? "bg-blue-600 text-white"
                                             : isSubHovered
                                               ? "bg-blue-100 text-blue-600"
-                                              : "bg-slate-100 text-slate-400"
+                                              : "bg-slate-100 text-slate-700"
                                         }
                                       `}
                                     >
                                       {String(subIndex + 1).padStart(2, "0")}
                                     </div>
 
-                                    <span className="flex-1">
-                                      {subItem.label}
-                                    </span>
+                      <span className="flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
+                        {subItem.label}
+                      </span>
 
                                     <svg
-                                      className={`w-[0.6vw] h-[0.6vw] flex-shrink-0 transition-all duration-200 ${
+                                      className={`w-2.5 h-2.5 flex-shrink-0 transition-all duration-200 ${
                                         isSubActive
                                           ? "opacity-100 text-blue-600 translate-x-0"
                                           : isSubHovered
-                                            ? "opacity-100 text-slate-400 translate-x-0"
-                                            : "opacity-0 -translate-x-[0.3vw]"
+                                            ? "opacity-100 text-slate-700 translate-x-0"
+                                            : "opacity-0 -translate-x-[4px]"
                                       }`}
                                       fill="none"
                                       viewBox="0 0 24 24"
@@ -536,9 +553,9 @@ export default function Sidebar() {
 
                   {/* Collapsed tooltip */}
                   {isCollapsed && hoveredItem === item.path && (
-                    <div className="absolute left-[120%] top-1/2 -translate-y-1/2 z-[100] bg-gray-900 text-white text-[0.75vw] font-medium px-[0.8vw] py-[0.5vh] rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
+                    <div className="absolute left-[120%] top-1/2 -translate-y-1/2 z-[100] bg-gray-900 text-white text-xs font-medium px-3 py-[0.5vh] rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
                       {item.label}
-                      <div className="absolute right-full top-1/2 -translate-y-1/2 border-[0.4vw] border-transparent border-r-gray-900" />
+                      <div className="absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent border-r-gray-900" />
                     </div>
                   )}
                 </li>
@@ -548,14 +565,14 @@ export default function Sidebar() {
       </nav>
 
       {/* Divider */}
-      <div className={isCollapsed ? "mx-[0.5vw]" : "mx-[1vw]"}>
-        <div className="h-[1px] bg-slate-200" />
+      <div className={isCollapsed ? "mx-2" : "mx-3.5"}>
+        <div className="h-px bg-slate-200" />
       </div>
 
       {/* Footer: Toggle Collapse / Expand */}
       <div
         className={`py-[1vh] transition-all duration-300 ease-out ${
-          isCollapsed ? "px-[0.3vw]" : "px-[0.8vw]"
+          isCollapsed ? "px-1" : "px-3"
         }`}
       >
         <button
@@ -563,27 +580,27 @@ export default function Sidebar() {
           className={`w-full flex items-center rounded-xl transition-all duration-200 cursor-pointer group ${
             isCollapsed
               ? "justify-center py-[0.4vh] bg-transparent"
-              : "px-[0.85vw] py-[0.8vh] justify-between text-slate-700 hover:text-blue-700 bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 shadow-2xs hover:shadow-xs"
+              : "px-3 py-[0.8vh] justify-between text-slate-700 hover:text-blue-700 bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-200 shadow-2xs hover:shadow-xs"
           }`}
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {!isCollapsed && (
-            <span className="text-[0.76vw] font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">
+            <span className="text-xs font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">
               Collapse menu
             </span>
           )}
           <div
             className={`rounded-xl flex items-center justify-center transition-all duration-200 ${
               isCollapsed
-                ? "w-[2.4vw] h-[2.4vw] bg-blue-50 hover:bg-blue-600 border border-blue-200 hover:border-blue-600 text-[#1a73e8] hover:text-white shadow-2xs hover:shadow-md"
-                : "w-[1.8vw] h-[1.8vw] bg-blue-50 group-hover:bg-blue-600 border border-blue-200 group-hover:border-blue-600 text-[#1a73e8] group-hover:text-white shadow-2xs"
+                ? "w-9 h-9 bg-blue-50 hover:bg-blue-600 border border-blue-200 hover:border-blue-600 text-[#1a73e8] hover:text-white shadow-2xs hover:shadow-md"
+                : "w-6.5 h-6.5 bg-blue-50 group-hover:bg-blue-600 border border-blue-200 group-hover:border-blue-600 text-[#1a73e8] group-hover:text-white shadow-2xs"
             }`}
           >
             <svg
               className={`transition-all duration-300 ${
                 isCollapsed
-                  ? "w-[1.15vw] h-[1.15vw] text-[#1a73e8] group-hover:text-white group-hover:translate-x-[0.08vw]"
-                  : "w-[0.9vw] h-[0.9vw] rotate-180 text-[#1a73e8] group-hover:text-white"
+                  ? "w-4 h-4 text-[#1a73e8] group-hover:text-white group-hover:translate-x-[1px]"
+                  : "w-3.5 h-3.5 rotate-180 text-[#1a73e8] group-hover:text-white"
               }`}
               fill="none"
               viewBox="0 0 24 24"

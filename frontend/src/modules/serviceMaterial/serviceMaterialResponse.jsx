@@ -101,9 +101,9 @@ const Badge = ({ label, color = "gray", size = "sm" }) => {
     purple: "bg-purple-50 text-purple-700 border-purple-200",
   };
   const sizeMap = {
-    xs: "text-[0.58vw] px-[0.35vw] py-[0.08vw]",
-    sm: "text-[0.65vw] px-[0.45vw] py-[0.12vw]",
-    md: "text-[0.72vw] px-[0.55vw] py-[0.15vw]",
+    xs: "text-xs px-1.5 py-px",
+    sm: "text-xs px-1.5 py-0.5",
+    md: "text-sm px-2 py-0.5",
   };
   return (
     <span
@@ -163,13 +163,13 @@ const STATUS_CONFIG = {
 // ── Read-only Input Field ─────────────────────────────────────────────────────
 const RefInput = ({ label, value, icon: Icon, span = 1 }) => (
   <div
-    className={`flex flex-col gap-[0.25vw] ${span === 2 ? "col-span-2" : span === 3 ? "col-span-3" : span === 4 ? "col-span-4" : ""}`}
+    className={`flex flex-col gap-1 ${span === 2 ? "col-span-2" : span === 3 ? "col-span-3" : span === 4 ? "col-span-4" : ""}`}
   >
-    <label className="text-[0.75vw] font-semibold text-black flex items-start gap-[0.25vw] text-black">
-      {/* {Icon && <Icon className="w-[0.8vw] h-[0.8vw]" />} */}
+    <label className="text-xs font-semibold text-black flex items-start gap-1 text-black">
+      {/* {Icon && <Icon className="w-3 h-3" />} */}
       {label}
     </label>
-    <div className="bg-white border-r border-b border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden">
+    <div className="bg-white border-r border-b border-slate-300 rounded-md py-1.5 px-2.5 text-xs text-gray-900 break-words whitespace-normal overflow-hidden">
       {value || "—"}
     </div>
   </div>
@@ -202,9 +202,9 @@ const StatsBar = ({
   totalClaimed,
 }) => {
   return (
-    <div className="flex items-center justify-between gap-[1vw] w-full flex-wrap">
+    <div className="flex items-center justify-between gap-3.5 w-full flex-wrap">
       {/* Sleek Connected Segmented Track for Status Tabs */}
-      <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+      <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-slate-200/90 gap-1.5 max-w-full overflow-x-auto">
         {STATUS_CHIPS.map(({ label, dot }) => {
           const isActive = activeFilter === label;
           const count = counts[label] ?? 0;
@@ -214,7 +214,7 @@ const StatsBar = ({
               key={label}
               type="button"
               onClick={() => onFilterChange(label)}
-              className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all whitespace-nowrap ${
                 isActive
                   ? "bg-blue-600 text-white shadow-xs font-semibold"
                   : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -225,10 +225,10 @@ const StatsBar = ({
                 {label}
               </span>
               <span
-                className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                className={`text-sm font-medium ml-px transition-all ${
                   isActive
-                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                    : "text-slate-400"
+                    ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                    : "text-slate-700"
                 }`}
               >
                 {count}
@@ -238,8 +238,8 @@ const StatsBar = ({
         })}
       </div>
 
-      <div className="flex items-center gap-[1.2vw]">
-        <div className="text-[0.72vw] text-blue-700 font-semibold bg-blue-50 border border-blue-200 px-[0.8vw] py-[0.38vw] rounded-full shadow-sm">
+      <div className="flex items-center gap-4">
+        <div className="text-sm text-blue-700 font-semibold bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full shadow-sm">
           Total Claimed: {totalClaimed}
         </div>
       </div>
@@ -252,15 +252,15 @@ const EmptyState = () => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
     animate={{ opacity: 1, scale: 1 }}
-    className="flex flex-col items-center justify-center py-[6vw] bg-white rounded-[0.6vw] border-r border-b border-slate-300"
+    className="flex flex-col items-center justify-center py-[86px] bg-white rounded-lg border-r border-b border-slate-300"
   >
-    <div className="w-[4vw] h-[4vw] rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-[1vw]">
-      <Package className="w-[2vw] h-[2vw] text-gray-800" />
+    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-3.5">
+      <Package className="w-7 h-7 text-gray-800" />
     </div>
-    <h3 className="text-[1vw] font-semibold text-gray-700 mb-[0.3vw]">
+    <h3 className="text-xs font-semibold text-gray-700 mb-1">
       No Products Assigned
     </h3>
-    <p className="text-[0.75vw] text-gray-800 text-center max-w-[18vw]">
+    <p className="text-xs text-gray-800 text-center max-w-[259px]">
       You don't have any inward products assigned to you at the moment.
     </p>
   </motion.div>
@@ -269,9 +269,9 @@ const EmptyState = () => (
 const ClaimButton = ({ onClaim }) => (
   <button
     onClick={onClaim}
-    className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.85vw] font-semibold cursor-pointer transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/10 hover:bg-emerald-700 hover:scale-105 active:scale-95"
+    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-sm font-semibold cursor-pointer transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/10 hover:bg-emerald-700 hover:scale-105 active:scale-95"
   >
-    <Plus className="w-[0.75vw] h-[0.75vw]" />
+    <Plus className="w-3 h-3" />
     Claim Item
   </button>
 );
@@ -1398,173 +1398,173 @@ export default function ServiceMaterialInwardResponse({
 
   const columns = [
     { key: "sno", label: "S. No", align: "text-center" },
-    { key: "date", label: "Date", align: "text-left", minW: "min-w-[7vw]" },
-    { key: "ref", label: "Ref No", align: "text-left", minW: "min-w-[7vw]" },
+    { key: "date", label: "Date", align: "text-left", minW: "min-w-[101px]" },
+    { key: "ref", label: "Ref No", align: "text-left", minW: "min-w-[101px]" },
     {
       key: "product",
       label: "Product",
       align: "text-left",
-      minW: "min-w-[12vw]",
+      minW: "min-w-[173px]",
     },
     {
       key: "board",
       label: "Board Type",
       align: "text-left",
-      minW: "min-w-[8vw]",
+      minW: "min-w-[115px]",
     },
     {
       key: "serial",
       label: "Serial No",
       align: "text-left",
-      minW: "min-w-[8vw]",
+      minW: "min-w-[115px]",
     },
     {
       key: "testedBy",
       label: "Tested By",
       align: "text-left",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "fqaBy",
       label: "FQA By",
       align: "text-left",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "fourM",
       label: (
         <span>
-          4M Category <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+          4M Category <span className="text-red-500 font-black ml-px">*</span>
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "errorCode",
       label: "Error Code",
       align: "text-left",
-      minW: "min-w-[8vw]",
+      minW: "min-w-[115px]",
     },
     {
       key: "problemDesc",
       label: (
         <span>
-          Problem Desc <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+          Problem Desc <span className="text-red-500 font-black ml-px">*</span>
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[12vw]",
+      minW: "min-w-[173px]",
     },
     {
       key: "pv",
       label: "PV",
       align: "text-left",
-      minW: "min-w-[7vw]",
+      minW: "min-w-[101px]",
     },
     {
       key: "cv",
       label: "CV",
       align: "text-left",
-      minW: "min-w-[7vw]",
+      minW: "min-w-[101px]",
     },
     {
       key: "designators",
       label: "Designators",
       align: "text-left",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "rootCause",
       label: (
         <span>
-          Root Cause <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+          Root Cause <span className="text-red-500 font-black ml-px">*</span>
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[12vw]",
+      minW: "min-w-[173px]",
     },
     {
       key: "faultParts",
       label: "Fault Parts",
       align: "text-left",
-      minW: "min-w-[11vw]",
+      minW: "min-w-[158px]",
     },
     {
       key: "partsReplaced",
       label: "Parts Replaced",
       align: "text-left",
-      minW: "min-w-[12vw]",
+      minW: "min-w-[173px]",
     },
     {
       key: "correctiveAction",
       label: (
         <span>
-          Corrective Action <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+          Corrective Action <span className="text-red-500 font-black ml-px">*</span>
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[12vw]",
+      minW: "min-w-[173px]",
     },
     {
       key: "timeInHours",
       label: "Time (Hrs)",
       align: "text-center",
-      minW: "min-w-[7vw]",
+      minW: "min-w-[101px]",
     },
     {
       key: "materialCost",
       label: "Material Cost",
       align: "text-right",
-      minW: "min-w-[8vw]",
+      minW: "min-w-[115px]",
     },
     {
       key: "manpowerCost",
       label: "Man Power Cost",
       align: "text-right",
-      minW: "min-w-[9vw]",
+      minW: "min-w-[130px]",
     },
     {
       key: "disposition",
       label: "Disposition",
       align: "text-left",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "status",
       label: (
         <span>
-          Status <span className="text-red-500 font-black ml-[0.1vw]">*</span>
+          Status <span className="text-red-500 font-black ml-px">*</span>
         </span>
       ),
       align: "text-center",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "completionDate",
       label: "Completion Date",
       align: "text-left",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
     {
       key: "remarks",
       label: "Action Remark",
       align: "text-center",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
-    { key: "image", label: "Image", align: "text-center", minW: "min-w-[6vw]" },
+    { key: "image", label: "Image", align: "text-center", minW: "min-w-[86px]" },
     { key: "info", label: "Info", align: "text-center" },
     {
       key: "history",
       label: "History",
       align: "text-center",
-      minW: "min-w-[6vw]",
+      minW: "min-w-[86px]",
     },
     {
       key: "action",
       label: "Action",
       align: "text-center",
-      minW: "min-w-[10vw]",
+      minW: "min-w-[144px]",
     },
   ];
 
@@ -1675,7 +1675,7 @@ export default function ServiceMaterialInwardResponse({
   }, [isFilling, selection, paginatedItems, drafts]);
 
   const getCellClass = (rowIndex, colKey) => {
-    let cls = "py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 relative ";
+    let cls = "py-2.5 px-2.5 border-r border-b border-slate-300 relative ";
     if (!selection || selection.colKey !== colKey) return cls;
     const { startRow, endRow } = selection;
     const minR = Math.min(startRow, endRow);
@@ -1705,7 +1705,7 @@ export default function ServiceMaterialInwardResponse({
         <div
           data-fill-handle="true"
           onMouseDown={(e) => handleFillHandleMouseDown(e, startRow, colKey)}
-          className="absolute bottom-[-4px] right-[-4px] w-[9px] h-[9px] bg-blue-600 border border-white cursor-crosshair z-[60] shadow-sm rounded-sm hover:scale-125 transition-transform"
+          className="absolute bottom-[-4px] right-[-4px] w-2.5 h-2.5 bg-blue-600 border border-white cursor-crosshair z-[60] shadow-sm rounded-sm hover:scale-125 transition-transform"
           title="Drag down to fill value in column"
         />
       );
@@ -1714,7 +1714,7 @@ export default function ServiceMaterialInwardResponse({
   };
 
   return (
-    <div className="w-full flex-1 min-h-0 flex flex-col font-sans overflow-hidden pb-[0.4vw]">
+    <div className="w-full flex-1 min-h-0 flex flex-col font-sans overflow-hidden pb-1.5">
       <datalist id="errorCodeList">
         {errorCodeHistory?.map((opt, i) => (
           <option key={i} value={opt} />
@@ -1726,26 +1726,26 @@ export default function ServiceMaterialInwardResponse({
         ))}
       </datalist>
       {/* ── Search & Filter Controls Toolbar ────────────────────────────────────── */}
-      <div className="bg-white rounded-full border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] mb-[0.6vw] px-[0.7vw] py-[0.4vw] flex-shrink-0 transition-all">
-        <div className="flex items-center justify-between gap-[0.6vw] flex-nowrap w-full text-[0.7vw]">
+      <div className="bg-white rounded-full border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] mb-2.5 px-2.5 py-1.5 flex-shrink-0 transition-all">
+        <div className="flex items-center justify-between gap-2.5 flex-nowrap w-full text-sm">
           {/* Left Controls: Search, Serials & More Filters Toggle */}
-          <div className="flex items-center gap-[0.5vw] flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Search Input */}
-            <div className="relative w-[18vw] min-w-[13vw] flex-shrink-0">
-              <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+            <div className="relative w-[259px] min-w-[187px] flex-shrink-0">
+              <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
               <input
                 type="text"
                 placeholder="Search product, customer, ref no…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full pl-9 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                  className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
                 >
-                  <X className="w-[0.65vw] h-[0.65vw]" />
+                  <X className="w-2.5 h-2.5" />
                 </button>
               )}
             </div>
@@ -1755,22 +1755,22 @@ export default function ServiceMaterialInwardResponse({
               <button
                 type="button"
                 onClick={openSerialModal}
-                className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-sm font-semibold cursor-pointer transition-all shadow-sm ${
                   activeSerials.length > 0 || showSerialFilterModal
                     ? "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100"
                     : "bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50/60 hover:border-indigo-300"
                 }`}
                 title="Filter by multiple serial numbers"
               >
-                <ListFilter className="w-[0.85vw] h-[0.85vw]" />
+                <ListFilter className="w-3 h-3" />
                 <span>Filter Serials</span>
                 {activeSerials.length > 0 && (
-                  <span className="px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-bold bg-white text-indigo-700 shadow-xs">
+                  <span className="px-1.5 py-px rounded-full text-xs font-bold bg-white text-indigo-700 shadow-xs">
                     {activeSerials.length}
                   </span>
                 )}
                 <ChevronDown
-                  className={`w-[0.7vw] h-[0.7vw] transition-transform duration-200 ${
+                  className={`w-2.5 h-2.5 transition-transform duration-200 ${
                     showSerialFilterModal ? "rotate-180" : ""
                   }`}
                 />
@@ -1778,14 +1778,14 @@ export default function ServiceMaterialInwardResponse({
 
               {/* Anchored Popover directly below the button */}
               {showSerialFilterModal && (
-                <div className="absolute left-0 top-full mt-[0.4vw] w-[19vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute left-0 top-full mt-1.5 w-[274px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-[0.3vw]">
-                        <span className="text-[0.72vw] font-bold text-slate-800">
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-bold text-slate-800">
                           Filter Serial Numbers
                         </span>
                         {tempSerialInput.trim() && (
-                          <span className="text-[0.62vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.35vw] py-[0.05vw] rounded">
+                          <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-px rounded">
                             {
                               tempSerialInput
                                 .split(/[,\s\n]+/)
@@ -1799,9 +1799,9 @@ export default function ServiceMaterialInwardResponse({
                       <button
                         type="button"
                         onClick={() => setShowSerialFilterModal(false)}
-                        className="p-[0.15vw] text-slate-400 hover:text-slate-600 cursor-pointer"
+                        className="p-0.5 text-slate-700 hover:text-slate-600 cursor-pointer"
                       >
-                        <X className="w-[0.75vw] h-[0.75vw]" />
+                        <X className="w-3 h-3" />
                       </button>
                     </div>
 
@@ -1810,33 +1810,33 @@ export default function ServiceMaterialInwardResponse({
                       value={tempSerialInput}
                       onChange={(e) => setTempSerialInput(e.target.value)}
                       placeholder="Paste serial numbers (one per line, comma or space separated)"
-                      className="w-full p-[0.6vw] border border-slate-300 rounded-[0.4vw] text-[0.72vw] font-mono text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 resize-none shadow-2xs placeholder:font-sans placeholder:text-slate-400"
+                      className="w-full p-2.5 border border-slate-300 rounded-md text-sm font-mono text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 resize-none shadow-2xs placeholder:font-sans placeholder:text-slate-700"
                       autoFocus
                     />
 
-                    <div className="flex items-center justify-between pt-[0.2vw] text-[0.68vw]">
+                    <div className="flex items-center justify-between pt-1 text-sm">
                       <button
                         type="button"
                         onClick={() => {
                           clearAllSerials();
                           setShowSerialFilterModal(false);
                         }}
-                        className="text-slate-500 hover:text-rose-600 font-semibold cursor-pointer"
+                        className="text-slate-700 hover:text-rose-600 font-semibold cursor-pointer"
                       >
                         Clear All
                       </button>
-                      <div className="flex items-center gap-[0.4vw]">
+                      <div className="flex items-center gap-1.5">
                         <button
                           type="button"
                           onClick={() => setShowSerialFilterModal(false)}
-                          className="px-[0.65vw] py-[0.25vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-[0.3vw] cursor-pointer"
+                          className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md cursor-pointer"
                         >
                           Cancel
                         </button>
                         <button
                           type="button"
                           onClick={applySerialModal}
-                          className="px-[0.8vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-[0.3vw] cursor-pointer shadow-2xs"
+                          className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-md cursor-pointer shadow-2xs"
                         >
                           Apply
                         </button>
@@ -1853,20 +1853,20 @@ export default function ServiceMaterialInwardResponse({
               <button
                 type="button"
                 onClick={() => setShowFiltersPanel((p) => !p)}
-                className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-sm font-semibold cursor-pointer transition-all shadow-sm ${
                   showFiltersPanel || (dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved)
                     ? "bg-blue-50 border-blue-300 text-blue-700 shadow-blue-50"
                     : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                 }`}
                 title="Filter by date range and status"
               >
-                <Filter className="w-[0.8vw] h-[0.8vw] text-blue-600" />
+                <Filter className="w-3 h-3 text-blue-600" />
                 <span>Filters</span>
                 {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
-                  <span className="w-[0.42vw] h-[0.42vw] rounded-full bg-blue-600 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
                 )}
                 <ChevronDown
-                  className={`w-[0.75vw] h-[0.75vw] text-slate-400 transition-transform duration-200 ${
+                  className={`w-3 h-3 text-slate-700 transition-transform duration-200 ${
                     showFiltersPanel ? "rotate-180 text-blue-600" : ""
                   }`}
                 />
@@ -1879,20 +1879,20 @@ export default function ServiceMaterialInwardResponse({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowFiltersPanel(false)}
                   />
-                  <div className="absolute left-0 top-full mt-[0.4vw] w-[18vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.7vw] animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute left-0 top-full mt-1.5 w-[259px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
                     {/* Date Range */}
                     <div>
-                      <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.25vw]">
+                      <label className="block text-sm text-slate-700 font-semibold mb-1">
                         Date Range
                       </label>
-                      <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[2vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
+                      <div className="flex items-center justify-between bg-white border border-slate-300 rounded-md h-7 px-2 text-sm hover:border-slate-400 transition-colors">
                         <input
                           type="date"
                           value={dateFrom}
                           onChange={(e) => setDateFrom(e.target.value)}
                           className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
                         />
-                        <span className="text-slate-400 mx-[0.25vw] shrink-0">—</span>
+                        <span className="text-slate-700 mx-1 shrink-0">—</span>
                         <input
                           type="date"
                           value={dateTo}
@@ -1905,25 +1905,25 @@ export default function ServiceMaterialInwardResponse({
 
                     {/* Quick Views */}
                     <div>
-                      <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.3vw]">
+                      <label className="block text-sm text-slate-700 font-semibold mb-1">
                         Quick Views
                       </label>
                       {filterStatus === "All" ? (
-                        <div className="flex flex-col gap-[0.4vw]">
+                        <div className="flex flex-col gap-1.5">
                           <button
                             type="button"
                             onClick={() => {
                               setShowOnlyUnclaimed((prev) => !prev);
                               if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
                             }}
-                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.72vw] font-semibold cursor-pointer transition-all ${
+                            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-sm font-semibold cursor-pointer transition-all ${
                               showOnlyUnclaimed
                                 ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                                 : "bg-slate-50/80 border-slate-200 text-slate-700 hover:bg-slate-100"
                             }`}
                           >
                             <div
-                              className={`w-[0.45vw] h-[0.45vw] rounded-full ${
+                              className={`w-1.5 h-1.5 rounded-full ${
                                 showOnlyUnclaimed ? "bg-white animate-pulse" : "bg-slate-400"
                               }`}
                             />
@@ -1936,14 +1936,14 @@ export default function ServiceMaterialInwardResponse({
                               setShowOnlyUnsaved((prev) => !prev);
                               if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
                             }}
-                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.72vw] font-semibold cursor-pointer transition-all ${
+                            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-sm font-semibold cursor-pointer transition-all ${
                               showOnlyUnsaved
                                 ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                                 : "bg-slate-50/80 border-slate-200 text-slate-700 hover:bg-slate-100"
                             }`}
                           >
                             <div
-                              className={`w-[0.45vw] h-[0.45vw] rounded-full ${
+                              className={`w-1.5 h-1.5 rounded-full ${
                                 showOnlyUnsaved ? "bg-white animate-pulse" : "bg-slate-400"
                               }`}
                             />
@@ -1951,7 +1951,7 @@ export default function ServiceMaterialInwardResponse({
                           </button>
                         </div>
                       ) : (
-                        <div className="text-[0.68vw] text-slate-400 italic bg-slate-50 p-[0.4vw] rounded-[0.3vw] border border-slate-200">
+                        <div className="text-sm text-slate-700 italic bg-slate-50 p-1.5 rounded-md border border-slate-200">
                           Quick views available on 'All' tab
                         </div>
                       )}
@@ -1959,7 +1959,7 @@ export default function ServiceMaterialInwardResponse({
 
                     {/* Reset All Filters Button */}
                     {(dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved) && (
-                      <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-between">
+                      <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between">
                         <button
                           type="button"
                           onClick={() => {
@@ -1968,15 +1968,15 @@ export default function ServiceMaterialInwardResponse({
                             setShowOnlyUnclaimed(false);
                             setShowOnlyUnsaved(false);
                           }}
-                          className="inline-flex items-center gap-[0.25vw] text-[0.7vw] font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer py-[0.1vw]"
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer py-px"
                         >
-                          <X className="w-[0.7vw] h-[0.7vw]" />
+                          <X className="w-2.5 h-2.5" />
                           <span>Reset Filters</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowFiltersPanel(false)}
-                          className="px-[0.65vw] py-[0.25vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.7vw] rounded-[0.3vw] cursor-pointer shadow-2xs"
+                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-md cursor-pointer shadow-2xs"
                         >
                           Done
                         </button>
@@ -1993,7 +1993,7 @@ export default function ServiceMaterialInwardResponse({
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-[0.6vw] gap-[1vw] flex-shrink-0">
+      <div className="flex items-center justify-between mb-2.5 gap-3.5 flex-shrink-0">
         {/* Left — Status Filter Chips */}
         <div className="flex-1 min-w-0">
           {myItems.length >= 0 && (
@@ -2011,17 +2011,17 @@ export default function ServiceMaterialInwardResponse({
 
       {/* Content */}
       {initialLoading ? (
-        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-collapse">
-              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
                 <tr className="bg-[#E9EDF7]">
                   {columns.map((col) => {
                     const isAction = col.key === "action";
                     return (
                       <th
                         key={col.key}
-                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
+                        className={`${col.width || col.minW || ""} ${col.align} py-2.5 px-2.5 font-bold text-slate-700 uppercase tracking-wider text-xs whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
                       >
                         {col.label}
                       </th>
@@ -2031,10 +2031,10 @@ export default function ServiceMaterialInwardResponse({
               </thead>
               <tbody>
                 <tr>
-                  <td colSpan={columns.length} className="text-center py-[6vw]">
-                    <div className="flex flex-col items-center gap-[0.7vw]">
-                      <Loader2 className="w-[1.8vw] h-[1.8vw] text-blue-600 animate-spin" />
-                      <span className="text-[0.82vw] font-semibold text-gray-500">
+                  <td colSpan={columns.length} className="text-center py-[86px]">
+                    <div className="flex flex-col items-center gap-2.5">
+                      <Loader2 className="w-6.5 h-6.5 text-blue-600 animate-spin" />
+                      <span className="text-xs font-semibold text-gray-700">
                         Loading service material data…
                       </span>
                     </div>
@@ -2047,19 +2047,19 @@ export default function ServiceMaterialInwardResponse({
       ) : myItems.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
           {/* Table Container with Internal Scroll */}
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-collapse">
               {/* Table Header */}
-              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
                 <tr className="bg-[#E9EDF7]">
                   {columns.map((col) => {
                     const isAction = col.key === "action";
                     return (
                       <th
                         key={col.key}
-                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
+                        className={`${col.width || col.minW || ""} ${col.align} py-2.5 px-2.5 font-bold text-slate-700 uppercase tracking-wider text-xs whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
                       >
                         {col.label}
                       </th>
@@ -2144,11 +2144,11 @@ export default function ServiceMaterialInwardResponse({
                           <tr className="bg-slate-50/80 border-y border-slate-300">
                             <td
                               colSpan={columns.length}
-                              className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[2.4vw] z-20 shadow-2xs"
+                              className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[35px] z-20 shadow-2xs"
                             >
-                              <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
-                                <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
-                                <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
+                              <div className="flex items-center gap-2.5 sticky left-0 w-fit px-3.5 py-2 bg-slate-50 z-10">
+                                <div className="w-1.5 h-4 bg-slate-400 rounded-full" />
+                                <span className="font-semibold text-slate-800 text-xs tracking-wide">
                                   {entry.customerName}
                                 </span>
 
@@ -2157,48 +2157,48 @@ export default function ServiceMaterialInwardResponse({
                                   type="button"
                                   onClick={(e) => toggleCustomerDetails(entry.customerName, e)}
                                   title={expandedCustomerDetails[entry.customerName] ? "Collapse customer details" : "Expand customer details"}
-                                  className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.2vw] shadow-2xs"
+                                  className="px-1.5 py-0.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-sm transition-all cursor-pointer flex items-center justify-center shrink-0 ml-1 shadow-2xs"
                                 >
                                   <Icon
                                     icon={expandedCustomerDetails[entry.customerName] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
-                                    className="w-[0.75vw] h-[0.75vw]"
+                                    className="w-3 h-3"
                                   />
                                 </button>
 
                                 {/* Customer metadata badges: hidden by default, revealed on clicking chevron */}
                                 {expandedCustomerDetails[entry.customerName] && (
-                                  <div className="flex items-center gap-[0.4vw] flex-wrap animate-in fade-in duration-200">
+                                  <div className="flex items-center gap-1.5 flex-wrap animate-in fade-in duration-200">
                                     {/* Customer Code */}
                                     {entry.customerCode && (
-                                      <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.3vw]">
+                                      <span className="text-xs text-slate-700 font-medium ml-1">
                                         Code: {entry.customerCode}
                                       </span>
                                     )}
 
                                     {/* Ref No (Customer) */}
                                     {entry.refNoCustomer && (
-                                      <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-sm font-normal bg-purple-50 text-purple-600 border border-purple-200 px-2.5 py-px rounded-md whitespace-nowrap ml-1">
                                         Cust Ref: {entry.refNoCustomer}
                                       </span>
                                     )}
 
                                     {/* Ref No (Internal) */}
                                     {entry.refNoInternal && (
-                                      <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-sm font-normal bg-blue-50 text-blue-600 border border-blue-200 px-2.5 py-px rounded-md whitespace-nowrap ml-1">
                                         Int Ref: {entry.refNoInternal}
                                       </span>
                                     )}
 
                                     {/* Category (Cus Type) */}
                                     {entry.category && (
-                                      <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-sm font-normal text-slate-700 bg-slate-50 border border-slate-300 px-2.5 py-px rounded-md whitespace-nowrap ml-1">
                                         Type: {entry.category}
                                       </span>
                                     )}
 
                                     {/* Unit */}
                                     {entry.unit && (
-                                      <span className="text-[0.7vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-sm font-normal text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-px rounded-md whitespace-nowrap ml-1">
                                         Unit: {entry.unit}
                                       </span>
                                     )}
@@ -2215,14 +2215,14 @@ export default function ServiceMaterialInwardResponse({
                                 colSpan={columns.length}
                                 className="p-0 border-b border-amber-300 bg-amber-50"
                               >
-                                <div className="flex items-center gap-[1.2vw] flex-wrap sticky left-0 w-fit px-[1vw] py-[0.55vw] bg-amber-50 z-10">
-                                  <div className="flex items-center gap-[0.45vw]">
-                                    <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.74vw] font-semibold shadow-2xs">
-                                      <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
+                                <div className="flex items-center gap-4 flex-wrap sticky left-0 w-fit px-3.5 py-2 bg-amber-50 z-10">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-xs font-semibold shadow-2xs">
+                                      <Icon icon="solar:danger-triangle-linear" className="w-3.5 h-3.5 text-amber-700" />
                                       Admin Returned / Declined
                                     </span>
                                     <span
-                                      className={`inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.7vw] font-medium ${
+                                      className={`inline-flex items-center px-2 py-1 rounded-full border text-sm font-medium ${
                                         product.finalStatus === "Hold"
                                           ? "bg-rose-100 text-rose-800 border-rose-300"
                                           : product.finalStatus ===
@@ -2243,8 +2243,8 @@ export default function ServiceMaterialInwardResponse({
                                     if (!rawTimestamp) return null;
 
                                     return (
-                                      <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-700 font-medium bg-white border border-amber-200 px-[0.6vw] py-[0.2vw] rounded shadow-2xs">
-                                        <Icon icon="solar:calendar-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                                      <span className="inline-flex items-center gap-1.5 text-xs text-slate-700 font-medium bg-white border border-amber-200 px-2.5 py-1 rounded shadow-2xs">
+                                        <Icon icon="solar:calendar-linear" className="w-3.5 h-3.5 text-slate-600" />
                                         {(() => {
                                           const dt = new Date(rawTimestamp);
                                           if (Number.isNaN(dt.getTime())) return rawTimestamp;
@@ -2261,12 +2261,12 @@ export default function ServiceMaterialInwardResponse({
                                     );
                                   })()}
                                   {product.finalStatusRemarks && (
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-800 font-normal bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
-                                      <Icon icon="solar:chat-round-dots-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
+                                    <span className="inline-flex items-center gap-1.5 text-xs text-slate-800 font-normal bg-white border border-amber-200 px-2.5 py-1 rounded-md shadow-2xs">
+                                      <Icon icon="solar:chat-round-dots-linear" className="w-3.5 h-3.5 text-slate-600" />
                                       <span className="font-medium text-slate-900">Admin Reason:</span> {product.finalStatusRemarks}
                                     </span>
                                   )}
-                                  <span className="text-[0.72vw] text-amber-900 font-normal ml-auto">
+                                  <span className="text-sm text-amber-900 font-normal ml-auto">
                                     Please edit and click Re-Submit to return to Admin
                                   </span>
                                 </div>
@@ -2282,67 +2282,67 @@ export default function ServiceMaterialInwardResponse({
                           className={`transition-all duration-150 ${isHovered ? "bg-blue-50/30" : "bg-white"}`}
                         >
                           {/* S.No */}
-                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
-                            <span className="inline-flex items-center justify-center w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 text-[0.68vw] font-semibold text-gray-600">
+                          <td className="py-2.5 px-2.5 text-center border-r border-b border-slate-300 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                            <span className="inline-flex items-center justify-center w-5.5 h-5.5 rounded-full bg-gray-100 text-sm font-semibold text-gray-600">
                               {(currentPage - 1) * itemsPerPage + idx + 1}
                             </span>
                           </td>
 
                           {/* Date */}
-                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <div className="flex items-center gap-[0.3vw]">
-                              <span className="text-[0.78vw] font-medium text-slate-800 whitespace-nowrap">
+                          <td className="py-2.5 px-2.5 border-r border-b border-slate-300">
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs font-medium text-slate-800 whitespace-nowrap">
                                 {entry.date ? fmtDate(entry.date) : "—"}
                               </span>
                             </div>
                           </td>
 
                           {/* Ref No */}
-                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <span className="text-[0.78vw] font-medium text-black whitespace-nowrap">
+                          <td className="py-2.5 px-2.5 border-r border-b border-slate-300">
+                            <span className="text-xs font-medium text-black whitespace-nowrap">
                               {entry.refNoCustomer || entry.refNo || "—"}
                             </span>
                           </td>
 
                           {/* Product */}
-                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <div className="min-w-[10vw]">
+                          <td className="py-2.5 px-2.5 border-r border-b border-slate-300">
+                            <div className="min-w-[144px]">
                               <div
-                                className="text-[0.78vw] font-medium text-black break-words whitespace-normal"
+                                className="text-xs font-medium text-black break-words whitespace-normal"
                                 title={product.productDescription}
                               >
                                 {product.productDescription}
                               </div>
-                              <div className="text-[0.66vw] text-slate-700 mt-[.2vw] font-medium">
+                              <div className="text-sm text-slate-700 mt-1 font-medium">
                                 {product.productCode || "—"}
                               </div>
                             </div>
                           </td>
 
                           {/* Board Type */}
-                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <span className="text-[0.78vw] font-medium text-black whitespace-nowrap">
+                          <td className="py-2.5 px-2.5 border-r border-b border-slate-300">
+                            <span className="text-xs font-medium text-black whitespace-nowrap">
                               {product.boardType || "—"}
                             </span>
                           </td>
 
                           {/* Serial No */}
-                          <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <div className="flex items-center justify-between gap-[0.35vw] whitespace-nowrap group/sn w-full">
-                              <span className="text-[0.78vw] font-medium text-black truncate">
+                          <td className="py-2.5 px-2.5 border-r border-b border-slate-300">
+                            <div className="flex items-center justify-between gap-1.5 whitespace-nowrap group/sn w-full">
+                              <span className="text-xs font-medium text-black truncate">
                                 {product.serialNumber || "—"}
                               </span>
                               {product.serialNumber && (
                                 <button
                                   type="button"
                                   onClick={() => handleCopySerial(product.serialNumber)}
-                                  className="p-[0.2vw] text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.2vw] transition-all cursor-pointer shrink-0 opacity-70 group-hover/sn:opacity-100 ml-auto"
+                                  className="p-1 text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-sm transition-all cursor-pointer shrink-0 opacity-70 group-hover/sn:opacity-100 ml-auto"
                                   title="Copy Serial Number"
                                 >
                                   {copiedSerial === product.serialNumber ? (
-                                    <Icon icon="solar:check-read-bold" className="w-[0.85vw] h-[0.85vw] text-emerald-600" />
+                                    <Icon icon="solar:check-read-bold" className="w-3 h-3 text-emerald-600" />
                                   ) : (
-                                    <Icon icon="solar:copy-linear" className="w-[0.85vw] h-[0.85vw]" />
+                                    <Icon icon="solar:copy-linear" className="w-3 h-3" />
                                   )}
                                 </button>
                               )}
@@ -2356,7 +2356,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "testedBy")}
                           >
                             {draft ? (
-                              <div className="min-w-[8vw]">
+                              <div className="min-w-[115px]">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2368,11 +2368,11 @@ export default function ServiceMaterialInwardResponse({
                                   options={employees
                                     .filter((emp) => emp.role === "User")
                                     .map((e) => ({ value: e.name, label: e.name }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-7 !text-xs !py-1 !px-2 !rounded-md !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap">
+                              <span className="text-xs whitespace-nowrap">
                                 {product.report?.testedBy || "—"}
                               </span>
                             )}
@@ -2386,7 +2386,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "fqaBy")}
                           >
                             {draft ? (
-                              <div className="min-w-[8vw]">
+                              <div className="min-w-[115px]">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2398,11 +2398,11 @@ export default function ServiceMaterialInwardResponse({
                                   options={employees
                                     .filter((emp) => emp.role === "User")
                                     .map((e) => ({ value: e.name, label: e.name }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-7 !text-xs !py-1 !px-2 !rounded-md !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap">
+                              <span className="text-xs whitespace-nowrap">
                                 {product.report?.fqaBy || "—"}
                               </span>
                             )}
@@ -2416,7 +2416,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "fourM")}
                           >
                             {draft ? (
-                              <div className="min-w-[8vw]">
+                              <div className="min-w-[115px]">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2427,11 +2427,11 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt.name,
                                     label: opt.name,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-7 !text-xs !py-1 !px-2 !rounded-md !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap font-medium text-slate-800">
+                              <span className="text-xs whitespace-nowrap font-medium text-slate-800">
                                 {product.report?.fourMCategory || "—"}
                               </span>
                             )}
@@ -2452,11 +2452,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[86px]"
                                 placeholder="Code..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap font-medium text-slate-800">
+                              <span className="text-xs whitespace-nowrap font-medium text-slate-800">
                                 {product.report?.errorCode || "—"}
                               </span>
                             )}
@@ -2477,11 +2477,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px]"
                                 placeholder="Problem..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.problemDescription || "—"}
                               </span>
                             )}
@@ -2499,11 +2499,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
                                 onChange={(e) => hc("pv", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[86px]"
                                 placeholder="PV..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.pv || (product.report?.pvCv ? product.report.pvCv.split(',')[0]?.trim() : "—")}
                               </span>
                             )}
@@ -2521,11 +2521,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
                                 onChange={(e) => hc("cv", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[86px]"
                                 placeholder="CV..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.cv || (product.report?.pvCv ? product.report.pvCv.split(',')[1]?.trim() : "—")}
                               </span>
                             )}
@@ -2545,11 +2545,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[115px]"
                                 placeholder="Designator..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.designators || "—"}
                               </span>
                             )}
@@ -2569,11 +2569,11 @@ export default function ServiceMaterialInwardResponse({
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px] resize-y min-h-[22px]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.rootCause || "—"}
                               </span>
                             )}
@@ -2591,11 +2591,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.faultParts || ""}
                                 onChange={(e) => hc("faultParts", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[9vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[130px]"
                                 placeholder="Fault Parts..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.faultParts || "—"}
                               </span>
                             )}
@@ -2615,11 +2615,11 @@ export default function ServiceMaterialInwardResponse({
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px] resize-y min-h-[22px]"
                                 placeholder="Parts..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.partsReplacement || "—"}
                               </span>
                             )}
@@ -2639,11 +2639,11 @@ export default function ServiceMaterialInwardResponse({
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px] resize-y min-h-[22px]"
                                 placeholder="Action..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.correctiveAction || "—"}
                               </span>
                             )}
@@ -2661,11 +2661,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.timeInHours || ""}
                                 onChange={(e) => hc("timeInHours", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-center min-w-[5vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs text-center min-w-[72px]"
                                 placeholder="Hrs e.g. 2.5"
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800 whitespace-nowrap">
+                              <span className="text-xs font-medium text-slate-800 whitespace-nowrap">
                                 {product.report?.timeInHours ? `${product.report.timeInHours} hrs` : "—"}
                               </span>
                             )}
@@ -2683,11 +2683,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.materialCost || ""}
                                 onChange={(e) => hc("materialCost", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-right min-w-[6vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs text-right min-w-[86px]"
                                 placeholder="Cost e.g. 1500"
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800 whitespace-nowrap">
+                              <span className="text-xs font-medium text-slate-800 whitespace-nowrap">
                                 {product.report?.materialCost ? `₹${product.report.materialCost}` : "—"}
                               </span>
                             )}
@@ -2695,8 +2695,8 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           {/* Man Power Cost */}
-                          <td className="py-[0.65vw] px-[0.7vw] text-right border-r border-b border-slate-300">
-                            <span className="text-[0.75vw] font-medium text-emerald-800 whitespace-nowrap">
+                          <td className="py-2.5 px-2.5 text-right border-r border-b border-slate-300">
+                            <span className="text-xs font-medium text-emerald-800 whitespace-nowrap">
                               {draft && draft.manpowerCost != null && draft.manpowerCost !== ""
                                 ? `₹${Number(draft.manpowerCost).toFixed(2)}`
                                 : product.report?.manpowerCost != null
@@ -2712,7 +2712,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "disposition")}
                           >
                             {draft ? (
-                              <div className="min-w-[8vw]">
+                              <div className="min-w-[115px]">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2723,11 +2723,11 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt,
                                     label: opt,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-7 !text-xs !py-1 !px-2 !rounded-md !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-xs font-medium text-slate-800">
                                 {product.report?.disposition || "—"}
                               </span>
                             )}
@@ -2741,7 +2741,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "status")}
                           >
                             {draft ? (
-                              <div className="min-w-[9vw]">
+                              <div className="min-w-[130px]">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2752,14 +2752,14 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt,
                                     label: opt,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
+                                  triggerClassName="!h-7 !text-xs !py-1 !px-2 !rounded-md !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
                                 />
                               </div>
                             ) : (
                               <span
-                                className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-full border text-[0.68vw] font-semibold whitespace-nowrap ${statusCfg.bg} ${statusCfg.border} ${statusCfg.text}`}
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-sm font-semibold whitespace-nowrap ${statusCfg.bg} ${statusCfg.border} ${statusCfg.text}`}
                               >
-                                <StatusIcon className="w-[0.8vw] h-[0.8vw]" />
+                                <StatusIcon className="w-3 h-3" />
                                 {pStatus}
                               </span>
                             )}
@@ -2780,17 +2780,17 @@ export default function ServiceMaterialInwardResponse({
                                   onChange={(e) =>
                                     hc("completedDate", e.target.value)
                                   }
-                                  className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                  className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[115px]"
                                 />
                               ) : (
-                                <span className="text-[0.75vw] whitespace-nowrap font-medium text-slate-800">
+                                <span className="text-xs whitespace-nowrap font-medium text-slate-800">
                                   {product.report?.completedDate
                                     ? fmtDate(product.report.completedDate)
                                     : "—"}
                                 </span>
                               )
                             ) : (
-                              <span className="text-slate-400 text-[0.75vw] select-none">—</span>
+                              <span className="text-slate-700 text-xs select-none">—</span>
                             )}
                             {renderFillHandle(idx, "completionDate")}
                           </td>
@@ -2808,11 +2808,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[115px]"
                                 placeholder="Remark..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] text-slate-800 font-medium">
+                              <span className="text-xs text-slate-800 font-medium">
                                 {pRemark}
                               </span>
                             )}
@@ -2820,7 +2820,7 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           <td
-                            className={`py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 text-center min-w-[8vw] transition-colors ${
+                            className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center min-w-[115px] transition-colors ${
                               dragOverPid === product._pid ? "bg-blue-100/60 ring-2 ring-blue-500 ring-inset" : ""
                             }`}
                             onDragOver={(e) => {
@@ -2858,7 +2858,7 @@ export default function ServiceMaterialInwardResponse({
                             }}
                           >
                             {draft ? (
-                              <div className="flex items-center justify-center gap-[0.5vw]">
+                              <div className="flex items-center justify-center gap-2">
                                 <input
                                   type="file"
                                   id={`file-${product._pid}`}
@@ -2870,18 +2870,18 @@ export default function ServiceMaterialInwardResponse({
                                 />
                                 <label
                                   htmlFor={`file-${product._pid}`}
-                                  className={`flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] cursor-pointer transition-all shadow-sm text-[0.7vw] font-medium border ${
+                                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md cursor-pointer transition-all shadow-sm text-sm font-medium border ${
                                     dragOverPid === product._pid
                                       ? "bg-blue-600 text-white border-blue-600 ring-2 ring-blue-300 animate-pulse"
                                       : "bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white"
                                   }`}
                                   title="Click to Upload or Drag & Drop Image/PDF here"
                                 >
-                                  <Upload className="w-[0.8vw] h-[0.8vw]" />
+                                  <Upload className="w-3 h-3" />
                                   <span>{dragOverPid === product._pid ? "Drop here" : "Upload"}</span>
                                 </label>
                                 {(draft.imagePreview || draft.imageFile || draft.image) && (
-                                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-300 flex-shrink-0 relative group shadow-sm flex items-center justify-center bg-white overflow-hidden">
+                                  <div className="w-8 h-8 rounded-md border border-slate-300 flex-shrink-0 relative group shadow-sm flex items-center justify-center bg-white overflow-hidden">
                                     {draft.isPdf || (draft.image && draft.image.toLowerCase().endsWith(".pdf")) ? (
                                       <button
                                         type="button"
@@ -2900,8 +2900,8 @@ export default function ServiceMaterialInwardResponse({
                                         className="w-full h-full flex flex-col items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-0"
                                         title={draft.fileName || "PDF Document"}
                                       >
-                                        <FileText className="w-[1.1vw] h-[1.1vw]" />
-                                        <span className="text-[0.45vw] font-normal">PDF</span>
+                                        <FileText className="w-4 h-4" />
+                                        <span className="text-xs font-normal">PDF</span>
                                       </button>
                                     ) : (
                                       <>
@@ -2913,7 +2913,7 @@ export default function ServiceMaterialInwardResponse({
                                               : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`)
                                           }
                                           alt="preview"
-                                          className="w-full h-full object-cover rounded-[0.4vw] cursor-pointer"
+                                          className="w-full h-full object-cover rounded-md cursor-pointer"
                                           onClick={() => {
                                             const url = draft.imagePreview ||
                                               (draft.image.startsWith("http")
@@ -2928,7 +2928,7 @@ export default function ServiceMaterialInwardResponse({
                                         />
 
                                         {/* Hover Preview Tooltip */}
-                                        <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+0.5vw)] z-50 bg-white border border-slate-300 rounded-[0.6vw] shadow-xl p-[0.4vw] w-[12vw] pointer-events-none">
+                                        <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+7px)] z-50 bg-white border border-slate-300 rounded-lg shadow-xl p-1.5 w-[173px] pointer-events-none">
                                           <img
                                             src={
                                               draft.imagePreview ||
@@ -2937,7 +2937,7 @@ export default function ServiceMaterialInwardResponse({
                                                 : `${API_URL?.replace(/\/$/, "") || ""}${draft.image.startsWith("/") ? "" : "/"}${draft.image}`)
                                             }
                                             alt="hover-preview"
-                                            className="w-full h-auto rounded-[0.4vw] object-contain max-h-[12vw]"
+                                            className="w-full h-auto rounded-md object-contain max-h-[173px]"
                                           />
                                         </div>
                                       </>
@@ -2946,7 +2946,7 @@ export default function ServiceMaterialInwardResponse({
                                 )}
                               </div>
                             ) : product.report?.image ? (
-                              <div className="w-[2.2vw] h-[2.2vw] rounded-[0.4vw] border border-slate-300 relative group shadow-sm mx-auto flex items-center justify-center bg-white overflow-hidden">
+                              <div className="w-8 h-8 rounded-md border border-slate-300 relative group shadow-sm mx-auto flex items-center justify-center bg-white overflow-hidden">
                                 {product.report.image.toLowerCase().endsWith(".pdf") ? (
                                   <button
                                     type="button"
@@ -2963,8 +2963,8 @@ export default function ServiceMaterialInwardResponse({
                                     className="w-full h-full flex flex-col items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-0"
                                     title="View PDF"
                                   >
-                                    <FileText className="w-[1.1vw] h-[1.1vw]" />
-                                    <span className="text-[0.45vw] font-normal">PDF</span>
+                                    <FileText className="w-4 h-4" />
+                                    <span className="text-xs font-normal">PDF</span>
                                   </button>
                                 ) : (
                                   <>
@@ -2975,7 +2975,7 @@ export default function ServiceMaterialInwardResponse({
                                           : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                                       }
                                       alt="preview"
-                                      className="w-full h-full object-cover rounded-[0.4vw] cursor-pointer"
+                                      className="w-full h-full object-cover rounded-md cursor-pointer"
                                       onClick={() => {
                                         const url = product.report.image.startsWith("http")
                                           ? product.report.image
@@ -2989,7 +2989,7 @@ export default function ServiceMaterialInwardResponse({
                                     />
 
                                     {/* Hover Preview Tooltip */}
-                                    <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+0.5vw)] z-50 bg-white border border-slate-300 rounded-[0.6vw] shadow-xl p-[0.4vw] w-[12vw] pointer-events-none">
+                                    <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+7px)] z-50 bg-white border border-slate-300 rounded-lg shadow-xl p-1.5 w-[173px] pointer-events-none">
                                       <img
                                         src={
                                           product.report.image.startsWith("http")
@@ -2997,57 +2997,57 @@ export default function ServiceMaterialInwardResponse({
                                             : `${API_URL?.replace(/\/$/, "") || ""}${product.report.image.startsWith("/") ? "" : "/"}${product.report.image}`
                                         }
                                         alt="hover-preview"
-                                        className="w-full h-auto rounded-[0.4vw] object-contain max-h-[12vw]"
+                                        className="w-full h-auto rounded-md object-contain max-h-[173px]"
                                       />
                                     </div>
                                   </>
                                 )}
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] text-gray-400">
+                              <span className="text-xs text-gray-700">
                                 —
                               </span>
                             )}
                           </td>
 
                           {/* Info */}
-                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
+                          <td className="py-2.5 px-2.5 text-center border-r border-b border-slate-300">
                             <button
                               type="button"
                               onClick={() =>
                                 setInfoSelected({ entry, product })
                               }
-                              className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.7vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
+                              className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-sm font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
                               title="View Details"
                             >
-                              <Info className="w-[0.75vw] h-[0.75vw] text-slate-500 group-hover:text-blue-600" />
+                              <Info className="w-3 h-3 text-slate-700 group-hover:text-blue-600" />
                               <span>View</span>
                             </button>
                           </td>
 
                           {/* History */}
-                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
+                          <td className="py-2.5 px-2.5 text-center border-r border-b border-slate-300">
                             {product.report?.history && product.report.history.length > 0 ? (
                               <button
                                 type="button"
                                 onClick={() =>
                                   setHistorySelected({ entry, product })
                                 }
-                                className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.7vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
+                                className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-sm font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
                                 title="View History"
                               >
-                                <Clock className="w-[0.75vw] h-[0.75vw] text-slate-500 group-hover:text-blue-600" />
+                                <Clock className="w-3 h-3 text-slate-700 group-hover:text-blue-600" />
                                 <span>View</span>
                               </button>
                             ) : (
-                              <span className="text-[0.75vw] text-slate-400 select-none">
+                              <span className="text-xs text-slate-700 select-none">
                                 —
                               </span>
                             )}
                           </td>
 
                           {/* Action — Save button per record */}
-                          <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                          <td className="py-2.5 px-2.5 text-center border-r border-b border-slate-300 bg-white sticky right-0 z-10 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                             {isResubmitting ? (
                               <button
                                 onClick={async () => {
@@ -3078,28 +3078,28 @@ export default function ServiceMaterialInwardResponse({
                                   !draft?.hasChanges ||
                                   savingStates[product._pid]
                                 }
-                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
                                   savingStates[product._pid]
                                     ? "bg-amber-400 text-white cursor-not-allowed"
                                     : draft?.hasChanges
                                       ? "bg-amber-600 text-white hover:bg-amber-700 cursor-pointer shadow-md"
-                                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                      : "bg-gray-200 text-gray-700 cursor-not-allowed"
                                 }`}
                               >
                                 {savingStates[product._pid] ? (
                                   <>
-                                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                    <Loader2 className="w-3 h-3 animate-spin" />
                                     Saving...
                                   </>
                                 ) : (
                                   <>
-                                    <Save className="w-[0.75vw] h-[0.75vw]" />
+                                    <Save className="w-3 h-3" />
                                     Re-Submit
                                   </>
                                 )}
                               </button>
                             ) : isClaimedByMe && draft ? (
-                              <div className="flex items-center justify-center gap-[0.35vw]">
+                              <div className="flex items-center justify-center gap-1.5">
                                 <button
                                   onClick={async () => {
                                     const saved = await saveRow(entry, product, draft);
@@ -3115,22 +3115,22 @@ export default function ServiceMaterialInwardResponse({
                                     !draft?.hasChanges ||
                                     savingStates[product._pid]
                                   }
-                                  className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
                                     savingStates[product._pid]
                                       ? "bg-blue-400 text-white cursor-not-allowed"
                                       : draft?.hasChanges
                                         ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
-                                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                        : "bg-gray-200 text-gray-700 cursor-not-allowed"
                                   }`}
                                 >
                                   {savingStates[product._pid] ? (
                                     <>
-                                      <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                      <Loader2 className="w-3 h-3 animate-spin" />
                                       Saving...
                                     </>
                                   ) : (
                                     <>
-                                      <Save className="w-[0.75vw] h-[0.75vw]" />
+                                      <Save className="w-3 h-3" />
                                       Save
                                     </>
                                   )}
@@ -3150,10 +3150,10 @@ export default function ServiceMaterialInwardResponse({
                                         return next;
                                       });
                                     }}
-                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all cursor-pointer shadow-2xs"
+                                    className="flex items-center gap-1 px-1.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-sm font-semibold transition-all cursor-pointer shadow-2xs"
                                     title="Cancel Edit"
                                   >
-                                    <X className="w-[0.65vw] h-[0.65vw]" />
+                                    <X className="w-2.5 h-2.5" />
                                     <span>Cancel</span>
                                   </button>
                                 )}
@@ -3169,33 +3169,33 @@ export default function ServiceMaterialInwardResponse({
                                       })
                                     }
                                     disabled={unclaimingStates[product._pid]}
-                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-[0.35vw] text-[0.72vw] font-medium transition-all shadow-sm cursor-pointer"
+                                    className="flex items-center gap-1 px-1.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-md text-sm font-medium transition-all shadow-sm cursor-pointer"
                                     title="Unclaim item and return to open queue"
                                   >
                                     {unclaimingStates[product._pid] ? (
-                                      <Loader2 className="w-[0.65vw] h-[0.65vw] animate-spin text-rose-600" />
+                                      <Loader2 className="w-2.5 h-2.5 animate-spin text-rose-600" />
                                     ) : (
-                                      <Undo2 className="w-[0.65vw] h-[0.65vw]" />
+                                      <Undo2 className="w-2.5 h-2.5" />
                                     )}
                                     <span>Unclaim</span>
                                   </button>
                                 )}
                               </div>
                             ) : isClaimedByMe && isProductCompleted ? (
-                              <div className="flex items-center justify-center gap-[0.4vw]">
+                              <div className="flex items-center justify-center gap-1.5">
                                 {isAdminReturnedProduct ? (
                                   <span
-                                    className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
                                     title={`Admin Declined: ${product.finalStatusRemarks || "Needs correction"}`}
                                   >
-                                    <AlertTriangle className="w-[0.65vw] h-[0.65vw] text-rose-600" />
+                                    <AlertTriangle className="w-2.5 h-2.5 text-rose-600" />
                                     Denied / Returned
                                   </span>
                                 ) : (
                                   <span
-                                    className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
+                                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
                                   >
-                                    <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
+                                    <StatusIcon className="w-2.5 h-2.5" />
                                     {pStatus}
                                   </span>
                                 )}
@@ -3206,14 +3206,14 @@ export default function ServiceMaterialInwardResponse({
                                       [product._pid]: true,
                                     }));
                                   }}
-                                  className={`flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer ${
+                                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-sm font-semibold transition-all shadow-sm cursor-pointer ${
                                     isAdminReturnedProduct
                                       ? "bg-amber-500 hover:bg-amber-600 text-white"
                                       : "bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300"
                                   }`}
                                   title={isAdminReturnedProduct ? "Fix and re-submit this returned report" : "Edit Completed Row Directly"}
                                 >
-                                  <Edit3 className="w-[0.65vw] h-[0.65vw]" />
+                                  <Edit3 className="w-2.5 h-2.5" />
                                   <span>{isAdminReturnedProduct ? "Fix & Re-Submit" : "Edit"}</span>
                                 </button>
                               </div>
@@ -3224,11 +3224,11 @@ export default function ServiceMaterialInwardResponse({
                                 }
                               />
                             ) : (
-                              <div className="flex items-center justify-center gap-[0.4vw]">
+                              <div className="flex items-center justify-center gap-1.5">
                                 <span
-                                  className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
+                                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
                                 >
-                                  <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
+                                  <StatusIcon className="w-2.5 h-2.5" />
                                   {pStatus}
                                 </span>
                                 {(product.report || pStatus !== "Open") && (
@@ -3241,10 +3241,10 @@ export default function ServiceMaterialInwardResponse({
                                       });
                                       setEditReason("");
                                     }}
-                                    className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer"
+                                    className="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-md text-sm font-semibold transition-all shadow-sm cursor-pointer"
                                     title="Edit Report"
                                   >
-                                    <Edit3 className="w-[0.65vw] h-[0.65vw]" />
+                                    <Edit3 className="w-2.5 h-2.5" />
                                     <span>Edit</span>
                                   </button>
                                 )}
@@ -3261,9 +3261,9 @@ export default function ServiceMaterialInwardResponse({
           </div>
 
           {/* Table Footer */}
-          <div className="bg-gray-50 border-t border-slate-300 px-[1.2vw] py-[0.6vw] flex items-center justify-between flex-shrink-0">
-            <div className="flex items-center gap-[1.5vw]">
-              <span className="text-[0.75vw] text-slate-600 font-medium">
+          <div className="bg-gray-50 border-t border-slate-300 px-4 py-2.5 flex items-center justify-between flex-shrink-0">
+            <div className="flex items-center gap-5.5">
+              <span className="text-xs text-slate-600 font-medium">
                 Showing{" "}
                 <span className="font-semibold text-slate-800">
                   {myItems.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}
@@ -3280,24 +3280,24 @@ export default function ServiceMaterialInwardResponse({
               </span>
 
               {/* Pagination Controls */}
-              <div className="flex items-center gap-[0.6vw] border-l border-gray-400 pl-[1.5vw]">
+              <div className="flex items-center gap-2.5 border-l border-gray-400 pl-5.5">
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="p-[0.3vw] rounded-[0.4vw] bg-white border-r border-b border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
+                  className="p-1 rounded-md bg-white border-r border-b border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
                   title="Previous Page"
                 >
-                  <ChevronLeft className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />
+                  <ChevronLeft className="w-3.5 h-3.5 text-gray-600 group-hover:text-blue-600" />
                 </button>
 
-                <div className="flex items-center gap-[0.4vw] px-[0.6vw] py-[0.15vw] bg-blue-50 border border-blue-100 rounded-[0.3vw]">
-                  <span className="text-[0.72vw] font-semibold text-blue-700">
+                <div className="flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-50 border border-blue-100 rounded-md">
+                  <span className="text-sm font-semibold text-blue-700">
                     {currentPage}
                   </span>
-                  <span className="text-[0.65vw] font-medium text-blue-300">
+                  <span className="text-xs font-medium text-blue-300">
                     /
                   </span>
-                  <span className="text-[0.72vw] font-semibold text-gray-600">
+                  <span className="text-sm font-semibold text-gray-600">
                     {totalPages || 1}
                   </span>
                 </div>
@@ -3307,10 +3307,10 @@ export default function ServiceMaterialInwardResponse({
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages, p + 1))
                   }
-                  className="p-[0.3vw] rounded-[0.4vw] bg-white border-r border-b border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
+                  className="p-1 rounded-md bg-white border-r border-b border-slate-300 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm group cursor-pointer"
                   title="Next Page"
                 >
-                  <ChevronRight className="w-[1vw] h-[1vw] text-gray-600 group-hover:text-blue-600" />
+                  <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-blue-600" />
                 </button>
               </div>
             </div>
@@ -3319,25 +3319,25 @@ export default function ServiceMaterialInwardResponse({
               <button
                 onClick={handleBulkSave}
                 disabled={isBulkSaving || !hasAnyDraftChanges}
-                className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.4vw] rounded-[0.4vw] text-[0.75vw] font-semibold transition-all ml-[1vw] ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all ml-3.5 ${
                   isBulkSaving
                     ? "bg-emerald-400 text-white cursor-not-allowed"
                     : hasAnyDraftChanges
                       ? "bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-md shadow-emerald-900/20"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                      : "bg-gray-300 text-gray-700 cursor-not-allowed shadow-none"
                 }`}
               >
                 {isBulkSaving ? (
                   <>
-                    <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     Saving...
                   </>
                 ) : (
                   <>
-                    <Send className="w-[0.9vw] h-[0.9vw]" />
+                    <Send className="w-3.5 h-3.5" />
                     Bulk Save
                     {hasAnyDraftChanges && (
-                      <span className="ml-[0.2vw] px-[0.35vw] py-[0.05vw] bg-white/20 text-white rounded-full text-[0.65vw] font-bold">
+                      <span className="ml-1 px-1.5 py-px bg-white/20 text-white rounded-full text-xs font-bold">
                         {
                           Object.values(drafts).filter((d) => d && d.hasChanges)
                             .length
@@ -3378,35 +3378,35 @@ export default function ServiceMaterialInwardResponse({
       {/* History Modal */}
       <AnimatePresence>
         {historySelected && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-[2vw]">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-7">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] max-h-[85vh] flex flex-col overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-[605px] max-h-[85vh] flex flex-col overflow-hidden"
             >
               {/* Header */}
-              <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between">
+              <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
-                    <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
+                  <h3 className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
+                  <p className="text-xs text-slate-600 font-normal mt-0.5">
                     {historySelected.product.productDescription} (
                     <span className="font-mono font-medium text-slate-800">{historySelected.product.serialNumber}</span>)
                   </p>
                 </div>
                 <button
                   onClick={() => setHistorySelected(null)}
-                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 hover:text-slate-800 transition-colors cursor-pointer"
                 >
-                  <X className="w-[1.05vw] h-[1.05vw]" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Timeline Area */}
-              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-[#f8fafd]">
+              <div className="flex-1 overflow-y-auto p-5.5 space-y-4 bg-[#f8fafd]">
                 {(() => {
                   const empHistory =
                     historySelected.product.report?.history || [];
@@ -3485,17 +3485,17 @@ export default function ServiceMaterialInwardResponse({
 
                   if (timeline.length === 0) {
                     return (
-                      <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-500">
-                        <Info className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
-                        <span className="text-[0.82vw] font-semibold text-slate-700">No status history recorded yet.</span>
+                      <div className="flex flex-col items-center justify-center py-9 text-slate-700">
+                        <Info className="w-6.5 h-6.5 mb-2 text-slate-700" />
+                        <span className="text-xs font-semibold text-slate-700">No status history recorded yet.</span>
                       </div>
                     );
                   }
 
                   return (
-                    <div className="relative pl-[1.8vw] space-y-[0.85vw]">
+                    <div className="relative pl-6.5 space-y-3">
                       {/* Vertical timeline line precisely positioned */}
-                      <div className="absolute left-[0.6vw] -translate-x-1/2 top-[0.5vw] bottom-[0.5vw] w-[2px] bg-slate-200 pointer-events-none" />
+                      <div className="absolute left-[9px] -translate-x-1/2 top-[7px] bottom-[7px] w-0.5 bg-slate-200 pointer-events-none" />
 
                       {timeline.map((item, index) => {
                         let label = item.status;
@@ -3534,18 +3534,18 @@ export default function ServiceMaterialInwardResponse({
                           <div key={index} className="relative group">
                             {/* Dot precisely in the timeline line */}
                             <div
-                              className={`absolute -left-[1.8vw] top-[0.6vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                              className={`absolute -left-[26px] top-[9px] w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
                             />
 
                                 {/* Timeline Row */}
-                                <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
-                                  <div className="flex items-center justify-between gap-[0.5vw]">
+                                <div className="py-2 border-b border-slate-200/80 last:border-b-0">
+                                  <div className="flex items-center justify-between gap-2">
                                     <span
-                                      className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-medium tracking-normal border ${pillClass}`}
+                                      className={`px-2 py-0.5 rounded-full text-sm font-medium tracking-normal border ${pillClass}`}
                                     >
                                       {label}
                                     </span>
-                                    <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
+                                    <span className="text-sm text-slate-700 font-mono font-normal whitespace-nowrap">
                                       {(() => {
                                         const dt = new Date(item.timestamp);
                                         if (isNaN(dt.getTime())) return item.timestamp || "—";
@@ -3563,8 +3563,8 @@ export default function ServiceMaterialInwardResponse({
                                   </div>
 
                                   {remarkText && (
-                                    <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
-                                      <span className="font-medium text-slate-500 mr-[0.35vw]">
+                                    <div className="mt-1.5 text-xs text-slate-700 leading-relaxed font-normal">
+                                      <span className="font-medium text-slate-700 mr-1.5">
                                         Remark:
                                       </span>
                                       {remarkText}
@@ -3572,51 +3572,51 @@ export default function ServiceMaterialInwardResponse({
                                   )}
 
                                   {item.diffs && item.diffs.length > 0 && (
-                                    <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
-                                      <div className="flex items-center justify-between text-[0.72vw]">
-                                        <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
-                                          <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
+                                    <div className="mt-2 bg-purple-50/30 rounded-md border border-purple-200/60 p-1.5 space-y-1.5">
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="font-semibold text-purple-800 flex items-center gap-1.5">
+                                          <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
                                           Changed Fields ({item.diffs.length})
                                         </span>
                                         {item.remark && (
-                                          <span className="font-normal text-slate-500 text-[0.68vw]">
+                                          <span className="font-normal text-slate-700 text-sm">
                                             Reason: <span className="text-slate-700 font-medium">{item.remark}</span>
                                           </span>
                                         )}
                                       </div>
 
-                                      <div className="space-y-[0.3vw] pt-[0.2vw]">
+                                      <div className="space-y-1 pt-1">
                                         {item.diffs.map((d, di) => (
                                           <div
                                             key={di}
-                                            className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                            className="text-xs bg-white rounded-md p-1.5 border border-slate-200"
                                           >
-                                            <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
+                                            <div className="font-medium text-slate-700 text-sm mb-1">
                                               {d.field}
                                             </div>
 
-                                            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
+                                            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1.5">
                                               {/* Previous Value */}
-                                              <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
-                                                <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                              <div className="bg-rose-50/40 rounded-sm px-1.5 py-1 border border-rose-200/80">
+                                                <div className="text-xs font-semibold text-rose-600 uppercase tracking-wider mb-px">
                                                   Previous
                                                 </div>
-                                                <div className="text-rose-700 font-normal text-[0.72vw] break-words">
+                                                <div className="text-rose-700 font-normal text-sm break-words">
                                                   {d.originalValue || "—"}
                                                 </div>
                                               </div>
 
                                               {/* Arrow Indicator */}
-                                              <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                              <div className="text-slate-700 font-normal text-xs px-px">
                                                 →
                                               </div>
 
                                               {/* Updated Value */}
-                                              <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
-                                                <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                              <div className="bg-emerald-50/40 rounded-sm px-1.5 py-1 border border-emerald-200/80">
+                                                <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-px">
                                                   Updated
                                                 </div>
-                                                <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
+                                                <div className="text-emerald-900 font-medium text-sm break-words">
                                                   {d.editedValue || "—"}
                                                 </div>
                                               </div>
@@ -3636,11 +3636,11 @@ export default function ServiceMaterialInwardResponse({
               </div>
 
               {/* Footer */}
-              <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
+              <div className="px-5 py-3 border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
                 <button
                   type="button"
                   onClick={() => setHistorySelected(null)}
-                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="px-[19px] h-7 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   Close
                 </button>
@@ -3653,35 +3653,35 @@ export default function ServiceMaterialInwardResponse({
       {/* Edit Report Modal */}
       <AnimatePresence>
         {editReportModal && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[250] p-[2vw]">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[250] p-7">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[55vw] max-h-[90vh] flex flex-col overflow-hidden"
+              className="bg-white rounded-xl shadow-2xl border border-slate-200 w-[792px] max-h-[90vh] flex flex-col overflow-hidden"
             >
-              <div className="px-[1.5vw] py-[1vw] border-b border-slate-200 bg-white flex items-center justify-between">
+              <div className="px-5.5 py-3.5 border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1.1vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
-                    <Edit3 className="w-[1.1vw] h-[1.1vw] text-blue-600" />
+                  <h3 className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                    <Edit3 className="w-4 h-4 text-blue-600" />
                     Edit Submitted Report
                   </h3>
-                  <p className="text-[0.74vw] text-slate-700 font-medium">
+                  <p className="text-xs text-slate-700 font-medium">
                     {editReportModal.product.productDescription} (<span className="font-mono font-semibold text-slate-900">{editReportModal.product.serialNumber}</span>)
                   </p>
                 </div>
                 <button
                   onClick={() => setEditReportModal(null)}
-                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-700 hover:text-slate-950 transition-all cursor-pointer"
+                  className="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 hover:text-slate-950 transition-all cursor-pointer"
                 >
-                  <X className="w-[1.1vw] h-[1.1vw]" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-white divide-y divide-slate-200">
-                <div className="grid grid-cols-3 gap-[0.8vw] pb-[1vw]">
+              <div className="flex-1 overflow-y-auto p-5.5 space-y-4 bg-white divide-y divide-slate-200">
+                <div className="grid grid-cols-3 gap-3 pb-3.5">
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Status</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Status</label>
                     <CustomDropdown
                       size="sm"
                       placeholder="Select Status"
@@ -3691,11 +3691,11 @@ export default function ServiceMaterialInwardResponse({
                         draft: { ...prev.draft, status: val }
                       }))}
                       options={STATUS_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] font-semibold text-slate-800"
+                      triggerClassName="!h-7 !text-xs !rounded-md font-semibold text-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Tested By</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Tested By</label>
                     <CustomDropdown
                       size="sm"
                       searchable={true}
@@ -3709,11 +3709,11 @@ export default function ServiceMaterialInwardResponse({
                       options={employees
                         .filter((emp) => emp.role === "User")
                         .map((e) => ({ value: e.name, label: e.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
+                      triggerClassName="!h-7 !text-xs !rounded-md !border-slate-300 !bg-white text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">FQA By</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">FQA By</label>
                     <CustomDropdown
                       size="sm"
                       searchable={true}
@@ -3727,11 +3727,11 @@ export default function ServiceMaterialInwardResponse({
                       options={employees
                         .filter((emp) => emp.role === "User")
                         .map((e) => ({ value: e.name, label: e.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
+                      triggerClassName="!h-7 !text-xs !rounded-md !border-slate-300 !bg-white text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">4M Category</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">4M Category</label>
                     <CustomDropdown
                       size="sm"
                       placeholder="Select 4M Category"
@@ -3741,11 +3741,11 @@ export default function ServiceMaterialInwardResponse({
                         draft: { ...prev.draft, fourMCategory: val }
                       }))}
                       options={(fourMCategories || []).map((opt) => ({ value: opt.name, label: opt.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] text-slate-800"
+                      triggerClassName="!h-7 !text-xs !rounded-md text-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Error Code</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Error Code</label>
                     <input
                       type="text"
                       value={editReportModal.draft.errorCode || ""}
@@ -3753,11 +3753,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, errorCode: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">PV</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">PV</label>
                     <input
                       type="text"
                       value={editReportModal.draft.pv !== undefined ? editReportModal.draft.pv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[0]?.trim() : "")}
@@ -3765,11 +3765,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, pv: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">CV</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">CV</label>
                     <input
                       type="text"
                       value={editReportModal.draft.cv !== undefined ? editReportModal.draft.cv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[1]?.trim() : "")}
@@ -3777,14 +3777,14 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, cv: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-[0.8vw] pt-[1vw] pb-[1vw]">
+                <div className="grid grid-cols-2 gap-3 pt-3.5 pb-3.5">
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Problem Description</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Problem Description</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.problemDescription || ""}
@@ -3792,11 +3792,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, problemDescription: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Root Cause</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Root Cause</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.rootCause || ""}
@@ -3804,11 +3804,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, rootCause: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Fault Parts</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Fault Parts</label>
                     <input
                       type="text"
                       value={editReportModal.draft.faultParts || ""}
@@ -3816,11 +3816,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, faultParts: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Parts Replaced</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Parts Replaced</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.partsReplacement || ""}
@@ -3828,11 +3828,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, partsReplacement: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Corrective Action</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Corrective Action</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.correctiveAction || ""}
@@ -3840,14 +3840,14 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, correctiveAction: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-normal"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-[0.8vw] pt-[1vw] pb-[1vw]">
+                <div className="grid grid-cols-3 gap-3 pt-3.5 pb-3.5">
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Time (Hours)</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Time (Hours)</label>
                     <input
                       type="text"
                       value={editReportModal.draft.timeInHours || ""}
@@ -3868,11 +3868,11 @@ export default function ServiceMaterialInwardResponse({
                           }
                         }));
                       }}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Material Cost (₹)</label>
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Material Cost (₹)</label>
                     <input
                       type="text"
                       value={editReportModal.draft.materialCost || ""}
@@ -3880,20 +3880,20 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, materialCost: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-xs border border-slate-300 rounded-md p-1.5 outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Man Power Cost (₹)</label>
-                    <div className="w-full text-[0.75vw] bg-slate-50 border border-slate-300 rounded-[0.3vw] p-[0.35vw] font-bold text-emerald-800">
+                    <label className="text-xs font-bold text-slate-800 mb-1 block">Man Power Cost (₹)</label>
+                    <div className="w-full text-xs bg-slate-50 border border-slate-300 rounded-md p-1.5 font-bold text-emerald-800">
                       ₹{Number(editReportModal.draft.manpowerCost || 0).toFixed(2)}
                     </div>
                   </div>
                 </div>
 
                 {/* Edit Reason input */}
-                <div className="pt-[1vw]">
-                  <label className="text-[0.75vw] font-bold text-slate-900 mb-[0.25vw] block">
+                <div className="pt-3.5">
+                  <label className="text-xs font-bold text-slate-900 mb-1 block">
                     Reason for Editing <span className="text-rose-600">*</span>
                   </label>
                   <input
@@ -3901,16 +3901,16 @@ export default function ServiceMaterialInwardResponse({
                     placeholder="Enter reason for modifying this technical report..."
                     value={editReason}
                     onChange={(e) => setEditReason(e.target.value)}
-                    className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.45vw] bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 text-slate-800 font-medium"
+                    className="w-full text-xs border border-slate-300 rounded-md p-1.5 bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 text-slate-800 font-medium"
                   />
                 </div>
               </div>
 
-              <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end gap-[0.8vw]">
+              <div className="px-5.5 py-3 border-t border-slate-200 bg-white flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setEditReportModal(null)}
-                  className="px-[1.2vw] py-[0.45vw] bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full font-bold text-[0.75vw] cursor-pointer transition-all border-0"
+                  className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full font-bold text-xs cursor-pointer transition-all border-0"
                 >
                   Cancel
                 </button>
@@ -3943,16 +3943,16 @@ export default function ServiceMaterialInwardResponse({
                       setIsSubmittingEdit(false);
                     }
                   }}
-                  className="flex items-center gap-[0.4vw] px-[1.5vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-[0.75vw] cursor-pointer transition-all shadow-md border-0"
+                  className="flex items-center gap-1.5 px-5.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-xs cursor-pointer transition-all shadow-md border-0"
                 >
                   {isSubmittingEdit ? (
                     <>
-                      <Loader2 className="w-[0.8vw] h-[0.8vw] animate-spin" />
+                      <Loader2 className="w-3 h-3 animate-spin" />
                       Saving...
                     </>
                   ) : (
                     <>
-                      <Save className="w-[0.8vw] h-[0.8vw]" />
+                      <Save className="w-3 h-3" />
                       Save Modifications
                     </>
                   )}
@@ -3967,7 +3967,7 @@ export default function ServiceMaterialInwardResponse({
       <AnimatePresence>
         {docPreviewModal && (
           <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[110] p-[1.5vw]"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[110] p-5.5"
             onClick={() => setDocPreviewModal(null)}
           >
             <motion.div
@@ -3975,70 +3975,70 @@ export default function ServiceMaterialInwardResponse({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[75vw] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-[1080px] max-w-[1100px] h-[85vh] flex flex-col overflow-hidden"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white">
-                <div className="flex items-center gap-[0.7vw]">
+              <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-white">
+                <div className="flex items-center gap-2.5">
                   <div
-                    className={`w-[2.2vw] h-[2.2vw] rounded-[0.5vw] flex items-center justify-center shadow-xs shrink-0 ${
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-xs shrink-0 ${
                       docPreviewModal.isPdf
                         ? "bg-rose-50 text-rose-600 border border-rose-200"
                         : "bg-blue-50 text-blue-600 border border-blue-200"
                     }`}
                   >
                     {docPreviewModal.isPdf ? (
-                      <FileText className="w-[1.1vw] h-[1.1vw]" />
+                      <FileText className="w-4 h-4" />
                     ) : (
-                      <Eye className="w-[1.1vw] h-[1.1vw]" />
+                      <Eye className="w-4 h-4" />
                     )}
                   </div>
                   <div>
-                    <h3 className="text-[0.95vw] font-bold text-slate-900 leading-tight">
+                    <h3 className="text-sm font-bold text-slate-900 leading-tight">
                       {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
                     </h3>
-                    <p className="text-[0.7vw] text-slate-500 font-medium">
+                    <p className="text-sm text-slate-700 font-medium">
                       {docPreviewModal.isPdf ? "PDF technical document" : "Technical image attachment"}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-[0.6vw]">
+                <div className="flex items-center gap-2.5">
                   <a
                     href={docPreviewModal.url}
                     download
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.74vw] font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-[0.35vw] px-[0.85vw] py-[0.35vw] rounded-full bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer border border-slate-200/80"
+                    className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer border border-slate-200/80"
                   >
-                    <Download className="w-[0.8vw] h-[0.8vw] text-slate-600" />
+                    <Download className="w-3 h-3 text-slate-600" />
                     <span>Download</span>
                   </a>
                   <button
                     type="button"
                     onClick={() => setDocPreviewModal(null)}
-                    className="p-[0.4vw] rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border-0 bg-transparent"
+                    className="p-1.5 rounded-full text-slate-700 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border-0 bg-transparent"
                     title="Close preview"
                   >
-                    <X className="w-[1.1vw] h-[1.1vw]" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
               {/* Modal Content */}
-              <div className="flex-1 bg-[#f8fafd] flex items-center justify-center overflow-hidden p-[1.2vw]">
+              <div className="flex-1 bg-[#f8fafd] flex items-center justify-center overflow-hidden p-4">
                 {docPreviewModal.isPdf ? (
                   <iframe
                     src={`${docPreviewModal.url}#toolbar=1&navpanes=0`}
                     title="PDF Document"
-                    className="w-full h-full rounded-[0.5vw] border border-slate-200 bg-white shadow-sm"
+                    className="w-full h-full rounded-lg border border-slate-200 bg-white shadow-sm"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center overflow-auto p-[0.8vw]">
+                  <div className="w-full h-full flex items-center justify-center overflow-auto p-3">
                     <img
                       src={docPreviewModal.url}
                       alt="Attachment Preview"
-                      className="max-h-full max-w-full object-contain rounded-[0.5vw] shadow-md border border-slate-200 bg-white"
+                      className="max-h-full max-w-full object-contain rounded-lg shadow-md border border-slate-200 bg-white"
                     />
                   </div>
                 )}
@@ -4051,7 +4051,7 @@ export default function ServiceMaterialInwardResponse({
       {/* Custom Confirmation Modal for Unclaiming Product */}
       <AnimatePresence>
         {unclaimConfirmModal && (
-          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-[1vw]">
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3.5">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -4075,18 +4075,18 @@ export default function ServiceMaterialInwardResponse({
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-[26vw] min-w-[340px] bg-white rounded-[0.9vw] shadow-2xl border border-slate-200 overflow-hidden z-10 flex flex-col font-sans"
+              className="relative w-full max-w-[374px] min-w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-10 flex flex-col font-sans"
             >
               {/* Header Banner */}
-              <div className="p-[1.2vw] pb-[0.8vw] flex items-start gap-[0.8vw]">
-                <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 shadow-2xs">
-                  <AlertCircle className="w-[1.2vw] h-[1.2vw] text-amber-600" />
+              <div className="p-4 pb-3 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 shadow-2xs">
+                  <AlertCircle className="w-4 h-4 text-amber-600" />
                 </div>
-                <div className="flex-1 min-w-0 pr-[0.4vw]">
-                  <h3 className="text-[0.95vw] font-semibold text-slate-800 leading-snug">
+                <div className="flex-1 min-w-0 pr-1.5">
+                  <h3 className="text-sm font-semibold text-slate-800 leading-snug">
                     Unclaim Product
                   </h3>
-                  <p className="text-[0.74vw] text-slate-500 mt-[0.2vw] leading-relaxed font-normal">
+                  <p className="text-xs text-slate-700 mt-1 leading-relaxed font-normal">
                     Are you sure you want to unclaim this product? It will be released back to the Open queue.
                   </p>
                 </div>
@@ -4094,20 +4094,20 @@ export default function ServiceMaterialInwardResponse({
                   type="button"
                   onClick={() => setUnclaimConfirmModal(null)}
                   disabled={unclaimingStates[unclaimConfirmModal.productId]}
-                  className="p-[0.3vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="p-1 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
               {/* Product Info Box */}
               {(unclaimConfirmModal.productDescription || unclaimConfirmModal.serialNumber) && (
-                <div className="mx-[1.2vw] p-[0.6vw] bg-slate-50 rounded-[0.5vw] border border-slate-200 text-[0.72vw]">
+                <div className="mx-4 p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-sm">
                   <div className="text-slate-700 font-medium truncate">
                     {unclaimConfirmModal.productDescription || "Product"}
                   </div>
                   {unclaimConfirmModal.serialNumber && (
-                    <div className="text-slate-500 font-mono text-[0.68vw] mt-[0.1vw]">
+                    <div className="text-slate-700 font-mono text-sm mt-px">
                       S/N: {unclaimConfirmModal.serialNumber}
                     </div>
                   )}
@@ -4115,12 +4115,12 @@ export default function ServiceMaterialInwardResponse({
               )}
 
               {/* Action Buttons */}
-              <div className="p-[1vw] bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-[0.6vw] mt-[0.8vw]">
+              <div className="p-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5 mt-3">
                 <button
                   type="button"
                   onClick={() => setUnclaimConfirmModal(null)}
                   disabled={unclaimingStates[unclaimConfirmModal.productId]}
-                  className="px-[0.9vw] py-[0.4vw] text-[0.74vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 hover:border-slate-400 rounded-[0.4vw] shadow-2xs transition-all cursor-pointer"
+                  className="px-3.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 hover:border-slate-400 rounded-md shadow-2xs transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -4128,16 +4128,16 @@ export default function ServiceMaterialInwardResponse({
                   type="button"
                   onClick={() => unclaimProduct(unclaimConfirmModal.id, unclaimConfirmModal.productId)}
                   disabled={unclaimingStates[unclaimConfirmModal.productId]}
-                  className="inline-flex items-center gap-[0.35vw] px-[0.95vw] py-[0.4vw] text-[0.74vw] font-medium text-white bg-rose-600 hover:bg-rose-700 border border-rose-600 rounded-[0.4vw] shadow-xs transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-rose-600 hover:bg-rose-700 border border-rose-600 rounded-md shadow-xs transition-all cursor-pointer active:scale-98 disabled:opacity-50"
                 >
                   {unclaimingStates[unclaimConfirmModal.productId] ? (
                     <>
-                      <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                      <Loader2 className="w-3 h-3 animate-spin" />
                       <span>Unclaiming...</span>
                     </>
                   ) : (
                     <>
-                      <Undo2 className="w-[0.75vw] h-[0.75vw]" />
+                      <Undo2 className="w-3 h-3" />
                       <span>Unclaim</span>
                     </>
                   )}

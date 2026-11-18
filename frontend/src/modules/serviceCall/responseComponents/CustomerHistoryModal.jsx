@@ -26,17 +26,17 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
   }, [identifier]);
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-[2vw]">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-7">
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[50vw] rounded-[1vw] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border border-slate-400"
+        className="bg-white w-[720px] rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border border-slate-400"
       >
-        <div className="bg-indigo-950 px-[1.4vw] py-[1vw] flex justify-between items-center border-b border-indigo-800">
-          <div className="flex items-center gap-[0.6vw]">
-            <History className="w-[1.2vw] h-[1.2vw] text-indigo-400" />
-            <h3 className="text-[1vw] font-bold text-white">
+        <div className="bg-indigo-950 px-5 py-3.5 flex justify-between items-center border-b border-indigo-800">
+          <div className="flex items-center gap-2.5">
+            <History className="w-4 h-4 text-indigo-400" />
+            <h3 className="text-xs font-bold text-white">
               Service History: {identifier}
             </h3>
           </div>
@@ -44,32 +44,32 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
             onClick={onClose}
             className="text-indigo-200 hover:text-white transition-colors"
           >
-            <X className="w-[1.2vw] h-[1.2vw]" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-[1.5vw] overflow-y-auto flex-1 bg-slate-50">
+        <div className="p-5.5 overflow-y-auto flex-1 bg-slate-50">
           {loading ? (
-            <div className="flex justify-center p-[2vw]">
-              <div className="w-[2vw] h-[2vw] border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+            <div className="flex justify-center p-7">
+              <div className="w-7 h-7 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
             </div>
           ) : history.length === 0 ? (
-            <div className="text-center text-slate-500 font-bold text-[0.9vw] p-[2vw]">
+            <div className="text-center text-slate-700 font-bold text-sm p-7">
               No past service calls found for this customer.
             </div>
           ) : (
-            <div className="flex flex-col gap-[1vw]">
+            <div className="flex flex-col gap-3.5">
               {history.map((call) => (
                 <div
                   key={call._id}
-                  className="bg-white border border-slate-300 rounded-[0.6vw] p-[1vw] shadow-sm"
+                  className="bg-white border border-slate-300 rounded-lg p-3.5 shadow-sm"
                 >
-                  <div className="flex justify-between items-center border-b border-slate-200 pb-[0.5vw] mb-[0.6vw]">
-                    <div className="flex items-center gap-[0.6vw]">
-                      <span className="font-bold text-[0.9vw] text-slate-800">
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2 mb-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-bold text-sm text-slate-800">
                         Call ID : {call.callNumber}
                       </span>
-                      <span className="text-[0.85vw] text-slate-700 bg-slate-100 px-[0.4vw] py-[0.1vw] rounded">
+                      <span className="text-sm text-slate-700 bg-slate-100 px-1.5 py-px rounded">
                         {new Date(call.createdAt).toLocaleDateString()}
                       </span>
                     </div>
@@ -79,7 +79,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                     />
                   </div>
 
-                  <div className="flex flex-col gap-[0.8vw]">
+                  <div className="flex flex-col gap-3">
                     {call.products?.map((p, idx) => {
                       let finalStatus = "Open";
                       let statusColor = "text-blue-600";
@@ -110,18 +110,18 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                       return (
                         <div
                           key={idx}
-                          className="bg-slate-50 border border-slate-200 p-[1vw] rounded-[0.5vw]"
+                          className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg"
                         >
-                          <div className="grid grid-cols-2 gap-[0.8vw] text-[0.85vw] text-slate-700 leading-relaxed">
+                          <div className="grid grid-cols-2 gap-3 text-sm text-slate-700 leading-relaxed">
                             <div>
-                              <span className="font-bold text-slate-500">
+                              <span className="font-bold text-slate-700">
                                 Product:
                               </span>{" "}
                               {p.productModel || p.itemCode || "Unknown"}
                             </div>
                             {p.productSegment && (
                               <div>
-                                <span className="font-bold text-slate-500">
+                                <span className="font-bold text-slate-700">
                                   Segment:
                                 </span>{" "}
                                 {p.productSegment}
@@ -129,7 +129,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                             )}
                             {p.serialNumber && (
                               <div>
-                                <span className="font-bold text-slate-500">
+                                <span className="font-bold text-slate-700">
                                   S/N:
                                 </span>{" "}
                                 {p.serialNumber}
@@ -137,20 +137,20 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                             )}
                             {p.errorCode && (
                               <div>
-                                <span className="font-bold text-slate-500">
+                                <span className="font-bold text-slate-700">
                                   Error:
                                 </span>{" "}
                                 {p.errorCode}
                               </div>
                             )}
                             <div className="col-span-2">
-                              <span className="font-bold text-slate-500">
+                              <span className="font-bold text-slate-700">
                                 Description:
                               </span>{" "}
                               {p.callDescription || "No description"}
                             </div>
-                            <div className="col-span-2 flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.9vw]">
-                              <span className="font-bold text-slate-500">
+                            <div className="col-span-2 flex items-center gap-1.5 mt-1 text-sm">
+                              <span className="font-bold text-slate-700">
                                 Status:
                               </span>
                               <span className={`font-black ${statusColor}`}>
@@ -159,7 +159,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                             </div>
 
                             {finalStatus === "Resolved" && (
-                              <div className="col-span-2 mt-[0.5vw] bg-emerald-50/50 border border-emerald-100 rounded-[0.5vw] p-[0.8vw]">
+                              <div className="col-span-2 mt-2 bg-emerald-50/50 border border-emerald-100 rounded-lg p-3">
                                 {(() => {
                                   const resolveEvent = p._history
                                     ?.slice()
@@ -180,12 +180,12 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                                     "Support Team";
 
                                   return (
-                                    <div className="flex flex-col gap-[0.3vw]">
-                                      <div className="text-[0.75vw] text-emerald-800 font-bold">
+                                    <div className="flex flex-col gap-1">
+                                      <div className="text-xs text-emerald-800 font-bold">
                                         Resolved by: {resolvedBy}
                                       </div>
                                       {remarks && (
-                                        <div className="text-[0.8vw] text-slate-700 italic border-l-2 border-emerald-300 pl-[0.5vw] mt-[0.2vw]">
+                                        <div className="text-xs text-slate-700 italic border-l-2 border-emerald-300 pl-2 mt-1">
                                           "{remarks}"
                                         </div>
                                       )}

@@ -37,15 +37,26 @@ function NavBarWithTitle() {
 }
 
 function MainLayout() {
-  const { isCollapsed, isFullScreen } = useSidebar();
+  const { isCollapsed, isFullScreen, setIsCollapsed } = useSidebar();
 
   return (
     <div className="flex w-full h-full max-w-full max-h-full overflow-hidden relative">
-      {!isFullScreen && <Sidebar />}
+      {/* Mobile/Tablet Backdrop when sidebar is expanded */}
+      {!isCollapsed && !isFullScreen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-xs transition-opacity"
+          onClick={() => setIsCollapsed(true)}
+        />
+      )}
+      {!isFullScreen && (
+        <div className={`shrink-0 z-50 h-full ${!isCollapsed ? "max-lg:fixed max-lg:top-0 max-lg:left-0 max-lg:bottom-0 shadow-2xl" : ""}`}>
+          <Sidebar />
+        </div>
+      )}
       <main
         className={`
           flex-1 bg-[#f2f8ff] h-full min-h-0 min-w-0
-          ${isFullScreen ? "px-[1.5vw] py-[0.8vh] z-50 w-full" : "px-[1.2vw] pt-[0.4vh] pb-[0.8vh]"}
+          ${isFullScreen ? "px-4 md:px-5.5 py-2 z-50 w-full" : "px-2.5 md:px-4 pt-1 pb-2"}
           overflow-hidden flex flex-col
           transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
         `}

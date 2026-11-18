@@ -363,7 +363,7 @@ const ProductionEditableProductTable = ({
         <div 
           data-fill-handle="true"
           onMouseDown={handleFillHandleMouseDown}
-          className="absolute bottom-[-5px] right-[-5px] w-[0.6vw] h-[0.6vw] bg-blue-600 border-2 border-white cursor-crosshair z-[60] shadow-sm rounded-sm"
+          className="absolute bottom-[-5px] right-[-5px] w-2.5 h-2.5 bg-blue-600 border-2 border-white cursor-crosshair z-[60] shadow-sm rounded-sm"
         />
       );
     }
@@ -431,31 +431,31 @@ const ProductionEditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
+      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-3.5 relative ${isFilling ? "select-none" : ""}`}
     >
-      <table className="w-full border-collapse text-[0.8vw]">
-        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
+      <table className="w-full border-collapse text-xs">
+        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-sm">
           <tr>
-            {!isReadOnly && <th className="w-[3vw] py-[0.7vw] px-[0.4vw] border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
-            <th className="w-[3.5vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
-            <th className="min-w-[18vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="min-w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
-            <th className="w-[14vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
-            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
-            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
-            <th className="w-[8vw] min-w-[7.5vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
-            <th className="w-[14vw] min-w-[13vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
-            {!isReadOnly && <th className="sticky right-0 w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
+            {!isReadOnly && <th className="w-[43px] py-2.5 px-1.5 border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
+            <th className="w-12 py-2.5 px-1.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
+            <th className="min-w-[259px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="min-w-[173px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
+            <th className="w-[144px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
+            <th className="w-[115px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
+            <th className="w-[202px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
+            <th className="w-[115px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
+            <th className="w-[130px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
+            <th className="w-[130px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
+            <th className="w-[115px] min-w-[108px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
+            <th className="w-[202px] min-w-[187px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
+            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
+            {!isReadOnly && <th className="sticky right-0 w-[86px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -476,17 +476,17 @@ const ProductionEditableProductTable = ({
                         className={`border-b border-slate-300 last:border-0 hover:bg-blue-50/30 transition-colors ${snapshot.isDragging ? "bg-white shadow-lg ring-1 ring-blue-200 z-50 table" : ""}`}
                       >
                         {!isReadOnly && (
-                          <td className="py-[0.6vw] px-[0.5vw] text-center align-middle" {...provided.dragHandleProps}>
-                            <GripVertical className="w-[1vw] h-[1vw] text-gray-700 cursor-grab active:cursor-grabbing" />
+                          <td className="py-2.5 px-2 text-center align-middle" {...provided.dragHandleProps}>
+                            <GripVertical className="w-3.5 h-3.5 text-gray-700 cursor-grab active:cursor-grabbing" />
                           </td>
                         )}
-                        <td className="py-[0.6vw] px-[0.5vw] text-center align-middle font-medium text-black border-r border-b border-slate-300">
+                        <td className="py-2.5 px-2 text-center align-middle font-medium text-black border-r border-b border-slate-300">
                           {index + 1}
                         </td>
                         
                         {/* 0. Product Description */}
                         <td 
-                          className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 0)}`}
+                          className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 0)}`}
                           onMouseDown={(e) => handleCellMouseDown(index, 0, e)}
                           onMouseEnter={() => handleCellMouseEnter(index, 0)}
                           onDoubleClick={(e) => openDropdown(prod._pid, e.currentTarget)}
@@ -509,19 +509,19 @@ const ProductionEditableProductTable = ({
                               onKeyDown={(e) => handleDropdownKeyDown(e, prod._pid)}
                               placeholder={customerCode ? "Search or enter description..." : "Select customer first"}
                               disabled={!customerCode || isReadOnly}
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal disabled:bg-transparent cursor-text description-input text-[0.8vw]"
+                              className="w-full bg-transparent border-none rounded-md py-1.5 px-2.5 outline-none transition-all text-black font-normal disabled:bg-transparent cursor-text description-input text-xs"
                             />
                             {!isReadOnly && customerCode && (
-                              <Search className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none group-focus-within:text-blue-500" />
+                              <Search className="w-3 h-3 text-gray-700 absolute right-[9px] pointer-events-none group-focus-within:text-blue-500" />
                             )}
                           </div>
                           {renderFillHandle(index, 0)}
                           
                           {activeDropdown?.id === prod._pid && (
                             <DropdownPortal targetRect={activeDropdown.rect}>
-                              <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto dropdown-container">
+                              <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-md max-h-[216px] overflow-y-auto dropdown-container">
                                 {!customerCode ? (
-                                    <div className="p-[1vw] text-center text-red-500 font-normal text-[0.8vw]">Please select a customer first.</div>
+                                    <div className="p-3.5 text-center text-red-500 font-normal text-xs">Please select a customer first.</div>
                                 ) : filteredProds.length > 0 ? (
                                   filteredProds.map((p, i) => (
                                     <div
@@ -531,14 +531,14 @@ const ProductionEditableProductTable = ({
                                           e.stopPropagation();
                                           selectProduct(prod._pid, p);
                                       }}
-                                      className={`p-[0.6vw] cursor-pointer border-b border-slate-300 last:border-0 transition-colors ${selectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-blue-100"}`}
+                                      className={`p-2.5 cursor-pointer border-b border-slate-300 last:border-0 transition-colors ${selectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-blue-100"}`}
                                     >
-                                      <div className={`font-semibold text-[0.8vw] ${selectedIndex === i ? "text-white" : "text-gray-900"}`}>{p.itemDescription || p.productDescription}</div>
-                                      <div className={`text-[0.7vw] ${selectedIndex === i ? "text-blue-100" : "text-gray-500"}`}>{p.itemCode || p.productCode} {p.productSegment ? `· ${p.productSegment}` : ''}</div>
+                                      <div className={`font-semibold text-xs ${selectedIndex === i ? "text-white" : "text-gray-900"}`}>{p.itemDescription || p.productDescription}</div>
+                                      <div className={`text-sm ${selectedIndex === i ? "text-blue-100" : "text-gray-700"}`}>{p.itemCode || p.productCode} {p.productSegment ? `· ${p.productSegment}` : ''}</div>
                                     </div>
                                   ))
                                 ) : (
-                                  <div className="p-[1vw] text-center text-gray-500 font-normal text-[0.8vw]">No products found for this customer</div>
+                                  <div className="p-3.5 text-center text-gray-700 font-normal text-xs">No products found for this customer</div>
                                 )}
                               </div>
                             </DropdownPortal>
@@ -546,9 +546,9 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 1. Code (Read-only, auto applied from DB) */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
                           <div 
-                            className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-mono font-medium text-[0.78vw] truncate select-text cursor-default" 
+                            className="text-black px-1.5 py-1.5 rounded-md font-mono font-medium text-xs truncate select-text cursor-default" 
                             title={prod.productCode || ""}
                           >
                             {prod.productCode || "—"}
@@ -557,7 +557,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 2. Product Segment */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
                           <input
                             type="text"
                             value={prod.productSegment || prod.productType || ""}
@@ -566,14 +566,14 @@ const ProductionEditableProductTable = ({
                               handleUpdate(prod._pid, "productType", e.target.value);
                             }}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-md py-1.5 px-1 outline-none transition-all text-slate-900 font-medium text-xs disabled:bg-transparent"
                             placeholder="Segment..."
                           />
                           {renderFillHandle(index, 2)}
                         </td>
 
                         {/* 3. Board Type */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
                           <CustomDropdown
                             value={prod.boardType || ""}
                             onChange={(val) => handleUpdate(prod._pid, "boardType", val)}
@@ -582,10 +582,10 @@ const ProductionEditableProductTable = ({
                             size="sm"
                             options={boardTypeOptions}
                             usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="151px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -594,7 +594,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 4. Problem Type */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
                           <CustomDropdown
                             value={prod.problemType || ""}
                             onChange={(val) => handleUpdate(prod._pid, "problemType", val)}
@@ -603,10 +603,10 @@ const ProductionEditableProductTable = ({
                             size="sm"
                             options={problemTypeDropdownOptions}
                             usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="151px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -615,7 +615,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 5. NC Type */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <CustomDropdown
                             value={prod.ncType || "Internal"}
                             onChange={(val) => handleUpdate(prod._pid, "ncType", val)}
@@ -624,10 +624,10 @@ const ProductionEditableProductTable = ({
                             size="sm"
                             options={ncTypeOptions}
                             usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="151px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-semibold text-blue-600"
                             }`}
                             className="w-full"
@@ -636,7 +636,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 6. Problem Description */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 6)}`} onMouseDown={(e) => handleCellMouseDown(index, 6, e)} onMouseEnter={() => handleCellMouseEnter(index, 6)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 6)}`} onMouseDown={(e) => handleCellMouseDown(index, 6, e)} onMouseEnter={() => handleCellMouseEnter(index, 6)}>
                           <input 
                             type="text" 
                             autoComplete="off" 
@@ -647,18 +647,18 @@ const ProductionEditableProductTable = ({
                             }} 
                             placeholder="Problem Description" 
                             disabled={isReadOnly} 
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent" 
+                            className="w-full bg-transparent border-none rounded-md py-1.5 px-2.5 outline-none transition-all text-slate-900 font-medium text-xs disabled:bg-transparent" 
                           />
                           {renderFillHandle(index, 6)}
                         </td>
 
                         {/* 7. Repeatability (Auto-calculated number based on Segment + Board Type + Problem Type + NC Type + Problem Description) */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all text-center ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all text-center ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
                           <div 
-                            className="text-slate-800 font-medium text-[0.78vw] py-[0.4vw] px-[0.4vw] text-center select-text cursor-default"
+                            className="text-slate-800 font-medium text-xs py-1.5 px-1.5 text-center select-text cursor-default"
                             title="Auto-calculated repeatability count for matching Segment, Board Type, Problem Type, NC Type & Description"
                           >
-                            <span className={`inline-block px-[0.55vw] py-[0.1vw] rounded-[0.3vw] font-mono ${
+                            <span className={`inline-block px-2 py-px rounded-md font-mono ${
                               Number(prod.repeatability) > 0 
                                 ? "bg-amber-50 text-amber-700 border border-amber-200 font-semibold" 
                                 : "bg-slate-50 text-slate-600 border border-slate-300"
@@ -670,55 +670,55 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 8. Delay Time(in mins) */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 8)}`} onMouseDown={(e) => handleCellMouseDown(index, 8, e)} onMouseEnter={() => handleCellMouseEnter(index, 8)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 8)}`} onMouseDown={(e) => handleCellMouseDown(index, 8, e)} onMouseEnter={() => handleCellMouseEnter(index, 8)}>
                           <input
                             type="number"
                             min="0"
                             value={prod.delayTime !== undefined ? prod.delayTime : ""}
                             onChange={(e) => handleUpdate(prod._pid, "delayTime", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] text-center disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-md py-1.5 px-1 outline-none transition-all text-slate-900 font-medium text-xs text-center disabled:bg-transparent"
                             placeholder="0"
                           />
                           {renderFillHandle(index, 8)}
                         </td>
 
                         {/* 9. Designators */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 9)}`} onMouseDown={(e) => handleCellMouseDown(index, 9, e)} onMouseEnter={() => handleCellMouseEnter(index, 9)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 9)}`} onMouseDown={(e) => handleCellMouseDown(index, 9, e)} onMouseEnter={() => handleCellMouseEnter(index, 9)}>
                           <input
                             type="text"
                             value={prod.designators || ""}
                             onChange={(e) => handleUpdate(prod._pid, "designators", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-md py-1.5 px-1 outline-none transition-all text-slate-900 font-medium text-xs disabled:bg-transparent"
                             placeholder="Designator..."
                           />
                           {renderFillHandle(index, 9)}
                         </td>
 
                         {/* 10. Board Image */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 10)}`} onMouseDown={(e) => handleCellMouseDown(index, 10, e)} onMouseEnter={() => handleCellMouseEnter(index, 10)}>
-                           <div className="flex flex-col items-center justify-center gap-[0.4vw]">
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 10)}`} onMouseDown={(e) => handleCellMouseDown(index, 10, e)} onMouseEnter={() => handleCellMouseEnter(index, 10)}>
+                           <div className="flex flex-col items-center justify-center gap-1.5">
                              {prod.boardImage && (
                                <div className="relative group">
                                  <img 
                                    src={prod.boardImage.startsWith('data:') || prod.boardImage.startsWith('blob:') ? prod.boardImage : `${import.meta.env.VITE_API_URL}${prod.boardImage}`} 
                                    alt="Board" 
-                                   className="w-[2.2vw] h-[2.2vw] object-cover rounded-[0.3vw] border border-slate-300"
+                                   className="w-8 h-8 object-cover rounded-md border border-slate-300"
                                  />
                                  {!isReadOnly && (
                                    <button 
                                      onClick={(e) => { e.stopPropagation(); handleUpdate(prod._pid, "boardImage", ""); handleUpdate(prod._pid, "_boardImageFile", null); }}
-                                     className="absolute -top-[0.4vw] -right-[0.4vw] bg-red-500 text-white rounded-full p-[0.1vw] opacity-0 group-hover:opacity-100 transition-opacity"
+                                     className="absolute -top-[6px] -right-[6px] bg-red-500 text-white rounded-full p-px opacity-0 group-hover:opacity-100 transition-opacity"
                                    >
-                                     <X className="w-[0.6vw] h-[0.6vw]" />
+                                     <X className="w-2.5 h-2.5" />
                                    </button>
                                  )}
                                </div>
                              )}
                              {!isReadOnly && !prod.boardImage && (
-                               <label className="cursor-pointer hover:text-blue-600 transition-colors flex items-center justify-center p-[0.2vw]">
-                                 <Plus className="w-[1.1vw] h-[1.1vw] text-slate-500 hover:text-blue-600" />
+                               <label className="cursor-pointer hover:text-blue-600 transition-colors flex items-center justify-center p-1">
+                                 <Plus className="w-4 h-4 text-slate-700 hover:text-blue-600" />
                                  <input 
                                    type="file" 
                                    className="hidden" 
@@ -742,7 +742,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 11. Detection Stage */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 11)}`} onMouseDown={(e) => handleCellMouseDown(index, 11, e)} onMouseEnter={() => handleCellMouseEnter(index, 11)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 11)}`} onMouseDown={(e) => handleCellMouseDown(index, 11, e)} onMouseEnter={() => handleCellMouseEnter(index, 11)}>
                           <CustomDropdown
                             value={prod.stage || ""}
                             onChange={(val) => handleUpdate(prod._pid, "stage", val)}
@@ -751,10 +751,10 @@ const ProductionEditableProductTable = ({
                             size="sm"
                             options={stageDropdownOptions}
                             usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="151px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -763,7 +763,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 12. Inspected By */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 12)}`} onMouseDown={(e) => handleCellMouseDown(index, 12, e)} onMouseEnter={() => handleCellMouseEnter(index, 12)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 12)}`} onMouseDown={(e) => handleCellMouseDown(index, 12, e)} onMouseEnter={() => handleCellMouseEnter(index, 12)}>
                           <CustomDropdown
                             value={prod.inspectedBy || ""}
                             onChange={(val) => {
@@ -778,10 +778,10 @@ const ProductionEditableProductTable = ({
                             searchable={true}
                             searchPlaceholder="Search employee..."
                             usePortal={true}
-                            maxHeight="12vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="173px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -790,20 +790,20 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 13. Qty */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 13)}`} onMouseDown={(e) => handleCellMouseDown(index, 13, e)} onMouseEnter={() => handleCellMouseEnter(index, 13)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 13)}`} onMouseDown={(e) => handleCellMouseDown(index, 13, e)} onMouseEnter={() => handleCellMouseEnter(index, 13)}>
                           <input 
                             type="number" 
                             min="1" 
                             value={prod.qty} 
                             onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} 
                             disabled={isReadOnly} 
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] text-center disabled:bg-transparent" 
+                            className="w-full bg-transparent border-none rounded-md py-1.5 px-2.5 outline-none transition-all text-slate-900 font-medium text-xs text-center disabled:bg-transparent" 
                           />
                           {renderFillHandle(index, 13)}
                         </td>
 
                         {/* 14. Batch / SN */}
-                        <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 14)}`} onMouseDown={(e) => handleCellMouseDown(index, 14, e)} onMouseEnter={() => handleCellMouseEnter(index, 14)}>
+                        <td className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 14)}`} onMouseDown={(e) => handleCellMouseDown(index, 14, e)} onMouseEnter={() => handleCellMouseEnter(index, 14)}>
                           <div className="relative flex items-center group">
                             <input 
                               type="text" 
@@ -815,11 +815,11 @@ const ProductionEditableProductTable = ({
                               }} 
                               placeholder="Batch / SN" 
                               disabled={isReadOnly} 
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-medium text-[0.8vw] disabled:bg-transparent" 
+                              className="w-full bg-transparent border-none rounded-md py-1.5 px-2.5 pr-8 outline-none transition-all text-black font-medium text-xs disabled:bg-transparent" 
                             />
                             {!isReadOnly && (
-                              <button type="button" className="absolute right-[0.4vw] p-[0.3vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all">
-                                <ScanBarcode className="w-[1vw] h-[1vw]" />
+                              <button type="button" className="absolute right-[6px] p-1 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all">
+                                <ScanBarcode className="w-3.5 h-3.5" />
                               </button>
                             )}
                           </div>
@@ -827,7 +827,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 15. Disposition */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 15)}`} onMouseDown={(e) => handleCellMouseDown(index, 15, e)} onMouseEnter={() => handleCellMouseEnter(index, 15)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 15)}`} onMouseDown={(e) => handleCellMouseDown(index, 15, e)} onMouseEnter={() => handleCellMouseEnter(index, 15)}>
                           <CustomDropdown
                             value={prod.disposition || ""}
                             onChange={(val) => handleUpdate(prod._pid, "disposition", val)}
@@ -836,10 +836,10 @@ const ProductionEditableProductTable = ({
                             size="sm"
                             options={dispositionDropdownOptions}
                             usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="151px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -848,7 +848,7 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {/* 16. Raised To */}
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 16)}`} onMouseDown={(e) => handleCellMouseDown(index, 16, e)} onMouseEnter={() => handleCellMouseEnter(index, 16)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 16)}`} onMouseDown={(e) => handleCellMouseDown(index, 16, e)} onMouseEnter={() => handleCellMouseEnter(index, 16)}>
                           <CustomDropdown
                             value={prod.raisedTo || ""}
                             onChange={(val) => {
@@ -863,10 +863,10 @@ const ProductionEditableProductTable = ({
                             searchable={true}
                             searchPlaceholder="Search employee..."
                             usePortal={true}
-                            maxHeight="12vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="173px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -875,10 +875,10 @@ const ProductionEditableProductTable = ({
                         </td>
 
                         {!isReadOnly && (
-                          <td className="sticky right-0 py-[0.6vw] px-[0.8vw] border-r border-b border-slate-300 bg-white z-10 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">
-                            <div className="flex items-center justify-start gap-[0.5vw]">
-                              <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.4vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors" title="Duplicate row"><Copy className="w-[1vw] h-[1vw]" /></button>
-                              <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.4vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors" title="Delete row"><Trash2 className="w-[1vw] h-[1vw]" /></button>
+                          <td className="sticky right-0 py-2.5 px-3 border-r border-b border-slate-300 bg-white z-10 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">
+                            <div className="flex items-center justify-start gap-2">
+                              <button type="button" onClick={() => onDuplicate(prod)} className="p-1.5 text-blue-500 hover:bg-blue-100 rounded-md transition-colors" title="Duplicate row"><Copy className="w-3.5 h-3.5" /></button>
+                              <button type="button" onClick={() => onRemove(prod._pid)} className="p-1.5 text-red-500 hover:bg-red-100 rounded-md transition-colors" title="Delete row"><Trash2 className="w-3.5 h-3.5" /></button>
                             </div>
                           </td>
                         )}
@@ -889,7 +889,7 @@ const ProductionEditableProductTable = ({
                 
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={19} className="py-[1vw] text-center text-blue-700 font-bold italic text-[0.8vw] bg-blue-100/50">
+                     <td colSpan={19} className="py-3.5 text-center text-blue-700 font-bold italic text-xs bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>

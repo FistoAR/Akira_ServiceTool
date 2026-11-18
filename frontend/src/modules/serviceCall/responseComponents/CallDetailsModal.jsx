@@ -217,71 +217,71 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
   const priorityCfg = getPriorityBadge(call.priority || "Medium");
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-[1.5vw] animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-5.5 animate-in fade-in duration-200">
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 10 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-white rounded-[1.2vw] shadow-2xl border border-slate-200/90 w-full max-w-[58vw] max-h-[88vh] flex flex-col overflow-hidden font-sans"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200/90 w-full max-w-[835px] max-h-[88vh] flex flex-col overflow-hidden font-sans"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── HEADER ──────────────────────────────────────────────────────── */}
-        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-[0.75vw]">
-            <div className="w-[2.2vw] h-[2.2vw] rounded-[0.5vw] bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
-              <FileText className="w-[1.1vw] h-[1.1vw]" />
+        <div className="px-5 py-3.5 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
+              <FileText className="w-4 h-4" />
             </div>
 
             <div>
-              <div className="flex items-center gap-[0.45vw] flex-wrap">
-                <span className="font-mono font-medium text-[1vw] text-slate-900 tracking-tight">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-mono font-medium text-xs text-slate-900 tracking-tight">
                   {call.callNumber || "Service Call"}
                 </span>
 
                 <button
                   type="button"
                   onClick={handleCopyCallNo}
-                  className="p-[0.2vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
+                  className="p-1 text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
                   title="Copy Call Reference"
                 >
                   {copied ? (
-                    <Check className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
+                    <Check className="w-3 h-3 text-emerald-600" />
                   ) : (
-                    <Copy className="w-[0.75vw] h-[0.75vw]" />
+                    <Copy className="w-3 h-3" />
                   )}
                 </button>
 
                 {/* Status Pill (hidden if 'Assigned' when call is already Self Assigned) */}
                 {(!isSelfAssigned || (statusCfg.label !== "Assigned" && statusCfg.label !== "Registered")) && (
-                  <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${statusCfg.pill}`}>
-                    <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${statusCfg.dot}`} />
+                  <span className={`inline-flex items-center gap-1 px-2 py-px rounded-full text-sm font-normal border ${statusCfg.pill}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${statusCfg.dot}`} />
                     {statusCfg.label}
                   </span>
                 )}
 
                 {/* Priority Pill */}
-                <span className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border ${priorityCfg.pill}`}>
-                  <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${priorityCfg.dot}`} />
+                <span className={`inline-flex items-center gap-1 px-2 py-px rounded-full text-sm font-normal border ${priorityCfg.pill}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${priorityCfg.dot}`} />
                   {priorityCfg.label}
                 </span>
 
                 {isSelfAssigned && (
-                  <span className="inline-flex items-center gap-[0.2vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal bg-teal-50 text-teal-700 border border-teal-200">
-                    <UserCheck className="w-[0.6vw] h-[0.6vw]" />
+                  <span className="inline-flex items-center gap-1 px-1.5 py-px rounded-full text-sm font-normal bg-teal-50 text-teal-700 border border-teal-200">
+                    <UserCheck className="w-2.5 h-2.5" />
                     Self Assigned
                   </span>
                 )}
               </div>
 
-              <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw] flex items-center gap-[0.3vw]">
-                <Clock className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
+              <div className="text-sm text-slate-700 font-normal mt-px flex items-center gap-1">
+                <Clock className="w-2.5 h-2.5 text-slate-700 shrink-0" />
                 <span>
                   Registered on <span className="text-slate-700 font-normal">{fmtDate(call.dateTime || call.createdAt)}</span>
                 </span>
                 {call.registeredByName && call.registeredByName !== "System" && (
                   <>
-                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-600">•</span>
                     <span>
                       by <span className="text-slate-700 font-normal">{call.registeredByName}</span>
                     </span>
@@ -291,9 +291,9 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-[0.8vw]">
+          <div className="flex items-center gap-3">
             {/* Connected Segmented Navigation Tabs */}
-            <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw]">
+            <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-slate-200/90 gap-0.5">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -302,20 +302,20 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-[0.3vw] px-[0.65vw] py-[0.25vw] rounded-full text-[0.72vw] font-normal transition-all cursor-pointer whitespace-nowrap ${
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-normal transition-all cursor-pointer whitespace-nowrap ${
                       isActive
                         ? "bg-blue-600 text-white shadow-xs font-medium"
                         : "text-slate-600 hover:text-slate-900 hover:bg-white/70"
                     }`}
                   >
-                    <Icon className={`w-[0.75vw] h-[0.75vw] ${isActive ? "text-white" : "text-slate-500"}`} />
+                    <Icon className={`w-3 h-3 ${isActive ? "text-white" : "text-slate-700"}`} />
                     <span>{tab.label}</span>
                     {tab.count !== null && (
                       <span
-                        className={`text-[0.66vw] font-semibold ml-[0.1vw] ${
+                        className={`text-sm font-semibold ml-px ${
                           isActive
-                            ? "bg-white/20 text-white px-[0.35vw] py-[0.02vw] rounded-full"
-                            : "text-slate-400"
+                            ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                            : "text-slate-700"
                         }`}
                       >
                         {tab.count}
@@ -330,100 +330,100 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="p-[0.45vw] text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+              className="p-1.5 text-slate-700 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
               title="Close modal"
             >
-              <X className="w-[1.05vw] h-[1.05vw]" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* ── MODAL BODY ──────────────────────────────────────────────────── */}
-        <div className="p-[1.6vw] overflow-y-auto flex-1 min-h-0 bg-[#f8fafd] space-y-[1.2vw]">
+        <div className="p-6 overflow-y-auto flex-1 min-h-0 bg-[#f8fafd] space-y-4">
           {/* TAB 1: OVERVIEW */}
           {activeTab === "overview" && (
-            <div className="space-y-[1.2vw]">
+            <div className="space-y-4">
               {/* Customer & Call Attributes Cards */}
-              <div className="grid grid-cols-2 gap-[1vw]">
+              <div className="grid grid-cols-2 gap-3.5">
                 {/* 1. Customer Details Card */}
-                <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs">
-                  <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
-                    <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-800">
-                      <div className="p-[0.28vw] rounded-[0.35vw] bg-blue-50 text-blue-600">
-                        <Building2 className="w-[0.85vw] h-[0.85vw]" />
+                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-slate-800">
+                      <div className="p-1 rounded-md bg-blue-50 text-blue-600">
+                        <Building2 className="w-3 h-3" />
                       </div>
                       <span>Customer Details</span>
                     </div>
                     {call.partyCode && (
-                      <span className="font-mono text-[0.68vw] font-normal text-slate-600 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded border border-slate-200">
+                      <span className="font-mono text-sm font-normal text-slate-600 bg-slate-100 px-1.5 py-px rounded border border-slate-200">
                         {call.partyCode}
                       </span>
                     )}
                   </div>
 
-                  <div className="mt-[0.75vw] space-y-[0.55vw] text-[0.76vw]">
-                    <div className="flex items-start justify-between gap-[0.8vw]">
-                      <span className="text-slate-400 font-normal">Customer Name</span>
-                      <span className="font-normal text-slate-800 text-right max-w-[18vw] leading-snug">
+                  <div className="mt-3 space-y-2 text-xs">
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="text-slate-700 font-normal">Customer Name</span>
+                      <span className="font-normal text-slate-800 text-right max-w-[259px] leading-snug">
                         {call.customerName || "—"}
                       </span>
                     </div>
 
                     {call.customerType && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400 font-normal">Customer Type</span>
-                        <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-normal border ${getCustomerTypePill(call.customerType)}`}>
+                        <span className="text-slate-700 font-normal">Customer Type</span>
+                        <span className={`px-1.5 py-px rounded-full text-sm font-normal border ${getCustomerTypePill(call.customerType)}`}>
                           {call.customerType}
                         </span>
                       </div>
                     )}
 
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-normal">Contact Number</span>
+                      <span className="text-slate-700 font-normal">Contact Number</span>
                       {call.contactNumber ? (
                         <a
                           href={`tel:${call.contactNumber}`}
-                          className="font-normal text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.25vw] transition-colors"
+                          className="font-normal text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1 transition-colors"
                         >
-                          <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                          <Phone className="w-2.5 h-2.5 text-blue-500 shrink-0" />
                           <span>{call.contactNumber}</span>
                         </a>
                       ) : (
-                        <span className="text-slate-400 font-normal">—</span>
+                        <span className="text-slate-700 font-normal">—</span>
                       )}
                     </div>
 
                     {call.contactPerson && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400 font-normal">Contact Person</span>
+                        <span className="text-slate-700 font-normal">Contact Person</span>
                         <span className="font-normal text-slate-800">{call.contactPerson}</span>
                       </div>
                     )}
 
                     {call.emailId && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400 font-normal">Email Address</span>
+                        <span className="text-slate-700 font-normal">Email Address</span>
                         <a
                           href={`mailto:${call.emailId}`}
-                          className="font-normal text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.25vw]"
+                          className="font-normal text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
                         >
-                          <Mail className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
+                          <Mail className="w-2.5 h-2.5 text-blue-500 shrink-0" />
                           <span>{call.emailId}</span>
                         </a>
                       </div>
                     )}
 
-                    <div className="flex items-start justify-between gap-[0.8vw]">
-                      <span className="text-slate-400 font-normal">Location</span>
-                      <span className="font-normal text-slate-800 text-right flex items-start justify-end gap-[0.25vw] max-w-[18vw] leading-snug">
-                        <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0 mt-[0.12vw]" />
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="text-slate-700 font-normal">Location</span>
+                      <span className="font-normal text-slate-800 text-right flex items-start justify-end gap-1 max-w-[259px] leading-snug">
+                        <MapPin className="w-2.5 h-2.5 text-slate-700 shrink-0 mt-0.5" />
                         <span>{call.location || "—"}</span>
                       </span>
                     </div>
 
                     {call.site && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400 font-normal">Site / Branch</span>
+                        <span className="text-slate-700 font-normal">Site / Branch</span>
                         <span className="font-normal text-slate-800">{call.site}</span>
                       </div>
                     )}
@@ -431,41 +431,41 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                 </div>
 
                 {/* 2. Call Attributes Card */}
-                <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs">
-                  <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
-                    <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-medium text-slate-800">
-                      <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-600">
-                        <Briefcase className="w-[0.85vw] h-[0.85vw]" />
+                <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-slate-800">
+                      <div className="p-1 rounded-md bg-indigo-50 text-indigo-600">
+                        <Briefcase className="w-3 h-3" />
                       </div>
                       <span>Call Attributes</span>
                     </div>
-                    <span className="font-normal text-[0.68vw] text-slate-600 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded border border-slate-200">
+                    <span className="font-normal text-sm text-slate-600 bg-slate-100 px-1.5 py-px rounded border border-slate-200">
                       {products.length} Item{products.length > 1 ? "s" : ""}
                     </span>
                   </div>
 
-                  <div className="mt-[0.75vw] space-y-[0.55vw] text-[0.76vw]">
+                  <div className="mt-3 space-y-2 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-normal">Call Mode</span>
+                      <span className="text-slate-700 font-normal">Call Mode</span>
                       <span className="font-normal text-slate-800">{call.mode || "Phone"}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-normal">Current Engineer</span>
-                      <span className="font-normal text-indigo-700 bg-indigo-50 px-[0.4vw] py-[0.06vw] rounded text-[0.74vw] border border-indigo-100">
+                      <span className="text-slate-700 font-normal">Current Engineer</span>
+                      <span className="font-normal text-indigo-700 bg-indigo-50 px-1.5 py-px rounded text-xs border border-indigo-100">
                         {call.currentEngineerName || "Unassigned"}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-normal">Department</span>
+                      <span className="text-slate-700 font-normal">Department</span>
                       <span className="font-normal text-slate-800">
                         {call.currentDepartment || "Support Engineers"}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 font-normal">Registered By</span>
+                      <span className="text-slate-700 font-normal">Registered By</span>
                       <span className="font-normal text-slate-800">
                         {call.registeredByName || call.registeredBy || "System"}
                       </span>
@@ -475,25 +475,25 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
               </div>
 
               {/* Quick Products Summary Section */}
-              <div className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.2vw] shadow-xs">
-                <div className="text-[0.8vw] font-medium text-slate-800 pb-[0.6vw] border-b border-slate-100 flex items-center justify-between">
-                  <span className="flex items-center gap-[0.4vw]">
-                    <div className="p-[0.28vw] rounded-[0.35vw] bg-blue-50 text-blue-600">
-                      <Wrench className="w-[0.85vw] h-[0.85vw]" />
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs">
+                <div className="text-xs font-medium text-slate-800 pb-2.5 border-b border-slate-100 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <div className="p-1 rounded-md bg-blue-50 text-blue-600">
+                      <Wrench className="w-3 h-3" />
                     </div>
                     <span>Product Summary ({products.length})</span>
                   </span>
                   <button
                     type="button"
                     onClick={() => setActiveTab("products")}
-                    className="text-[0.72vw] text-blue-600 font-normal hover:text-blue-800 flex items-center gap-[0.15vw] transition-colors cursor-pointer group"
+                    className="text-sm text-blue-600 font-normal hover:text-blue-800 flex items-center gap-0.5 transition-colors cursor-pointer group"
                   >
                     <span>View Details</span>
-                    <ChevronRight className="w-[0.7vw] h-[0.7vw] group-hover:translate-x-0.5 transition-transform" />
+                    <ChevronRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
 
-                <div className="mt-[0.7vw] divide-y divide-slate-100">
+                <div className="mt-2.5 divide-y divide-slate-100">
                   {products.map((p, idx) => {
                     const closureStatus = p._productClosure?.status || (p._resolved ? "Resolved" : "Open");
                     const pStatusCfg = getStatusBadge(closureStatus);
@@ -501,32 +501,32 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                     return (
                       <div
                         key={idx}
-                        className="py-[0.55vw] first:pt-0 last:pb-0 flex items-center justify-between text-[0.76vw] hover:bg-slate-50/70 px-[0.3vw] rounded transition-colors"
+                        className="py-2 first:pt-0 last:pb-0 flex items-center justify-between text-xs hover:bg-slate-50/70 px-1 rounded transition-colors"
                       >
-                        <div className="flex items-center gap-[0.65vw]">
-                          <span className="w-[1.5vw] h-[1.5vw] rounded bg-slate-100 text-slate-600 font-normal flex items-center justify-center text-[0.68vw] border border-slate-200">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-5.5 h-5.5 rounded bg-slate-100 text-slate-600 font-normal flex items-center justify-center text-sm border border-slate-200">
                             #{idx + 1}
                           </span>
                           <div>
-                            <div className="font-medium text-slate-800 text-[0.78vw]">
+                            <div className="font-medium text-slate-800 text-sm">
                               {p.productModel || p.productName || p.itemCode || "Product"}
                             </div>
-                            <div className="text-[0.68vw] text-slate-500 font-mono mt-[0.05vw] flex items-center gap-[0.35vw]">
+                            <div className="text-sm text-slate-700 font-mono mt-px flex items-center gap-1.5">
                               <span>SN: <span className="text-slate-600 font-normal">{p.serialNumber || "N/A"}</span></span>
-                              <span className="text-slate-300">•</span>
+                              <span className="text-slate-600">•</span>
                               <span>Segment: <span className="text-slate-600 font-normal">{p.productSegment || "General"}</span></span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-[0.6vw]">
+                        <div className="flex items-center gap-2.5">
                           {p.errorCode && (
-                            <span className="px-[0.4vw] py-[0.08vw] bg-rose-50 border border-rose-200 text-rose-700 font-mono font-normal text-[0.68vw] rounded">
+                            <span className="px-1.5 py-px bg-rose-50 border border-rose-200 text-rose-700 font-mono font-normal text-sm rounded">
                               Err: {p.errorCode}
                             </span>
                           )}
-                          <span className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
-                            <span className={`w-[0.32vw] h-[0.32vw] rounded-full ${pStatusCfg.dot}`} />
+                          <span className={`inline-flex items-center gap-1 px-2 py-px rounded-full text-sm font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${pStatusCfg.dot}`} />
                             {pStatusCfg.label}
                           </span>
                         </div>
@@ -540,7 +540,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
           {/* TAB 2: PRODUCTS DETAILED */}
           {activeTab === "products" && (
-            <div className="space-y-[0.9vw]">
+            <div className="space-y-3.5">
               {products.map((p, idx) => {
                 const closure = p._productClosure || {};
                 const closureStatus = closure.status || (p._resolved ? "Resolved" : "Open");
@@ -549,48 +549,48 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                 return (
                   <div
                     key={idx}
-                    className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.75vw]"
+                    className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs space-y-3"
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between pb-[0.55vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.55vw]">
-                        <span className="px-[0.45vw] py-[0.12vw] rounded bg-blue-50 text-blue-700 font-mono font-normal text-[0.7vw] border border-blue-200">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-mono font-normal text-sm border border-blue-200">
                           #{idx + 1}
                         </span>
-                        <h4 className="text-[0.85vw] font-medium text-slate-800">
+                        <h4 className="text-sm font-medium text-slate-800">
                           {p.productModel || p.productName || p.itemCode || "Item"}
                         </h4>
                       </div>
 
-                      <span className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
-                        <span className={`w-[0.32vw] h-[0.32vw] rounded-full ${pStatusCfg.dot}`} />
+                      <span className={`inline-flex items-center gap-1 px-2 py-px rounded-full text-sm font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${pStatusCfg.dot}`} />
                         {pStatusCfg.label}
                       </span>
                     </div>
 
                     {/* Product Specs Grid */}
-                    <div className="grid grid-cols-4 gap-[0.7vw] text-[0.74vw] bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border border-slate-200/80">
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Serial Number</span>
-                        <span className="font-mono font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
+                    <div className="grid grid-cols-4 gap-2.5 text-xs bg-slate-50/80 p-3 rounded-lg border border-slate-200/80">
+                      <div className="bg-white p-2 rounded border border-slate-200/70">
+                        <span className="text-slate-700 block text-xs font-normal uppercase tracking-wider">Serial Number</span>
+                        <span className="font-mono font-normal text-slate-800 text-xs mt-px block">
                           {p.serialNumber || "—"}
                         </span>
                       </div>
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Product Segment</span>
-                        <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
+                      <div className="bg-white p-2 rounded border border-slate-200/70">
+                        <span className="text-slate-700 block text-xs font-normal uppercase tracking-wider">Product Segment</span>
+                        <span className="font-normal text-slate-800 text-xs mt-px block">
                           {p.productSegment || "—"}
                         </span>
                       </div>
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Warranty Status</span>
-                        <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
+                      <div className="bg-white p-2 rounded border border-slate-200/70">
+                        <span className="text-slate-700 block text-xs font-normal uppercase tracking-wider">Warranty Status</span>
+                        <span className="font-normal text-slate-800 text-xs mt-px block">
                           {p.warrantyStatus || "In Warranty"}
                         </span>
                       </div>
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Error Code</span>
-                        <span className="font-mono font-normal text-rose-600 text-[0.78vw] mt-[0.1vw] block">
+                      <div className="bg-white p-2 rounded border border-slate-200/70">
+                        <span className="text-slate-700 block text-xs font-normal uppercase tracking-wider">Error Code</span>
+                        <span className="font-mono font-normal text-rose-600 text-xs mt-px block">
                           {p.errorCode || "—"}
                         </span>
                       </div>
@@ -598,34 +598,34 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                     {/* Issue Description */}
                     <div>
-                      <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
+                      <span className="text-sm font-normal text-slate-700 uppercase tracking-wider block mb-1">
                         Reported Issue
                       </span>
-                      <div className="text-[0.74vw] text-slate-700 bg-slate-50/60 p-[0.6vw] rounded border border-slate-200 font-normal leading-relaxed">
-                        {p.callDescription ? p.callDescription : <span className="text-slate-400 italic">No specific issue description entered.</span>}
+                      <div className="text-xs text-slate-700 bg-slate-50/60 p-2.5 rounded border border-slate-200 font-normal leading-relaxed">
+                        {p.callDescription ? p.callDescription : <span className="text-slate-700 italic">No specific issue description entered.</span>}
                       </div>
                     </div>
 
                     {/* Closure Report Section */}
                     {closure.status && (
-                      <div className="bg-emerald-50/50 border border-emerald-200 rounded-[0.5vw] p-[0.75vw] space-y-[0.4vw]">
+                      <div className="bg-emerald-50/50 border border-emerald-200 rounded-lg p-3 space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.74vw] font-normal text-emerald-800 flex items-center gap-[0.3vw]">
-                            <CheckCircle2 className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
+                          <span className="text-xs font-normal text-emerald-800 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                             Closure Report ({closure.status})
                           </span>
                           {closure.resolutionType && (
-                            <span className="text-[0.66vw] font-normal bg-white text-emerald-700 px-[0.4vw] py-[0.08vw] rounded border border-emerald-200">
+                            <span className="text-sm font-normal bg-white text-emerald-700 px-1.5 py-px rounded border border-emerald-200">
                               {closure.resolutionType}
                             </span>
                           )}
                         </div>
                         {closure.remarks && (
-                          <div className="text-[0.74vw] text-emerald-950 font-normal leading-relaxed bg-white/80 p-[0.5vw] rounded border border-emerald-100">
+                          <div className="text-xs text-emerald-950 font-normal leading-relaxed bg-white/80 p-2 rounded border border-emerald-100">
                             {closure.remarks}
                           </div>
                         )}
-                        <div className="text-[0.68vw] text-emerald-700 font-normal pt-[0.1vw]">
+                        <div className="text-sm text-emerald-700 font-normal pt-px">
                           Closed by: <span className="font-normal text-emerald-900">{closure.closedByName || closure.userName || "Engineer"}</span>
                           {closure.closedAt && ` on ${fmtDate(closure.closedAt)}`}
                         </div>
@@ -639,10 +639,10 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
           {/* TAB 3: AUDIT TIMELINE */}
           {activeTab === "timeline" && (
-            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.9vw]">
-              <div className="text-[0.8vw] font-medium text-slate-800 pb-[0.6vw] border-b border-slate-100 flex items-center gap-[0.4vw]">
-                <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-600">
-                  <Activity className="w-[0.85vw] h-[0.85vw]" />
+            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs space-y-3.5">
+              <div className="text-xs font-medium text-slate-800 pb-2.5 border-b border-slate-100 flex items-center gap-1.5">
+                <div className="p-1 rounded-md bg-indigo-50 text-indigo-600">
+                  <Activity className="w-3 h-3" />
                 </div>
                 <span>Lifecycle History & Audits</span>
               </div>
@@ -733,16 +733,16 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                 if (timelineEvents.length === 0) {
                   return (
-                    <div className="text-center py-[2vw] text-slate-400 text-[0.76vw] font-normal">
+                    <div className="text-center py-7 text-slate-700 text-xs font-normal">
                       No historical events recorded for this call.
                     </div>
                   );
                 }
 
                 return (
-                  <div className="relative pl-[2vw] space-y-[0.65vw]">
+                  <div className="relative pl-7 space-y-2.5">
                     {/* Vertical timeline line precisely running through the dot column */}
-                    <div className="absolute left-[0.7vw] -translate-x-1/2 top-[0.6vw] bottom-[0.6vw] w-[2px] bg-slate-200 pointer-events-none" />
+                    <div className="absolute left-[10px] -translate-x-1/2 top-[9px] bottom-[9px] w-0.5 bg-slate-200 pointer-events-none" />
 
                     {timelineEvents.map((ev, i) => {
                       const isCritical = ev.title.includes("Critical");
@@ -765,25 +765,25 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                       return (
                         <div key={i} className="relative group">
-                          {/* Dot positioned cleanly in the gutter at -left-[1.3vw], exactly centered on the line at left-[0.7vw] */}
+                          {/* Dot positioned cleanly in the gutter at -left-[19px], exactly centered on the line at left-[10px] */}
                           <div
-                            className={`absolute -left-[1.3vw] -translate-x-1/2 top-[0.7vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
+                            className={`absolute -left-[19px] -translate-x-1/2 top-[10px] w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
                           />
 
-                          <div className={`border rounded-[0.5vw] p-[0.65vw] transition-colors ${cardBorder} hover:bg-white`}>
-                            <div className="flex items-center justify-between text-[0.74vw]">
+                          <div className={`border rounded-lg p-2.5 transition-colors ${cardBorder} hover:bg-white`}>
+                            <div className="flex items-center justify-between text-xs">
                               <span className="font-normal text-slate-800">{ev.title}</span>
-                              <span className="text-slate-400 font-mono text-[0.68vw]">
+                              <span className="text-slate-700 font-mono text-sm">
                                 {fmtDate(ev.time)}
                               </span>
                             </div>
-                            <div className="text-[0.72vw] text-slate-600 mt-[0.15vw] leading-relaxed font-normal flex items-center flex-wrap gap-x-[0.35vw]">
+                            <div className="text-sm text-slate-600 mt-0.5 leading-relaxed font-normal flex items-center flex-wrap gap-x-1.5">
                               <span>
                                 By <span className="text-slate-800">{ev.person}</span>
                               </span>
                               {ev.target && (
                                 <>
-                                  <span className="text-slate-300">•</span>
+                                  <span className="text-slate-600">•</span>
                                   <span>
                                     To: <span className="text-slate-800">{ev.target}</span>
                                   </span>
@@ -791,7 +791,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                               )}
                               {ev.details && (
                                 <>
-                                  <span className="text-slate-300">•</span>
+                                  <span className="text-slate-600">•</span>
                                   <span>{ev.details}</span>
                                 </>
                               )}
@@ -808,11 +808,11 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
         </div>
 
         {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-        <div className="px-[1.6vw] py-[0.9vw] border-t border-slate-200/90 bg-white flex items-center justify-end shrink-0">
+        <div className="px-6 py-3.5 border-t border-slate-200/90 bg-white flex items-center justify-end shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.3vw] h-[2vw] text-[0.74vw] font-normal text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+            className="px-[19px] h-7 text-xs font-normal text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
           >
             Close
           </button>

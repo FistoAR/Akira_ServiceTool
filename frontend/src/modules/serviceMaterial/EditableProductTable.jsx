@@ -475,7 +475,7 @@ const EditableProductTable = ({
       <div 
         data-fill-handle="true"
         onMouseDown={handleFillHandleMouseDown}
-        className="absolute bottom-[-5px] right-[-5px] w-[0.6vw] h-[0.6vw] bg-blue-600 border-2 border-white cursor-crosshair z-[60] shadow-sm rounded-sm"
+        className="absolute bottom-[-5px] right-[-5px] w-2.5 h-2.5 bg-blue-600 border-2 border-white cursor-crosshair z-[60] shadow-sm rounded-sm"
         title="Drag down to copy / create duplicate rows"
       />
     );
@@ -492,20 +492,20 @@ const EditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
+      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-3.5 relative ${isFilling ? "select-none" : ""}`}
     >
-      <table className="w-full border-collapse text-[0.8vw]">
-        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
+      <table className="w-full border-collapse text-xs">
+        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-sm">
           <tr>
-            {!isReadOnly && <th className="w-[2.5vw] py-[0.7vw] px-[0.4vw] border-r border-b border-slate-300"></th>}
-            <th className="w-[3vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
-            <th className="min-w-[18vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="w-[9vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
-            <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
-            <th className="w-[9.5vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
-            {!isReadOnly && <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
+            {!isReadOnly && <th className="w-9 py-2.5 px-1.5 border-r border-b border-slate-300"></th>}
+            <th className="w-[43px] py-2.5 px-1.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
+            <th className="min-w-[259px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="w-[130px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
+            <th className="w-[115px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[144px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
+            <th className="w-[86px] py-2.5 px-2 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
+            <th className="w-[137px] py-2.5 px-2 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
+            {!isReadOnly && <th className="w-[86px] py-2.5 px-2 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -532,16 +532,16 @@ const EditableProductTable = ({
                         } ${snapshot.isDragging ? "bg-white shadow-lg ring-1 ring-blue-200 z-50 table" : ""}`}
                       >
                         {!isReadOnly && (
-                          <td className="py-[0.6vw] px-[0.5vw] text-center align-middle" {...provided.dragHandleProps}>
-                            <GripVertical className={`w-[1vw] h-[1vw] ${isClaimed ? "text-gray-300 cursor-not-allowed" : "text-gray-700 cursor-grab active:cursor-grabbing"}`} />
+                          <td className="py-2.5 px-2 text-center align-middle" {...provided.dragHandleProps}>
+                            <GripVertical className={`w-3.5 h-3.5 ${isClaimed ? "text-gray-600 cursor-not-allowed" : "text-gray-700 cursor-grab active:cursor-grabbing"}`} />
                           </td>
                         )}
-                        <td className="py-[0.6vw] px-[0.5vw] text-center align-middle font-semibold text-black border-r border-b border-slate-300">
+                        <td className="py-2.5 px-2 text-center align-middle font-semibold text-black border-r border-b border-slate-300">
                           {index + 1}
                         </td>
                         
                         <td 
-                          className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 0)}`}
+                          className={`py-2.5 px-3 relative transition-all ${getCellClass(index, 0)}`}
                           onMouseDown={(e) => handleCellMouseDown(index, 0, e)}
                           onMouseEnter={() => handleCellMouseEnter(index, 0)}
                           onDoubleClick={(e) => !isRowDisabled && openDropdown(prod._pid, e.currentTarget)}
@@ -564,19 +564,19 @@ const EditableProductTable = ({
                               onClick={(e) => !isRowDisabled && openDropdown(prod._pid, e.currentTarget.parentElement.parentElement)}
                               placeholder={customerCode ? "Search or enter description..." : "Select customer first"}
                               disabled={!customerCode || isRowDisabled}
-                              className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium disabled:bg-transparent ${isRowDisabled ? "cursor-not-allowed text-slate-500" : "cursor-text"} description-input`}
+                              className={`w-full bg-transparent border-none rounded-md py-1.5 px-2.5 outline-none transition-all text-slate-900 font-medium disabled:bg-transparent ${isRowDisabled ? "cursor-not-allowed text-slate-700" : "cursor-text"} description-input`}
                             />
                             {!isReadOnly && customerCode && !isClaimed && (
-                              <Search className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none group-focus-within:text-blue-500" />
+                              <Search className="w-3 h-3 text-gray-700 absolute right-[9px] pointer-events-none group-focus-within:text-blue-500" />
                             )}
                           </div>
                           {renderFillHandle(index, 0)}
                           
                           {activeDropdown?.id === prod._pid && !isRowDisabled && (
                             <DropdownPortal targetRect={activeDropdown.rect}>
-                              <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto dropdown-container">
+                              <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-md max-h-[216px] overflow-y-auto dropdown-container">
                                 {!customerCode ? (
-                                    <div className="p-[1vw] text-center text-red-500 font-semibold text-[0.8vw]">Please select a customer first.</div>
+                                    <div className="p-3.5 text-center text-red-500 font-semibold text-xs">Please select a customer first.</div>
                                 ) : filteredProds.length > 0 ? (
                                   <div className="prod-drop-container">
                                     {filteredProds.map((p, i) => (
@@ -587,30 +587,30 @@ const EditableProductTable = ({
                                             e.stopPropagation();
                                             selectProduct(prod._pid, p);
                                         }}
-                                        className={`p-[0.6vw] cursor-pointer border-b border-slate-300 last:border-0 ${i === prodActiveIndex ? "bg-blue-100" : "hover:bg-blue-50"}`}
+                                        className={`p-2.5 cursor-pointer border-b border-slate-300 last:border-0 ${i === prodActiveIndex ? "bg-blue-100" : "hover:bg-blue-50"}`}
                                       >
-                                        <div className="font-semibold text-gray-900 text-[0.8vw]">{p.itemDescription || p.productDescription}</div>
-                                        <div className="text-[0.7vw] text-gray-700 flex items-center gap-[0.4vw] mt-[0.1vw]">
-                                          <span className="bg-gray-100 px-[0.3vw] rounded font-mono border-r border-b border-slate-300">{p.itemCode || p.productCode}</span>
+                                        <div className="font-semibold text-gray-900 text-xs">{p.itemDescription || p.productDescription}</div>
+                                        <div className="text-sm text-gray-700 flex items-center gap-1.5 mt-px">
+                                          <span className="bg-gray-100 px-1 rounded font-mono border-r border-b border-slate-300">{p.itemCode || p.productCode}</span>
                                           {(p.productSegment || p.segment) && <span className="font-medium">· {p.productSegment || p.segment}</span>}
                                         </div>
                                       </div>
                                     ))}
                                   </div>
                                 ) : (
-                                  <div className="p-[1vw] text-center text-gray-700 font-medium italic">No products found for {customerCode}</div>
+                                  <div className="p-3.5 text-center text-gray-700 font-medium italic">No products found for {customerCode}</div>
                                 )}
                               </div>
                             </DropdownPortal>
                           )}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.5vw] relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
-                          <div className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-medium text-[0.75vw] truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
+                        <td className={`py-2.5 px-2 relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
+                          <div className="text-black px-1.5 py-1.5 rounded-md font-medium text-xs truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
                           {renderFillHandle(index, 1)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
                           <CustomDropdown
                             value={prod.boardType || ""}
                             onChange={(val) => handleUpdate(prod._pid, "boardType", val)}
@@ -619,10 +619,10 @@ const EditableProductTable = ({
                             size="sm"
                             options={boardTypeOptions}
                             usePortal={true}
-                            maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            maxHeight="151px"
+                            triggerClassName={`!py-1 !h-7 !rounded-md text-xs ${
                               isRowDisabled
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-700"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
@@ -630,20 +630,20 @@ const EditableProductTable = ({
                           {renderFillHandle(index, 2)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.5vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
+                        <td className={`py-2.5 px-2 relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
                           <div className="relative flex items-center group">
-                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isRowDisabled} className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.4vw] pr-[1.8vw] outline-none transition-all text-slate-900 font-medium disabled:bg-transparent text-[0.78vw] ${isRowDisabled ? "cursor-not-allowed text-slate-500" : ""}`} />
-                            {!isReadOnly && !isClaimed && <button type="button" className="absolute right-[0.2vw] p-[0.2vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-[0.9vw] h-[0.9vw]" /></button>}
+                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isRowDisabled} className={`w-full bg-transparent border-none rounded-md py-1.5 px-1.5 pr-6.5 outline-none transition-all text-slate-900 font-medium disabled:bg-transparent text-xs ${isRowDisabled ? "cursor-not-allowed text-slate-700" : ""}`} />
+                            {!isReadOnly && !isClaimed && <button type="button" className="absolute right-[3px] p-1 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-3.5 h-3.5" /></button>}
                           </div>
                           {renderFillHandle(index, 3)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
-                          <div className="flex bg-gray-100 p-[0.15vw] rounded-[0.3vw] w-full border border-slate-300 cursor-default select-none">
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 4)}`} onMouseDown={(e) => handleCellMouseDown(index, 4, e)} onMouseEnter={() => handleCellMouseEnter(index, 4)}>
+                          <div className="flex bg-gray-100 p-0.5 rounded-md w-full border border-slate-300 cursor-default select-none">
                             {typeOptions.map(opt => (
                               <span 
                                 key={opt} 
-                                className={`flex-1 py-[0.25vw] text-[0.68vw] font-bold rounded-[0.25vw] text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-400"}`}
+                                className={`flex-1 py-1 text-sm font-bold rounded-sm text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700"}`}
                               >
                                 {opt}
                               </span>
@@ -652,7 +652,7 @@ const EditableProductTable = ({
                           {renderFillHandle(index, 4)}
                         </td>
 
-                        <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
+                        <td className={`py-2.5 px-1.5 relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <div className="relative flex items-center">
                             <input 
                               type="date" 
@@ -660,7 +660,7 @@ const EditableProductTable = ({
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
                               disabled={isRowDisabled || !prod.serialNumber} 
                               title={isClaimed ? "Claimed record (read only)" : !prod.serialNumber ? "Enter Serial Number first" : ""}
-                              className="no-native-calendar w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.6vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-400 text-[0.76vw]" 
+                              className="no-native-calendar w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-md py-1.5 px-1 pr-6 outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-700 text-xs" 
                             />
                             <button
                               type="button"
@@ -676,25 +676,25 @@ const EditableProductTable = ({
                                   }
                                 }
                               }}
-                              className={`absolute right-[0.3vw] p-[0.1vw] flex items-center justify-center rounded-[0.2vw] transition-colors ${
+                              className={`absolute right-[4px] p-px flex items-center justify-center rounded-sm transition-colors ${
                                 isRowDisabled || !prod.serialNumber
-                                  ? "text-gray-300 cursor-not-allowed"
+                                  ? "text-gray-600 cursor-not-allowed"
                                   : "text-gray-600 hover:text-blue-600 cursor-pointer"
                               }`}
                               title={isClaimed ? "Claimed record (read only)" : !prod.serialNumber ? "Enter Serial Number first" : "Choose Date"}
                             >
-                              <Calendar className="w-[0.8vw] h-[0.8vw]" />
+                              <Calendar className="w-3 h-3" />
                             </button>
                           </div>
                           {renderFillHandle(index, 5)}
                         </td>
 
                         {!isReadOnly && (
-                          <td className="py-[0.6vw] px-[0.4vw] border-r border-b border-slate-300 text-center">
-                            <div className="flex items-center justify-center gap-[0.3vw]">
-                              <button type="button" onClick={() => onDuplicate(prod)} className="p-[0.3vw] text-blue-500 hover:bg-blue-100 rounded-[0.3vw] transition-colors" title="Duplicate row"><Copy className="w-[0.9vw] h-[0.9vw]" /></button>
+                          <td className="py-2.5 px-1.5 border-r border-b border-slate-300 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <button type="button" onClick={() => onDuplicate(prod)} className="p-1 text-blue-500 hover:bg-blue-100 rounded-md transition-colors" title="Duplicate row"><Copy className="w-3.5 h-3.5" /></button>
                               {!isClaimed && (
-                                <button type="button" onClick={() => onRemove(prod._pid)} className="p-[0.3vw] text-red-500 hover:bg-red-100 rounded-[0.3vw] transition-colors" title="Delete row"><Trash2 className="w-[0.9vw] h-[0.9vw]" /></button>
+                                <button type="button" onClick={() => onRemove(prod._pid)} className="p-1 text-red-500 hover:bg-red-100 rounded-md transition-colors" title="Delete row"><Trash2 className="w-3.5 h-3.5" /></button>
                               )}
                             </div>
                           </td>
@@ -708,7 +708,7 @@ const EditableProductTable = ({
                 {/* RESTORED: Dragging indicator */}
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={9} className="py-[1vw] text-center text-blue-700 font-semibold italic text-[0.8vw] bg-blue-100/50">
+                     <td colSpan={9} className="py-3.5 text-center text-blue-700 font-semibold italic text-xs bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>

@@ -6,23 +6,23 @@ export const IssueDetailsContainer = ({ product }) => {
     product.serialNumber || product.errorCode || product.warrantyStatus;
 
   return (
-    <div className="mt-[0.6vw] flex flex-col gap-[0.8vw]">
+    <div className="mt-2.5 flex flex-col gap-3">
       {hasExtra && (
-        <div className="flex flex-wrap gap-[0.8vw] items-center border-b border-slate-200 pb-[0.6vw]">
+        <div className="flex flex-wrap gap-3 items-center border-b border-slate-200 pb-2.5">
           {product.serialNumber && (
-            <div className="flex items-center gap-[0.3vw] text-[0.75vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
+            <div className="flex items-center gap-1 text-xs text-slate-700 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-md shadow-sm">
               <span className="font-bold">Serial Num:</span>{" "}
               {product.serialNumber}
             </div>
           )}
           {product.errorCode && (
-            <div className="flex items-center gap-[0.3vw] text-[0.75vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
+            <div className="flex items-center gap-1 text-xs text-slate-700 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-md shadow-sm">
               <span className="font-bold text-slate-900">Error code :</span>{" "}
               {product.errorCode}
             </div>
           )}
           {product.warrantyStatus && (
-            <div className="flex items-center gap-[0.3vw] text-[0.75vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
+            <div className="flex items-center gap-1 text-xs text-slate-700 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-md shadow-sm">
               <span className="font-bold text-slate-900">Warranty:</span>{" "}
               {product.warrantyStatus}
             </div>
@@ -30,19 +30,19 @@ export const IssueDetailsContainer = ({ product }) => {
         </div>
       )}
 
-      <div className="flex items-start justify-between gap-[1vw]">
+      <div className="flex items-start justify-between gap-3.5">
         <div className="flex-1">
-          <div className="text-[0.85vw] font-bold text-slate-500 mb-[0.3vw]">
+          <div className="text-sm font-bold text-slate-700 mb-1">
             Reported Issue Details
           </div>
-          <div className="text-[0.85vw] text-slate-800 font-semibold leading-relaxed">
+          <div className="text-sm text-slate-800 font-semibold leading-relaxed">
             {product.callDescription || "No description provided"}
           </div>
         </div>
 
         {/* Uploaded Reference Media */}
         {product.mediaFiles && product.mediaFiles.length > 0 && (
-          <div className="flex flex-wrap gap-[0.6vw] justify-end max-w-[40%]">
+          <div className="flex flex-wrap gap-2.5 justify-end max-w-[40%]">
             {product.mediaFiles.map((file, idx) => {
               const isImage =
                 file.type?.startsWith("image/") ||
@@ -59,7 +59,7 @@ export const IssueDetailsContainer = ({ product }) => {
               return (
                 <div
                   key={idx}
-                  className="group relative w-[5vw] h-[5vw] rounded-[0.5vw] border border-slate-300 overflow-hidden bg-slate-100 flex items-center justify-center shadow-sm"
+                  className="group relative w-18 h-18 rounded-lg border border-slate-300 overflow-hidden bg-slate-100 flex items-center justify-center shadow-sm"
                   title={file.name}
                 >
                   {isImage ? (
@@ -69,23 +69,23 @@ export const IssueDetailsContainer = ({ product }) => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="flex flex-col items-center justify-center p-[0.5vw] text-slate-500">
-                      <FileText className="w-[1.2vw] h-[1.2vw] mb-[0.2vw]" />
-                      <span className="text-[0.5vw] truncate w-[4vw] text-center font-medium">
+                    <div className="flex flex-col items-center justify-center p-2 text-slate-700">
+                      <FileText className="w-4 h-4 mb-1" />
+                      <span className="text-xs truncate w-14 text-center font-medium">
                         {file.name}
                       </span>
                     </div>
                   )}
 
                   {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-[0.4vw] backdrop-blur-[1px]">
+                  <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 backdrop-blur-[1px]">
                     <a
                       href={displayUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white/95 hover:bg-white text-slate-800 rounded px-[0.5vw] py-[0.15vw] text-[0.6vw] font-bold shadow-sm transition-colors flex items-center gap-[0.2vw]"
+                      className="bg-white/95 hover:bg-white text-slate-800 rounded px-2 py-0.5 text-xs font-bold shadow-sm transition-colors flex items-center gap-1"
                     >
-                      <Eye className="w-[0.7vw] h-[0.7vw]" /> View
+                      <Eye className="w-2.5 h-2.5" /> View
                     </a>
                     <button
                       onClick={(e) => {
@@ -99,9 +99,9 @@ export const IssueDetailsContainer = ({ product }) => {
                             link.click();
                           });
                       }}
-                      className="bg-indigo-600/95 hover:bg-indigo-500 text-white rounded px-[0.5vw] py-[0.15vw] text-[0.6vw] font-bold shadow-sm transition-colors flex items-center gap-[0.2vw]"
+                      className="bg-indigo-600/95 hover:bg-indigo-500 text-white rounded px-2 py-0.5 text-xs font-bold shadow-sm transition-colors flex items-center gap-1"
                     >
-                      <Download className="w-[0.7vw] h-[0.7vw]" /> Save
+                      <Download className="w-2.5 h-2.5" /> Save
                     </button>
                   </div>
                 </div>

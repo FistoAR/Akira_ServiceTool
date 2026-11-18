@@ -70,22 +70,22 @@ const ProductClosurePanel = ({
   const badgeConfig = {
     Resolved: {
       bg: "bg-emerald-50 text-emerald-700 border-emerald-300",
-      icon: <CheckCircle className="w-[0.85vw] h-[0.85vw]" />,
+      icon: <CheckCircle className="w-3 h-3" />,
       label: "Resolved",
     },
     Pending: {
       bg: "bg-amber-50 text-amber-700 border-amber-300",
-      icon: <Clock className="w-[0.85vw] h-[0.85vw]" />,
+      icon: <Clock className="w-3 h-3" />,
       label: "Pending",
     },
     "Field Visit Required": {
       bg: "bg-blue-50 text-blue-700 border-blue-300",
-      icon: <MapPin className="w-[0.85vw] h-[0.85vw]" />,
+      icon: <MapPin className="w-3 h-3" />,
       label: "Field Visit",
     },
     "Support Requested": {
       bg: "bg-sky-50 text-sky-700 border-sky-300",
-      icon: <HelpCircle className="w-[0.85vw] h-[0.85vw]" />,
+      icon: <HelpCircle className="w-3 h-3" />,
       label: "Support Requested",
     },
   };
@@ -97,12 +97,12 @@ const ProductClosurePanel = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] rounded-[0.5vw] border text-[0.75vw] font-bold ${currentBadge.bg} shadow-2xs`}
+        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-bold ${currentBadge.bg} shadow-2xs`}
       >
         {currentBadge.icon}
         <span>{currentBadge.label}</span>
         {existing.remarks && (
-          <span className="text-[0.7vw] text-slate-600 truncate max-w-[12vw] font-normal">
+          <span className="text-sm text-slate-600 truncate max-w-[173px] font-normal">
             - {existing.remarks}
           </span>
         )}
@@ -334,7 +334,7 @@ const ProductClosurePanel = ({
     {
       id: "Open",
       l: "Support",
-      icon: <LifeBuoy className="w-[0.9vw] h-[0.9vw] text-blue-500" />,
+      icon: <LifeBuoy className="w-3.5 h-3.5 text-blue-500" />,
       activeStyle:
         "bg-blue-600 text-white shadow-md shadow-blue-500/20 border-blue-600",
       hoverStyle: "hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300",
@@ -344,7 +344,7 @@ const ProductClosurePanel = ({
           {
             id: "Pending",
             l: "Pending",
-            icon: <PauseCircle className="w-[0.9vw] h-[0.9vw] text-amber-500" />,
+            icon: <PauseCircle className="w-3.5 h-3.5 text-amber-500" />,
             activeStyle:
               "bg-amber-600 text-white shadow-md shadow-amber-500/20 border-amber-600",
             hoverStyle:
@@ -355,7 +355,7 @@ const ProductClosurePanel = ({
     {
       id: "FVRequired",
       l: "Field Visit",
-      icon: <MapPin className="w-[0.9vw] h-[0.9vw] text-indigo-500" />,
+      icon: <MapPin className="w-3.5 h-3.5 text-indigo-500" />,
       activeStyle:
         "bg-indigo-600 text-white shadow-md shadow-indigo-500/20 border-indigo-600",
       hoverStyle:
@@ -364,7 +364,7 @@ const ProductClosurePanel = ({
     {
       id: "Resolved",
       l: "Resolve",
-      icon: <CheckCircle2 className="w-[0.9vw] h-[0.9vw] text-emerald-500" />,
+      icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />,
       activeStyle:
         "bg-emerald-600 text-white shadow-md shadow-emerald-500/20 border-emerald-600",
       hoverStyle:
@@ -375,7 +375,7 @@ const ProductClosurePanel = ({
           {
             id: "Returned",
             l: "Return to Assigned",
-            icon: <Undo2 className="w-[0.9vw] h-[0.9vw] text-purple-500" />,
+            icon: <Undo2 className="w-3.5 h-3.5 text-purple-500" />,
             activeStyle:
               "bg-purple-600 text-white shadow-md shadow-purple-500/20 border-purple-600",
             hoverStyle:
@@ -388,7 +388,7 @@ const ProductClosurePanel = ({
           {
             id: "ReverseEscalate",
             l: "Reverse Escalate",
-            icon: <RotateCcw className="w-[0.9vw] h-[0.9vw] text-rose-500" />,
+            icon: <RotateCcw className="w-3.5 h-3.5 text-rose-500" />,
             activeStyle:
               "bg-rose-600 text-white shadow-md shadow-rose-500/20 border-rose-600",
             hoverStyle:
@@ -399,19 +399,19 @@ const ProductClosurePanel = ({
   ];
 
   return (
-    <div className="flex flex-col gap-[0.8vw]">
-      <div className="flex flex-col gap-[0.6vw]">
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2.5">
         {savedBadge ? (
-          <div className="flex items-center justify-between border-b border-slate-200 pb-[0.6vw]">
-            <span className="text-[0.72vw] font-normal text-slate-400 uppercase tracking-wider">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+            <span className="text-sm font-normal text-slate-700 uppercase tracking-wider">
               Current Status
             </span>
             {savedBadge}
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-[0.7vw]">
-          <div className="flex items-center gap-[0.4vw] w-full flex-nowrap">
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center gap-1.5 w-full flex-nowrap">
             {tabs.map((t) => {
               const isActive = selected === t.id;
               return (
@@ -424,7 +424,7 @@ const ProductClosurePanel = ({
                     setNotes("");
                     setErrors({});
                   }}
-                  className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.74vw] font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
+                  className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg border text-xs font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
                     isActive
                       ? t.activeStyle
                       : `bg-white border-slate-300 text-slate-700 ${t.hoverStyle}`
@@ -433,7 +433,7 @@ const ProductClosurePanel = ({
                   {t.icon &&
                     (isActive
                       ? cloneElement(t.icon, {
-                          className: `${t.icon.props.className || "w-[0.9vw] h-[0.9vw]"} text-white`,
+                          className: `${t.icon.props.className || "w-3.5 h-3.5"} text-white`,
                         })
                       : t.icon)}
                   <span className="truncate">{t.l}</span>
@@ -448,15 +448,15 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="bg-blue-50 border border-blue-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-visible shadow-inner"
+                className="bg-blue-50 border border-blue-300 rounded-lg p-3 space-y-2.5 overflow-visible shadow-inner"
               >
-                <div className="text-[0.85vw] font-semibold text-blue-900">
+                <div className="text-sm font-semibold text-blue-900">
                   Request Support / Escalate
                 </div>
-                <div className="flex flex-col gap-[0.5vw]">
+                <div className="flex flex-col gap-2">
                   <div className="relative" ref={dropdownRef}>
-                    <div className="absolute inset-y-0 left-0 pl-[0.8vw] flex items-center pointer-events-none">
-                      <Search className="h-[0.85vw] w-[0.85vw] text-slate-400" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Search className="h-3 w-3 text-slate-700" />
                     </div>
                     <input
                       type="text"
@@ -469,20 +469,20 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, supportPerson: null }));
                       }}
                       placeholder="Search person or department..."
-                      className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.7vw] py-[0.55vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm ${
+                      className={`w-full border rounded-lg pl-8 pr-2.5 py-2 text-xs font-normal outline-none bg-white transition-all shadow-sm ${
                         errors.supportPerson
                           ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
                           : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.supportPerson && (
-                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.7vw] font-normal mt-[0.15vw]">
-                        <AlertCircle className="w-[0.7vw] h-[0.7vw]" />
+                      <div className="flex items-center gap-1 text-rose-600 text-sm font-normal mt-0.5">
+                        <AlertCircle className="w-2.5 h-2.5" />
                         {errors.supportPerson}
                       </div>
                     )}
                     {showDropdown && candidates.length > 0 && (
-                      <div className="absolute top-full left-0 right-0 z-20 border border-slate-300 bg-white rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto divide-y divide-slate-100 shadow-lg mt-[-0.1vw]">
+                      <div className="absolute top-full left-0 right-0 z-20 border border-slate-300 bg-white rounded-b-[8px] max-h-[173px] overflow-y-auto divide-y divide-slate-100 shadow-lg mt-[-0.09rem]">
                         {candidates.map((emp) => (
                           <div
                             key={emp.userId}
@@ -492,7 +492,7 @@ const ProductClosurePanel = ({
                               setShowDropdown(false);
                               setErrors((p) => ({ ...p, supportPerson: null }));
                             }}
-                            className={`px-[0.7vw] py-[0.5vw] text-[0.72vw] font-normal cursor-pointer hover:bg-blue-50/60 flex justify-between items-center transition-colors ${
+                            className={`px-2.5 py-2 text-sm font-normal cursor-pointer hover:bg-blue-50/60 flex justify-between items-center transition-colors ${
                               selectedPerson?.userId === emp.userId
                                 ? "bg-blue-50 text-blue-900 font-medium border-l-2 border-blue-600"
                                 : "text-slate-700"
@@ -502,7 +502,7 @@ const ProductClosurePanel = ({
                               {emp.name} ({emp.department})
                             </span>
                             {selectedPerson?.userId === emp.userId && (
-                              <CheckCircle className="w-[0.75vw] h-[0.75vw] text-blue-600" />
+                              <CheckCircle className="w-3 h-3 text-blue-600" />
                             )}
                           </div>
                         ))}
@@ -518,15 +518,15 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, notes: null }));
                       }}
                       placeholder="Provide handover notes..."
-                      className={`w-full border rounded-[0.5vw] p-[0.6vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
+                      className={`w-full border rounded-lg p-2.5 text-xs font-normal outline-none bg-white transition-all shadow-sm resize-none ${
                         errors.notes
                           ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
                           : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.notes && (
-                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.7vw] font-normal mt-[0.15vw]">
-                        <AlertCircle className="w-[0.7vw] h-[0.7vw]" />
+                      <div className="flex items-center gap-1 text-rose-600 text-sm font-normal mt-0.5">
+                        <AlertCircle className="w-2.5 h-2.5" />
                         {errors.notes}
                       </div>
                     )}
@@ -535,10 +535,10 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={handleSupport}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-blue-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white disabled:opacity-70 rounded-lg font-medium text-xs hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin" />
                   ) : null}
                   Assign Support Person
                 </button>
@@ -550,9 +550,9 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="bg-emerald-50 border border-emerald-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
+                className="bg-emerald-50 border border-emerald-300 rounded-lg p-3 space-y-2.5 overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-semibold text-emerald-900">
+                <div className="text-sm font-semibold text-emerald-900">
                   Resolution Details
                 </div>
                 <div>
@@ -564,15 +564,15 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter details of fixed parts, logical adjustments, or resolution explanation..."
-                    className={`w-full border rounded-[0.5vw] p-[0.8vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-lg p-3 text-xs font-normal outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
-                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                    <div className="flex items-center gap-1 text-rose-600 text-sm font-bold mt-px">
+                      <AlertCircle className="w-2.5 h-2.5" />
                       {errors.remarks}
                     </div>
                   )}
@@ -580,10 +580,10 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Resolved")}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-emerald-600 to-teal-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md shadow-emerald-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white disabled:opacity-70 rounded-lg font-medium text-xs hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md shadow-emerald-500/10 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin" />
                   ) : null}
                   Confirm Resolution
                 </button>
@@ -595,9 +595,9 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="bg-amber-50 border border-amber-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
+                className="bg-amber-50 border border-amber-300 rounded-lg p-3 space-y-2.5 overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-semibold text-amber-900">
+                <div className="text-sm font-semibold text-amber-900">
                   Pending Reason
                 </div>
                 <div>
@@ -609,15 +609,15 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Why is this call pending? (e.g., waiting for parts, client unavailable)"
-                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-lg p-2.5 text-xs font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
-                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                    <div className="flex items-center gap-1 text-rose-600 text-sm font-bold mt-px">
+                      <AlertCircle className="w-2.5 h-2.5" />
                       {errors.remarks}
                     </div>
                   )}
@@ -625,10 +625,10 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Pending")}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-amber-500 to-orange-500 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-amber-600 hover:to-orange-655 transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white disabled:opacity-70 rounded-lg font-medium text-xs hover:from-amber-600 hover:to-orange-655 transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin" />
                   ) : null}
                   Mark Pending
                 </button>
@@ -640,7 +640,7 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="p-[0.1vw] overflow-hidden"
+                className="p-px overflow-hidden"
               >
                 <AssignVisitModal
                   type="Field Visit"
@@ -670,26 +670,26 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="bg-rose-50 border border-rose-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
+                className="bg-rose-50 border border-rose-300 rounded-lg p-3 space-y-2.5 overflow-hidden shadow-inner"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-[0.85vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
-                    <RotateCcw className="w-[0.9vw] h-[0.9vw]" /> Reverse Escalate (Send Back)
+                  <div className="text-sm font-bold text-rose-900 flex items-center gap-1.5">
+                    <RotateCcw className="w-3.5 h-3.5" /> Reverse Escalate (Send Back)
                   </div>
-                  <span className="text-[0.68vw] bg-rose-100 text-rose-800 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-rose-200">
+                  <span className="text-sm bg-rose-100 text-rose-800 px-1.5 py-px rounded font-semibold border border-rose-200">
                     Returns with SLA
                   </span>
                 </div>
                 {reverseTargetInfo.targetName && (
-                  <div className="bg-white/95 border border-rose-200 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] flex items-center justify-between shadow-2xs">
-                    <span className="text-[0.72vw] text-slate-600 font-medium">
+                  <div className="bg-white/95 border border-rose-200 rounded-md px-2.5 py-1.5 flex items-center justify-between shadow-2xs">
+                    <span className="text-sm text-slate-600 font-medium">
                       Will be returned back to:
                     </span>
-                    <span className="text-[0.76vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
-                      <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-rose-600 inline-block"></span>
+                    <span className="text-xs font-bold text-rose-900 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-600 inline-block"></span>
                       {reverseTargetInfo.targetName}
                       {reverseTargetInfo.targetDept && (
-                        <span className="text-[0.66vw] font-medium text-slate-500 font-mono">
+                        <span className="text-sm font-medium text-slate-700 font-mono">
                           ({reverseTargetInfo.targetDept})
                         </span>
                       )}
@@ -705,15 +705,15 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter reason for sending this call back to the previous engineer..."
-                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-lg p-2.5 text-xs font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-300 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
-                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                    <div className="flex items-center gap-1 text-rose-600 text-sm font-bold mt-px">
+                      <AlertCircle className="w-2.5 h-2.5" />
                       {errors.remarks}
                     </div>
                   )}
@@ -737,12 +737,12 @@ const ProductClosurePanel = ({
                       setIsSubmitting(false);
                     }
                   }}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-[0.5vw] font-medium text-[0.74vw] transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-2 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-lg font-medium text-xs transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin" />
                   ) : (
-                    <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                    <RotateCcw className="w-3 h-3" />
                   )}
                   Confirm Reverse Escalation
                 </button>
@@ -754,9 +754,9 @@ const ProductClosurePanel = ({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="bg-purple-50 border border-purple-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
+                className="bg-purple-50 border border-purple-300 rounded-lg p-3 space-y-2.5 overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-bold text-purple-900">
+                <div className="text-sm font-bold text-purple-900">
                   Return to Assigned Person
                 </div>
                 <div>
@@ -768,15 +768,15 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter reason or instructions for returning this request..."
-                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-lg p-2.5 text-xs font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
-                      <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
+                    <div className="flex items-center gap-1 text-rose-600 text-sm font-bold mt-px">
+                      <AlertCircle className="w-2.5 h-2.5" />
                       {errors.remarks}
                     </div>
                   )}
@@ -784,10 +784,10 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Returned")}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-purple-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md shadow-purple-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white disabled:opacity-70 rounded-lg font-bold text-xs hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md shadow-purple-500/10 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin" />
                   ) : null}
                   Confirm Return
                 </button>

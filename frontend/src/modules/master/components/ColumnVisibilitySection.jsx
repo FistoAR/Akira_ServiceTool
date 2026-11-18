@@ -48,37 +48,37 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
   const totalCount = CUSTOMER_DB_COLUMNS.length;
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-white p-[1.4vw]">
+    <div className="flex-1 flex flex-col min-h-0 bg-white p-5">
       {/* Header */}
-      <div className="flex items-center justify-between pb-[0.8vw] mb-[1.2vw] border-b border-gray-100">
+      <div className="flex items-center justify-between pb-3 mb-4 border-b border-gray-100">
         <div>
-          <h3 className="text-[0.9vw] font-bold text-gray-900">Database Column Visibility</h3>
-          <p className="text-[0.74vw] text-gray-500">
+          <h3 className="text-sm font-bold text-gray-900">Database Column Visibility</h3>
+          <p className="text-xs text-gray-700">
             Control table column presence in Customer Database. Core identifying columns remain pinned.
           </p>
         </div>
-        <div className="flex items-center gap-[0.7vw]">
-          <span className="text-[0.72vw] font-semibold text-blue-700 bg-blue-50 px-[0.7vw] py-[0.25vw] rounded-full border border-blue-200">
+        <div className="flex items-center gap-2.5">
+          <span className="text-sm font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
             {visibleCount} of {totalCount} columns visible
           </span>
           <button
             type="button"
             onClick={enableAll}
-            className="flex items-center gap-[0.35vw] border border-gray-300 text-gray-700 hover:bg-gray-50 px-[0.85vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"
+            className="flex items-center gap-1.5 border border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-1.5 rounded-md cursor-pointer text-xs font-medium transition-all"
           >
-            <Eye className="w-[0.85vw] h-[0.85vw]" /> Show All
+            <Eye className="w-3 h-3" /> Show All
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md cursor-pointer text-xs font-semibold transition-all shadow-sm ${
               saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
             }`}
           >
             {saved ? (
-              <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
+              <CheckCircle className="w-3.5 h-3.5" />
             ) : (
-              <Save className="w-[0.9vw] h-[0.9vw]" />
+              <Save className="w-3.5 h-3.5" />
             )}
             {saved ? "Saved!" : "Save Configuration"}
           </button>
@@ -86,7 +86,7 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
       </div>
 
       {/* Modern Compact Grid with clean list item style */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[0.8vw]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {CUSTOMER_DB_COLUMNS.map((col) => {
           const isOn = colVis[col.key] ?? true;
           const isRequired = col.required;
@@ -94,7 +94,7 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
             <div
               key={col.key}
               onClick={() => toggle(col.key)}
-              className={`flex items-center justify-between px-[1vw] py-[0.75vw] rounded-[0.5vw] border transition-all select-none ${
+              className={`flex items-center justify-between px-3.5 py-3 rounded-lg border transition-all select-none ${
                 isRequired
                   ? "opacity-60 cursor-not-allowed bg-gray-50 border-gray-200"
                   : isOn
@@ -102,18 +102,18 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
                     : "bg-gray-50/50 border-gray-200 hover:border-gray-300 cursor-pointer"
               }`}
             >
-              <div className="flex flex-col gap-[0.15vw] min-w-0 pr-[0.8vw]">
-                <div className="flex items-center gap-[0.4vw]">
-                  <span className={`text-[0.8vw] font-semibold truncate ${isOn ? "text-gray-900" : "text-gray-400"}`}>
+              <div className="flex flex-col gap-0.5 min-w-0 pr-3">
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-xs font-semibold truncate ${isOn ? "text-gray-900" : "text-gray-700"}`}>
                     {col.label}
                   </span>
                   {isRequired && (
-                    <span className="text-[0.6vw] bg-gray-200 text-gray-700 px-[0.35vw] py-[0.05vw] rounded font-semibold flex-shrink-0">
+                    <span className="text-xs bg-gray-200 text-gray-700 px-1.5 py-px rounded font-semibold flex-shrink-0">
                       Required
                     </span>
                   )}
                 </div>
-                <span className="text-[0.68vw] text-gray-400 truncate">
+                <span className="text-sm text-gray-700 truncate">
                   {col.description}
                 </span>
               </div>
@@ -127,7 +127,7 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
                   readOnly
                   className="sr-only peer"
                 />
-                <div className={`w-[2.1vw] h-[1.15vw] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.12vw] after:left-[0.15vw] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[0.9vw] after:w-[0.9vw] after:transition-all ${
+                <div className={`w-7.5 h-4 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all ${
                   isRequired ? "bg-gray-300" : "bg-gray-200 peer-checked:bg-blue-600"
                 }`}></div>
               </label>
@@ -137,26 +137,26 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
       </div>
 
       {/* Live Table Header Preview */}
-      <div className="mt-[1.6vw] bg-gray-50/80 border border-gray-200 rounded-[0.5vw] p-[0.9vw]">
-        <div className="flex items-center justify-between mb-[0.5vw]">
-          <span className="text-[0.72vw] font-bold text-gray-700 uppercase tracking-wider">
+      <div className="mt-6 bg-gray-50/80 border border-gray-200 rounded-lg p-3.5">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-bold text-gray-700 uppercase tracking-wider">
             Live Header Strip Preview
           </span>
-          <span className="text-[0.68vw] text-gray-400">
+          <span className="text-sm text-gray-700">
             Preview of customer database columns
           </span>
         </div>
-        <div className="flex items-center gap-[0.4vw] flex-wrap">
-          <span className="text-[0.68vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-sm bg-gray-200 text-gray-600 px-2 py-1 rounded font-mono font-medium">
             ☑
           </span>
-          <span className="text-[0.68vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
+          <span className="text-sm bg-gray-200 text-gray-600 px-2 py-1 rounded font-mono font-medium">
             S.No
           </span>
           {CUSTOMER_DB_COLUMNS.filter((c) => colVis[c.key] ?? true).map((c) => (
             <span
               key={c.key}
-              className="text-[0.68vw] bg-white text-blue-700 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded font-semibold shadow-2xs"
+              className="text-sm bg-white text-blue-700 border border-blue-200 px-2.5 py-1 rounded font-semibold shadow-2xs"
             >
               {c.label}
             </span>

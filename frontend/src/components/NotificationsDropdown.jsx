@@ -350,11 +350,11 @@ const NotificationsDropdown = () => {
           setIsOpen(!isOpen);
           requestPermission();
         }}
-        className={`relative p-[0.55vw] rounded-full border transition-all cursor-pointer group ${isOpen ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-350 hover:border-indigo-300'}`}
+        className={`relative p-2 rounded-full border transition-all cursor-pointer group ${isOpen ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-350 hover:border-indigo-300'}`}
       >
-        <Bell className={`w-[1.1vw] h-[1.1vw] transition-colors ${isOpen ? 'text-indigo-650' : 'text-slate-800 group-hover:text-indigo-600'}`} />
+        <Bell className={`w-4 h-4 transition-colors ${isOpen ? 'text-indigo-650' : 'text-slate-800 group-hover:text-indigo-600'}`} />
         {unreadCount > 0 && (
-          <span className="absolute -top-[0.1vw] -right-[0.1vw] bg-indigo-600 text-white text-[0.6vw] font-bold px-[0.35vw] py-[0.05vw] rounded-full border border-white">
+          <span className="absolute -top-[1px] -right-[1px] bg-indigo-600 text-white text-xs font-bold px-1.5 py-px rounded-full border border-white">
             {unreadCount}
           </span>
         )}
@@ -367,35 +367,35 @@ const NotificationsDropdown = () => {
             initial={{ opacity: 0, y: 10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            className="absolute right-0 mt-[0.6vw] w-[30vw] bg-white rounded-[1.2vw] border border-slate-200/80 z-[2000] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
+            className="absolute right-0 mt-2.5 w-[432px] bg-white rounded-2xl border border-slate-200/80 z-[2000] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
           >
             {/* Header */}
-            <div className="p-[1vw] pb-[0.6vw] flex items-center justify-between bg-white relative">
-              <h3 className="text-[1.05vw] font-bold text-indigo-950">Notifications</h3>
+            <div className="p-3.5 pb-2.5 flex items-center justify-between bg-white relative">
+              <h3 className="text-xs font-bold text-indigo-950">Notifications</h3>
 
               {/* Action Icons */}
-              <div className="flex items-center gap-[0.7vw]">
+              <div className="flex items-center gap-2.5">
                 <button
                   onClick={markAllAsRead}
-                  className="flex items-center gap-[0.2vw] px-[0.4vw] py-[0.2vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer text-[0.72vw] font-bold"
+                  className="flex items-center gap-1 px-1.5 py-1 text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-all cursor-pointer text-sm font-bold"
                 >
-                  <CheckCheck className="w-[0.9vw] h-[0.9vw]" />
+                  <CheckCheck className="w-3.5 h-3.5" />
                   Mark all as read
                 </button>
                 <button
                   onClick={clearAllNotifications}
-                  className="flex items-center gap-[0.2vw] px-[0.4vw] py-[0.2vw] text-slate-500 hover:text-red-650 hover:bg-red-50 rounded-[0.4vw] transition-all cursor-pointer text-[0.72vw] font-bold"
+                  className="flex items-center gap-1 px-1.5 py-1 text-slate-700 hover:text-red-650 hover:bg-red-50 rounded-md transition-all cursor-pointer text-sm font-bold"
                 >
-                  <Trash2 className="w-[0.9vw] h-[0.9vw]" />
+                  <Trash2 className="w-3.5 h-3.5" />
                   Clear all
                 </button>
                 <div className="relative" ref={settingsRef}>
                   <button
                     onClick={() => setSettingsOpen(!settingsOpen)}
                     title="Notification Settings"
-                    className="p-[0.35vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
+                    className="p-1.5 text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
                   >
-                    <Settings className="w-[0.95vw] h-[0.95vw]" />
+                    <Settings className="w-3.5 h-3.5" />
                   </button>
 
                   {/* Settings Panel Popover */}
@@ -405,24 +405,24 @@ const NotificationsDropdown = () => {
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
-                        className="absolute right-0 mt-[0.4vw] w-[12vw] bg-white rounded-[0.8vw] border border-slate-200 shadow-lg z-[2100] p-[0.6vw] flex flex-col gap-[0.4vw]"
+                        className="absolute right-0 mt-1.5 w-[173px] bg-white rounded-xl border border-slate-200 shadow-lg z-[2100] p-2.5 flex flex-col gap-1.5"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.75vw] font-semibold text-indigo-955">Only Unread</span>
+                          <span className="text-xs font-semibold text-indigo-955">Only Unread</span>
                           <button
                             onClick={() => {
                               const nextVal = !onlyUnread;
                               setOnlyUnread(nextVal);
                               updateSettings({ onlyUnread: nextVal, sortOrder });
                             }}
-                            className={`relative w-[1.8vw] h-[1vw] rounded-full transition-colors border ${onlyUnread ? 'bg-indigo-600 border-indigo-700' : 'bg-slate-200 border-slate-300'}`}
+                            className={`relative w-6.5 h-3.5 rounded-full transition-colors border ${onlyUnread ? 'bg-indigo-600 border-indigo-700' : 'bg-slate-200 border-slate-300'}`}
                           >
-                            <div className={`absolute top-1/2 -translate-y-1/2 w-[0.65vw] h-[0.65vw] bg-white rounded-full transition-all ${onlyUnread ? 'left-[1vw]' : 'left-[0.1vw]'}`} />
+                            <div className={`absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full transition-all ${onlyUnread ? 'left-[14px]' : 'left-[1px]'}`} />
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.75vw] font-semibold text-indigo-955">Sort</span>
-                          <span className="text-[0.68vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.4vw] py-[0.1vw] rounded">
+                          <span className="text-xs font-semibold text-indigo-955">Sort</span>
+                          <span className="text-sm font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-px rounded">
                             Latest First
                           </span>
                         </div>
@@ -434,8 +434,8 @@ const NotificationsDropdown = () => {
             </div>
 
             {/* Modern Single-Tier Navigation Bar */}
-            <div className="px-[1vw] py-[0.5vw] border-b border-slate-200 bg-white flex items-center justify-between gap-[0.6vw]">
-              <div className="flex items-center gap-[0.4vw] overflow-x-auto">
+            <div className="px-3.5 py-2 border-b border-slate-200 bg-white flex items-center justify-between gap-2.5">
+              <div className="flex items-center gap-1.5 overflow-x-auto">
                 {[
                   { id: 'all', label: 'All', count: getUnreadCount('All') },
                   { id: 'Service Call', label: 'Service Calls', count: getUnreadCount('Service Call') },
@@ -449,7 +449,7 @@ const NotificationsDropdown = () => {
                         setActiveMainTab(tab.id === 'all' ? 'All' : tab.id);
                         setActiveSubTab('all');
                       }}
-                      className={`px-[0.65vw] py-[0.25vw] rounded-[0.4vw] text-[0.74vw] font-semibold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                      className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                         isActive 
                           ? 'bg-slate-900 text-white shadow-2xs' 
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -457,7 +457,7 @@ const NotificationsDropdown = () => {
                     >
                       <span>{tab.label}</span>
                       {tab.count > 0 && (
-                        <span className={`text-[0.6vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
+                        <span className={`text-xs px-1.5 py-0 rounded-full font-bold ${
                           isActive ? 'bg-white text-slate-900' : 'bg-indigo-50 text-indigo-700'
                         }`}>
                           {tab.count}
@@ -470,19 +470,19 @@ const NotificationsDropdown = () => {
             </div>
 
             {/* List Content */}
-            <div className="max-h-[28vw] overflow-y-auto bg-slate-50/50 flex flex-col min-h-[16vw] divide-y divide-slate-100">
+            <div className="max-h-[403px] overflow-y-auto bg-slate-50/50 flex flex-col min-h-[230px] divide-y divide-slate-100">
               {filteredNotifications.length === 0 ? (
-                <div className="py-[4vw] flex flex-col items-center justify-center text-center my-auto">
-                  <div className="w-[3.6vw] h-[3.6vw] rounded-full border border-slate-200/80 bg-white shadow-sm flex items-center justify-center mb-[0.8vw]">
-                    <Inbox className="w-[1.6vw] h-[1.6vw] text-slate-350" />
+                <div className="py-14 flex flex-col items-center justify-center text-center my-auto">
+                  <div className="w-[52px] h-[52px] rounded-full border border-slate-200/80 bg-white shadow-sm flex items-center justify-center mb-3">
+                    <Inbox className="w-6 h-6 text-slate-350" />
                   </div>
-                  <p className="text-[0.9vw] font-bold text-slate-800">You're all caught up!</p>
-                  <p className="text-[0.72vw] text-slate-500 max-w-[75%] mt-[0.2vw] leading-relaxed">
+                  <p className="text-sm font-bold text-slate-800">You're all caught up!</p>
+                  <p className="text-sm text-slate-700 max-w-[75%] mt-1 leading-relaxed">
                     No new alerts or escalations pending in this category.
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col p-[0.6vw] gap-[0.45vw]">
+                <div className="flex flex-col p-2.5 gap-1.5">
                   <AnimatePresence initial={false}>
                     {filteredNotifications.map((n) => {
                       const visuals = getNotificationVisuals(n);
@@ -497,7 +497,7 @@ const NotificationsDropdown = () => {
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-                          className={`group relative rounded-[0.8vw] p-[0.75vw] flex items-center gap-[0.75vw] transition-all cursor-pointer border ${
+                          className={`group relative rounded-xl p-3 flex items-center gap-3 transition-all cursor-pointer border ${
                             isUnread
                               ? 'bg-white border-slate-200 shadow-[0_3px_12px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_-2px_rgba(0,0,0,0.12)]'
                               : 'bg-white/90 border-slate-200/80 hover:bg-white hover:border-slate-300 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] hover:shadow-md'
@@ -506,16 +506,16 @@ const NotificationsDropdown = () => {
                         >
                           {/* Circular App-Themed Icon on the Left without extra distracting dot */}
                           <div className="relative shrink-0">
-                            <div className={`w-[2.3vw] h-[2.3vw] rounded-full flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
-                              <IconComp className={`w-[1.15vw] h-[1.15vw] ${visuals.iconColor}`} />
+                            <div className={`w-[33px] h-[33px] rounded-full flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
+                              <IconComp className={`w-4 h-4 ${visuals.iconColor}`} />
                             </div>
                           </div>
 
                           {/* Content Body: Clean layout with non-wrapping title row */}
-                          <div className="flex-1 min-w-0 pr-[0.2vw]">
+                          <div className="flex-1 min-w-0 pr-1">
                             {/* Row 1: Title without noisy badge tags */}
                             <div className="flex items-center justify-between">
-                              <h4 className={`text-[0.82vw] truncate ${
+                              <h4 className={`text-xs truncate ${
                                 isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-800'
                               }`}>
                                 {cleanTitle}
@@ -523,24 +523,24 @@ const NotificationsDropdown = () => {
                             </div>
 
                             {/* Row 2: Clean, straightforward message */}
-                            <p className="text-[0.74vw] text-slate-650 leading-snug mt-[0.1vw] line-clamp-2 break-words">
+                            <p className="text-xs text-slate-650 leading-snug mt-px line-clamp-2 break-words">
                               {cleanMessage}
                             </p>
 
                             {/* Row 3: Timestamp & Call Number */}
-                            <div className="flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.68vw] text-slate-500 font-medium">
+                            <div className="flex items-center gap-1.5 mt-1 text-sm text-slate-700 font-medium">
                               <span>{formatTimeShort(n.createdAt)}</span>
                               <span>•</span>
-                              <span className="text-slate-600 font-semibold font-mono text-[0.66vw]">
+                              <span className="text-slate-600 font-semibold font-mono text-sm">
                                 {n.data?.callNumber || (n.type === 'Service Material' ? 'Material Dispatch' : 'Akira Service')}
                               </span>
                             </div>
                           </div>
 
                           {/* Right Side: Unread indicator & absolute-pinned dismiss button so it never causes title wrapping */}
-                          <div className="relative w-[1.4vw] flex items-center justify-end shrink-0 self-center">
+                          <div className="relative w-5 flex items-center justify-end shrink-0 self-center">
                             {isUnread && (
-                              <span className="w-[0.5vw] h-[0.5vw] rounded-full bg-blue-600 shadow-xs group-hover:opacity-0 transition-opacity" />
+                              <span className="w-2 h-2 rounded-full bg-blue-600 shadow-xs group-hover:opacity-0 transition-opacity" />
                             )}
                             <button
                               onClick={(e) => {
@@ -548,9 +548,9 @@ const NotificationsDropdown = () => {
                                 deleteNotification(n._id);
                               }}
                               title="Dismiss notification"
-                              className="absolute right-0 opacity-0 group-hover:opacity-100 p-[0.3vw] text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-[0.4vw] transition-all cursor-pointer"
+                              className="absolute right-0 opacity-0 group-hover:opacity-100 p-1 text-slate-700 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
                             >
-                              <X className="w-[0.85vw] h-[0.85vw]" />
+                              <X className="w-3 h-3" />
                             </button>
                           </div>
                         </motion.div>
@@ -562,12 +562,12 @@ const NotificationsDropdown = () => {
             </div>
 
             {/* Footer */}
-            <div className="px-[1vw] py-[0.6vw] border-t border-slate-100 flex items-center justify-between bg-slate-50/20">
-              <div className="flex items-center gap-[0.3vw] text-[0.72vw] font-bold text-indigo-955 opacity-70">
-                <Bell className="w-[0.8vw] h-[0.8vw] text-indigo-650" />
+            <div className="px-3.5 py-2.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/20">
+              <div className="flex items-center gap-1 text-sm font-bold text-indigo-955 opacity-70">
+                <Bell className="w-3 h-3 text-indigo-650" />
                 Akira Service Tool
               </div>
-              <div className="text-[0.65vw] font-bold text-slate-400">
+              <div className="text-xs font-bold text-slate-700">
                 {unreadCount > 0 ? `${unreadCount} unread` : 'All read'}
               </div>
             </div>
@@ -578,11 +578,11 @@ const NotificationsDropdown = () => {
       {/* Notification Information / Detail Popup Modal */}
       {selectedNotification && (
         <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-xs p-[1vw] animate-in fade-in duration-200"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-xs p-3.5 animate-in fade-in duration-200"
           onClick={() => setSelectedNotification(null)}
         >
           <div 
-            className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col"
+            className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-[461px] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -590,73 +590,73 @@ const NotificationsDropdown = () => {
               const visuals = getNotificationVisuals(selectedNotification);
               const IconComp = visuals.icon;
               return (
-                <div className="p-[1.2vw] border-b border-slate-100 flex items-start justify-between bg-gradient-to-r from-slate-50 via-white to-indigo-50/30">
-                  <div className="flex items-start gap-[0.8vw]">
-                    <div className={`w-[2.8vw] h-[2.8vw] rounded-full flex items-center justify-center border shadow-xs ${visuals.iconBg}`}>
-                      <IconComp className={`w-[1.4vw] h-[1.4vw] ${visuals.iconColor}`} />
+                <div className="p-4 border-b border-slate-100 flex items-start justify-between bg-gradient-to-r from-slate-50 via-white to-indigo-50/30">
+                  <div className="flex items-start gap-3">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-xs ${visuals.iconBg}`}>
+                      <IconComp className={`w-5 h-5 ${visuals.iconColor}`} />
                     </div>
                     <div>
-                      <div className="flex items-center gap-[0.4vw]">
-                        <span className={`text-[0.65vw] font-bold px-[0.4vw] py-[0.08vw] rounded-[0.25vw] border uppercase tracking-wider ${visuals.badgeBg}`}>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-xs font-bold px-1.5 py-px rounded-sm border uppercase tracking-wider ${visuals.badgeBg}`}>
                           {visuals.badgeText}
                         </span>
-                        <span className="text-[0.68vw] text-slate-400 font-medium">
+                        <span className="text-sm text-slate-700 font-medium">
                           {formatTimeShort(selectedNotification.createdAt)}
                         </span>
                       </div>
-                      <h3 className="text-[1vw] font-bold text-slate-900 mt-[0.3vw] leading-tight">
+                      <h3 className="text-xs font-bold text-slate-900 mt-1 leading-tight">
                         {selectedNotification.title}
                       </h3>
                     </div>
                   </div>
                   <button 
                     onClick={() => setSelectedNotification(null)}
-                    className="p-[0.35vw] text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                    className="p-1.5 text-slate-700 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                   >
-                    <X className="w-[1vw] h-[1vw]" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               );
             })()}
 
             {/* Modal Body */}
-            <div className="p-[1.2vw] space-y-[0.9vw] text-slate-700">
-              <div className="bg-slate-50 border border-slate-200/80 rounded-[0.6vw] p-[0.9vw]">
-                <p className="text-[0.8vw] text-slate-700 leading-relaxed font-medium">
+            <div className="p-4 space-y-3.5 text-slate-700">
+              <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-3.5">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
                   {selectedNotification.message}
                 </p>
               </div>
 
               {/* Context Details Grid */}
-              <div className="grid grid-cols-2 gap-[0.7vw] text-[0.75vw]">
+              <div className="grid grid-cols-2 gap-2.5 text-xs">
                 {selectedNotification.data?.callNumber && (
-                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Call Number</span>
-                    <span className="font-bold text-indigo-700 text-[0.82vw]">
+                  <div className="bg-white border border-slate-200 rounded-lg p-2.5">
+                    <span className="text-xs font-semibold text-slate-700 block uppercase">Call Number</span>
+                    <span className="font-bold text-indigo-700 text-xs">
                       #{selectedNotification.data.callNumber}
                     </span>
                   </div>
                 )}
                 {selectedNotification.priority && (
-                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Priority</span>
-                    <span className="font-bold text-slate-800 text-[0.82vw]">
+                  <div className="bg-white border border-slate-200 rounded-lg p-2.5">
+                    <span className="text-xs font-semibold text-slate-700 block uppercase">Priority</span>
+                    <span className="font-bold text-slate-800 text-xs">
                       {selectedNotification.priority}
                     </span>
                   </div>
                 )}
                 {selectedNotification.type && (
-                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Notification Type</span>
-                    <span className="font-bold text-slate-800 text-[0.82vw]">
+                  <div className="bg-white border border-slate-200 rounded-lg p-2.5">
+                    <span className="text-xs font-semibold text-slate-700 block uppercase">Notification Type</span>
+                    <span className="font-bold text-slate-800 text-xs">
                       {selectedNotification.type}
                     </span>
                   </div>
                 )}
                 {selectedNotification.createdAt && (
-                  <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Received Time</span>
-                    <span className="font-semibold text-slate-700 text-[0.75vw]">
+                  <div className="bg-white border border-slate-200 rounded-lg p-2.5">
+                    <span className="text-xs font-semibold text-slate-700 block uppercase">Received Time</span>
+                    <span className="font-semibold text-slate-700 text-xs">
                       {new Date(selectedNotification.createdAt).toLocaleString("en-IN", {
                         dateStyle: "medium",
                         timeStyle: "short",
@@ -668,20 +668,20 @@ const NotificationsDropdown = () => {
             </div>
 
             {/* Modal Actions */}
-            <div className="p-[1vw] border-t border-slate-100 flex items-center justify-end gap-[0.6vw] bg-slate-50/60">
+            <div className="p-3.5 border-t border-slate-100 flex items-center justify-end gap-2.5 bg-slate-50/60">
               <button
                 onClick={() => setSelectedNotification(null)}
-                className="px-[0.9vw] py-[0.4vw] rounded-[0.5vw] border border-slate-300 text-[0.75vw] font-semibold text-slate-700 hover:bg-white transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-white transition-all cursor-pointer"
               >
                 Close
               </button>
               {(selectedNotification.data?.callNumber || selectedNotification.type === 'Service Material') && (
                 <button
                   onClick={() => handleNavigateToTarget(selectedNotification)}
-                  className="px-[1vw] py-[0.4vw] rounded-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white text-[0.75vw] font-bold flex items-center gap-[0.35vw] shadow-sm transition-all cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                 >
                   <span>View Details</span>
-                  <ArrowUpRight className="w-[0.9vw] h-[0.9vw]" />
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>

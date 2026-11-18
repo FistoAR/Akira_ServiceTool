@@ -87,68 +87,68 @@ const ReportsModal = ({ row, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[100] flex items-center justify-center p-[2vw]">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[72vw] max-h-[88vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200">
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="bg-blue-50 p-[0.5vw] rounded-full text-blue-600 border border-blue-100">
-              <FileText className="w-[1.2vw] h-[1.2vw]" />
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[100] flex items-center justify-center p-7">
+      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[1037px] max-h-[88vh] rounded-xl shadow-2xl overflow-hidden flex flex-col border border-slate-200">
+        <div className="bg-white border-b border-slate-200 px-5.5 py-3.5 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-50 p-2 rounded-full text-blue-600 border border-blue-100">
+              <FileText className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Full Production Report</h3>
-              <p className="text-[0.74vw] text-slate-500 font-medium">{row.refNoInternal} · {row.jobOrderNo || "No Job Order"}</p>
+              <h3 className="text-xs font-bold text-slate-800">Full Production Report</h3>
+              <p className="text-xs text-slate-700 font-medium">{row.refNoInternal} · {row.jobOrderNo || "No Job Order"}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 cursor-pointer transition-all hover:bg-slate-100 p-[0.35vw] rounded-full">
-            <X className="w-[1.2vw] h-[1.2vw]" />
+          <button onClick={onClose} className="text-slate-700 hover:text-slate-700 cursor-pointer transition-all hover:bg-slate-100 p-1.5 rounded-full">
+            <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
-          <div className="grid grid-cols-3 gap-[1vw]">
-            <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-bold text-slate-500 tracking-wider mb-[0.6vw]">Entry Details</div>
-              <div className="space-y-[0.4vw]">
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Date:</span> {fmtDate(row.date)}</div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Job Order:</span> <span className="text-blue-600 font-semibold">{row.jobOrderNo || "—"}</span></div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Products:</span> {products.length}</div>
+        <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/40">
+          <div className="grid grid-cols-3 gap-3.5">
+            <div className="bg-white rounded-lg p-3.5 border border-slate-200 shadow-2xs">
+              <div className="text-sm uppercase font-bold text-slate-700 tracking-wider mb-2.5">Entry Details</div>
+              <div className="space-y-1.5">
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Date:</span> {fmtDate(row.date)}</div>
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Job Order:</span> <span className="text-blue-600 font-semibold">{row.jobOrderNo || "—"}</span></div>
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Products:</span> {products.length}</div>
               </div>
             </div>
-            <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-bold text-slate-500 tracking-wider mb-[0.6vw]">Customer</div>
-              <div className="space-y-[0.4vw]">
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Name:</span> <span className="font-medium text-slate-800">{row.customerName || "—"}</span></div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Code:</span> <span className="font-mono text-slate-600">{row.customerCode || "—"}</span></div>
+            <div className="bg-white rounded-lg p-3.5 border border-slate-200 shadow-2xs">
+              <div className="text-sm uppercase font-bold text-slate-700 tracking-wider mb-2.5">Customer</div>
+              <div className="space-y-1.5">
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Name:</span> <span className="font-medium text-slate-800">{row.customerName || "—"}</span></div>
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Code:</span> <span className="font-mono text-slate-600">{row.customerCode || "—"}</span></div>
               </div>
             </div>
-            <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-bold text-slate-500 tracking-wider mb-[0.6vw]">Audit Details</div>
-              <div className="space-y-[0.4vw]">
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Created By:</span> {row.creatorName || "Admin"}</div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Last updated:</span> {fmtDate(row.updatedAt || row.createdAt)}</div>
+            <div className="bg-white rounded-lg p-3.5 border border-slate-200 shadow-2xs">
+              <div className="text-sm uppercase font-bold text-slate-700 tracking-wider mb-2.5">Audit Details</div>
+              <div className="space-y-1.5">
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Created By:</span> {row.creatorName || "Admin"}</div>
+                <div className="text-xs text-slate-700"><span className="font-semibold text-slate-700">Last updated:</span> {fmtDate(row.updatedAt || row.createdAt)}</div>
               </div>
             </div>
           </div>
 
           {products.length === 0 ? (
-            <div className="text-center py-[4vw] text-[0.85vw] text-slate-400">No product records available for this entry.</div>
+            <div className="text-center py-14 text-sm text-slate-700">No product records available for this entry.</div>
           ) : products.map((prod, idx) => (
-            <div key={prod._pid} className="border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs bg-white">
+            <div key={prod._pid} className="border border-slate-200 rounded-lg overflow-hidden shadow-2xs bg-white">
               <div
                 onClick={() => toggleExpand(prod._pid)}
-                className="bg-slate-50/80 px-[1.2vw] py-[0.8vw] flex items-center justify-between gap-[1vw] cursor-pointer hover:bg-slate-100/70 transition-colors border-b border-slate-200/80"
+                className="bg-slate-50/80 px-4 py-3 flex items-center justify-between gap-3.5 cursor-pointer hover:bg-slate-100/70 transition-colors border-b border-slate-200/80"
               >
                 <div>
-                  <div className="text-[0.88vw] font-semibold text-slate-800">{prod.productDescription || "Unnamed Product"}</div>
-                  <div className="text-[0.72vw] text-slate-500 mt-[0.2vw] flex flex-wrap gap-[0.8vw]">
+                  <div className="text-sm font-semibold text-slate-800">{prod.productDescription || "Unnamed Product"}</div>
+                  <div className="text-sm text-slate-700 mt-1 flex flex-wrap gap-3">
                     <span>JO: <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span></span>
                     <span>Code: <span className="font-mono text-slate-700">{prod.productCode || "—"}</span></span>
                     <span>Qty: <span className="font-medium text-slate-700">{prod.qty || "—"}</span></span>
                     <span>S/N: <span className="font-mono text-slate-700">{prod.serialNumber || "—"}</span></span>
                   </div>
                 </div>
-                <div className="flex items-center gap-[0.8vw]">
-                  <span className="text-[0.7vw] px-[0.6vw] py-[0.15vw] rounded-full bg-slate-200/70 text-slate-700 font-semibold">Item {idx + 1}</span>
-                  <ChevronDown className={`w-[1vw] h-[1vw] text-slate-500 transition-transform duration-200 ${expanded.has(prod._pid) ? "rotate-180" : ""}`} />
+                <div className="flex items-center gap-3">
+                  <span className="text-sm px-2.5 py-0.5 rounded-full bg-slate-200/70 text-slate-700 font-semibold">Item {idx + 1}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-700 transition-transform duration-200 ${expanded.has(prod._pid) ? "rotate-180" : ""}`} />
                 </div>
               </div>
 
@@ -163,98 +163,98 @@ const ReportsModal = ({ row, onClose }) => {
                   >
                     <div className="border-t border-slate-100">
                       {/* Registration Info */}
-                      <div className="p-[1.2vw] bg-white border-b border-slate-200/80">
-                        <div className="text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
-                          <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" />
-                          <Target className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Registration Information
+                      <div className="p-4 bg-white border-b border-slate-200/80">
+                        <div className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3.5 flex items-center gap-1.5">
+                          <span className="w-1 h-3 bg-blue-600 rounded-full inline-block" />
+                          <Target className="w-3.5 h-3.5 text-blue-600" /> Registration Information
                         </div>
-                        <div className="grid grid-cols-6 gap-[1.2vw] mb-[0.9vw]">
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Stage</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.stage || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Category</div><div className="text-slate-800 font-medium text-[0.78vw]">{row.category || prod.category || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">NC Type</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.ncType || "Internal"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Problem Type</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.problemType || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Inspected By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.inspectedByName || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Designators</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.designators || "—"}</div></div>
+                        <div className="grid grid-cols-6 gap-4 mb-3.5">
+                          <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Stage</div><div className="text-slate-800 font-medium text-xs">{prod.stage || "—"}</div></div>
+                          <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Category</div><div className="text-slate-800 font-medium text-xs">{row.category || prod.category || "—"}</div></div>
+                          <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">NC Type</div><div className="text-slate-800 font-medium text-xs">{prod.ncType || "Internal"}</div></div>
+                          <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Problem Type</div><div className="text-slate-800 font-medium text-xs">{prod.problemType || "—"}</div></div>
+                          <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Inspected By</div><div className="text-slate-800 font-medium text-xs">{prod.inspectedByName || "—"}</div></div>
+                          <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Designators</div><div className="text-slate-800 font-medium text-xs">{prod.designators || "—"}</div></div>
                         </div>
-                        <div className="flex gap-[1.2vw] mb-[0.9vw]">
+                        <div className="flex gap-4 mb-3.5">
                           <div className="flex-1">
-                            <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Initial Problem Description</div>
-                            <div className="text-[0.78vw] text-slate-800 leading-relaxed bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-200">{prod.problem || "No description provided."}</div>
+                            <div className="text-xs text-slate-700 font-semibold uppercase mb-1.5">Initial Problem Description</div>
+                            <div className="text-xs text-slate-800 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">{prod.problem || "No description provided."}</div>
                           </div>
                           {prod.boardImage && (
-                            <div className="w-[10vw]">
-                              <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Board Image</div>
+                            <div className="w-[144px]">
+                              <div className="text-xs text-slate-700 font-semibold uppercase mb-1.5">Board Image</div>
                               <img 
                                 src={`${API_URL}${prod.boardImage}`} 
                                 alt="Board" 
-                                className="w-full h-[6vw] object-cover rounded-[0.5vw] border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
+                                className="w-full h-[86px] object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
                                 onClick={() => window.open(`${API_URL}${prod.boardImage}`, '_blank')}
                               />
                             </div>
                           )}
                         </div>
-                        <div className="grid grid-cols-6 gap-[1.2vw]">
-                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Assembled By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report?.assembledByName || prod.assembledByName || "—"}</div></div>
-                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Tested By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report?.testedByName || prod.testedByName || "—"}</div></div>
+                        <div className="grid grid-cols-6 gap-4">
+                           <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Assembled By</div><div className="text-slate-800 font-medium text-xs">{prod.report?.assembledByName || prod.assembledByName || "—"}</div></div>
+                           <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Tested By</div><div className="text-slate-800 font-medium text-xs">{prod.report?.testedByName || prod.testedByName || "—"}</div></div>
                         </div>
                       </div>
 
                       {/* Technical Resolution Report */}
-                      <div className="p-[1.2vw] bg-slate-50/50">
-                        <div className="text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
-                          <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full inline-block" />
-                          <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" /> Technical Resolution Report
+                      <div className="p-4 bg-slate-50/50">
+                        <div className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3.5 flex items-center gap-1.5">
+                          <span className="w-1 h-3 bg-emerald-600 rounded-full inline-block" />
+                          <Wrench className="w-3.5 h-3.5 text-emerald-600" /> Technical Resolution Report
                         </div>
                         {prod.report ? (
-                          <div className="space-y-[1vw]">
-                            <div className="grid grid-cols-4 gap-[1.2vw]">
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Start Date</div><div className="text-slate-800 font-medium text-[0.78vw]">{fmtDate(prod.report.startDate)}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">4M Category</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report.fourMCategory || "—"}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">CAE</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report.cae || "—"}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Status</div><div className="text-blue-600 font-semibold text-[0.78vw]">{prod.report.status || "—"}</div></div>
+                          <div className="space-y-3.5">
+                            <div className="grid grid-cols-4 gap-4">
+                              <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Start Date</div><div className="text-slate-800 font-medium text-xs">{fmtDate(prod.report.startDate)}</div></div>
+                              <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">4M Category</div><div className="text-slate-800 font-medium text-xs">{prod.report.fourMCategory || "—"}</div></div>
+                              <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">CAE</div><div className="text-slate-800 font-medium text-xs">{prod.report.cae || "—"}</div></div>
+                              <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Status</div><div className="text-blue-600 font-semibold text-xs">{prod.report.status || "—"}</div></div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-[1vw]">
-                              <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Root Cause Analysis</div>
-                                <div className="text-[0.78vw] text-slate-800 leading-relaxed">{prod.report.rootCause || "—"}</div>
+                            <div className="grid grid-cols-2 gap-3.5">
+                              <div className="bg-white p-3 rounded-lg border border-slate-200">
+                                <div className="text-xs text-slate-700 font-semibold uppercase mb-1.5">Root Cause Analysis</div>
+                                <div className="text-xs text-slate-800 leading-relaxed">{prod.report.rootCause || "—"}</div>
                               </div>
-                              <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Corrective Action Taken</div>
-                                <div className="text-[0.78vw] text-slate-800 leading-relaxed">{prod.report.correctiveAction || "—"}</div>
+                              <div className="bg-white p-3 rounded-lg border border-slate-200">
+                                <div className="text-xs text-slate-700 font-semibold uppercase mb-1.5">Corrective Action Taken</div>
+                                <div className="text-xs text-slate-800 leading-relaxed">{prod.report.correctiveAction || "—"}</div>
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-[1vw]">
-                              <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.5vw]">Parts Replaced</div>
+                            <div className="grid grid-cols-2 gap-3.5">
+                              <div className="bg-white p-3 rounded-lg border border-slate-200">
+                                <div className="text-xs text-slate-700 font-semibold uppercase mb-2">Parts Replaced</div>
                                 {prod.report && prod.report.partsReplacement && prod.report.partsReplacement.trim() ? (
-                                  <ul className="list-disc list-inside space-y-[0.2vw]">
+                                  <ul className="list-disc list-inside space-y-1">
                                     {parseParts(prod.report.partsReplacement).map((part, pidx) => (
-                                      <li key={pidx} className="text-[0.76vw] text-slate-800 leading-tight">{part}</li>
+                                      <li key={pidx} className="text-xs text-slate-800 leading-tight">{part}</li>
                                     ))}
                                   </ul>
-                                ) : <div className="text-[0.76vw] text-slate-400 italic">No parts replaced.</div>}
+                                ) : <div className="text-xs text-slate-700 italic">No parts replaced.</div>}
                               </div>
-                              <div className="grid grid-cols-2 gap-[0.8vw]">
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Closed Date</div><div className="text-slate-800 font-medium text-[0.78vw]">{fmtDate(prod.report.closedDate)}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Verified Date</div><div className="text-slate-800 font-medium text-[0.78vw]">{fmtDate(prod.report.verifiedDate)}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Verified By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report.verifiedByName || "—"}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Disposition</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.disposition || "—"}</div></div>
+                              <div className="grid grid-cols-2 gap-3">
+                                <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Closed Date</div><div className="text-slate-800 font-medium text-xs">{fmtDate(prod.report.closedDate)}</div></div>
+                                <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Verified Date</div><div className="text-slate-800 font-medium text-xs">{fmtDate(prod.report.verifiedDate)}</div></div>
+                                <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Verified By</div><div className="text-slate-800 font-medium text-xs">{prod.report.verifiedByName || "—"}</div></div>
+                                <div><div className="text-slate-700 mb-1 uppercase text-xs font-semibold">Disposition</div><div className="text-slate-800 font-medium text-xs">{prod.disposition || "—"}</div></div>
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-4 gap-[0.8vw]">
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">Assembler</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">Tester</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">FI By</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">Final Status</div><div className="text-[0.75vw] font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
+                            <div className="grid grid-cols-4 gap-3">
+                              <div className="bg-white p-2.5 rounded-md border border-slate-200 text-center"><div className="text-xs font-bold text-slate-700 uppercase">Assembler</div><div className="text-xs font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
+                              <div className="bg-white p-2.5 rounded-md border border-slate-200 text-center"><div className="text-xs font-bold text-slate-700 uppercase">Tester</div><div className="text-xs font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
+                              <div className="bg-white p-2.5 rounded-md border border-slate-200 text-center"><div className="text-xs font-bold text-slate-700 uppercase">FI By</div><div className="text-xs font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
+                              <div className="bg-white p-2.5 rounded-md border border-slate-200 text-center"><div className="text-xs font-bold text-slate-700 uppercase">Final Status</div><div className="text-xs font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
                             </div>
                           </div>
                         ) : (
-                          <div className="py-[2.5vw] text-center">
-                            <Clock className="w-[1.8vw] h-[1.8vw] text-slate-300 mx-auto mb-[0.6vw]" />
-                            <div className="text-[0.82vw] text-slate-400 font-medium">No technical report submitted yet.</div>
+                          <div className="py-9 text-center">
+                            <Clock className="w-6.5 h-6.5 text-slate-600 mx-auto mb-2.5" />
+                            <div className="text-xs text-slate-700 font-medium">No technical report submitted yet.</div>
                           </div>
                         )}
                       </div>
@@ -265,8 +265,8 @@ const ReportsModal = ({ row, onClose }) => {
             </div>
           ))}
         </div>
-        <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex justify-end">
-          <button onClick={onClose} className="px-[1.5vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[0.76vw] font-semibold cursor-pointer transition-all">Close</button>
+        <div className="px-5.5 py-3 border-t border-slate-200 bg-white flex justify-end">
+          <button onClick={onClose} className="px-5.5 h-8 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-xs font-semibold cursor-pointer transition-all">Close</button>
         </div>
       </motion.div>
     </div>
@@ -323,35 +323,35 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[200] flex items-center justify-center p-[2vw]">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[35vw] rounded-[0.8vw] flex flex-col border border-slate-200 shadow-2xl overflow-visible">
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center rounded-t-[0.8vw]">
-          <div className="flex items-center gap-[0.7vw]">
-            <div className="bg-emerald-50 p-[0.45vw] rounded-full text-emerald-600 border border-emerald-100">
-              <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[200] flex items-center justify-center p-7">
+      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[504px] rounded-xl flex flex-col border border-slate-200 shadow-2xl overflow-visible">
+        <div className="bg-white border-b border-slate-200 px-5.5 py-3.5 flex justify-between items-center rounded-t-[12px]">
+          <div className="flex items-center gap-2.5">
+            <div className="bg-emerald-50 p-1.5 rounded-full text-emerald-600 border border-emerald-100">
+              <CheckCircle className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Verify Resolution</h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">Verify completion & CAE for this product</p>
+              <h3 className="text-xs font-bold text-slate-800">Verify Resolution</h3>
+              <p className="text-sm text-slate-700 font-medium">Verify completion & CAE for this product</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
-            <X className="w-[1.1vw] h-[1.1vw]" />
+          <button onClick={onClose} className="text-slate-700 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-full transition-all cursor-pointer">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-[1.4vw] space-y-[1.1vw] bg-white">
-          <div className="bg-slate-50/70 p-[0.9vw] rounded-[0.6vw] border border-slate-200/80">
-            <div className="text-[0.68vw] font-bold text-blue-600 uppercase tracking-wider mb-[0.35vw]">Product Context</div>
-            <div className="text-[0.85vw] font-semibold text-slate-800">{prod.productDescription}</div>
-            <div className="text-[0.72vw] text-slate-500 mt-[0.15vw]">
+        <div className="p-5 space-y-4 bg-white">
+          <div className="bg-slate-50/70 p-3.5 rounded-lg border border-slate-200/80">
+            <div className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-1.5">Product Context</div>
+            <div className="text-sm font-semibold text-slate-800">{prod.productDescription}</div>
+            <div className="text-sm text-slate-700 mt-0.5">
               <span className="font-semibold text-slate-600">S/N:</span> <span className="font-mono">{prod.serialNumber || "—"}</span> · <span className="font-semibold text-slate-600">JO:</span> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span>
             </div>
           </div>
 
-          <div className="space-y-[0.9vw]">
-            <div className="flex flex-col gap-[0.3vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">Verified By <span className="text-rose-500">*</span></label>
+          <div className="space-y-3.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700">Verified By <span className="text-rose-500">*</span></label>
               <CustomDropdown
                 value={formData.verifiedBy}
                 onChange={val => {
@@ -361,22 +361,22 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                 options={employees.map(e => ({ value: e.userId || e._id, label: e.name }))}
                 placeholder="Select Employee"
                 usePortal={true}
-                triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+                triggerClassName="!h-[33px] !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
               />
             </div>
 
-            <div className="flex flex-col gap-[0.3vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">Verified Date <span className="text-rose-500">*</span></label>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700">Verified Date <span className="text-rose-500">*</span></label>
               <input
                 type="date"
                 value={formData.verifiedDate}
                 onChange={e => setFormData(p => ({ ...p, verifiedDate: e.target.value }))}
-                className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.78vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all cursor-pointer"
+                className="w-full border border-slate-200 rounded-lg py-2 px-3 text-xs font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all cursor-pointer"
               />
             </div>
 
-            <div className="flex flex-col gap-[0.3vw] relative">
-              <label className="text-[0.76vw] font-semibold text-slate-700">CAE (Corrective Action Effectiveness)</label>
+            <div className="flex flex-col gap-1 relative">
+              <label className="text-xs font-semibold text-slate-700">CAE (Corrective Action Effectiveness)</label>
               <div className="relative">
                 <input
                   value={formData.cae}
@@ -385,7 +385,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                   onBlur={() => setTimeout(() => setShowCaeSuggestions(false), 200)}
                   onKeyDown={onKeyDown}
                   placeholder="Enter or select CAE..."
-                  className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.78vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all"
+                  className="w-full border border-slate-200 rounded-lg py-2 px-3 text-xs font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all"
                 />
                 <AnimatePresence>
                   {showCaeSuggestions && filteredCaeSuggestions.length > 0 && (
@@ -393,13 +393,13 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                       initial={{ opacity: 0, y: -5 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       exit={{ opacity: 0, y: -5 }} 
-                      className="absolute z-50 w-full mt-[0.2vw] bg-white border border-slate-200 rounded-[0.5vw] shadow-xl max-h-[12vw] overflow-y-auto overflow-x-hidden custom-scrollbar py-[0.2vw]"
+                      className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-[173px] overflow-y-auto overflow-x-hidden custom-scrollbar py-1"
                     >
                       {filteredCaeSuggestions.map((opt, i) => (
                         <div 
                           key={i} 
                           onClick={() => { setFormData(p => ({ ...p, cae: opt })); setShowCaeSuggestions(false); }} 
-                          className={`px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium transition-colors border-b border-slate-100 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-slate-700 hover:bg-slate-50"}`}
+                          className={`px-3.5 py-1.5 text-xs font-medium transition-colors border-b border-slate-100 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-slate-700 hover:bg-slate-50"}`}
                         >
                           {opt}
                         </div>
@@ -412,9 +412,9 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
           </div>
         </div>
 
-        <div className="p-[1vw] border-t border-slate-200 bg-slate-50/70 flex justify-end gap-[0.6vw] rounded-b-[0.8vw]">
-          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white text-slate-700 font-semibold rounded-full text-[0.76vw] hover:bg-slate-50 cursor-pointer transition-all">Cancel</button>
-          <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white font-semibold rounded-full text-[0.76vw] hover:bg-blue-700 active:scale-95 transition-all shadow-xs">Save Verification</button>
+        <div className="p-3.5 border-t border-slate-200 bg-slate-50/70 flex justify-end gap-2.5 rounded-b-[12px]">
+          <button onClick={onClose} className="px-4 h-8 border border-slate-200 bg-white text-slate-700 font-semibold rounded-full text-xs hover:bg-slate-50 cursor-pointer transition-all">Cancel</button>
+          <button onClick={handleSave} className="px-5 h-8 bg-blue-600 text-white font-semibold rounded-full text-xs hover:bg-blue-700 active:scale-95 transition-all shadow-xs">Save Verification</button>
         </div>
       </motion.div>
     </div>
@@ -478,26 +478,26 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
   ];
 
   return (
-    <div className="fixed inset-0 z-[120] bg-black/50 backdrop-blur-xs flex items-center justify-center p-[1.5vw]">
-      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-[0.9vw] w-[55vw] max-h-[85vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col">
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center shrink-0">
-          <div className="flex items-center gap-[0.7vw]">
-            <div className="bg-blue-50 p-[0.45vw] rounded-full text-blue-600 border border-blue-100">
-              <ClipboardList className="w-[1.1vw] h-[1.1vw]" />
+    <div className="fixed inset-0 z-[120] bg-black/50 backdrop-blur-xs flex items-center justify-center p-5.5">
+      <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-2xl w-[792px] max-h-[85vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col">
+        <div className="bg-white border-b border-slate-200 px-5.5 py-3.5 flex justify-between items-center shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="bg-blue-50 p-1.5 rounded-full text-blue-600 border border-blue-100">
+              <ClipboardList className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Master Data Configuration</h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">Manage system-wide production material categories</p>
+              <h3 className="text-xs font-bold text-slate-800">Master Data Configuration</h3>
+              <p className="text-sm text-slate-700 font-medium">Manage system-wide production material categories</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer"><X className="w-[1.2vw] h-[1.2vw]" /></button>
+          <button onClick={onClose} className="text-slate-700 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-full transition-all cursor-pointer"><X className="w-4 h-4" /></button>
         </div>
 
         <div className="flex-1 overflow-hidden flex bg-slate-50/30 min-h-[46vh]">
           {/* Sidebar with distinctive background & active pill styling */}
-          <div className="w-[15vw] border-r border-slate-200 flex flex-col bg-[#F3F6FA] p-[0.7vw] gap-[0.35vw]">
-            <div className="px-[0.6vw] py-[0.3vw] mb-[0.2vw]">
-              <span className="text-[0.68vw] font-medium uppercase tracking-wider text-slate-400">Categories</span>
+          <div className="w-[216px] border-r border-slate-200 flex flex-col bg-[#F3F6FA] p-2.5 gap-1.5">
+            <div className="px-2.5 py-1 mb-1">
+              <span className="text-sm font-medium uppercase tracking-wider text-slate-700">Categories</span>
             </div>
             {TABS.map(tab => {
               const isSelected = activeTab === tab.id;
@@ -508,18 +508,18 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center justify-between px-[0.85vw] py-[0.65vw] text-[0.78vw] rounded-[0.55vw] transition-all text-left cursor-pointer ${
+                  className={`flex items-center justify-between px-3 py-2.5 text-xs rounded-lg transition-all text-left cursor-pointer ${
                     isSelected
                       ? "bg-white text-blue-700 shadow-sm border border-slate-200/90 font-medium"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium"
                   }`}
                 >
-                  <div className="flex items-center gap-[0.6vw]">
-                    <tab.icon className={`w-[1vw] h-[1vw] ${isSelected ? "text-blue-600" : "text-slate-400"}`} />
+                  <div className="flex items-center gap-2.5">
+                    <tab.icon className={`w-3.5 h-3.5 ${isSelected ? "text-blue-600" : "text-slate-700"}`} />
                     <span className="font-medium">{tab.label}</span>
                   </div>
-                  <span className={`text-[0.68vw] px-[0.45vw] py-[0.05vw] rounded-full font-medium ${
-                    isSelected ? "bg-blue-50 text-blue-600 border border-blue-100" : "bg-slate-200/70 text-slate-500"
+                  <span className={`text-sm px-1.5 py-px rounded-full font-medium ${
+                    isSelected ? "bg-blue-50 text-blue-600 border border-blue-100" : "bg-slate-200/70 text-slate-700"
                   }`}>
                     {count}
                   </span>
@@ -529,38 +529,38 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 p-[1.5vw] overflow-hidden bg-white flex flex-col min-h-0">
+          <div className="flex-1 p-5.5 overflow-hidden bg-white flex flex-col min-h-0">
             <AnimatePresence mode="wait">
               {activeTab === "stages" && (
-                <motion.div key="stages" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                <motion.div key="stages" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-4 flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Work Stages</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure workflow stages available during production and inspection</p>
+                    <h4 className="text-sm font-medium text-slate-800">Work Stages</h4>
+                    <p className="text-sm text-slate-700 font-normal">Configure workflow stages available during production and inspection</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
+                  <div className="flex gap-2.5 bg-[#F8FAFC] p-2.5 rounded-xl border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newStage} 
                       onChange={e => setNewStage(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addStage()} 
                       placeholder="Enter new work stage name..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-1.5 px-3.5 text-xs outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-700" 
                     />
                     <button 
                       onClick={addStage} 
-                      className="bg-blue-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-blue-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-blue-600 text-white px-4 h-8 rounded-full text-xs font-medium hover:bg-blue-700 shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Stage
+                      <Plus className="w-3.5 h-3.5" /> Add Stage
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                  <div className="flex-1 border border-slate-200 rounded-lg overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
-                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Stage Name</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
+                        <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
+                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3.5 text-left font-medium">Stage Name</th>
+                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -571,10 +571,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "stages" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -582,46 +582,46 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-md px-2 py-1 text-xs font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     s
                                   )}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
-                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                  <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
                                         <button 
                                           onClick={saveEdit} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Save"
                                         >
-                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                          <Save className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => setEditingItem(null)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Cancel"
                                         >
-                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                          <X className="w-3 h-3" />
                                         </button>
                                       </>
                                     ) : (
                                       <>
                                         <button 
                                           onClick={() => setEditingItem({ category: "stages", index: idx, value: s })} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Edit"
                                         >
-                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Edit3 className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => removeStage(s)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Delete"
                                         >
-                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Trash2 className="w-3 h-3" />
                                         </button>
                                       </>
                                     )}
@@ -638,35 +638,35 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               )}
 
               {activeTab === "dispositions" && (
-                <motion.div key="dispositions" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                <motion.div key="dispositions" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-4 flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Disposition Outcomes</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure disposition resolution statuses for rejected or verified items</p>
+                    <h4 className="text-sm font-medium text-slate-800">Disposition Outcomes</h4>
+                    <p className="text-sm text-slate-700 font-normal">Configure disposition resolution statuses for rejected or verified items</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
+                  <div className="flex gap-2.5 bg-[#F8FAFC] p-2.5 rounded-xl border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newDisposition} 
                       onChange={e => setNewDisposition(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addDisposition()} 
                       placeholder="Enter new disposition outcome..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-1.5 px-3.5 text-xs outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-700" 
                     />
                     <button 
                       onClick={addDisposition} 
-                      className="bg-emerald-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-emerald-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-emerald-600 text-white px-4 h-8 rounded-full text-xs font-medium hover:bg-emerald-700 shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Outcome
+                      <Plus className="w-3.5 h-3.5" /> Add Outcome
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                  <div className="flex-1 border border-slate-200 rounded-lg overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
-                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Outcome Description</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
+                        <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
+                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3.5 text-left font-medium">Outcome Description</th>
+                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -677,10 +677,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "dispositions" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -688,46 +688,46 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-md px-2 py-1 text-xs font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     d
                                   )}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
-                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                  <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
                                         <button 
                                           onClick={saveEdit} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Save"
                                         >
-                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                          <Save className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => setEditingItem(null)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Cancel"
                                         >
-                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                          <X className="w-3 h-3" />
                                         </button>
                                       </>
                                     ) : (
                                       <>
                                         <button 
                                           onClick={() => setEditingItem({ category: "dispositions", index: idx, value: d })} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Edit"
                                         >
-                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Edit3 className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => removeDisposition(d)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Delete"
                                         >
-                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Trash2 className="w-3 h-3" />
                                         </button>
                                       </>
                                     )}
@@ -744,35 +744,35 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               )}
 
               {activeTab === "problems" && (
-                <motion.div key="problems" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                <motion.div key="problems" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-4 flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Problem Types</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Categorize issue classifications identified on production boards</p>
+                    <h4 className="text-sm font-medium text-slate-800">Problem Types</h4>
+                    <p className="text-sm text-slate-700 font-normal">Categorize issue classifications identified on production boards</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
+                  <div className="flex gap-2.5 bg-[#F8FAFC] p-2.5 rounded-xl border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newProblemType} 
                       onChange={e => setNewProblemType(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addProblemType()} 
                       placeholder="Enter new problem classification..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-1.5 px-3.5 text-xs outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-700" 
                     />
                     <button 
                       onClick={addProblemType} 
-                      className="bg-orange-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-orange-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-orange-600 text-white px-4 h-8 rounded-full text-xs font-medium hover:bg-orange-700 shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Type
+                      <Plus className="w-3.5 h-3.5" /> Add Type
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                  <div className="flex-1 border border-slate-200 rounded-lg overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
-                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Problem Classification</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
+                        <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
+                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3.5 text-left font-medium">Problem Classification</th>
+                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -783,10 +783,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "problems" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -794,46 +794,46 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-md px-2 py-1 text-xs font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     p
                                   )}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
-                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                  <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
                                         <button 
                                           onClick={saveEdit} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Save"
                                         >
-                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                          <Save className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => setEditingItem(null)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Cancel"
                                         >
-                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                          <X className="w-3 h-3" />
                                         </button>
                                       </>
                                     ) : (
                                       <>
                                         <button 
                                           onClick={() => setEditingItem({ category: "problems", index: idx, value: p })} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Edit"
                                         >
-                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Edit3 className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => removeProblemType(p)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Delete"
                                         >
-                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Trash2 className="w-3 h-3" />
                                         </button>
                                       </>
                                     )}
@@ -850,35 +850,35 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               )}
 
               {activeTab === "products" && (
-                <motion.div key="products" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
+                <motion.div key="products" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-4 flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Product Types</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure manufacturing assembly and board types</p>
+                    <h4 className="text-sm font-medium text-slate-800">Product Types</h4>
+                    <p className="text-sm text-slate-700 font-normal">Configure manufacturing assembly and board types</p>
                   </div>
 
-                  <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
+                  <div className="flex gap-2.5 bg-[#F8FAFC] p-2.5 rounded-xl border border-slate-200 shadow-2xs shrink-0">
                     <input 
                       value={newProductType} 
                       onChange={e => setNewProductType(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addProductType()} 
                       placeholder="Enter new product type..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-1.5 px-3.5 text-xs outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-700" 
                     />
                     <button 
                       onClick={addProductType} 
-                      className="bg-purple-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-purple-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-purple-600 text-white px-4 h-8 rounded-full text-xs font-medium hover:bg-purple-700 shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Product Type
+                      <Plus className="w-3.5 h-3.5" /> Add Product Type
                     </button>
                   </div>
 
-                  <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
+                  <div className="flex-1 border border-slate-200 rounded-lg overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
-                          <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Product Type</th>
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
+                        <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
+                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3.5 text-left font-medium">Product Type</th>
+                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -889,10 +889,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "products" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -900,46 +900,46 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-md px-2 py-1 text-xs font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     p
                                   )}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.8vw] text-center w-[7vw]">
-                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                  <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
                                         <button 
                                           onClick={saveEdit} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Save"
                                         >
-                                          <Save className="w-[0.8vw] h-[0.8vw]" />
+                                          <Save className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => setEditingItem(null)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-slate-600 hover:bg-slate-100 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Cancel"
                                         >
-                                          <X className="w-[0.8vw] h-[0.8vw]" />
+                                          <X className="w-3 h-3" />
                                         </button>
                                       </>
                                     ) : (
                                       <>
                                         <button 
                                           onClick={() => setEditingItem({ category: "products", index: idx, value: p })} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-blue-600 hover:bg-blue-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Edit"
                                         >
-                                          <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Edit3 className="w-3 h-3" />
                                         </button>
                                         <button 
                                           onClick={() => removeProductType(p)} 
-                                          className="w-[1.4vw] h-[1.4vw] rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
+                                          className="w-5 h-5 rounded-full text-slate-700 hover:text-rose-600 hover:bg-rose-50 inline-flex items-center justify-center transition-all cursor-pointer"
                                           title="Delete"
                                         >
-                                          <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                          <Trash2 className="w-3 h-3" />
                                         </button>
                                       </>
                                     )}
@@ -958,9 +958,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
           </div>
         </div>
 
-        <div className="flex justify-end gap-[0.6vw] p-[1vw] border-t border-slate-200 bg-slate-50/70 shrink-0 rounded-b-[0.9vw]">
-          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] rounded-full border border-slate-200 text-[0.76vw] text-slate-700 font-semibold hover:bg-slate-100 cursor-pointer">Cancel</button>
-          <button onClick={() => onSave(stages, dispositions, problemTypes, productTypes)} className="px-[1.4vw] h-[2.2vw] rounded-full bg-blue-600 text-white text-[0.76vw] font-semibold hover:bg-blue-700 shadow-xs transition-all active:scale-95 cursor-pointer">Save Master Data</button>
+        <div className="flex justify-end gap-2.5 p-3.5 border-t border-slate-200 bg-slate-50/70 shrink-0 rounded-b-[16px]">
+          <button onClick={onClose} className="px-4 h-8 rounded-full border border-slate-200 text-xs text-slate-700 font-semibold hover:bg-slate-100 cursor-pointer">Cancel</button>
+          <button onClick={() => onSave(stages, dispositions, problemTypes, productTypes)} className="px-5 h-8 rounded-full bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 shadow-xs transition-all active:scale-95 cursor-pointer">Save Master Data</button>
         </div>
       </motion.div>
     </div>
@@ -974,15 +974,15 @@ const EmpSelectCell = ({ val, employees, onSelect }) => {
   useEffect(() => { const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); }; document.addEventListener("mousedown", handler); return () => document.removeEventListener("mousedown", handler); }, []);
   return (
     <div className="relative" ref={ref}>
-      <div onClick={() => setOpen(!open)} className={`flex items-center justify-center gap-[0.4vw] bg-white border rounded-[0.3vw] px-[0.5vw] py-[0.25vw] transition-all cursor-pointer hover:border-blue-400 mx-auto w-max ${val ? "border-slate-300" : "border-dashed border-slate-300"}`}>
-        <span className={`text-[0.7vw] font-bold truncate max-w-[6vw] ${val ? "text-black" : "text-gray-400"}`}>{selected ? selected.name : "Assign"}</span>
+      <div onClick={() => setOpen(!open)} className={`flex items-center justify-center gap-1.5 bg-white border rounded-md px-2 py-1 transition-all cursor-pointer hover:border-blue-400 mx-auto w-max ${val ? "border-slate-300" : "border-dashed border-slate-300"}`}>
+        <span className={`text-sm font-bold truncate max-w-[86px] ${val ? "text-black" : "text-gray-700"}`}>{selected ? selected.name : "Assign"}</span>
       </div>
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-[0.2vw] bg-white border border-slate-300 shadow-xl rounded-[0.4vw] w-[14vw] max-h-[12vw] overflow-y-auto z-[200] py-[0.2vw]">
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-1 bg-white border border-slate-300 shadow-xl rounded-md w-[202px] max-h-[173px] overflow-y-auto z-[200] py-1">
             {employees.map(u => (
-              <div key={u.userId} onClick={() => { onSelect(u); setOpen(false); }} className="px-[0.6vw] py-[0.4vw] flex items-center gap-[0.5vw] hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0">
-                <div className="flex-1 min-w-0"><div className="text-[0.7vw] font-bold text-black truncate">{u.name}</div><div className="text-[0.55vw] text-gray-400 font-bold truncate">{u.department}</div></div>
+              <div key={u.userId} onClick={() => { onSelect(u); setOpen(false); }} className="px-2.5 py-1.5 flex items-center gap-2 hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0">
+                <div className="flex-1 min-w-0"><div className="text-sm font-bold text-black truncate">{u.name}</div><div className="text-xs text-gray-700 font-bold truncate">{u.department}</div></div>
               </div>
             ))}
           </motion.div>
@@ -1002,29 +1002,29 @@ const HistoryCellButton = ({ prod, row }) => {
         type="button"
         onClick={() => setShowHistory(true)}
         title="View History"
-        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
+        className="px-2.5 py-1 text-sm font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-md transition-all cursor-pointer shadow-2xs active:scale-95"
       >
         View
       </button>
 
       {showHistory &&
         ReactDOM.createPortal(
-          <div className="fixed inset-0 z-[99999] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-[2vw]">
+          <div className="fixed inset-0 z-[99999] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-7">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] max-w-[650px] min-w-[360px] max-h-[85vh] flex flex-col overflow-hidden text-left"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-[605px] max-w-[650px] min-w-[360px] max-h-[85vh] flex flex-col overflow-hidden text-left"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
+              <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
                 <div>
-                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
-                    <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
+                  <h3 className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
+                  <p className="text-xs text-slate-600 font-normal mt-0.5">
                     {prod.productDescription || "Product"} (
                     <span className="font-mono font-medium text-slate-800">{prod.serialNumber || prod.identification || "—"}</span>)
                   </p>
@@ -1032,14 +1032,14 @@ const HistoryCellButton = ({ prod, row }) => {
                 <button
                   type="button"
                   onClick={() => setShowHistory(false)}
-                  className="p-[0.4vw] rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 hover:text-slate-800 transition-colors cursor-pointer"
                 >
-                  <X className="w-[1.1vw] h-[1.1vw]" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Timeline Area */}
-              <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-[#f8fafd]">
+              <div className="flex-1 overflow-y-auto p-5.5 space-y-4 bg-[#f8fafd]">
                 {(() => {
                   const empHistory = prod.report?.history || [];
                   const finalHistory = prod.finalStatusHistory || [];
@@ -1127,9 +1127,9 @@ const HistoryCellButton = ({ prod, row }) => {
 
                   if (timeline.length === 0) {
                     return (
-                      <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-700">
-                        <Clock className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
-                        <span className="text-[0.82vw] font-semibold text-slate-800">
+                      <div className="flex flex-col items-center justify-center py-9 text-slate-700">
+                        <Clock className="w-6.5 h-6.5 mb-2 text-slate-700" />
+                        <span className="text-xs font-semibold text-slate-800">
                           Not yet updated or assigned.
                         </span>
                       </div>
@@ -1137,8 +1137,8 @@ const HistoryCellButton = ({ prod, row }) => {
                   }
 
                   return (
-                    <div className="relative pl-[1.8vw] space-y-[0.85vw]">
-                      <div className="absolute left-[0.6vw] -translate-x-1/2 top-[0.5vw] bottom-[0.5vw] w-[2px] bg-slate-200 pointer-events-none" />
+                    <div className="relative pl-6.5 space-y-3">
+                      <div className="absolute left-[9px] -translate-x-1/2 top-[7px] bottom-[7px] w-0.5 bg-slate-200 pointer-events-none" />
 
                       {timeline.map((entry, i) => {
                         let dotColor = "bg-slate-500";
@@ -1170,30 +1170,30 @@ const HistoryCellButton = ({ prod, row }) => {
                         return (
                           <div key={i} className="relative group">
                             <div
-                              className={`absolute -left-[1.8vw] top-[0.6vw] w-[0.55vw] h-[0.55vw] rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                              className={`absolute -left-[26px] top-[9px] w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
                             />
 
-                            <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
-                              <div className="flex items-center justify-between gap-[0.5vw] flex-wrap">
+                            <div className="py-2 border-b border-slate-200/80 last:border-b-0">
+                              <div className="flex items-center justify-between gap-2 flex-wrap">
                                 {entry.type === "assigned" ? (
-                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                                  <span className="text-sm px-2 py-px rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
                                     {entry.label} → {entry.name}
                                   </span>
                                 ) : entry.type === "verification" ? (
-                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+                                  <div className="flex items-center gap-1 flex-wrap">
+                                    <span className="text-sm px-2 py-px rounded-full font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                      <span className="text-sm px-1.5 py-px bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
                                         Verified By: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "admin" ? (
-                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                  <div className="flex items-center gap-1 flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                      className={`text-sm px-2 py-px rounded-full font-medium border ${
                                         entry.status.includes("Approved")
                                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : "bg-rose-50 text-rose-700 border-rose-200"
@@ -1202,32 +1202,32 @@ const HistoryCellButton = ({ prod, row }) => {
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-normal">
+                                      <span className="text-sm px-1.5 py-px bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-normal">
                                         Admin: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "adminEdit" ? (
-                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
+                                  <div className="flex items-center gap-1 flex-wrap">
+                                    <span className="text-sm px-2 py-px rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                      <span className="text-sm px-1.5 py-px bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
                                         By: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "closureEdit" ? (
-                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
+                                  <div className="flex items-center gap-1 flex-wrap">
+                                    <span className="text-sm px-2 py-px rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
                                       {entry.status}
                                     </span>
                                   </div>
                                 ) : (
-                                  <div className="flex items-center gap-[0.3vw] flex-wrap">
+                                  <div className="flex items-center gap-1 flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                      className={`text-sm px-2 py-px rounded-full font-medium border ${
                                         entry.status === "Completed"
                                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : entry.status === "Under Testing"
@@ -1241,15 +1241,15 @@ const HistoryCellButton = ({ prod, row }) => {
                                 )}
 
                                 {tsLabel && (
-                                  <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
+                                  <span className="text-sm text-slate-700 font-mono font-normal whitespace-nowrap">
                                     {tsLabel}
                                   </span>
                                 )}
                               </div>
 
                               {entry.remark && (
-                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
-                                  <span className="text-slate-500 font-medium mr-[0.3vw]">
+                                <div className="mt-1.5 text-xs text-slate-700 leading-relaxed font-normal">
+                                  <span className="text-slate-700 font-medium mr-1">
                                     Remarks / Reason:
                                   </span>
                                   {entry.remark}
@@ -1258,40 +1258,40 @@ const HistoryCellButton = ({ prod, row }) => {
 
                               {/* Diffs display for edits */}
                               {entry.diffs && entry.diffs.length > 0 && (
-                                <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
-                                  <div className="flex items-center justify-between text-[0.72vw]">
-                                    <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
-                                      <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
+                                <div className="mt-2 bg-purple-50/30 rounded-md border border-purple-200/60 p-1.5 space-y-1.5">
+                                  <div className="flex items-center justify-between text-sm">
+                                    <span className="font-semibold text-purple-800 flex items-center gap-1.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
                                       Changed Fields ({entry.diffs.length})
                                     </span>
                                   </div>
 
-                                  <div className="space-y-[0.3vw] pt-[0.2vw]">
+                                  <div className="space-y-1 pt-1">
                                     {entry.diffs.map((d, di) => (
                                       <div
                                         key={di}
-                                        className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                        className="text-xs bg-white rounded-md p-1.5 border border-slate-200"
                                       >
-                                        <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
+                                        <div className="font-medium text-slate-700 text-sm mb-1">
                                           {d.field}
                                         </div>
-                                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
-                                          <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
-                                            <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1.5">
+                                          <div className="bg-rose-50/40 rounded-sm px-1.5 py-1 border border-rose-200/80">
+                                            <div className="text-xs font-semibold text-rose-600 uppercase tracking-wider mb-px">
                                               Previous
                                             </div>
-                                            <div className="text-rose-700 font-normal text-[0.72vw] break-words">
+                                            <div className="text-rose-700 font-normal text-sm break-words">
                                               {String(d.originalValue || "—")}
                                             </div>
                                           </div>
-                                          <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                          <div className="text-slate-700 font-normal text-xs px-px">
                                             →
                                           </div>
-                                          <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
-                                            <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                          <div className="bg-emerald-50/40 rounded-sm px-1.5 py-1 border border-emerald-200/80">
+                                            <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-px">
                                               Updated
                                             </div>
-                                            <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
+                                            <div className="text-emerald-900 font-medium text-sm break-words">
                                               {String(d.editedValue || "—")}
                                             </div>
                                           </div>
@@ -1311,11 +1311,11 @@ const HistoryCellButton = ({ prod, row }) => {
               </div>
 
               {/* Footer */}
-              <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
+              <div className="px-5 py-3 border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
                 <button
                   type="button"
                   onClick={() => setShowHistory(false)}
-                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="px-[19px] h-7 text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   Close
                 </button>
@@ -1359,29 +1359,29 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
   const cls = FINAL_STATUS_COLORS[status] || "bg-gray-100 text-black/80 border-slate-300";
 
   return (
-    <div className="flex items-center justify-center gap-[0.35vw]">
+    <div className="flex items-center justify-center gap-1.5">
       <div className="relative" ref={ref}>
         <button 
           onClick={() => !isSupervisor && setOpen(!open)} 
-          className={`text-[0.68vw] px-[0.55vw] py-[0.18vw] rounded-full border font-normal flex items-center gap-[0.3vw] transition-all shadow-2xs ${cls} ${isSupervisor ? "cursor-default" : "cursor-pointer"}`}
+          className={`text-sm px-2 py-1 rounded-full border font-normal flex items-center gap-1 transition-all shadow-2xs ${cls} ${isSupervisor ? "cursor-default" : "cursor-pointer"}`}
         >
           <span>{status}</span>
-          {!isSupervisor && <ChevronDown className="w-[0.65vw] h-[0.65vw] opacity-70" />}
+          {!isSupervisor && <ChevronDown className="w-2.5 h-2.5 opacity-70" />}
         </button>
         <AnimatePresence>
           {open && (
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-200 shadow-xl rounded-[0.7vw] z-40 w-[17vw] p-[0.9vw] text-left">
-              <div className="text-[0.74vw] font-bold text-slate-800 mb-[0.5vw]">Update Final Status</div>
-              <div className="grid grid-cols-3 gap-[0.35vw] mb-[0.7vw]">
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-1 bg-white border border-slate-200 shadow-xl rounded-xl z-40 w-[245px] p-3.5 text-left">
+              <div className="text-xs font-bold text-slate-800 mb-2">Update Final Status</div>
+              <div className="grid grid-cols-3 gap-1.5 mb-2.5">
                 {FINAL_STATUS_OPTIONS.map((opt) => (
-                  <button key={opt} onClick={() => setStatus(opt)} className={`py-[0.32vw] rounded-full border text-[0.66vw] font-normal cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300 font-medium" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
+                  <button key={opt} onClick={() => setStatus(opt)} className={`py-1.5 rounded-full border text-sm font-normal cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300 font-medium" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
                     {opt}
                   </button>
                 ))}
               </div>
-              <div className="mb-[0.6vw]"><label className="text-[0.65vw] font-semibold text-slate-700 block mb-[0.25vw]">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-slate-200 rounded-[0.4vw] px-[0.5vw] py-[0.35vw] text-[0.72vw] outline-none focus:border-blue-500 font-normal text-slate-700" /></div>
-              <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-slate-200 rounded-[0.4vw] p-[0.5vw] text-[0.72vw] outline-none focus:border-blue-500 resize-none mb-[0.6vw] font-normal text-slate-700" />
-              <div className="flex justify-end gap-[0.4vw]"><button onClick={() => setOpen(false)} className="px-[0.85vw] py-[0.3vw] text-[0.7vw] border border-slate-200 rounded-full text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">Cancel</button><button onClick={handleSave} className="px-[0.9vw] py-[0.3vw] text-[0.7vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium flex items-center gap-[0.3vw] shadow-2xs cursor-pointer"><Save className="w-[0.7vw] h-[0.7vw]" />Save</button></div>
+              <div className="mb-2.5"><label className="text-xs font-semibold text-slate-700 block mb-1">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-slate-200 rounded-md px-2 py-1.5 text-sm outline-none focus:border-blue-500 font-normal text-slate-700" /></div>
+              <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-slate-200 rounded-md p-2 text-sm outline-none focus:border-blue-500 resize-none mb-2.5 font-normal text-slate-700" />
+              <div className="flex justify-end gap-1.5"><button onClick={() => setOpen(false)} className="px-3 py-1 text-sm border border-slate-200 rounded-full text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">Cancel</button><button onClick={handleSave} className="px-3.5 py-1 text-sm bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium flex items-center gap-1 shadow-2xs cursor-pointer"><Save className="w-2.5 h-2.5" />Save</button></div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1665,24 +1665,24 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
   };
 
   return (
-    <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="w-full h-full flex flex-col font-sans flex-1 min-h-0 overflow-hidden pr-[0.3vw]">
+    <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="w-full h-full flex flex-col font-sans flex-1 min-h-0 overflow-hidden pr-1">
       {/* Top Header Bar */}
-      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 mb-[0.6vw] shrink-0">
-        <div className="flex items-center gap-[0.9vw]">
+      <div className="flex items-center justify-between bg-white px-4 py-2.5 rounded-xl shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 mb-2.5 shrink-0">
+        <div className="flex items-center gap-3.5">
           <button
             type="button"
             onClick={onBack}
-            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors"
+            className="flex items-center gap-1.5 text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg cursor-pointer text-xs font-medium transition-colors"
           >
-            <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back</span>
           </button>
-          <h2 className="text-[1.05vw] font-bold text-slate-800">
+          <h2 className="text-xs font-bold text-slate-800">
             {initialData._id ? "Edit Production NC" : "New Production NC Registration"}
           </h2>
         </div>
-        <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.8vw] flex items-center gap-[0.4vw]">
-          <span className="text-slate-500 font-medium">Ref No:</span>
+        <div className="bg-blue-50/80 border border-blue-200 px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5">
+          <span className="text-slate-700 font-medium">Ref No:</span>
           <span className="font-mono font-bold text-blue-600">
             {base.refNoInternal}
           </span>
@@ -1691,49 +1691,49 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
 
       <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Scrollable Middle Content */}
-        <div className="flex-1 min-h-0 overflow-y-auto pr-[0.4vw] flex flex-col gap-[0.9vw] pb-[0.8vw] custom-scrollbar">
+        <div className="flex-1 min-h-0 overflow-y-auto pr-1.5 flex flex-col gap-3.5 pb-3 custom-scrollbar">
           {/* SECTION 1: Primary Order Details */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
-            <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
-              <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
-              <ClipboardList className="w-[1vw] h-[1vw] text-blue-600" />
-              <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+          <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-4">
+            <div className="flex items-center gap-1.5 mb-3.5 pb-2.5 border-b border-slate-100">
+              <span className="w-1 h-3.5 bg-blue-600 rounded-full inline-block" />
+              <ClipboardList className="w-3.5 h-3.5 text-blue-600" />
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 Primary Order Details
               </h3>
             </div>
-            <div className="grid grid-cols-12 gap-[1.2vw]">
-              <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Registration Date</label>
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-2 flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Registration Date</label>
                 <input
                   type="date"
                   value={base.date}
                   onChange={e => setBase({ ...base, date: e.target.value })}
                   disabled={isReadOnly}
-                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="bg-white border border-slate-200 rounded-lg h-[33px] px-3 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
-              <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Job Order Number <span className="text-rose-500">*</span></label>
+              <div className="col-span-2 flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Job Order Number <span className="text-rose-500">*</span></label>
                 <input
                   value={base.jobOrderNo}
                   onChange={e => setBase({ ...base, jobOrderNo: e.target.value })}
                   placeholder="Enter Job Order..."
                   disabled={isReadOnly}
-                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="bg-white border border-slate-200 rounded-lg h-[33px] px-3 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
-              <div className="col-span-4 flex flex-col gap-[0.35vw] relative" ref={custRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
+              <div className="col-span-4 flex flex-col gap-1.5 relative" ref={custRef}>
+                <label className="text-xs font-semibold text-slate-700 flex items-center justify-between h-[19px]">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                   </span>
-                  <span className="text-[0.68vw] text-slate-400 font-normal">
+                  <span className="text-sm text-slate-700 font-normal">
                     ({filteredCustomers.length})
                   </span>
                 </label>
-                <div className="flex gap-[0.4vw]">
+                <div className="flex gap-1.5">
                   <div className="relative flex-1">
-                    <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.9vw] h-[0.9vw] text-slate-400" />
+                    <Search className="absolute left-[10px] top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-700" />
                     <input
                       value={custSearch}
                       onChange={e => {
@@ -1747,7 +1747,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                       onKeyDown={onCustKeyDown}
                       placeholder="Search & select customer..."
                       disabled={isReadOnly}
-                      className="w-full bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] pl-[2.2vw] pr-[2vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="w-full bg-white border border-slate-200 rounded-lg h-[33px] pl-8 pr-7 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1765,10 +1765,10 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             })),
                           );
                         }}
-                        className="absolute right-[0.5vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                        className="absolute right-[7px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
                         title="Clear customer"
                       >
-                        <X className="w-[0.75vw] h-[0.75vw]" />
+                        <X className="w-3 h-3" />
                       </button>
                     )}
                   </div>
@@ -1793,29 +1793,29 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                         });
                         setShowAddCustModal(true);
                       }}
-                      className="flex items-center gap-[0.3vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[0.75vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.74vw] font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
+                      className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 h-[33px] rounded-lg cursor-pointer text-xs font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
                       title="Add New Customer"
                     >
-                      <UserPlus className="w-[0.85vw] h-[0.85vw]" />
+                      <UserPlus className="w-3 h-3" />
                       <span>New</span>
                     </button>
                   )}
                 </div>
                 <AnimatePresence>
                   {showCustDrop && filteredCustomers.length > 0 && (
-                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute z-[100] w-[25vw] left-0 top-full mt-[0.3vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-2xl max-h-[15vw] overflow-y-auto py-[0.3vw]">
+                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute z-[100] w-[360px] left-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-2xl max-h-[216px] overflow-y-auto py-1">
                       {filteredCustomers.map((c, i) => (
                         <div 
                           key={c.code} 
                           onClick={() => selectCustomer(c)} 
-                          className={`px-[1vw] py-[0.5vw] cursor-pointer flex justify-between items-center border-b border-slate-100 last:border-0 transition-colors ${custSelectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-slate-50"}`}
+                          className={`px-3.5 py-2 cursor-pointer flex justify-between items-center border-b border-slate-100 last:border-0 transition-colors ${custSelectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-slate-50"}`}
                         >
                           <div className="flex-1">
-                            <div className={`text-[0.8vw] font-semibold ${custSelectedIndex === i ? "text-white" : "text-slate-800"}`}>{c.name}</div>
-                            <div className={`text-[0.68vw] font-mono ${custSelectedIndex === i ? "text-white/80" : "text-slate-400"}`}>{c.code}</div>
+                            <div className={`text-xs font-semibold ${custSelectedIndex === i ? "text-white" : "text-slate-800"}`}>{c.name}</div>
+                            <div className={`text-sm font-mono ${custSelectedIndex === i ? "text-white/80" : "text-slate-700"}`}>{c.code}</div>
                           </div>
                           {c.type && (
-                            <span className={`text-[0.6vw] px-[0.4vw] py-[0.1vw] rounded font-semibold uppercase ${custSelectedIndex === i ? "bg-white/20 text-white border border-white/30" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{c.type}</span>
+                            <span className={`text-xs px-1.5 py-px rounded font-semibold uppercase ${custSelectedIndex === i ? "bg-white/20 text-white border border-white/30" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{c.type}</span>
                           )}
                         </div>
                       ))}
@@ -1823,34 +1823,34 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   )}
                 </AnimatePresence>
               </div>
-              <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Customer Code</label>
+              <div className="col-span-2 flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Customer Code</label>
                 <input
                   value={base.customerCode}
                   readOnly
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] font-mono text-slate-600 cursor-not-allowed outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-lg h-[33px] px-3 text-xs font-mono text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
-              <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Category</label>
+              <div className="col-span-2 flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Category</label>
                 <input
                   value={base.category}
                   readOnly
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-lg h-[33px] px-3 text-xs text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
             </div>
           </div>
 
           {/* SECTION 2: Product Manifest & Assembly Specs */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
-            <div className="flex items-center justify-between mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
-              <div className="flex items-center gap-[0.45vw]">
-                <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
-                <Package className="w-[1vw] h-[1vw] text-blue-600" />
-                <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-[0.5vw]">
+          <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-4">
+            <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
+              <div className="flex items-center gap-1.5">
+                <span className="w-1 h-3.5 bg-blue-600 rounded-full inline-block" />
+                <Package className="w-3.5 h-3.5 text-blue-600" />
+                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
                   Manifest & Assembly Specs
-                  <span className="text-[0.68vw] bg-blue-50 text-blue-700 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-full font-semibold">
+                  <span className="text-sm bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-px rounded-full font-semibold">
                     {products.length} {products.length === 1 ? 'Item' : 'Items'}
                   </span>
                 </h3>
@@ -1859,9 +1859,9 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 <button
                   type="button"
                   onClick={addProduct}
-                  className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-full text-[0.74vw] transition-all shadow-2xs active:scale-95"
+                  className="cursor-pointer flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3.5 h-7.5 rounded-full text-xs transition-all shadow-2xs active:scale-95"
                 >
-                  <Plus className="w-[0.85vw] h-[0.85vw]" />
+                  <Plus className="w-3 h-3" />
                   <span>Add Item Row</span>
                 </button>
               )}
@@ -1885,20 +1885,20 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
         </div>
 
         {/* Action Buttons Footer */}
-        <div className="flex items-center justify-end gap-[0.8vw] bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] border border-slate-200 shadow-[0_-2px_10px_-2px_rgba(0,0,0,0.04)] shrink-0">
+        <div className="flex items-center justify-end gap-3 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-[0_-2px_10px_-2px_rgba(0,0,0,0.04)] shrink-0">
           <button
             type="button"
             onClick={onBack}
-            className="px-[1.4vw] h-[2.2vw] border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-full cursor-pointer flex items-center gap-[0.4vw] font-semibold text-[0.76vw] transition-all"
+            className="px-5 h-8 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-full cursor-pointer flex items-center gap-1.5 font-semibold text-xs transition-all"
           >
-            <X className="w-[0.85vw] h-[0.85vw]" /> Cancel
+            <X className="w-3 h-3" /> Cancel
           </button>
           {((initialData._id ? canUpdate : canWrite) && !isReadOnly) && (
             <button
               type="submit"
-              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-full flex items-center gap-[0.4vw] cursor-pointer font-bold text-[0.76vw] shadow-xs transition-all active:scale-95"
+              className="px-6 h-8 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-full flex items-center gap-1.5 cursor-pointer font-bold text-xs shadow-xs transition-all active:scale-95"
             >
-              <Save className="w-[0.85vw] h-[0.85vw]" /> {initialData._id ? "Update Registration" : "Register Inward"}
+              <Save className="w-3 h-3" /> {initialData._id ? "Update Registration" : "Register Inward"}
             </button>
           )}
         </div>
@@ -1907,39 +1907,39 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
       {/* Add Customer Modal (matches Service Material) */}
       <AnimatePresence>
         {showAddCustModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-[1vw]">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-3.5">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+              className="bg-white w-[835px] rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
             >
-              <div className="px-[1.2vw] py-[0.8vw] border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                <div className="flex items-center gap-[0.5vw]">
-                  <UserPlus className="w-[1.1vw] h-[1.1vw] text-blue-600" />
-                  <h2 className="text-[1vw] font-bold text-slate-800">
+              <div className="px-4 py-3 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <div className="flex items-center gap-2">
+                  <UserPlus className="w-4 h-4 text-blue-600" />
+                  <h2 className="text-xs font-bold text-slate-800">
                     Add Customer &amp; Items
                   </h2>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowAddCustModal(false)}
-                  className="text-slate-400 hover:text-rose-500 cursor-pointer p-[0.2vw] transition-colors rounded-full hover:bg-slate-200/60"
+                  className="text-slate-700 hover:text-rose-500 cursor-pointer p-1 transition-colors rounded-full hover:bg-slate-200/60"
                 >
-                  <X className="w-[1vw] h-[1vw]" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
               <form
                 onSubmit={handleAddCustomerSubmit}
-                className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto custom-scrollbar"
+                className="p-4 flex flex-col gap-3.5 overflow-y-auto custom-scrollbar"
               >
-                <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-200">
-                  <h3 className="text-[0.82vw] font-bold text-slate-700 mb-[0.8vw] uppercase tracking-wider">
+                <div className="bg-slate-50/80 p-3.5 rounded-lg border border-slate-200">
+                  <h3 className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">
                     Party Details
                   </h3>
-                  <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
-                    <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                  <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-700 font-semibold">
                         Party Code <span className="text-rose-500">*</span>
                       </label>
                       <input
@@ -1951,12 +1951,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             partyCode: e.target.value,
                           })
                         }
-                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        className="border border-slate-300 p-2 rounded-md bg-white focus:ring-2 ring-blue-100 outline-none text-xs"
                         placeholder="e.g. CUS-001"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-700 font-semibold">
                         Party Type
                       </label>
                       <CustomDropdown
@@ -1968,12 +1968,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                           })
                         }
                         options={(partyTypes.length > 0 ? partyTypes : [{ name: "OEM" }, { name: "End Customer" }]).map((t) => ({ value: t.name, label: t.name }))}
-                        triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-300 text-[0.8vw]"
+                        triggerClassName="!p-2 !rounded-md bg-white border-slate-300 text-xs"
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-[0.35vw] mb-[0.8vw]">
-                    <label className="text-[0.76vw] text-slate-700 font-semibold">
+                  <div className="flex flex-col gap-1.5 mb-3">
+                    <label className="text-xs text-slate-700 font-semibold">
                       Party Description / Customer Name <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -1985,13 +1985,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                           partyDescription: e.target.value,
                         })
                       }
-                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-300 p-2 rounded-md bg-white focus:ring-2 ring-blue-100 outline-none text-xs"
                       placeholder="Company Name"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-[1.2vw]">
-                    <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">State</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-700 font-semibold">State</label>
                       <input
                         value={newCustomer.state}
                         list="prod-cust-states-datalist"
@@ -2001,12 +2001,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             state: e.target.value,
                           })
                         }
-                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        className="border border-slate-300 p-2 rounded-md bg-white focus:ring-2 ring-blue-100 outline-none text-xs"
                         placeholder="e.g. Tamil Nadu"
                       />
                     </div>
-                    <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs text-slate-700 font-semibold">
                         District / City
                       </label>
                       <input
@@ -2018,36 +2018,36 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             districtCity: e.target.value,
                           })
                         }
-                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        className="border border-slate-300 p-2 rounded-md bg-white focus:ring-2 ring-blue-100 outline-none text-xs"
                         placeholder="e.g. Coimbatore"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[1vw]">
-                  <div className="flex justify-between items-center mb-[0.6vw]">
-                    <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+                <div className="bg-white border border-slate-200 rounded-lg p-3.5">
+                  <div className="flex justify-between items-center mb-2.5">
+                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                       Product Items
                     </h3>
                     <button
                       type="button"
                       onClick={handleAddCustItemRow}
-                      className="text-blue-600 hover:text-blue-800 text-[0.76vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer"
+                      className="text-blue-600 hover:text-blue-800 text-xs font-semibold flex items-center gap-1 cursor-pointer"
                     >
-                      <PlusCircle className="w-[0.85vw] h-[0.85vw]" />
+                      <PlusCircle className="w-3 h-3" />
                       Add Another Item
                     </button>
                   </div>
-                  <div className="flex flex-col gap-[0.6vw]">
+                  <div className="flex flex-col gap-2.5">
                     {newCustomer.items.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex gap-[0.6vw] items-center border border-slate-100 p-[0.6vw] rounded-[0.4vw] bg-slate-50/50"
+                        className="flex gap-2.5 items-center border border-slate-100 p-2.5 rounded-md bg-slate-50/50"
                       >
-                        <div className="flex-1 flex flex-col gap-[0.3vw]">
+                        <div className="flex-1 flex flex-col gap-1">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-sm text-slate-700 font-medium">
                               Product Segment
                             </label>
                           )}
@@ -2062,13 +2062,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-1.5 rounded-md text-xs bg-white outline-none"
                             placeholder="Segment"
                           />
                         </div>
-                        <div className="flex-1 flex flex-col gap-[0.3vw]">
+                        <div className="flex-1 flex flex-col gap-1">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-sm text-slate-700 font-medium">
                               Item Code
                             </label>
                           )}
@@ -2082,13 +2082,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-1.5 rounded-md text-xs bg-white outline-none"
                             placeholder="Code"
                           />
                         </div>
-                        <div className="flex-[2] flex flex-col gap-[0.3vw]">
+                        <div className="flex-[2] flex flex-col gap-1">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-sm text-slate-700 font-medium">
                               Description
                             </label>
                           )}
@@ -2102,13 +2102,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-1.5 rounded-md text-xs bg-white outline-none"
                             placeholder="Description"
                           />
                         </div>
-                        <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
+                        <div className="flex-[0.7] flex flex-col gap-1">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-sm text-slate-700 font-medium">
                               Warranty (days)
                             </label>
                           )}
@@ -2124,7 +2124,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-1.5 rounded-md text-xs bg-white outline-none"
                             placeholder="Days"
                           />
                         </div>
@@ -2133,11 +2133,11 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             type="button"
                             onClick={() => handleRemoveCustItemRow(idx)}
                             disabled={newCustomer.items.length === 1}
-                            className={`text-slate-400 hover:text-rose-500 disabled:opacity-30 cursor-pointer p-[0.2vw] ${
-                              idx === 0 ? "mt-[1.3vw]" : ""
+                            className={`text-slate-700 hover:text-rose-500 disabled:opacity-30 cursor-pointer p-1 ${
+                              idx === 0 ? "mt-[19px]" : ""
                             }`}
                           >
-                            <MinusCircle className="w-[1vw] h-[1vw]" />
+                            <MinusCircle className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
@@ -2145,17 +2145,17 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-[0.8vw] pt-[0.4vw]">
+                <div className="flex justify-end gap-3 pt-1.5">
                   <button
                     type="button"
                     onClick={() => setShowAddCustModal(false)}
-                    className="px-[1.4vw] h-[2.2vw] border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.76vw] font-medium transition-colors"
+                    className="px-5 h-8 border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer text-slate-700 text-xs font-medium transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.76vw] font-semibold transition-colors shadow-xs"
+                    className="px-6 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center gap-1.5 cursor-pointer text-xs font-semibold transition-colors shadow-xs"
                   >
                     Save All
                   </button>
@@ -2460,9 +2460,9 @@ export default function ProductionMaterial() {
   }, [data]);
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center p-[10vw] gap-[1.5vw]">
-      <div className="w-[3vw] h-[3vw] border-[0.35vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-      <div className="text-blue-600 font-bold text-[1vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
+    <div className="flex flex-col items-center justify-center p-[144px] gap-5.5">
+      <div className="w-[43px] h-[43px] border-[5px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
+      <div className="text-blue-600 font-bold text-xs uppercase tracking-widest animate-pulse">Loading Production Data...</div>
     </div>
   );
 
@@ -2519,43 +2519,43 @@ export default function ProductionMaterial() {
           />
         )}
       </AnimatePresence>
-      <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="w-full h-full font-sans text-sm flex flex-col flex-1 min-h-0 overflow-hidden">
         <AnimatePresence>{reportsRow && <ReportsModal row={reportsRow} onClose={() => setReportsRow(null)} />}</AnimatePresence>
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-2 h-full flex-1 min-h-0">
           {/* ── 1. Top Level Scoping Toolbar: Pill Search, Date Range, Clear & Actions ── */}
-          <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+          <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
             {/* Soft Pill Search Box */}
-            <div className="relative w-[20vw]">
-              <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
+            <div className="relative w-[288px]">
+              <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
               <input
                 type="text"
                 placeholder="Search by ref, JO, customer, product..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full pl-9 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-[0.7vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+                  className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
                 >
-                  <X className="w-[0.7vw] h-[0.7vw]" />
+                  <X className="w-2.5 h-2.5" />
                 </button>
               )}
             </div>
 
             {/* Right cluster: Date Range, Clear, Bulk Delete, Master Data & New Registration */}
-            <div className="flex items-center gap-[0.6vw] flex-shrink-0">
+            <div className="flex items-center gap-2.5 flex-shrink-0">
               {/* Unified Date Range Capsule */}
-              <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-                <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+              <div className="flex items-center gap-1.5 border border-slate-200 rounded-full h-8 px-3 bg-white text-xs shadow-2xs hover:border-slate-300 transition-all">
+                <span className="text-slate-700 font-medium text-xs">From</span>
                 <input
                   ref={fromDateRef}
                   type="date"
                   value={dateFrom || ""}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                  className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                 />
                 <button
                   type="button"
@@ -2564,20 +2564,20 @@ export default function ProductionMaterial() {
                       try { fromDateRef.current.showPicker(); } catch { fromDateRef.current.focus(); }
                     }
                   }}
-                  className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+                  className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center mr-0.5"
                   title="Choose from date"
                 >
-                  <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                  <Calendar className="w-3 h-3 shrink-0" />
                 </button>
-                <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-                <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+                <span className="text-slate-700 mx-0.5 text-sm">→</span>
+                <span className="text-slate-700 font-medium text-xs">To</span>
                 <input
                   ref={toDateRef}
                   type="date"
                   value={dateTo || ""}
                   min={dateFrom || undefined}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                  className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                 />
                 <button
                   type="button"
@@ -2586,10 +2586,10 @@ export default function ProductionMaterial() {
                       try { toDateRef.current.showPicker(); } catch { toDateRef.current.focus(); }
                     }
                   }}
-                  className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+                  className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center ml-px"
                   title="Choose to date"
                 >
-                  <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+                  <Calendar className="w-3 h-3 shrink-0" />
                 </button>
               </div>
 
@@ -2601,10 +2601,10 @@ export default function ProductionMaterial() {
                     setDateFrom("");
                     setDateTo("");
                   }}
-                  className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                  className="flex items-center gap-1 h-8 px-3 rounded-full text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
                   title="Clear date filter"
                 >
-                  <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+                  <RotateCcw className="w-3 h-3" />
                   <span>Clear</span>
                 </button>
               )}
@@ -2618,9 +2618,9 @@ export default function ProductionMaterial() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     onClick={handleBulkDelete}
-                    className="flex items-center gap-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-[0.85vw] h-[2.2vw] rounded-full font-semibold text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-3 h-8 rounded-full font-semibold text-xs transition-all cursor-pointer shadow-2xs"
                   >
-                    <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                    <Trash2 className="w-3 h-3" />
                     Delete ({selectedItems.size})
                   </motion.button>
                 )}
@@ -2631,17 +2631,17 @@ export default function ProductionMaterial() {
                   <button
                     type="button"
                     onClick={() => setShowMasterData(true)}
-                    className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs"
+                    className="cursor-pointer flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-3.5 h-8 rounded-full text-xs transition-all shadow-2xs"
                   >
-                    <ClipboardList className="w-[0.8vw] h-[0.8vw] text-slate-500" />
+                    <ClipboardList className="w-3 h-3 text-slate-700" />
                     <span>Master Data</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setView("form")}
-                    className="cursor-pointer flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-[1.1vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs active:scale-95"
+                    className="cursor-pointer flex items-center gap-1.5 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-4 h-8 rounded-full text-xs transition-all shadow-2xs active:scale-95"
                   >
-                    <Plus className="w-[0.9vw] h-[0.9vw] text-white" />
+                    <Plus className="w-3.5 h-3.5 text-white" />
                     <span>New Registration</span>
                   </button>
                 </>
@@ -2650,10 +2650,10 @@ export default function ProductionMaterial() {
           </div>
 
           {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+          <div className="bg-white rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
             {/* Integrated Header: Segment Track on left, Result count on right */}
-            <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
+            <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-200 bg-slate-50/50 shrink-0">
+              <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-slate-200/90 gap-1.5 max-w-full overflow-x-auto min-w-0">
                 {[
                   { label: "All" },
                   { label: "Pending" },
@@ -2667,7 +2667,7 @@ export default function ProductionMaterial() {
                       key={label}
                       type="button"
                       onClick={() => setActiveFilter(label)}
-                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all whitespace-nowrap ${
                         isActive
                           ? "bg-blue-600 text-white shadow-xs font-semibold"
                           : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -2677,10 +2677,10 @@ export default function ProductionMaterial() {
                         {label}
                       </span>
                       <span
-                        className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                        className={`text-sm font-medium ml-px transition-all ${
                           isActive
-                            ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                            : "text-slate-400"
+                            ? "bg-white/20 text-white px-1.5 py-0 rounded-full"
+                            : "text-slate-700"
                         }`}
                       >
                         {count}
@@ -2691,9 +2691,9 @@ export default function ProductionMaterial() {
               </div>
 
               {/* Scoped Result Count */}
-              <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+              <div className="text-xs text-slate-700 font-medium whitespace-nowrap pl-2 flex items-center gap-1">
                 <span>Showing</span>
-                <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+                <span className="font-bold text-slate-800 bg-slate-100 px-1.5 py-px rounded text-sm">
                   {filteredData.length}
                 </span>
                 <span>entries</span>
@@ -2702,13 +2702,13 @@ export default function ProductionMaterial() {
 
             <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
               <table className="w-full text-left border-collapse border-spacing-0">
-                {/* ── THEAD (Sticky 0 & 1.8vw) ── */}
-                <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-xs">
+                {/* ── THEAD (Sticky) ── */}
+                <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-xs">
                   <tr className="bg-[#E9EDF7]">
                     {canDelete && !isSupervisor && (
                       <th
                         rowSpan={2}
-                        className="p-[0.6vw] border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-40 bg-[#E9EDF7]"
+                        className="p-2.5 border-b border-r border-slate-300 text-center align-middle w-[2.5%] sticky top-0 z-40 bg-[#E9EDF7]"
                       >
                         <button
                           type="button"
@@ -2716,14 +2716,14 @@ export default function ProductionMaterial() {
                           className="flex items-center justify-center w-full cursor-pointer"
                         >
                           <div
-                            className={`w-[1.1vw] h-[1.1vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
+                            className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-all ${
                               isPageSelected
                                 ? "bg-[#1a73e8] border-[#1a73e8] text-white"
                                 : "bg-white border-slate-400 text-transparent"
                             }`}
                           >
                             {isPageSelected && (
-                              <span className="text-[0.75vw] leading-none font-bold text-white">
+                              <span className="text-xs leading-none font-bold text-white">
                                 ✓
                               </span>
                             )}
@@ -2733,13 +2733,13 @@ export default function ProductionMaterial() {
                     )}
                     <th
                       rowSpan={2}
-                      className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3.5%] sticky top-0 z-40 bg-[#E9EDF7]"
+                      className="px-2.5 py-2.5 font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-xs align-middle w-[3.5%] sticky top-0 z-40 bg-[#E9EDF7]"
                     >
                       S. No
                     </th>
                     <th
                       colSpan={8}
-                      className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-40 bg-[#E9EDF7]"
+                      className="px-2.5 py-1.5 h-6.5 font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-xs sticky top-0 z-40 bg-[#E9EDF7]"
                     >
                       Product Manifest Details
                     </th>
@@ -2750,18 +2750,18 @@ export default function ProductionMaterial() {
                         style={{
                           minWidth:
                             h === "Final Status"
-                              ? "9.5vw"
+                              ? "137px"
                               : h === "Resolution Verification"
-                              ? "11vw"
+                              ? "158px"
                               : h === "Final Remarks"
-                              ? "10vw"
+                              ? "144px"
                               : h === "History"
-                              ? "5.5vw"
+                              ? "79px"
                               : h === "Actions"
-                              ? "6.5vw"
-                              : "8vw",
+                              ? "94px"
+                              : "115px",
                         }}
-                        className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
+                        className="px-2.5 py-2.5 font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-xs align-middle sticky top-0 z-40 bg-[#E9EDF7]"
                       >
                         {h}
                       </th>
@@ -2769,19 +2769,19 @@ export default function ProductionMaterial() {
                   </tr>
                   <tr className="bg-[#E9EDF7]">
                     {[
-                      { name: "Item Code", minW: "8vw" },
-                      { name: "Description", minW: "14vw" },
-                      { name: "Segment", minW: "6.5vw" },
-                      { name: "NC Type", minW: "6.5vw" },
-                      { name: "Stage", minW: "6.5vw" },
-                      { name: "Qty", minW: "4.5vw" },
-                      { name: "Repeatability", minW: "6.5vw" },
-                      { name: "Serial/Batch", minW: "8vw" },
+                      { name: "Item Code", minW: "115px" },
+                      { name: "Description", minW: "202px" },
+                      { name: "Segment", minW: "94px" },
+                      { name: "NC Type", minW: "94px" },
+                      { name: "Stage", minW: "94px" },
+                      { name: "Qty", minW: "65px" },
+                      { name: "Repeatability", minW: "94px" },
+                      { name: "Serial/Batch", minW: "115px" },
                     ].map(({ name, minW }) => (
                       <th
                         key={name}
                         style={{ minWidth: minW }}
-                        className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
+                        className="px-2.5 py-1.5 h-6.5 font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-xs sticky top-[26px] z-40 bg-[#E9EDF7]"
                       >
                         {name}
                       </th>
@@ -2795,24 +2795,24 @@ export default function ProductionMaterial() {
                       const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 6;
 
                       return [
-                        // ── STICKY HEADER 1: CUSTOMER HEADER ROW (sticky top-[3.6vw]) ──
+                        // ── STICKY HEADER 1: CUSTOMER HEADER ROW (sticky top-[52px]) ──
                         <tr
                           key={`cust-${customerName}`}
-                          className="cursor-pointer select-none border-b border-slate-300 bg-[#EEF2F6] hover:bg-[#E2E8F0] transition-colors sticky top-[3.6vw] z-30 shadow-xs"
+                          className="cursor-pointer select-none border-b border-slate-300 bg-[#EEF2F6] hover:bg-[#E2E8F0] transition-colors sticky top-[52px] z-30 shadow-xs"
                           onClick={() => toggleCustomer(customerName)}
                         >
                           <td
                             colSpan={totalCols}
-                            className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
+                            className="px-2.5 py-1.5 h-7 border-l-[3px] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
                           >
-                            <div className="flex items-center gap-[0.5vw]">
+                            <div className="flex items-center gap-2">
                               {isCustomerCollapsed ? (
-                                <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0 -rotate-90 transition-transform" />
+                                <ChevronDown className="w-3.5 h-3.5 text-slate-700 flex-shrink-0 -rotate-90 transition-transform" />
                               ) : (
-                                <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0 transition-transform" />
+                                <ChevronDown className="w-3.5 h-3.5 text-slate-700 flex-shrink-0 transition-transform" />
                               )}
 
-                              <span className="font-semibold text-slate-800 text-[0.76vw] tracking-wide">
+                              <span className="font-semibold text-slate-800 text-xs tracking-wide">
                                 {customerName}
                               </span>
 
@@ -2821,37 +2821,37 @@ export default function ProductionMaterial() {
                                 type="button"
                                 onClick={(e) => toggleCustomerDetails(customerName, e)}
                                 title={expandedCustomerDetails[customerName] ? "Collapse customer details" : "Expand customer details"}
-                                className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.3vw] shadow-2xs"
+                                className="px-1.5 py-0.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-sm transition-all cursor-pointer flex items-center justify-center shrink-0 ml-1 shadow-2xs"
                               >
                                 <Icon
                                   icon={expandedCustomerDetails[customerName] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
-                                  className="w-[0.75vw] h-[0.75vw]"
+                                  className="w-3 h-3"
                                 />
                               </button>
 
                               {/* Customer metadata: revealed on clicking chevron */}
                               {expandedCustomerDetails[customerName] && (
-                                <div className="flex items-center gap-[0.35vw] flex-wrap animate-in fade-in duration-200">
+                                <div className="flex items-center gap-1.5 flex-wrap animate-in fade-in duration-200">
                                   {rows[0]?.customerCode && (
-                                    <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.2vw]">
+                                    <span className="text-xs text-slate-700 font-medium ml-1">
                                       Code: {rows[0].customerCode}
                                     </span>
                                   )}
                                   {rows[0]?.category && (
-                                    <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                    <span className="text-xs font-normal text-slate-700 bg-slate-50 border border-slate-300 px-1.5 py-px rounded-sm whitespace-nowrap ml-1">
                                       Category: {rows[0].category}
                                     </span>
                                   )}
                                   {rows[0]?.refNoInternal && (
-                                    <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                    <span className="text-xs font-normal bg-blue-50 text-blue-600 border border-blue-200 px-1.5 py-px rounded-sm whitespace-nowrap ml-1">
                                       Ref: {rows[0].refNoInternal}
                                     </span>
                                   )}
                                 </div>
                               )}
 
-                              <div className="ml-auto flex items-center gap-[0.5vw]">
-                                <span className="text-[0.68vw] text-slate-500 font-medium bg-white px-[0.5vw] py-[0.1vw] rounded-full border border-slate-300">
+                              <div className="ml-auto flex items-center gap-2">
+                                <span className="text-sm text-slate-700 font-medium bg-white px-2 py-px rounded-full border border-slate-300">
                                   {rows.length} {rows.length === 1 ? "order" : "orders"}
                                 </span>
                               </div>
@@ -2872,16 +2872,16 @@ export default function ProductionMaterial() {
                               });
 
                               return [
-                                // ── STICKY HEADER 2: JOB ORDER / REGISTRATION ROW (sticky top-[5.6vw]) ──
+                                // ── STICKY HEADER 2: JOB ORDER / REGISTRATION ROW (sticky top-[81px]) ──
                                 <tr
                                   key={`entry-hdr-${row.id}`}
-                                  className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
+                                  className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[81px] z-20 shadow-xs ${
                                     isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9] hover:bg-[#E2E8F0]"
                                   }`}
                                 >
                                   {canDelete && !isSupervisor && (
                                     <td
-                                      className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${
+                                      className={`py-1.5 px-1.5 border-r border-b border-slate-300 text-center align-middle ${
                                         isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                       }`}
                                       onClick={(e) => {
@@ -2894,14 +2894,14 @@ export default function ProductionMaterial() {
                                         className="flex items-center justify-center w-full cursor-pointer"
                                       >
                                         <div
-                                          className={`w-[0.95vw] h-[0.95vw] rounded-[0.2vw] border flex items-center justify-center transition-all ${
+                                          className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center transition-all ${
                                             isSelected
                                               ? "bg-blue-600 border-blue-600 text-white"
                                               : "border-slate-300 hover:border-slate-400 bg-white"
                                           }`}
                                         >
                                           {isSelected && (
-                                            <span className="text-[0.65vw] leading-none font-bold">
+                                            <span className="text-xs leading-none font-bold">
                                               ✓
                                             </span>
                                           )}
@@ -2912,7 +2912,7 @@ export default function ProductionMaterial() {
 
                                   {/* S.No */}
                                   <td
-                                    className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${
+                                    className={`py-1.5 px-1.5 border-r border-b border-slate-300 text-center text-sm font-normal text-slate-700 align-middle ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
                                     onClick={() => toggleEntry(row.id)}
@@ -2923,40 +2923,40 @@ export default function ProductionMaterial() {
                                   {/* Date + Job Order No + Summary Spanning remaining columns */}
                                   <td
                                     colSpan={8 + 6}
-                                    className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${
+                                    className={`px-2.5 py-1 h-7 align-middle border-b border-slate-300 ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
                                     onClick={() => toggleEntry(row.id)}
                                   >
-                                    <div className="flex items-center gap-[0.6vw] flex-wrap">
+                                    <div className="flex items-center gap-2.5 flex-wrap">
                                       {/* Chevron */}
                                       <span
-                                        className="text-slate-400 flex-shrink-0 transition-transform duration-200"
+                                        className="text-slate-700 flex-shrink-0 transition-transform duration-200"
                                         style={{
                                           display: "inline-flex",
                                           transform: isEntryCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
                                         }}
                                       >
-                                        <ChevronDown className="w-[0.75vw] h-[0.75vw]" />
+                                        <ChevronDown className="w-3 h-3" />
                                       </span>
 
                                       {/* Date */}
-                                      <div className="flex items-center gap-[0.35vw] ml-[0.3vw]">
-                                        <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-500 flex-shrink-0" />
-                                        <span className="text-[0.72vw] font-medium text-slate-700 whitespace-nowrap">
+                                      <div className="flex items-center gap-1.5 ml-1">
+                                        <Calendar className="w-3 h-3 text-slate-700 flex-shrink-0" />
+                                        <span className="text-sm font-medium text-slate-700 whitespace-nowrap">
                                           {fmtDate(row.date)}
                                         </span>
                                       </div>
 
                                       {/* Job Order Number Badge */}
-                                      <div className="flex items-center gap-[0.35vw] ml-[0.4vw]">
-                                        <span className="text-[0.68vw] text-slate-500 font-semibold">JO:</span>
+                                      <div className="flex items-center gap-1.5 ml-1.5">
+                                        <span className="text-sm text-slate-700 font-semibold">JO:</span>
                                         <span
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             setReportsRow(row);
                                           }}
-                                          className="text-[0.74vw] font-mono font-semibold text-blue-600 hover:underline cursor-pointer bg-blue-50/80 px-[0.45vw] py-[0.05vw] rounded border border-blue-200"
+                                          className="text-xs font-mono font-semibold text-blue-600 hover:underline cursor-pointer bg-blue-50/80 px-1.5 py-px rounded border border-blue-200"
                                         >
                                           {row.jobOrderNo || "—"}
                                         </span>
@@ -2967,11 +2967,11 @@ export default function ProductionMaterial() {
                                         type="button"
                                         onClick={(e) => toggleEntryDetails(row.id, e)}
                                         title={expandedEntryDetails[row.id] ? "Collapse summary" : "Expand summary"}
-                                        className="px-[0.35vw] py-[0.12vw] bg-white hover:bg-blue-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-[0.25vw] transition-all cursor-pointer flex items-center justify-center shrink-0 ml-[0.3vw] shadow-2xs"
+                                        className="px-1.5 py-0.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-300 rounded-sm transition-all cursor-pointer flex items-center justify-center shrink-0 ml-1 shadow-2xs"
                                       >
                                         <Icon
                                           icon={expandedEntryDetails[row.id] ? "solar:alt-arrow-left-linear" : "solar:alt-arrow-right-linear"}
-                                          className="w-[0.75vw] h-[0.75vw]"
+                                          className="w-3 h-3"
                                         />
                                       </button>
 
@@ -2985,11 +2985,11 @@ export default function ProductionMaterial() {
                                         const rowPending = Math.max(0, rowTotal - rowCompleted);
 
                                         return (
-                                          <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[0.6vw] animate-in fade-in duration-200">
+                                          <div className="flex items-center gap-3 text-sm text-slate-600 font-normal ml-2.5 animate-in fade-in duration-200">
                                             <span>Total Qty: <strong className="text-slate-800">{rowTotal}</strong></span>
-                                            <span className="text-slate-300">|</span>
+                                            <span className="text-slate-600">|</span>
                                             <span>Completed: <strong className="text-emerald-700">{rowCompleted}</strong></span>
-                                            <span className="text-slate-300">|</span>
+                                            <span className="text-slate-600">|</span>
                                             <span>Pending: <strong className="text-amber-700">{rowPending}</strong></span>
                                           </div>
                                         );
@@ -2997,16 +2997,16 @@ export default function ProductionMaterial() {
 
                                       {/* Actions — right side */}
                                       <div
-                                        className="ml-auto flex items-center gap-[0.4vw]"
+                                        className="ml-auto flex items-center gap-1.5"
                                         onClick={(e) => e.stopPropagation()}
                                       >
                                         <button
                                           type="button"
                                           onClick={() => setReportsRow(row)}
                                           title="View Full Report"
-                                          className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                          className="w-6 h-6 flex items-center justify-center bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
                                         >
-                                          <Eye className="w-[0.8vw] h-[0.8vw]" />
+                                          <Eye className="w-3 h-3" />
                                         </button>
 
                                         {canUpdate && !isSupervisor && (
@@ -3017,9 +3017,9 @@ export default function ProductionMaterial() {
                                               setView("form");
                                             }}
                                             title="Edit Registration"
-                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                            className="w-6 h-6 flex items-center justify-center bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
                                           >
-                                            <Edit3 className="w-[0.8vw] h-[0.8vw]" />
+                                            <Edit3 className="w-3 h-3" />
                                           </button>
                                         )}
 
@@ -3038,9 +3038,9 @@ export default function ProductionMaterial() {
                                               }
                                             }}
                                             title="Delete Registration"
-                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-300 hover:border-rose-300 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                            className="w-6 h-6 flex items-center justify-center bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-300 hover:border-rose-300 rounded-full shadow-2xs cursor-pointer transition-colors"
                                           >
-                                            <Trash2 className="w-[0.8vw] h-[0.8vw]" />
+                                            <Trash2 className="w-3 h-3" />
                                           </button>
                                         )}
                                       </div>
@@ -3074,42 +3074,42 @@ export default function ProductionMaterial() {
                                           )}
 
                                           {/* S.No sub-number */}
-                                          <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
-                                            <span className="text-[0.72vw] font-bold text-slate-500">
+                                          <td className="border-r border-slate-300 text-center align-middle px-1 py-1.5">
+                                            <span className="text-sm font-bold text-slate-700">
                                               {globalSn}.{pi + 1}
                                             </span>
                                           </td>
 
                                           {/* Product Code */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 text-center align-middle font-medium">
                                             {showReadyHighlight && (
-                                              <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
-                                                <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
-                                                <span className="text-[0.6vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
+                                              <div className="flex items-center justify-center gap-1 mb-1">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-xs" />
+                                                <span className="text-xs font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
                                               </div>
                                             )}
-                                            <div className="font-mono text-slate-800 text-[0.72vw] font-medium">
+                                            <div className="font-mono text-slate-800 text-sm font-medium">
                                               {prod.productCode || "—"}
                                             </div>
                                           </td>
 
                                           {/* Product Description */}
                                           <td
-                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-[0.76vw] truncate max-w-[14vw]"
+                                            className="px-2.5 py-2 border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-sm truncate max-w-[202px]"
                                             title={prod.productDescription}
                                           >
                                             {prod.productDescription || "—"}
                                           </td>
 
                                           {/* Product Segment */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.74vw] text-slate-800 font-medium align-middle text-center">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 text-xs text-slate-800 font-medium align-middle text-center">
                                             {prod.productSegment || "—"}
                                           </td>
 
                                           {/* NC Type */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 text-center align-middle font-medium">
                                             <span
-                                              className={`inline-flex items-center justify-center text-[0.68vw] font-medium px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${
+                                              className={`inline-flex items-center justify-center text-sm font-medium px-2 py-0.5 rounded-full border shadow-2xs whitespace-nowrap ${
                                                 prod.ncType === "External"
                                                   ? "bg-orange-50 text-orange-700 border-orange-200"
                                                   : "bg-blue-50 text-blue-700 border-blue-200"
@@ -3120,18 +3120,18 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Detection Stage */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.76vw]">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-sm">
                                             {prod.stage || "Assembly"}
                                           </td>
 
                                           {/* Qty */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-black text-[0.76vw]">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 text-center align-middle font-medium text-black text-xs">
                                             {prod.qty || "1"}
                                           </td>
 
                                           {/* Repeatability */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.74vw]">
-                                            <span className={`inline-block px-[0.5vw] py-[0.08vw] rounded-[0.25vw] font-mono text-[0.72vw] ${
+                                          <td className="px-2.5 py-2 border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-sm">
+                                            <span className={`inline-block px-2 py-px rounded-sm font-mono text-sm ${
                                               Number(prod.repeatability) > 0 
                                                 ? "bg-amber-50 text-amber-700 border border-amber-200 font-medium" 
                                                 : "text-slate-700 font-medium"
@@ -3141,12 +3141,12 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Serial Number */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-mono text-black text-[0.72vw] font-medium">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-mono text-black text-sm font-medium">
                                             {prod.serialNumber || "—"}
                                           </td>
 
                                           {/* Assigned To */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw]">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-xs">
                                             {canUpdate && !isSupervisor ? (
                                               <EmpSelectCell
                                                 val={prod.assignedTo}
@@ -3164,19 +3164,19 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Resolution Verification */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-normal">
                                             {prod.report?.verifiedByName ? (
                                               <div className="flex flex-col items-center">
-                                                <span className="text-[0.74vw] font-medium text-emerald-800">{prod.report.verifiedByName}</span>
-                                                <span className="text-[0.66vw] text-slate-700 font-medium">{fmtDate(prod.report.verifiedDate)}</span>
+                                                <span className="text-xs font-medium text-emerald-800">{prod.report.verifiedByName}</span>
+                                                <span className="text-sm text-slate-700 font-medium">{fmtDate(prod.report.verifiedDate)}</span>
                                               </div>
                                             ) : (
-                                              <span className="text-slate-500 font-medium text-[0.72vw]">—</span>
+                                              <span className="text-slate-700 font-medium text-sm">—</span>
                                             )}
                                           </td>
 
                                           {/* Final Status */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-normal">
                                             <FinalStatusCell
                                               row={row}
                                               prod={prod}
@@ -3187,44 +3187,44 @@ export default function ProductionMaterial() {
 
                                           {/* Final Remarks */}
                                           <td
-                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-600 text-[0.72vw] truncate max-w-[10vw]"
+                                            className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-normal text-slate-600 text-sm truncate max-w-[144px]"
                                             title={prod.finalStatusRemarks}
                                           >
                                             {prod.finalStatusRemarks || "—"}
                                           </td>
 
                                           {/* History */}
-                                          <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
+                                          <td className="px-2.5 py-2 border-r border-slate-300 align-middle text-center">
                                             <HistoryCellButton prod={prod} row={row} />
                                           </td>
 
                                           {/* Actions */}
                                           <td
-                                            className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-b border-slate-300 ${
+                                            className={`px-2.5 py-2.5 text-center align-middle border-b border-slate-300 ${
                                               isSelected ? "bg-blue-50/70" : "bg-white"
                                             }`}
                                           >
-                                            <div className="flex items-center justify-center gap-[0.4vw]">
+                                            <div className="flex items-center justify-center gap-1.5">
                                               <button
                                                 type="button"
                                                 onClick={() => setReportsRow(row)}
-                                                className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                                className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                                 title="View Report"
                                               >
-                                                <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                                <Eye className="w-3.5 h-3.5" />
                                               </button>
 
                                               <button
                                                 type="button"
                                                 onClick={() => setShowVerify({ row, prod })}
-                                                className={`p-[0.35vw] rounded-full transition-all cursor-pointer ${
+                                                className={`p-1.5 rounded-full transition-all cursor-pointer ${
                                                   prod.report?.verifiedBy
                                                     ? "text-emerald-600 hover:bg-emerald-50"
-                                                    : "text-slate-400 hover:text-emerald-600 hover:bg-slate-100"
+                                                    : "text-slate-700 hover:text-emerald-600 hover:bg-slate-100"
                                                 }`}
                                                 title={prod.report?.verifiedBy ? "Update Verification" : "Verify Resolution"}
                                               >
-                                                <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
+                                                <CheckCircle className="w-3.5 h-3.5" />
                                               </button>
 
                                               {canUpdate && !isSupervisor && (
@@ -3234,10 +3234,10 @@ export default function ProductionMaterial() {
                                                     setSelectedRow(row);
                                                     setView("form");
                                                   }}
-                                                  className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
+                                                  className="p-1.5 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer"
                                                   title="Edit Registration"
                                                 >
-                                                  <Edit3 className="w-[0.9vw] h-[0.9vw]" />
+                                                  <Edit3 className="w-3.5 h-3.5" />
                                                 </button>
                                               )}
                                             </div>
@@ -3251,7 +3251,7 @@ export default function ProductionMaterial() {
                     })
                   ) : (
                     <tr>
-                      <td colSpan={20} className="py-[6vw] text-center text-slate-400 text-[0.85vw] font-medium">
+                      <td colSpan={20} className="py-[86px] text-center text-slate-700 text-sm font-medium">
                         No records found.
                       </td>
                     </tr>
@@ -3261,26 +3261,26 @@ export default function ProductionMaterial() {
             </div>
 
                         {/* Pagination Footer */}
-            <div className="border-t border-slate-200 px-[1vw] py-[0.55vw] bg-slate-50/70 flex justify-between items-center rounded-b-[0.8vw] shrink-0">
-              <div className="text-[0.74vw] font-medium text-slate-500">
+            <div className="border-t border-slate-200 px-3.5 py-2 bg-slate-50/70 flex justify-between items-center rounded-b-[12px] shrink-0">
+              <div className="text-xs font-medium text-slate-700">
                 Showing <strong className="text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</strong> to <strong className="text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</strong> of <strong className="text-slate-800">{filteredData.length}</strong> entries
               </div>
-              <div className="flex items-center gap-[0.5vw]">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
+                  className="w-6.5 h-6.5 flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
                 >
-                  <ChevronDown className="w-[0.85vw] h-[0.85vw] rotate-90" />
+                  <ChevronDown className="w-3 h-3 rotate-90" />
                 </button>
-                <div className="flex gap-[0.3vw]">
+                <div className="flex gap-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
                     .slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))
                     .map(pNum => (
                       <button
                         key={pNum}
                         onClick={() => setCurrentPage(pNum)}
-                        className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+                        className={`w-6.5 h-6.5 flex items-center justify-center rounded-full text-xs font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
                       >
                         {pNum}
                       </button>
@@ -3289,9 +3289,9 @@ export default function ProductionMaterial() {
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages || totalPages === 0}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
+                  className="w-6.5 h-6.5 flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
                 >
-                  <ChevronUp className="w-[0.85vw] h-[0.85vw] rotate-90" />
+                  <ChevronUp className="w-3 h-3 rotate-90" />
                 </button>
               </div>
             </div>

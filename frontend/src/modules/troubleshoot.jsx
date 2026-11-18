@@ -409,16 +409,16 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "1rem",
+          padding: "16px",
         }}
       >
         <div
           style={{
             background: "#2d2d2d",
-            padding: "2rem",
-            borderRadius: "1rem",
+            padding: "32px",
+            borderRadius: "16px",
             boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
-            maxWidth: "28rem",
+            maxWidth: "448px",
             width: "100%",
             animation: "fadeIn 0.3s ease-out",
           }}
@@ -427,26 +427,26 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
             style={{
               display: "flex",
               justifyContent: "center",
-              marginBottom: "1.5rem",
+              marginBottom: "24px",
             }}
           >
             <div
               style={{
                 background: "white",
-                padding: "1rem",
+                padding: "16px",
                 borderRadius: "9999px",
               }}
             >
-              <Lock style={{ width: "2rem", height: "2rem", color: "#1a1a1a" }} />
+              <Lock style={{ width: "32px", height: "32px", color: "#1a1a1a" }} />
             </div>
           </div>
           <h2
             style={{
-              fontSize: "1.5rem",
+              fontSize: "24px",
               fontWeight: "bold",
               color: "white",
               textAlign: "center",
-              marginBottom: "1.5rem",
+              marginBottom: "24px",
             }}
           >
             Admin Login
@@ -462,8 +462,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
               padding: "0.75rem 1rem",
               background: "#404040",
               color: "white",
-              borderRadius: "0.5rem",
-              marginBottom: "1rem",
+              borderRadius: "8px",
+              marginBottom: "16px",
               border: "none",
               outline: "none",
             }}
@@ -474,8 +474,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
               width: "100%",
               background: "#2563eb",
               color: "white",
-              padding: "0.75rem",
-              borderRadius: "0.5rem",
+              padding: "12px",
+              borderRadius: "8px",
               fontWeight: "600",
               border: "none",
               cursor: "pointer",
@@ -490,11 +490,11 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
             onClick={() => setShowAdminLogin(false)}
             style={{
               width: "100%",
-              marginTop: "0.75rem",
+              marginTop: "12px",
               background: "#404040",
               color: "white",
-              padding: "0.75rem",
-              borderRadius: "0.5rem",
+              padding: "12px",
+              borderRadius: "8px",
               fontWeight: "600",
               border: "none",
               cursor: "pointer",
@@ -549,7 +549,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "2rem",
+            padding: "32px",
           }}
           onClick={() => setViewerMedia(null)}
         >
@@ -557,13 +557,13 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
             onClick={() => setViewerMedia(null)}
             style={{
               position: "absolute",
-              top: "1rem",
-              right: "1rem",
+              top: "16px",
+              right: "16px",
             //   background: "#404040",
               border: "none",
               borderRadius: "50%",
-              width: "3rem",
-              height: "3rem",
+              width: "48px",
+              height: "48px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -571,21 +571,21 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
               color: "white",
             }}
           >
-            <X style={{ width: "1.5rem", height: "1.5rem" }} />
+            <X style={{ width: "24px", height: "24px" }} />
           </button>
           <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: "90%", maxHeight: "90%" }}>
             {viewerMedia.type === "image" ? (
               <img
                 src={viewerMedia.url}
                 alt=""
-                style={{ maxWidth: "100%", maxHeight: "85vh", borderRadius: "0.5rem" }}
+                style={{ maxWidth: "100%", maxHeight: "85vh", borderRadius: "8px" }}
               />
             ) : (
               <video
                 src={viewerMedia.url}
                 controls
                 autoPlay
-                style={{ maxWidth: "100%", maxHeight: "85vh", borderRadius: "0.5rem" }}
+                style={{ maxWidth: "100%", maxHeight: "85vh", borderRadius: "8px" }}
               />
             )}
           </div>
@@ -593,17 +593,17 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
       )}
 
 
-      <div className="absolute z-10 right-[2vw] cursor-pointer">
+      <div className="absolute z-10 right-[29px] cursor-pointer">
         <button
         className=""
           onClick={() => (isAdmin ? setIsAdmin(false) : setShowAdminLogin(true))}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "0.5rem",
+            gap: "8px",
             padding: "0.5rem 1rem",
             background: "#2b7fff",
-            borderRadius: "0.5rem",
+            borderRadius: "8px",
             border: "none",
             color: "white",
             cursor: "pointer",
@@ -614,11 +614,11 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
         >
           {isAdmin ? (
             <>
-              <LogOut style={{ width: "1rem", height: "1rem" }} /> Exit Admin
+              <LogOut style={{ width: "16px", height: "16px" }} /> Exit Admin
             </>
           ) : (
             <>
-              <Lock style={{ width: "1rem", height: "1rem" }} /> Admin
+              <Lock style={{ width: "16px", height: "16px" }} /> Admin
             </>
           )}
         </button>
@@ -630,7 +630,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            maxWidth: isAdmin ? "50vw" : "100vw",
+            maxWidth: isAdmin ? "720px" : "1440px",
             width: "100%",
             position: "relative",
           }}
@@ -639,10 +639,10 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
             style={{
               flex: 1,
               overflowY: "auto",
-              padding: "1.5rem",
+              padding: "24px",
               display: "flex",
               flexDirection: "column",
-              gap: "1rem",
+              gap: "16px",
             }}
             className="custom-scrollbar"
           >
@@ -653,7 +653,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                 margin: "0 auto",
                 display: "flex",
                 flexDirection: "column",
-                gap: "1rem",
+                gap: "16px",
               }}
             >
               {messages.map((msg, idx) => (
@@ -669,17 +669,17 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     style={{
                       maxWidth: "80%",
                       padding: "1rem 1.5rem",
-                      borderRadius: "1rem",
+                      borderRadius: "16px",
                       background: msg.from === "user" ? "#2563eb" : "#2d2d2d",
                       color: "white",
-                      borderBottomRightRadius: msg.from === "user" ? "0.25rem" : "1rem",
-                      borderBottomLeftRadius: msg.from === "bot" ? "0.25rem" : "1rem",
+                      borderBottomRightRadius: msg.from === "user" ? "4px" : "16px",
+                      borderBottomLeftRadius: msg.from === "bot" ? "4px" : "16px",
                       boxShadow: msg.from === "bot" ? "0 4px 10px rgba(0,0,0,0.3)" : "none",
                     }}
                   >
                     <p style={{ whiteSpace: "pre-wrap", margin: 0 }}>{msg.text}</p>
                     {msg.images && msg.images.length > 0 && (
-                      <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                      <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
                         {msg.images.map((img, imgIdx) => {
                           const imgKey = `${idx}-${imgIdx}`;
                           return (
@@ -702,7 +702,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                 alt=""
                                 style={{
                                   maxWidth: "100%",
-                                  borderRadius: "0.5rem",
+                                  borderRadius: "8px",
                                   cursor: "pointer",
                                   opacity: imageLoading[imgKey] ? 0.5 : 1,
                                   transition: "opacity 0.3s",
@@ -716,7 +716,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                   })
                                 }
                               />
-                              <div style={{ marginTop: "0.25rem", display: "flex", gap: "0.5rem" }}>
+                              <div style={{ marginTop: "4px", display: "flex", gap: "8px" }}>
                                 <button
                                   onClick={() =>
                                     setViewerMedia({
@@ -729,18 +729,18 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                     color: "white",
                                     border: "none",
                                     padding: "0.25rem 0.75rem",
-                                    borderRadius: "0.25rem",
-                                    fontSize: "0.75rem",
+                                    borderRadius: "4px",
+                                    fontSize: "12px",
                                     cursor: "pointer",
                                     transition: "background 0.2s",
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: "0.25rem",
+                                    gap: "4px",
                                   }}
                                   onMouseOver={(e) => (e.target.style.background = "#525252")}
                                   onMouseOut={(e) => (e.target.style.background = "#404040")}
                                 >
-                                  <Eye style={{ width: "0.75rem", height: "0.75rem" }} />
+                                  <Eye style={{ width: "12px", height: "12px" }} />
                                   View
                                 </button>
                                 <button
@@ -750,18 +750,18 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                     color: "white",
                                     border: "none",
                                     padding: "0.25rem 0.75rem",
-                                    borderRadius: "0.25rem",
-                                    fontSize: "0.75rem",
+                                    borderRadius: "4px",
+                                    fontSize: "12px",
                                     cursor: "pointer",
                                     transition: "background 0.2s",
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: "0.25rem",
+                                    gap: "4px",
                                   }}
                                   onMouseOver={(e) => (e.target.style.background = "#525252")}
                                   onMouseOut={(e) => (e.target.style.background = "#404040")}
                                 >
-                                  <Download style={{ width: "0.75rem", height: "0.75rem" }} />
+                                  <Download style={{ width: "12px", height: "12px" }} />
                                   Download
                                 </button>
                               </div>
@@ -771,7 +771,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       </div>
                     )}
                     {msg.videos && msg.videos.length > 0 && (
-                      <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                      <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
                         {msg.videos.map((vid, vidIdx) => {
                           const vidKey = `${idx}-${vidIdx}`;
                           return (
@@ -794,14 +794,14 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                 controls
                                 style={{
                                   maxWidth: "100%",
-                                  borderRadius: "0.5rem",
+                                  borderRadius: "8px",
                                   opacity: videoLoading[vidKey] ? 0.5 : 1,
                                   transition: "opacity 0.3s",
                                 }}
                                 onLoadStart={() => setVideoLoading((prev) => ({ ...prev, [vidKey]: true }))}
                                 onCanPlay={() => setVideoLoading((prev) => ({ ...prev, [vidKey]: false }))}
                               />
-                              <div style={{ marginTop: "0.25rem", display: "flex", gap: "0.5rem" }}>
+                              <div style={{ marginTop: "4px", display: "flex", gap: "8px" }}>
                                 <button
                                   onClick={() =>
                                     setViewerMedia({
@@ -814,18 +814,18 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                     color: "white",
                                     border: "none",
                                     padding: "0.25rem 0.75rem",
-                                    borderRadius: "0.25rem",
-                                    fontSize: "0.75rem",
+                                    borderRadius: "4px",
+                                    fontSize: "12px",
                                     cursor: "pointer",
                                     transition: "background 0.2s",
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: "0.25rem",
+                                    gap: "4px",
                                   }}
                                   onMouseOver={(e) => (e.target.style.background = "#525252")}
                                   onMouseOut={(e) => (e.target.style.background = "#404040")}
                                 >
-                                  <Eye style={{ width: "0.75rem", height: "0.75rem" }} />
+                                  <Eye style={{ width: "12px", height: "12px" }} />
                                   View
                                 </button>
                                 <button
@@ -835,18 +835,18 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                                     color: "white",
                                     border: "none",
                                     padding: "0.25rem 0.75rem",
-                                    borderRadius: "0.25rem",
-                                    fontSize: "0.75rem",
+                                    borderRadius: "4px",
+                                    fontSize: "12px",
                                     cursor: "pointer",
                                     transition: "background 0.2s",
                                     display: "flex",
                                     alignItems: "center",
-                                    gap: "0.25rem",
+                                    gap: "4px",
                                   }}
                                   onMouseOver={(e) => (e.target.style.background = "#525252")}
                                   onMouseOut={(e) => (e.target.style.background = "#404040")}
                                 >
-                                  <Download style={{ width: "0.75rem", height: "0.75rem" }} />
+                                  <Download style={{ width: "12px", height: "12px" }} />
                                   Download
                                 </button>
                               </div>
@@ -865,16 +865,16 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     style={{
                       background: "#2d2d2d",
                       padding: "1rem 1.5rem",
-                      borderRadius: "1rem",
-                      borderBottomLeftRadius: "0.25rem",
+                      borderRadius: "16px",
+                      borderBottomLeftRadius: "4px",
                       boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
                     }}
                   >
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <div style={{ display: "flex", gap: "8px" }}>
                       <div
                         style={{
-                          width: "0.5rem",
-                          height: "0.5rem",
+                          width: "8px",
+                          height: "8px",
                           background: "#a0a0a0",
                           borderRadius: "9999px",
                           animation: "bounce 1s infinite",
@@ -882,8 +882,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       ></div>
                       <div
                         style={{
-                          width: "0.5rem",
-                          height: "0.5rem",
+                          width: "8px",
+                          height: "8px",
                           background: "#a0a0a0",
                           borderRadius: "9999px",
                           animation: "bounce 1s infinite 0.2s",
@@ -891,8 +891,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       ></div>
                       <div
                         style={{
-                          width: "0.5rem",
-                          height: "0.5rem",
+                          width: "8px",
+                          height: "8px",
                           background: "#a0a0a0",
                           borderRadius: "9999px",
                           animation: "bounce 1s infinite 0.4s",
@@ -915,7 +915,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
               margin: "0 auto",
             }}
           >
-            <div style={{ display: "flex", gap: "0.75rem" }}>
+            <div style={{ display: "flex", gap: "12px" }}>
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -935,7 +935,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                 onClick={handleSend}
                 style={{
                   background: "#2563eb",
-                  padding: "1rem",
+                  padding: "16px",
                   borderRadius: "9999px",
                   border: "none",
                   cursor: "pointer",
@@ -951,7 +951,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   e.target.style.transform = "scale(1)";
                 }}
               >
-                <Send style={{ width: "1.25rem", height: "1.25rem", color: "white" }} />
+                <Send style={{ width: "20px", height: "20px", color: "white" }} />
               </button>
             </div>
           </div>
@@ -960,41 +960,41 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
         {isAdmin && (
           <div
             style={{
-              width: "35vw",
+              width: "504px",
               background: "#2d2d2d",
               borderLeft: "1px solid #404040",
-              padding: "1.5rem",
+              padding: "24px",
               overflowY: "auto",
             }}
             className="custom-scrollbar rounded-lg mt-[5.5vh]"
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <h2 style={{ fontSize: "20px", fontWeight: "bold", margin: 0 }}>
                 🛠️ Admin Panel
               </h2>
               <button
                 onClick={() => setShowUnanswered(!showUnanswered)}
                 style={{
                   background: "#404040",
-                  padding: "0.5rem",
-                  borderRadius: "0.5rem",
+                  padding: "8px",
+                  borderRadius: "8px",
                   border: "none",
                   color: "white",
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
-                  gap: "0.5rem",
-                  fontSize: "0.875rem",
+                  gap: "8px",
+                  fontSize: "14px",
                 }}
               >
-                <MessageSquare style={{ width: "1rem", height: "1rem" }} />
+                <MessageSquare style={{ width: "16px", height: "16px" }} />
                 {unansweredQuestions.length > 0 && (
                   <span
                     style={{
                       background: "#ef4444",
                       padding: "0.125rem 0.5rem",
                       borderRadius: "9999px",
-                      fontSize: "0.75rem",
+                      fontSize: "12px",
                     }}
                   >
                     {unansweredQuestions.length}
@@ -1005,8 +1005,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
 
             {showUnanswered ? (
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-                  <h3 style={{ fontSize: "1rem", fontWeight: "600", margin: 0 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "600", margin: 0 }}>
                     Unanswered Questions
                   </h3>
                   <button
@@ -1016,34 +1016,34 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       border: "none",
                       color: "#a0a0a0",
                       cursor: "pointer",
-                      fontSize: "0.875rem",
+                      fontSize: "14px",
                     }}
                   >
                     Back
                   </button>
                 </div>
                 {unansweredQuestions.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "2rem", color: "#a0a0a0" }}>
+                  <div style={{ textAlign: "center", padding: "32px", color: "#a0a0a0" }}>
                     No unanswered questions
                   </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                     {unansweredQuestions.map((q) => (
                       <div
                         key={q._id}
                         style={{
                           background: "#404040",
-                          padding: "1rem",
-                          borderRadius: "0.5rem",
+                          padding: "16px",
+                          borderRadius: "8px",
                         }}
                       >
-                        <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.875rem" }}>
+                        <p style={{ margin: "0 0 0.5rem 0", fontSize: "14px" }}>
                           {q.query}
                         </p>
-                        <div style={{ display: "flex", gap: "0.5rem", fontSize: "0.75rem", color: "#a0a0a0" }}>
+                        <div style={{ display: "flex", gap: "8px", fontSize: "12px", color: "#a0a0a0" }}>
                           <span>{new Date(q.createdAt).toLocaleDateString()}</span>
                         </div>
-                        <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+                        <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
                           <button
                             onClick={() => handleUseQuestion(q)}
                             style={{
@@ -1051,9 +1051,9 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                               background: "#2563eb",
                               color: "white",
                               border: "none",
-                              padding: "0.5rem",
-                              borderRadius: "0.25rem",
-                              fontSize: "0.75rem",
+                              padding: "8px",
+                              borderRadius: "4px",
+                              fontSize: "12px",
                               cursor: "pointer",
                             }}
                           >
@@ -1065,9 +1065,9 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                               background: "#ef4444",
                               color: "white",
                               border: "none",
-                              padding: "0.5rem",
-                              borderRadius: "0.25rem",
-                              fontSize: "0.75rem",
+                              padding: "8px",
+                              borderRadius: "4px",
+                              fontSize: "12px",
                               cursor: "pointer",
                             }}
                           >
@@ -1080,7 +1080,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                 )}
               </div>
             ) : loading ? (
-              <div style={{ textAlign: "center", padding: "2rem", color: "#a0a0a0" }}>
+              <div style={{ textAlign: "center", padding: "32px", color: "#a0a0a0" }}>
                 Loading solutions...
               </div>
             ) : !editMode ? (
@@ -1090,14 +1090,14 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   style={{
                     width: "100%",
                     background: "#2563eb",
-                    padding: "0.75rem",
-                    borderRadius: "0.5rem",
+                    padding: "12px",
+                    borderRadius: "8px",
                     fontWeight: "600",
-                    marginBottom: "1rem",
+                    marginBottom: "16px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "0.5rem",
+                    gap: "8px",
                     border: "none",
                     color: "white",
                     cursor: "pointer",
@@ -1106,17 +1106,17 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   onMouseOver={(e) => (e.target.style.background = "#1d4ed8")}
                   onMouseOut={(e) => (e.target.style.background = "#2563eb")}
                 >
-                  <Plus style={{ width: "1.25rem", height: "1.25rem" }} /> Add New Solution
+                  <Plus style={{ width: "20px", height: "20px" }} /> Add New Solution
                 </button>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {solutions.map((sol) => (
                     <div
                       key={sol._id}
                       style={{
                         background: "#404040",
-                        padding: "1rem",
-                        borderRadius: "0.5rem",
+                        padding: "16px",
+                        borderRadius: "8px",
                       }}
                     >
                       <div
@@ -1124,11 +1124,11 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "flex-start",
-                          marginBottom: "0.5rem",
+                          marginBottom: "8px",
                         }}
                       >
                         <h3 style={{ fontWeight: "600", margin: 0 }}>{sol.title}</h3>
-                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <div style={{ display: "flex", gap: "8px" }}>
                           <button
                             onClick={() => {
                               setCurrentSolution({
@@ -1142,7 +1142,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                               background: "none",
                               border: "none",
                               cursor: "pointer",
-                              fontSize: "0.875rem",
+                              fontSize: "14px",
                             }}
                           >
                             Edit
@@ -1157,15 +1157,15 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                               padding: 0,
                             }}
                           >
-                            <Trash2 style={{ width: "1rem", height: "1rem" }} />
+                            <Trash2 style={{ width: "16px", height: "16px" }} />
                           </button>
                         </div>
                       </div>
-                      <p style={{ fontSize: "0.875rem", color: "#a0a0a0", margin: 0 }}>
+                      <p style={{ fontSize: "14px", color: "#a0a0a0", margin: 0 }}>
                         Keywords: {sol.keywords.join(", ")}
                       </p>
                       {(sol.images?.length > 0 || sol.videos?.length > 0) && (
-                        <p style={{ fontSize: "0.75rem", color: "#a0a0a0", marginTop: "0.5rem", margin: 0 }}>
+                        <p style={{ fontSize: "12px", color: "#a0a0a0", marginTop: "8px", margin: 0 }}>
                           {sol.images?.length > 0 && `📷 ${sol.images.length} image(s) `}
                           {sol.videos?.length > 0 && `🎥 ${sol.videos.length} video(s)`}
                         </p>
@@ -1175,14 +1175,14 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                 </div>
               </>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
+                      fontSize: "14px",
                       fontWeight: "600",
-                      marginBottom: "0.5rem",
+                      marginBottom: "8px",
                     }}
                   >
                     Title *
@@ -1199,7 +1199,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       width: "100%",
                       padding: "0.5rem 1rem",
                       background: "#404040",
-                      borderRadius: "0.5rem",
+                      borderRadius: "8px",
                       border: "none",
                       color: "white",
                       outline: "none",
@@ -1212,9 +1212,9 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   <label
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
+                      fontSize: "14px",
                       fontWeight: "600",
-                      marginBottom: "0.5rem",
+                      marginBottom: "8px",
                     }}
                   >
                     Keywords * (comma-separated)
@@ -1231,7 +1231,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       width: "100%",
                       padding: "0.5rem 1rem",
                       background: "#404040",
-                      borderRadius: "0.5rem",
+                      borderRadius: "8px",
                       border: "none",
                       color: "white",
                       outline: "none",
@@ -1244,9 +1244,9 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   <label
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
+                      fontSize: "14px",
                       fontWeight: "600",
-                      marginBottom: "0.5rem",
+                      marginBottom: "8px",
                     }}
                   >
                     Response Text *
@@ -1263,8 +1263,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                       width: "100%",
                       padding: "0.5rem 1rem",
                     //   background: "#404040",
-                      borderRadius: "0.5rem",
-                      height: "8rem",
+                      borderRadius: "8px",
+                      height: "128px",
                       border: "none",
                       color: "white",
                       outline: "none",
@@ -1278,14 +1278,14 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   <label
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
+                      fontSize: "14px",
                       fontWeight: "600",
-                      marginBottom: "0.5rem",
+                      marginBottom: "8px",
                     }}
                   >
                     Images ({currentSolution.images.length})
                   </label>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
                     {currentSolution.images.map((img, idx) => (
                       <div
                         key={idx}
@@ -1293,7 +1293,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                           position: "relative",
                           width: "80px",
                           height: "80px",
-                          borderRadius: "0.25rem",
+                          borderRadius: "4px",
                           overflow: "hidden",
                         }}
                       >
@@ -1306,13 +1306,13 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                           onClick={() => handleRemoveMedia("image", idx)}
                           style={{
                             position: "absolute",
-                            top: "0.25rem",
-                            right: "0.25rem",
+                            top: "4px",
+                            right: "4px",
                             background: "#ef4444",
                             border: "none",
                             borderRadius: "50%",
-                            width: "1.5rem",
-                            height: "1.5rem",
+                            width: "24px",
+                            height: "24px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -1320,7 +1320,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                             color: "white",
                           }}
                         >
-                          <X style={{ width: "0.75rem", height: "0.75rem" }} />
+                          <X style={{ width: "12px", height: "12px" }} />
                         </button>
                       </div>
                     ))}
@@ -1330,12 +1330,12 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     style={{
                       width: "100%",
                       background: "#404040",
-                      padding: "0.5rem",
-                      borderRadius: "0.5rem",
+                      padding: "8px",
+                      borderRadius: "8px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: "0.5rem",
+                      gap: "8px",
                       border: "none",
                       color: "white",
                       cursor: "pointer",
@@ -1344,7 +1344,7 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     onMouseOver={(e) => (e.target.style.background = "#525252")}
                     onMouseOut={(e) => (e.target.style.background = "#404040")}
                   >
-                    <ImageIcon style={{ width: "1rem", height: "1rem" }} /> Add Images (Multiple)
+                    <ImageIcon style={{ width: "16px", height: "16px" }} /> Add Images (Multiple)
                   </button>
                 </div>
 
@@ -1352,28 +1352,28 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                   <label
                     style={{
                       display: "block",
-                      fontSize: "0.875rem",
+                      fontSize: "14px",
                       fontWeight: "600",
-                      marginBottom: "0.5rem",
+                      marginBottom: "8px",
                     }}
                   >
                     Videos ({currentSolution.videos.length})
                   </label>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "8px" }}>
                     {currentSolution.videos.map((vid, idx) => (
                       <div
                         key={idx}
                         style={{
                           position: "relative",
                           background: "#525252",
-                          padding: "0.5rem",
-                          borderRadius: "0.25rem",
+                          padding: "8px",
+                          borderRadius: "4px",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
                         }}
                       >
-                        <span style={{ fontSize: "0.75rem", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: "12px", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           🎥 {vid.originalName}
                         </span>
                         <button
@@ -1381,11 +1381,11 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                           style={{
                             background: "#ef4444",
                             border: "none",
-                            borderRadius: "0.25rem",
+                            borderRadius: "4px",
                             padding: "0.25rem 0.5rem",
                             cursor: "pointer",
                             color: "white",
-                            fontSize: "0.75rem",
+                            fontSize: "12px",
                           }}
                         >
                           Remove
@@ -1398,12 +1398,12 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     style={{
                       width: "100%",
                       background: "#404040",
-                      padding: "0.5rem",
-                      borderRadius: "0.5rem",
+                      padding: "8px",
+                      borderRadius: "8px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: "0.5rem",
+                      gap: "8px",
                       border: "none",
                       color: "white",
                       cursor: "pointer",
@@ -1412,18 +1412,18 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     onMouseOver={(e) => (e.target.style.background = "#525252")}
                     onMouseOut={(e) => (e.target.style.background = "#404040")}
                   >
-                    <VideoIcon style={{ width: "1rem", height: "1rem" }} /> Add Videos (Multiple)
+                    <VideoIcon style={{ width: "16px", height: "16px" }} /> Add Videos (Multiple)
                   </button>
                 </div>
 
-                <div style={{ display: "flex", gap: "0.5rem", paddingTop: "1rem" }}>
+                <div style={{ display: "flex", gap: "8px", paddingTop: "16px" }}>
                   <button
                     onClick={handleSaveSolution}
                     style={{
                       flex: 1,
                       background: "#16a34a",
-                      padding: "0.75rem",
-                      borderRadius: "0.5rem",
+                      padding: "12px",
+                      borderRadius: "8px",
                       fontWeight: "600",
                       border: "none",
                       color: "white",
@@ -1449,8 +1449,8 @@ const API_BASE_URL1 = import.meta.env.VITE_API_BASE_URL1;
                     style={{
                       flex: 1,
                       background: "#404040",
-                      padding: "0.75rem",
-                      borderRadius: "0.5rem",
+                      padding: "12px",
+                      borderRadius: "8px",
                       fontWeight: "600",
                       border: "none",
                       color: "white",

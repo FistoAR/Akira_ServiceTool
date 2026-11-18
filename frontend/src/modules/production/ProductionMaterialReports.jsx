@@ -59,14 +59,14 @@ const DateRangeFilter = ({ from, setFrom, to, setTo }) => {
   const toRef = useRef(null);
 
   return (
-    <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-      <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+    <div className="flex items-center gap-1.5 border border-slate-200 rounded-full h-8 px-3 bg-white text-xs shadow-2xs hover:border-slate-300 transition-all">
+      <span className="text-slate-700 font-medium text-xs">From</span>
       <input
         ref={fromRef}
         type="date"
         value={from || ""}
         onChange={(e) => setFrom(e.target.value)}
-        className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+        className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
       />
       <button
         type="button"
@@ -75,20 +75,20 @@ const DateRangeFilter = ({ from, setFrom, to, setTo }) => {
             try { fromRef.current.showPicker(); } catch { fromRef.current.focus(); }
           }
         }}
-        className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center mr-[0.15vw]"
+        className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center mr-0.5"
         title="Choose from date"
       >
-        <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+        <Calendar className="w-3 h-3 shrink-0" />
       </button>
-      <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-      <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+      <span className="text-slate-700 mx-0.5 text-sm">→</span>
+      <span className="text-slate-700 font-medium text-xs">To</span>
       <input
         ref={toRef}
         type="date"
         value={to || ""}
         min={from || undefined}
         onChange={(e) => setTo(e.target.value)}
-        className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+        className="no-native-calendar text-xs text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
       />
       <button
         type="button"
@@ -97,10 +97,10 @@ const DateRangeFilter = ({ from, setFrom, to, setTo }) => {
             try { toRef.current.showPicker(); } catch { toRef.current.focus(); }
           }
         }}
-        className="p-0 border-0 bg-transparent cursor-pointer text-slate-500 hover:text-blue-600 transition-colors flex items-center ml-[0.1vw]"
+        className="p-0 border-0 bg-transparent cursor-pointer text-slate-700 hover:text-blue-600 transition-colors flex items-center ml-px"
         title="Choose to date"
       >
-        <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
+        <Calendar className="w-3 h-3 shrink-0" />
       </button>
     </div>
   );
@@ -238,29 +238,29 @@ const StatusBadge = ({ status }) => {
     Pending: "bg-orange-100 text-orange-700 border-orange-200",
   };
   return (
-    <span className={`px-[0.55vw] py-[0.1vw] rounded-full text-[0.75vw] font-semibold border ${colors[status] || "bg-blue-50 text-black border-blue-200"}`}>
+    <span className={`px-2 py-px rounded-full text-xs font-semibold border ${colors[status] || "bg-blue-50 text-black border-blue-200"}`}>
       {status || "Pending"}
     </span>
   );
 };
 
 const Th = ({ children, cls = "" }) => (
-  <th className={`px-[0.7vw] py-[0.7vw] text-[0.74vw] text-slate-700 font-bold uppercase tracking-wider whitespace-nowrap border-b border-r border-slate-300 last:border-r-0 bg-[#E9EDF7] ${cls}`}>
+  <th className={`px-2.5 py-2.5 text-xs text-slate-700 font-bold uppercase tracking-wider whitespace-nowrap border-b border-r border-slate-300 last:border-r-0 bg-[#E9EDF7] ${cls}`}>
     {children}
   </th>
 );
 const Td = ({ children, cls = "" }) => (
-  <td className={`px-[0.7vw] py-[0.65vw] text-[0.78vw] text-slate-800 font-medium border-r border-b border-slate-300 last:border-r-0 align-middle ${cls}`}>
+  <td className={`px-2.5 py-2.5 text-xs text-slate-800 font-medium border-r border-b border-slate-300 last:border-r-0 align-middle ${cls}`}>
     {children}
   </td>
 );
 
 const SummaryBar = ({ items }) => (
-  <div className="flex items-center gap-[1.5vw] mt-[0.8vw] px-[0.5vw]">
+  <div className="flex items-center gap-5.5 mt-3 px-2">
     {items.map((it, i) => (
-      <div key={i} className="flex items-center gap-[0.4vw]">
-        <span className="text-[0.68vw] text-black font-semibold">{it.label}:</span>
-        <span className={`text-[0.8vw] font-semibold ${it.color}`}>{it.value}</span>
+      <div key={i} className="flex items-center gap-1.5">
+        <span className="text-sm text-black font-semibold">{it.label}:</span>
+        <span className={`text-xs font-semibold ${it.color}`}>{it.value}</span>
       </div>
     ))}
   </div>
@@ -268,18 +268,18 @@ const SummaryBar = ({ items }) => (
 
 const ExportButtons = ({ onCsv, onPdf, color = "blue" }) => {
   return (
-    <div className="flex items-center gap-[0.4vw]">
+    <div className="flex items-center gap-1.5">
       <button 
         onClick={onCsv} 
-        className="flex items-center gap-[0.3vw] px-[0.85vw] h-[2.2vw] border border-emerald-200 bg-white hover:bg-emerald-50 text-emerald-700 rounded-full text-[0.72vw] font-bold cursor-pointer transition-all shadow-2xs hover:border-emerald-300"
+        className="flex items-center gap-1 px-3 h-8 border border-emerald-200 bg-white hover:bg-emerald-50 text-emerald-700 rounded-full text-sm font-bold cursor-pointer transition-all shadow-2xs hover:border-emerald-300"
       >
-        <FileSpreadsheet className="w-[0.9vw] h-[0.9vw] text-emerald-600" /> Excel
+        <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" /> Excel
       </button>
       <button 
         onClick={onPdf} 
-        className="flex items-center gap-[0.3vw] px-[0.85vw] h-[2.2vw] border border-rose-200 bg-white hover:bg-rose-50 text-rose-700 rounded-full text-[0.72vw] font-bold cursor-pointer transition-all shadow-2xs hover:border-rose-300"
+        className="flex items-center gap-1 px-3 h-8 border border-rose-200 bg-white hover:bg-rose-50 text-rose-700 rounded-full text-sm font-bold cursor-pointer transition-all shadow-2xs hover:border-rose-300"
       >
-        <Download className="w-[0.9vw] h-[0.9vw] text-rose-600" /> PDF
+        <Download className="w-3.5 h-3.5 text-rose-600" /> PDF
       </button>
     </div>
   );
@@ -298,37 +298,37 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between mt-[0.8vw] gap-[0.6vw] px-[0.8vw] py-[0.5vw] bg-white rounded-full border border-slate-200 shadow-2xs">
-      <div className="text-[0.72vw] text-slate-500 font-medium">
+    <div className="flex flex-col sm:flex-row items-center justify-between mt-3 gap-2.5 px-3 py-2 bg-white rounded-full border border-slate-200 shadow-2xs">
+      <div className="text-sm text-slate-700 font-medium">
         Showing <span className="font-bold text-slate-700">{totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-bold text-slate-700">{Math.min(currentPage * itemsPerPage, totalItems)}</span> of <span className="font-bold text-slate-700">{totalItems}</span> records
       </div>
       
       {totalPages > 1 && (
-        <div className="flex items-center gap-[0.3vw]">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => onPageChange(1)}
             disabled={currentPage === 1}
-            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
+            className="w-6.5 h-6.5 flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronsLeft className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
+            <ChevronsLeft className="w-3 h-3 text-slate-700 group-hover:text-blue-600" />
           </button>
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
+            className="w-6.5 h-6.5 flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronLeft className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
+            <ChevronLeft className="w-3 h-3 text-slate-700 group-hover:text-blue-600" />
           </button>
 
-          <div className="flex items-center gap-[0.2vw] mx-[0.2vw]">
+          <div className="flex items-center gap-1 mx-1">
             {pages.map((page, i) => (
               page === "..." ? (
-                <span key={`dots-${i}`} className="px-[0.3vw] text-slate-400 text-[0.65vw]">...</span>
+                <span key={`dots-${i}`} className="px-1 text-slate-700 text-xs">...</span>
               ) : (
                 <button
                   key={page}
                   onClick={() => onPageChange(page)}
-                  className={`min-w-[1.8vw] h-[1.8vw] px-[0.4vw] flex items-center justify-center rounded-full text-[0.72vw] font-bold transition-all cursor-pointer ${
+                  className={`min-w-[26px] h-6.5 px-1.5 flex items-center justify-center rounded-full text-sm font-bold transition-all cursor-pointer ${
                     currentPage === page ? "bg-blue-600 text-white shadow-xs" : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
@@ -341,16 +341,16 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
+            className="w-6.5 h-6.5 flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronRight className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
+            <ChevronRight className="w-3 h-3 text-slate-700 group-hover:text-blue-600" />
           </button>
           <button
             onClick={() => onPageChange(totalPages)}
             disabled={currentPage === totalPages}
-            className="w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
+            className="w-6.5 h-6.5 flex items-center justify-center rounded-full border border-slate-200 disabled:opacity-30 hover:bg-slate-50 hover:border-blue-400 transition-all cursor-pointer group"
           >
-            <ChevronsRight className="w-[0.85vw] h-[0.85vw] text-slate-500 group-hover:text-blue-600" />
+            <ChevronsRight className="w-3 h-3 text-slate-700 group-hover:text-blue-600" />
           </button>
         </div>
       )}
@@ -401,24 +401,24 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 flex items-center justify-between mb-[0.6vw] gap-[0.6vw]">
+      <div className="flex-shrink-0 flex items-center justify-between mb-2.5 gap-2.5">
         <div></div>
-        <div className="flex items-center gap-[0.5vw]">
-          <div className="relative w-[14vw]">
-            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
+        <div className="flex items-center gap-2">
+          <div className="relative w-[202px]">
+            <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3 h-3 text-slate-700" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search reports..."
-              className="w-full pl-[2.2vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+              className="w-full pl-8 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-[9px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
               >
-                <X className="w-[0.7vw] h-[0.7vw]" />
+                <X className="w-2.5 h-2.5" />
               </button>
             )}
           </div>
@@ -430,10 +430,10 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
                 setFromDate("");
                 setToDate("");
               }}
-              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1 h-8 px-3 rounded-full text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
-              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+              <RotateCcw className="w-3 h-3" />
               <span>Clear</span>
             </button>
           )}
@@ -481,23 +481,23 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[70vw]">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-lg border border-slate-300 shadow-sm relative">
+        <table className="w-full text-left border-collapse min-w-[1008px]">
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[6.5vw]">Date</Th>
-              <Th cls="min-w-[8vw]">Job Order</Th>
-              <Th cls="min-w-[12vw]">Customer</Th>
-              <Th cls="min-w-[15vw]">Product</Th>
-              <Th cls="min-w-[8vw]">Serial No</Th>
-              <Th cls="min-w-[9vw]">Problem Type</Th>
-              <Th cls="min-w-[7vw]">NC Type</Th>
-              <Th cls="min-w-[8vw]">Inspected By</Th>
-              <Th cls="min-w-[8vw]">Designators</Th>
-              <Th cls="min-w-[8vw]">Image</Th>
+              <Th cls="min-w-[94px]">Date</Th>
+              <Th cls="min-w-[115px]">Job Order</Th>
+              <Th cls="min-w-[173px]">Customer</Th>
+              <Th cls="min-w-[216px]">Product</Th>
+              <Th cls="min-w-[115px]">Serial No</Th>
+              <Th cls="min-w-[130px]">Problem Type</Th>
+              <Th cls="min-w-[101px]">NC Type</Th>
+              <Th cls="min-w-[115px]">Inspected By</Th>
+              <Th cls="min-w-[115px]">Designators</Th>
+              <Th cls="min-w-[115px]">Image</Th>
               <Th>4M Category</Th>
-              <Th cls="min-w-[15vw]">Root Cause</Th>
+              <Th cls="min-w-[216px]">Root Cause</Th>
               <Th>Parts Replaced</Th>
               <Th>Personnel</Th>
               <Th>Status</Th>
@@ -510,24 +510,24 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
                 <Td>{fmtDate(r.entry.date)}</Td>
                 <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
                 <Td cls="font-medium text-black">{r.entry.customerName}</Td>
-                <Td><div className="max-w-[12vw] truncate font-medium text-black" title={r.prod.productDescription}>{r.prod.productDescription}</div></Td>
+                <Td><div className="max-w-[173px] truncate font-medium text-black" title={r.prod.productDescription}>{r.prod.productDescription}</div></Td>
                 <Td cls="font-medium text-black font-mono">{r.prod.serialNumber || "—"}</Td>
-                <Td><span className="bg-slate-50 px-[0.4vw] rounded font-medium text-black">{r.prod.problemType || "—"}</span></Td>
-                <Td><span className="bg-orange-50 px-[0.4vw] rounded font-medium text-black">{r.prod.ncType || "Internal"}</span></Td>
+                <Td><span className="bg-slate-50 px-1.5 rounded font-medium text-black">{r.prod.problemType || "—"}</span></Td>
+                <Td><span className="bg-orange-50 px-1.5 rounded font-medium text-black">{r.prod.ncType || "Internal"}</span></Td>
                 <Td><span className="text-black font-medium">{r.prod.inspectedByName || "—"}</span></Td>
                 <Td><span className="text-black font-medium">{r.prod.designators || "—"}</span></Td>
                 <Td>
                   {r.prod.boardImage ? (
-                    <button onClick={() => window.open(`${API_URL.replace('/api', '')}${r.prod.boardImage}`, '_blank')} className="text-blue-600 hover:underline font-bold text-[0.7vw]">View</button>
+                    <button onClick={() => window.open(`${API_URL.replace('/api', '')}${r.prod.boardImage}`, '_blank')} className="text-blue-600 hover:underline font-bold text-sm">View</button>
                   ) : "—"}
                 </Td>
-                <Td><span className="bg-blue-50 px-[0.4vw] rounded font-medium text-black">{r.prod.report?.fourMCategory || "—"}</span></Td>
-                <Td><div className="max-w-[15vw] text-black">{r.prod.report?.rootCause || "—"}</div></Td>
+                <Td><span className="bg-blue-50 px-1.5 rounded font-medium text-black">{r.prod.report?.fourMCategory || "—"}</span></Td>
+                <Td><div className="max-w-[216px] text-black">{r.prod.report?.rootCause || "—"}</div></Td>
                 <Td>{r.prod.report?.partsReplacement || "—"}</Td>
                 <Td>
-                  <div className="space-y-[0.1vw]">
-                    <div className="flex gap-[0.2vw]"><span className="text-black">A:</span><span className="font-medium text-black">{r.prod.report?.assembledByName || "—"}</span></div>
-                    <div className="flex gap-[0.2vw]"><span className="text-black">T:</span><span className="font-medium text-black">{r.prod.report?.testedByName || "—"}</span></div>
+                  <div className="space-y-px">
+                    <div className="flex gap-1"><span className="text-black">A:</span><span className="font-medium text-black">{r.prod.report?.assembledByName || "—"}</span></div>
+                    <div className="flex gap-1"><span className="text-black">T:</span><span className="font-medium text-black">{r.prod.report?.testedByName || "—"}</span></div>
                   </div>
                 </Td>
                 <Td><StatusBadge status={r.prod.finalStatus} /></Td>
@@ -598,24 +598,24 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 flex items-center justify-between mb-[0.6vw] gap-[0.6vw]">
+      <div className="flex-shrink-0 flex items-center justify-between mb-2.5 gap-2.5">
         <div></div>
-        <div className="flex items-center gap-[0.5vw]">
-          <div className="relative w-[14vw]">
-            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
+        <div className="flex items-center gap-2">
+          <div className="relative w-[202px]">
+            <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3 h-3 text-slate-700" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search analytics..."
-              className="w-full pl-[2.2vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+              className="w-full pl-8 pr-7 h-8 border-0 rounded-full text-xs font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 p-[0.15vw] text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-[9px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
               >
-                <X className="w-[0.7vw] h-[0.7vw]" />
+                <X className="w-2.5 h-2.5" />
               </button>
             )}
           </div>
@@ -627,10 +627,10 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
                 setFromDate("");
                 setToDate("");
               }}
-              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1 h-8 px-3 rounded-full text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
-              <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
+              <RotateCcw className="w-3 h-3" />
               <span>Clear</span>
             </button>
           )}
@@ -672,20 +672,20 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[70vw]">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-lg border border-slate-300 shadow-sm relative">
+        <table className="w-full text-left border-collapse min-w-[1008px]">
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[7vw]">Inward Date</Th>
-              <Th cls="min-w-[12vw]">Customer</Th>
-              <Th cls="min-w-[8vw]">Job Order</Th>
-              <Th cls="min-w-[15vw]">Product Details</Th>
+              <Th cls="min-w-[101px]">Inward Date</Th>
+              <Th cls="min-w-[173px]">Customer</Th>
+              <Th cls="min-w-[115px]">Job Order</Th>
+              <Th cls="min-w-[216px]">Product Details</Th>
               <Th>Stage</Th>
-              <Th cls="min-w-[9vw]">Problem Type</Th>
+              <Th cls="min-w-[130px]">Problem Type</Th>
               <Th>NC Type</Th>
               <Th>Disposition</Th>
-              <Th cls="min-w-[7vw]">Closed Date</Th>
+              <Th cls="min-w-[101px]">Closed Date</Th>
               <Th>TAT (Days)</Th>
               <Th>Status</Th>
             </tr>
@@ -699,7 +699,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
                 <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
                 <Td>
                   <div className="font-medium text-black">{r.prod.productCode}</div>
-                  <div className="text-[0.68vw] text-black">{r.prod.productDescription}</div>
+                  <div className="text-sm text-black">{r.prod.productDescription}</div>
                 </Td>
                 <Td cls="font-medium text-black">{r.prod.stage}</Td>
                 <Td><span className="text-black font-medium">{r.prod.problemType || "—"}</span></Td>
@@ -774,20 +774,20 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 flex items-center justify-between mb-[0.8vw] gap-[0.6vw]">
+      <div className="flex-shrink-0 flex items-center justify-between mb-3 gap-2.5">
         <div></div>
-        <div className="flex items-center gap-[0.5vw]">
+        <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
+            <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3 h-3 text-slate-700" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search RCA details..."
-              className="pl-[2.2vw] pr-[1.8vw] h-[2.2vw] bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-[0.76vw] w-[13vw] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-400"
+              className="pl-8 pr-6.5 h-8 bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-xs w-[187px] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-700"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                <X className="w-[0.75vw] h-[0.75vw]" />
+              <button onClick={() => setSearch("")} className="absolute right-[9px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600">
+                <X className="w-3 h-3" />
               </button>
             )}
           </div>
@@ -795,10 +795,10 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
           {(search || fromDate || toDate) && (
             <button
               onClick={() => { setSearch(""); setFromDate(""); setToDate(""); }}
-              className="h-[2.2vw] px-[0.8vw] flex items-center gap-[0.3vw] text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 rounded-full transition-all"
+              className="h-8 px-3 flex items-center gap-1 text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 rounded-full transition-all"
               title="Reset all filters"
             >
-              <RotateCcw className="w-[0.8vw] h-[0.8vw]" />
+              <RotateCcw className="w-3 h-3" />
               Reset
             </button>
           )}
@@ -835,17 +835,17 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[70vw]">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-lg border border-slate-300 shadow-sm relative">
+        <table className="w-full text-left border-collapse min-w-[1008px]">
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[10vw]">Product</Th>
-              <Th cls="min-w-[8vw]">JO#</Th>
-              <Th cls="min-w-[10vw]">Problem Type</Th>
+              <Th cls="min-w-[144px]">Product</Th>
+              <Th cls="min-w-[115px]">JO#</Th>
+              <Th cls="min-w-[144px]">Problem Type</Th>
               <Th>4M Cat</Th>
-              <Th cls="min-w-[22vw]">Root Cause Detail</Th>
-              <Th cls="min-w-[20vw]">Corrective Action</Th>
+              <Th cls="min-w-[317px]">Root Cause Detail</Th>
+              <Th cls="min-w-[288px]">Corrective Action</Th>
               <Th>Analysed By</Th>
             </tr>
           </thead>
@@ -855,13 +855,13 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
                 <Td cls="text-center font-medium text-black">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
                 <Td>
                   <div className="font-medium text-black">{r.prod.productCode}</div>
-                  <div className="text-[0.68vw] text-slate-700 truncate max-w-[10vw] font-medium">{r.prod.productDescription}</div>
+                  <div className="text-sm text-slate-700 truncate max-w-[144px] font-medium">{r.prod.productDescription}</div>
                 </Td>
                 <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
-                <Td><span className="font-medium text-black bg-slate-100 px-[0.4vw] rounded">{r.prod.problemType || "—"}</span></Td>
+                <Td><span className="font-medium text-black bg-slate-100 px-1.5 rounded">{r.prod.problemType || "—"}</span></Td>
                 <Td><span className="font-medium text-amber-800">{r.prod.report?.fourMCategory}</span></Td>
-                <Td><div className="max-w-[20vw] italic text-black font-medium leading-relaxed text-[0.68vw]">"{r.prod.report?.rootCause}"</div></Td>
-                <Td><div className="max-w-[20vw] text-emerald-800 font-medium text-[0.68vw]">{r.prod.report?.correctiveAction || "—"}</div></Td>
+                <Td><div className="max-w-[288px] italic text-black font-medium leading-relaxed text-sm">"{r.prod.report?.rootCause}"</div></Td>
+                <Td><div className="max-w-[288px] text-emerald-800 font-medium text-sm">{r.prod.report?.correctiveAction || "—"}</div></Td>
                 <Td cls="font-medium text-black">{r.prod.report?.testedByName || "—"}</Td>
               </tr>
             ))}
@@ -926,20 +926,20 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 flex items-center justify-between mb-[0.8vw] gap-[0.6vw]">
+      <div className="flex-shrink-0 flex items-center justify-between mb-3 gap-2.5">
         <div></div>
-        <div className="flex items-center gap-[0.5vw]">
+        <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-[0.8vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-400" />
+            <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3 h-3 text-slate-700" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search CAE..."
-              className="pl-[2.2vw] pr-[1.8vw] h-[2.2vw] bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-[0.76vw] w-[13vw] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-400"
+              className="pl-8 pr-6.5 h-8 bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-xs w-[187px] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-700"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                <X className="w-[0.75vw] h-[0.75vw]" />
+              <button onClick={() => setSearch("")} className="absolute right-[9px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600">
+                <X className="w-3 h-3" />
               </button>
             )}
           </div>
@@ -947,10 +947,10 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
           {(search || fromDate || toDate) && (
             <button
               onClick={() => { setSearch(""); setFromDate(""); setToDate(""); }}
-              className="h-[2.2vw] px-[0.8vw] flex items-center gap-[0.3vw] text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 rounded-full transition-all"
+              className="h-8 px-3 flex items-center gap-1 text-xs font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 rounded-full transition-all"
               title="Reset all filters"
             >
-              <RotateCcw className="w-[0.8vw] h-[0.8vw]" />
+              <RotateCcw className="w-3 h-3" />
               Reset
             </button>
           )}
@@ -983,16 +983,16 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
           />
         </div>
       </div>
-      <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
-        <table className="w-full text-left border-collapse min-w-[70vw]">
+      <div className="flex-1 overflow-auto rounded-lg md:rounded-lg border border-slate-300 shadow-sm relative">
+        <table className="w-full text-left border-collapse min-w-[1008px]">
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[12vw]">Product</Th>
-              <Th cls="min-w-[22vw]">Corrective Action</Th>
-              <Th cls="min-w-[18vw]">Effectiveness (CAE)</Th>
+              <Th cls="min-w-[173px]">Product</Th>
+              <Th cls="min-w-[317px]">Corrective Action</Th>
+              <Th cls="min-w-[259px]">Effectiveness (CAE)</Th>
               <Th>Verified By</Th>
-              <Th cls="min-w-[7vw]">Verified Date</Th>
+              <Th cls="min-w-[101px]">Verified Date</Th>
             </tr>
           </thead>
           <tbody>
@@ -1001,10 +1001,10 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
                 <Td cls="text-center font-medium text-black">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
                 <Td>
                   <div className="font-medium text-black">{r.prod.productCode}</div>
-                  <div className="text-[0.68vw] text-slate-700 font-medium">{r.prod.productDescription}</div>
+                  <div className="text-sm text-slate-700 font-medium">{r.prod.productDescription}</div>
                 </Td>
-                <Td><div className="max-w-[20vw] font-medium text-black italic leading-tight text-[0.68vw]">"{r.prod.report?.correctiveAction}"</div></Td>
-                <Td cls="bg-green-50/50"><div className="font-bold text-green-700 text-[0.75vw]">{r.prod.report?.cae}</div></Td>
+                <Td><div className="max-w-[288px] font-medium text-black italic leading-tight text-sm">"{r.prod.report?.correctiveAction}"</div></Td>
+                <Td cls="bg-green-50/50"><div className="font-bold text-green-700 text-xs">{r.prod.report?.cae}</div></Td>
                 <Td cls="font-medium text-teal-900">{r.prod.report?.verifiedByName || "—"}</Td>
                 <Td>{fmtDate(r.prod.report?.verifiedDate)}</Td>
               </tr>
@@ -1058,42 +1058,42 @@ export default function ProductionMaterialReports() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-[1.2vw] rounded-[1vw] border border-slate-200">
-        <div className="w-[3vw] h-[3vw] border-[0.3vw] border-black/10 border-t-blue-600 rounded-full animate-spin mb-[1vw]" />
-        <span className="text-[1vw] font-bold text-slate-800">Fetching records...</span>
+      <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <div className="w-[43px] h-[43px] border-[4px] border-black/10 border-t-blue-600 rounded-full animate-spin mb-3.5" />
+        <span className="text-xs font-bold text-slate-800">Fetching records...</span>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 flex flex-col font-sans text-[0.85vw] overflow-hidden gap-[0.55vw]">
+    <div className="w-full h-full flex-1 min-h-0 flex flex-col font-sans text-sm overflow-hidden gap-2">
       {/* Header Panel */}
-      <div className="flex-shrink-0 bg-white border border-slate-200/90 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] px-[0.8vw] py-[0.4vw] flex items-center justify-between gap-[0.8vw]">
+      <div className="flex-shrink-0 bg-white border border-slate-200/90 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] px-3 py-1.5 flex items-center justify-between gap-3">
         {/* Tab Buttons as Segment Track */}
-        <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] max-w-full overflow-x-auto">
+        <div className="inline-flex items-center p-1 bg-slate-100 rounded-full border border-slate-200/90 gap-0.5 max-w-full overflow-x-auto">
           {TABS.map(t => {
             const isActive = activeTab === t.id;
             return (
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex items-center gap-[0.4vw] px-[0.8vw] py-[0.3vw] rounded-full text-[0.75vw] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
                   isActive
                     ? "bg-blue-600 text-white font-semibold shadow-xs"
                     : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                 }`}
               >
-                <t.icon className="w-[0.85vw] h-[0.85vw]" />
+                <t.icon className="w-3 h-3" />
                 <span>{t.label}</span>
               </button>
             );
           })}
         </div>
 
-        <div className="flex items-center gap-[0.8vw]">
-          <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pr-[0.4vw] flex items-center gap-[0.3vw]">
+        <div className="flex items-center gap-3">
+          <div className="text-xs text-slate-700 font-medium whitespace-nowrap pr-1.5 flex items-center gap-1">
             <span>Total:</span>
-            <span className="font-bold text-slate-800 bg-slate-100 px-[0.45vw] py-[0.08vw] rounded-full text-[0.72vw]">
+            <span className="font-bold text-slate-800 bg-slate-100 px-1.5 py-px rounded-full text-sm">
               {entries.length}
             </span>
             <span>Inward Records</span>
@@ -1102,7 +1102,7 @@ export default function ProductionMaterialReports() {
       </div>
 
       {/* Main Tab Content */}
-      <div className="flex-1 bg-white border border-slate-200 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] p-[1vw] overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-white border border-slate-200 rounded-xl shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] p-3.5 overflow-hidden flex flex-col min-h-0">
         {activeTab === "technical" && (
           <TechnicalReport 
             entries={entries} 
