@@ -579,7 +579,7 @@ export default function ServiceCallAssignment() {
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-700 font-normal text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-black font-medium text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
@@ -587,12 +587,12 @@ export default function ServiceCallAssignment() {
                           <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             <button
                               onClick={() => setSelectedInfoCall(g.rawCall || g)}
-                              className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
+                              className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                               title="View Call Details"
                             >
                               {g.callNumber}
                             </button>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-600 font-normal leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const d = new Date(g.timestamp || g.dateTime);
@@ -611,7 +611,7 @@ export default function ServiceCallAssignment() {
                                     <>
                                       <span>{datePart}</span>
                                       <span className="text-slate-300 font-normal">|</span>
-                                      <span className="text-slate-500">{timePart}</span>
+                                      <span className="text-slate-600 font-medium">{timePart}</span>
                                     </>
                                   );
                                 } catch {
@@ -629,18 +629,18 @@ export default function ServiceCallAssignment() {
                               partyCode={g.partyCode}
                             />
                             {(g.location || g.site) && (
-                              <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
+                              <div className="text-[0.68vw] text-slate-600 font-medium flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
                                 <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
-                                <span className="truncate font-normal">{g.site ? `${g.site} • ` : ""}{g.location}</span>
+                                <span className="truncate font-medium text-slate-700">{g.site ? `${g.site} • ` : ""}{g.location}</span>
                               </div>
                             )}
                           </td>
 
                           {/* 4. Customer Type */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-normal">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-medium">
                             {g.customerType && g.customerType !== "All" ? (
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border shadow-2xs whitespace-nowrap ${
                                   g.customerType === "OEM"
                                     ? "bg-blue-50 text-blue-700 border-blue-200"
                                     : g.customerType === "End Customer"
@@ -655,7 +655,7 @@ export default function ServiceCallAssignment() {
                                 {g.customerType}
                               </span>
                             ) : (
-                              <span className="text-slate-400 font-normal">—</span>
+                              <span className="text-slate-400 font-medium">—</span>
                             )}
                           </td>
                         </>
@@ -685,28 +685,28 @@ export default function ServiceCallAssignment() {
                             </div>
                           }
                         >
-                          <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-black text-[0.8vw] truncate cursor-default">
                             {item.p.productModel || item.p.itemCode}
                           </div>
                         </CustomTooltip>
                         <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
                           {g.segment && g.segment !== "—" && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-normal">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-medium">
                               {g.segment}
                             </span>
                           )}
                           {item.p.serialNumber && (
-                            <span className="text-[0.66vw] text-slate-400 font-mono">
+                            <span className="text-[0.66vw] text-slate-700 font-medium font-mono">
                               SN: {item.p.serialNumber}
                             </span>
                           )}
                           {item.p.errorCode && (
-                            <span className="text-[0.66vw] text-rose-600 font-mono">
+                            <span className="text-[0.66vw] text-rose-700 font-medium font-mono">
                               Err: {item.p.errorCode}
                             </span>
                           )}
                           {g.products.length > 1 && (
-                            <span className="text-[0.64vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                            <span className="text-[0.64vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
                               +{g.products.length - 1} more
                             </span>
                           )}
@@ -724,7 +724,7 @@ export default function ServiceCallAssignment() {
                               else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                               else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                               return (
-                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                   {p}
                                 </span>
                               );
@@ -746,13 +746,13 @@ export default function ServiceCallAssignment() {
                               {canAssign ? (
                                 <button
                                   onClick={() => setSelectedGroup(g)}
-                                  className="cursor-pointer inline-flex items-center gap-[0.25vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.75vw] py-[0.3vw] rounded-full font-normal text-[0.7vw] transition-all shadow-xs"
+                                  className="cursor-pointer inline-flex items-center gap-[0.25vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.75vw] py-[0.3vw] rounded-full font-medium text-[0.7vw] transition-all shadow-xs"
                                 >
                                   <span>Assign</span>
                                   <ArrowRight className="w-[0.7vw] h-[0.7vw]" />
                                 </button>
                               ) : (
-                                <span className="text-[0.68vw] text-slate-400 italic font-normal px-[0.5vw] py-[0.15vw] bg-slate-50 border border-slate-200 rounded-full">
+                                <span className="text-[0.68vw] text-slate-600 italic font-medium px-[0.5vw] py-[0.15vw] bg-slate-50 border border-slate-200 rounded-full">
                                   View Only
                                 </span>
                               )}

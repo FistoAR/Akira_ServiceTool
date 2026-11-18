@@ -555,7 +555,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
                    <div key={i} className="flex flex-col gap-[0.2vw] p-[0.6vw] rounded-[0.4vw] bg-slate-50 border border-slate-200 hover:bg-blue-50/30 transition-colors">
                      <div className="flex justify-between items-center">
                        <Badge label={h.status} color={STATUS_CONFIG[h.status]?.color || "gray"} size="xs" />
-                       <span className="text-[0.64vw] text-slate-400 font-mono">
+                       <span className="text-[0.66vw] text-slate-700 font-medium font-mono">
                          {fmtDate(h.timestamp)} · {new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                        </span>
                      </div>
@@ -1093,37 +1093,37 @@ export default function ProductionMaterialResponse() {
                             </tr>
                           )}
 
-                          <tr className="hover:bg-slate-50/70 transition-colors bg-white">
+                          <tr className="hover:bg-blue-50/30 transition-colors bg-white">
                             {/* SNo */}
                             <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 font-bold text-slate-800 text-[0.76vw]">
                               {((currentPage - 1) * itemsPerPage) + idx + 1}
                             </td>
 
                             {/* Date */}
-                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-[0.76vw] text-slate-700 whitespace-nowrap font-medium">
+                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-[0.76vw] text-slate-800 whitespace-nowrap font-medium">
                               {fmtDate(entry.date)}
                             </td>
 
                             {/* Registration */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.76vw] font-mono font-medium text-slate-800">{entry.refNoInternal}</div>
-                              <div className="text-[0.68vw] font-semibold text-blue-600 mt-[0.05vw]">JO: {entry.jobOrderNo || "—"}</div>
+                              <div className="text-[0.76vw] font-mono font-medium text-black">{entry.refNoInternal}</div>
+                              <div className="text-[0.68vw] font-medium text-blue-700 mt-[0.05vw]">JO: {entry.jobOrderNo || "—"}</div>
                             </td>
 
                             {/* Customer */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.76vw] font-medium text-slate-800 truncate max-w-[12vw]">{entry.customerName}</div>
-                              <div className="text-[0.68vw] font-mono text-slate-500">{entry.customerCode || "—"}</div>
+                              <div className="text-[0.76vw] font-medium text-black truncate max-w-[12vw]">{entry.customerName}</div>
+                              <div className="text-[0.68vw] font-mono text-slate-700 font-medium">{entry.customerCode || "—"}</div>
                             </td>
 
                             {/* Product */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.76vw] font-medium text-slate-800 leading-tight">{product.productDescription}</div>
-                              <div className="text-[0.68vw] text-slate-500 mt-[0.1vw] font-mono">S/N: {product.serialNumber || product.identification || "—"}</div>
+                              <div className="text-[0.76vw] font-medium text-black leading-tight">{product.productDescription}</div>
+                              <div className="text-[0.68vw] text-slate-700 mt-[0.1vw] font-mono font-medium">S/N: {product.serialNumber || product.identification || "—"}</div>
                             </td>
 
                             {/* Qty */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 text-[0.76vw] font-medium text-slate-800">
+                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 text-[0.76vw] font-medium text-black">
                               {product.qty || "1"}
                             </td>
 

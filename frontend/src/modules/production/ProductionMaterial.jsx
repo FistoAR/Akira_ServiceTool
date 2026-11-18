@@ -556,9 +556,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
-                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Stage Name</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
@@ -662,9 +662,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
-                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Outcome Description</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
@@ -768,9 +768,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
-                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Problem Classification</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
@@ -874,9 +874,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
-                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-200">
+                      <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
-                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-200 font-medium">#</th>
+                          <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Product Type</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
                         </tr>
@@ -2851,7 +2851,7 @@ export default function ProductionMaterial() {
                               )}
 
                               <div className="ml-auto flex items-center gap-[0.5vw]">
-                                <span className="text-[0.68vw] text-slate-500 font-medium bg-white px-[0.5vw] py-[0.1vw] rounded-full border border-slate-200">
+                                <span className="text-[0.68vw] text-slate-500 font-medium bg-white px-[0.5vw] py-[0.1vw] rounded-full border border-slate-300">
                                   {rows.length} {rows.length === 1 ? "order" : "orders"}
                                 </span>
                               </div>
@@ -3004,7 +3004,7 @@ export default function ProductionMaterial() {
                                           type="button"
                                           onClick={() => setReportsRow(row)}
                                           title="View Full Report"
-                                          className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                          className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
                                         >
                                           <Eye className="w-[0.8vw] h-[0.8vw]" />
                                         </button>
@@ -3017,7 +3017,7 @@ export default function ProductionMaterial() {
                                               setView("form");
                                             }}
                                             title="Edit Registration"
-                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-2xs cursor-pointer transition-colors"
                                           >
                                             <Edit3 className="w-[0.8vw] h-[0.8vw]" />
                                           </button>
@@ -3038,7 +3038,7 @@ export default function ProductionMaterial() {
                                               }
                                             }}
                                             title="Delete Registration"
-                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-300 rounded-full shadow-2xs cursor-pointer transition-colors"
+                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-300 hover:border-rose-300 rounded-full shadow-2xs cursor-pointer transition-colors"
                                           >
                                             <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                                           </button>
@@ -3075,41 +3075,41 @@ export default function ProductionMaterial() {
 
                                           {/* S.No sub-number */}
                                           <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
-                                            <span className="text-[0.72vw] font-semibold text-slate-400">
+                                            <span className="text-[0.72vw] font-bold text-slate-500">
                                               {globalSn}.{pi + 1}
                                             </span>
                                           </td>
 
                                           {/* Product Code */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
                                             {showReadyHighlight && (
                                               <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
                                                 <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
-                                                <span className="text-[0.6vw] font-medium text-emerald-700 whitespace-nowrap">Completed</span>
+                                                <span className="text-[0.6vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
                                               </div>
                                             )}
-                                            <div className="font-mono text-slate-700 text-[0.72vw] font-normal">
+                                            <div className="font-mono text-slate-800 text-[0.72vw] font-medium">
                                               {prod.productCode || "—"}
                                             </div>
                                           </td>
 
                                           {/* Product Description */}
                                           <td
-                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-normal text-slate-800 text-[0.76vw] truncate max-w-[14vw]"
+                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-[0.76vw] truncate max-w-[14vw]"
                                             title={prod.productDescription}
                                           >
                                             {prod.productDescription || "—"}
                                           </td>
 
                                           {/* Product Segment */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.74vw] text-slate-700 font-normal align-middle text-center">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.74vw] text-slate-800 font-medium align-middle text-center">
                                             {prod.productSegment || "—"}
                                           </td>
 
                                           {/* NC Type */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
                                             <span
-                                              className={`inline-flex items-center justify-center text-[0.68vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${
+                                              className={`inline-flex items-center justify-center text-[0.68vw] font-medium px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${
                                                 prod.ncType === "External"
                                                   ? "bg-orange-50 text-orange-700 border-orange-200"
                                                   : "bg-blue-50 text-blue-700 border-blue-200"
@@ -3120,28 +3120,28 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Detection Stage */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.76vw]">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.76vw]">
                                             {prod.stage || "Assembly"}
                                           </td>
 
                                           {/* Qty */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.76vw]">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-black text-[0.76vw]">
                                             {prod.qty || "1"}
                                           </td>
 
                                           {/* Repeatability */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-normal text-slate-700 text-[0.74vw]">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.74vw]">
                                             <span className={`inline-block px-[0.5vw] py-[0.08vw] rounded-[0.25vw] font-mono text-[0.72vw] ${
                                               Number(prod.repeatability) > 0 
-                                                ? "bg-amber-50 text-amber-700 border border-amber-200 font-semibold" 
-                                                : "text-slate-600"
+                                                ? "bg-amber-50 text-amber-700 border border-amber-200 font-medium" 
+                                                : "text-slate-700 font-medium"
                                             }`}>
                                               {prod.repeatability !== undefined && prod.repeatability !== "" ? prod.repeatability : "0"}
                                             </span>
                                           </td>
 
                                           {/* Serial Number */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-mono text-slate-600 text-[0.72vw] font-normal">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-mono text-black text-[0.72vw] font-medium">
                                             {prod.serialNumber || "—"}
                                           </td>
 
@@ -3167,11 +3167,11 @@ export default function ProductionMaterial() {
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
                                             {prod.report?.verifiedByName ? (
                                               <div className="flex flex-col items-center">
-                                                <span className="text-[0.74vw] font-semibold text-emerald-700">{prod.report.verifiedByName}</span>
-                                                <span className="text-[0.62vw] text-slate-400">{fmtDate(prod.report.verifiedDate)}</span>
+                                                <span className="text-[0.74vw] font-medium text-emerald-800">{prod.report.verifiedByName}</span>
+                                                <span className="text-[0.66vw] text-slate-700 font-medium">{fmtDate(prod.report.verifiedDate)}</span>
                                               </div>
                                             ) : (
-                                              <span className="text-slate-400 text-[0.72vw]">—</span>
+                                              <span className="text-slate-500 font-medium text-[0.72vw]">—</span>
                                             )}
                                           </td>
 

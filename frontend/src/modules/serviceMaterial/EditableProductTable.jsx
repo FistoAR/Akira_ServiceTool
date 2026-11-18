@@ -564,7 +564,7 @@ const EditableProductTable = ({
                               onClick={(e) => !isRowDisabled && openDropdown(prod._pid, e.currentTarget.parentElement.parentElement)}
                               placeholder={customerCode ? "Search or enter description..." : "Select customer first"}
                               disabled={!customerCode || isRowDisabled}
-                              className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent ${isRowDisabled ? "cursor-not-allowed text-slate-500" : "cursor-text"} description-input`}
+                              className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium disabled:bg-transparent ${isRowDisabled ? "cursor-not-allowed text-slate-500" : "cursor-text"} description-input`}
                             />
                             {!isReadOnly && customerCode && !isClaimed && (
                               <Search className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none group-focus-within:text-blue-500" />
@@ -606,7 +606,7 @@ const EditableProductTable = ({
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.5vw] relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
-                          <div className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-semibold text-[0.75vw] truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
+                          <div className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-medium text-[0.75vw] truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
                           {renderFillHandle(index, 1)}
                         </td>
 
@@ -623,7 +623,7 @@ const EditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isRowDisabled
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />
@@ -632,7 +632,7 @@ const EditableProductTable = ({
 
                         <td className={`py-[0.6vw] px-[0.5vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
                           <div className="relative flex items-center group">
-                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isRowDisabled} className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.4vw] pr-[1.8vw] outline-none transition-all text-slate-800 font-normal disabled:bg-transparent text-[0.78vw] ${isRowDisabled ? "cursor-not-allowed text-slate-500" : ""}`} />
+                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isRowDisabled} className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.4vw] pr-[1.8vw] outline-none transition-all text-slate-900 font-medium disabled:bg-transparent text-[0.78vw] ${isRowDisabled ? "cursor-not-allowed text-slate-500" : ""}`} />
                             {!isReadOnly && !isClaimed && <button type="button" className="absolute right-[0.2vw] p-[0.2vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-[0.9vw] h-[0.9vw]" /></button>}
                           </div>
                           {renderFillHandle(index, 3)}

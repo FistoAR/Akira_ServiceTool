@@ -2009,7 +2009,7 @@ export default function ServiceCall() {
                     )}
                     {isLoading ? (
                       <tr>
-                        <td colSpan={9} className="py-[10vh] text-center border-b border-slate-200">
+                        <td colSpan={9} className="py-[10vh] text-center border-b border-slate-300">
                           <div className="flex flex-col items-center justify-center gap-[1vw]">
                             <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
                             <span className="text-[1vw] font-medium text-blue-600">
@@ -2091,7 +2091,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap font-normal text-slate-700 text-[0.76vw] ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap font-medium text-slate-800 text-[0.76vw] ${cellBg}`}
                                 >
                                   {(currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1}
                                 </td>
@@ -2105,11 +2105,11 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-600 font-normal leading-normal mt-[0.2vw]">
+                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
@@ -2127,8 +2127,8 @@ export default function ServiceCall() {
                                         return (
                                           <>
                                             <span>{datePart}</span>
-                                            <span className="text-slate-300 font-normal">|</span>
-                                            <span className="text-slate-500">{timePart}</span>
+                                            <span className="text-slate-400 font-normal">|</span>
+                                            <span className="text-slate-600">{timePart}</span>
                                           </>
                                         );
                                       } catch {
@@ -2170,7 +2170,7 @@ export default function ServiceCall() {
                                           ? "bg-purple-50 text-purple-700 border-purple-200"
                                           : row.customerType === "Dealer"
                                           ? "bg-amber-50 text-amber-700 border-amber-200"
-                                          : "bg-slate-50 text-slate-700 border-slate-200"
+                                          : "bg-slate-50 text-slate-700 border-slate-300"
                                       }`}
                                     >
                                       {row.customerType}
@@ -2205,13 +2205,13 @@ export default function ServiceCall() {
                                     </div>
                                   }
                                 >
-                                  <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                                  <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
                                     {prod?.productModel || prod?.itemCode || "—"}
                                   </div>
                                 </CustomTooltip>
                                 <div className="flex items-center gap-[0.3vw] mt-[0.1vw] flex-wrap">
                                   {prod?.serialNumber && (
-                                    <span className="text-[0.66vw] text-slate-400 font-mono">
+                                    <span className="text-[0.66vw] text-black font-medium font-mono">
                                       SN: {prod.serialNumber}
                                     </span>
                                   )}
@@ -2264,15 +2264,15 @@ export default function ServiceCall() {
                                     (row.assignedTo ? employees?.find(e => e.userId === row.assignedTo || e._id === row.assignedTo)?.name : null);
                                   return (
                                     <div>
-                                      <div className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-normal text-slate-800">
+                                      <div className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-medium text-black">
                                         <span className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
                                         <span>{cfg.label}</span>
                                       </div>
-                                      <div className="mt-[0.1vw] text-[0.66vw] text-slate-400 font-normal">
+                                      <div className="mt-[0.1vw] text-[0.68vw] text-slate-700 font-medium">
                                         {engineerName ? (
-                                          <span>to: <span className="text-slate-600">{engineerName}</span></span>
+                                          <span>to: <span className="text-black font-medium">{engineerName}</span></span>
                                         ) : (
-                                          <span className="italic">Unassigned</span>
+                                          <span className="text-slate-600 font-medium italic">Unassigned</span>
                                         )}
                                       </div>
                                     </div>
@@ -2337,7 +2337,7 @@ export default function ServiceCall() {
                                           animate={{ opacity: 1, scale: 1, y: 0 }}
                                           exit={{ opacity: 0, scale: 0.95, y: -5 }}
                                           transition={{ duration: 0.12 }}
-                                          className="min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-2xl border border-slate-200 py-[0.4vw] text-left"
+                                          className="min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-2xl border border-slate-300 py-[0.4vw] text-left"
                                         >
                                           <button
                                             onClick={() => {
@@ -2404,7 +2404,7 @@ export default function ServiceCall() {
                       <tr>
                         <td
                           colSpan={9}
-                          className="py-[6vw] text-center border-b border-slate-200"
+                          className="py-[6vw] text-center border-b border-slate-300"
                         >
                           <div className="flex flex-col items-center justify-center gap-[0.8vw]">
                             <div className="w-[3.6vw] h-[3.6vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">

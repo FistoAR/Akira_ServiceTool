@@ -566,7 +566,7 @@ const ProductionEditableProductTable = ({
                               handleUpdate(prod._pid, "productType", e.target.value);
                             }}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent"
                             placeholder="Segment..."
                           />
                           {renderFillHandle(index, 2)}
@@ -586,7 +586,7 @@ const ProductionEditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />
@@ -607,7 +607,7 @@ const ProductionEditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />
@@ -647,7 +647,7 @@ const ProductionEditableProductTable = ({
                             }} 
                             placeholder="Problem Description" 
                             disabled={isReadOnly} 
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent" 
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent" 
                           />
                           {renderFillHandle(index, 6)}
                         </td>
@@ -661,7 +661,7 @@ const ProductionEditableProductTable = ({
                             <span className={`inline-block px-[0.55vw] py-[0.1vw] rounded-[0.3vw] font-mono ${
                               Number(prod.repeatability) > 0 
                                 ? "bg-amber-50 text-amber-700 border border-amber-200 font-semibold" 
-                                : "bg-slate-50 text-slate-600 border border-slate-200"
+                                : "bg-slate-50 text-slate-600 border border-slate-300"
                             }`}>
                               {prod.repeatability !== undefined && prod.repeatability !== "" ? prod.repeatability : "0"}
                             </span>
@@ -677,7 +677,7 @@ const ProductionEditableProductTable = ({
                             value={prod.delayTime !== undefined ? prod.delayTime : ""}
                             onChange={(e) => handleUpdate(prod._pid, "delayTime", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-normal text-[0.8vw] text-center disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] text-center disabled:bg-transparent"
                             placeholder="0"
                           />
                           {renderFillHandle(index, 8)}
@@ -690,7 +690,7 @@ const ProductionEditableProductTable = ({
                             value={prod.designators || ""}
                             onChange={(e) => handleUpdate(prod._pid, "designators", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent"
                             placeholder="Designator..."
                           />
                           {renderFillHandle(index, 9)}
@@ -755,7 +755,7 @@ const ProductionEditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />
@@ -782,7 +782,7 @@ const ProductionEditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />
@@ -797,7 +797,7 @@ const ProductionEditableProductTable = ({
                             value={prod.qty} 
                             onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} 
                             disabled={isReadOnly} 
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal text-[0.8vw] text-center disabled:bg-transparent" 
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] text-center disabled:bg-transparent" 
                           />
                           {renderFillHandle(index, 13)}
                         </td>
@@ -815,7 +815,7 @@ const ProductionEditableProductTable = ({
                               }} 
                               placeholder="Batch / SN" 
                               disabled={isReadOnly} 
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-normal text-[0.8vw] disabled:bg-transparent" 
+                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-medium text-[0.8vw] disabled:bg-transparent" 
                             />
                             {!isReadOnly && (
                               <button type="button" className="absolute right-[0.4vw] p-[0.3vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all">
@@ -840,7 +840,7 @@ const ProductionEditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />
@@ -867,7 +867,7 @@ const ProductionEditableProductTable = ({
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-normal text-slate-800"
+                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"
                           />

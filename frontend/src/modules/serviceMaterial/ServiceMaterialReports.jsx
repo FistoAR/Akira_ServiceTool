@@ -201,7 +201,7 @@ const getCustomerTypeBadgeStyle = (type) => {
     case "Dealer":
       return "bg-amber-50 text-amber-700 border-amber-200";
     default:
-      return "bg-slate-50 text-slate-700 border-slate-200";
+      return "bg-slate-50 text-slate-700 border-slate-300";
   }
 };
 
@@ -270,7 +270,7 @@ const getMaterialStatusBadge = (status, finalStatus) => {
     displayStatus = "Review Required";
   }
 
-  let badgeStyle = "bg-slate-50 text-slate-700 border-slate-200 border";
+  let badgeStyle = "bg-slate-50 text-slate-700 border-slate-300 border";
   if (displayStatus === "Completed") {
     badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-200 border";
   } else if (
@@ -483,10 +483,10 @@ const ProductHistoryModal = ({ item, onClose }) => {
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="bg-white rounded-[1vw] shadow-2xl border border-slate-200 w-[42vw] min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
+        className="bg-white rounded-[1vw] shadow-2xl border border-slate-300 w-[42vw] min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
       >
         {/* Header */}
-        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 bg-white flex items-center justify-between">
+        <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-300 bg-white flex items-center justify-between">
           <div className="flex items-center gap-[0.5vw]">
             <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200">
               <Clock className="w-[0.95vw] h-[0.95vw]" />
@@ -513,7 +513,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
               No status history records found for this product.
             </div>
           ) : (
-            <div className="relative pl-[1.5vw] border-l-2 border-slate-200 ml-[0.6vw] space-y-[1.2vw] py-[0.5vw]">
+            <div className="relative pl-[1.5vw] border-l-2 border-slate-300 ml-[0.6vw] space-y-[1.2vw] py-[0.5vw]">
               {enrichedTimeline.map((item, index) => {
                 const isAdmin = item.type === "admin" || item.type === "adminEdit";
                 const isApproved = item.status === "Approved by Admin" || item.status === "Completed";
@@ -531,7 +531,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
                     <div className={`absolute -left-[1.85vw] top-[0.4vw] w-[0.7vw] h-[0.7vw] rounded-full ${dotColor} ring-4 ring-white shadow-xs`} />
 
                     {/* Content Card */}
-                    <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-slate-200 shadow-2xs">
+                    <div className="bg-white rounded-[0.6vw] p-[0.8vw] border border-slate-300 shadow-2xs">
                       <div className="flex items-center justify-between mb-[0.3vw] flex-wrap gap-[0.3vw]">
                         <div className="flex items-center gap-[0.35vw] flex-wrap">
                           <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium ${
@@ -548,7 +548,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
                             {item.status}
                           </span>
                           {item.adminName && (
-                            <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                            <span className="text-[0.64vw] px-[0.35vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-300 font-normal">
                               {item.role ? `${item.role}: ` : ""}{item.adminName}
                             </span>
                           )}
@@ -564,7 +564,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
                       </div>
 
                       {item.remark && (
-                        <p className="text-[0.75vw] text-slate-600 font-normal mt-[0.3vw] bg-slate-50/80 p-[0.4vw] rounded-[0.35vw] border border-slate-200/70">
+                        <p className="text-[0.75vw] text-slate-600 font-normal mt-[0.3vw] bg-slate-50/80 p-[0.4vw] rounded-[0.35vw] border border-slate-300/70">
                           <span className="text-slate-500 font-medium">Remarks / Reason: </span>
                           {item.remark}
                         </p>
@@ -577,7 +577,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
                             Changed Fields ({item.diffs.length})
                           </div>
                           {item.diffs.map((d, di) => (
-                            <div key={di} className="text-[0.68vw] bg-slate-50 p-[0.3vw] rounded border border-slate-200 flex items-center justify-between gap-[0.4vw]">
+                            <div key={di} className="text-[0.68vw] bg-slate-50 p-[0.3vw] rounded border border-slate-300 flex items-center justify-between gap-[0.4vw]">
                               <span className="font-medium text-slate-700 truncate max-w-[45%]">
                                 {d.field}
                               </span>
@@ -603,7 +603,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-200 bg-white flex items-center justify-end shrink-0">
+        <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-300 bg-white flex items-center justify-end shrink-0">
           <button
             onClick={onClose}
             className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[0.76vw] rounded-full transition-colors cursor-pointer"
@@ -1752,7 +1752,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 setCurrentPage(1);
               }}
               placeholder="Search product, customer, ref no, serial..."
-              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[17vw] rounded-full border border-slate-200/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
+              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[17vw] rounded-full border border-slate-300/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
               <CustomTooltip text="Clear search">
@@ -1777,7 +1777,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
                   showFilterPopover || fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All"
                     ? "bg-blue-50 border-blue-300 text-blue-700"
-                    : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+                    : "bg-white border-slate-300/90 text-slate-700 hover:bg-slate-50"
                 }`}
               >
                 <Filter className="w-[0.85vw] h-[0.85vw]" />
@@ -1797,7 +1797,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 />
                 <div className="absolute right-0 top-full mt-[0.4vw] w-[17.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
                   {/* Header */}
-                  <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
+                  <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-300">
                     <span className="text-[0.76vw] font-bold text-slate-800">Quick Filters</span>
                     {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
                       <button
@@ -1895,7 +1895,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                   {/* Clear Filter Button */}
                   {(fromDate || toDate || selectedEmployee !== "All" || categoryFilter !== "All") && (
-                    <div className="pt-[0.3vw] border-t border-slate-200 mt-[0.1vw]">
+                    <div className="pt-[0.3vw] border-t border-slate-300 mt-[0.1vw]">
                       <button
                         onClick={() => {
                           setFromDate("");
@@ -1930,7 +1930,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
             className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
               showCustomFilterBar || customFilters.some((cf) => cf.field && cf.value.trim())
                 ? "bg-indigo-50 border-indigo-300 text-indigo-700"
-                : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+                : "bg-white border-slate-300/90 text-slate-700 hover:bg-slate-50"
             }`}
             title="Toggle custom field filter rows"
           >
@@ -1951,12 +1951,12 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
                   showColPicker
                     ? "bg-blue-50 border-blue-300 text-blue-700"
-                    : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+                    : "bg-white border-slate-300/90 text-slate-700 hover:bg-slate-50"
                 }`}
               >
                 <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
                 <span>Columns</span>
-                <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-300">
                   {selectedExportCols.length}/{EXPORT_COLUMNS.length}
                 </span>
               </button>
@@ -1969,7 +1969,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                   className="fixed inset-0 z-40"
                   onClick={() => setShowColPicker(false)}
                 />
-                <div className="absolute right-0 top-full mt-[0.4vw] w-[21vw] max-h-[30vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-[0.4vw] w-[21vw] max-h-[30vw] bg-white border border-slate-300 rounded-[0.6vw] shadow-xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-100">
                   {/* Header */}
                   <div className="p-[0.65vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
                     <div className="flex items-center gap-[0.35vw]">
@@ -2021,7 +2021,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             if (e.key === "Enter") saveCurrentAsTemplate(newTemplateName);
                           }}
                           placeholder="New template name..."
-                          className="flex-1 text-[0.7vw] px-[0.4vw] py-[0.2vw] border border-slate-200 rounded-[0.25vw] outline-none focus:border-blue-500 text-slate-800 placeholder-slate-400"
+                          className="flex-1 text-[0.7vw] px-[0.4vw] py-[0.2vw] border border-slate-300 rounded-[0.25vw] outline-none focus:border-blue-500 text-slate-800 placeholder-slate-400"
                           autoFocus
                         />
                         <button
@@ -2052,7 +2052,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           const tpl = colTemplates.find((t) => t.id === val);
                           if (tpl) applyTemplate(tpl);
                         }}
-                        className="w-full appearance-none bg-white border border-slate-200 hover:border-blue-300 rounded-[0.4vw] px-[0.55vw] py-[0.3vw] pr-[1.5vw] text-[0.72vw] text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
+                        className="w-full appearance-none bg-white border border-slate-300 hover:border-blue-300 rounded-[0.4vw] px-[0.55vw] py-[0.3vw] pr-[1.5vw] text-[0.72vw] text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
                       >
                         <option value="" disabled>
                           {selectedTemplateId ? "Select a template..." : "Custom selection active"}
@@ -2084,7 +2084,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   if (e.key === "Enter") renameTemplate(curTpl.id, editingTemplateName);
                                 }}
                                 placeholder="Rename template..."
-                                className="flex-1 text-[0.7vw] px-[0.35vw] py-[0.15vw] border border-slate-200 rounded-[0.2vw] outline-none focus:border-blue-500 text-slate-800"
+                                className="flex-1 text-[0.7vw] px-[0.35vw] py-[0.15vw] border border-slate-300 rounded-[0.2vw] outline-none focus:border-blue-500 text-slate-800"
                                 autoFocus
                               />
                               <button
@@ -2249,7 +2249,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
           {/* Filter Rows */}
           {customFilters.length === 0 ? (
-            <div className="py-[0.5vw] text-center text-slate-400 text-[0.7vw] italic bg-slate-50 border border-dashed border-slate-200 rounded-md">
+            <div className="py-[0.5vw] text-center text-slate-400 text-[0.7vw] italic bg-slate-50 border border-dashed border-slate-300 rounded-md">
               No custom filters active. Click &quot;Add Filter&quot; above to select any column header and enter a value.
             </div>
           ) : (
@@ -2364,8 +2364,8 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 )}
 
                 {/* Status Segmented Track Bar (Header Integrated) */}
-                <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-                  <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
+                <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
+                  <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-300/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
                     {STATUS_CHIPS.map(({ label, dot }) => {
                       const isActive = activeStatusTab === label;
                       const count = statusCounts[label] ?? 0;
@@ -2434,7 +2434,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             onClick={() => setShowQuantitiesPopover(false)}
                           />
                           <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
-                            <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
+                            <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-300">
                               <span className="text-[0.72vw] font-semibold text-slate-800">
                                 Total Quantities Breakdown
                               </span>
@@ -2471,7 +2471,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
                                 quantityFilter === "all"
                                   ? "bg-slate-800 text-white border-slate-900 font-semibold shadow-xs"
-                                  : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                                  : "bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-700"
                               }`}
                             >
                               <span className="font-normal">Received Qty (All):</span>
@@ -2753,23 +2753,23 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           return (
                             <tr
                               key={`${entry.id || entry._id}-${product._pid}`}
-                              className="transition-colors border-b border-slate-200 last:border-0 hover:bg-slate-50/70"
+                              className="transition-colors border-b border-slate-300 last:border-0 hover:bg-slate-50/70"
                             >
                               {/* S.No */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center text-slate-600 font-normal">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center text-slate-800 font-medium">
                                 {itemIndex}
                               </td>
 
                               {/* Date */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap text-slate-800 font-normal">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap text-slate-800 font-medium">
                                 {fmtDate(entry.date)}
                               </td>
 
                               {/* Customer Name & Code */}
-                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-200 max-w-[11.5vw]">
+                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-300 max-w-[11.5vw]">
                                 <div className="flex items-center gap-[0.35vw] max-w-full">
                                   <CustomTooltip text={entry.customerName} position="top-start" className="min-w-0 flex-1">
-                                    <span className="font-normal text-slate-800 truncate block">
+                                    <span className="font-semibold text-slate-900 truncate block">
                                       {entry.customerName || "—"}
                                     </span>
                                   </CustomTooltip>
@@ -2815,19 +2815,19 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Category */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
                                 {entry.category ? (
-                                  <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-normal border shadow-2xs ${getCustomerTypeBadgeStyle(entry.category)}`}>
+                                  <span className={`inline-flex items-center px-[0.5vw] py-[0.1vw] rounded-full text-[0.68vw] font-medium border shadow-2xs ${getCustomerTypeBadgeStyle(entry.category)}`}>
                                     {entry.category}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300 font-normal">—</span>
+                                  <span className="text-slate-400 font-normal">—</span>
                                 )}
                               </td>
 
                               {/* Ref No */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap">
-                                <div className="text-[0.72vw] font-normal text-purple-700 truncate">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap">
+                                <div className="text-[0.72vw] font-medium text-purple-900 truncate">
                                   {entry.refNoCustomer ? (
                                     <CustomTooltip text={`Customer Ref: ${entry.refNoCustomer}`}>
                                       <span>Cust: {entry.refNoCustomer}</span>
@@ -2835,7 +2835,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   ) : null}
                                 </div>
                                 {entry.refNoInternal && (
-                                  <div className="text-[0.66vw] text-blue-600 font-normal truncate">
+                                  <div className="text-[0.66vw] text-blue-800 font-medium truncate">
                                     <CustomTooltip text={`Internal Ref: ${entry.refNoInternal}`}>
                                       <span>Int: {entry.refNoInternal}</span>
                                     </CustomTooltip>
@@ -2847,10 +2847,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Product Description */}
-                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-200 max-w-[11.5vw]">
+                              <td className="py-[0.55vw] px-[0.6vw] border-r border-slate-300 max-w-[11.5vw]">
                                 <div className="flex items-center gap-[0.35vw] max-w-full">
                                   <CustomTooltip text={product.productDescription} position="top-start" className="min-w-0 flex-1">
-                                    <span className="font-normal text-slate-800 truncate block">
+                                    <span className="font-medium text-slate-900 truncate block">
                                       {product.productDescription || "—"}
                                     </span>
                                   </CustomTooltip>
@@ -2885,54 +2885,54 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Segment */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap text-slate-700 font-normal">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap text-slate-800 font-medium">
                                 {product.productSegment || product.segment ? (
-                                  <span className="inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] bg-slate-100 text-slate-700 border border-slate-200">
+                                  <span className="inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] bg-slate-100 text-slate-800 border border-slate-300 font-medium">
                                     {product.productSegment || product.segment}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300">—</span>
+                                  <span className="text-slate-400">—</span>
                                 )}
                               </td>
 
                               {/* Board Type */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 whitespace-nowrap text-slate-700 font-normal">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 whitespace-nowrap text-slate-800 font-medium">
                                 {product.boardType || "—"}
                               </td>
 
                               {/* Serial No */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap font-mono font-normal text-slate-800">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap font-mono font-medium text-black">
                                 {product.serialNumber || "—"}
                               </td>
 
                               {/* Qty */}
-                              <td className="py-[0.55vw] px-[0.4vw] border-r border-slate-200 text-center font-semibold text-slate-800">
+                              <td className="py-[0.55vw] px-[0.4vw] border-r border-slate-300 text-center font-medium text-black">
                                 {Math.max(1, Number(product.qty) || 1)}
                               </td>
 
                               {/* Material Cost */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-right font-medium text-slate-800">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-right font-medium text-black">
                                 {Number(product.report?.materialCost || product.materialCost) > 0 ? (
                                   <span>₹{Number(product.report?.materialCost || product.materialCost).toLocaleString()}</span>
                                 ) : (
-                                  <span className="text-slate-300 font-normal">—</span>
+                                  <span className="text-slate-400 font-normal">—</span>
                                 )}
                               </td>
 
                               {/* Man Power Cost */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-right font-medium text-slate-800">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-right font-medium text-black">
                                 {Number(product.report?.manpowerCost || product.manpowerCost) > 0 ? (
                                   <span>₹{Number(product.report?.manpowerCost || product.manpowerCost).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                                 ) : (
-                                  <span className="text-slate-300 font-normal">—</span>
+                                  <span className="text-slate-400 font-normal">—</span>
                                 )}
                               </td>
 
                               {/* TAT */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
-                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-normal border ${
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
+                                <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-medium border ${
                                   isWarrantyCrossed
-                                    ? "bg-rose-100 text-rose-700 border-rose-300"
+                                    ? "bg-rose-100 text-rose-700 border-rose-300 font-semibold"
                                     : "bg-blue-50 text-blue-700 border-blue-200"
                                 }`}>
                                   {formatTatText(entry.date, product.report?.completedDate)}
@@ -2941,7 +2941,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Age Group */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
                                 {(() => {
                                   const days = calculateTatDays(entry.date, product.report?.completedDate);
                                   const label = getAgeGroupLabel(days);
@@ -2967,7 +2967,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Type (W / PW) */}
-                              <td className="py-[0.55vw] px-[0.45vw] border-r border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.55vw] px-[0.45vw] border-r border-slate-300 text-center whitespace-nowrap">
                                 <span className={`inline-block px-[0.4vw] py-[0.08vw] rounded text-[0.68vw] font-normal ${
                                   product.type === "W"
                                     ? "bg-green-100 text-green-700 border border-green-200"
@@ -2978,7 +2978,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Claimed By */}
-                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-200 whitespace-nowrap font-normal">
+                              <td className="py-[0.55vw] px-[0.55vw] border-r border-slate-300 whitespace-nowrap font-normal">
                                 {product.assignedToName ? (
                                   <div className="font-normal text-slate-800">
                                     {product.assignedToName}
@@ -2989,7 +2989,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                               </td>
 
                               {/* Status */}
-                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-200 text-center whitespace-nowrap">
+                              <td className="py-[0.55vw] px-[0.5vw] border-r border-slate-300 text-center whitespace-nowrap">
                                 <span className={`inline-flex items-center justify-center px-[0.7vw] py-[0.2vw] rounded-lg text-[0.7vw] font-normal tracking-wide ${statusBadge.style}`}>
                                   {statusBadge.label}
                                 </span>
@@ -3009,7 +3009,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                   <CustomTooltip text="View Lifecycle History">
                                     <button
                                       onClick={() => setHistoryItem({ entry, product })}
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-200 hover:border-slate-700"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-slate-50 hover:bg-slate-700 text-slate-600 hover:text-white rounded-full transition-all cursor-pointer shadow-2xs border border-slate-300 hover:border-slate-700"
                                     >
                                       <History className="w-[0.9vw] h-[0.9vw]" />
                                     </button>
@@ -3049,7 +3049,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 </div>
 
                 {/* Table Footer with Pagination Controls */}
-                <div className="bg-slate-50 border-t border-slate-200 px-[1vw] py-[0.55vw] flex items-center justify-between shrink-0">
+                <div className="bg-slate-50 border-t border-slate-300 px-[1vw] py-[0.55vw] flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-[1.2vw]">
                     <span className="text-[0.75vw] text-slate-600 font-medium">
                       Showing{" "}
@@ -3130,30 +3130,30 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           employeeSummaryData.map((emp, index) => (
                             <tr
                               key={emp.id}
-                              className="hover:bg-blue-50/40 transition-colors border-b border-slate-200 last:border-0"
+                              className="hover:bg-blue-50/40 transition-colors border-b border-slate-300 last:border-0"
                             >
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center text-slate-600">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center text-slate-600">
                                 {index + 1}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 font-medium text-slate-800">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 font-medium text-slate-800">
                                 {emp.name}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-slate-600 font-normal">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-slate-600 font-normal">
                                 {emp.department}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-800">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-800">
                                 {emp.assignedCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.inProgressCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.reviewCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.pendingCount}
                               </td>
-                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-200 text-center font-normal text-slate-700">
+                              <td className="py-[0.6vw] px-[0.6vw] border-r border-slate-300 text-center font-normal text-slate-700">
                                 {emp.completedCount}
                               </td>
                               <td className="py-[0.6vw] px-[0.6vw] text-center align-middle whitespace-nowrap sticky right-0 bg-white shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)]">

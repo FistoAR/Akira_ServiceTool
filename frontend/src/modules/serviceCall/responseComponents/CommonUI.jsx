@@ -99,7 +99,7 @@ export const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => 
   return (
     <div className="flex items-center gap-[0.35vw] max-w-full">
       <CustomTooltip text={customerName} position="top-start" className="min-w-0 flex-1">
-        <span className="font-normal text-slate-900 text-[0.82vw] truncate block">
+        <span className="font-medium text-black text-[0.82vw] truncate block">
           {customerName || "—"}
         </span>
       </CustomTooltip>

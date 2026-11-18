@@ -2437,13 +2437,13 @@ const buildEscalationHistoryString = (call, prod) => {
                                       return (
                                         <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">{time}</span>}
+                                          {time && <span className="text-[0.68vw] text-slate-700 font-medium mt-[0.14vw]">{time}</span>}
                                         </div>
                                       );
                                     })()}
                                     {call.registeredByName && call.registeredByName !== "System" ? (
-                                      <div className="text-[0.66vw] text-slate-400 mt-[0.1vw]">
-                                        By: {call.registeredByName}
+                                      <div className="text-[0.68vw] text-slate-700 font-medium mt-[0.1vw]">
+                                        By: <span className="text-black font-medium">{call.registeredByName}</span>
                                       </div>
                                     ) : null}
                                   </td>
@@ -2456,7 +2456,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
-                                       <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
+                                       <span className="font-mono font-medium text-[0.82vw] text-black block leading-tight select-text">
                                          {call.callNumber}
                                        </span>
                                       {hasEdits && (
@@ -2481,7 +2481,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">
                                         Registered
                                       </span>
                                     )}
@@ -2537,7 +2537,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                       </div>
                                     }
                                   >
-                                    <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                                    <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
                                       {prod.productModel || prod.itemCode || "—"}
                                     </div>
                                   </CustomTooltip>
@@ -2549,7 +2549,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                     const engName = prod._assignedEngineerName || call.currentEngineerName;
                                     const engId = prod._assignedEngineerId || call.currentEngineerId;
                                     if (!engName) {
-                                      return <span className="text-slate-400 font-normal italic text-[0.72vw]">Unassigned</span>;
+                                      return <span className="text-slate-600 font-medium italic text-[0.72vw]">Unassigned</span>;
                                     }
                                     const matchedEmp = employees.find(e => (engId && (e.userId === engId || e._id === engId)) || (e.name && e.name.toLowerCase() === engName.toLowerCase()));
                                     const userImg = matchedEmp?.profilePicture || matchedEmp?.image || null;
@@ -2561,7 +2561,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                       >
                                         <div className="flex items-center gap-[0.45vw] cursor-default">
                                           <UserAvatar name={engName} image={userImg} size="1.6vw" textClass="text-[0.68vw]" />
-                                          <div className="font-normal text-slate-800 text-[0.75vw]">
+                                          <div className="font-medium text-black text-[0.75vw]">
                                             {engName}
                                           </div>
                                         </div>
@@ -2609,7 +2609,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                           {displayStatus}
                                         </span>
                                         {isClosed && (prod._productClosure?.closedAt || prod._productClosure?.date) && (
-                                          <div className="text-[0.65vw] text-slate-400 font-normal mt-[0.15vw]">
+                                          <div className="text-[0.68vw] text-slate-700 font-medium mt-[0.15vw]">
                                             {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
                                           </div>
                                         )}
@@ -3080,7 +3080,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                           Self Assigned
                                         </span>
                                       ) : (
-                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
+                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">
                                           Registered
                                         </span>
                                       )}

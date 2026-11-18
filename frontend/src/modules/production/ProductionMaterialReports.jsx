@@ -250,7 +250,7 @@ const Th = ({ children, cls = "" }) => (
   </th>
 );
 const Td = ({ children, cls = "" }) => (
-  <td className={`px-[0.7vw] py-[0.65vw] text-[0.78vw] text-slate-700 font-normal border-r border-b border-slate-300 last:border-r-0 align-middle ${cls}`}>
+  <td className={`px-[0.7vw] py-[0.65vw] text-[0.78vw] text-slate-800 font-medium border-r border-b border-slate-300 last:border-r-0 align-middle ${cls}`}>
     {children}
   </td>
 );
@@ -483,7 +483,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[70vw]">
-          <thead className="sticky top-0 z-20 bg-blue-50">
+          <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
               <Th cls="min-w-[6.5vw]">Date</Th>
@@ -506,28 +506,28 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
           <tbody>
             {paginated.map((r, i) => (
               <tr key={i} className="hover:bg-blue-50/30 transition-colors">
-                <Td cls="text-center font-semibold">{((currentPage - 1) * rowsPerPage) + i + 1}</Td>
+                <Td cls="text-center font-medium text-black">{((currentPage - 1) * rowsPerPage) + i + 1}</Td>
                 <Td>{fmtDate(r.entry.date)}</Td>
-                <Td cls="font-semibold text-blue-700">{r.entry.jobOrderNo}</Td>
-                <Td cls="font-normal">{r.entry.customerName}</Td>
-                <Td><div className="max-w-[12vw] truncate" title={r.prod.productDescription}>{r.prod.productDescription}</div></Td>
-                <Td cls="font-normal">{r.prod.serialNumber || "—"}</Td>
-                <Td><span className="bg-slate-50 px-[0.4vw] rounded font-semibold text-black">{r.prod.problemType || "—"}</span></Td>
-                <Td><span className="bg-orange-50 px-[0.4vw] rounded font-semibold text-black">{r.prod.ncType || "Internal"}</span></Td>
-                <Td><span className="text-black font-semibold">{r.prod.inspectedByName || "—"}</span></Td>
-                <Td><span className="text-black font-semibold">{r.prod.designators || "—"}</span></Td>
+                <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
+                <Td cls="font-medium text-black">{r.entry.customerName}</Td>
+                <Td><div className="max-w-[12vw] truncate font-medium text-black" title={r.prod.productDescription}>{r.prod.productDescription}</div></Td>
+                <Td cls="font-medium text-black font-mono">{r.prod.serialNumber || "—"}</Td>
+                <Td><span className="bg-slate-50 px-[0.4vw] rounded font-medium text-black">{r.prod.problemType || "—"}</span></Td>
+                <Td><span className="bg-orange-50 px-[0.4vw] rounded font-medium text-black">{r.prod.ncType || "Internal"}</span></Td>
+                <Td><span className="text-black font-medium">{r.prod.inspectedByName || "—"}</span></Td>
+                <Td><span className="text-black font-medium">{r.prod.designators || "—"}</span></Td>
                 <Td>
                   {r.prod.boardImage ? (
                     <button onClick={() => window.open(`${API_URL.replace('/api', '')}${r.prod.boardImage}`, '_blank')} className="text-blue-600 hover:underline font-bold text-[0.7vw]">View</button>
                   ) : "—"}
                 </Td>
-                <Td><span className="bg-blue-50 px-[0.4vw] rounded font-semibold text-black">{r.prod.report?.fourMCategory || "—"}</span></Td>
-                <Td><div className="max-w-[15vw]  text-black">{r.prod.report?.rootCause || "—"}</div></Td>
+                <Td><span className="bg-blue-50 px-[0.4vw] rounded font-medium text-black">{r.prod.report?.fourMCategory || "—"}</span></Td>
+                <Td><div className="max-w-[15vw] text-black">{r.prod.report?.rootCause || "—"}</div></Td>
                 <Td>{r.prod.report?.partsReplacement || "—"}</Td>
                 <Td>
                   <div className="space-y-[0.1vw]">
-                    <div className="flex gap-[0.2vw]"><span className="text-black">A:</span><span className="font-semibold">{r.prod.report?.assembledByName || "—"}</span></div>
-                    <div className="flex gap-[0.2vw]"><span className="text-black">T:</span><span className="font-semibold">{r.prod.report?.testedByName || "—"}</span></div>
+                    <div className="flex gap-[0.2vw]"><span className="text-black">A:</span><span className="font-medium text-black">{r.prod.report?.assembledByName || "—"}</span></div>
+                    <div className="flex gap-[0.2vw]"><span className="text-black">T:</span><span className="font-medium text-black">{r.prod.report?.testedByName || "—"}</span></div>
                   </div>
                 </Td>
                 <Td><StatusBadge status={r.prod.finalStatus} /></Td>
@@ -674,7 +674,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[70vw]">
-          <thead className="sticky top-0 z-20 bg-emerald-50">
+          <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
               <Th cls="min-w-[7vw]">Inward Date</Th>
@@ -693,20 +693,20 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
           <tbody>
             {paginated.map((r, i) => (
               <tr key={i} className="hover:bg-emerald-50/30 transition-colors">
-                <Td cls="text-center font-semibold text-black">{((currentPage - 1) * rowsPerPage) + i + 1}</Td>
+                <Td cls="text-center font-medium text-black">{((currentPage - 1) * rowsPerPage) + i + 1}</Td>
                 <Td>{fmtDate(r.entry.date)}</Td>
-                <Td cls="font-semibold">{r.entry.customerName}</Td>
-                <Td cls="font-semibold text-blue-700">{r.entry.jobOrderNo}</Td>
+                <Td cls="font-medium text-black">{r.entry.customerName}</Td>
+                <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
                 <Td>
-                  <div className="font-semibold text-black">{r.prod.productCode}</div>
+                  <div className="font-medium text-black">{r.prod.productCode}</div>
                   <div className="text-[0.68vw] text-black">{r.prod.productDescription}</div>
                 </Td>
-                <Td cls="font-semibold text-black">{r.prod.stage}</Td>
-                <Td><span className="text-black font-semibold">{r.prod.problemType || "—"}</span></Td>
-                <Td><span className="text-orange-600 font-semibold">{r.prod.ncType || "Internal"}</span></Td>
+                <Td cls="font-medium text-black">{r.prod.stage}</Td>
+                <Td><span className="text-black font-medium">{r.prod.problemType || "—"}</span></Td>
+                <Td><span className="text-orange-700 font-medium">{r.prod.ncType || "Internal"}</span></Td>
                 <Td>{r.prod.disposition}</Td>
                 <Td>{fmtDate(r.prod.report?.closedDate)}</Td>
-                <Td cls={`font-semibold ${r.tat !== null ? (r.tat <= 2 ? "text-green-600" : r.tat <= 5 ? "text-orange-600" : "text-red-600") : "text-black"}`}>
+                <Td cls={`font-medium ${r.tat !== null ? (r.tat <= 2 ? "text-emerald-700" : r.tat <= 5 ? "text-amber-700" : "text-rose-700") : "text-black"}`}>
                   {r.tat !== null ? `${r.tat}d` : "—"}
                 </Td>
                 <Td><StatusBadge status={r.prod.finalStatus} /></Td>
@@ -837,7 +837,7 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[70vw]">
-          <thead className="sticky top-0 z-20 bg-amber-50">
+          <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
               <Th cls="min-w-[10vw]">Product</Th>
@@ -852,17 +852,17 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
           <tbody>
             {paginated.map((r, i) => (
               <tr key={i} className="hover:bg-amber-50/30 transition-colors">
-                <Td cls="text-center font-bold">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
+                <Td cls="text-center font-medium text-black">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
                 <Td>
-                  <div className="font-bold text-slate-900">{r.prod.productCode}</div>
-                  <div className="text-[0.68vw] text-black/50 truncate max-w-[10vw]">{r.prod.productDescription}</div>
+                  <div className="font-medium text-black">{r.prod.productCode}</div>
+                  <div className="text-[0.68vw] text-slate-700 truncate max-w-[10vw] font-medium">{r.prod.productDescription}</div>
                 </Td>
-                <Td cls="font-bold text-blue-700">{r.entry.jobOrderNo}</Td>
-                <Td><span className="font-semibold text-slate-700 bg-slate-100 px-[0.4vw] rounded">{r.prod.problemType || "—"}</span></Td>
-                <Td><span className="font-bold text-amber-700">{r.prod.report?.fourMCategory}</span></Td>
-                <Td><div className="max-w-[20vw] italic text-slate-900 font-medium leading-relaxed text-[0.68vw]">"{r.prod.report?.rootCause}"</div></Td>
-                <Td><div className="max-w-[20vw] text-green-700 font-semibold text-[0.68vw]">{r.prod.report?.correctiveAction || "—"}</div></Td>
-                <Td cls="font-semibold text-gray-600">{r.prod.report?.testedByName || "—"}</Td>
+                <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
+                <Td><span className="font-medium text-black bg-slate-100 px-[0.4vw] rounded">{r.prod.problemType || "—"}</span></Td>
+                <Td><span className="font-medium text-amber-800">{r.prod.report?.fourMCategory}</span></Td>
+                <Td><div className="max-w-[20vw] italic text-black font-medium leading-relaxed text-[0.68vw]">"{r.prod.report?.rootCause}"</div></Td>
+                <Td><div className="max-w-[20vw] text-emerald-800 font-medium text-[0.68vw]">{r.prod.report?.correctiveAction || "—"}</div></Td>
+                <Td cls="font-medium text-black">{r.prod.report?.testedByName || "—"}</Td>
               </tr>
             ))}
           </tbody>
@@ -985,7 +985,7 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
       </div>
       <div className="flex-1 overflow-auto rounded-lg md:rounded-[0.5vw] border border-slate-300 shadow-sm relative">
         <table className="w-full text-left border-collapse min-w-[70vw]">
-          <thead className="sticky top-0 z-20 bg-teal-50">
+          <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
               <Th cls="min-w-[12vw]">Product</Th>
@@ -998,14 +998,14 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
           <tbody>
             {paginated.map((r, i) => (
               <tr key={i} className="hover:bg-teal-50/30 transition-colors">
-                <Td cls="text-center font-bold">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
+                <Td cls="text-center font-medium text-black">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
                 <Td>
-                  <div className="font-bold text-slate-900">{r.prod.productCode}</div>
-                  <div className="text-[0.68vw] text-black/50">{r.prod.productDescription}</div>
+                  <div className="font-medium text-black">{r.prod.productCode}</div>
+                  <div className="text-[0.68vw] text-slate-700 font-medium">{r.prod.productDescription}</div>
                 </Td>
-                <Td><div className="max-w-[20vw] font-medium text-slate-900 italic leading-tight text-[0.68vw]">"{r.prod.report?.correctiveAction}"</div></Td>
-                <Td cls="bg-green-50/50"><div className="font-black text-green-700 text-[0.75vw]">{r.prod.report?.cae}</div></Td>
-                <Td cls="font-semibold text-teal-800">{r.prod.report?.verifiedByName || "—"}</Td>
+                <Td><div className="max-w-[20vw] font-medium text-black italic leading-tight text-[0.68vw]">"{r.prod.report?.correctiveAction}"</div></Td>
+                <Td cls="bg-green-50/50"><div className="font-bold text-green-700 text-[0.75vw]">{r.prod.report?.cae}</div></Td>
+                <Td cls="font-medium text-teal-900">{r.prod.report?.verifiedByName || "—"}</Td>
                 <Td>{fmtDate(r.prod.report?.verifiedDate)}</Td>
               </tr>
             ))}

@@ -705,7 +705,7 @@ const ServiceCallEscalations = () => {
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-700 font-normal text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-800 font-medium text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
@@ -714,12 +714,12 @@ const ServiceCallEscalations = () => {
                             <div className="flex items-center gap-[0.4vw]">
                               <button
                                 onClick={() => setSelectedInfoCall(call)}
-                                className="font-mono text-left text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight cursor-pointer"
+                                className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                                 title="View Call Details"
                               >
                                 {call.callNumber}
                               </button>
-                              <span className={`inline-flex items-center justify-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-normal border shadow-2xs whitespace-nowrap ${
+                              <span className={`inline-flex items-center justify-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-semibold border shadow-2xs whitespace-nowrap ${
                                 call.priority === 'Critical'
                                   ? 'bg-rose-50 text-rose-700 border-rose-200'
                                   : call.priority === 'High'
@@ -729,7 +729,7 @@ const ServiceCallEscalations = () => {
                                 {call.priority || 'Normal'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-600 font-normal leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const dateVal = escalationStartTime || call.dateTime;
@@ -749,8 +749,8 @@ const ServiceCallEscalations = () => {
                                   return (
                                     <>
                                       <span>{datePart}</span>
-                                      <span className="text-slate-300 font-normal">|</span>
-                                      <span className="text-slate-500">{timePart}</span>
+                                      <span className="text-slate-400 font-normal">|</span>
+                                      <span className="text-slate-600">{timePart}</span>
                                     </>
                                   );
                                 } catch {
@@ -788,7 +788,7 @@ const ServiceCallEscalations = () => {
                                     ? "bg-purple-50 text-purple-700 border-purple-200"
                                     : call.customerType === "Dealer"
                                     ? "bg-amber-50 text-amber-700 border-amber-200"
-                                    : "bg-slate-50 text-slate-700 border-slate-200"
+                                    : "bg-slate-50 text-slate-700 border-slate-300"
                                 }`}
                               >
                                 {call.customerType}
@@ -824,18 +824,18 @@ const ServiceCallEscalations = () => {
                             </div>
                           }
                         >
-                          <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
                             {p.productModel || p.productDescription || p.itemCode || "Equipment"}
                           </div>
                         </CustomTooltip>
                         <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
                           {p.productSegment && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-normal">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-medium">
                               {p.productSegment}
                             </span>
                           )}
                           {p.serialNumber && (
-                            <span className="text-[0.66vw] text-slate-400 font-mono">
+                            <span className="text-[0.66vw] text-slate-600 font-semibold font-mono">
                               SN: {p.serialNumber}
                             </span>
                           )}

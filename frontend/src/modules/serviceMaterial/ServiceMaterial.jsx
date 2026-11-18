@@ -391,7 +391,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                     {items.map((item) => (
                       <tr
                         key={item._id}
-                        className="border-b border-slate-200 last:border-b-0 hover:bg-slate-50/70 transition-colors"
+                        className="border-b border-slate-300 last:border-b-0 hover:bg-slate-50/70 transition-colors"
                       >
                         {editingId === item._id ? (
                           <>
@@ -2432,7 +2432,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onView(row)}
                                       title="View"
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Eye className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
@@ -2443,7 +2443,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onView(row)}
                                       title="View (all assigned)"
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Eye className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
@@ -2452,7 +2452,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onEdit(row)}
                                       title="Edit (unclaimed records)"
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-500 hover:text-blue-600 border border-slate-300 hover:border-blue-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Edit3 className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
@@ -2463,7 +2463,7 @@ const AdminTableView = ({
                                       type="button"
                                       onClick={() => onDelete(row.id)}
                                       title="Delete"
-                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-400 rounded-full shadow-sm cursor-pointer transition-colors"
+                                      className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-white hover:bg-slate-50 text-slate-400 hover:text-rose-600 border border-slate-300 hover:border-rose-400 rounded-full shadow-sm cursor-pointer transition-colors"
                                     >
                                       <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                                     </button>
@@ -2510,7 +2510,7 @@ const AdminTableView = ({
 
                                     {/* S.No sub-number */}
                                     <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
-                                      <span className="text-[0.72vw] font-semibold text-slate-400">
+                                      <span className="text-[0.72vw] font-bold text-slate-500">
                                         {globalSn}.{pi + 1}
                                       </span>
                                     </td>
@@ -2519,7 +2519,7 @@ const AdminTableView = ({
                                     <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle">
                                       <div className="flex flex-col gap-[0.2vw]">
                                         <div
-                                          className="font-normal text-slate-800 text-[0.78vw] max-w-[15vw] break-words leading-snug"
+                                          className="font-medium text-slate-900 text-[0.78vw] max-w-[15vw] break-words leading-snug"
                                           title={prod.productDescription}
                                         >
                                           {prod.productDescription || "—"}
@@ -2528,7 +2528,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Product Code */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal align-middle text-center">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium align-middle text-center">
                                       {prod.productCode || (
                                         <span className="text-slate-400">
                                           —
@@ -2537,7 +2537,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Segment */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal align-middle text-center">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium align-middle text-center">
                                       {prod.productSegment || (
                                         <span className="text-slate-400">
                                           —
@@ -2546,7 +2546,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Serial No */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal font-mono align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-black font-medium font-mono align-middle text-center">
                                       {prod.serialNumber || (
                                         <span className="text-slate-400">
                                           —
@@ -2555,7 +2555,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Board Type */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium align-middle text-center">
                                       {prod.boardType || (
                                         <span className="text-slate-400">
                                           —
@@ -2564,14 +2564,14 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Exp. Delivery */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-700 font-normal whitespace-nowrap align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium whitespace-nowrap align-middle text-center">
                                       {fmtDate(prod.expectedDeliveryDate)}
                                     </td>
 
                                     {/* Type badge */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <span
-                                        className={`whitespace-nowrap text-[0.7vw] font-bold px-[0.6vw] py-[0.15vw] rounded-full border shadow-2xs font-normal ${
+                                        className={`whitespace-nowrap text-[0.7vw] font-bold px-[0.6vw] py-[0.15vw] rounded-full border shadow-2xs ${
                                           prod.type === "W"
                                             ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                             : "bg-sky-50 text-sky-700 border-sky-200"
