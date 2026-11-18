@@ -209,7 +209,7 @@ const NavBar = ({ type }) => {
                           <User className="w-3.5 h-3.5 text-emerald-600" />
                           <span className="text-xs font-normal text-slate-650">Full Name</span>
                         </div>
-                        <span className="font-medium text-slate-800 text-sm truncate max-w-[158px]">
+                        <span className="font-medium text-slate-800 text-sm truncate max-w-40">
                           {loggedInUser.name || "—"}
                         </span>
                       </div>
@@ -220,7 +220,7 @@ const NavBar = ({ type }) => {
                           <Building2 className="w-3.5 h-3.5 text-purple-600" />
                           <span className="text-xs font-normal text-slate-650">Department</span>
                         </div>
-                        <span className="font-medium text-slate-800 text-sm truncate max-w-[158px]">
+                        <span className="font-medium text-slate-800 text-sm truncate max-w-40">
                           {loggedInUser.department || "—"}
                         </span>
                       </div>
@@ -232,7 +232,7 @@ const NavBar = ({ type }) => {
                             <Mail className="w-3.5 h-3.5 text-amber-600" />
                             <span className="text-xs font-normal text-slate-650">Email</span>
                           </div>
-                          <span className="font-medium text-slate-800 font-mono text-xs truncate max-w-[158px]" title={loggedInUser.email}>
+                          <span className="font-medium text-slate-800 font-mono text-xs truncate max-w-40" title={loggedInUser.email}>
                             {loggedInUser.email}
                           </span>
                         </div>

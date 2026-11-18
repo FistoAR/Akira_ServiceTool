@@ -1239,8 +1239,8 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
       {/* ── FILTER & SEARCH TOOLBAR (Matching Entry & Reports page) ── */}
       <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0 mb-2.5">
         {/* Left side: Soft Pill Search Box */}
-        <div className="relative flex-1 max-w-[403px]">
-          <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+        <div className="relative flex-1 max-w-96">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
           <input
             type="text"
             placeholder="Search by customer, party code, call no, product, model..."
@@ -1254,7 +1254,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
             >
               <X className="w-2.5 h-2.5" />
             </button>
@@ -1332,7 +1332,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
           )}
 
           {/* Priority Dropdown (Pill shaped) */}
-          <div className="w-[137px]">
+          <div className="w-36">
             <CustomDropdown
               size="sm"
               align="right"
@@ -1355,7 +1355,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
         
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-100/70 p-4 rounded-2xl border border-slate-400 shadow-inner">
-            <RefreshCw className="w-[43px] h-[43px] text-indigo-650 animate-spin mb-3.5" />
+            <RefreshCw className="w-11 h-11 text-indigo-650 animate-spin mb-3.5" />
             <span className="text-xs font-bold text-slate-800">
               Fetching latest tasks...
             </span>

@@ -80,9 +80,9 @@ export const CustomTooltip = ({
                   : "top-full border-transparent border-t-slate-900"
               } ${
                 coords.align === "top-start"
-                  ? "left-[9px]"
+                  ? "left-2"
                   : coords.align === "top-end"
-                  ? "right-[9px]"
+                  ? "right-2"
                   : "left-1/2 -translate-x-1/2"
               }`}
             />

@@ -460,9 +460,9 @@ const CustomTooltip = ({ children, text, content: tooltipContent, position = "to
                   : "top-full border-transparent border-t-slate-900"
               } ${
                 coords.align === "top-start"
-                  ? "left-[9px]"
+                  ? "left-2"
                   : coords.align === "top-end"
-                  ? "right-[9px]"
+                  ? "right-2"
                   : "left-1/2 -translate-x-1/2"
               }`}
             />
@@ -1791,7 +1791,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 setCurrentPage(1);
               }}
               placeholder="Search call, customer, item, SN..."
-              className="pl-8 pr-7 h-8 w-[216px] rounded-full border border-slate-200/90 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
+              className="pl-8 pr-7 h-8 w-56 rounded-full border border-slate-200/90 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
               <button
@@ -1799,7 +1799,7 @@ const buildEscalationHistoryString = (call, prod) => {
                   setSearch("");
                   setCurrentPage(1);
                 }}
-                className="absolute right-[10px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600 p-1 cursor-pointer transition-colors"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600 p-1 cursor-pointer transition-colors"
                 title="Clear search"
               >
                 <X className="w-3 h-3" />
@@ -2331,7 +2331,7 @@ const buildEscalationHistoryString = (call, prod) => {
                       setCurrentPage(1);
                     }}
                     placeholder="Type value..."
-                    className="h-6.5 w-[158px] px-2 bg-white border border-slate-300 rounded text-sm text-slate-800 outline-none placeholder:text-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                    className="h-6.5 w-40 px-2 bg-white border border-slate-300 rounded text-sm text-slate-800 outline-none placeholder:text-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
                   />
 
                   {/* Delete button */}
@@ -2369,15 +2369,15 @@ const buildEscalationHistoryString = (call, prod) => {
                   <table className="w-full text-left border-collapse">
                     <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                       <tr>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">S.No</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">S.No</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 w-[151px] whitespace-nowrap">Registered Date</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">Call No</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">Call No</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[94px] whitespace-nowrap">Origin</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Customer & Contact</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[101px] whitespace-nowrap">Customer Type</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Product / Model</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">Assigned</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[101px] whitespace-nowrap">Escalation</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">Customer & Contact</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-24 whitespace-nowrap">Customer Type</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">Product / Model</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">Assigned</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-24 whitespace-nowrap">Escalation</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">Status</th>
                         <th className="py-2.5 px-2.5 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[79px]">Actions</th>
                       </tr>
@@ -2385,7 +2385,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     <tbody className="text-xs">
                       {paginatedData.length === 0 ? (
                         <tr>
-                          <td colSpan={11} className="py-[10vh] text-center text-slate-700 font-bold">
+                          <td colSpan={11} className="py-[10vh] text-center text-slate-700 font-semibold">
                             No service call records match the active criteria.
                           </td>
                         </tr>
@@ -2492,7 +2492,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-[202px]"
+                                    className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-52"
                                   >
                                     <CustomerInfoCell
                                       customerName={call.customerName}
@@ -2519,7 +2519,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                 )}
 
                                 {/* 6. Product / Model */}
-                                <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[202px]">
+                                <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-52">
                                   <CustomTooltip
                                     position="top-start"
                                     className="max-w-full"
@@ -2665,13 +2665,13 @@ const buildEscalationHistoryString = (call, prod) => {
                   <table className="w-full text-left border-collapse">
                     <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                       <tr>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">S.No</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">Call No</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Customer & Contact</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[101px] whitespace-nowrap">Customer Type</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">S.No</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">Call No</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">Customer & Contact</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-24 whitespace-nowrap">Customer Type</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 w-[187px] whitespace-nowrap">Product / SN</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">Escalated By</th>
-                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-[137px] whitespace-nowrap">Escalated Date</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">Escalated By</th>
+                        <th className="py-2.5 px-2.5 border-r border-slate-300 w-36 whitespace-nowrap">Escalated Date</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 w-[187px] whitespace-nowrap">Reason</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">Open Duration</th>
                         <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">Status</th>
@@ -2681,7 +2681,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     <tbody className="text-xs">
                       {paginatedData.length === 0 ? (
                         <tr>
-                          <td colSpan={11} className="py-[10vh] text-center text-slate-700 font-bold">
+                          <td colSpan={11} className="py-[10vh] text-center text-slate-700 font-semibold">
                             No escalated calls found.
                           </td>
                         </tr>
@@ -2701,7 +2701,7 @@ const buildEscalationHistoryString = (call, prod) => {
                             </td>
 
                             {/* 2. Customer & Contact */}
-                            <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-[202px]">
+                            <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-52">
                               <CustomerInfoCell
                                 customerName={item.call.customerName}
                                 contactNumber={item.call.contactNumber}
@@ -2840,21 +2840,21 @@ const buildEscalationHistoryString = (call, prod) => {
                     <table className="w-full text-left border-collapse">
                       <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                         <tr>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">S.No.</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Employee</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-[173px] whitespace-nowrap">Department</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[101px] whitespace-nowrap">Total Calls</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">S.No.</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">Employee</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-44 whitespace-nowrap">Department</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-24 whitespace-nowrap">Total Calls</th>
                           <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">Self Assigned</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[86px] whitespace-nowrap">Open</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[86px] whitespace-nowrap">Closed</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[115px] whitespace-nowrap">Avg Response</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-20 whitespace-nowrap">Open</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-20 whitespace-nowrap">Closed</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-28 whitespace-nowrap">Avg Response</th>
                           <th className="py-2.5 px-2.5 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-18">Action</th>
                         </tr>
                       </thead>
                       <tbody className="text-xs">
                         {paginatedData.length === 0 ? (
                           <tr>
-                            <td colSpan={9} className="py-[10vh] text-center text-slate-700 font-bold">
+                            <td colSpan={9} className="py-[10vh] text-center text-slate-700 font-semibold">
                               No assignment records found.
                             </td>
                           </tr>
@@ -2999,14 +2999,14 @@ const buildEscalationHistoryString = (call, prod) => {
                       <table className="w-full text-left border-collapse">
                         <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                           <tr>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">S.No</th>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-[137px] whitespace-nowrap">Registered Date</th>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">Call No</th>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[86px] whitespace-nowrap">Origin</th>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Customer</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">S.No</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-36 whitespace-nowrap">Registered Date</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">Call No</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-20 whitespace-nowrap">Origin</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">Customer</th>
                             <th className="py-2.5 px-2.5 border-r border-slate-300 w-[187px] whitespace-nowrap">Product / Model</th>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-[115px] whitespace-nowrap">Assigned</th>
-                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-[115px] whitespace-nowrap">Closed</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-28 whitespace-nowrap">Assigned</th>
+                            <th className="py-2.5 px-2.5 border-r border-slate-300 w-28 whitespace-nowrap">Closed</th>
                             <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">Status</th>
                             <th className="py-2.5 px-2.5 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-18">Actions</th>
                           </tr>
@@ -3089,7 +3089,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                   {pIdx === 0 && (
                                     <td
                                       rowSpan={prods.length}
-                                      className="py-2.5 px-2.5 border-r border-b border-slate-300 max-w-[202px] bg-white align-middle"
+                                      className="py-2.5 px-2.5 border-r border-b border-slate-300 max-w-52 bg-white align-middle"
                                     >
                                       <CustomerInfoCell
                                         customerName={call.customerName}
@@ -3306,7 +3306,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     <div className="text-sm text-slate-700 font-normal mt-0.5 flex items-center gap-1.5">
                       <span className="font-normal text-[#6e000a] font-mono">{editingReportItem.callNumber}</span>
                       <span className="text-slate-600">•</span>
-                      <span className="truncate max-w-[259px] text-slate-600">
+                      <span className="truncate max-w-64 text-slate-600">
                         {editingReportItem.product.productModel || editingReportItem.product.productDescription || editingReportItem.product.itemCode || "Equipment"}
                       </span>
                     </div>

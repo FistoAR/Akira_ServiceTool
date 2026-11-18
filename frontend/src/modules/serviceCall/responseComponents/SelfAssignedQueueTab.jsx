@@ -212,37 +212,37 @@ export const SelfAssignedQueueTab = ({
                   )}
                 </button>
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">
                 S.No
               </th>
               <th className="py-2.5 px-2.5 border-r border-slate-300 w-[151px] whitespace-nowrap">
                 Date & Time
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">
                 Call No
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                 Customer
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                 Product / Issue
               </th>
               <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[94px] whitespace-nowrap">
                 Error Code
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[137px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-36 whitespace-nowrap">
                 Caller Details
               </th>
               <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[94px] whitespace-nowrap">
                 Priority
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[101px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-24 whitespace-nowrap">
                 Origin
               </th>
               <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">
                 Status
               </th>
-              <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[137px]">
+              <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-36">
                 Actions
               </th>
             </tr>
@@ -259,14 +259,14 @@ export const SelfAssignedQueueTab = ({
                     {!isAllFilteredSelected ? (
                       <span>
                         All{" "}
-                        <span className="font-bold">
+                        <span className="font-semibold">
                           {selfAssignedPaginatedCalls.length}
                         </span>{" "}
                         calls on this page are selected.{" "}
                         <button
                           type="button"
                           onClick={selectAllFiltered}
-                          className="text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer ml-1"
+                          className="text-blue-600 hover:text-blue-800 font-semibold underline cursor-pointer ml-1"
                         >
                           Select all {selfAssignedFilteredCalls.length} calls in
                           queue
@@ -275,14 +275,14 @@ export const SelfAssignedQueueTab = ({
                     ) : (
                       <span>
                         All{" "}
-                        <span className="font-bold">
+                        <span className="font-semibold">
                           {selfAssignedFilteredCalls.length}
                         </span>{" "}
                         calls across all pages are selected.{" "}
                         <button
                           type="button"
                           onClick={clearAllSelected}
-                          className="text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer ml-1"
+                          className="text-blue-600 hover:text-blue-800 font-semibold underline cursor-pointer ml-1"
                         >
                           Clear selection
                         </button>
@@ -436,7 +436,7 @@ export const SelfAssignedQueueTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-[202px]"
+                          className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-52"
                         >
                           <CustomerInfoCell
                             customerName={
@@ -460,7 +460,7 @@ export const SelfAssignedQueueTab = ({
                       )}
 
                       {/* Product / Issue */}
-                      <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[202px]">
+                      <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-52">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"
@@ -688,7 +688,7 @@ export const SelfAssignedQueueTab = ({
               <tr>
                 <td
                   colSpan={12}
-                  className="py-[10vh] text-center text-slate-700 font-bold"
+                  className="py-[10vh] text-center text-slate-700 font-semibold"
                 >
                   No self-assigned calls found.
                 </td>

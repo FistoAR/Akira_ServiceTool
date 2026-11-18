@@ -182,12 +182,12 @@ const ReportsModal = ({ row, onClose }) => {
                             <div className="text-xs text-slate-800 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">{prod.problem || "No description provided."}</div>
                           </div>
                           {prod.boardImage && (
-                            <div className="w-[144px]">
+                            <div className="w-36">
                               <div className="text-xs text-slate-700 font-semibold uppercase mb-1.5">Board Image</div>
                               <img 
                                 src={`${API_URL}${prod.boardImage}`} 
                                 alt="Board" 
-                                className="w-full h-[86px] object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
+                                className="w-full h-20 object-cover rounded-lg border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
                                 onClick={() => window.open(`${API_URL}${prod.boardImage}`, '_blank')}
                               />
                             </div>
@@ -361,7 +361,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                 options={employees.map(e => ({ value: e.userId || e._id, label: e.name }))}
                 placeholder="Select Employee"
                 usePortal={true}
-                triggerClassName="!h-[33px] !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
+                triggerClassName="!h-8 !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
               />
             </div>
 
@@ -495,7 +495,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
 
         <div className="flex-1 overflow-hidden flex bg-slate-50/30 min-h-[46vh]">
           {/* Sidebar with distinctive background & active pill styling */}
-          <div className="w-[216px] border-r border-slate-200 flex flex-col bg-[#F3F6FA] p-2.5 gap-1.5">
+          <div className="w-56 border-r border-slate-200 flex flex-col bg-[#F3F6FA] p-2.5 gap-1.5">
             <div className="px-2.5 py-1 mb-1">
               <span className="text-sm font-medium uppercase tracking-wider text-slate-700">Categories</span>
             </div>
@@ -558,9 +558,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
-                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3 text-center w-16 border-r border-slate-300 font-medium">#</th>
                           <th className="py-2 px-3.5 text-left font-medium">Stage Name</th>
-                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
+                          <th className="py-2 px-3 text-center w-24 font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -571,7 +571,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "stages" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-16">
                                   {idx + 1}
                                 </td>
                                 <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
@@ -588,7 +588,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                     s
                                   )}
                                 </td>
-                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                <td className="py-1.5 px-3 text-center w-24">
                                   <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
@@ -664,9 +664,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
-                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3 text-center w-16 border-r border-slate-300 font-medium">#</th>
                           <th className="py-2 px-3.5 text-left font-medium">Outcome Description</th>
-                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
+                          <th className="py-2 px-3 text-center w-24 font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -677,7 +677,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "dispositions" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-16">
                                   {idx + 1}
                                 </td>
                                 <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
@@ -694,7 +694,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                     d
                                   )}
                                 </td>
-                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                <td className="py-1.5 px-3 text-center w-24">
                                   <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
@@ -770,9 +770,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
-                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3 text-center w-16 border-r border-slate-300 font-medium">#</th>
                           <th className="py-2 px-3.5 text-left font-medium">Problem Classification</th>
-                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
+                          <th className="py-2 px-3 text-center w-24 font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -783,7 +783,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "problems" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-16">
                                   {idx + 1}
                                 </td>
                                 <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
@@ -800,7 +800,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                     p
                                   )}
                                 </td>
-                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                <td className="py-1.5 px-3 text-center w-24">
                                   <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
@@ -876,9 +876,9 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
                         <tr className="text-slate-700 font-medium text-sm uppercase tracking-wider">
-                          <th className="py-2 px-3 text-center w-[65px] border-r border-slate-300 font-medium">#</th>
+                          <th className="py-2 px-3 text-center w-16 border-r border-slate-300 font-medium">#</th>
                           <th className="py-2 px-3.5 text-left font-medium">Product Type</th>
-                          <th className="py-2 px-3 text-center w-[101px] font-medium">Action</th>
+                          <th className="py-2 px-3 text-center w-24 font-medium">Action</th>
                         </tr>
                       </thead>
                     </table>
@@ -889,7 +889,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "products" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-[65px]">
+                                <td className="py-2 px-3 text-center font-mono text-sm text-slate-700 border-r border-slate-100 font-normal w-16">
                                   {idx + 1}
                                 </td>
                                 <td className="py-1.5 px-3.5 text-xs text-slate-800 font-normal">
@@ -906,7 +906,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                     p
                                   )}
                                 </td>
-                                <td className="py-1.5 px-3 text-center w-[101px]">
+                                <td className="py-1.5 px-3 text-center w-24">
                                   <div className="flex items-center justify-center gap-1">
                                     {isEditing ? (
                                       <>
@@ -975,11 +975,11 @@ const EmpSelectCell = ({ val, employees, onSelect }) => {
   return (
     <div className="relative" ref={ref}>
       <div onClick={() => setOpen(!open)} className={`flex items-center justify-center gap-1.5 bg-white border rounded-md px-2 py-1 transition-all cursor-pointer hover:border-blue-400 mx-auto w-max ${val ? "border-slate-300" : "border-dashed border-slate-300"}`}>
-        <span className={`text-sm font-bold truncate max-w-[86px] ${val ? "text-black" : "text-gray-700"}`}>{selected ? selected.name : "Assign"}</span>
+        <span className={`text-sm font-bold truncate max-w-20 ${val ? "text-black" : "text-gray-700"}`}>{selected ? selected.name : "Assign"}</span>
       </div>
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-1 bg-white border border-slate-300 shadow-xl rounded-md w-[202px] max-h-[173px] overflow-y-auto z-[200] py-1">
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-1 bg-white border border-slate-300 shadow-xl rounded-md w-52 max-h-[173px] overflow-y-auto z-[200] py-1">
             {employees.map(u => (
               <div key={u.userId} onClick={() => { onSelect(u); setOpen(false); }} className="px-2.5 py-1.5 flex items-center gap-2 hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0">
                 <div className="flex-1 min-w-0"><div className="text-sm font-bold text-black truncate">{u.name}</div><div className="text-xs text-gray-700 font-bold truncate">{u.department}</div></div>
@@ -1014,7 +1014,7 @@ const HistoryCellButton = ({ prod, row }) => {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-[605px] max-w-[650px] min-w-[360px] max-h-[85vh] flex flex-col overflow-hidden text-left"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-2xl max-w-[650px] min-w-[360px] max-h-[85vh] flex flex-col overflow-hidden text-left"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -1138,7 +1138,7 @@ const HistoryCellButton = ({ prod, row }) => {
 
                   return (
                     <div className="relative pl-6.5 space-y-3">
-                      <div className="absolute left-[9px] -translate-x-1/2 top-[7px] bottom-[7px] w-0.5 bg-slate-200 pointer-events-none" />
+                      <div className="absolute left-2 -translate-x-1/2 top-[7px] bottom-[7px] w-0.5 bg-slate-200 pointer-events-none" />
 
                       {timeline.map((entry, i) => {
                         let dotColor = "bg-slate-500";
@@ -1170,7 +1170,7 @@ const HistoryCellButton = ({ prod, row }) => {
                         return (
                           <div key={i} className="relative group">
                             <div
-                              className={`absolute -left-[26px] top-[9px] w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                              className={`absolute -left-[26px] top-2 w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
                             />
 
                             <div className="py-2 border-b border-slate-200/80 last:border-b-0">
@@ -1370,7 +1370,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
         </button>
         <AnimatePresence>
           {open && (
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-1 bg-white border border-slate-200 shadow-xl rounded-xl z-40 w-[245px] p-3.5 text-left">
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-1 bg-white border border-slate-200 shadow-xl rounded-xl z-40 w-60 p-3.5 text-left">
               <div className="text-xs font-bold text-slate-800 mb-2">Update Final Status</div>
               <div className="grid grid-cols-3 gap-1.5 mb-2.5">
                 {FINAL_STATUS_OPTIONS.map((opt) => (
@@ -1703,27 +1703,27 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
             </div>
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Registration Date</label>
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-5">Registration Date</label>
                 <input
                   type="date"
                   value={base.date}
                   onChange={e => setBase({ ...base, date: e.target.value })}
                   disabled={isReadOnly}
-                  className="bg-white border border-slate-200 rounded-lg h-[33px] px-3 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="bg-white border border-slate-200 rounded-lg h-8 px-3 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Job Order Number <span className="text-rose-500">*</span></label>
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-5">Job Order Number <span className="text-rose-500">*</span></label>
                 <input
                   value={base.jobOrderNo}
                   onChange={e => setBase({ ...base, jobOrderNo: e.target.value })}
                   placeholder="Enter Job Order..."
                   disabled={isReadOnly}
-                  className="bg-white border border-slate-200 rounded-lg h-[33px] px-3 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="bg-white border border-slate-200 rounded-lg h-8 px-3 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
               <div className="col-span-4 flex flex-col gap-1.5 relative" ref={custRef}>
-                <label className="text-xs font-semibold text-slate-700 flex items-center justify-between h-[19px]">
+                <label className="text-xs font-semibold text-slate-700 flex items-center justify-between h-5">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                   </span>
@@ -1733,7 +1733,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 </label>
                 <div className="flex gap-1.5">
                   <div className="relative flex-1">
-                    <Search className="absolute left-[10px] top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-700" />
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-700" />
                     <input
                       value={custSearch}
                       onChange={e => {
@@ -1747,7 +1747,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                       onKeyDown={onCustKeyDown}
                       placeholder="Search & select customer..."
                       disabled={isReadOnly}
-                      className="w-full bg-white border border-slate-200 rounded-lg h-[33px] pl-8 pr-7 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="w-full bg-white border border-slate-200 rounded-lg h-8 pl-8 pr-7 text-xs text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1793,7 +1793,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                         });
                         setShowAddCustModal(true);
                       }}
-                      className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 h-[33px] rounded-lg cursor-pointer text-xs font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
+                      className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 h-8 rounded-lg cursor-pointer text-xs font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
                       title="Add New Customer"
                     >
                       <UserPlus className="w-3 h-3" />
@@ -1824,19 +1824,19 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 </AnimatePresence>
               </div>
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Customer Code</label>
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-5">Customer Code</label>
                 <input
                   value={base.customerCode}
                   readOnly
-                  className="bg-slate-100/70 border border-slate-200 rounded-lg h-[33px] px-3 text-xs font-mono text-slate-600 cursor-not-allowed outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-lg h-8 px-3 text-xs font-mono text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-700 flex items-center h-[19px]">Category</label>
+                <label className="text-xs font-semibold text-slate-700 flex items-center h-5">Category</label>
                 <input
                   value={base.category}
                   readOnly
-                  className="bg-slate-100/70 border border-slate-200 rounded-lg h-[33px] px-3 text-xs text-slate-600 cursor-not-allowed outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-lg h-8 px-3 text-xs text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
             </div>
@@ -2460,8 +2460,8 @@ export default function ProductionMaterial() {
   }, [data]);
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center p-[144px] gap-5.5">
-      <div className="w-[43px] h-[43px] border-[5px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
+    <div className="flex flex-col items-center justify-center p-36 gap-5.5">
+      <div className="w-11 h-11 border-[5px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
       <div className="text-blue-600 font-bold text-xs uppercase tracking-widest animate-pulse">Loading Production Data...</div>
     </div>
   );
@@ -2526,7 +2526,7 @@ export default function ProductionMaterial() {
           <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
             {/* Soft Pill Search Box */}
             <div className="relative w-[288px]">
-              <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
               <input
                 type="text"
                 placeholder="Search by ref, JO, customer, product..."
@@ -2538,7 +2538,7 @@ export default function ProductionMaterial() {
                 <button
                   type="button"
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
                 >
                   <X className="w-2.5 h-2.5" />
                 </button>
@@ -2901,7 +2901,7 @@ export default function ProductionMaterial() {
                                           }`}
                                         >
                                           {isSelected && (
-                                            <span className="text-xs leading-none font-bold">
+                                            <span className="text-xs leading-none font-semibold">
                                               ✓
                                             </span>
                                           )}
@@ -3075,7 +3075,7 @@ export default function ProductionMaterial() {
 
                                           {/* S.No sub-number */}
                                           <td className="border-r border-slate-300 text-center align-middle px-1 py-1.5">
-                                            <span className="text-sm font-bold text-slate-700">
+                                            <span className="text-sm font-semibold text-slate-700">
                                               {globalSn}.{pi + 1}
                                             </span>
                                           </td>
@@ -3095,7 +3095,7 @@ export default function ProductionMaterial() {
 
                                           {/* Product Description */}
                                           <td
-                                            className="px-2.5 py-2 border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-sm truncate max-w-[202px]"
+                                            className="px-2.5 py-2 border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-sm truncate max-w-52"
                                             title={prod.productDescription}
                                           >
                                             {prod.productDescription || "—"}
@@ -3187,7 +3187,7 @@ export default function ProductionMaterial() {
 
                                           {/* Final Remarks */}
                                           <td
-                                            className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-normal text-slate-600 text-sm truncate max-w-[144px]"
+                                            className="px-2.5 py-2 border-r border-slate-300 align-middle text-center font-normal text-slate-600 text-sm truncate max-w-36"
                                             title={prod.finalStatusRemarks}
                                           >
                                             {prod.finalStatusRemarks || "—"}

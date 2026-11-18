@@ -436,26 +436,26 @@ const ProductionEditableProductTable = ({
       <table className="w-full border-collapse text-xs">
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-sm">
           <tr>
-            {!isReadOnly && <th className="w-[43px] py-2.5 px-1.5 border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
+            {!isReadOnly && <th className="w-11 py-2.5 px-1.5 border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
             <th className="w-12 py-2.5 px-1.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
-            <th className="min-w-[259px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="min-w-[173px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
-            <th className="w-[144px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
-            <th className="w-[115px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
-            <th className="w-[202px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
-            <th className="w-[115px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
-            <th className="w-[130px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
-            <th className="w-[130px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
-            <th className="w-[115px] min-w-[108px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
-            <th className="w-[202px] min-w-[187px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
-            <th className="w-[158px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
-            {!isReadOnly && <th className="sticky right-0 w-[86px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
+            <th className="min-w-64 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="min-w-44 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
+            <th className="w-36 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
+            <th className="w-28 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
+            <th className="w-52 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
+            <th className="w-28 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
+            <th className="w-32 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
+            <th className="w-32 py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
+            <th className="w-28 min-w-[108px] py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
+            <th className="w-52 min-w-[187px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
+            <th className="w-40 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
+            {!isReadOnly && <th className="sticky right-0 w-20 py-2.5 px-2.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -512,7 +512,7 @@ const ProductionEditableProductTable = ({
                               className="w-full bg-transparent border-none rounded-md py-1.5 px-2.5 outline-none transition-all text-black font-normal disabled:bg-transparent cursor-text description-input text-xs"
                             />
                             {!isReadOnly && customerCode && (
-                              <Search className="w-3 h-3 text-gray-700 absolute right-[9px] pointer-events-none group-focus-within:text-blue-500" />
+                              <Search className="w-3 h-3 text-gray-700 absolute right-2 pointer-events-none group-focus-within:text-blue-500" />
                             )}
                           </div>
                           {renderFillHandle(index, 0)}
@@ -889,7 +889,7 @@ const ProductionEditableProductTable = ({
                 
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={19} className="py-3.5 text-center text-blue-700 font-bold italic text-xs bg-blue-100/50">
+                     <td colSpan={19} className="py-3.5 text-center text-blue-700 font-semibold italic text-xs bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>

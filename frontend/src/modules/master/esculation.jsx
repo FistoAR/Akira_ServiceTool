@@ -577,9 +577,9 @@ const ReportDetailsModal = ({ rec, onClose }) => {
               <div className="text-sm text-gray-700 mt-px">{startDate}</div>
             </div>
             <div className="flex items-center gap-1.5 text-gray-600">
-              <div className="w-[43px] h-px bg-gray-300" />
+              <div className="w-11 h-px bg-gray-300" />
               <ChevronRight className="w-3.5 h-3.5 text-gray-700" />
-              <div className="w-[43px] h-px bg-gray-300" />
+              <div className="w-11 h-px bg-gray-300" />
             </div>
             <div className="flex-1 text-right">
               <div className="text-sm font-semibold text-gray-700 uppercase mb-1">Current</div>
@@ -931,7 +931,7 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                 {entry.escalationHistory.map((hist, idx) => (
                   <div key={idx} className="flex gap-2 mb-2 last:mb-0">
                     <div className="flex flex-col items-center">
-                      <div className={`w-[19px] h-[19px] rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold ${hist.level === 0 ? "bg-blue-500" : hist.level === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold ${hist.level === 0 ? "bg-blue-500" : hist.level === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
                         {hist.level + 1}
                       </div>
                       {idx < entry.escalationHistory.length - 1 && <div className="w-px flex-1 bg-gray-200 my-px" />}
@@ -1031,8 +1031,8 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
       {viewMode === "assigned" && (
         mine.length === 0
           ? (
-            <div className="bg-white rounded-lg p-[43px] text-center border border-slate-400">
-              <MapPin className="w-[43px] h-[43px] text-gray-600 mx-auto mb-3" />
+            <div className="bg-white rounded-lg p-11 text-center border border-slate-400">
+              <MapPin className="w-11 h-11 text-gray-600 mx-auto mb-3" />
               <p className="text-xs text-gray-700 font-medium">No field visit records</p>
             </div>
           ) : (
@@ -1086,8 +1086,8 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
       {viewMode === "open" && (
         openCalls.length === 0
           ? (
-            <div className="bg-white rounded-lg p-[43px] text-center border border-slate-400">
-              <CheckCircle className="w-[43px] h-[43px] text-gray-600 mx-auto mb-3" />
+            <div className="bg-white rounded-lg p-11 text-center border border-slate-400">
+              <CheckCircle className="w-11 h-11 text-gray-600 mx-auto mb-3" />
               <p className="text-xs text-gray-700 font-medium">All calls covered</p>
             </div>
           ) : (
@@ -1357,8 +1357,8 @@ const SupportRequestsTab = ({ currentUser }) => {
       </div>
 
       {activeList.length === 0 ? (
-        <div className="bg-white rounded-lg p-[43px] text-center border border-slate-400">
-          <HelpCircle className="w-[43px] h-[43px] text-gray-600 mx-auto mb-3" />
+        <div className="bg-white rounded-lg p-11 text-center border border-slate-400">
+          <HelpCircle className="w-11 h-11 text-gray-600 mx-auto mb-3" />
           <p className="text-xs text-gray-700 font-medium">No requests</p>
         </div>
       ) : (
@@ -1415,8 +1415,8 @@ const PendingTab = ({ queue, currentUser, onAssignFieldVisit }) => {
   }, [queue, uid]);
 
   if (pendingItems.length === 0) return (
-    <div className="bg-white rounded-lg p-[43px] text-center border border-slate-400 mt-3.5">
-      <CheckCircle className="w-[43px] h-[43px] text-gray-600 mx-auto mb-3" />
+    <div className="bg-white rounded-lg p-11 text-center border border-slate-400 mt-3.5">
+      <CheckCircle className="w-11 h-11 text-gray-600 mx-auto mb-3" />
       <p className="text-xs text-gray-700 font-medium">No pending items</p>
     </div>
   );
@@ -1511,8 +1511,8 @@ const ReportsTab = ({ currentUser }) => {
   }), [allRecords, statusFilter, search]);
 
   if (allRecords.length === 0) return (
-    <div className="bg-white rounded-lg p-[43px] text-center border border-slate-400 mt-3.5">
-      <BarChart2 className="w-[43px] h-[43px] text-gray-600 mx-auto mb-3" />
+    <div className="bg-white rounded-lg p-11 text-center border border-slate-400 mt-3.5">
+      <BarChart2 className="w-11 h-11 text-gray-600 mx-auto mb-3" />
       <p className="text-xs text-gray-700 font-medium">No records found</p>
     </div>
   );
@@ -1536,8 +1536,8 @@ const ReportsTab = ({ currentUser }) => {
           <tbody className="divide-y divide-gray-100">
             {filteredRecords.map((rec) => (
               <tr key={rec.callId} className="hover:bg-blue-50/30 transition-colors">
-                <td className="px-2.5 py-2.5"><span className="text-xs font-bold text-blue-600 font-mono">{rec.callNumber}</span></td>
-                <td className="px-2.5 py-2.5 text-xs font-bold text-gray-800">{rec.customerName}</td>
+                <td className="px-2.5 py-2.5"><span className="text-xs font-semibold text-blue-600 font-mono">{rec.callNumber}</span></td>
+                <td className="px-2.5 py-2.5 text-xs font-semibold text-gray-800">{rec.customerName}</td>
                 <td className="px-2.5 py-2.5"><Badge label={rec.status} color="gray" /></td>
                 <td className="px-2.5 py-2.5">
                   <button onClick={() => setDetailRec(rec)} className="bg-blue-600 text-white px-2.5 py-1.5 rounded-md text-sm font-semibold cursor-pointer">Details</button>
@@ -1883,8 +1883,8 @@ const EscalationPage = () => {
             )}
 
             {myEscalations.length === 0 ? (
-              <div className="bg-white rounded-lg p-[43px] text-center border border-slate-400">
-                <Shield className="w-[43px] h-[43px] text-gray-600 mx-auto mb-3" />
+              <div className="bg-white rounded-lg p-11 text-center border border-slate-400">
+                <Shield className="w-11 h-11 text-gray-600 mx-auto mb-3" />
                 <p className="text-xs text-gray-700 font-medium">No active escalations</p>
                 <p className="text-xs text-gray-600 mt-1">Service calls assigned to you will appear here</p>
               </div>

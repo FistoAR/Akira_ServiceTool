@@ -143,7 +143,7 @@ const TrackingModal = ({ entry, onClose }) => {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="bg-white w-[605px] rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[85vh] flex flex-col border border-slate-200"
+        className="bg-white w-2xl rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[85vh] flex flex-col border border-slate-200"
       >
         <div className="bg-white px-4 py-3 flex justify-between items-center border-b border-slate-200">
           <div className="flex items-center gap-2">
@@ -208,7 +208,7 @@ const TrackingModal = ({ entry, onClose }) => {
                      <div className="flex flex-col items-center">
                        <div className={`w-2 h-2 rounded-full mt-1.5 z-10 ${dotColor} ring-4 ring-white shadow-2xs`} />
                        {i !== pastEvents.length - 1 && (
-                         <div className="w-[1.5px] h-full bg-slate-200 absolute top-[9px] bottom-[-11px] left-[3px]" />
+                         <div className="w-[1.5px] h-full bg-slate-200 absolute top-2 bottom-[-11px] left-[3px]" />
                        )}
                      </div>
                      <div className={`flex-1 rounded-lg p-2.5 border shadow-2xs transition-colors ${cardClasses}`}>
@@ -492,8 +492,8 @@ const ServiceCallEscalations = () => {
         {/* Top Level Scoping Toolbar: Soft Pill Search, Date Range, Status & Priority */}
         <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
           {/* Left side: Soft Pill Search Box */}
-          <div className="relative w-[259px]">
-            <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
             <input
               type="text"
               placeholder="Search escalations, customer, engineer..."
@@ -504,7 +504,7 @@ const ServiceCallEscalations = () => {
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm("")}
-                className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
               >
                 <X className="w-2.5 h-2.5" />
               </button>
@@ -605,7 +605,7 @@ const ServiceCallEscalations = () => {
             )}
 
             {/* Priority Dropdown (Pill shaped) */}
-            <div className="w-[137px]">
+            <div className="w-36">
               <CustomDropdown
                 size="sm"
                 align="right"
@@ -633,25 +633,25 @@ const ServiceCallEscalations = () => {
                 <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[158px]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-40">
                   Call Ref & Started
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[259px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-64 whitespace-nowrap">
                   Customer & Site
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[115px]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-28">
                   Customer Type
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[259px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-64 whitespace-nowrap">
                   Escalated Equipment
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[130px]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-32">
                   SLA Status
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[173px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-44 whitespace-nowrap">
                   Escalated To
                 </th>
-                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[130px]">
+                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-32">
                   Action
                 </th>
               </tr>
@@ -761,14 +761,14 @@ const ServiceCallEscalations = () => {
                           </td>
 
                           {/* 3. Customer & Site */}
-                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white max-w-[259px]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white max-w-64">
                             <CustomerInfoCell
                               customerName={call.customerName}
                               contactNumber={call.contactNumber}
                               partyCode={call.partyCode}
                             />
                             {(call.location || call.site) && (
-                              <div className="text-sm text-slate-700 flex items-center gap-1 mt-0.5 truncate max-w-[245px]" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
+                              <div className="text-sm text-slate-700 flex items-center gap-1 mt-0.5 truncate max-w-60" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
                                 <MapPin className="w-2.5 h-2.5 text-slate-700 shrink-0" />
                                 <span className="truncate font-normal">{call.site ? `${call.site} • ` : ""}{call.location}</span>
                               </div>
@@ -801,7 +801,7 @@ const ServiceCallEscalations = () => {
                       )}
 
                       {/* 5. Product & Segment */}
-                      <td className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 max-w-[259px]">
+                      <td className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 max-w-64">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"
@@ -872,7 +872,7 @@ const ServiceCallEscalations = () => {
 
                           {/* 7. Escalated To */}
                           <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white">
-                            <div className="font-normal text-xs text-indigo-700 truncate max-w-[173px]">
+                            <div className="font-normal text-xs text-indigo-700 truncate max-w-44">
                               {timer?.currentEngineerName || call.currentEngineerName || 'Unassigned'}
                             </div>
                             <div className="text-slate-700 text-sm font-normal truncate mt-px">
@@ -1021,7 +1021,7 @@ const ServiceCallEscalations = () => {
                     <div className="text-sm text-slate-700 font-normal mt-0.5 flex items-center gap-1.5">
                       <span className="font-normal text-[#6e000a] font-mono">{cancelModal.callNumber}</span>
                       <span className="text-slate-600">•</span>
-                      <span className="truncate max-w-[259px] text-slate-600">{cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Equipment'}</span>
+                      <span className="truncate max-w-64 text-slate-600">{cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Equipment'}</span>
                     </div>
                   </div>
                 </div>

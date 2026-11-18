@@ -124,13 +124,13 @@ const SitesSection = ({ sites = [], setSites }) => {
               <p className="text-sm text-gray-700">Plant and warehouse operational locations</p>
             </div>
             <div className="relative">
-              <Search className="absolute left-[9px] top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
               <input
                 type="text"
                 placeholder="Search sites..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-[173px] pl-6.5 pr-2.5 py-1 border border-gray-200 rounded-md text-xs outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-44 pl-6.5 pr-2.5 py-1 border border-gray-200 rounded-md text-xs outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
@@ -138,7 +138,7 @@ const SitesSection = ({ sites = [], setSites }) => {
           <div className="border border-gray-200 rounded-lg bg-white overflow-hidden shadow-2xs flex flex-col">
             <div className="divide-y divide-gray-100 min-h-[259px]">
               {paginatedSites.length === 0 ? (
-                <div className="p-[43px] text-center text-gray-700 text-xs">
+                <div className="p-11 text-center text-gray-700 text-xs">
                   {searchTerm ? "No sites match your search." : "No sites configured yet."}
                 </div>
               ) : (

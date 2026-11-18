@@ -56,7 +56,7 @@ export default function ConfirmDeleteModal({
             exit={{ opacity: 0, scale: 0.95, y: 8 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-[374px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden z-10 flex flex-col font-sans"
+            className="relative w-full max-w-96 bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden z-10 flex flex-col font-sans"
           >
             {/* Header Banner */}
             <div className="p-4 pb-3 flex items-start gap-3.5">

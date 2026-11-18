@@ -498,14 +498,14 @@ const EditableProductTable = ({
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider shadow-sm">
           <tr>
             {!isReadOnly && <th className="w-9 py-2.5 px-1.5 border-r border-b border-slate-300"></th>}
-            <th className="w-[43px] py-2.5 px-1.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
-            <th className="min-w-[259px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="w-[130px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
-            <th className="w-[115px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[144px] py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
-            <th className="w-[86px] py-2.5 px-2 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
-            <th className="w-[137px] py-2.5 px-2 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
-            {!isReadOnly && <th className="w-[86px] py-2.5 px-2 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
+            <th className="w-11 py-2.5 px-1.5 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
+            <th className="min-w-64 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="w-32 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
+            <th className="w-28 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-36 py-2.5 px-2.5 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
+            <th className="w-20 py-2.5 px-2 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
+            <th className="w-36 py-2.5 px-2 text-left text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
+            {!isReadOnly && <th className="w-20 py-2.5 px-2 text-center text-slate-700 font-bold text-xs uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -567,7 +567,7 @@ const EditableProductTable = ({
                               className={`w-full bg-transparent border-none rounded-md py-1.5 px-2.5 outline-none transition-all text-slate-900 font-medium disabled:bg-transparent ${isRowDisabled ? "cursor-not-allowed text-slate-700" : "cursor-text"} description-input`}
                             />
                             {!isReadOnly && customerCode && !isClaimed && (
-                              <Search className="w-3 h-3 text-gray-700 absolute right-[9px] pointer-events-none group-focus-within:text-blue-500" />
+                              <Search className="w-3 h-3 text-gray-700 absolute right-2 pointer-events-none group-focus-within:text-blue-500" />
                             )}
                           </div>
                           {renderFillHandle(index, 0)}
@@ -643,7 +643,7 @@ const EditableProductTable = ({
                             {typeOptions.map(opt => (
                               <span 
                                 key={opt} 
-                                className={`flex-1 py-1 text-sm font-bold rounded-sm text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700"}`}
+                                className={`flex-1 py-1 text-sm font-semibold rounded-sm text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-700"}`}
                               >
                                 {opt}
                               </span>

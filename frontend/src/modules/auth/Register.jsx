@@ -182,7 +182,7 @@ const RegisterPage = () => {
                >
                  <ArrowLeft size="14px" /> Back to Login
                </button>
-               <img src={logo} alt="App Logo" className="w-[86px]" />
+               <img src={logo} alt="App Logo" className="w-20" />
             </div>
 
             <div className="text-center mb-5.5">

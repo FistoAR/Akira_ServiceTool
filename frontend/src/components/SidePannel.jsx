@@ -320,8 +320,8 @@ export default function Sidebar() {
         border-r border-slate-300 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.08)]
         ${
           isCollapsed
-            ? "min-w-[58px] max-w-[58px] 2xl:min-w-[68px] 2xl:max-w-[68px]"
-            : "min-w-[260px] max-w-[260px] xl:min-w-[285px] xl:max-w-[285px] 2xl:min-w-[310px] 2xl:max-w-[310px]"
+            ? "min-w-14 max-w-14 2xl:min-w-[68px] 2xl:max-w-[68px]"
+            : "min-w-64 max-w-64 xl:min-w-72 xl:max-w-72 2xl:min-w-80 2xl:max-w-80"
         }
       `}
       style={{ height: "100vh" }}

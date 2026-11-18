@@ -404,7 +404,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
       <div className="flex-shrink-0 flex items-center justify-between mb-2.5 gap-2.5">
         <div></div>
         <div className="flex items-center gap-2">
-          <div className="relative w-[202px]">
+          <div className="relative w-52">
             <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3 h-3 text-slate-700" />
             <input
               value={search}
@@ -416,7 +416,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-[9px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
               >
                 <X className="w-2.5 h-2.5" />
               </button>
@@ -487,17 +487,17 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
             <tr>
               <Th>S.No</Th>
               <Th cls="min-w-[94px]">Date</Th>
-              <Th cls="min-w-[115px]">Job Order</Th>
-              <Th cls="min-w-[173px]">Customer</Th>
-              <Th cls="min-w-[216px]">Product</Th>
-              <Th cls="min-w-[115px]">Serial No</Th>
-              <Th cls="min-w-[130px]">Problem Type</Th>
-              <Th cls="min-w-[101px]">NC Type</Th>
-              <Th cls="min-w-[115px]">Inspected By</Th>
-              <Th cls="min-w-[115px]">Designators</Th>
-              <Th cls="min-w-[115px]">Image</Th>
+              <Th cls="min-w-28">Job Order</Th>
+              <Th cls="min-w-44">Customer</Th>
+              <Th cls="min-w-56">Product</Th>
+              <Th cls="min-w-28">Serial No</Th>
+              <Th cls="min-w-32">Problem Type</Th>
+              <Th cls="min-w-24">NC Type</Th>
+              <Th cls="min-w-28">Inspected By</Th>
+              <Th cls="min-w-28">Designators</Th>
+              <Th cls="min-w-28">Image</Th>
               <Th>4M Category</Th>
-              <Th cls="min-w-[216px]">Root Cause</Th>
+              <Th cls="min-w-56">Root Cause</Th>
               <Th>Parts Replaced</Th>
               <Th>Personnel</Th>
               <Th>Status</Th>
@@ -510,7 +510,7 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
                 <Td>{fmtDate(r.entry.date)}</Td>
                 <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
                 <Td cls="font-medium text-black">{r.entry.customerName}</Td>
-                <Td><div className="max-w-[173px] truncate font-medium text-black" title={r.prod.productDescription}>{r.prod.productDescription}</div></Td>
+                <Td><div className="max-w-44 truncate font-medium text-black" title={r.prod.productDescription}>{r.prod.productDescription}</div></Td>
                 <Td cls="font-medium text-black font-mono">{r.prod.serialNumber || "—"}</Td>
                 <Td><span className="bg-slate-50 px-1.5 rounded font-medium text-black">{r.prod.problemType || "—"}</span></Td>
                 <Td><span className="bg-orange-50 px-1.5 rounded font-medium text-black">{r.prod.ncType || "Internal"}</span></Td>
@@ -518,11 +518,11 @@ const TechnicalReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) 
                 <Td><span className="text-black font-medium">{r.prod.designators || "—"}</span></Td>
                 <Td>
                   {r.prod.boardImage ? (
-                    <button onClick={() => window.open(`${API_URL.replace('/api', '')}${r.prod.boardImage}`, '_blank')} className="text-blue-600 hover:underline font-bold text-sm">View</button>
+                    <button onClick={() => window.open(`${API_URL.replace('/api', '')}${r.prod.boardImage}`, '_blank')} className="text-blue-600 hover:underline font-semibold text-sm">View</button>
                   ) : "—"}
                 </Td>
                 <Td><span className="bg-blue-50 px-1.5 rounded font-medium text-black">{r.prod.report?.fourMCategory || "—"}</span></Td>
-                <Td><div className="max-w-[216px] text-black">{r.prod.report?.rootCause || "—"}</div></Td>
+                <Td><div className="max-w-56 text-black">{r.prod.report?.rootCause || "—"}</div></Td>
                 <Td>{r.prod.report?.partsReplacement || "—"}</Td>
                 <Td>
                   <div className="space-y-px">
@@ -601,7 +601,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
       <div className="flex-shrink-0 flex items-center justify-between mb-2.5 gap-2.5">
         <div></div>
         <div className="flex items-center gap-2">
-          <div className="relative w-[202px]">
+          <div className="relative w-52">
             <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-3 h-3 text-slate-700" />
             <input
               value={search}
@@ -613,7 +613,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-[9px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
               >
                 <X className="w-2.5 h-2.5" />
               </button>
@@ -677,15 +677,15 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[101px]">Inward Date</Th>
-              <Th cls="min-w-[173px]">Customer</Th>
-              <Th cls="min-w-[115px]">Job Order</Th>
-              <Th cls="min-w-[216px]">Product Details</Th>
+              <Th cls="min-w-24">Inward Date</Th>
+              <Th cls="min-w-44">Customer</Th>
+              <Th cls="min-w-28">Job Order</Th>
+              <Th cls="min-w-56">Product Details</Th>
               <Th>Stage</Th>
-              <Th cls="min-w-[130px]">Problem Type</Th>
+              <Th cls="min-w-32">Problem Type</Th>
               <Th>NC Type</Th>
               <Th>Disposition</Th>
-              <Th cls="min-w-[101px]">Closed Date</Th>
+              <Th cls="min-w-24">Closed Date</Th>
               <Th>TAT (Days)</Th>
               <Th>Status</Th>
             </tr>
@@ -786,7 +786,7 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
               className="pl-8 pr-6.5 h-8 bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-xs w-[187px] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-700"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-[9px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600">
+              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600">
                 <X className="w-3 h-3" />
               </button>
             )}
@@ -840,9 +840,9 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[144px]">Product</Th>
-              <Th cls="min-w-[115px]">JO#</Th>
-              <Th cls="min-w-[144px]">Problem Type</Th>
+              <Th cls="min-w-36">Product</Th>
+              <Th cls="min-w-28">JO#</Th>
+              <Th cls="min-w-36">Problem Type</Th>
               <Th>4M Cat</Th>
               <Th cls="min-w-[317px]">Root Cause Detail</Th>
               <Th cls="min-w-[288px]">Corrective Action</Th>
@@ -855,7 +855,7 @@ const RCALogReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) => 
                 <Td cls="text-center font-medium text-black">{(currentPage - 1) * rowsPerPage + i + 1}</Td>
                 <Td>
                   <div className="font-medium text-black">{r.prod.productCode}</div>
-                  <div className="text-sm text-slate-700 truncate max-w-[144px] font-medium">{r.prod.productDescription}</div>
+                  <div className="text-sm text-slate-700 truncate max-w-36 font-medium">{r.prod.productDescription}</div>
                 </Td>
                 <Td cls="font-medium text-blue-700">{r.entry.jobOrderNo}</Td>
                 <Td><span className="font-medium text-black bg-slate-100 px-1.5 rounded">{r.prod.problemType || "—"}</span></Td>
@@ -938,7 +938,7 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
               className="pl-8 pr-6.5 h-8 bg-slate-100/70 hover:bg-slate-100 focus:bg-white border-0 rounded-full outline-none text-xs w-[187px] focus:ring-1 focus:ring-blue-500 transition-all text-slate-800 placeholder:text-slate-700"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-[9px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600">
+              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600">
                 <X className="w-3 h-3" />
               </button>
             )}
@@ -988,11 +988,11 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
           <thead className="sticky top-0 z-20 bg-[#E9EDF7]">
             <tr>
               <Th>S.No</Th>
-              <Th cls="min-w-[173px]">Product</Th>
+              <Th cls="min-w-44">Product</Th>
               <Th cls="min-w-[317px]">Corrective Action</Th>
-              <Th cls="min-w-[259px]">Effectiveness (CAE)</Th>
+              <Th cls="min-w-64">Effectiveness (CAE)</Th>
               <Th>Verified By</Th>
-              <Th cls="min-w-[101px]">Verified Date</Th>
+              <Th cls="min-w-24">Verified Date</Th>
             </tr>
           </thead>
           <tbody>
@@ -1004,7 +1004,7 @@ const EffectivenessReport = ({ entries, fromDate, setFromDate, toDate, setToDate
                   <div className="text-sm text-slate-700 font-medium">{r.prod.productDescription}</div>
                 </Td>
                 <Td><div className="max-w-[288px] font-medium text-black italic leading-tight text-sm">"{r.prod.report?.correctiveAction}"</div></Td>
-                <Td cls="bg-green-50/50"><div className="font-bold text-green-700 text-xs">{r.prod.report?.cae}</div></Td>
+                <Td cls="bg-green-50/50"><div className="font-semibold text-green-700 text-xs">{r.prod.report?.cae}</div></Td>
                 <Td cls="font-medium text-teal-900">{r.prod.report?.verifiedByName || "—"}</Td>
                 <Td>{fmtDate(r.prod.report?.verifiedDate)}</Td>
               </tr>
@@ -1059,7 +1059,7 @@ export default function ProductionMaterialReports() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-50 p-4 rounded-2xl border border-slate-200">
-        <div className="w-[43px] h-[43px] border-[4px] border-black/10 border-t-blue-600 rounded-full animate-spin mb-3.5" />
+        <div className="w-11 h-11 border-[4px] border-black/10 border-t-blue-600 rounded-full animate-spin mb-3.5" />
         <span className="text-xs font-bold text-slate-800">Fetching records...</span>
       </div>
     );

@@ -137,7 +137,7 @@ const LoginPage = () => {
         <div className={`transition-all duration-1000 ${mounted ? "transform translate-y-0 opacity-100" : "transform translate-y-8 opacity-0"}`}>
           <div className="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl shadow-2xl p-5.5 border border-white border-opacity-20">
             <div className="flex flex-col items-center text-center mb-3.5">
-              <img src={logo} alt="App Logo" className="mb-3 w-[115px]" />
+              <img src={logo} alt="App Logo" className="mb-3 w-28" />
               <p className="text-gray-600 text-xs">Welcome back! Please sign in to your account.</p>
             </div>
 

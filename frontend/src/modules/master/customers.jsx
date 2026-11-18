@@ -1121,7 +1121,7 @@ const CustomerDatabase = () => {
     <th
       key={col.key}
       className={`py-2.5 px-2.5 font-semibold text-slate-700 uppercase tracking-wider text-sm border-r border-slate-300 whitespace-nowrap ${
-        col.key === "state" ? "min-w-[115px] w-[115px]" : ""
+        col.key === "state" ? "min-w-28 w-28" : ""
       }`}
     >
       {col.label}
@@ -1172,7 +1172,7 @@ const CustomerDatabase = () => {
         );
       case "partyDescription":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-normal truncate max-w-[202px]"} title={row.partyDescription}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-normal truncate max-w-52"} title={row.partyDescription}>
             {row.partyDescription}
           </td>
         );
@@ -1180,7 +1180,7 @@ const CustomerDatabase = () => {
         return <td key={col.key} className={baseClass + " text-slate-700 font-mono text-xs"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
-          <td key={col.key} className={baseClass + " text-slate-700 truncate max-w-[230px] text-xs"} title={row.itemDescription}>
+          <td key={col.key} className={baseClass + " text-slate-700 truncate max-w-60 text-xs"} title={row.itemDescription}>
             {row.itemDescription}
           </td>
         );
@@ -1192,7 +1192,7 @@ const CustomerDatabase = () => {
         );
       case "state":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700 min-w-[115px] w-[115px] whitespace-nowrap"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700 min-w-28 w-28 whitespace-nowrap"}>
             {row.state || "—"}
           </td>
         );
@@ -1228,7 +1228,7 @@ const CustomerDatabase = () => {
       <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
         {/* Soft Pill Search Box */}
         <div className="relative w-[317px]">
-          <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
           <input
             type="text"
             placeholder="Search by party code, description or item code..."
@@ -1239,7 +1239,7 @@ const CustomerDatabase = () => {
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
             >
               <X className="w-2.5 h-2.5" />
             </button>
@@ -1348,7 +1348,7 @@ const CustomerDatabase = () => {
               <option value="nameAsc">Sort by: Name (A-Z)</option>
               <option value="nameDesc">Sort by: Name (Z-A)</option>
             </select>
-            <ChevronRight className="w-3 h-3 text-gray-700 pointer-events-none absolute right-[9px] top-1/2 -translate-y-1/2 rotate-90" />
+            <ChevronRight className="w-3 h-3 text-gray-700 pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rotate-90" />
           </div>
         </div>
       </div>
@@ -1389,7 +1389,7 @@ const CustomerDatabase = () => {
                 <tr>
                   <td colSpan={totalCols} className="py-[144px]">
                     <div className="flex flex-col items-center justify-center gap-3.5 text-gray-700">
-                      <Loader2 className="w-[43px] h-[43px] animate-spin text-[#1a73e8]" />
+                      <Loader2 className="w-11 h-11 animate-spin text-[#1a73e8]" />
                       <p className="text-xs font-medium text-[#1a73e8]">Loading customer data...</p>
                     </div>
                   </td>
@@ -1972,7 +1972,7 @@ const CustomerDatabase = () => {
                   </div>
                 )}
                 {uploadStep === 2 && (
-                  <div className="flex flex-col items-center justify-center w-full max-w-[432px] mx-auto">
+                  <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto">
                     <div className="w-full flex justify-between font-semibold text-gray-600 mb-2">
                       <span>Processing...</span>
                       <span>{uploadProgress}%</span>
@@ -1984,7 +1984,7 @@ const CustomerDatabase = () => {
                 )}
                 {uploadStep === 3 && (
                   <div className="flex gap-7 h-full items-stretch">
-                    <div className="w-[259px] flex flex-col gap-3.5">
+                    <div className="w-64 flex flex-col gap-3.5">
                       <div className="bg-gray-50 p-5.5 rounded-lg border border-slate-400 space-y-3">
                         <h4 className="font-bold text-gray-700 uppercase tracking-wider mb-3.5">Summary</h4>
                         <div className="flex justify-between">
@@ -2034,7 +2034,7 @@ const CustomerDatabase = () => {
                           ))
                         ) : (
                           <div className="h-full flex flex-col items-center justify-center text-gray-700">
-                            <Check className="w-[43px] h-[43px] mb-2" />
+                            <Check className="w-11 h-11 mb-2" />
                             <p>No Issues Found</p>
                           </div>
                         )}

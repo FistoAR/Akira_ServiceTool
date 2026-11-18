@@ -367,7 +367,7 @@ const NotificationsDropdown = () => {
             initial={{ opacity: 0, y: 10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            className="absolute right-0 mt-2.5 w-[432px] bg-white rounded-2xl border border-slate-200/80 z-[2000] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
+            className="absolute right-0 mt-2.5 w-md bg-white rounded-2xl border border-slate-200/80 z-[2000] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col"
           >
             {/* Header */}
             <div className="p-3.5 pb-2.5 flex items-center justify-between bg-white relative">
@@ -405,7 +405,7 @@ const NotificationsDropdown = () => {
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
-                        className="absolute right-0 mt-1.5 w-[173px] bg-white rounded-xl border border-slate-200 shadow-lg z-[2100] p-2.5 flex flex-col gap-1.5"
+                        className="absolute right-0 mt-1.5 w-44 bg-white rounded-xl border border-slate-200 shadow-lg z-[2100] p-2.5 flex flex-col gap-1.5"
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-semibold text-indigo-955">Only Unread</span>
@@ -417,7 +417,7 @@ const NotificationsDropdown = () => {
                             }}
                             className={`relative w-6.5 h-3.5 rounded-full transition-colors border ${onlyUnread ? 'bg-indigo-600 border-indigo-700' : 'bg-slate-200 border-slate-300'}`}
                           >
-                            <div className={`absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full transition-all ${onlyUnread ? 'left-[14px]' : 'left-[1px]'}`} />
+                            <div className={`absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full transition-all ${onlyUnread ? 'left-3.5' : 'left-[1px]'}`} />
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
@@ -506,7 +506,7 @@ const NotificationsDropdown = () => {
                         >
                           {/* Circular App-Themed Icon on the Left without extra distracting dot */}
                           <div className="relative shrink-0">
-                            <div className={`w-[33px] h-[33px] rounded-full flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border shadow-2xs ${visuals.iconBg}`}>
                               <IconComp className={`w-4 h-4 ${visuals.iconColor}`} />
                             </div>
                           </div>

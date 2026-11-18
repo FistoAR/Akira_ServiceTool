@@ -383,8 +383,8 @@ export default function ServiceCallAssignment() {
       {/* ── FILTER & SEARCH TOOLBAR ── */}
       <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
         {/* Left side: Soft Pill Search Box */}
-        <div className="relative w-[259px]">
-          <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+        <div className="relative w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
           <input
             type="text"
             placeholder="Search customer, call no, engineer..."
@@ -395,7 +395,7 @@ export default function ServiceCallAssignment() {
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
             >
               <X className="w-2.5 h-2.5" />
             </button>
@@ -466,7 +466,7 @@ export default function ServiceCallAssignment() {
           )}
 
           {/* Customer Type Dropdown */}
-          <div className="w-[137px]">
+          <div className="w-36">
             <CustomDropdown
               size="sm"
               align="right"
@@ -481,7 +481,7 @@ export default function ServiceCallAssignment() {
           </div>
 
           {/* Priority Dropdown (Pill shaped) */}
-          <div className="w-[137px]">
+          <div className="w-36">
             <CustomDropdown
               size="sm"
               align="right"
@@ -520,22 +520,22 @@ export default function ServiceCallAssignment() {
                 <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[158px]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-40">
                   Call Ref & Date
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[259px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-64 whitespace-nowrap">
                   Customer & Site
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[115px]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-28">
                   Customer Type
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-[245px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 min-w-60 whitespace-nowrap">
                   Product & Segment
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-[101px]">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap min-w-24">
                   Priority
                 </th>
-                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[115px]">
+                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-28">
                   Action
                 </th>
               </tr>
@@ -622,14 +622,14 @@ export default function ServiceCallAssignment() {
                           </td>
 
                           {/* 3. Customer & Site */}
-                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white max-w-[259px]">
+                          <td rowSpan={rowCount} className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 bg-white max-w-64">
                             <CustomerInfoCell
                               customerName={g.customerName}
                               contactNumber={g.contactNumber}
                               partyCode={g.partyCode}
                             />
                             {(g.location || g.site) && (
-                              <div className="text-sm text-slate-600 font-medium flex items-center gap-1 mt-0.5 truncate max-w-[245px]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
+                              <div className="text-sm text-slate-600 font-medium flex items-center gap-1 mt-0.5 truncate max-w-60" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
                                 <MapPin className="w-2.5 h-2.5 text-slate-700 shrink-0" />
                                 <span className="truncate font-medium text-slate-700">{g.site ? `${g.site} • ` : ""}{g.location}</span>
                               </div>
@@ -662,7 +662,7 @@ export default function ServiceCallAssignment() {
                       )}
 
                       {/* 4. Product & Segment */}
-                      <td className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 max-w-[245px]">
+                      <td className="py-2.5 px-2.5 align-middle border-r border-b border-slate-300 max-w-60">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"
@@ -927,7 +927,7 @@ export default function ServiceCallAssignment() {
                 <div className="w-[44%] flex flex-col border-r border-slate-200 overflow-hidden bg-slate-50/40">
                   <div className="p-3.5 border-b border-slate-200 bg-white">
                     <div className="relative">
-                      <Search className="absolute left-[10px] top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
                       <input 
                         type="text" 
                         placeholder="Search qualified engineers..." 
@@ -938,7 +938,7 @@ export default function ServiceCallAssignment() {
                       {engSearch && (
                         <button 
                           onClick={() => setEngSearch("")} 
-                          className="absolute right-[9px] top-1/2 -translate-y-1/2 text-gray-700 hover:text-gray-600 cursor-pointer"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-700 hover:text-gray-600 cursor-pointer"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -951,7 +951,7 @@ export default function ServiceCallAssignment() {
                       <div className="h-full flex flex-col items-center justify-center gap-3 text-center py-[6vh]">
                         <Loader2 className="w-7 h-7 animate-spin text-blue-600" />
                         <div className="text-xs font-semibold text-slate-700">Checking SLA eligible engineers...</div>
-                        <div className="text-sm text-slate-700 font-normal max-w-[216px]">
+                        <div className="text-sm text-slate-700 font-normal max-w-56">
                           Matching against department requirements &amp; current active queue.
                         </div>
                       </div>

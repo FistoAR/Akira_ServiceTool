@@ -146,9 +146,9 @@ const CustomTooltip = ({
                   : "top-full border-transparent border-t-slate-900"
               } ${
                 coords.align === "top-start"
-                  ? "left-[9px]"
+                  ? "left-2"
                   : coords.align === "top-end"
-                  ? "right-[9px]"
+                  ? "right-2"
                   : "left-1/2 -translate-x-1/2"
               }`}
             />
@@ -483,7 +483,7 @@ const ProductHistoryModal = ({ item, onClose }) => {
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="bg-white rounded-2xl shadow-2xl border border-slate-300 w-[605px] min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-300 w-2xl min-w-[380px] max-w-[620px] max-h-[85vh] flex flex-col overflow-hidden font-sans"
       >
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-slate-300 bg-white flex items-center justify-between">
@@ -582,11 +582,11 @@ const ProductHistoryModal = ({ item, onClose }) => {
                                 {d.field}
                               </span>
                               <span className="flex items-center gap-1 text-right truncate">
-                                <span className="text-rose-600 truncate max-w-[115px] font-normal">
+                                <span className="text-rose-600 truncate max-w-28 font-normal">
                                   {String(d.originalValue || "—")}
                                 </span>
                                 <span className="text-slate-700 font-normal">→</span>
-                                <span className="text-emerald-700 font-medium truncate max-w-[115px]">
+                                <span className="text-emerald-700 font-medium truncate max-w-28">
                                   {String(d.editedValue || "—")}
                                 </span>
                               </span>
@@ -1752,7 +1752,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 setCurrentPage(1);
               }}
               placeholder="Search product, customer, ref no, serial..."
-              className="pl-8 pr-7 h-8 w-[245px] rounded-full border border-slate-300/90 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
+              className="pl-8 pr-7 h-8 w-60 rounded-full border border-slate-300/90 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
               <CustomTooltip text="Clear search">
@@ -1761,7 +1761,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     setSearch("");
                     setCurrentPage(1);
                   }}
-                  className="absolute right-[10px] top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600 p-1 cursor-pointer transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-700 hover:text-slate-600 p-1 cursor-pointer transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -2293,7 +2293,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                       setCurrentPage(1);
                     }}
                     placeholder="Type value..."
-                    className="h-6.5 w-[158px] px-2 bg-white border border-slate-300 rounded text-sm text-slate-800 outline-none placeholder:text-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                    className="h-6.5 w-40 px-2 bg-white border border-slate-300 rounded text-sm text-slate-800 outline-none placeholder:text-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
                   />
 
                   {/* Delete button */}
@@ -2433,7 +2433,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             className="fixed inset-0 z-40"
                             onClick={() => setShowQuantitiesPopover(false)}
                           />
-                          <div className="absolute right-0 top-full mt-1.5 w-[245px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-1.5 animate-in fade-in zoom-in-95 duration-100">
+                          <div className="absolute right-0 top-full mt-1.5 w-60 bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-1.5 animate-in fade-in zoom-in-95 duration-100">
                             <div className="flex items-center justify-between pb-1 border-b border-slate-300">
                               <span className="text-sm font-semibold text-slate-800">
                                 Total Quantities Breakdown
@@ -2561,7 +2561,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         <th className="py-2.5 px-2 border-r border-slate-300 text-center w-[37px] whitespace-nowrap">S.No</th>
                         <th
                           onClick={() => handleSort("date")}
-                          className="py-2.5 px-2 border-r border-slate-300 w-[86px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 w-20 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
                           <div className="flex items-center gap-1">
                             <span>Date</span>
@@ -2574,7 +2574,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         </th>
                         <th
                           onClick={() => handleSort("customerName")}
-                          className="py-2.5 px-2.5 border-r border-slate-300 w-[158px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2.5 border-r border-slate-300 w-40 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
                           <div className="flex items-center gap-1">
                             <span>Customer Name &amp; Code</span>
@@ -2598,7 +2598,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             )}
                           </div>
                         </th>
-                        <th className="py-2.5 px-2 border-r border-slate-300 w-[86px] whitespace-nowrap">Ref No</th>
+                        <th className="py-2.5 px-2 border-r border-slate-300 w-20 whitespace-nowrap">Ref No</th>
                         <th
                           onClick={() => handleSort("productDescription")}
                           className="py-2.5 px-2.5 border-r border-slate-300 w-[166px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
@@ -2614,7 +2614,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                         </th>
                         <th
                           onClick={() => handleSort("productSegment")}
-                          className="py-2.5 px-2 border-r border-slate-300 text-center w-[86px] whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
+                          className="py-2.5 px-2 border-r border-slate-300 text-center w-20 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
                         >
                           <div className="flex items-center justify-center gap-1">
                             <span>Segment</span>
@@ -2638,7 +2638,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             )}
                           </div>
                         </th>
-                        <th className="py-2.5 px-2 border-r border-slate-300 w-[86px] whitespace-nowrap font-mono">Serial No</th>
+                        <th className="py-2.5 px-2 border-r border-slate-300 w-20 whitespace-nowrap font-mono">Serial No</th>
                         <th
                           onClick={() => handleSort("qty")}
                           className="py-2.5 px-1.5 border-r border-slate-300 text-center w-12 whitespace-nowrap cursor-pointer hover:bg-slate-200/70 select-none transition-colors"
@@ -2731,7 +2731,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                             )}
                           </div>
                         </th>
-                        <th className="py-2.5 px-2 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[65px]">Actions</th>
+                        <th className="py-2.5 px-2 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-16">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="text-xs">
@@ -2862,7 +2862,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                                           <div className="font-medium text-slate-200 border-b border-slate-700/80 pb-1 mb-px">
                                             Product Details
                                           </div>
-                                          <div className="text-slate-600 text-sm max-w-[202px] leading-tight mb-px">
+                                          <div className="text-slate-600 text-sm max-w-52 leading-tight mb-px">
                                             {product.productDescription}
                                           </div>
                                           <div className="flex items-center gap-1 text-slate-600 font-mono text-xs">
@@ -3028,15 +3028,15 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                           <td colSpan={9} className="py-2.5 px-2.5 border-r border-slate-300 text-right uppercase tracking-wider text-slate-600">
                             Total
                           </td>
-                          <td className="py-2.5 px-1.5 border-r border-slate-300 text-center font-bold text-slate-900">
+                          <td className="py-2.5 px-1.5 border-r border-slate-300 text-center font-semibold text-slate-900">
                             {quantityStats.receivedQty}
                           </td>
-                          <td className="py-2.5 px-2 border-r border-slate-300 text-right font-bold text-indigo-900">
+                          <td className="py-2.5 px-2 border-r border-slate-300 text-right font-semibold text-indigo-900">
                             {quantityStats.totalMaterialCost > 0
                               ? `₹${quantityStats.totalMaterialCost.toLocaleString()}`
                               : "—"}
                           </td>
-                          <td className="py-2.5 px-2 border-r border-slate-300 text-right font-bold text-indigo-900">
+                          <td className="py-2.5 px-2 border-r border-slate-300 text-right font-semibold text-indigo-900">
                             {quantityStats.totalManpowerCost > 0
                               ? `₹${quantityStats.totalManpowerCost.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
                               : "—"}
@@ -3108,14 +3108,14 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                     <table className="w-full text-left border-collapse">
                       <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-xs">
                         <tr>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">S.No</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">Engineer Name</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-[173px] whitespace-nowrap">Department</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Total Assigned</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">In Progress / Testing</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Review Required</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Pending / Hold</th>
-                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[130px] whitespace-nowrap">Completed</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">S.No</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">Engineer Name</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 w-44 whitespace-nowrap">Department</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-32 whitespace-nowrap">Total Assigned</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-32 whitespace-nowrap">In Progress / Testing</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-32 whitespace-nowrap">Review Required</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-32 whitespace-nowrap">Pending / Hold</th>
+                          <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-32 whitespace-nowrap">Completed</th>
                           <th className="py-2.5 px-2.5 text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-18">Action</th>
                         </tr>
                       </thead>

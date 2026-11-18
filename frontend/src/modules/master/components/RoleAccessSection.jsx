@@ -840,7 +840,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           </div>
 
           {/* Searchable Multi-select Employees Dropdown */}
-          <div className="w-[245px] flex-shrink-0">
+          <div className="w-60 flex-shrink-0">
             <CustomDropdown
               multiple
               searchable
@@ -1005,7 +1005,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <h3 className="text-xs font-bold text-gray-800">
               Select an Employee First
             </h3>
-            <p className="text-xs text-gray-700 max-w-[403px] mt-1.5 leading-relaxed">
+            <p className="text-xs text-gray-700 max-w-96 mt-1.5 leading-relaxed">
               Please choose at least one employee from the <span className="font-semibold text-gray-700">"Employees"</span> dropdown above to {accessMode === "preset" ? "apply role presets" : "view, configure, and customize module permissions"}.
             </p>
           </div>
@@ -1022,7 +1022,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-[19px]">
                 {/* 1. Admin Preset */}
-                <div className="border border-purple-200 rounded-xl p-[19px] bg-white flex flex-col justify-between hover:border-purple-400 hover:shadow-lg transition-all min-h-[317px]">
+                <div className="border border-purple-200 rounded-xl p-5 bg-white flex flex-col justify-between hover:border-purple-400 hover:shadow-lg transition-all min-h-[317px]">
                   <div className="space-y-3.5">
                     <div className="flex items-center gap-2.5">
                       <div className="w-9 h-9 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600 flex-shrink-0 shadow-2xs">
@@ -1057,7 +1057,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 </div>
 
                 {/* 2. Supervisor Preset */}
-                <div className="border border-indigo-200 rounded-xl p-[19px] bg-white flex flex-col justify-between hover:border-indigo-400 hover:shadow-lg transition-all min-h-[317px]">
+                <div className="border border-indigo-200 rounded-xl p-5 bg-white flex flex-col justify-between hover:border-indigo-400 hover:shadow-lg transition-all min-h-[317px]">
                   <div className="space-y-3.5">
                     <div className="flex items-center gap-2.5">
                       <div className="w-9 h-9 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 flex-shrink-0 shadow-2xs">
@@ -1091,7 +1091,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 </div>
 
                 {/* 3. User Preset */}
-                <div className="border border-blue-200 rounded-xl p-[19px] bg-white flex flex-col justify-between hover:border-blue-400 hover:shadow-lg transition-all min-h-[317px]">
+                <div className="border border-blue-200 rounded-xl p-5 bg-white flex flex-col justify-between hover:border-blue-400 hover:shadow-lg transition-all min-h-[317px]">
                   <div className="space-y-3.5">
                     <div className="flex items-center gap-2.5">
                       <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 flex-shrink-0 shadow-2xs">
@@ -1287,7 +1287,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
       {/* ── Custom Confirmation Modal ── */}
       {confirmModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-3.5">
-          <div className="bg-white rounded-lg shadow-xl border border-gray-200 w-full max-w-[403px] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-lg shadow-xl border border-gray-200 w-full max-w-96 overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
             {/* Modal Header */}
             <div className="p-4 border-b border-gray-100 flex items-start gap-3">
               <div

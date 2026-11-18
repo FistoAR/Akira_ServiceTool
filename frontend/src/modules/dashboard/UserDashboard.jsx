@@ -65,7 +65,7 @@ export default function UserDashboard({ stats, navigate }) {
                     <p className="font-mono text-sm font-bold text-indigo-700">
                       {call.callNumber}
                     </p>
-                    <p className="text-sm text-slate-700 font-semibold mt-px truncate max-w-[230px]">
+                    <p className="text-sm text-slate-700 font-semibold mt-px truncate max-w-60">
                       {call.customerName}
                     </p>
                   </div>
@@ -112,10 +112,10 @@ export default function UserDashboard({ stats, navigate }) {
                     flex items-center justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="font-bold text-sm text-slate-800 truncate max-w-[230px]">
+                    <p className="font-bold text-sm text-slate-800 truncate max-w-60">
                       {product.productDescription || "Product Item"}
                     </p>
-                    <p className="text-xs text-slate-700 mt-px truncate max-w-[230px]">
+                    <p className="text-xs text-slate-700 mt-px truncate max-w-60">
                       SN: {product.serialNumber || "N/A"} · {entry.customerName || "N/A"}
                     </p>
                   </div>

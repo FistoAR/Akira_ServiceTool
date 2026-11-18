@@ -65,7 +65,7 @@ export const AssignVisitModal = ({
           Assign To *
         </label>
         <div className="relative flex items-center">
-          <div className="absolute left-[9px] flex items-center justify-center pointer-events-none">
+          <div className="absolute left-2 flex items-center justify-center pointer-events-none">
             <Search className="h-3.5 w-3.5 text-slate-700" />
           </div>
           <input
@@ -232,7 +232,7 @@ export const AssignVisitModal = ({
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[547px] rounded-2xl shadow-2xl overflow-hidden border border-slate-400"
+        className="bg-white w-xl rounded-2xl shadow-2xl overflow-hidden border border-slate-400"
       >
         <div className="border-b border-slate-400 px-5 py-3.5 flex justify-between items-center bg-slate-50">
           <h3 className="text-xs font-bold text-slate-850">Assign {type}</h3>

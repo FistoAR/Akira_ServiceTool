@@ -364,7 +364,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                   <div className="mt-3 space-y-2 text-xs">
                     <div className="flex items-start justify-between gap-3">
                       <span className="text-slate-700 font-normal">Customer Name</span>
-                      <span className="font-normal text-slate-800 text-right max-w-[259px] leading-snug">
+                      <span className="font-normal text-slate-800 text-right max-w-64 leading-snug">
                         {call.customerName || "—"}
                       </span>
                     </div>
@@ -415,7 +415,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                     <div className="flex items-start justify-between gap-3">
                       <span className="text-slate-700 font-normal">Location</span>
-                      <span className="font-normal text-slate-800 text-right flex items-start justify-end gap-1 max-w-[259px] leading-snug">
+                      <span className="font-normal text-slate-800 text-right flex items-start justify-end gap-1 max-w-64 leading-snug">
                         <MapPin className="w-2.5 h-2.5 text-slate-700 shrink-0 mt-0.5" />
                         <span>{call.location || "—"}</span>
                       </span>
@@ -742,7 +742,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                 return (
                   <div className="relative pl-7 space-y-2.5">
                     {/* Vertical timeline line precisely running through the dot column */}
-                    <div className="absolute left-[10px] -translate-x-1/2 top-[9px] bottom-[9px] w-0.5 bg-slate-200 pointer-events-none" />
+                    <div className="absolute left-2.5 -translate-x-1/2 top-2 bottom-2 w-0.5 bg-slate-200 pointer-events-none" />
 
                     {timelineEvents.map((ev, i) => {
                       const isCritical = ev.title.includes("Critical");
@@ -765,9 +765,9 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                       return (
                         <div key={i} className="relative group">
-                          {/* Dot positioned cleanly in the gutter at -left-[19px], exactly centered on the line at left-[10px] */}
+                          {/* Dot positioned cleanly in the gutter at -left-[19px], exactly centered on the line at left-2.5 */}
                           <div
-                            className={`absolute -left-[19px] -translate-x-1/2 top-[10px] w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
+                            className={`absolute -left-[19px] -translate-x-1/2 top-2.5 w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10`}
                           />
 
                           <div className={`border rounded-lg p-2.5 transition-colors ${cardBorder} hover:bg-white`}>

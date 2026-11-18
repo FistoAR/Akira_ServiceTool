@@ -74,13 +74,13 @@ const PendingTab = ({
               <th className="py-2.5 px-2.5 border-r border-slate-300 w-[151px] whitespace-nowrap">
                 Date & Time
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">
                 Call No
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                 Customer
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                 Product / Issue
               </th>
               <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[94px] whitespace-nowrap">
@@ -89,10 +89,10 @@ const PendingTab = ({
               <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[94px] whitespace-nowrap">
                 Priority
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                 Pending Remarks
               </th>
-              <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[137px]">
+              <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-36">
                 Actions
               </th>
             </tr>
@@ -194,7 +194,7 @@ const PendingTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-[202px]"
+                          className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-52"
                         >
                           <CustomerInfoCell
                             customerName={
@@ -217,7 +217,7 @@ const PendingTab = ({
                         </td>
                       )}
 
-                      <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[202px]">
+                      <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-52">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"

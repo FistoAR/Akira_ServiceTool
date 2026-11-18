@@ -218,7 +218,7 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
           <Plus className="w-3.5 h-3.5" /> Add Level
         </button>
         {showPicker && availableToAdd.length > 0 && (
-          <div className="absolute top-full left-0 mt-1.5 bg-white border border-slate-400 rounded-md shadow-lg z-40 overflow-hidden min-w-[173px]">
+          <div className="absolute top-full left-0 mt-1.5 bg-white border border-slate-400 rounded-md shadow-lg z-40 overflow-hidden min-w-44">
             {availableToAdd.map((d) => (
               <button
                 key={d}

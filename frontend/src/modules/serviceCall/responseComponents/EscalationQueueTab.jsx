@@ -81,19 +81,19 @@ export const EscalationQueueTab = ({
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-xs">
               <tr>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[43px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-11 whitespace-nowrap">
                   S.No
                 </th>
                 <th className="py-2.5 px-2.5 border-r border-slate-300 w-[151px] whitespace-nowrap">
                   Date & Time
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 w-[130px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 w-32 whitespace-nowrap">
                   Call No
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                   Customer
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 w-[202px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 w-52 whitespace-nowrap">
                   Product / Issue
                 </th>
                 <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[94px] whitespace-nowrap">
@@ -105,13 +105,13 @@ export const EscalationQueueTab = ({
                 <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[122px] whitespace-nowrap">
                   SLA Timer
                 </th>
-                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[101px] whitespace-nowrap">
+                <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-24 whitespace-nowrap">
                   Origin
                 </th>
                 <th className="py-2.5 px-2.5 border-r border-slate-300 text-center w-[108px] whitespace-nowrap">
                   Status
                 </th>
-                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[137px]">
+                <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-36">
                   Actions
                 </th>
               </tr>
@@ -209,7 +209,7 @@ export const EscalationQueueTab = ({
                         {pIdx === 0 && (
                           <td
                             rowSpan={rowCount}
-                            className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-[202px]"
+                            className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-52"
                           >
                             <CustomerInfoCell
                               customerName={row.customerName || row.partyDescription}
@@ -231,7 +231,7 @@ export const EscalationQueueTab = ({
                         )}
 
                         {/* Product / Issue */}
-                        <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[202px]">
+                        <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-52">
                           <CustomTooltip
                             position="top-start"
                             className="max-w-full"
@@ -328,7 +328,7 @@ export const EscalationQueueTab = ({
                                 {prod._isReverseEscalated && (
                                   <span
                                     title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                    className="inline-flex items-center justify-center w-3.5 h-3.5 rounded bg-rose-200/80 text-rose-800 font-bold text-xs border border-rose-300 select-none cursor-help mr-px"
+                                    className="inline-flex items-center justify-center w-3.5 h-3.5 rounded bg-rose-200/80 text-rose-800 font-semibold text-xs border border-rose-300 select-none cursor-help mr-px"
                                   >
                                     R
                                   </span>
@@ -353,7 +353,7 @@ export const EscalationQueueTab = ({
                                   <span className="inline-flex items-center gap-1 font-mono text-sm font-normal px-2 py-0.5 rounded-full border shadow-2xs bg-rose-50 text-rose-800 border-rose-200">
                                     <span
                                       title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                      className="inline-flex items-center justify-center w-3.5 h-3.5 rounded bg-rose-200/80 text-rose-800 font-bold text-xs border border-rose-300 select-none cursor-help mr-px"
+                                      className="inline-flex items-center justify-center w-3.5 h-3.5 rounded bg-rose-200/80 text-rose-800 font-semibold text-xs border border-rose-300 select-none cursor-help mr-px"
                                     >
                                       R
                                     </span>
@@ -511,7 +511,7 @@ export const EscalationQueueTab = ({
                 })
               ) : (
                 <tr>
-                  <td colSpan="11" className="py-[10vh] text-center text-slate-700 font-bold">
+                  <td colSpan="11" className="py-[10vh] text-center text-slate-700 font-semibold">
                     No active calls in your escalation queue. All assigned tasks have been attended or resolved.
                   </td>
                 </tr>

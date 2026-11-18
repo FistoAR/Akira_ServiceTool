@@ -151,13 +151,13 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
               <p className="text-sm text-gray-700">Segment-specific serial index decoders and resolution SLA targets</p>
             </div>
             <div className="relative">
-              <Search className="absolute left-[9px] top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
               <input
                 type="text"
                 placeholder="Search rules..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-[173px] pl-6.5 pr-2.5 py-1 border border-gray-200 rounded-md text-xs outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-44 pl-6.5 pr-2.5 py-1 border border-gray-200 rounded-md text-xs outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
@@ -165,7 +165,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
           <div className="flex-1 overflow-hidden border border-gray-200 rounded-lg bg-white flex flex-col shadow-2xs">
             <div className="flex-1 overflow-y-auto">
               {paginatedRules.length === 0 ? (
-                <div className="p-[43px] text-center text-gray-700 text-xs">
+                <div className="p-11 text-center text-gray-700 text-xs">
                   {searchTerm ? "No warranty rules match your search." : "No warranty rules defined yet."}
                 </div>
               ) : (

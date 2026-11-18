@@ -1725,8 +1725,8 @@ export default function ServiceCall() {
             {/* ── 1. Top Level Scoping Toolbar: Search, Date Range, Priority & Action ── */}
             <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
               {/* Left side: Soft Pill Search Box */}
-              <div className="relative w-[259px]">
-                <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+              <div className="relative w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
                 <input
                   type="text"
                   placeholder="Search customer, call no, engineer..."
@@ -1737,7 +1737,7 @@ export default function ServiceCall() {
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
                   >
                     <X className="w-2.5 h-2.5" />
                   </button>
@@ -1841,7 +1841,7 @@ export default function ServiceCall() {
                 </AnimatePresence>
 
                 {/* Priority Dropdown (Pill shaped) */}
-                <div className="w-[137px]">
+                <div className="w-36">
                   <CustomDropdown
                     size="sm"
                     value={filterPriority}
@@ -1946,25 +1946,25 @@ export default function ServiceCall() {
                       <th className="py-2.5 px-2.5 border-r border-slate-300 text-center whitespace-nowrap w-12">
                         S.No
                       </th>
-                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[158px]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-40">
                         Call No & Date
                       </th>
-                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[216px]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-56">
                         Customer
                       </th>
-                      <th className="py-2.5 px-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-[101px]">
+                      <th className="py-2.5 px-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-24">
                         Customer Type
                       </th>
-                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[216px]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-56">
                         Product / System
                       </th>
                       <th className="py-2.5 px-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-[94px]">
                         Priority
                       </th>
-                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[115px]">
+                      <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-28">
                         Status
                       </th>
-                      <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[86px]">
+                      <th className="py-2.5 px-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-20">
                         Actions
                       </th>
                     </tr>
@@ -1985,7 +1985,7 @@ export default function ServiceCall() {
                               <button
                                 type="button"
                                 onClick={selectAllFiltered}
-                                className="font-bold text-blue-700 hover:text-blue-900 underline hover:no-underline cursor-pointer transition-colors"
+                                className="font-semibold text-blue-700 hover:text-blue-900 underline hover:no-underline cursor-pointer transition-colors"
                               >
                                 Select all {filteredData.length} calls
                               </button>
@@ -1998,7 +1998,7 @@ export default function ServiceCall() {
                               <button
                                 type="button"
                                 onClick={clearAllSelected}
-                                className="font-bold text-rose-600 hover:text-rose-800 underline hover:no-underline cursor-pointer transition-colors ml-1"
+                                className="font-semibold text-rose-600 hover:text-rose-800 underline hover:no-underline cursor-pointer transition-colors ml-1"
                               >
                                 Clear selection
                               </button>
@@ -2011,7 +2011,7 @@ export default function ServiceCall() {
                       <tr>
                         <td colSpan={9} className="py-[10vh] text-center border-b border-slate-300">
                           <div className="flex flex-col items-center justify-center gap-3.5">
-                            <Loader2 className="w-[43px] h-[43px] animate-spin text-blue-600" />
+                            <Loader2 className="w-11 h-11 animate-spin text-blue-600" />
                             <span className="text-xs font-medium text-blue-600">
                               Loading Service Calls...
                             </span>
@@ -2143,7 +2143,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[216px] ${cellBg}`}
+                                  className={`py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-56 ${cellBg}`}
                                 >
                                   <CustomerInfoCell
                                     customerName={row.customerName}
@@ -2182,7 +2182,7 @@ export default function ServiceCall() {
                               )}
 
                               {/* 3. Product / System */}
-                              <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[216px]">
+                              <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-56">
                                 <CustomTooltip
                                   position="top-start"
                                   className="max-w-full"
@@ -2337,7 +2337,7 @@ export default function ServiceCall() {
                                           animate={{ opacity: 1, scale: 1, y: 0 }}
                                           exit={{ opacity: 0, scale: 0.95, y: -5 }}
                                           transition={{ duration: 0.12 }}
-                                          className="min-w-[144px] w-max whitespace-nowrap bg-white rounded-lg shadow-2xl border border-slate-300 py-1.5 text-left"
+                                          className="min-w-36 w-max whitespace-nowrap bg-white rounded-lg shadow-2xl border border-slate-300 py-1.5 text-left"
                                         >
                                           <button
                                             onClick={() => {
@@ -2410,7 +2410,7 @@ export default function ServiceCall() {
                             <div className="w-[52px] h-[52px] rounded-full bg-slate-100 flex items-center justify-center text-slate-700">
                               <PhoneCall className="w-6.5 h-6.5" />
                             </div>
-                            <span className="text-sm font-bold text-slate-700">No service calls found</span>
+                            <span className="text-sm font-semibold text-slate-700">No service calls found</span>
                             <span className="text-xs text-slate-700 max-w-[317px]">
                               {searchTerm || filterFromDate || filterToDate || filterStatus !== "All" || filterPriority !== "All"
                                 ? "No records match your active filters. Try adjusting your dates, search query or status tab."

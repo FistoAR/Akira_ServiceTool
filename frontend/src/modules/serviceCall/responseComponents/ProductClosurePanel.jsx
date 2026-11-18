@@ -102,7 +102,7 @@ const ProductClosurePanel = ({
         {currentBadge.icon}
         <span>{currentBadge.label}</span>
         {existing.remarks && (
-          <span className="text-sm text-slate-600 truncate max-w-[173px] font-normal">
+          <span className="text-sm text-slate-600 truncate max-w-44 font-normal">
             - {existing.remarks}
           </span>
         )}

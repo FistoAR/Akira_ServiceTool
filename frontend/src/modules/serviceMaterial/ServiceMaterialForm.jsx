@@ -876,20 +876,20 @@ const ServiceMaterialForm = ({
             <div className="grid grid-cols-4 gap-4">
               {/* Row 1, Col 1: Date */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-700 flex items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex items-center h-5">
                   Date
                 </label>
                 <input
                   readOnly
                   value={fmtDate(base.date)}
-                  className="bg-slate-100/70 border border-slate-300 rounded-lg h-[33px] px-3 text-xs text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border border-slate-300 rounded-lg h-8 px-3 text-xs text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               </div>
 
               {/* Row 1, Col 2: Reference No (Customer) */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-700 flex items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex items-center h-5">
                   Reference No <span className="text-slate-700 font-normal ml-1">(Customer)</span>
                 </label>
                 <input
@@ -898,13 +898,13 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoCustomer", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter customer ref no…"
-                  className="w-full border border-slate-300 rounded-lg h-[33px] px-3 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-300 rounded-lg h-8 px-3 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
               {/* Row 1, Col 3: Reference No (Internal) */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-700 flex items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex items-center h-5">
                   Reference No <span className="text-slate-700 font-normal ml-1">(Internal)</span>
                 </label>
                 <input
@@ -913,13 +913,13 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoInternal", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter internal ref no…"
-                  className="w-full border border-slate-300 rounded-lg h-[33px] px-3 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-300 rounded-lg h-8 px-3 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
               {/* Row 1, Col 4: Category */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-700 flex items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex items-center h-5">
                   Category
                 </label>
                 <CustomDropdown
@@ -939,13 +939,13 @@ const ServiceMaterialForm = ({
                       label: t.name,
                     })),
                   ]}
-                  triggerClassName="h-[33px] !rounded-lg border-slate-300 text-xs text-slate-800 bg-white"
+                  triggerClassName="h-8 !rounded-lg border-slate-300 text-xs text-slate-800 bg-white"
                 />
               </div>
 
               {/* Row 2, Col 1-2: Customer Name (col-span-2) */}
               <div className="col-span-2 flex flex-col gap-1.5 relative" ref={custRef}>
-                <label className="text-xs font-medium text-slate-700 flex justify-between items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex justify-between items-center h-5">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                     {base.customerCode && (
@@ -960,7 +960,7 @@ const ServiceMaterialForm = ({
                 </label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <Search className="absolute left-[10px] top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-700" />
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-700" />
                     <input
                       type="text"
                       value={custSearch}
@@ -982,7 +982,7 @@ const ServiceMaterialForm = ({
                       }}
                       disabled={isReadOnly}
                       placeholder="Search & select customer…"
-                      className="w-full border border-slate-300 rounded-lg pl-8 pr-7 h-[33px] bg-white text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                      className="w-full border border-slate-300 rounded-lg pl-8 pr-7 h-8 bg-white text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -994,7 +994,7 @@ const ServiceMaterialForm = ({
                           setProducts([emptyProduct()]);
                           setShowCustDrop(false);
                         }}
-                        className="absolute right-[9px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
                         title="Clear Customer"
                       >
                         <X className="w-3 h-3" />
@@ -1022,7 +1022,7 @@ const ServiceMaterialForm = ({
                         });
                         setShowAddCustModal(true);
                       }}
-                      className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3.5 h-[33px] rounded-lg cursor-pointer text-xs font-medium transition-colors shrink-0 shadow-xs"
+                      className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3.5 h-8 rounded-lg cursor-pointer text-xs font-medium transition-colors shrink-0 shadow-xs"
                     >
                       <UserPlus className="w-3.5 h-3.5" />
                       <span>New</span>
@@ -1068,7 +1068,7 @@ const ServiceMaterialForm = ({
 
               {/* Row 2, Col 3: Unit (comes before site) */}
               <div className="col-span-1 flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-700 flex items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex items-center h-5">
                   Unit
                 </label>
                 <CustomDropdown
@@ -1083,13 +1083,13 @@ const ServiceMaterialForm = ({
                       label: u.name,
                     })),
                   ]}
-                  triggerClassName="h-[33px] !rounded-lg border-slate-300 text-xs text-slate-800 bg-white"
+                  triggerClassName="h-8 !rounded-lg border-slate-300 text-xs text-slate-800 bg-white"
                 />
               </div>
 
               {/* Row 2, Col 4: Site (mandatory with *) */}
               <div className="col-span-1 flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-slate-700 flex items-center h-[19px]">
+                <label className="text-xs font-medium text-slate-700 flex items-center h-5">
                   Site <span className="text-rose-500">*</span>
                 </label>
                 <CustomDropdown
@@ -1104,7 +1104,7 @@ const ServiceMaterialForm = ({
                       label: s.name,
                     })),
                   ]}
-                  triggerClassName="h-[33px] !rounded-lg border-slate-300 text-xs text-slate-800 bg-white"
+                  triggerClassName="h-8 !rounded-lg border-slate-300 text-xs text-slate-800 bg-white"
                 />
               </div>
             </div>

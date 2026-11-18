@@ -77,7 +77,7 @@ const ToastItem = ({ toast, onRemove }) => {
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`pointer-events-auto flex items-center gap-3 px-3.5 py-2.5 rounded-full bg-white shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] max-w-[490px] w-fit min-w-[259px] border ${styles.border}`}
+      className={`pointer-events-auto flex items-center gap-3 px-3.5 py-2.5 rounded-full bg-white shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] max-w-[490px] w-fit min-w-64 border ${styles.border}`}
     >
       {/* Solid Filled Circular Icon Badge */}
       <div
@@ -101,7 +101,7 @@ const ToastItem = ({ toast, onRemove }) => {
 
       {/* Minimal Close 'X' Button */}
       <button
-        className="w-[19px] h-[19px] rounded-full flex items-center justify-center text-slate-700 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors flex-shrink-0"
+        className="w-5 h-5 rounded-full flex items-center justify-center text-slate-700 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors flex-shrink-0"
         onClick={onRemove}
         title="Dismiss"
       >

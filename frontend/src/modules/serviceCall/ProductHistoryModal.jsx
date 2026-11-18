@@ -131,7 +131,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                   <div className="flex flex-col items-center">
                     <div className={`w-2 h-2 rounded-full mt-1 z-10 ${isSlaBreached ? 'bg-rose-500' : 'bg-slate-400'}`} />
                     {i !== sortedHistory.length - 1 && (
-                      <div className="w-px h-full bg-slate-200 absolute top-[9px] bottom-[-12px] left-[4px]" />
+                      <div className="w-px h-full bg-slate-200 absolute top-2 bottom-[-12px] left-[4px]" />
                     )}
                   </div>
                   <div className={`flex-1 rounded-lg p-2.5 shadow-xs bg-white border ${
@@ -174,7 +174,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                 <div className="flex flex-col items-center">
                   <div className={`w-2 h-2 rounded-full mt-1 z-10 ${isHighlightedEvent ? 'bg-blue-500 ring-2 ring-blue-100' : 'bg-indigo-500'}`} />
                   {i !== sortedHistory.length - 1 && (
-                    <div className="w-px h-full bg-slate-200 absolute top-[9px] bottom-[-12px] left-[4px]" />
+                    <div className="w-px h-full bg-slate-200 absolute top-2 bottom-[-12px] left-[4px]" />
                   )}
                 </div>
                 <div className={`flex-1 rounded-lg p-2.5 shadow-xs bg-white border ${
@@ -313,7 +313,7 @@ export const ProductHistoryModal = ({ history, employees, currentUser, onClose }
       >
         <div className="p-4 border-b border-slate-200 bg-white flex justify-between items-center">
           <h2 className="text-xs font-bold text-slate-900 flex items-center gap-2">
-            <History className="w-[19px] h-[19px] text-indigo-600" />
+            <History className="w-5 h-5 text-indigo-600" />
             Product History
           </h2>
           <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">

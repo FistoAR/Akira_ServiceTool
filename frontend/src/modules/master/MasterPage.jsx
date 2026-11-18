@@ -26,7 +26,7 @@ import ColumnVisibilitySection from "./components/ColumnVisibilitySection";
 
 
 const TabContentLoader = () => (
-  <div className="flex-1 w-full flex flex-col items-center justify-center gap-3 p-[43px] bg-white min-h-[40vh]">
+  <div className="flex-1 w-full flex flex-col items-center justify-center gap-3 p-11 bg-white min-h-[40vh]">
     <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
     <span className="text-xs text-slate-700 font-medium">Loading details...</span>
   </div>

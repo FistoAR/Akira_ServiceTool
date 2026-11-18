@@ -260,7 +260,7 @@ const EmptyState = () => (
     <h3 className="text-xs font-semibold text-gray-700 mb-1">
       No Products Assigned
     </h3>
-    <p className="text-xs text-gray-800 text-center max-w-[259px]">
+    <p className="text-xs text-gray-800 text-center max-w-64">
       You don't have any inward products assigned to you at the moment.
     </p>
   </motion.div>
@@ -1398,37 +1398,37 @@ export default function ServiceMaterialInwardResponse({
 
   const columns = [
     { key: "sno", label: "S. No", align: "text-center" },
-    { key: "date", label: "Date", align: "text-left", minW: "min-w-[101px]" },
-    { key: "ref", label: "Ref No", align: "text-left", minW: "min-w-[101px]" },
+    { key: "date", label: "Date", align: "text-left", minW: "min-w-24" },
+    { key: "ref", label: "Ref No", align: "text-left", minW: "min-w-24" },
     {
       key: "product",
       label: "Product",
       align: "text-left",
-      minW: "min-w-[173px]",
+      minW: "min-w-44",
     },
     {
       key: "board",
       label: "Board Type",
       align: "text-left",
-      minW: "min-w-[115px]",
+      minW: "min-w-28",
     },
     {
       key: "serial",
       label: "Serial No",
       align: "text-left",
-      minW: "min-w-[115px]",
+      minW: "min-w-28",
     },
     {
       key: "testedBy",
       label: "Tested By",
       align: "text-left",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "fqaBy",
       label: "FQA By",
       align: "text-left",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "fourM",
@@ -1438,13 +1438,13 @@ export default function ServiceMaterialInwardResponse({
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "errorCode",
       label: "Error Code",
       align: "text-left",
-      minW: "min-w-[115px]",
+      minW: "min-w-28",
     },
     {
       key: "problemDesc",
@@ -1454,25 +1454,25 @@ export default function ServiceMaterialInwardResponse({
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[173px]",
+      minW: "min-w-44",
     },
     {
       key: "pv",
       label: "PV",
       align: "text-left",
-      minW: "min-w-[101px]",
+      minW: "min-w-24",
     },
     {
       key: "cv",
       label: "CV",
       align: "text-left",
-      minW: "min-w-[101px]",
+      minW: "min-w-24",
     },
     {
       key: "designators",
       label: "Designators",
       align: "text-left",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "rootCause",
@@ -1482,19 +1482,19 @@ export default function ServiceMaterialInwardResponse({
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[173px]",
+      minW: "min-w-44",
     },
     {
       key: "faultParts",
       label: "Fault Parts",
       align: "text-left",
-      minW: "min-w-[158px]",
+      minW: "min-w-40",
     },
     {
       key: "partsReplaced",
       label: "Parts Replaced",
       align: "text-left",
-      minW: "min-w-[173px]",
+      minW: "min-w-44",
     },
     {
       key: "correctiveAction",
@@ -1504,31 +1504,31 @@ export default function ServiceMaterialInwardResponse({
         </span>
       ),
       align: "text-left",
-      minW: "min-w-[173px]",
+      minW: "min-w-44",
     },
     {
       key: "timeInHours",
       label: "Time (Hrs)",
       align: "text-center",
-      minW: "min-w-[101px]",
+      minW: "min-w-24",
     },
     {
       key: "materialCost",
       label: "Material Cost",
       align: "text-right",
-      minW: "min-w-[115px]",
+      minW: "min-w-28",
     },
     {
       key: "manpowerCost",
       label: "Man Power Cost",
       align: "text-right",
-      minW: "min-w-[130px]",
+      minW: "min-w-32",
     },
     {
       key: "disposition",
       label: "Disposition",
       align: "text-left",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "status",
@@ -1538,33 +1538,33 @@ export default function ServiceMaterialInwardResponse({
         </span>
       ),
       align: "text-center",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "completionDate",
       label: "Completion Date",
       align: "text-left",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
     {
       key: "remarks",
       label: "Action Remark",
       align: "text-center",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
-    { key: "image", label: "Image", align: "text-center", minW: "min-w-[86px]" },
+    { key: "image", label: "Image", align: "text-center", minW: "min-w-20" },
     { key: "info", label: "Info", align: "text-center" },
     {
       key: "history",
       label: "History",
       align: "text-center",
-      minW: "min-w-[86px]",
+      minW: "min-w-20",
     },
     {
       key: "action",
       label: "Action",
       align: "text-center",
-      minW: "min-w-[144px]",
+      minW: "min-w-36",
     },
   ];
 
@@ -1731,8 +1731,8 @@ export default function ServiceMaterialInwardResponse({
           {/* Left Controls: Search, Serials & More Filters Toggle */}
           <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Search Input */}
-            <div className="relative w-[259px] min-w-[187px] flex-shrink-0">
-              <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+            <div className="relative w-64 min-w-[187px] flex-shrink-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
               <input
                 type="text"
                 placeholder="Search product, customer, ref no…"
@@ -1743,7 +1743,7 @@ export default function ServiceMaterialInwardResponse({
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
                 >
                   <X className="w-2.5 h-2.5" />
                 </button>
@@ -1778,7 +1778,7 @@ export default function ServiceMaterialInwardResponse({
 
               {/* Anchored Popover directly below the button */}
               {showSerialFilterModal && (
-                <div className="absolute left-0 top-full mt-1.5 w-[274px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute left-0 top-full mt-1.5 w-72 bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         <span className="text-sm font-bold text-slate-800">
@@ -1879,7 +1879,7 @@ export default function ServiceMaterialInwardResponse({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowFiltersPanel(false)}
                   />
-                  <div className="absolute left-0 top-full mt-1.5 w-[259px] bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute left-0 top-full mt-1.5 w-64 bg-white border border-slate-300 rounded-lg shadow-xl z-50 p-3 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-100">
                     {/* Date Range */}
                     <div>
                       <label className="block text-sm text-slate-700 font-semibold mb-1">
@@ -2306,7 +2306,7 @@ export default function ServiceMaterialInwardResponse({
 
                           {/* Product */}
                           <td className="py-2.5 px-2.5 border-r border-b border-slate-300">
-                            <div className="min-w-[144px]">
+                            <div className="min-w-36">
                               <div
                                 className="text-xs font-medium text-black break-words whitespace-normal"
                                 title={product.productDescription}
@@ -2356,7 +2356,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "testedBy")}
                           >
                             {draft ? (
-                              <div className="min-w-[115px]">
+                              <div className="min-w-28">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2386,7 +2386,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "fqaBy")}
                           >
                             {draft ? (
-                              <div className="min-w-[115px]">
+                              <div className="min-w-28">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2416,7 +2416,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "fourM")}
                           >
                             {draft ? (
-                              <div className="min-w-[115px]">
+                              <div className="min-w-28">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2452,7 +2452,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[86px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-20"
                                 placeholder="Code..."
                               />
                             ) : (
@@ -2477,7 +2477,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-36"
                                 placeholder="Problem..."
                               />
                             ) : (
@@ -2499,7 +2499,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
                                 onChange={(e) => hc("pv", e.target.value)}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[86px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-20"
                                 placeholder="PV..."
                               />
                             ) : (
@@ -2521,7 +2521,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
                                 onChange={(e) => hc("cv", e.target.value)}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[86px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-20"
                                 placeholder="CV..."
                               />
                             ) : (
@@ -2545,7 +2545,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[115px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-28"
                                 placeholder="Designator..."
                               />
                             ) : (
@@ -2569,7 +2569,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px] resize-y min-h-[22px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-36 resize-y min-h-[22px]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
@@ -2591,7 +2591,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.faultParts || ""}
                                 onChange={(e) => hc("faultParts", e.target.value)}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[130px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-32"
                                 placeholder="Fault Parts..."
                               />
                             ) : (
@@ -2615,7 +2615,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px] resize-y min-h-[22px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-36 resize-y min-h-[22px]"
                                 placeholder="Parts..."
                               />
                             ) : (
@@ -2639,7 +2639,7 @@ export default function ServiceMaterialInwardResponse({
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[144px] resize-y min-h-[22px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-36 resize-y min-h-[22px]"
                                 placeholder="Action..."
                               />
                             ) : (
@@ -2683,7 +2683,7 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.materialCost || ""}
                                 onChange={(e) => hc("materialCost", e.target.value)}
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs text-right min-w-[86px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs text-right min-w-20"
                                 placeholder="Cost e.g. 1500"
                               />
                             ) : (
@@ -2712,7 +2712,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "disposition")}
                           >
                             {draft ? (
-                              <div className="min-w-[115px]">
+                              <div className="min-w-28">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2741,7 +2741,7 @@ export default function ServiceMaterialInwardResponse({
                             onMouseEnter={() => handleCellMouseEnter(idx, "status")}
                           >
                             {draft ? (
-                              <div className="min-w-[130px]">
+                              <div className="min-w-32">
                                 <CustomDropdown
                                   size="sm"
                                   usePortal={true}
@@ -2780,7 +2780,7 @@ export default function ServiceMaterialInwardResponse({
                                   onChange={(e) =>
                                     hc("completedDate", e.target.value)
                                   }
-                                  className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[115px]"
+                                  className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-28"
                                 />
                               ) : (
                                 <span className="text-xs whitespace-nowrap font-medium text-slate-800">
@@ -2808,7 +2808,7 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-[115px]"
+                                className="w-full text-xs bg-white border border-slate-300 rounded-md px-2 py-1 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-700 shadow-2xs min-w-28"
                                 placeholder="Remark..."
                               />
                             ) : (
@@ -2820,7 +2820,7 @@ export default function ServiceMaterialInwardResponse({
                           </td>
 
                           <td
-                            className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center min-w-[115px] transition-colors ${
+                            className={`py-2.5 px-2.5 border-r border-b border-slate-300 text-center min-w-28 transition-colors ${
                               dragOverPid === product._pid ? "bg-blue-100/60 ring-2 ring-blue-500 ring-inset" : ""
                             }`}
                             onDragOver={(e) => {
@@ -2928,7 +2928,7 @@ export default function ServiceMaterialInwardResponse({
                                         />
 
                                         {/* Hover Preview Tooltip */}
-                                        <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+7px)] z-50 bg-white border border-slate-300 rounded-lg shadow-xl p-1.5 w-[173px] pointer-events-none">
+                                        <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+7px)] z-50 bg-white border border-slate-300 rounded-lg shadow-xl p-1.5 w-44 pointer-events-none">
                                           <img
                                             src={
                                               draft.imagePreview ||
@@ -2989,7 +2989,7 @@ export default function ServiceMaterialInwardResponse({
                                     />
 
                                     {/* Hover Preview Tooltip */}
-                                    <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+7px)] z-50 bg-white border border-slate-300 rounded-lg shadow-xl p-1.5 w-[173px] pointer-events-none">
+                                    <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-[calc(100%+7px)] z-50 bg-white border border-slate-300 rounded-lg shadow-xl p-1.5 w-44 pointer-events-none">
                                       <img
                                         src={
                                           product.report.image.startsWith("http")
@@ -3185,7 +3185,7 @@ export default function ServiceMaterialInwardResponse({
                               <div className="flex items-center justify-center gap-1.5">
                                 {isAdminReturnedProduct ? (
                                   <span
-                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
                                     title={`Admin Declined: ${product.finalStatusRemarks || "Needs correction"}`}
                                   >
                                     <AlertTriangle className="w-2.5 h-2.5 text-rose-600" />
@@ -3193,7 +3193,7 @@ export default function ServiceMaterialInwardResponse({
                                   </span>
                                 ) : (
                                   <span
-                                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
+                                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
                                   >
                                     <StatusIcon className="w-2.5 h-2.5" />
                                     {pStatus}
@@ -3226,7 +3226,7 @@ export default function ServiceMaterialInwardResponse({
                             ) : (
                               <div className="flex items-center justify-center gap-1.5">
                                 <span
-                                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
+                                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
                                 >
                                   <StatusIcon className="w-2.5 h-2.5" />
                                   {pStatus}
@@ -3383,7 +3383,7 @@ export default function ServiceMaterialInwardResponse({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-[605px] max-h-[85vh] flex flex-col overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-2xl max-h-[85vh] flex flex-col overflow-hidden"
             >
               {/* Header */}
               <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
@@ -3495,7 +3495,7 @@ export default function ServiceMaterialInwardResponse({
                   return (
                     <div className="relative pl-6.5 space-y-3">
                       {/* Vertical timeline line precisely positioned */}
-                      <div className="absolute left-[9px] -translate-x-1/2 top-[7px] bottom-[7px] w-0.5 bg-slate-200 pointer-events-none" />
+                      <div className="absolute left-2 -translate-x-1/2 top-[7px] bottom-[7px] w-0.5 bg-slate-200 pointer-events-none" />
 
                       {timeline.map((item, index) => {
                         let label = item.status;
@@ -3534,7 +3534,7 @@ export default function ServiceMaterialInwardResponse({
                           <div key={index} className="relative group">
                             {/* Dot precisely in the timeline line */}
                             <div
-                              className={`absolute -left-[26px] top-[9px] w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
+                              className={`absolute -left-[26px] top-2 w-2 h-2 rounded-full ${dotColor} ring-4 ring-white shadow-2xs z-10 -translate-x-1/2`}
                             />
 
                                 {/* Timeline Row */}
@@ -4075,7 +4075,7 @@ export default function ServiceMaterialInwardResponse({
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-[374px] min-w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-10 flex flex-col font-sans"
+              className="relative w-full max-w-96 min-w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-10 flex flex-col font-sans"
             >
               {/* Header Banner */}
               <div className="p-4 pb-3 flex items-start gap-3">

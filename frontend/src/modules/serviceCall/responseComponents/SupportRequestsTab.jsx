@@ -117,25 +117,25 @@ const SupportRequestsTab = ({
         <table className="w-full text-left border-collapse">
           <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
             <tr>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[137px]">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-36">
                 Date & Time
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[130px]">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-32">
                 Call No
               </th>
               <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[187px]">
                 Customer
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[202px]">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-52">
                 Product / Issue
               </th>
               <th className="py-2.5 px-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-[94px]">
                 Priority
               </th>
-              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-[173px]">
+              <th className="py-2.5 px-2.5 border-r border-slate-300 whitespace-nowrap min-w-44">
                 {subView === "assigned" ? "Requested By & Notes" : "Support Person & Status"}
               </th>
-              <th className="py-2.5 px-2.5 text-center sticky right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[130px]">
+              <th className="py-2.5 px-2.5 text-center sticky right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-32">
                 Actions
               </th>
             </tr>
@@ -215,7 +215,7 @@ const SupportRequestsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-[202px]"
+                          className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle bg-white max-w-52"
                         >
                           <CustomerInfoCell
                             customerName={row.customerName || row.partyDescription}
@@ -236,7 +236,7 @@ const SupportRequestsTab = ({
                         </td>
                       )}
 
-                      <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-[202px]">
+                      <td className="py-2.5 px-2.5 border-r border-b border-slate-300 align-middle max-w-52">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"

@@ -454,7 +454,7 @@ const CustomDropdown = ({
               minWidth: menuCoords.width,
               zIndex: 99999,
             } : undefined}
-            className={`${usePortal ? "fixed" : `absolute ${actualPlacement === "top" ? "bottom-full mb-1" : "top-full mt-1"} ${align === "right" ? "right-0" : "left-0"} w-full`} z-[99999] min-w-[173px] bg-white border border-gray-200 rounded-md shadow-xl py-1 animate-in fade-in-50 zoom-in-95 duration-100 ${menuClassName}`}
+            className={`${usePortal ? "fixed" : `absolute ${actualPlacement === "top" ? "bottom-full mb-1" : "top-full mt-1"} ${align === "right" ? "right-0" : "left-0"} w-full`} z-[99999] min-w-44 bg-white border border-gray-200 rounded-md shadow-xl py-1 animate-in fade-in-50 zoom-in-95 duration-100 ${menuClassName}`}
           >
           {/* Search Box */}
           {searchable && (

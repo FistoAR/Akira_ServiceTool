@@ -118,7 +118,7 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
             >
               <div className="p-1.5 border-b border-slate-300 bg-gray-50">
                 <div className="relative">
-                  <Search className="absolute left-[9px] top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
+                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-700" />
                   <input
                     autoFocus
                     type="text"
@@ -275,7 +275,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                   <img 
                     src={`${API_URL}${product.boardImage}`} 
                     alt="Board" 
-                    className="w-full h-[65px] object-cover rounded-md border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
+                    className="w-full h-16 object-cover rounded-md border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
                     onClick={() => window.open(`${API_URL}${product.boardImage}`, '_blank')}
                   />
                 </div>
@@ -309,7 +309,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     searchable={true}
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[33px] !rounded-md text-xs font-medium text-slate-800 border-slate-300 bg-white"
+                    triggerClassName="!h-8 !rounded-md text-xs font-medium text-slate-800 border-slate-300 bg-white"
                   />
                 </div>
 
@@ -323,7 +323,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     placeholder="Select Category"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[33px] !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName="!h-8 !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
                   />
                 </div>
               </div>
@@ -407,7 +407,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     placeholder="Select Validation Status"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[33px] !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName="!h-8 !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
                   />
                 </div>
 
@@ -421,7 +421,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     placeholder="Select Verification Status"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[33px] !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName="!h-8 !rounded-lg text-xs font-medium text-slate-800 border-slate-200 bg-white"
                   />
                 </div>
               </div>
@@ -807,8 +807,8 @@ export default function ProductionMaterialResponse() {
   }, [entries]);
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center p-[144px] gap-5.5">
-      <div className="w-[43px] h-[43px] border-[5px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
+    <div className="flex flex-col items-center justify-center p-36 gap-5.5">
+      <div className="w-11 h-11 border-[5px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
       <div className="text-blue-600 font-bold text-xs uppercase tracking-widest animate-pulse">Loading Production Data...</div>
     </div>
   );
@@ -820,7 +820,7 @@ export default function ProductionMaterialResponse() {
         <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-2.5 shrink-0">
           {/* Soft Pill Search Box */}
           <div className="relative w-[288px]">
-            <Search className="absolute left-[13px] top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700 w-3.5 h-3.5" />
             <input
               type="text"
               placeholder="Search by customer, code, JO, product..."
@@ -832,7 +832,7 @@ export default function ProductionMaterialResponse() {
               <button
                 type="button"
                 onClick={() => setSearchTerm("")}
-                className="absolute right-[10px] top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 text-slate-700 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors"
               >
                 <X className="w-2.5 h-2.5" />
               </button>
@@ -986,14 +986,14 @@ export default function ProductionMaterialResponse() {
                 <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-xs uppercase tracking-wider">
                   <tr>
                     <th className="px-2.5 py-2.5 text-center border-r border-slate-300 whitespace-nowrap w-12">S.No</th>
-                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-[101px]">Date</th>
-                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-[144px]">Registration</th>
-                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-[173px]">Customer</th>
-                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-[202px]">Product</th>
+                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-24">Date</th>
+                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-36">Registration</th>
+                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-44">Customer</th>
+                    <th className="px-2.5 py-2.5 border-r border-slate-300 whitespace-nowrap min-w-52">Product</th>
                     <th className="px-2.5 py-2.5 text-center border-r border-slate-300 whitespace-nowrap w-14">Qty</th>
-                    <th className="px-2.5 py-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-[130px]">Status</th>
-                    <th className="px-2.5 py-2.5 text-center border-r border-slate-300 whitespace-nowrap w-[65px]">Info</th>
-                    <th className="px-2.5 py-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[115px]">Action</th>
+                    <th className="px-2.5 py-2.5 text-center border-r border-slate-300 whitespace-nowrap min-w-32">Status</th>
+                    <th className="px-2.5 py-2.5 text-center border-r border-slate-300 whitespace-nowrap w-16">Info</th>
+                    <th className="px-2.5 py-2.5 text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-28">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
@@ -1095,7 +1095,7 @@ export default function ProductionMaterialResponse() {
 
                           <tr className="hover:bg-blue-50/30 transition-colors bg-white">
                             {/* SNo */}
-                            <td className="px-2.5 py-2.5 text-center border-r border-b border-slate-300 font-bold text-slate-800 text-xs">
+                            <td className="px-2.5 py-2.5 text-center border-r border-b border-slate-300 font-semibold text-slate-800 text-xs">
                               {((currentPage - 1) * itemsPerPage) + idx + 1}
                             </td>
 
@@ -1112,7 +1112,7 @@ export default function ProductionMaterialResponse() {
 
                             {/* Customer */}
                             <td className="px-2.5 py-2.5 border-r border-b border-slate-300">
-                              <div className="text-xs font-medium text-black truncate max-w-[173px]">{entry.customerName}</div>
+                              <div className="text-xs font-medium text-black truncate max-w-44">{entry.customerName}</div>
                               <div className="text-sm font-mono text-slate-700 font-medium">{entry.customerCode || "—"}</div>
                             </td>
 
