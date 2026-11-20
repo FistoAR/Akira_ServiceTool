@@ -544,7 +544,7 @@ const ReportsModal = ({ row, onClose }) => {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.97, opacity: 0, y: 10 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-white w-[58vw] max-w-[850px] max-h-[88vh] rounded-[1.2vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200/90 font-sans"
+        className="bg-white w-[58vw] max-w-[850px] max-h-[88vh] rounded-[1.2vw] shadow-2xl overflow-hidden flex flex-col border-[1.5px] border-slate-400 status-pills-track font-sans"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -3238,7 +3238,7 @@ export default function App() {
             className="flex flex-col flex-1 min-h-0 w-full overflow-hidden"
           >
                         {/* Top bar - Standard Service Call Pill Toolbar */}
-            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] mb-[0.8vw] shrink-0">
+            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-[1.5px] border-slate-400 status-pills-track gap-[0.7vw] mb-[0.8vw] shrink-0">
               {/* Left side: Soft Pill Search Box */}
               <div className="relative w-[18vw]">
                 <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
@@ -3346,7 +3346,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setIsBoardTypeMasterOpen(true)}
-                      className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs"
+                      className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border-[1.5px] border-slate-400 hover:border-blue-500 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs"
                     >
                       <Wrench className="w-[0.8vw] h-[0.8vw] text-slate-500" />{" "}
                       Board Types Master
@@ -3366,7 +3366,7 @@ export default function App() {
 
             {/* Sleek Connected Segmented Track for Status Tabs & Overall Quantity KPI Capsules */}
             <div className="flex items-center justify-between gap-[0.8vw] mb-[0.8vw] flex-nowrap">
-              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
+              <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
                 {STATUS_CHIPS.map(({ label, dot }) => {
                   const isActive = activeFilter === label;
                   const count = counts[label] ?? 0;

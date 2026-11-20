@@ -204,7 +204,7 @@ const StatsBar = ({
   return (
     <div className="flex items-center justify-between gap-[1vw] w-full flex-wrap">
       {/* Sleek Connected Segmented Track for Status Tabs */}
-      <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+      <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto">
         {STATUS_CHIPS.map(({ label, dot }) => {
           const isActive = activeFilter === label;
           const count = counts[label] ?? 0;
@@ -1726,7 +1726,7 @@ export default function ServiceMaterialInwardResponse({
         ))}
       </datalist>
       {/* ── Search & Filter Controls Toolbar ────────────────────────────────────── */}
-      <div className="bg-white rounded-full border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] mb-[0.6vw] px-[0.7vw] py-[0.4vw] flex-shrink-0 transition-all">
+      <div className="bg-white rounded-full border-[1.5px] border-slate-400 status-pills-track shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] mb-[0.6vw] px-[0.7vw] py-[0.4vw] flex-shrink-0 transition-all">
         <div className="flex items-center justify-between gap-[0.6vw] flex-nowrap w-full text-[0.7vw]">
           {/* Left Controls: Search, Serials & More Filters Toggle */}
           <div className="flex items-center gap-[0.5vw] flex-1 min-w-0">

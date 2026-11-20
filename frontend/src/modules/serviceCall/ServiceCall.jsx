@@ -1736,7 +1736,7 @@ export default function ServiceCall() {
             className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0"
           >
             {/* ── 1. Top Level Scoping Toolbar: Search, Date Range, Priority & Action ── */}
-            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+            <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-[1.5px] border-slate-400 status-pills-track gap-[0.7vw] shrink-0">
               {/* Left side: Soft Pill Search Box */}
               <div className="relative w-[18vw]">
                 <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
@@ -1828,7 +1828,7 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={clearAllSelected}
-                      className="flex items-center gap-[0.35vw] bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/90 px-[0.8vw] h-[2.2vw] rounded-full font-medium text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                      className="flex items-center gap-[0.35vw] bg-slate-100 hover:bg-slate-200/80 text-slate-700 border-[1.5px] border-slate-400 status-pills-track px-[0.8vw] h-[2.2vw] rounded-full font-medium text-[0.74vw] transition-all cursor-pointer shadow-2xs"
                       title="Unselect all selected calls"
                     >
                       <X className="w-[0.8vw] h-[0.8vw] text-slate-500" />
@@ -1885,7 +1885,7 @@ export default function ServiceCall() {
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
               <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
                 {/* Sleek Connected Segmented Track for Status Tabs */}
-                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto status-pills-track">
+                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto status-pills-track">
                   {[
                     { label: "All", dot: "bg-blue-600" },
                     { label: "Registered", dot: "bg-blue-500" },

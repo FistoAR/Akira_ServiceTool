@@ -817,7 +817,7 @@ export default function ProductionMaterialResponse() {
     <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <div className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0">
         {/* ── 1. Top Level Scoping Toolbar: Soft Pill Search, Date Range, Clear & Page navigation ── */}
-        <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+        <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-[1.5px] border-slate-400 status-pills-track gap-[0.7vw] shrink-0">
           {/* Soft Pill Search Box */}
           <div className="relative w-[20vw]">
             <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
@@ -905,7 +905,7 @@ export default function ProductionMaterialResponse() {
 
             {/* Quick Pagination Pill */}
             {allProducts.length > 0 && (
-              <div className="flex items-center gap-[0.4vw] bg-slate-100/70 border border-slate-200/90 h-[2.2vw] px-[0.6vw] rounded-full">
+              <div className="flex items-center gap-[0.4vw] bg-slate-100/70 border-[1.5px] border-slate-400 status-pills-track h-[2.2vw] px-[0.6vw] rounded-full">
                 <button 
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -932,7 +932,7 @@ export default function ProductionMaterialResponse() {
         <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
           {/* Integrated Header: Segment Track on left, Result count on right */}
           <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
-            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
+            <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
               {STATUS_CHIPS.map(({ label }) => {
                 const isActive = filterStatus === label;
                 const count = counts[label] ?? 0;

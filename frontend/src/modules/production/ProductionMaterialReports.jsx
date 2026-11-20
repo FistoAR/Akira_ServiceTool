@@ -1068,9 +1068,9 @@ export default function ProductionMaterialReports() {
   return (
     <div className="w-full h-full flex-1 min-h-0 flex flex-col font-sans text-[0.85vw] overflow-hidden gap-[0.55vw]">
       {/* Header Panel */}
-      <div className="flex-shrink-0 bg-white border border-slate-200/90 rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] px-[0.8vw] py-[0.4vw] flex items-center justify-between gap-[0.8vw]">
+      <div className="flex-shrink-0 bg-white border-[1.5px] border-slate-400 status-pills-track rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] px-[0.8vw] py-[0.4vw] flex items-center justify-between gap-[0.8vw]">
         {/* Tab Buttons as Segment Track */}
-        <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.15vw] max-w-full overflow-x-auto">
+        <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.15vw] max-w-full overflow-x-auto">
           {TABS.map(t => {
             const isActive = activeTab === t.id;
             return (

@@ -1752,7 +1752,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 setCurrentPage(1);
               }}
               placeholder="Search product, customer, ref no, serial..."
-              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[17vw] rounded-full border border-slate-300/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
+              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[17vw] rounded-full border-[1.5px] border-slate-400 status-pills-track text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
               <CustomTooltip text="Clear search">
@@ -2365,7 +2365,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
                 {/* Status Segmented Track Bar (Header Integrated) */}
                 <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
-                  <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-300/90 gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
+                  <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto no-scrollbar shrink-0">
                     {STATUS_CHIPS.map(({ label, dot }) => {
                       const isActive = activeStatusTab === label;
                       const count = statusCounts[label] ?? 0;
