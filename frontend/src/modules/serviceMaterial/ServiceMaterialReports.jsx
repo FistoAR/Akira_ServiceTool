@@ -1670,7 +1670,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
       <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
         {/* Main View Capsule: All Material vs Employee Assignment (Employee Assignment is Admin-only) */}
         {isAdmin ? (
-          <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
+          <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs status-pills-track">
             <button
               onClick={() => {
                 if (drilldownEmployee) return;
@@ -1945,7 +1945,10 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
 
           {/* Select Export Columns Button */}
           <div className="relative">
-            <CustomTooltip text="Select columns to export">
+            <CustomTooltip
+              text={`${selectedExportCols.length} of ${EXPORT_COLUMNS.length} columns selected`}
+              position="top"
+            >
               <button
                 onClick={() => setShowColPicker(!showColPicker)}
                 className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
@@ -1956,9 +1959,6 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
               >
                 <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
                 <span>Columns</span>
-                <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-300">
-                  {selectedExportCols.length}/{EXPORT_COLUMNS.length}
-                </span>
               </button>
             </CustomTooltip>
 

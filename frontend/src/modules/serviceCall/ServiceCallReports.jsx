@@ -1684,7 +1684,7 @@ const buildEscalationHistoryString = (call, prod) => {
       {/* ── Top Header Bar ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
         {/* Main Tab Navigation: Sleek Segmented Capsule */}
-        <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs">
+        <div className="inline-flex items-center p-[0.25vw] bg-slate-200/70 rounded-full border border-slate-300/80 gap-[0.45vw] shadow-2xs status-pills-track">
           <button
             onClick={() => {
               if (selectedEmployee) return;
@@ -1983,21 +1983,22 @@ const buildEscalationHistoryString = (call, prod) => {
 
           {/* Select Columns Button & Popover */}
           <div className="relative">
-            <button
-              onClick={() => setShowColPicker(!showColPicker)}
-              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
-                showColPicker
-                  ? "bg-blue-50 border-blue-300 text-blue-700"
-                  : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
-              }`}
-              title="Select columns to export to Excel"
+            <CustomTooltip
+              text={`${selectedExportCols.length} of ${activeExportConfig.length} columns selected`}
+              position="top"
             >
-              <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
-              <span>Columns</span>
-              <span className="ml-[0.1vw] px-[0.35vw] py-[0.02vw] text-[0.66vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                {selectedExportCols.length}/{activeExportConfig.length}
-              </span>
-            </button>
+              <button
+                onClick={() => setShowColPicker(!showColPicker)}
+                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+                  showColPicker
+                    ? "bg-blue-50 border-blue-300 text-blue-700"
+                    : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
+                <span>Columns</span>
+              </button>
+            </CustomTooltip>
 
             {/* Columns Dropdown Popover */}
             {showColPicker && (

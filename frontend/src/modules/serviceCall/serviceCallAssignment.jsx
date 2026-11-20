@@ -400,7 +400,7 @@ export default function ServiceCallAssignment() {
                 <button
                   type="button"
                   onClick={handleCloseAssignView}
-                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border-2 border-slate-300 bg-slate-50 hover:bg-slate-100 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-semibold transition-colors"
+                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border-[1.5px] border-slate-400 bg-white hover:bg-slate-50 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-semibold transition-colors"
                 >
                   <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                   <span>Back to Queue</span>
@@ -518,7 +518,7 @@ export default function ServiceCallAssignment() {
                       placeholder="Search qualified engineers..." 
                       value={engSearch} 
                       onChange={e => setEngSearch(e.target.value)} 
-                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-slate-50 border-2 border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.76vw] text-slate-800 font-medium transition-all" 
+                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.76vw] text-slate-800 font-medium transition-all" 
                     />
                     {engSearch && (
                       <button 
@@ -665,7 +665,7 @@ export default function ServiceCallAssignment() {
                               min="0"
                               value={resHours} 
                               onChange={e => setResHours(e.target.value)} 
-                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border-2 border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-bold text-slate-900 transition-all" 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.88vw] font-bold text-slate-900 transition-all" 
                             />
                           </div>
                           <div className="flex flex-col gap-[0.25vw]">
@@ -676,7 +676,7 @@ export default function ServiceCallAssignment() {
                               max="59"
                               value={resMins} 
                               onChange={e => setResMins(e.target.value)} 
-                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border-2 border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-bold text-slate-900 transition-all" 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.88vw] font-bold text-slate-900 transition-all" 
                             />
                           </div>
                         </div>
@@ -694,7 +694,7 @@ export default function ServiceCallAssignment() {
                       <button
                         type="button"
                         onClick={() => setSelectedEngineer(null)}
-                        className="px-[1.1vw] h-[2.3vw] border-2 border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.78vw] cursor-pointer transition-colors"
+                        className="form-cancel-btn px-[1.1vw] h-[2.3vw] border-[1.5px] border-slate-400 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.78vw] cursor-pointer transition-colors"
                       >
                         Change Engineer
                       </button>
@@ -817,7 +817,7 @@ export default function ServiceCallAssignment() {
                 setFilterFromDate("");
                 setFilterToDate("");
               }}
-              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
               <RotateCcw className="w-[0.75vw] h-[0.75vw]" />

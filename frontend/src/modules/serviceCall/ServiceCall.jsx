@@ -1812,7 +1812,7 @@ export default function ServiceCall() {
                       setFilterFromDate("");
                       setFilterToDate("");
                     }}
-                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                     title="Clear date filter"
                   >
                     <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -1885,7 +1885,7 @@ export default function ServiceCall() {
               {/* Integrated Card Header: Status Tabs on left, Active Results count on right */}
               <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
                 {/* Sleek Connected Segmented Track for Status Tabs */}
-                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto">
+                <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border border-slate-200/90 gap-[0.4vw] max-w-full overflow-x-auto status-pills-track">
                   {[
                     { label: "All", dot: "bg-blue-600" },
                     { label: "Registered", dot: "bg-blue-500" },

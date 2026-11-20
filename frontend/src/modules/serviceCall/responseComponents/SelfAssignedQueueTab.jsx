@@ -95,7 +95,7 @@ export const SelfAssignedQueueTab = ({
     <div className="bg-white rounded-lg shadow-sm border border-slate-300 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
       {/* Status chips bar */}
       <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
-        <div className="flex items-center gap-[0.3vw] bg-white p-[0.25vw] rounded-full border border-slate-200/90 shadow-2xs overflow-x-auto">
+        <div className="flex items-center gap-[0.3vw] bg-white p-[0.25vw] rounded-full border border-slate-200/90 shadow-2xs overflow-x-auto status-pills-track">
           {[
             { label: "All", dot: "bg-slate-400" },
             { label: "Assigned", dot: "bg-indigo-500" },

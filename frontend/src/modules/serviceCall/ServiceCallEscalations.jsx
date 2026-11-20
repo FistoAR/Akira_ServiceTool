@@ -514,7 +514,7 @@ const ServiceCallEscalations = () => {
           {/* Right cluster: Status Pills, Date Range Capsule, Clear & Priority */}
           <div className="flex items-center gap-[0.6vw] flex-shrink-0">
             {/* Status Segmented Buttons */}
-            <div className="flex items-center gap-[0.3vw] bg-slate-100/80 p-[0.2vw] rounded-full border border-slate-200">
+            <div className="flex items-center gap-[0.3vw] bg-slate-100/80 p-[0.2vw] rounded-full border border-slate-200 status-pills-track">
               {[
                 { label: "All", count: counts.All, dot: "bg-blue-600" },
                 { label: "Escalating", count: counts.Escalating, dot: "bg-amber-500" },
@@ -596,7 +596,7 @@ const ServiceCallEscalations = () => {
                   setFilterFromDate("");
                   setFilterToDate("");
                 }}
-                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-500 bg-rose-50/70 hover:bg-rose-100 hover:text-rose-600 border border-rose-100 transition-all cursor-pointer shadow-2xs"
+                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                 title="Clear date filter"
               >
                 <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -1011,7 +1011,7 @@ const ServiceCallEscalations = () => {
               {/* Modal Header */}
               <div className="px-[1.4vw] py-[1vw] border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-rose-50/40 via-white to-slate-50">
                 <div className="flex items-center gap-[0.75vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.55vw] bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
+                  <div className="w-[2.2vw] h-[2.2vw] rounded-[0.55vw] bg-rose-50 text-rose-600 border-[1.5px] border-rose-400 flex items-center justify-center shrink-0">
                     <Ban className="w-[1vw] h-[1vw]" />
                   </div>
                   <div>

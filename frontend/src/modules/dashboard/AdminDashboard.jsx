@@ -639,7 +639,7 @@ export default function AdminDashboard({
                   <div
                     key={call._id || call.callNumber}
                     onClick={() => navigate("/serviceCall/escalations")}
-                    className="flex items-center justify-between p-[0.45vw] rounded-[0.4vw] border border-rose-100 bg-rose-50/30 hover:bg-rose-50/70 hover:border-rose-200 transition-colors cursor-pointer"
+                    className="flex items-center justify-between p-[0.45vw] rounded-[0.4vw] border-[1.5px] border-rose-400 bg-rose-50/30 hover:bg-rose-50/70 hover:border-rose-200 transition-colors cursor-pointer"
                   >
                     <div>
                       <div className="font-mono font-medium text-rose-600 text-[0.68vw]">

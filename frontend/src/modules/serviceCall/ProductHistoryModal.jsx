@@ -160,7 +160,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                       </div>
                     )}
                     {h.metadata?.remarks && (
-                      <div className={`text-[0.78vw] font-normal mt-[0.35vw] ${isSlaBreached ? 'text-rose-700 bg-rose-50/70 border border-rose-100 p-[0.4vw] rounded' : 'text-slate-700'}`}>
+                      <div className={`text-[0.78vw] font-normal mt-[0.35vw] ${isSlaBreached ? 'text-rose-700 bg-rose-50/70 border-[1.5px] border-rose-400 p-[0.4vw] rounded' : 'text-slate-700'}`}>
                         {h.metadata.remarks}
                       </div>
                     )}
