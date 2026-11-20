@@ -27,6 +27,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import EditableProductTable from "./EditableProductTable";
 import CustomDropdown from "../../components/CustomDropdown";
+import AutocompleteInput from "../../components/AutocompleteInput";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const ESCALATION_FLOWS_KEY = "escalation_flows_v2";
@@ -494,6 +495,132 @@ const ServiceMaterialForm = ({
     [customerDbFlat],
   );
 
+  const uniquePartyCodes = useMemo(() => {
+    const seen = new Set();
+    const result = [];
+    customerDbFlat.forEach((item) => {
+      if (item.partyCode && !seen.has(item.partyCode)) {
+        seen.add(item.partyCode);
+        result.push(item.partyCode);
+      }
+    });
+    return result.sort();
+  }, [customerDbFlat]);
+
+  const uniquePartyDescriptions = useMemo(() => {
+    const seen = new Set();
+    const result = [];
+    customerDbFlat.forEach((item) => {
+      if (item.partyDescription && !seen.has(item.partyDescription)) {
+        seen.add(item.partyDescription);
+        result.push(item.partyDescription);
+      }
+    });
+    return result.sort();
+  }, [customerDbFlat]);
+
+  const uniqueItemDescriptions = useMemo(() => {
+    const s = new Set();
+    customerDbFlat.forEach((item) => {
+      if (item.itemDescription) s.add(item.itemDescription);
+    });
+    return Array.from(s).sort();
+  }, [customerDbFlat]);
+
+  const addModalDistricts = useMemo(() => {
+    const d = new Set();
+    customerDbFlat.forEach((item) => {
+      if (item.districtCity && (!newCustomer.state || item.state === newCustomer.state)) {
+        d.add(item.districtCity);
+      }
+    });
+    return Array.from(d).sort();
+  }, [customerDbFlat, newCustomer.state]);
+
+  const partyLookupByCode = useMemo(() => {
+    const map = {};
+    customerDbFlat.forEach((row) => {
+      if (!map[row.partyCode]) {
+        map[row.partyCode] = {
+          partyCode: row.partyCode,
+          partyDescription: row.partyDescription,
+          partyType: row.partyType,
+          state: row.state,
+          districtCity: row.districtCity,
+          items: [],
+        };
+      }
+      if (row.itemCode) {
+        map[row.partyCode].items.push({
+          productSegment: row.productSegment || "",
+          itemCode: row.itemCode || "",
+          itemDescription: row.itemDescription || "",
+          warrantyPeriodDays: String(row.warrantyPeriodDays ?? ""),
+        });
+      }
+    });
+    return map;
+  }, [customerDbFlat]);
+
+  const partyLookupByDesc = useMemo(() => {
+    const map = {};
+    customerDbFlat.forEach((row) => {
+      if (row.partyDescription && !map[row.partyDescription]) {
+        map[row.partyDescription] = row.partyCode;
+      }
+    });
+    return map;
+  }, [customerDbFlat]);
+
+  const handleAddPartyCodeChange = (val) => {
+    setNewCustomer((prev) => {
+      const party = partyLookupByCode[val];
+      if (party) {
+        return {
+          ...prev,
+          partyCode: val,
+          partyDescription: party.partyDescription,
+          partyType: party.partyType,
+          state: party.state || "",
+          districtCity: party.districtCity || "",
+          items: party.items.length > 0
+            ? [
+                ...party.items.map((it) => ({ ...it, _existing: true })),
+                { productSegment: "", itemCode: "", itemDescription: "", warrantyPeriodDays: "", _existing: false },
+              ]
+            : [{ productSegment: "", itemCode: "", itemDescription: "", warrantyPeriodDays: "", _existing: false }],
+        };
+      }
+      return { ...prev, partyCode: val };
+    });
+  };
+
+  const handleAddPartyDescChange = (val) => {
+    setNewCustomer((prev) => {
+      const code = partyLookupByDesc[val];
+      if (code) {
+        const party = partyLookupByCode[code];
+        if (party) {
+          return {
+            ...prev,
+            partyDescription: val,
+            partyCode: party.partyCode,
+            partyType: party.partyType,
+            state: party.state || "",
+            districtCity: party.districtCity || "",
+            items: party.items.length > 0
+              ? [
+                  ...party.items.map((it) => ({ ...it, _existing: true })),
+                  { productSegment: "", itemCode: "", itemDescription: "", warrantyPeriodDays: "", _existing: false },
+                ]
+              : [{ productSegment: "", itemCode: "", itemDescription: "", warrantyPeriodDays: "", _existing: false }],
+          };
+        }
+      }
+      return { ...prev, partyDescription: val };
+    });
+  };
+
   const sb = (k, v) => {
     if (!isReadOnly) {
       setBase((p) => ({ ...p, [k]: v }));
@@ -641,7 +768,30 @@ const ServiceMaterialForm = ({
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "");
 
-    const dups = newCustomer.items.filter((ni) =>
+    const partyDesc = (newCustomer.partyDescription || "").trim();
+    if (!partyDesc) {
+      toast("Party Description (Company Name) is required!", "warning");
+      return;
+    }
+
+    let finalPartyCode = (newCustomer.partyCode || "").trim();
+    if (!finalPartyCode) {
+      const existingNums = customerDbFlat
+        .map((c) => {
+          const m = String(c.partyCode || "").match(/CUS-(\d+)/i);
+          return m ? parseInt(m[1], 10) : 0;
+        })
+        .filter((n) => !isNaN(n));
+      const nextNum = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 1;
+      finalPartyCode = `CUS-${String(nextNum).padStart(3, "0")}`;
+    }
+
+    const itemsToSave = (newCustomer.items || []).filter(
+      (it) => it.itemCode?.trim() || it.itemDescription?.trim() || it.productSegment?.trim(),
+    );
+
+    const dups = itemsToSave.filter((ni) =>
+      ni.itemCode?.trim() &&
       customerDbFlat.some((d) => cleanStr(d.itemCode) === cleanStr(ni.itemCode)),
     );
     if (dups.length > 0) {
@@ -649,9 +799,10 @@ const ServiceMaterialForm = ({
       return;
     }
 
-    const invalidWarranty = newCustomer.items.find((item) => {
+    const invalidWarranty = itemsToSave.find((item) => {
+      if (!item.warrantyPeriodDays && item.warrantyPeriodDays !== 0) return false;
       const val = Number(item.warrantyPeriodDays);
-      return item.warrantyPeriodDays === "" || isNaN(val) || val < 0;
+      return isNaN(val) || val < 0;
     });
 
     if (invalidWarranty) {
@@ -662,17 +813,31 @@ const ServiceMaterialForm = ({
       return;
     }
 
-    const newRows = newCustomer.items.map((item) => ({
-      partyCode: newCustomer.partyCode,
-      partyDescription: newCustomer.partyDescription,
-      partyType: newCustomer.partyType,
-      state: newCustomer.state,
-      districtCity: newCustomer.districtCity,
-      productSegment: item.productSegment,
-      itemCode: item.itemCode,
-      itemDescription: item.itemDescription,
-      warrantyPeriodDays: item.warrantyPeriodDays,
-    }));
+    const newRows = itemsToSave.length > 0
+      ? itemsToSave.map((item) => ({
+          partyCode: finalPartyCode,
+          partyDescription: partyDesc,
+          partyType: newCustomer.partyType || "OEM",
+          state: newCustomer.state || "",
+          districtCity: newCustomer.districtCity || "",
+          productSegment: item.productSegment || "",
+          itemCode: item.itemCode || "",
+          itemDescription: item.itemDescription || "",
+          warrantyPeriodDays: item.warrantyPeriodDays || "",
+        }))
+      : [
+          {
+            partyCode: finalPartyCode,
+            partyDescription: partyDesc,
+            partyType: newCustomer.partyType || "OEM",
+            state: newCustomer.state || "",
+            districtCity: newCustomer.districtCity || "",
+            productSegment: "",
+            itemCode: "",
+            itemDescription: "",
+            warrantyPeriodDays: "",
+          },
+        ];
 
     const updated = [...newRows, ...customerDbFlat].sort((a, b) =>
       (a.partyCode || "").localeCompare(b.partyCode || ""),
@@ -683,11 +848,11 @@ const ServiceMaterialForm = ({
     }
     setBase((p) => ({
       ...p,
-      customerCode: newCustomer.partyCode,
-      customerName: newCustomer.partyDescription,
+      customerCode: finalPartyCode,
+      customerName: partyDesc,
       category: newCustomer.partyType || p.category,
     }));
-    setCustSearch(newCustomer.partyDescription);
+    setCustSearch(partyDesc);
     toast("Customer added successfully!", "success");
     setShowAddCustModal(false);
   };
@@ -1193,251 +1358,244 @@ const ServiceMaterialForm = ({
 
       {/* Add Customer Modal (Like ServiceCallForm) */}
       {showAddCustModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-[1vw]">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="bg-white w-[54vw] rounded-[1vw] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] overflow-hidden max-h-[88vh] flex flex-col border border-gray-100"
           >
-            <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-slate-50">
-              <h2 className="text-[1.15vw] font-semibold text-slate-800">
-                Add Customer &amp; Items
-              </h2>
+            {/* Modal Header */}
+            <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-100 flex justify-between items-center bg-white">
+              <div className="flex items-center gap-[0.5vw]">
+                <div className="w-[2vw] h-[2vw] rounded-[0.5vw] bg-blue-50 flex items-center justify-center text-blue-600">
+                  <UserPlus className="w-[1vw] h-[1vw]" />
+                </div>
+                <div>
+                  <h2 className="text-[1.1vw] font-bold text-gray-900 leading-none">
+                    Add Customer & Items
+                  </h2>
+                  <p className="text-[0.73vw] text-gray-400 font-medium mt-[0.15vw]">
+                    Register a new party and catalog item details
+                  </p>
+                </div>
+              </div>
               <button
+                type="button"
                 onClick={() => setShowAddCustModal(false)}
-                className="text-slate-400 hover:text-rose-500 cursor-pointer p-[0.2vw] transition-colors"
+                className="w-[1.8vw] h-[1.8vw] rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
               >
-                <X className="w-[1.1vw] h-[1.1vw]" />
+                <X className="w-[1vw] h-[1vw]" />
               </button>
             </div>
+
+            {/* Form Content */}
             <form
               onSubmit={handleAddCustomerSubmit}
-              className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto"
+              className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto"
             >
-              <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-400">
-                <h3 className="text-[0.9vw] font-semibold text-slate-700 mb-[0.8vw]">
-                  Party Details
-                </h3>
-                <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
-                  <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.81vw] text-slate-700 font-medium">
-                      Party Code <span className="text-rose-500">*</span>
+              {/* Party Details Card */}
+              <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-slate-400/80">
+                <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
+                  <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
+                  <h3 className="text-[0.87vw] font-bold text-gray-800 uppercase tracking-wider">
+                    Party Details
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
+                  <div className="flex flex-col gap-[0.3vw]">
+                    <label className="text-[0.79vw] font-semibold text-gray-700">
+                      Party Code <span className="text-slate-400 font-normal text-[0.7vw]">(Auto-generated if blank)</span>
                     </label>
-                    <input
-                      required
+                    <AutocompleteInput
                       value={newCustomer.partyCode}
-                      onChange={(e) =>
-                        setNewCustomer({
-                          ...newCustomer,
-                          partyCode: e.target.value,
-                        })
-                      }
-                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
+                      onChange={handleAddPartyCodeChange}
+                      suggestions={uniquePartyCodes}
                       placeholder="e.g. CUS-001"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
-                  <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.81vw] text-slate-700 font-medium">
+                  <div className="flex flex-col gap-[0.3vw]">
+                    <label className="text-[0.79vw] font-semibold text-gray-700">
                       Party Type
                     </label>
                     <CustomDropdown
-                      value={newCustomer.partyType}
-                      onChange={(val) =>
-                        setNewCustomer({
-                          ...newCustomer,
-                          partyType: val,
-                        })
-                      }
                       options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
-                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-400 text-[0.85vw]"
+                      value={newCustomer.partyType}
+                      onChange={(val) => setNewCustomer({ ...newCustomer, partyType: val })}
+                      size="md"
+                      className="w-full"
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-[0.35vw] mb-[0.8vw]">
-                  <label className="text-[0.81vw] text-slate-700 font-medium">
+
+                <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
+                  <label className="text-[0.79vw] font-semibold text-gray-700">
                     Party Description <span className="text-rose-500">*</span>
                   </label>
-                  <input
+                  <AutocompleteInput
                     required
                     value={newCustomer.partyDescription}
-                    onChange={(e) =>
-                      setNewCustomer({
-                        ...newCustomer,
-                        partyDescription: e.target.value,
-                      })
-                    }
-                    className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
-                    placeholder="Company Name"
+                    onChange={handleAddPartyDescChange}
+                    suggestions={uniquePartyDescriptions}
+                    placeholder="Company / Customer Name"
+                    className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-[1.2vw]">
-                  <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.81vw] text-slate-700 font-medium">State</label>
-                    <input
+
+                <div className="grid grid-cols-2 gap-[1vw]">
+                  <div className="flex flex-col gap-[0.3vw]">
+                    <label className="text-[0.79vw] font-semibold text-gray-700">State</label>
+                    <AutocompleteInput
                       value={newCustomer.state}
-                      list="mat-ctx-states-datalist"
-                      onChange={(e) =>
-                        setNewCustomer({
-                          ...newCustomer,
-                          state: e.target.value,
-                        })
-                      }
-                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
+                      onChange={(val) => setNewCustomer({ ...newCustomer, state: val })}
+                      suggestions={uniqueStates}
                       placeholder="e.g. Tamil Nadu"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
-                  <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.81vw] text-slate-700 font-medium">
-                      District / City
-                    </label>
-                    <input
+                  <div className="flex flex-col gap-[0.3vw]">
+                    <label className="text-[0.79vw] font-semibold text-gray-700">District / City</label>
+                    <AutocompleteInput
                       value={newCustomer.districtCity}
-                      list="mat-ctx-districts-datalist"
-                      onChange={(e) =>
-                        setNewCustomer({
-                          ...newCustomer,
-                          districtCity: e.target.value,
-                        })
-                      }
-                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
+                      onChange={(val) => setNewCustomer({ ...newCustomer, districtCity: val })}
+                      suggestions={addModalDistricts}
                       placeholder="e.g. Coimbatore"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-400 rounded-[0.6vw] p-[1vw]">
+              {/* Items Section Card */}
+              <div className="bg-white border border-slate-400/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
                 <div className="flex justify-between items-center mb-[0.6vw]">
-                  <h3 className="text-[0.9vw] font-semibold text-slate-800">
-                    Product Items
-                  </h3>
+                  <div className="flex items-center gap-[0.4vw]">
+                    <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
+                    <h3 className="text-[0.87vw] font-bold text-gray-800 uppercase tracking-wider">
+                      Product Items
+                    </h3>
+                  </div>
                   <button
                     type="button"
                     onClick={handleAddCustItemRow}
-                    className="text-blue-600 hover:text-blue-800 text-[0.83vw] font-semibold flex items-center gap-1 cursor-pointer"
+                    className="text-blue-600 hover:text-blue-700 text-[0.79vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
                   >
-                    <PlusCircle className="w-[0.9vw] h-[0.9vw]" />
-                    Add Another Item
+                    <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
                   </button>
                 </div>
-                <div className="flex flex-col gap-[0.6vw]">
-                  {newCustomer.items.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex gap-[0.6vw] items-center border border-slate-100 p-[0.6vw] rounded-[0.4vw] bg-slate-50/50"
-                    >
-                      <div className="flex-1 flex flex-col gap-[0.3vw]">
-                        {idx === 0 && (
-                          <label className="text-[0.77vw] text-slate-500 font-medium">
-                            Product Segment
-                          </label>
+
+                <div className="space-y-[0.6vw]">
+                  {newCustomer.items.map((item, idx) => {
+                    const isExisting = item._existing;
+                    return (
+                      <div
+                        key={idx}
+                        className={`flex gap-[0.5vw] items-center border-b border-gray-100 pb-[0.6vw] last:border-0 ${
+                          isExisting ? "bg-blue-50/40 rounded-[0.4vw] p-[0.4vw]" : ""
+                        }`}
+                      >
+                        {isExisting && (
+                          <div className="flex flex-col justify-end shrink-0">
+                            <span className="text-[0.67vw] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                              Existing
+                            </span>
+                          </div>
                         )}
-                        <input
-                          required
-                          value={item.productSegment}
-                          list="mat-ctx-segments-datalist"
-                          onChange={(e) =>
-                            handleCustItemChange(
-                              idx,
-                              "productSegment",
-                              e.target.value,
-                            )
-                          }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
-                          placeholder="Segment"
-                        />
+                        <div className="flex-1 flex flex-col gap-[0.2vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.73vw] font-semibold text-gray-500">
+                              Segment
+                            </label>
+                          )}
+                          <AutocompleteInput
+                            value={item.productSegment}
+                            onChange={(val) => handleCustItemChange(idx, "productSegment", val)}
+                            suggestions={uniqueSegments}
+                            placeholder="Segment"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                          />
+                        </div>
+                        <div className="flex-1 flex flex-col gap-[0.2vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.73vw] font-semibold text-gray-500">
+                              Item Code
+                            </label>
+                          )}
+                          <input
+                            value={item.itemCode}
+                            readOnly={isExisting}
+                            onChange={(e) => handleCustItemChange(idx, "itemCode", e.target.value)}
+                            className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${
+                              isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""
+                            }`}
+                            placeholder="Item Code"
+                          />
+                        </div>
+                        <div className="flex-[2] flex flex-col gap-[0.2vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.73vw] font-semibold text-gray-500">
+                              Description
+                            </label>
+                          )}
+                          <AutocompleteInput
+                            value={item.itemDescription}
+                            onChange={(val) => handleCustItemChange(idx, "itemDescription", val)}
+                            suggestions={uniqueItemDescriptions}
+                            placeholder="Item Description"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                          />
+                        </div>
+                        <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
+                          {idx === 0 && (
+                            <label className="text-[0.73vw] font-semibold text-gray-500">
+                              Warranty (days)
+                            </label>
+                          )}
+                          <input
+                            type="number"
+                            min="0"
+                            value={item.warrantyPeriodDays}
+                            onChange={(e) =>
+                              handleCustItemChange(idx, "warrantyPeriodDays", e.target.value)
+                            }
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                            placeholder="Days"
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-end">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCustItemRow(idx)}
+                            disabled={newCustomer.items.length === 1 && !isExisting}
+                            className={`p-[0.35vw] text-gray-400 hover:text-rose-600 disabled:opacity-20 cursor-pointer transition-colors ${
+                              idx === 0 ? "mt-[1.1vw]" : ""
+                            }`}
+                          >
+                            <MinusCircle className="w-[1vw] h-[1vw]" />
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex-1 flex flex-col gap-[0.3vw]">
-                        {idx === 0 && (
-                          <label className="text-[0.77vw] text-slate-500 font-medium">
-                            Item Code
-                          </label>
-                        )}
-                        <input
-                          required
-                          value={item.itemCode}
-                          onChange={(e) =>
-                            handleCustItemChange(
-                              idx,
-                              "itemCode",
-                              e.target.value,
-                            )
-                          }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
-                          placeholder="Code"
-                        />
-                      </div>
-                      <div className="flex-[2] flex flex-col gap-[0.3vw]">
-                        {idx === 0 && (
-                          <label className="text-[0.77vw] text-slate-500 font-medium">
-                            Description
-                          </label>
-                        )}
-                        <input
-                          required
-                          value={item.itemDescription}
-                          onChange={(e) =>
-                            handleCustItemChange(
-                              idx,
-                              "itemDescription",
-                              e.target.value,
-                            )
-                          }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
-                          placeholder="Description"
-                        />
-                      </div>
-                      <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
-                        {idx === 0 && (
-                          <label className="text-[0.77vw] text-slate-500 font-medium">
-                            Warranty (days)
-                          </label>
-                        )}
-                        <input
-                          required
-                          type="number"
-                          min="0"
-                          value={item.warrantyPeriodDays}
-                          onChange={(e) =>
-                            handleCustItemChange(
-                              idx,
-                              "warrantyPeriodDays",
-                              e.target.value,
-                            )
-                          }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
-                          placeholder="Days"
-                        />
-                      </div>
-                      <div className="flex flex-col justify-end">
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveCustItemRow(idx)}
-                          disabled={newCustomer.items.length === 1}
-                          className={`text-slate-400 hover:text-rose-500 disabled:opacity-30 cursor-pointer p-[0.2vw] ${
-                            idx === 0 ? "mt-[1.3vw]" : ""
-                          }`}
-                        >
-                          <MinusCircle className="w-[1.1vw] h-[1.1vw]" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="flex justify-end gap-[0.8vw] pt-[0.4vw]">
+              {/* Footer Buttons */}
+              <div className="flex justify-end gap-[0.6vw] pt-[0.4vw]">
                 <button
                   type="button"
                   onClick={() => setShowAddCustModal(false)}
-                  className="px-[1.4vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.83vw] font-medium transition-colors"
+                  className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.81vw] font-semibold transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.5vw] hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.83vw] font-medium transition-colors shadow-xs"
+                  className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.81vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
                 >
                   Save All
                 </button>

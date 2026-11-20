@@ -408,7 +408,8 @@ const ProductionEditableProductTable = ({
 
   const ncTypeOptions = useMemo(() => [
     { value: "Internal", label: "Internal" },
-    { value: "External", label: "External" }
+    { value: "External", label: "External" },
+    { value: "Field Return", label: "Field Return" }
   ], []);
 
   const repeatabilityOptions = useMemo(() => [
@@ -425,7 +426,7 @@ const ProductionEditableProductTable = ({
   [dispositionOptions]);
 
   const employeeDropdownOptions = useMemo(() => 
-    employees.map(e => ({ value: e.userId || e._id, label: e.name })), 
+    (employees || []).map(e => ({ value: e.userId || e._id, label: e.name || e.userId })), 
   [employees]);
 
   return (
@@ -556,19 +557,14 @@ const ProductionEditableProductTable = ({
                           {renderFillHandle(index, 1)}
                         </td>
 
-                        {/* 2. Product Segment */}
+                        {/* 2. Product Segment (Read-only, auto applied from DB) */}
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 2)}`} onMouseDown={(e) => handleCellMouseDown(index, 2, e)} onMouseEnter={() => handleCellMouseEnter(index, 2)}>
-                          <input
-                            type="text"
-                            value={prod.productSegment || prod.productType || ""}
-                            onChange={(e) => {
-                              handleUpdate(prod._pid, "productSegment", e.target.value);
-                              handleUpdate(prod._pid, "productType", e.target.value);
-                            }}
-                            disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.85vw] disabled:bg-transparent"
-                            placeholder="Segment..."
-                          />
+                          <div 
+                            className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-medium text-[0.83vw] truncate select-text cursor-default" 
+                            title={prod.productSegment || prod.productType || ""}
+                          >
+                            {prod.productSegment || prod.productType || "—"}
+                          </div>
                           {renderFillHandle(index, 2)}
                         </td>
 
@@ -618,7 +614,27 @@ const ProductionEditableProductTable = ({
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 5)}`} onMouseDown={(e) => handleCellMouseDown(index, 5, e)} onMouseEnter={() => handleCellMouseEnter(index, 5)}>
                           <CustomDropdown
                             value={prod.ncType || "Internal"}
-                            onChange={(val) => handleUpdate(prod._pid, "ncType", val)}
+                            onChange={(val) => {
+                              handleUpdate(prod._pid, "ncType", val);
+                              // Auto-handle Raised To if Internal
+                              if (val === "Internal") {
+                                const storedUserStr = sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || localStorage.getItem("user");
+                                if (storedUserStr) {
+                                  try {
+                                    const u = JSON.parse(storedUserStr);
+                                    const uid = u.userId || u._id || "";
+                                    const uname = u.name || "";
+                                    handleUpdate(prod._pid, "raisedTo", uid);
+                                    handleUpdate(prod._pid, "raisedToName", uname);
+                                    handleUpdate(prod._pid, "inspectedBy", uid);
+                                    handleUpdate(prod._pid, "inspectedByName", uname);
+                                  } catch (err) {}
+                                }
+                              } else {
+                                handleUpdate(prod._pid, "raisedTo", "");
+                                handleUpdate(prod._pid, "raisedToName", "");
+                              }
+                            }}
                             disabled={isReadOnly}
                             placeholder="Select"
                             size="sm"
@@ -856,8 +872,8 @@ const ProductionEditableProductTable = ({
                               handleUpdate(prod._pid, "raisedTo", val);
                               handleUpdate(prod._pid, "raisedToName", emp?.name || val);
                             }}
-                            disabled={isReadOnly}
-                            placeholder="Select Employee"
+                            disabled={isReadOnly || prod.ncType === "Internal"}
+                            placeholder={prod.ncType === "Internal" ? "Auto (Same Person)" : "Select Employee"}
                             size="sm"
                             options={employeeDropdownOptions}
                             searchable={true}
@@ -865,8 +881,8 @@ const ProductionEditableProductTable = ({
                             usePortal={true}
                             maxHeight="12vw"
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
-                              isReadOnly
-                                ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
+                              isReadOnly || prod.ncType === "Internal"
+                                ? "cursor-not-allowed bg-slate-50 border-transparent text-slate-600 font-semibold"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
                             }`}
                             className="w-full"

@@ -305,7 +305,7 @@ export default function Sidebar() {
         flex flex-col bg-white relative
         transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         border-r border-slate-300 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.08)]
-        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[16vw] max-w-[16vw]"}
+        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[17.5vw] max-w-[17.5vw]"}
       `}
       style={{ height: "100vh" }}
     >
@@ -476,7 +476,7 @@ export default function Sidebar() {
                                   <Link
                                     to={subItem.path}
                                     className={`
-                                      relative flex items-center gap-[0.6vw] px-[0.7vw] py-[0.8vh] rounded-lg text-[0.81vw]
+                                      relative flex items-center gap-[0.55vw] px-[0.65vw] py-[0.75vh] rounded-lg text-[0.76vw]
                                       transition-all duration-200 ease-out
                                       ${
                                         isSubActive
@@ -501,7 +501,7 @@ export default function Sidebar() {
                                       {String(subIndex + 1).padStart(2, "0")}
                                     </div>
 
-                                    <span className="flex-1">
+                                    <span className="flex-1 whitespace-nowrap">
                                       {subItem.label}
                                     </span>
 

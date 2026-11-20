@@ -158,7 +158,7 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
 };
 
 // ── Production Response Modal ──────────────────────────────────────────────────
-const ProductionResponseModal = ({ entry, product, employees, fourMCategories, onSave, onClose }) => {
+const ProductionResponseModal = ({ entry, product, employees, fourMCategories, caeHistory, currentUser, onSave, onClose }) => {
   const [formData, setFormData] = useState({
     workDoneBy: product.report?.workDoneBy || product.report?.assembledBy || "",
     workDoneByName: product.report?.workDoneByName || product.report?.assembledByName || "",
@@ -195,6 +195,25 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
   const { toast } = useNotification();
 
   const sp = (k, v) => setFormData(p => ({ ...p, [k]: v }));
+
+  // Verification & Validation permissions based on user requirements
+  // Internal NC: verification & validation both done by same person (creator/finder)
+  // External NC: verification done by raisedTo/preceding person; validation done by creator/finder
+  // Field Return: allocated by Quality/Inspection
+  const currentUserId = currentUser?.userId || currentUser?.id;
+  const isFinder = currentUserId && (
+    product.inspectedBy === currentUserId || 
+    entry.creatorUserId === currentUserId || 
+    (currentUser?.name && product.inspectedByName === currentUser.name)
+  );
+  const isRaisedTo = currentUserId && (
+    product.raisedTo === currentUserId || 
+    product.assignedTo === currentUserId || 
+    (currentUser?.name && (product.raisedToName === currentUser.name || product.assignedToName === currentUser.name))
+  );
+
+  const canValidate = product.ncType === "Internal" ? isFinder || isRaisedTo : isFinder;
+  const canVerify = product.ncType === "Internal" ? isFinder || isRaisedTo : isRaisedTo;
 
   const handleSave = () => {
     if (!formData.rootCause) return toast("Root Cause is mandatory", "error");
@@ -399,29 +418,49 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 9. Validation Status */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Validation Status</label>
+                  <div className="flex justify-between items-center">
+                    <label className="text-[0.81vw] font-semibold text-slate-700">Validation Status</label>
+                    {!canValidate && (
+                      <span className="text-[0.68vw] text-amber-700 font-medium bg-amber-50 px-[0.35vw] py-[0.05vw] rounded border border-amber-200">
+                        {product.ncType === "External" ? "Only Finder can Validate" : "Locked"}
+                      </span>
+                    )}
+                  </div>
                   <CustomDropdown
                     value={formData.validationStatus}
                     onChange={val => sp("validationStatus", val)}
                     options={VALIDATION_OPTIONS}
+                    disabled={!canValidate}
                     placeholder="Select Validation Status"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName={`!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium border-slate-200 ${
+                      !canValidate ? "bg-slate-100 text-slate-400 cursor-not-allowed" : "text-slate-800 bg-white"
+                    }`}
                   />
                 </div>
 
                 {/* 10. Verification Status */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Verification Status</label>
+                  <div className="flex justify-between items-center">
+                    <label className="text-[0.81vw] font-semibold text-slate-700">Verification Status</label>
+                    {!canVerify && (
+                      <span className="text-[0.68vw] text-amber-700 font-medium bg-amber-50 px-[0.35vw] py-[0.05vw] rounded border border-amber-200">
+                        {product.ncType === "External" ? "Only Preceding Station can Verify" : "Locked"}
+                      </span>
+                    )}
+                  </div>
                   <CustomDropdown
                     value={formData.verificationStatus}
                     onChange={val => sp("verificationStatus", val)}
                     options={VERIFICATION_OPTIONS}
+                    disabled={!canVerify}
                     placeholder="Select Verification Status"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName={`!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium border-slate-200 ${
+                      !canVerify ? "bg-slate-100 text-slate-400 cursor-not-allowed" : "text-slate-800 bg-white"
+                    }`}
                   />
                 </div>
               </div>
@@ -687,13 +726,26 @@ export default function ProductionMaterialResponse() {
   const myProducts = useMemo(() => {
     const list = [];
     const myId = currentUser?.userId || currentUser?.id;
+    const userRole = (currentUser?.role || "").toLowerCase();
+    const isQualityOrAdmin = userRole === "admin" || (currentUser?.department || "").toLowerCase().includes("quality");
+
     entries.forEach(entry => {
       entry.products?.forEach(product => {
-        // Only include items assigned to the current user (by ID or matching name)
-        const isAssignedToMe = myId 
-          ? (product.assignedTo === myId || (currentUser?.name && product.assignedToName === currentUser.name))
-          : false;
-        if (isAssignedToMe) {
+        // Quality / Admin see all products; other floor operators see items assigned, raised to them, or created by them
+        const isRelevant = isQualityOrAdmin || (
+          myId && (
+            product.assignedTo === myId ||
+            product.raisedTo === myId ||
+            product.inspectedBy === myId ||
+            entry.creatorUserId === myId ||
+            (currentUser?.name && (
+              product.assignedToName === currentUser.name ||
+              product.raisedToName === currentUser.name ||
+              product.inspectedByName === currentUser.name
+            ))
+          )
+        );
+        if (isRelevant) {
           list.push({ entry, product });
         }
       });
@@ -1257,6 +1309,7 @@ export default function ProductionMaterialResponse() {
               employees={employees}
               fourMCategories={fourMCategories}
               caeHistory={caeHistory}
+              currentUser={currentUser}
               onSave={handleSaveReport}
               onClose={() => setSelected(null)}
             />

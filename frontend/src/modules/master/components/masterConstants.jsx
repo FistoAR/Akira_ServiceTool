@@ -15,7 +15,11 @@ export const COLUMN_VIS_KEY = "customer_db_col_visibility_v1";
 export const API_URL = import.meta.env.VITE_API_URL;
 
 // ── Default dept flow ─────────────────────────────────────────────────────────
-export const DEFAULT_DEPTS = ["Support Engineers", "Service Engineers", "R&D"];
+export const DEFAULT_DEPTS = ["Support Engineers", "Service Engineers", "R&D", "SMD", "THT", "MID", "Quality", "Testing"];
+
+export const DEFAULT_ZONES = [
+  "Assembly 1", "Assembly 2", "Assembly 3", "Inspection", "Testing", "FI", "Rework", "General"
+];
 
 // ── Column definitions (shared with CustomerDatabase) ─────────────────────────
 export const CUSTOMER_DB_COLUMNS = [

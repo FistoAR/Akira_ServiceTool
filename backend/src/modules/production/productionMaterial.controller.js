@@ -1,9 +1,40 @@
 const ProductionMaterial = require('./productionMaterial.model');
 
+// Helper to determine if user has overarching production access (Admin, Management, QA)
+const hasOverarchingAccess = (user) => {
+  if (!user) return true; // fallback if no auth passed
+  const role = (user.role || '').toLowerCase();
+  const dept = (user.department || '').toLowerCase();
+  if (role === 'admin' || role === 'superuser' || role === 'super admin') return true;
+  if (dept.includes('quality') || dept.includes('qa') || dept.includes('management') || dept.includes('admin')) return true;
+  return false;
+};
+
 // --- GET /api/production-material ---
 exports.getAllInwards = async (req, res) => {
   try {
-    const inwards = await ProductionMaterial.find().lean().sort({ createdAt: -1 });
+    let filter = {};
+    const user = req.user;
+
+    // Department data isolation: if not admin/quality, filter by department or created/assigned to user
+    if (user && !hasOverarchingAccess(user)) {
+      const userDept = user.department;
+      const uid = user.userId || String(user._id);
+
+      filter = {
+        $or: [
+          { department: userDept },
+          { 'products.department': userDept },
+          { creatorUserId: uid },
+          { 'products.inspectedBy': uid },
+          { 'products.raisedTo': uid },
+          { 'products.assignedTo': uid },
+          { 'products.report.workDoneBy': uid }
+        ]
+      };
+    }
+
+    const inwards = await ProductionMaterial.find(filter).lean().sort({ createdAt: -1 });
     res.json(inwards);
   } catch (err) {
     res.status(500).json({ message: err.message });

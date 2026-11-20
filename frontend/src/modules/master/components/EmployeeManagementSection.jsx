@@ -16,7 +16,7 @@ import {
   MapPin, RefreshCw, UploadCloud
 } from "lucide-react";
 import {
-  API_URL, DEFAULT_DEPTS, TYPE_BADGE_COLORS, TYPE_COLORS, LEVEL_COLORS,
+  API_URL, DEFAULT_DEPTS, DEFAULT_ZONES, TYPE_BADGE_COLORS, TYPE_COLORS, LEVEL_COLORS,
   LEVEL_BG_LIGHT, DURATION_PRESETS, HelpTooltip, DEFAULT_COL_VIS
 } from "./masterConstants";
 
@@ -189,6 +189,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       setEditingEmp(emp);
       setRegData({
         ...emp,
+        zone: emp.zone || "",
         password: "", // Don't show password
         confirmPassword: "",
         dob: emp.dob ? new Date(emp.dob).toISOString().split('T')[0] : "",
@@ -198,7 +199,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       setEditingEmp(null);
       setRegData({
         name: "", userId: "", email: "", phoneNumber: "", dob: "", gender: "",
-        role: "User", department: "", designation: "", ctc: "", dateOfJoining: "",
+        role: "User", department: "", zone: "", designation: "", ctc: "", dateOfJoining: "",
         workingStatus: "Active", password: "", confirmPassword: "", profilePicture: null
       });
     }
@@ -499,6 +500,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Zone / Stage</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
@@ -525,6 +527,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   <td className="px-[1vw] py-[0.7vw] text-[0.85vw] font-semibold text-gray-700">{emp.userId}</td>
                   <td className="px-[1vw] py-[0.7vw] text-[0.85vw] text-gray-700">
                     {emp.department || "—"}
+                  </td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.85vw] text-gray-700">
+                    {emp.zone || "—"}
                   </td>
                   <td className="px-[1vw] py-[0.7vw] text-[0.85vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
                   <td className="px-[1vw] py-[0.7vw] text-[0.85vw]">
@@ -814,6 +819,21 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         onChange={e => setRegData({ ...regData, designation: e.target.value })}
                         className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Senior Engineer"
+                      />
+                    </div>
+
+                    <div className="space-y-[0.35vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <MapPin className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Zone / Stage
+                      </label>
+                      <CustomDropdown
+                        searchable
+                        options={DEFAULT_ZONES}
+                        value={regData.zone}
+                        onChange={(val) => setRegData({ ...regData, zone: val })}
+                        placeholder="Select Zone / Stage (e.g. Assembly 1)"
+                        size="md"
+                        className="w-full"
                       />
                     </div>
 
