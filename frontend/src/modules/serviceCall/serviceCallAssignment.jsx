@@ -970,7 +970,7 @@ export default function ServiceCallAssignment() {
                             >
                               {g.callNumber}
                             </button>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-semibold leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const d = new Date(g.timestamp || g.dateTime);
@@ -987,9 +987,9 @@ export default function ServiceCallAssignment() {
                                   });
                                   return (
                                     <>
-                                      <span>{datePart}</span>
-                                      <span className="text-slate-300 font-normal">|</span>
-                                      <span className="text-slate-600 font-medium">{timePart}</span>
+                                      <span className="text-[#4a2810]">{datePart}</span>
+                                      <span className="text-[#8c5835] font-normal">|</span>
+                                      <span className="text-[#5c3317]">{timePart}</span>
                                     </>
                                   );
                                 } catch {

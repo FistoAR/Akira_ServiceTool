@@ -619,7 +619,7 @@ const ServiceCallForm = ({
                 onChange={(val) => set("mode", val)}
                 options={modes.map((m) => ({ value: m, label: m }))}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
-                  errors.mode ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-200"
+                  errors.mode ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-300"
                 }`}
               />
             </div>
@@ -632,7 +632,7 @@ const ServiceCallForm = ({
                 onChange={(val) => set("priority", val)}
                 options={PRIORITIES.map((p) => ({ value: p, label: p }))}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] font-medium ${
-                  errors.priority ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-200"
+                  errors.priority ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-300"
                 } ${
                   formData.priority === "Critical"
                     ? "!text-rose-600 !font-semibold"
@@ -674,7 +674,7 @@ const ServiceCallForm = ({
                   { value: "All", label: "All Types" },
                   ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
               />
             </div>
             <div
@@ -703,7 +703,7 @@ const ServiceCallForm = ({
                     className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                       errors.customerName
                         ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                        : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                        : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                     }`}
                   />
                   {formData.customerName && (
@@ -802,7 +802,7 @@ const ServiceCallForm = ({
                 className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactPerson
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                    : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
             </div>
@@ -817,7 +817,7 @@ const ServiceCallForm = ({
                 className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactNumber
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                    : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
             </div>
@@ -828,7 +828,7 @@ const ServiceCallForm = ({
                 value={formData.emailId}
                 onChange={(e) => set("emailId", e.target.value)}
                 placeholder="e.g. client@example.com"
-                className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
@@ -858,7 +858,7 @@ const ServiceCallForm = ({
                   { value: "IPR", label: "IPR" },
                   { value: "Site", label: "Site" },
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw] col-span-2" data-error-field="location">
@@ -876,7 +876,7 @@ const ServiceCallForm = ({
                 className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.location
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                    : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
             </div>
@@ -896,7 +896,7 @@ const ServiceCallForm = ({
                   })),
                 ]}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
-                  errors.site ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-200"
+                  errors.site ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-300"
                 }`}
               />
             </div>
@@ -1091,7 +1091,7 @@ const ServiceCallForm = ({
                         className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
                           errors[`product_${idx}_productModel`]
                             ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                            : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                            : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                         }`}
                       />
                       {showProdSearch[idx] && formData.partyCode && (
@@ -1163,7 +1163,7 @@ const ServiceCallForm = ({
                         { value: "", label: "-- Select Segment --" },
                         ...uniqueSegments.map((seg) => ({ value: seg, label: seg })),
                       ]}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
                     />
                   </div>
                   <div className="col-span-1 flex flex-col gap-[0.35vw]">
@@ -1175,7 +1175,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "serialNumber", e.target.value)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="e.g. SN-12345"
                     />
                   </div>
@@ -1191,7 +1191,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "warrantyPeriodDays", e.target.value)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="Days"
                     />
                   </div>
@@ -1205,7 +1205,7 @@ const ServiceCallForm = ({
                         changeProduct(idx, "warrantyStatus", val)
                       }
                       options={WARRANTY_STATUS.map((s) => ({ value: s, label: s }))}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
                     />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
@@ -1217,7 +1217,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "errorCode", e.target.value)
                       }
-                      className="border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="e.g. E-404"
                     />
                   </div>
@@ -1235,7 +1235,7 @@ const ServiceCallForm = ({
                         { value: "Yes", label: "Yes" },
                         { value: "No", label: "No" },
                       ]}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
                     />
                   </div>
 
@@ -1252,7 +1252,7 @@ const ServiceCallForm = ({
                       className={`border rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
                         errors[`product_${idx}_callDescription`]
                           ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                          : "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                          : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                       }`}
                       placeholder="Describe the issue…"
                     />

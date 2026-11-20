@@ -189,7 +189,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
   const getCustomerTypePill = (type) => {
     switch (type) {
       case "OEM":
-        return "bg-blue-50 text-blue-700 border-blue-200";
+        return "bg-[#1B539A]/10 text-[#1B539A] border-[#1B539A]/20";
       case "End Customer":
         return "bg-emerald-50 text-emerald-700 border-emerald-200";
       case "Distributor":
@@ -217,38 +217,38 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
   const priorityCfg = getPriorityBadge(call.priority || "Medium");
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-[1.5vw] animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-[1.5vw] animate-in fade-in duration-200">
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 10 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-white rounded-[1.2vw] shadow-2xl border border-slate-200/90 w-full max-w-[58vw] max-h-[88vh] flex flex-col overflow-hidden font-sans"
+        className="bg-slate-50 rounded-[1.2vw] shadow-2xl border border-slate-200 w-full max-w-[58vw] max-h-[88vh] flex flex-col overflow-hidden font-sans"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── HEADER ──────────────────────────────────────────────────────── */}
-        <div className="px-[1.6vw] py-[1vw] border-b border-slate-200 bg-white shrink-0 space-y-[0.8vw]">
+        <div className="px-[1.6vw] pt-[1vw] border-b border-slate-200/80 bg-slate-50/90 shrink-0 space-y-[0.8vw]">
           {/* Top Row: Call ID, Chips & Close button */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[0.75vw]">
-              <div className="w-[2.4vw] h-[2.4vw] rounded-[0.55vw] bg-blue-600 flex items-center justify-center text-white shadow-sm shrink-0">
+              <div className="w-[2.4vw] h-[2.4vw] rounded-[0.55vw] bg-[#1B539A] flex items-center justify-center text-white shadow-sm shrink-0">
                 <FileText className="w-[1.2vw] h-[1.2vw]" />
               </div>
 
               <div>
                 <div className="flex items-center gap-[0.5vw] flex-wrap">
-                  <span className="font-mono font-semibold text-[1.05vw] text-slate-900 tracking-tight">
+                  <span className="font-mono font-bold text-[1.05vw] text-slate-900 tracking-tight">
                     {call.callNumber || "Service Call"}
                   </span>
 
                   <button
                     type="button"
                     onClick={handleCopyCallNo}
-                    className="p-[0.25vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-all cursor-pointer"
+                    className="p-[0.25vw] text-slate-700 hover:text-[#1B539A] hover:bg-[#1B539A]/10 rounded transition-all cursor-pointer"
                     title="Copy Call Reference"
                   >
                     {copied ? (
-                      <Check className="w-[0.8vw] h-[0.8vw] text-emerald-600" />
+                      <Check className="w-[0.8vw] h-[0.8vw] text-emerald-700 font-bold" />
                     ) : (
                       <Copy className="w-[0.8vw] h-[0.8vw]" />
                     )}
@@ -256,36 +256,36 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                   {/* Status Pill */}
                   {(!isSelfAssigned || (statusCfg.label !== "Assigned" && statusCfg.label !== "Registered")) && (
-                    <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border ${statusCfg.pill}`}>
+                    <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold border ${statusCfg.pill}`}>
                       <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${statusCfg.dot}`} />
                       {statusCfg.label}
                     </span>
                   )}
 
                   {/* Priority Pill */}
-                  <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border ${priorityCfg.pill}`}>
+                  <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold border ${priorityCfg.pill}`}>
                     <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${priorityCfg.dot}`} />
                     {priorityCfg.label}
                   </span>
 
                   {isSelfAssigned && (
-                    <span className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium bg-teal-50 text-teal-700 border border-teal-200">
+                    <span className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold bg-teal-50 text-teal-800 border border-teal-300">
                       <UserCheck className="w-[0.65vw] h-[0.65vw]" />
                       Self Assigned
                     </span>
                   )}
                 </div>
 
-                <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.15vw] flex items-center gap-[0.35vw]">
-                  <Clock className="w-[0.68vw] h-[0.68vw] text-slate-400 shrink-0" />
+                <div className="text-[0.72vw] text-slate-700 font-medium mt-[0.15vw] flex items-center gap-[0.35vw]">
+                  <Clock className="w-[0.68vw] h-[0.68vw] text-slate-700 shrink-0" />
                   <span>
-                    Registered on <span className="text-slate-700 font-medium">{fmtDate(call.dateTime || call.createdAt)}</span>
+                    Registered on <span className="text-slate-900 font-bold">{fmtDate(call.dateTime || call.createdAt)}</span>
                   </span>
                   {call.registeredByName && call.registeredByName !== "System" && (
                     <>
-                      <span className="text-slate-300">•</span>
+                      <span className="text-slate-400">•</span>
                       <span>
-                        by <span className="text-slate-700 font-medium">{call.registeredByName}</span>
+                        by <span className="text-slate-900 font-bold">{call.registeredByName}</span>
                       </span>
                     </>
                   )}
@@ -297,202 +297,202 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="p-[0.45vw] text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+              className="p-[0.45vw] text-slate-700 hover:text-slate-950 hover:bg-slate-200/70 rounded-full transition-colors cursor-pointer"
               title="Close modal"
             >
               <X className="w-[1.1vw] h-[1.1vw]" />
             </button>
           </div>
 
-          {/* Bottom Row: Tab Navigation */}
-          <div className="flex items-center justify-between pt-[0.2vw]">
-            <div className="inline-flex items-center p-[0.2vw] bg-slate-100/90 rounded-[0.5vw] border border-slate-200 gap-[0.2vw]">
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.3vw] rounded-[0.4vw] text-[0.74vw] transition-all cursor-pointer whitespace-nowrap ${
-                      isActive
-                        ? "bg-white text-blue-600 shadow-xs font-semibold"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium"
-                    }`}
-                  >
-                    <Icon className={`w-[0.8vw] h-[0.8vw] ${isActive ? "text-blue-600" : "text-slate-500"}`} />
-                    <span>{tab.label}</span>
-                    {tab.count !== null && (
-                      <span
-                        className={`text-[0.66vw] font-bold px-[0.35vw] py-[0.05vw] rounded-full ${
-                          isActive
-                            ? "bg-blue-50 text-blue-700"
-                            : "bg-slate-200 text-slate-600"
-                        }`}
-                      >
-                        {tab.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Bottom Row: Classic Line Tab View */}
+          <div className="flex items-center gap-[1.6vw] pt-[0.2vw] -mb-[1px]">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-[0.4vw] pb-[0.65vw] text-[0.78vw] transition-all cursor-pointer relative ${
+                    isActive
+                      ? "text-[#1B539A] font-bold"
+                      : "text-slate-700 hover:text-slate-950 font-semibold"
+                  }`}
+                >
+                  <Icon className={`w-[0.85vw] h-[0.85vw] ${isActive ? "text-[#1B539A]" : "text-slate-700"}`} />
+                  <span>{tab.label}</span>
+                  {tab.count !== null && (
+                    <span
+                      className={`text-[0.66vw] font-bold px-[0.4vw] py-[0.05vw] rounded-full transition-colors ${
+                        isActive
+                          ? "bg-[#1B539A]/15 text-[#1B539A]"
+                          : "bg-slate-200 text-slate-800"
+                      }`}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTabUnderline"
+                      className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#1B539A] rounded-t-full"
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* ── MODAL BODY ──────────────────────────────────────────────────── */}
-        <div className="p-[1.6vw] overflow-y-auto flex-1 min-h-0 bg-[#f8fafd] space-y-[1.2vw]">
+        <div className="p-[1.6vw] overflow-y-auto flex-1 min-h-0 bg-slate-100/70 space-y-[1.2vw]">
           {/* TAB 1: OVERVIEW */}
           {activeTab === "overview" && (
             <div className="space-y-[1.2vw]">
               {/* Customer & Call Attributes Cards */}
-              <div className="grid grid-cols-2 gap-[1.1vw] items-stretch">
+              <div className="grid grid-cols-2 gap-[1.2vw] items-stretch">
                 {/* 1. Customer Details Card */}
-                <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-semibold text-slate-800">
-                        <div className="p-[0.28vw] rounded-[0.35vw] bg-blue-50 text-blue-600">
-                          <Building2 className="w-[0.85vw] h-[0.85vw]" />
-                        </div>
-                        <span>Customer Details</span>
+                <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden">
+                  <div className="flex items-center justify-between px-[1.1vw] py-[0.7vw] bg-[#1B539A]/[0.04] border-b-2 border-slate-200">
+                    <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-bold text-slate-900">
+                      <div className="p-[0.28vw] rounded-[0.35vw] bg-[#1B539A]/10 text-[#1B539A]">
+                        <Building2 className="w-[0.85vw] h-[0.85vw]" />
                       </div>
-                      {call.partyCode && (
-                        <span className="font-mono text-[0.68vw] font-medium text-slate-600 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded border border-slate-200">
-                          {call.partyCode}
+                      <span>Customer Details</span>
+                    </div>
+                    {call.partyCode && (
+                      <span className="font-mono text-[0.68vw] font-bold text-[#1B539A] bg-[#1B539A]/10 px-[0.4vw] py-[0.08vw] rounded border-2 border-[#1B539A]/30">
+                        {call.partyCode}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="p-[1.1vw] space-y-[0.6vw] text-[0.76vw]">
+                    <div className="flex items-start gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Customer Name</span>
+                      <span className="font-bold text-slate-900 text-left flex-1 leading-snug">
+                        {call.customerName || "—"}
+                      </span>
+                    </div>
+
+                    {call.customerType && (
+                      <div className="flex items-center gap-[0.6vw]">
+                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Customer Type</span>
+                        <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-bold border ${getCustomerTypePill(call.customerType)}`}>
+                          {call.customerType}
                         </span>
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Contact Number</span>
+                      {call.contactNumber ? (
+                        <a
+                          href={`tel:${call.contactNumber}`}
+                          className="font-bold text-[#1B539A] hover:underline flex items-center gap-[0.25vw] transition-colors"
+                        >
+                          <Phone className="w-[0.65vw] h-[0.65vw] text-[#1B539A] shrink-0" />
+                          <span>{call.contactNumber}</span>
+                        </a>
+                      ) : (
+                        <span className="text-slate-500">—</span>
                       )}
                     </div>
 
-                    <div className="mt-[0.75vw] space-y-[0.6vw] text-[0.76vw]">
-                      <div className="flex items-start justify-between gap-[0.8vw]">
-                        <span className="text-slate-500 font-medium shrink-0">Customer Name</span>
-                        <span className="font-semibold text-slate-800 text-right max-w-[18vw] leading-snug">
-                          {call.customerName || "—"}
-                        </span>
+                    {call.contactPerson && (
+                      <div className="flex items-center gap-[0.6vw]">
+                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Contact Person</span>
+                        <span className="font-semibold text-slate-900">{call.contactPerson}</span>
                       </div>
+                    )}
 
-                      {call.customerType && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Customer Type</span>
-                          <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-medium border ${getCustomerTypePill(call.customerType)}`}>
-                            {call.customerType}
-                          </span>
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Contact Number</span>
-                        {call.contactNumber ? (
-                          <a
-                            href={`tel:${call.contactNumber}`}
-                            className="font-medium text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.25vw] transition-colors"
-                          >
-                            <Phone className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
-                            <span>{call.contactNumber}</span>
-                          </a>
-                        ) : (
-                          <span className="text-slate-400">—</span>
-                        )}
+                    {call.emailId && (
+                      <div className="flex items-center gap-[0.6vw]">
+                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Email Address</span>
+                        <a
+                          href={`mailto:${call.emailId}`}
+                          className="font-bold text-[#1B539A] hover:underline flex items-center gap-[0.25vw]"
+                        >
+                          <Mail className="w-[0.65vw] h-[0.65vw] text-[#1B539A] shrink-0" />
+                          <span>{call.emailId}</span>
+                        </a>
                       </div>
+                    )}
 
-                      {call.contactPerson && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Contact Person</span>
-                          <span className="font-medium text-slate-800">{call.contactPerson}</span>
-                        </div>
-                      )}
-
-                      {call.emailId && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Email Address</span>
-                          <a
-                            href={`mailto:${call.emailId}`}
-                            className="font-medium text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-[0.25vw]"
-                          >
-                            <Mail className="w-[0.65vw] h-[0.65vw] text-blue-500 shrink-0" />
-                            <span>{call.emailId}</span>
-                          </a>
-                        </div>
-                      )}
-
-                      <div className="flex items-start justify-between gap-[0.8vw]">
-                        <span className="text-slate-500 font-medium shrink-0">Location</span>
-                        <span className="font-normal text-slate-800 text-right flex items-start justify-end gap-[0.25vw] max-w-[18vw] leading-snug">
-                          <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0 mt-[0.12vw]" />
-                          <span>{call.location || "—"}</span>
-                        </span>
-                      </div>
-
-                      {call.site && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 font-medium">Site / Branch</span>
-                          <span className="font-medium text-slate-800">{call.site}</span>
-                        </div>
-                      )}
+                    <div className="flex items-start gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Location</span>
+                      <span className="font-medium text-slate-900 flex items-start gap-[0.25vw] flex-1 leading-snug">
+                        <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-700 shrink-0 mt-[0.12vw]" />
+                        <span>{call.location || "—"}</span>
+                      </span>
                     </div>
+
+                    {call.site && (
+                      <div className="flex items-center gap-[0.6vw]">
+                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Site / Branch</span>
+                        <span className="font-semibold text-slate-900">{call.site}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* 2. Call Attributes Card */}
-                <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between pb-[0.6vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-semibold text-slate-800">
-                        <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-600">
-                          <Briefcase className="w-[0.85vw] h-[0.85vw]" />
-                        </div>
-                        <span>Call Attributes</span>
+                <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden">
+                  <div className="flex items-center justify-between px-[1.1vw] py-[0.7vw] bg-[#1B539A]/[0.04] border-b-2 border-slate-200">
+                    <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-bold text-slate-900">
+                      <div className="p-[0.28vw] rounded-[0.35vw] bg-[#1B539A]/10 text-[#1B539A]">
+                        <Briefcase className="w-[0.85vw] h-[0.85vw]" />
                       </div>
-                      <span className="font-medium text-[0.68vw] text-slate-600 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded border border-slate-200">
-                        {products.length} Product{products.length > 1 ? "s" : ""}
+                      <span>Call Attributes</span>
+                    </div>
+                    <span className="font-bold text-[0.68vw] text-slate-800 bg-white px-[0.4vw] py-[0.08vw] rounded border-2 border-slate-300">
+                      {products.length} Product{products.length > 1 ? "s" : ""}
+                    </span>
+                  </div>
+
+                  <div className="p-[1.1vw] space-y-[0.6vw] text-[0.76vw]">
+                    <div className="flex items-center gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Call Mode</span>
+                      <span className="font-semibold text-slate-900">{call.mode || "Phone"}</span>
+                    </div>
+
+                    <div className="flex items-center gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Current Engineer</span>
+                      <span className="font-bold text-[#1B539A] bg-[#1B539A]/10 px-[0.45vw] py-[0.1vw] rounded text-[0.74vw] border border-[#1B539A]/20">
+                        {call.currentEngineerName || "Unassigned"}
                       </span>
                     </div>
 
-                    <div className="mt-[0.75vw] space-y-[0.6vw] text-[0.76vw]">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Call Mode</span>
-                        <span className="font-medium text-slate-800">{call.mode || "Phone"}</span>
-                      </div>
+                    <div className="flex items-center gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Department</span>
+                      <span className="font-semibold text-slate-900">
+                        {call.currentDepartment || "Support Engineers"}
+                      </span>
+                    </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Current Engineer</span>
-                        <span className="font-medium text-indigo-700 bg-indigo-50 px-[0.45vw] py-[0.1vw] rounded text-[0.74vw] border border-indigo-100">
-                          {call.currentEngineerName || "Unassigned"}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Registered By</span>
+                      <span className="font-semibold text-slate-900">
+                        {call.registeredByName || call.registeredBy || "System"}
+                      </span>
+                    </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Department</span>
-                        <span className="font-medium text-slate-800">
-                          {call.currentDepartment || "Support Engineers"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Registered By</span>
-                        <span className="font-medium text-slate-800">
-                          {call.registeredByName || call.registeredBy || "System"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500 font-medium">Registered Date</span>
-                        <span className="font-medium text-slate-800">
-                          {fmtDate(call.dateTime || call.createdAt)}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-[0.6vw]">
+                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Registered Date</span>
+                      <span className="font-semibold text-slate-900">
+                        {fmtDate(call.dateTime || call.createdAt)}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Quick Products Summary Section */}
-              <div className="bg-white border border-slate-200/90 rounded-[0.9vw] p-[1.2vw] shadow-xs">
-                <div className="text-[0.8vw] font-medium text-slate-800 pb-[0.6vw] border-b border-slate-100 flex items-center justify-between">
+              <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] overflow-hidden">
+                <div className="px-[1.1vw] py-[0.7vw] bg-[#1B539A]/[0.04] border-b-2 border-slate-200 text-[0.8vw] font-bold text-slate-900 flex items-center justify-between">
                   <span className="flex items-center gap-[0.4vw]">
-                    <div className="p-[0.28vw] rounded-[0.35vw] bg-blue-50 text-blue-600">
+                    <div className="p-[0.28vw] rounded-[0.35vw] bg-[#1B539A]/10 text-[#1B539A]">
                       <Wrench className="w-[0.85vw] h-[0.85vw]" />
                     </div>
                     <span>Product Summary ({products.length})</span>
@@ -500,14 +500,14 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                   <button
                     type="button"
                     onClick={() => setActiveTab("products")}
-                    className="text-[0.72vw] text-blue-600 font-normal hover:text-blue-800 flex items-center gap-[0.15vw] transition-colors cursor-pointer group"
+                    className="text-[0.72vw] text-[#1B539A] font-bold hover:underline flex items-center gap-[0.15vw] transition-colors cursor-pointer group"
                   >
                     <span>View Details</span>
                     <ChevronRight className="w-[0.7vw] h-[0.7vw] group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
 
-                <div className="mt-[0.7vw] divide-y divide-slate-100">
+                <div className="p-[0.8vw] divide-y divide-slate-200">
                   {products.map((p, idx) => {
                     const closureStatus = p._productClosure?.status || (p._resolved ? "Resolved" : "Open");
                     const pStatusCfg = getStatusBadge(closureStatus);
@@ -515,31 +515,31 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                     return (
                       <div
                         key={idx}
-                        className="py-[0.55vw] first:pt-0 last:pb-0 flex items-center justify-between text-[0.76vw] hover:bg-slate-50/70 px-[0.3vw] rounded transition-colors"
+                        className="p-[0.6vw] first:pt-[0.3vw] last:pb-[0.3vw] flex items-center justify-between text-[0.76vw] hover:bg-slate-50/90 rounded-[0.5vw] transition-colors"
                       >
-                        <div className="flex items-center gap-[0.65vw]">
-                          <span className="w-[1.5vw] h-[1.5vw] rounded bg-slate-100 text-slate-600 font-normal flex items-center justify-center text-[0.68vw] border border-slate-200">
+                        <div className="flex items-center gap-[0.75vw]">
+                          <span className="w-[1.6vw] h-[1.6vw] rounded bg-slate-100 text-slate-800 font-bold flex items-center justify-center text-[0.68vw] border border-slate-300">
                             #{idx + 1}
                           </span>
                           <div>
-                            <div className="font-medium text-slate-800 text-[0.78vw]">
+                            <div className="font-bold text-slate-900 text-[0.78vw]">
                               {p.productModel || p.productName || p.itemCode || "Product"}
                             </div>
-                            <div className="text-[0.68vw] text-slate-500 font-mono mt-[0.05vw] flex items-center gap-[0.35vw]">
-                              <span>SN: <span className="text-slate-600 font-normal">{p.serialNumber || "N/A"}</span></span>
-                              <span className="text-slate-300">•</span>
-                              <span>Segment: <span className="text-slate-600 font-normal">{p.productSegment || "General"}</span></span>
+                            <div className="text-[0.68vw] text-slate-700 font-mono mt-[0.05vw] flex items-center gap-[0.35vw]">
+                              <span>SN: <span className="text-slate-900 font-semibold">{p.serialNumber || "N/A"}</span></span>
+                              <span className="text-slate-400">•</span>
+                              <span>Segment: <span className="text-slate-900 font-semibold">{p.productSegment || "General"}</span></span>
                             </div>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-[0.6vw]">
                           {p.errorCode && (
-                            <span className="px-[0.4vw] py-[0.08vw] bg-rose-50 border border-rose-200 text-rose-700 font-mono font-normal text-[0.68vw] rounded">
+                            <span className="px-[0.4vw] py-[0.08vw] bg-rose-50 border border-rose-300 text-rose-800 font-mono font-bold text-[0.68vw] rounded">
                               Err: {p.errorCode}
                             </span>
                           )}
-                          <span className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
+                          <span className={`inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.66vw] font-bold border uppercase tracking-wide ${pStatusCfg.pill}`}>
                             <span className={`w-[0.32vw] h-[0.32vw] rounded-full ${pStatusCfg.dot}`} />
                             {pStatusCfg.label}
                           </span>
@@ -554,7 +554,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
           {/* TAB 2: PRODUCTS DETAILED */}
           {activeTab === "products" && (
-            <div className="space-y-[0.9vw]">
+            <div className="space-y-[1vw]">
               {products.map((p, idx) => {
                 const closure = p._productClosure || {};
                 const closureStatus = closure.status || (p._resolved ? "Resolved" : "Open");
@@ -563,88 +563,90 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                 return (
                   <div
                     key={idx}
-                    className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.75vw]"
+                    className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] overflow-hidden"
                   >
-                    {/* Header */}
-                    <div className="flex items-center justify-between pb-[0.55vw] border-b border-slate-100">
-                      <div className="flex items-center gap-[0.55vw]">
-                        <span className="px-[0.45vw] py-[0.12vw] rounded bg-blue-50 text-blue-700 font-mono font-normal text-[0.7vw] border border-blue-200">
+                    {/* Header Banner */}
+                    <div className="flex items-center justify-between px-[1.2vw] py-[0.75vw] bg-[#1B539A]/[0.04] border-b-2 border-slate-200">
+                      <div className="flex items-center gap-[0.6vw]">
+                        <span className="w-[1.6vw] h-[1.6vw] rounded bg-[#1B539A]/10 text-[#1B539A] font-bold text-[0.7vw] flex items-center justify-center border-2 border-[#1B539A]/30">
                           #{idx + 1}
                         </span>
-                        <h4 className="text-[0.85vw] font-medium text-slate-800">
+                        <h4 className="text-[0.88vw] font-bold text-slate-900">
                           {p.productModel || p.productName || p.itemCode || "Item"}
                         </h4>
                       </div>
 
-                      <span className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border uppercase tracking-wide ${pStatusCfg.pill}`}>
+                      <span className={`inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.66vw] font-bold border-2 uppercase tracking-wide ${pStatusCfg.pill}`}>
                         <span className={`w-[0.32vw] h-[0.32vw] rounded-full ${pStatusCfg.dot}`} />
                         {pStatusCfg.label}
                       </span>
                     </div>
 
-                    {/* Product Specs Grid */}
-                    <div className="grid grid-cols-4 gap-[0.7vw] text-[0.74vw] bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border border-slate-200/80">
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Serial Number</span>
-                        <span className="font-mono font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
-                          {p.serialNumber || "—"}
-                        </span>
-                      </div>
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Product Segment</span>
-                        <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
-                          {p.productSegment || "—"}
-                        </span>
-                      </div>
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Warranty Status</span>
-                        <span className="font-normal text-slate-800 text-[0.78vw] mt-[0.1vw] block">
-                          {p.warrantyStatus || "In Warranty"}
-                        </span>
-                      </div>
-                      <div className="bg-white p-[0.5vw] rounded border border-slate-200/70">
-                        <span className="text-slate-400 block text-[0.64vw] font-normal uppercase tracking-wider">Error Code</span>
-                        <span className="font-mono font-normal text-rose-600 text-[0.78vw] mt-[0.1vw] block">
-                          {p.errorCode || "—"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Issue Description */}
-                    <div>
-                      <span className="text-[0.66vw] font-normal text-slate-400 uppercase tracking-wider block mb-[0.2vw]">
-                        Reported Issue
-                      </span>
-                      <div className="text-[0.74vw] text-slate-700 bg-slate-50/60 p-[0.6vw] rounded border border-slate-200 font-normal leading-relaxed">
-                        {p.callDescription ? p.callDescription : <span className="text-slate-400 italic">No specific issue description entered.</span>}
-                      </div>
-                    </div>
-
-                    {/* Closure Report Section */}
-                    {closure.status && (
-                      <div className="bg-emerald-50/50 border border-emerald-200 rounded-[0.5vw] p-[0.75vw] space-y-[0.4vw]">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[0.74vw] font-normal text-emerald-800 flex items-center gap-[0.3vw]">
-                            <CheckCircle2 className="w-[0.75vw] h-[0.75vw] text-emerald-600" />
-                            Closure Report ({closure.status})
+                    <div className="p-[1.2vw] space-y-[0.9vw]">
+                      {/* Clean Inline Specs Row */}
+                      <div className="grid grid-cols-4 gap-[1.2vw] py-[0.4vw] border-b-2 border-slate-200 text-[0.76vw]">
+                        <div>
+                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Serial Number</span>
+                          <span className="font-mono font-bold text-slate-900 mt-[0.1vw] block">
+                            {p.serialNumber || "—"}
                           </span>
-                          {closure.resolutionType && (
-                            <span className="text-[0.66vw] font-normal bg-white text-emerald-700 px-[0.4vw] py-[0.08vw] rounded border border-emerald-200">
-                              {closure.resolutionType}
-                            </span>
-                          )}
                         </div>
-                        {closure.remarks && (
-                          <div className="text-[0.74vw] text-emerald-950 font-normal leading-relaxed bg-white/80 p-[0.5vw] rounded border border-emerald-100">
-                            {closure.remarks}
-                          </div>
-                        )}
-                        <div className="text-[0.68vw] text-emerald-700 font-normal pt-[0.1vw]">
-                          Closed by: <span className="font-normal text-emerald-900">{closure.closedByName || closure.userName || "Engineer"}</span>
-                          {closure.closedAt && ` on ${fmtDate(closure.closedAt)}`}
+                        <div>
+                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Product Segment</span>
+                          <span className="font-bold text-slate-900 mt-[0.1vw] block">
+                            {p.productSegment || "—"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Warranty Status</span>
+                          <span className="font-bold text-slate-900 mt-[0.1vw] block">
+                            {p.warrantyStatus || "In Warranty"}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Error Code</span>
+                          <span className="font-mono font-bold text-rose-600 mt-[0.1vw] block">
+                            {p.errorCode || "—"}
+                          </span>
                         </div>
                       </div>
-                    )}
+
+                      {/* Reported Issue */}
+                      <div className="space-y-[0.25vw]">
+                        <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">
+                          Reported Issue
+                        </span>
+                        <div className="text-[0.76vw] text-slate-900 leading-relaxed font-medium">
+                          {p.callDescription ? p.callDescription : <span className="text-slate-500 italic">No specific issue description entered.</span>}
+                        </div>
+                      </div>
+
+                      {/* Closure Report Section (Minimalist Alert) */}
+                      {closure.status && (
+                        <div className="bg-emerald-50/60 border-2 border-emerald-300 rounded-[0.55vw] p-[0.8vw] space-y-[0.35vw]">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[0.74vw] font-bold text-emerald-900 flex items-center gap-[0.3vw]">
+                              <CheckCircle2 className="w-[0.75vw] h-[0.75vw] text-emerald-700" />
+                              Closure Report ({closure.status})
+                            </span>
+                            {closure.resolutionType && (
+                              <span className="text-[0.66vw] font-bold bg-white text-emerald-800 px-[0.4vw] py-[0.08vw] rounded border-2 border-emerald-300">
+                                {closure.resolutionType}
+                              </span>
+                            )}
+                          </div>
+                          {closure.remarks && (
+                            <div className="text-[0.76vw] text-emerald-950 font-medium leading-relaxed">
+                              {closure.remarks}
+                            </div>
+                          )}
+                          <div className="text-[0.68vw] text-emerald-800 font-bold pt-[0.1vw]">
+                            Closed by: <span className="text-emerald-950 font-black">{closure.closedByName || closure.userName || "Engineer"}</span>
+                            {closure.closedAt && ` on ${fmtDate(closure.closedAt)}`}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -653,9 +655,9 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
           {/* TAB 3: AUDIT TIMELINE */}
           {activeTab === "timeline" && (
-            <div className="bg-white border border-slate-200 rounded-[0.8vw] p-[1.1vw] shadow-2xs space-y-[0.9vw]">
-              <div className="text-[0.8vw] font-medium text-slate-800 pb-[0.6vw] border-b border-slate-100 flex items-center gap-[0.4vw]">
-                <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-600">
+            <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] p-[1.1vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] space-y-[0.9vw]">
+              <div className="text-[0.8vw] font-bold text-slate-900 pb-[0.6vw] border-b-2 border-slate-200 flex items-center gap-[0.4vw]">
+                <div className="p-[0.28vw] rounded-[0.35vw] bg-indigo-50 text-indigo-700">
                   <Activity className="w-[0.85vw] h-[0.85vw]" />
                 </div>
                 <span>Lifecycle History & Audits</span>
@@ -786,26 +788,26 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                           <div className={`border rounded-[0.5vw] p-[0.65vw] transition-colors ${cardBorder} hover:bg-white`}>
                             <div className="flex items-center justify-between text-[0.74vw]">
-                              <span className="font-normal text-slate-800">{ev.title}</span>
-                              <span className="text-slate-400 font-mono text-[0.68vw]">
+                              <span className="font-bold text-slate-900">{ev.title}</span>
+                              <span className="text-slate-700 font-mono text-[0.68vw] font-medium">
                                 {fmtDate(ev.time)}
                               </span>
                             </div>
-                            <div className="text-[0.72vw] text-slate-600 mt-[0.15vw] leading-relaxed font-normal flex items-center flex-wrap gap-x-[0.35vw]">
+                            <div className="text-[0.72vw] text-slate-800 mt-[0.15vw] leading-relaxed font-medium flex items-center flex-wrap gap-x-[0.35vw]">
                               <span>
-                                By <span className="text-slate-800">{ev.person}</span>
+                                By <span className="text-slate-950 font-bold">{ev.person}</span>
                               </span>
                               {ev.target && (
                                 <>
-                                  <span className="text-slate-300">•</span>
+                                  <span className="text-slate-400">•</span>
                                   <span>
-                                    To: <span className="text-slate-800">{ev.target}</span>
+                                    To: <span className="text-slate-950 font-bold">{ev.target}</span>
                                   </span>
                                 </>
                               )}
                               {ev.details && (
                                 <>
-                                  <span className="text-slate-300">•</span>
+                                  <span className="text-slate-400">•</span>
                                   <span>{ev.details}</span>
                                 </>
                               )}
@@ -822,11 +824,11 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
         </div>
 
         {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-        <div className="px-[1.6vw] py-[0.9vw] border-t border-slate-200/90 bg-white flex items-center justify-end shrink-0">
+        <div className="px-[1.6vw] py-[0.9vw] border-t border-slate-200/80 bg-slate-50/90 flex items-center justify-end shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.3vw] h-[2vw] text-[0.74vw] font-normal text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+            className="px-[1.3vw] h-[2.1vw] text-[0.74vw] font-medium text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 rounded-full transition-all cursor-pointer shadow-xs active:scale-95"
           >
             Close
           </button>

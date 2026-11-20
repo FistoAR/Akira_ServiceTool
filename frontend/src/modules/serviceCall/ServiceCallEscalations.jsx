@@ -729,7 +729,7 @@ const ServiceCallEscalations = () => {
                                 {call.priority || 'Normal'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-slate-700 font-medium leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-semibold leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const dateVal = escalationStartTime || call.dateTime;
@@ -748,9 +748,9 @@ const ServiceCallEscalations = () => {
                                   });
                                   return (
                                     <>
-                                      <span>{datePart}</span>
-                                      <span className="text-slate-400 font-normal">|</span>
-                                      <span className="text-slate-600">{timePart}</span>
+                                      <span className="text-[#4a2810]">{datePart}</span>
+                                      <span className="text-[#8c5835] font-normal">|</span>
+                                      <span className="text-[#5c3317]">{timePart}</span>
                                     </>
                                   );
                                 } catch {
