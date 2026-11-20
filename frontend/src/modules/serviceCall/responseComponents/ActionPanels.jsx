@@ -33,7 +33,7 @@ const AllocatedActionPanel = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
-    <div className="bg-white border border-slate-300 rounded-[0.8vw] shadow-sm overflow-hidden mt-[0.5vw]">
+    <div className="bg-white border border-slate-400 rounded-[0.8vw] shadow-sm overflow-hidden mt-[0.5vw]">
       <div className="bg-indigo-50/50 border-b border-indigo-100 p-[1vw] flex justify-between items-center">
         <h4 className="text-[0.9vw] font-black text-indigo-950 flex items-center gap-[0.5vw]">
           <MapPin className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
@@ -55,7 +55,7 @@ const AllocatedActionPanel = ({
           <span className="text-[0.75vw] font-bold text-slate-500 uppercase tracking-wider">
             Diagnosis / Objective
           </span>
-          <div className="text-[0.85vw] font-bold text-slate-800 bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-200">
+          <div className="text-[0.85vw] font-bold text-slate-800 bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-400">
             {product._fieldVisit.diagnosisSummary ||
               "No objective details specified."}
           </div>
@@ -72,7 +72,7 @@ const AllocatedActionPanel = ({
         </div>
       </div>
       {isReturned && (
-        <div className="p-[1vw] border-t border-slate-200 bg-slate-50/50 flex flex-col gap-[0.8vw]">
+        <div className="p-[1vw] border-t border-slate-400 bg-slate-50/50 flex flex-col gap-[0.8vw]">
           <div className="flex gap-[0.5vw]">
             <button
               onClick={() => {
@@ -250,7 +250,7 @@ const FieldVisitActionPanel = ({
   };
 
   return (
-    <div className="bg-white border border-slate-300 rounded-[0.8vw] shadow-sm overflow-hidden mt-[0.5vw]">
+    <div className="bg-white border border-slate-400 rounded-[0.8vw] shadow-sm overflow-hidden mt-[0.5vw]">
       <div className="bg-indigo-50/50 border-b border-indigo-100 p-[1vw] flex justify-between items-center">
         <h4 className="text-[0.9vw] font-black text-indigo-950 flex items-center gap-[0.5vw]">
           <MapPin className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
@@ -266,7 +266,7 @@ const FieldVisitActionPanel = ({
           <span className="text-[0.75vw] font-bold text-slate-500 uppercase tracking-wider">
             Diagnosis / Objective
           </span>
-          <div className="text-[0.85vw] font-bold text-slate-800 bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-200">
+          <div className="text-[0.85vw] font-bold text-slate-800 bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-400">
             {product._fieldVisit.diagnosisSummary ||
               "No objective details specified."}
           </div>
@@ -291,7 +291,7 @@ const FieldVisitActionPanel = ({
         </div>
       </div>
       {product._fieldVisit.assignedTo === currentUser?.userId && (
-        <div className="p-[1vw] border-t border-slate-200 bg-slate-50/50 flex flex-col gap-[0.8vw]">
+        <div className="p-[1vw] border-t border-slate-400 bg-slate-50/50 flex flex-col gap-[0.8vw]">
           <div className="flex gap-[0.5vw]">
             <button
               onClick={() => setAction("reschedule")}
@@ -343,7 +343,7 @@ const FieldVisitActionPanel = ({
                       value={visitDate}
                       onChange={(e) => setVisitDate(e.target.value)}
                       min={new Date().toISOString().split("T")[0]}
-                      className="w-full p-[0.5vw] text-[0.75vw] border border-slate-300 rounded-[0.4vw]"
+                      className="w-full p-[0.5vw] text-[0.75vw] border border-slate-400 rounded-[0.4vw]"
                     />
                   </div>
                 )}
@@ -355,7 +355,7 @@ const FieldVisitActionPanel = ({
                     value={remarks}
                     onChange={(e) => setRemarks(e.target.value)}
                     placeholder="Enter remarks..."
-                    className="w-full p-[0.5vw] text-[0.75vw] border border-slate-300 rounded-[0.4vw] min-h-[4vw] resize-y"
+                    className="w-full p-[0.5vw] text-[0.75vw] border border-slate-400 rounded-[0.4vw] min-h-[4vw] resize-y"
                   />
                 </div>
                 <div className="flex justify-end gap-[0.5vw]">

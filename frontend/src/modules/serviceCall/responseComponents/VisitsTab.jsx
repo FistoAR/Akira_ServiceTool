@@ -85,9 +85,9 @@ const VisitsTab = ({
   const totalPages = Math.ceil(currentCalls.length / pageSize) || 1;
 
   return (
-    <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+    <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
       {/* Top Toggle Bar */}
-      <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-300 bg-white shrink-0">
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-400 bg-white shrink-0">
         <div className="flex items-center gap-[0.7vw]">
           <span className="flex items-center gap-[0.35vw] text-[0.82vw] font-medium text-slate-800">
             <MapPin className="w-[0.95vw] h-[0.95vw] text-[#1a73e8]" />
@@ -95,7 +95,7 @@ const VisitsTab = ({
           </span>
 
           {/* Toggle pills */}
-          <div className="flex items-center p-[0.15vw] bg-slate-100 rounded-[0.5vw] border border-slate-300">
+          <div className="flex items-center p-[0.15vw] bg-slate-100 rounded-[0.5vw] border border-slate-400">
             <button
               type="button"
               onClick={() => { setSubView("assigned"); setPage(1); }}
@@ -136,24 +136,24 @@ const VisitsTab = ({
       {/* Table Area */}
       <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
         <table className="w-full text-left border-collapse">
-          <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+          <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-400 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
             <tr>
-              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
+              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 whitespace-nowrap min-w-[9.5vw]">
                 Visit Date / Time
               </th>
-              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[9vw]">
+              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 whitespace-nowrap min-w-[9vw]">
                 Call No
               </th>
-              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[13vw]">
+              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 whitespace-nowrap min-w-[13vw]">
                 Customer & Site
               </th>
-              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[14vw]">
+              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 whitespace-nowrap min-w-[14vw]">
                 Product / Issue
               </th>
-              <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+              <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-400 whitespace-nowrap min-w-[6.5vw]">
                 Priority
               </th>
-              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[12vw]">
+              <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 whitespace-nowrap min-w-[12vw]">
                 {subView === "assigned" ? "Objective & Allocated By" : "Assigned Engineer & Status"}
               </th>
               <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[10vw]">
@@ -177,7 +177,7 @@ const VisitsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
+                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 align-middle whitespace-nowrap bg-white"
                         >
                           {(() => {
                             const dateVal = prod._fieldVisit?.visitDate || row.dateTime || row.timestamp || row.createdAt;
@@ -210,7 +210,7 @@ const VisitsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
+                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 align-middle whitespace-nowrap bg-white"
                         >
                           <button
                             type="button"
@@ -229,7 +229,7 @@ const VisitsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle bg-white max-w-[14vw]"
+                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 align-middle bg-white max-w-[14vw]"
                         >
                           <CustomerInfoCell
                             customerName={row.customerName || row.partyDescription}
@@ -255,7 +255,7 @@ const VisitsTab = ({
                         </td>
                       )}
 
-                      <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[14vw]">
+                      <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 align-middle max-w-[14vw]">
                         <CustomTooltip
                           position="top-start"
                           className="max-w-full"
@@ -297,7 +297,7 @@ const VisitsTab = ({
                       {pIdx === 0 && (
                         <td
                           rowSpan={rowCount}
-                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white"
+                          className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-center align-middle whitespace-nowrap bg-white"
                         >
                           {(() => {
                             const p = row.priority || "Medium";
@@ -314,7 +314,7 @@ const VisitsTab = ({
                         </td>
                       )}
 
-                      <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle">
+                      <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 align-middle">
                         {subView === "assigned" ? (
                           <div className="text-left leading-tight">
                             <div className="text-[0.74vw] font-normal text-slate-800">
@@ -336,7 +336,7 @@ const VisitsTab = ({
                         )}
                       </td>
 
-                      <td className="py-[0.7vw] px-[0.7vw] border-b border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                      <td className="py-[0.7vw] px-[0.7vw] border-b border-slate-400 text-center align-middle whitespace-nowrap sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
                         <div className="flex items-center justify-center gap-[0.4vw]">
                           <button
                             type="button"
@@ -375,7 +375,7 @@ const VisitsTab = ({
               <tr>
                 <td colSpan="7" className="text-center py-[4vw] text-slate-500">
                   <div className="flex flex-col items-center justify-center gap-[0.6vw]">
-                    <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
+                    <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-400">
                       <MapPin className="w-[1.6vw] h-[1.6vw] text-slate-400" />
                     </div>
                     <p className="text-[0.9vw] font-medium text-slate-700">No field visits in this queue</p>
@@ -389,7 +389,7 @@ const VisitsTab = ({
       </div>
 
       {/* Pagination Footer */}
-      <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-300 bg-white shrink-0">
+      <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-400 bg-white shrink-0">
         <div className="text-[0.75vw] text-slate-600 font-medium">
           Showing <span className="font-semibold text-slate-800">{currentCalls.length > 0 ? (page - 1) * pageSize + 1 : 0}</span> to{" "}
           <span className="font-semibold text-slate-800">{Math.min(page * pageSize, currentCalls.length)}</span> of{" "}
@@ -399,7 +399,7 @@ const VisitsTab = ({
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+            className="p-[0.35vw] border border-slate-400 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
           >
             <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
           </button>
@@ -413,7 +413,7 @@ const VisitsTab = ({
                   className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
                     page === pNum
                       ? "bg-[#1a73e8] text-white shadow-2xs"
-                      : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                      : "bg-white border border-slate-400 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                   }`}
                 >
                   {pNum}
@@ -424,7 +424,7 @@ const VisitsTab = ({
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages || totalPages === 0}
-            className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+            className="p-[0.35vw] border border-slate-400 rounded-[0.4vw] hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
           >
             <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
           </button>

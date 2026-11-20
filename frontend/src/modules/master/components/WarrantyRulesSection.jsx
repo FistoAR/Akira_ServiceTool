@@ -157,12 +157,12 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                 placeholder="Search rules..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-slate-400 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
 
-          <div className="flex-1 overflow-hidden border border-gray-200 rounded-[0.6vw] bg-white flex flex-col shadow-2xs">
+          <div className="flex-1 overflow-hidden border border-slate-400 rounded-[0.6vw] bg-white flex flex-col shadow-2xs">
             <div className="flex-1 overflow-y-auto">
               {paginatedRules.length === 0 ? (
                 <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
@@ -170,7 +170,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                 </div>
               ) : (
                 <table className="w-full border-collapse text-[0.78vw] text-left text-gray-800">
-                  <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200">
+                  <thead className="sticky top-0 z-10 bg-gray-50 border-b border-slate-400">
                     <tr className="text-gray-600 text-[0.74vw] font-bold">
                       <th className="px-[0.8vw] py-[0.6vw]">Segment</th>
                       <th className="px-[0.8vw] py-[0.6vw]">Decoder Config</th>
@@ -257,7 +257,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                     type="button"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-[0.3vw] border border-gray-200 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    className="p-[0.3vw] border border-slate-400 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                     title="Previous page"
                   >
                     <ChevronLeft className="w-[0.85vw] h-[0.85vw]" />
@@ -277,7 +277,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                           className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
                             currentPage === pNum
                               ? "bg-blue-600 text-white shadow-2xs"
-                              : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                              : "bg-white border border-slate-400 text-gray-700 hover:border-blue-400 hover:text-blue-600"
                           }`}
                         >
                           {pNum}
@@ -289,7 +289,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                     type="button"
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="p-[0.3vw] border border-gray-200 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    className="p-[0.3vw] border border-slate-400 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                     title="Next page"
                   >
                     <ChevronRight className="w-[0.85vw] h-[0.85vw]" />
@@ -301,8 +301,8 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
         </div>
 
         {/* Right Column: Setup Form & Tester */}
-        <div className="lg:col-span-5 bg-gray-50/60 border border-gray-200 rounded-[0.6vw] p-[1.2vw] flex flex-col h-full overflow-hidden">
-          <div className="pb-[0.5vw] border-b border-gray-200 shrink-0">
+        <div className="lg:col-span-5 bg-gray-50/60 border border-slate-400 rounded-[0.6vw] p-[1.2vw] flex flex-col h-full overflow-hidden">
+          <div className="pb-[0.5vw] border-b border-slate-400 shrink-0">
             <h4 className="text-[0.88vw] font-bold text-gray-900">
               {editingRule ? `Edit Rule: ${editingRule.productSegment || editingRule.partyType}` : "Add Warranty Rule"}
             </h4>
@@ -331,7 +331,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
             </div>
 
             {/* 2. Serial decoder configuration */}
-            <div className="space-y-[0.6vw] pt-[0.4vw] border-t border-gray-200">
+            <div className="space-y-[0.6vw] pt-[0.4vw] border-t border-slate-400">
               <span className="text-[0.74vw] font-bold text-gray-900 block">Serial Number Indexing</span>
               
               <div className="grid grid-cols-2 gap-[0.7vw]">
@@ -346,7 +346,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, weekStartIdx: parseInt(e.target.value, 10) || 0 })
                         : setNewRule({ ...newRule, weekStartIdx: parseInt(e.target.value, 10) || 0 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                   <p className="text-[0.65vw] text-gray-400">0-based character index</p>
                 </div>
@@ -362,7 +362,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, weekLength: parseInt(e.target.value, 10) || 1 })
                         : setNewRule({ ...newRule, weekLength: parseInt(e.target.value, 10) || 1 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                   <p className="text-[0.65vw] text-gray-400">Standard 2 digits (e.g. 52)</p>
                 </div>
@@ -378,7 +378,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, yearStartIdx: parseInt(e.target.value, 10) || 0 })
                         : setNewRule({ ...newRule, yearStartIdx: parseInt(e.target.value, 10) || 0 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                   <p className="text-[0.65vw] text-gray-400">0-based character index</p>
                 </div>
@@ -394,7 +394,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, yearLength: parseInt(e.target.value, 10) || 1 })
                         : setNewRule({ ...newRule, yearLength: parseInt(e.target.value, 10) || 1 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                   <p className="text-[0.65vw] text-gray-400">Standard 2 digits (e.g. 26)</p>
                 </div>
@@ -402,7 +402,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
             </div>
 
             {/* 3. Duration & SLAs */}
-            <div className="space-y-[0.6vw] pt-[0.4vw] border-t border-gray-200">
+            <div className="space-y-[0.6vw] pt-[0.4vw] border-t border-slate-400">
               <span className="text-[0.74vw] font-bold text-gray-900 block">Warranty Durations & SLAs</span>
 
               <div className="grid grid-cols-3 gap-[0.6vw]">
@@ -417,7 +417,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, warrantyPeriodYears: parseInt(e.target.value, 10) || 1 })
                         : setNewRule({ ...newRule, warrantyPeriodYears: parseInt(e.target.value, 10) || 1 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                 </div>
 
@@ -432,7 +432,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, warrantySLADays: parseInt(e.target.value, 10) || 7 })
                         : setNewRule({ ...newRule, warrantySLADays: parseInt(e.target.value, 10) || 7 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                 </div>
 
@@ -447,14 +447,14 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                         ? setEditingRule({ ...editingRule, postWarrantySLADays: parseInt(e.target.value, 10) || 10 })
                         : setNewRule({ ...newRule, postWarrantySLADays: parseInt(e.target.value, 10) || 10 })
                     }
-                    className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.38vw] text-[0.82vw] outline-none focus:border-blue-500 font-medium"
                   />
                 </div>
               </div>
             </div>
 
             {/* 4. Real-time test decoder strip */}
-            <div className="space-y-[0.5vw] pt-[0.4vw] border-t border-gray-200">
+            <div className="space-y-[0.5vw] pt-[0.4vw] border-t border-slate-400">
               <div className="flex items-center justify-between">
                 <span className="text-[0.74vw] font-bold text-gray-900">Live Serial Tester</span>
                 <span className="text-[0.65vw] bg-emerald-50 text-emerald-700 font-semibold px-[0.4vw] py-[0.05vw] rounded border border-emerald-200">ACTIVE</span>
@@ -465,7 +465,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                 value={testSerial}
                 onChange={(e) => setTestSerial(e.target.value)}
                 placeholder="Paste or type sample serial..."
-                className="w-full bg-white border border-gray-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.82vw] outline-none font-mono font-medium text-gray-800"
+                className="w-full bg-white border border-slate-400 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.82vw] outline-none font-mono font-medium text-gray-800"
               />
 
               <div className="flex flex-wrap gap-[0.2vw] font-mono pt-[0.1vw]">
@@ -473,7 +473,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                   const isWeek = index >= wkStart && index < wkStart + wkLen;
                   const isYear = index >= yrStart && index < yrStart + yrLen;
 
-                  let colorClass = "bg-white text-gray-700 border-gray-200";
+                  let colorClass = "bg-white text-gray-700 border-slate-400";
                   if (isWeek) colorClass = "bg-orange-100 text-orange-800 border-orange-300 font-bold";
                   else if (isYear) colorClass = "bg-purple-100 text-purple-800 border-purple-300 font-bold";
 
@@ -499,7 +499,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
             </div>
           </div>
 
-          <div className="pt-[0.8vw] border-t border-gray-200 shrink-0">
+          <div className="pt-[0.8vw] border-t border-slate-400 shrink-0">
             {editingRule ? (
               canUpdate ? (
                 <div className="flex gap-[0.5vw]">
@@ -513,7 +513,7 @@ const WarrantyRulesSection = ({ warrantyRules = [], setWarrantyRules, segments =
                   <button
                     type="button"
                     onClick={() => setEditingRule(null)}
-                    className="px-[1vw] bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer"
+                    className="px-[1vw] bg-white border border-slate-400 hover:bg-gray-100 text-gray-700 py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer"
                   >
                     Cancel
                   </button>

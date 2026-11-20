@@ -1111,7 +1111,7 @@ const CustomerDatabase = () => {
       "bg-rose-50 text-rose-700 border-rose-200/80",
       "bg-indigo-50 text-indigo-700 border-indigo-200/80",
     ];
-    return colors[idx % colors.length] || "bg-gray-50 text-gray-700 border-gray-200";
+    return colors[idx % colors.length] || "bg-gray-50 text-gray-700 border-slate-400";
   };
 
   // Active visible columns (for table rendering)
@@ -1120,7 +1120,7 @@ const CustomerDatabase = () => {
   const renderHeaderCell = (col) => (
     <th
       key={col.key}
-      className={`py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-300 whitespace-nowrap ${
+      className={`py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-400 whitespace-nowrap ${
         col.key === "state" ? "min-w-[8vw] w-[8vw]" : ""
       }`}
     >
@@ -1133,7 +1133,7 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-[0.77vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-[0.77vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
@@ -1148,7 +1148,7 @@ const CustomerDatabase = () => {
                 ? "bg-purple-50 text-purple-700 border-purple-200"
                 : row.partyType === "Dealer"
                 ? "bg-amber-50 text-amber-700 border-amber-200"
-                : "bg-slate-50 text-slate-700 border-slate-200"
+                : "bg-slate-50 text-slate-700 border-slate-400"
             }`}>
               {row.partyType}
             </span>
@@ -1225,7 +1225,7 @@ const CustomerDatabase = () => {
   return (
     <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
       {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel (Matching Service Call Entry page) ── */}
-      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400/90 gap-[0.7vw] shrink-0">
         {/* Soft Pill Search Box */}
         <div className="relative w-[22vw]">
           <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
@@ -1257,7 +1257,7 @@ const CustomerDatabase = () => {
                 { value: "All", label: "All Types" },
                 ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-400 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
             />
           </div>
 
@@ -1266,7 +1266,7 @@ const CustomerDatabase = () => {
               {canWrite && (
                 <button
                   onClick={openAddModal}
-                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-2xs"
+                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 border border-slate-400 hover:border-slate-400 px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-2xs"
                 >
                   <Plus className="w-[0.85vw] h-[0.85vw] text-slate-600" />
                   <span>Add Party</span>
@@ -1341,7 +1341,7 @@ const CustomerDatabase = () => {
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="appearance-none bg-white font-medium text-slate-700 border border-slate-200 hover:border-slate-300 pl-[0.8vw] pr-[2vw] rounded-full outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+              className="appearance-none bg-white font-medium text-slate-700 border border-slate-400 hover:border-slate-400 pl-[0.8vw] pr-[2vw] rounded-full outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
             >
               <option value="latest">Sort by: Latest First</option>
               <option value="oldest">Sort by: Oldest First</option>
@@ -1354,13 +1354,13 @@ const CustomerDatabase = () => {
       </div>
 
       {/* ── Table Card ── */}
-      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 overflow-hidden min-h-0">
+      <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 flex flex-col flex-1 overflow-hidden min-h-0">
         <div className="overflow-x-auto overflow-y-auto flex-1 w-full min-h-0">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] tracking-wider uppercase">
+            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-400 text-slate-700 font-bold text-[0.74vw] tracking-wider uppercase">
               <tr className="bg-[#E9EDF7]">
                 {!isSupervisor && (
-                  <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[3%] text-center bg-[#E9EDF7]">
+                  <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 w-[3%] text-center bg-[#E9EDF7]">
                     <button
                       onClick={() => handleSelectAllPage(paginatedData)}
                       className="flex items-center justify-center w-full cursor-pointer"
@@ -1373,12 +1373,12 @@ const CustomerDatabase = () => {
                     </button>
                   </th>
                 )}
-                <th className="py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-300 w-[3.5%] text-center bg-[#E9EDF7]">
+                <th className="py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-400 w-[3.5%] text-center bg-[#E9EDF7]">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-slate-300 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                  <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-slate-400 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
                     Actions
                   </th>
                 )}
@@ -1410,10 +1410,10 @@ const CustomerDatabase = () => {
                   return (
                     <tr
                       key={i}
-                      className={`transition-colors border-b border-slate-300 ${isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/70"}`}
+                      className={`transition-colors border-b border-slate-400 ${isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/70"}`}
                     >
                       {!isSupervisor && (
-                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center">
+                        <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-center">
                           <button
                             onClick={() => handleSelectItem(row)}
                             className="flex items-center justify-center w-full cursor-pointer"
@@ -1426,7 +1426,7 @@ const CustomerDatabase = () => {
                           </button>
                         </td>
                       )}
-                      <td className="py-[0.7vw] px-[0.7vw] text-slate-700 font-normal border-r border-b border-slate-300 text-center text-[0.76vw]">
+                      <td className="py-[0.7vw] px-[0.7vw] text-slate-700 font-normal border-r border-b border-slate-400 text-center text-[0.76vw]">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
@@ -1436,7 +1436,7 @@ const CustomerDatabase = () => {
                       {!isSameParty && !isSupervisor ? (
                         <td
                           rowSpan={rowSpan}
-                          className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
+                          className="py-[0.7vw] px-[0.7vw] border-b border-r border-slate-400 text-center align-middle bg-white sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.06)]"
                         >
                           {(canUpdate || canDelete) ? (
                             <div className="flex items-center justify-center gap-[0.4vw] px-[0.4vw]">
@@ -1479,7 +1479,7 @@ const CustomerDatabase = () => {
         </div>
 
         {/* Pagination */}
-        <div className="border-t border-slate-300 px-[1vw] py-[0.7vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
+        <div className="border-t border-slate-400 px-[1vw] py-[0.7vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
           <div className="text-[0.74vw] text-slate-500 font-medium">
             Showing <span className="font-semibold text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</span> of <span className="font-semibold text-slate-800">{filteredData.length}</span> entries
           </div>
@@ -1487,7 +1487,7 @@ const CustomerDatabase = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-[0.35vw] border border-slate-400 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
               <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
             </button>
@@ -1501,7 +1501,7 @@ const CustomerDatabase = () => {
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
                     className={`min-w-[1.6vw] h-[1.6vw] px-[0.35vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold cursor-pointer transition-all ${
-                      currentPage === pNum ? "bg-[#1a73e8] text-white shadow-2xs" : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                      currentPage === pNum ? "bg-[#1a73e8] text-white shadow-2xs" : "bg-white border border-slate-400 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                     }`}
                   >
                     {pNum}
@@ -1512,7 +1512,7 @@ const CustomerDatabase = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-slate-300 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
+              className="p-[0.35vw] border border-slate-400 rounded-[0.4vw] hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-slate-600"
             >
               <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
             </button>
@@ -1553,7 +1553,7 @@ const CustomerDatabase = () => {
               {/* Form Content */}
               <form onSubmit={handleManualSubmit} className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
                 {/* Party Details Card */}
-                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-gray-200/80">
+                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-slate-400/80">
                   <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
                     <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
                     <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
@@ -1568,7 +1568,7 @@ const CustomerDatabase = () => {
                         onChange={handleAddPartyCodeChange}
                         suggestions={uniquePartyCodes}
                         placeholder="e.g. CUS-001"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
@@ -1591,7 +1591,7 @@ const CustomerDatabase = () => {
                       onChange={handleAddPartyDescChange}
                       suggestions={uniquePartyDescriptions}
                       placeholder="Company / Customer Name"
-                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
 
@@ -1603,7 +1603,7 @@ const CustomerDatabase = () => {
                         onChange={(val) => setNewEntry({ ...newEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
@@ -1613,14 +1613,14 @@ const CustomerDatabase = () => {
                         onChange={(val) => setNewEntry({ ...newEntry, districtCity: val })}
                         suggestions={addModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Items Section Card */}
-                <div className="bg-white border border-gray-200/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
+                <div className="bg-white border border-slate-400/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
                   <div className="flex justify-between items-center mb-[0.6vw]">
                     <div className="flex items-center gap-[0.4vw]">
                       <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
@@ -1656,7 +1656,7 @@ const CustomerDatabase = () => {
                               onChange={(val) => handleItemChange(idx, "productSegment", val)}
                               suggestions={uniqueSegments}
                               placeholder="Segment"
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
                           <div className="flex-1 flex flex-col gap-[0.2vw]">
@@ -1666,7 +1666,7 @@ const CustomerDatabase = () => {
                               value={item.itemCode}
                               readOnly={isExisting}
                               onChange={(e) => handleItemChange(idx, "itemCode", e.target.value)}
-                              className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
+                              className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
                               placeholder="Item Code"
                             />
                           </div>
@@ -1678,7 +1678,7 @@ const CustomerDatabase = () => {
                               onChange={(val) => handleItemChange(idx, "itemDescription", val)}
                               suggestions={uniqueItemDescriptions}
                               placeholder="Item Description"
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
                           <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
@@ -1689,7 +1689,7 @@ const CustomerDatabase = () => {
                               min="0"
                               value={item.warrantyPeriodDays}
                               onChange={(e) => handleItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                               placeholder="Days"
                             />
                           </div>
@@ -1715,7 +1715,7 @@ const CustomerDatabase = () => {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-[1.2vw] h-[2.2vw] border border-gray-200 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
+                    className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -1767,7 +1767,7 @@ const CustomerDatabase = () => {
               {/* Edit Form */}
               <form onSubmit={handleEditSubmit} className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto">
                 {/* Party Details Card */}
-                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-gray-200/80">
+                <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-slate-400/80">
                   <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
                     <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
                     <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
@@ -1780,7 +1780,7 @@ const CustomerDatabase = () => {
                         required
                         value={editEntry.partyCode}
                         onChange={(e) => setEditEntry({ ...editEntry, partyCode: e.target.value })}
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
                         placeholder="e.g. CUS-001"
                       />
                     </div>
@@ -1802,7 +1802,7 @@ const CustomerDatabase = () => {
                       required
                       value={editEntry.partyDescription}
                       onChange={(e) => setEditEntry({ ...editEntry, partyDescription: e.target.value })}
-                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
                       placeholder="Company Name"
                     />
                   </div>
@@ -1815,7 +1815,7 @@ const CustomerDatabase = () => {
                         onChange={(val) => setEditEntry({ ...editEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
@@ -1825,14 +1825,14 @@ const CustomerDatabase = () => {
                         onChange={(val) => setEditEntry({ ...editEntry, districtCity: val })}
                         suggestions={editModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Items Section Card */}
-                <div className="bg-white border border-gray-200/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
+                <div className="bg-white border border-slate-400/90 rounded-[0.7vw] p-[1vw] shadow-2xs">
                   <div className="flex justify-between items-center mb-[0.6vw]">
                     <div className="flex items-center gap-[0.4vw]">
                       <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
@@ -1859,7 +1859,7 @@ const CustomerDatabase = () => {
                             required
                             value={item.itemCode}
                             onChange={(e) => handleEditItemChange(idx, "itemCode", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
                             placeholder="Code"
                           />
                         </div>
@@ -1869,7 +1869,7 @@ const CustomerDatabase = () => {
                             required
                             value={item.itemDescription}
                             onChange={(e) => handleEditItemChange(idx, "itemDescription", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             placeholder="Description"
                           />
                         </div>
@@ -1881,7 +1881,7 @@ const CustomerDatabase = () => {
                             min="0"
                             value={item.warrantyPeriodDays}
                             onChange={(e) => handleEditItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                             placeholder="Days"
                           />
                         </div>
@@ -1892,7 +1892,7 @@ const CustomerDatabase = () => {
                             onChange={(val) => handleEditItemChange(idx, "productSegment", val)}
                             suggestions={uniqueSegments}
                             placeholder="Segment"
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-gray-200 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                           />
                         </div>
                         <div className="flex flex-col justify-end">
@@ -1914,7 +1914,7 @@ const CustomerDatabase = () => {
                   <button
                     type="button"
                     onClick={() => { setEditingPartyCode(null); setEditEntry(null); }}
-                    className="px-[1.2vw] h-[2.2vw] border border-gray-200 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
+                    className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>

@@ -223,7 +223,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.97, y: 10 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-slate-50 rounded-[1.2vw] shadow-2xl border border-slate-200 w-full max-w-[58vw] max-h-[88vh] flex flex-col overflow-hidden font-sans"
+        className="bg-slate-50 rounded-[1.2vw] shadow-2xl border border-slate-200 w-full max-w-[58vw] h-[84vh] max-h-[88vh] flex flex-col overflow-hidden font-sans"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── HEADER ──────────────────────────────────────────────────────── */}
@@ -236,56 +236,48 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
               </div>
 
               <div>
-                <div className="flex items-center gap-[0.5vw] flex-wrap">
+                <div className="flex items-center gap-[0.6vw] flex-wrap">
                   <span className="font-mono font-bold text-[1.05vw] text-slate-900 tracking-tight">
                     {call.callNumber || "Service Call"}
                   </span>
 
-                  <button
-                    type="button"
-                    onClick={handleCopyCallNo}
-                    className="p-[0.25vw] text-slate-700 hover:text-[#1B539A] hover:bg-[#1B539A]/10 rounded transition-all cursor-pointer"
-                    title="Copy Call Reference"
-                  >
-                    {copied ? (
-                      <Check className="w-[0.8vw] h-[0.8vw] text-emerald-700 font-bold" />
-                    ) : (
-                      <Copy className="w-[0.8vw] h-[0.8vw]" />
+                  {/* Plain text status & priority */}
+                  <div className="flex items-center gap-[0.45vw] text-[0.76vw] text-slate-500 font-normal">
+                    {(!isSelfAssigned || (statusCfg.label !== "Assigned" && statusCfg.label !== "Registered")) && (
+                      <>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-slate-600 font-medium">
+                          {statusCfg.label}
+                        </span>
+                      </>
                     )}
-                  </button>
 
-                  {/* Status Pill */}
-                  {(!isSelfAssigned || (statusCfg.label !== "Assigned" && statusCfg.label !== "Registered")) && (
-                    <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold border ${statusCfg.pill}`}>
-                      <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${statusCfg.dot}`} />
-                      {statusCfg.label}
+                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-600 font-medium">
+                      {priorityCfg.label} Priority
                     </span>
-                  )}
 
-                  {/* Priority Pill */}
-                  <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold border ${priorityCfg.pill}`}>
-                    <span className={`w-[0.35vw] h-[0.35vw] rounded-full ${priorityCfg.dot}`} />
-                    {priorityCfg.label}
-                  </span>
-
-                  {isSelfAssigned && (
-                    <span className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.12vw] rounded-full text-[0.68vw] font-bold bg-teal-50 text-teal-800 border border-teal-300">
-                      <UserCheck className="w-[0.65vw] h-[0.65vw]" />
-                      Self Assigned
-                    </span>
-                  )}
+                    {isSelfAssigned && (
+                      <>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-teal-700 font-medium">
+                          Self Assigned
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
 
-                <div className="text-[0.72vw] text-slate-700 font-medium mt-[0.15vw] flex items-center gap-[0.35vw]">
-                  <Clock className="w-[0.68vw] h-[0.68vw] text-slate-700 shrink-0" />
+                <div className="text-[0.72vw] text-slate-700 font-medium mt-[0.3vw] flex items-center gap-[0.35vw]">
+                  <Clock className="w-[0.68vw] h-[0.68vw] text-amber-900/70 shrink-0" />
                   <span>
-                    Registered on <span className="text-slate-900 font-bold">{fmtDate(call.dateTime || call.createdAt)}</span>
+                    Registered on <span className="text-amber-900 font-medium">{fmtDate(call.dateTime || call.createdAt)}</span>
                   </span>
                   {call.registeredByName && call.registeredByName !== "System" && (
                     <>
                       <span className="text-slate-400">•</span>
                       <span>
-                        by <span className="text-slate-900 font-bold">{call.registeredByName}</span>
+                        by <span className="text-slate-800 font-medium">{call.registeredByName}</span>
                       </span>
                     </>
                   )}
@@ -336,6 +328,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                   {isActive && (
                     <motion.div
                       layoutId="activeTabUnderline"
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#1B539A] rounded-t-full"
                     />
                   )}
@@ -353,7 +346,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
               {/* Customer & Call Attributes Cards */}
               <div className="grid grid-cols-2 gap-[1.2vw] items-stretch">
                 {/* 1. Customer Details Card */}
-                <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden">
+                <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] flex flex-col justify-start overflow-hidden">
                   <div className="flex items-center justify-between px-[1.1vw] py-[0.7vw] bg-[#1B539A]/[0.04] border-b-2 border-slate-200">
                     <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-bold text-slate-900">
                       <div className="p-[0.28vw] rounded-[0.35vw] bg-[#1B539A]/10 text-[#1B539A]">
@@ -370,49 +363,64 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                   <div className="p-[1.1vw] space-y-[0.6vw] text-[0.76vw]">
                     <div className="flex items-start gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Customer Name</span>
-                      <span className="font-bold text-slate-900 text-left flex-1 leading-snug">
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Customer Name</span>
+                        <span>:</span>
+                      </span>
+                      <span className="font-medium text-slate-900 text-left flex-1 leading-snug">
                         {call.customerName || "—"}
                       </span>
                     </div>
 
                     {call.customerType && (
                       <div className="flex items-center gap-[0.6vw]">
-                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Customer Type</span>
-                        <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-bold border ${getCustomerTypePill(call.customerType)}`}>
+                        <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                          <span>Customer Type</span>
+                          <span>:</span>
+                        </span>
+                        <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-medium border ${getCustomerTypePill(call.customerType)}`}>
                           {call.customerType}
                         </span>
                       </div>
                     )}
 
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Contact Number</span>
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Contact Number</span>
+                        <span>:</span>
+                      </span>
                       {call.contactNumber ? (
                         <a
                           href={`tel:${call.contactNumber}`}
-                          className="font-bold text-[#1B539A] hover:underline flex items-center gap-[0.25vw] transition-colors"
+                          className="font-medium text-[#1B539A] hover:underline flex items-center gap-[0.25vw] transition-colors"
                         >
                           <Phone className="w-[0.65vw] h-[0.65vw] text-[#1B539A] shrink-0" />
                           <span>{call.contactNumber}</span>
                         </a>
                       ) : (
-                        <span className="text-slate-500">—</span>
+                        <span className="text-slate-500 font-medium">—</span>
                       )}
                     </div>
 
                     {call.contactPerson && (
                       <div className="flex items-center gap-[0.6vw]">
-                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Contact Person</span>
-                        <span className="font-semibold text-slate-900">{call.contactPerson}</span>
+                        <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                          <span>Contact Person</span>
+                          <span>:</span>
+                        </span>
+                        <span className="font-medium text-slate-900">{call.contactPerson}</span>
                       </div>
                     )}
 
                     {call.emailId && (
                       <div className="flex items-center gap-[0.6vw]">
-                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Email Address</span>
+                        <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                          <span>Email Address</span>
+                          <span>:</span>
+                        </span>
                         <a
                           href={`mailto:${call.emailId}`}
-                          className="font-bold text-[#1B539A] hover:underline flex items-center gap-[0.25vw]"
+                          className="font-medium text-[#1B539A] hover:underline flex items-center gap-[0.25vw]"
                         >
                           <Mail className="w-[0.65vw] h-[0.65vw] text-[#1B539A] shrink-0" />
                           <span>{call.emailId}</span>
@@ -421,24 +429,30 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                     )}
 
                     <div className="flex items-start gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Location</span>
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Location</span>
+                        <span>:</span>
+                      </span>
                       <span className="font-medium text-slate-900 flex items-start gap-[0.25vw] flex-1 leading-snug">
-                        <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-700 shrink-0 mt-[0.12vw]" />
+                        <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-600 shrink-0 mt-[0.12vw]" />
                         <span>{call.location || "—"}</span>
                       </span>
                     </div>
 
                     {call.site && (
                       <div className="flex items-center gap-[0.6vw]">
-                        <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Site / Branch</span>
-                        <span className="font-semibold text-slate-900">{call.site}</span>
+                        <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                          <span>Site / Branch</span>
+                          <span>:</span>
+                        </span>
+                        <span className="font-medium text-slate-900">{call.site}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
                 {/* 2. Call Attributes Card */}
-                <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden">
+                <div className="bg-white border-2 border-slate-300 rounded-[0.8vw] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] flex flex-col justify-start overflow-hidden">
                   <div className="flex items-center justify-between px-[1.1vw] py-[0.7vw] bg-[#1B539A]/[0.04] border-b-2 border-slate-200">
                     <div className="flex items-center gap-[0.4vw] text-[0.8vw] font-bold text-slate-900">
                       <div className="p-[0.28vw] rounded-[0.35vw] bg-[#1B539A]/10 text-[#1B539A]">
@@ -453,34 +467,49 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                   <div className="p-[1.1vw] space-y-[0.6vw] text-[0.76vw]">
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Call Mode</span>
-                      <span className="font-semibold text-slate-900">{call.mode || "Phone"}</span>
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Call Mode</span>
+                        <span>:</span>
+                      </span>
+                      <span className="font-medium text-slate-900">{call.mode || "Phone"}</span>
                     </div>
 
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Current Engineer</span>
-                      <span className="font-bold text-[#1B539A] bg-[#1B539A]/10 px-[0.45vw] py-[0.1vw] rounded text-[0.74vw] border border-[#1B539A]/20">
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Current Engineer</span>
+                        <span>:</span>
+                      </span>
+                      <span className="font-medium text-[#1B539A] bg-[#1B539A]/10 px-[0.45vw] py-[0.1vw] rounded text-[0.74vw] border border-[#1B539A]/20">
                         {call.currentEngineerName || "Unassigned"}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Department</span>
-                      <span className="font-semibold text-slate-900">
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Department</span>
+                        <span>:</span>
+                      </span>
+                      <span className="font-medium text-slate-900">
                         {call.currentDepartment || "Support Engineers"}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Registered By</span>
-                      <span className="font-semibold text-slate-900">
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Registered By</span>
+                        <span>:</span>
+                      </span>
+                      <span className="font-medium text-slate-900">
                         {call.registeredByName || call.registeredBy || "System"}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="text-slate-700 font-semibold w-[7vw] shrink-0">Registered Date</span>
-                      <span className="font-semibold text-slate-900">
+                      <span className="text-[#530000] font-semibold w-[7.8vw] shrink-0 flex justify-between">
+                        <span>Registered Date</span>
+                        <span>:</span>
+                      </span>
+                      <span className="font-medium text-slate-900">
                         {fmtDate(call.dateTime || call.createdAt)}
                       </span>
                     </div>
@@ -522,13 +551,13 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                             #{idx + 1}
                           </span>
                           <div>
-                            <div className="font-bold text-slate-900 text-[0.78vw]">
+                            <div className="font-medium text-slate-900 text-[0.78vw]">
                               {p.productModel || p.productName || p.itemCode || "Product"}
                             </div>
                             <div className="text-[0.68vw] text-slate-700 font-mono mt-[0.05vw] flex items-center gap-[0.35vw]">
-                              <span>SN: <span className="text-slate-900 font-semibold">{p.serialNumber || "N/A"}</span></span>
+                              <span><strong className="font-semibold text-slate-800">SN:</strong> <span className="text-slate-900 font-medium">{p.serialNumber || "N/A"}</span></span>
                               <span className="text-slate-400">•</span>
-                              <span>Segment: <span className="text-slate-900 font-semibold">{p.productSegment || "General"}</span></span>
+                              <span><strong className="font-semibold text-slate-800">Segment:</strong> <span className="text-slate-900 font-medium">{p.productSegment || "General"}</span></span>
                             </div>
                           </div>
                         </div>
@@ -586,26 +615,26 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                       {/* Clean Inline Specs Row */}
                       <div className="grid grid-cols-4 gap-[1.2vw] py-[0.4vw] border-b-2 border-slate-200 text-[0.76vw]">
                         <div>
-                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Serial Number</span>
-                          <span className="font-mono font-bold text-slate-900 mt-[0.1vw] block">
+                          <span className="text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider block">Serial Number</span>
+                          <span className="font-mono font-medium text-slate-900 mt-[0.1vw] block">
                             {p.serialNumber || "—"}
                           </span>
                         </div>
                         <div>
-                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Product Segment</span>
-                          <span className="font-bold text-slate-900 mt-[0.1vw] block">
+                          <span className="text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider block">Product Segment</span>
+                          <span className="font-medium text-slate-900 mt-[0.1vw] block">
                             {p.productSegment || "—"}
                           </span>
                         </div>
                         <div>
-                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Warranty Status</span>
-                          <span className="font-bold text-slate-900 mt-[0.1vw] block">
+                          <span className="text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider block">Warranty Status</span>
+                          <span className="font-medium text-slate-900 mt-[0.1vw] block">
                             {p.warrantyStatus || "In Warranty"}
                           </span>
                         </div>
                         <div>
-                          <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">Error Code</span>
-                          <span className="font-mono font-bold text-rose-600 mt-[0.1vw] block">
+                          <span className="text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider block">Error Code</span>
+                          <span className="font-mono font-medium text-rose-600 mt-[0.1vw] block">
                             {p.errorCode || "—"}
                           </span>
                         </div>
@@ -613,7 +642,7 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
 
                       {/* Reported Issue */}
                       <div className="space-y-[0.25vw]">
-                        <span className="text-[0.66vw] font-bold text-slate-700 uppercase tracking-wider block">
+                        <span className="text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider block">
                           Reported Issue
                         </span>
                         <div className="text-[0.76vw] text-slate-900 leading-relaxed font-medium">
@@ -766,17 +795,17 @@ export const CallDetailsModal = ({ call, employees, onClose }) => {
                       const isResolved = ev.title.includes("Resolved") || ev.title.includes("Closed");
 
                       let dotColor = "bg-blue-600";
-                      let cardBorder = "border-slate-200 bg-slate-50/60";
+                      let cardBorder = "border-2 border-slate-300 bg-slate-100/70";
 
                       if (isCritical) {
                         dotColor = "bg-rose-600";
-                        cardBorder = "border-rose-200 bg-rose-50/30";
+                        cardBorder = "border-2 border-rose-300 bg-rose-50/70";
                       } else if (isEscalation) {
                         dotColor = "bg-orange-500";
-                        cardBorder = "border-amber-200 bg-amber-50/30";
+                        cardBorder = "border-2 border-amber-300 bg-amber-50/70";
                       } else if (isResolved) {
                         dotColor = "bg-emerald-600";
-                        cardBorder = "border-emerald-200 bg-emerald-50/30";
+                        cardBorder = "border-2 border-emerald-300 bg-emerald-50/70";
                       }
 
                       return (

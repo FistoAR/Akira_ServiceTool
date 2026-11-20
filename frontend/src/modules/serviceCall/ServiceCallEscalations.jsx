@@ -544,7 +544,7 @@ const ServiceCallEscalations = () => {
             </div>
 
             {/* Unified Date Range Capsule */}
-            <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+            <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
               <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
               <input
                 ref={fromDateRef}
@@ -729,7 +729,7 @@ const ServiceCallEscalations = () => {
                                 {call.priority || 'Normal'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-semibold leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-normal leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const dateVal = escalationStartTime || call.dateTime;
@@ -748,9 +748,9 @@ const ServiceCallEscalations = () => {
                                   });
                                   return (
                                     <>
-                                      <span className="text-[#4a2810]">{datePart}</span>
+                                      <span className="text-[#4a2810] font-normal">{datePart}</span>
                                       <span className="text-[#8c5835] font-normal">|</span>
-                                      <span className="text-[#5c3317]">{timePart}</span>
+                                      <span className="text-[#5c3317] font-normal">{timePart}</span>
                                     </>
                                   );
                                 } catch {

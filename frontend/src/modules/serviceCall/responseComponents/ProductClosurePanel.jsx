@@ -402,7 +402,7 @@ const ProductClosurePanel = ({
     <div className="flex flex-col gap-[0.8vw]">
       <div className="flex flex-col gap-[0.6vw]">
         {savedBadge ? (
-          <div className="flex items-center justify-between border-b border-slate-200 pb-[0.6vw]">
+          <div className="flex items-center justify-between border-b border-slate-400 pb-[0.6vw]">
             <span className="text-[0.72vw] font-normal text-slate-400 uppercase tracking-wider">
               Current Status
             </span>
@@ -427,7 +427,7 @@ const ProductClosurePanel = ({
                   className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.74vw] font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
                     isActive
                       ? t.activeStyle
-                      : `bg-white border-slate-300 text-slate-700 ${t.hoverStyle}`
+                      : `bg-white border-slate-400 text-slate-700 ${t.hoverStyle}`
                   }`}
                 >
                   {t.icon &&
@@ -472,7 +472,7 @@ const ProductClosurePanel = ({
                       className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.7vw] py-[0.55vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm ${
                         errors.supportPerson
                           ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
-                          : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                          : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.supportPerson && (
@@ -482,7 +482,7 @@ const ProductClosurePanel = ({
                       </div>
                     )}
                     {showDropdown && candidates.length > 0 && (
-                      <div className="absolute top-full left-0 right-0 z-20 border border-slate-300 bg-white rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto divide-y divide-slate-100 shadow-lg mt-[-0.1vw]">
+                      <div className="absolute top-full left-0 right-0 z-20 border border-slate-400 bg-white rounded-b-[0.5vw] max-h-[12vw] overflow-y-auto divide-y divide-slate-100 shadow-lg mt-[-0.1vw]">
                         {candidates.map((emp) => (
                           <div
                             key={emp.userId}
@@ -521,7 +521,7 @@ const ProductClosurePanel = ({
                       className={`w-full border rounded-[0.5vw] p-[0.6vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
                         errors.notes
                           ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
-                          : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                          : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.notes && (
@@ -708,7 +708,7 @@ const ProductClosurePanel = ({
                     className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
-                        : "border-slate-300 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
+                        : "border-slate-400 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
                     }`}
                   />
                   {errors.remarks && (

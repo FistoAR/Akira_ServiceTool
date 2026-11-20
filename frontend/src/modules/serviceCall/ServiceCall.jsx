@@ -1939,11 +1939,11 @@ export default function ServiceCall() {
               </div>
 
               <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
-                <table className="w-full text-left border-collapse">
-                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+                <table className="w-full text-left border-collapse border border-[#777777]">
+                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-[#777777] text-slate-800 font-bold text-[0.74vw] uppercase tracking-wider">
                     <tr>
                       {canDelete && !isSupervisor && (
-                        <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[3%] text-center">
+                        <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] w-[3%] text-center">
                           <button
                             onClick={toggleSelectPage}
                             className="flex items-center justify-center w-full cursor-pointer"
@@ -1956,25 +1956,25 @@ export default function ServiceCall() {
                           </button>
                         </th>
                       )}
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center whitespace-nowrap w-[3.5vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] text-center whitespace-nowrap w-[3.5vw]">
                         S.No
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[11vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] whitespace-nowrap min-w-[11vw]">
                         Call No & Date
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] whitespace-nowrap min-w-[15vw]">
                         Customer
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[7vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-[#777777] whitespace-nowrap min-w-[7vw]">
                         Customer Type
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[15vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] whitespace-nowrap min-w-[15vw]">
                         Product / System
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[6.5vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] text-center border-r border-[#777777] whitespace-nowrap min-w-[6.5vw]">
                         Priority
                       </th>
-                      <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[8vw]">
+                      <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] whitespace-nowrap min-w-[8vw]">
                         Status
                       </th>
                       <th className="py-[0.7vw] px-[0.7vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[6vw]">
@@ -2063,14 +2063,22 @@ export default function ServiceCall() {
                         const rowCount = displayProducts.length;
                         const rowId = row.id || row._id;
                         const isSelected = selectedItems.has(rowId);
-                        const cellBg = isSelected ? "bg-blue-50/70" : "bg-white";
+                        const isEvenRow = rowIdx % 2 === 0;
+                        const rowBg = isSelected
+                          ? "!bg-[#e8f0fe]"
+                          : isEvenRow
+                          ? "!bg-[#ffffff]"
+                          : "!bg-[#f8fafc]";
+                        const cellBg = rowBg;
 
                         if (rowCount === 0) return null;
 
                         return displayProducts.map((prod, pIdx) => {
                           const bgClass = isSelected
-                            ? "bg-blue-50/70"
-                            : "bg-white hover:bg-slate-50/70";
+                            ? "!bg-[#e8f0fe]"
+                            : isEvenRow
+                            ? "!bg-[#ffffff] hover:!bg-[#f1f5f9]"
+                            : "!bg-[#f8fafc] hover:!bg-[#f1f5f9]";
 
                           return (
                             <tr
@@ -2083,7 +2091,7 @@ export default function ServiceCall() {
                                   {canDelete && !isSupervisor && (
                                     <td
                                       rowSpan={rowCount}
-                                      className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle ${cellBg}`}
+                                      className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle ${cellBg}`}
                                     >
                                       <button
                                         onClick={() => toggleSelect(rowId)}
@@ -2104,7 +2112,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap font-medium text-slate-800 text-[0.76vw] ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap font-medium text-slate-800 text-[0.76vw] ${cellBg}`}
                                 >
                                   {(currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1}
                                 </td>
@@ -2114,7 +2122,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
@@ -2122,7 +2130,7 @@ export default function ServiceCall() {
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-semibold leading-normal mt-[0.2vw]">
+                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-normal leading-normal mt-[0.2vw]">
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
@@ -2139,9 +2147,9 @@ export default function ServiceCall() {
                                         });
                                         return (
                                           <>
-                                            <span className="text-[#4a2810]">{datePart}</span>
+                                            <span className="text-[#4a2810] font-normal">{datePart}</span>
                                             <span className="text-[#8c5835] font-normal">|</span>
-                                            <span className="text-[#5c3317]">{timePart}</span>
+                                            <span className="text-[#5c3317] font-normal">{timePart}</span>
                                           </>
                                         );
                                       } catch {
@@ -2156,7 +2164,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[15vw] ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] align-middle max-w-[15vw] ${cellBg}`}
                                 >
                                   <CustomerInfoCell
                                     customerName={row.customerName}
@@ -2170,7 +2178,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap text-[0.78vw] font-normal ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap text-[0.78vw] font-normal ${cellBg}`}
                                 >
                                   {row.customerType && row.customerType !== "All" ? (
                                     <span
@@ -2195,7 +2203,7 @@ export default function ServiceCall() {
                               )}
 
                               {/* 3. Product / System */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle max-w-[15vw]">
+                              <td className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] align-middle max-w-[15vw] ${cellBg}`}>
                                 <CustomTooltip
                                   position="top-start"
                                   className="max-w-full"
@@ -2245,7 +2253,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap ${cellBg}`}
                                 >
                                   {(() => {
                                     const p = row.priority || "Medium";
@@ -2263,7 +2271,7 @@ export default function ServiceCall() {
                               )}
 
                               {/* 5. Status & Assignee */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap">
+                              <td className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] align-middle whitespace-nowrap ${cellBg}`}>
                                 {(() => {
                                   const status = getProductStatus(prod, effectiveStatus);
                                   const cfg = getStatusCfg(status);
@@ -2318,7 +2326,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-b border-r border-slate-300 text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : "bg-white"}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-b border-r border-[#777777] text-center align-middle whitespace-nowrap sticky right-0 z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] ${isSelected ? "bg-[#f1f6fd]" : cellBg}`}
                                 >
                                   <div className="flex items-center justify-center gap-[0.3vw] action-menu-container">
                                     {/* Direct 1-click Info modal */}

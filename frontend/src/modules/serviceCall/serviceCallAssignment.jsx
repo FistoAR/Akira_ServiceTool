@@ -395,63 +395,35 @@ export default function ServiceCallAssignment() {
             className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden gap-[0.7vw]"
           >
             {/* Top Navigation & Action Header */}
-            <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.6vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 shrink-0">
+            <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border-2 border-slate-300 shrink-0">
               <div className="flex items-center gap-[0.8vw]">
                 <button
                   type="button"
                   onClick={handleCloseAssignView}
-                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-semibold transition-colors"
+                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border-2 border-slate-300 bg-slate-50 hover:bg-slate-100 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-semibold transition-colors"
                 >
                   <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                   <span>Back to Queue</span>
                 </button>
-                <div className="h-[1.4vw] w-[1px] bg-slate-200 mx-[0.2vw]" />
+                <div className="h-[1.6vw] w-[1px] bg-slate-300 mx-[0.2vw]" />
                 <div className="flex items-center gap-[0.6vw]">
-                  <div className="w-[2.2vw] h-[2.2vw] bg-blue-600 rounded-[0.55vw] flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]">
+                  <div className="w-[2.2vw] h-[2.2vw] bg-[#1a73e8] rounded-[0.55vw] flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)]">
                     <UserPlus className="w-[1.1vw] h-[1.1vw]" />
                   </div>
                   <div>
                     <div className="flex items-center gap-[0.5vw]">
-                      <h2 className="text-[1.05vw] font-semibold text-slate-800 leading-tight">
+                      <h2 className="text-[1.05vw] font-bold text-slate-900 leading-tight">
                         Allocate Field Engineer
                       </h2>
-                      <span className="text-[0.68vw] bg-blue-100 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
+                      <span className="text-[0.68vw] bg-blue-50 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
                         {selectedGroup.callNumber}
                       </span>
                     </div>
-                    <div className="text-[0.72vw] text-slate-500 font-medium">
+                    <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.25vw]">
                       Assign engineer and define initial SLA response window
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-[0.6vw]">
-                <button
-                  type="button"
-                  onClick={handleCloseAssignView}
-                  className="px-[0.9vw] h-[2.1vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-medium text-[0.75vw] cursor-pointer transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleAssign}
-                  disabled={isAssigning || !selectedEngineer}
-                  className="px-[1.2vw] h-[2.1vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-medium text-[0.75vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.45vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isAssigning ? (
-                    <>
-                      <Loader2 className="w-[0.85vw] h-[0.85vw] animate-spin" />
-                      <span>Allocating...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Confirm Assignment</span>
-                      <ArrowRight className="w-[0.85vw] h-[0.85vw]" />
-                    </>
-                  )}
-                </button>
               </div>
             </div>
 
@@ -466,69 +438,79 @@ export default function ServiceCallAssignment() {
             )}
 
             {/* Call Details Summary Ribbon */}
-            <div className="bg-white rounded-[0.8vw] border border-slate-200 p-[0.9vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.04)] grid grid-cols-5 gap-[1vw] shrink-0">
-              <div className="flex flex-col">
-                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                  <User className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Customer
-                </span>
-                <span className="text-[0.82vw] text-slate-800 font-semibold truncate mt-[0.1vw]" title={selectedGroup.customerName}>
-                  {selectedGroup.customerName}
-                </span>
-                <span className="text-[0.66vw] text-blue-600 font-mono font-medium">{selectedGroup.partyCode}</span>
+            <div className="bg-white rounded-[0.8vw] border-2 border-slate-300 px-[1.2vw] py-[0.85vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.04)] grid grid-cols-5 divide-x-2 divide-slate-200 shrink-0">
+              <div className="flex flex-col items-center justify-center pr-[1vw]">
+                <div className="flex flex-col items-start text-left max-w-full">
+                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                    <User className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Customer
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={selectedGroup.customerName}>
+                    {selectedGroup.customerName}
+                  </span>
+                  <span className="text-[0.66vw] text-slate-600 font-mono font-medium">{selectedGroup.partyCode}</span>
+                </div>
               </div>
 
-              <div className="flex flex-col">
-                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                  <MapPin className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Location &amp; Site
-                </span>
-                <span className="text-[0.8vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
-                  {selectedGroup.location || "—"}
-                </span>
-                {selectedGroup.site && (
-                  <span className="text-[0.66vw] text-slate-600 font-medium">Site: {selectedGroup.site}</span>
-                )}
+              <div className="flex flex-col items-center justify-center px-[1vw]">
+                <div className="flex flex-col items-start text-left max-w-full">
+                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                    <MapPin className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Location &amp; Site
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={`${selectedGroup.site ? selectedGroup.site + " • " : ""}${selectedGroup.location || "—"}`}>
+                    {selectedGroup.location || "—"}
+                  </span>
+                  <span className="text-[0.66vw] text-slate-600 font-medium">
+                    Site: {selectedGroup.site || "—"}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col">
-                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                  <Phone className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Contact
-                </span>
-                <span className="text-[0.8vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
-                  {selectedGroup.contactPerson || "—"}
-                </span>
-                <span className="text-[0.66vw] text-slate-600 font-mono">{selectedGroup.contactNumber || "—"}</span>
+              <div className="flex flex-col items-center justify-center px-[1vw]">
+                <div className="flex flex-col items-start text-left max-w-full">
+                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                    <Phone className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Contact
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={selectedGroup.contactPerson || "—"}>
+                    {selectedGroup.contactPerson || "—"}
+                  </span>
+                  <span className="text-[0.66vw] text-slate-600 font-mono font-medium">
+                    {selectedGroup.contactNumber || "—"}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col">
-                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                  <Tag className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Segment
-                </span>
-                <span className="text-[0.8vw] text-indigo-700 font-semibold truncate mt-[0.1vw]">
-                  {selectedGroup.segment}
-                </span>
-                <span className="text-[0.66vw] text-slate-600 font-medium">Type: {selectedGroup.customerType}</span>
+              <div className="flex flex-col items-center justify-center px-[1vw]">
+                <div className="flex flex-col items-start text-left max-w-full">
+                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                    <Tag className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Segment
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full">
+                    {selectedGroup.segment}
+                  </span>
+                  <span className="text-[0.66vw] text-slate-600 font-medium">
+                    Type: {selectedGroup.customerType}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex flex-col">
-                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                  <AlertCircle className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Priority Level
-                </span>
-                <span className={`text-[0.8vw] font-semibold truncate mt-[0.1vw] ${
-                  selectedGroup.priority === 'Critical' ? 'text-rose-600' :
-                  selectedGroup.priority === 'High' ? 'text-amber-600' :
-                  'text-blue-600'
-                }`}>
-                  {selectedGroup.priority}
-                </span>
-                <span className="text-[0.66vw] text-slate-600 font-medium">{selectedGroup.products.length} product(s)</span>
+              <div className="flex flex-col items-center justify-center pl-[1vw]">
+                <div className="flex flex-col items-start text-left max-w-full">
+                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                    <AlertCircle className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Priority Level
+                  </span>
+                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full">
+                    {selectedGroup.priority}
+                  </span>
+                  <span className="text-[0.66vw] text-slate-600 font-medium">{selectedGroup.products.length} product(s)</span>
+                </div>
               </div>
             </div>
 
             {/* Split Workspace View: Eligible Engineers & Assignment Review */}
-            <div className="flex-1 min-h-0 bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex overflow-hidden">
+            <div className="flex-1 min-h-0 bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-2 border-slate-300 flex overflow-hidden">
               {/* Left Column: Eligible Engineer Roster */}
-              <div className="w-[42%] flex flex-col border-r border-slate-200 overflow-hidden bg-slate-50/40">
-                <div className="p-[0.9vw] border-b border-slate-200 bg-white">
+              <div className="w-[40%] flex flex-col border-r-2 border-slate-300 overflow-hidden bg-slate-50/50">
+                <div className="p-[0.9vw] border-b-2 border-slate-200 bg-white">
                   <div className="relative">
                     <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-500" />
                     <input 
@@ -536,7 +518,7 @@ export default function ServiceCallAssignment() {
                       placeholder="Search qualified engineers..." 
                       value={engSearch} 
                       onChange={e => setEngSearch(e.target.value)} 
-                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.76vw] text-slate-800 font-normal transition-all" 
+                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-slate-50 border-2 border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.76vw] text-slate-800 font-medium transition-all" 
                     />
                     {engSearch && (
                       <button 
@@ -569,10 +551,10 @@ export default function ServiceCallAssignment() {
                         <div 
                           key={emp.userId} 
                           onClick={() => setSelectedEngineer(emp)} 
-                          className={`flex items-center gap-[0.7vw] p-[0.7vw] rounded-[0.6vw] border transition-all cursor-pointer ${
+                          className={`flex items-center gap-[0.75vw] p-[0.75vw] rounded-[0.6vw] border-2 transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
-                              : 'bg-white border-slate-200/90 hover:border-blue-300 hover:bg-blue-50/30'
+                              ? 'bg-[#1a73e8] border-[#1a73e8] text-white shadow-md' 
+                              : 'bg-white border-slate-300 hover:border-blue-400 hover:bg-blue-50/40 shadow-2xs'
                           }`}
                         >
                           <div className={`w-[2.4vw] h-[2.4vw] rounded-full flex items-center justify-center font-bold text-[0.85vw] bg-gradient-to-br ${
@@ -581,7 +563,7 @@ export default function ServiceCallAssignment() {
                             {initials(emp.name)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className={`font-medium text-[0.82vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
+                            <div className={`font-semibold text-[0.84vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>
                               {emp.name}
                             </div>
                             <div className="flex items-center gap-[0.35vw] mt-[0.2vw]">
@@ -589,18 +571,18 @@ export default function ServiceCallAssignment() {
                                 {emp.department || "Engineer"}
                               </span>
                               {emp.activeTasks > 0 ? (
-                                <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-medium border ${
+                                <span className={`px-[0.4vw] py-[0.06vw] rounded-full text-[0.6vw] font-medium border ${
                                   isSelected 
-                                    ? 'bg-amber-400/20 text-amber-100 border-amber-300/30' 
-                                    : 'bg-amber-50 text-amber-700 border-amber-200'
+                                    ? 'bg-amber-400/25 text-amber-100 border-amber-300/40' 
+                                    : 'bg-amber-50 text-amber-800 border-amber-300'
                                 }`}>
                                   {emp.activeTasks} Active
                                 </span>
                               ) : (
-                                <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-medium border ${
+                                <span className={`px-[0.4vw] py-[0.06vw] rounded-full text-[0.6vw] font-medium border ${
                                   isSelected 
-                                    ? 'bg-emerald-400/20 text-emerald-100 border-emerald-300/30' 
-                                    : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    ? 'bg-emerald-400/25 text-emerald-100 border-emerald-300/40' 
+                                    : 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                 }`}>
                                   Available
                                 </span>
@@ -621,15 +603,15 @@ export default function ServiceCallAssignment() {
               <div className="flex-1 bg-white flex flex-col overflow-hidden">
                 {selectedEngineer ? (
                   <div className="p-[1.4vw] flex flex-col h-full overflow-y-auto custom-scrollbar justify-between">
-                    <div className="space-y-[1.3vw]">
+                    <div className="space-y-[1.2vw]">
                       {/* Selected Engineer Banner */}
-                      <div className="bg-slate-50 rounded-[0.7vw] p-[1vw] border border-slate-200 flex items-center justify-between">
+                      <div className="bg-slate-50/80 rounded-[0.7vw] p-[1vw] border-2 border-slate-300 flex items-center justify-between">
                         <div className="flex items-center gap-[0.85vw]">
                           <div className={`w-[2.8vw] h-[2.8vw] rounded-full flex items-center justify-center text-[0.95vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
                             {initials(selectedEngineer.name)}
                           </div>
                           <div>
-                            <div className="text-[1vw] font-semibold text-slate-800 leading-tight">
+                            <div className="text-[1.05vw] font-bold text-slate-900 leading-tight">
                               {selectedEngineer.name}
                             </div>
                             <div className="text-[0.74vw] text-slate-600 font-medium mt-[0.15vw]">
@@ -637,10 +619,10 @@ export default function ServiceCallAssignment() {
                             </div>
                           </div>
                         </div>
-                        <span className={`px-[0.7vw] py-[0.2vw] rounded-full text-[0.68vw] font-medium border ${
+                        <span className={`px-[0.7vw] py-[0.2vw] rounded-full text-[0.68vw] font-semibold border ${
                           selectedEngineer.activeTasks > 0 
-                            ? 'bg-amber-50 text-amber-700 border-amber-200' 
-                            : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            ? 'bg-amber-50 text-amber-800 border-amber-300' 
+                            : 'bg-emerald-50 text-emerald-800 border-emerald-300'
                         }`}>
                           {selectedEngineer.activeTasks} Active Tasks
                         </span>
@@ -648,20 +630,20 @@ export default function ServiceCallAssignment() {
 
                       {/* Allocated Products List */}
                       <div>
-                        <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-medium text-slate-500 uppercase tracking-wider mb-[0.55vw]">
+                        <div className="flex items-center gap-[0.4vw] text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider mb-[0.55vw]">
                           <Package className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                           <span>Allocated Products ({selectedGroup.products.length})</span>
                         </div>
                         <div className="space-y-[0.4vw] max-h-[14vw] overflow-y-auto custom-scrollbar pr-[0.3vw]">
                           {selectedGroup.products.map(({ p, productIdx }) => (
-                            <div key={productIdx} className="bg-slate-50 p-[0.7vw] rounded-[0.5vw] border border-slate-200 flex items-center justify-between text-[0.78vw]">
+                            <div key={productIdx} className="bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border-2 border-slate-200 flex items-center justify-between text-[0.78vw]">
                               <div>
-                                <div className="text-slate-800 font-medium">{p.productModel || p.itemCode}</div>
+                                <div className="text-slate-900 font-semibold">{p.productModel || p.itemCode}</div>
                                 {p.errorCode && (
                                   <div className="text-[0.66vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
                                 )}
                               </div>
-                              <span className="text-slate-600 font-mono text-[0.72vw] bg-white px-[0.45vw] py-[0.15vw] rounded border border-slate-200 font-medium">
+                              <span className="text-slate-700 font-mono text-[0.72vw] bg-white px-[0.5vw] py-[0.15vw] rounded border-2 border-slate-300 font-semibold">
                                 SN: {p.serialNumber || "—"}
                               </span>
                             </div>
@@ -671,36 +653,36 @@ export default function ServiceCallAssignment() {
 
                       {/* SLA Delivery Window */}
                       <div>
-                        <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-medium text-slate-500 uppercase tracking-wider mb-[0.55vw]">
+                        <div className="flex items-center gap-[0.4vw] text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider mb-[0.55vw]">
                           <Clock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                           <span>SLA Delivery Window</span>
                         </div>
                         <div className="grid grid-cols-2 gap-[1vw]">
                           <div className="flex flex-col gap-[0.25vw]">
-                            <span className="text-[0.65vw] font-medium text-slate-600 uppercase">Target Hours</span>
+                            <span className="text-[0.66vw] font-semibold text-slate-700 uppercase">Target Hours</span>
                             <input 
                               type="number" 
                               min="0"
                               value={resHours} 
                               onChange={e => setResHours(e.target.value)} 
-                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-medium text-slate-800 transition-all" 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border-2 border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-bold text-slate-900 transition-all" 
                             />
                           </div>
                           <div className="flex flex-col gap-[0.25vw]">
-                            <span className="text-[0.65vw] font-medium text-slate-600 uppercase">Target Minutes</span>
+                            <span className="text-[0.66vw] font-semibold text-slate-700 uppercase">Target Minutes</span>
                             <input 
                               type="number" 
                               min="0" 
                               max="59"
                               value={resMins} 
                               onChange={e => setResMins(e.target.value)} 
-                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-medium text-slate-800 transition-all" 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border-2 border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-bold text-slate-900 transition-all" 
                             />
                           </div>
                         </div>
-                        <div className="flex items-center gap-[0.45vw] p-[0.7vw] bg-blue-50/70 rounded-[0.5vw] border border-blue-200/60 mt-[0.7vw]">
+                        <div className="flex items-center gap-[0.45vw] p-[0.7vw] bg-blue-50/70 rounded-[0.5vw] border-2 border-blue-200/60 mt-[0.7vw]">
                           <Info className="w-[0.85vw] h-[0.85vw] text-blue-600 shrink-0" />
-                          <span className="text-[0.7vw] text-blue-800 font-medium">
+                          <span className="text-[0.7vw] text-blue-900 font-medium">
                             Resolution target starts counting upon assignment confirmation.
                           </span>
                         </div>
@@ -708,18 +690,18 @@ export default function ServiceCallAssignment() {
                     </div>
 
                     {/* Bottom Action Footer */}
-                    <div className="pt-[1.2vw] border-t border-slate-200 flex justify-end gap-[0.6vw] mt-[1.2vw]">
+                    <div className="pt-[1.2vw] border-t-2 border-slate-200 flex justify-end gap-[0.6vw] mt-[1.2vw]">
                       <button
                         type="button"
                         onClick={() => setSelectedEngineer(null)}
-                        className="px-[1.1vw] h-[2.3vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-medium text-[0.78vw] cursor-pointer transition-colors"
+                        className="px-[1.1vw] h-[2.3vw] border-2 border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.78vw] cursor-pointer transition-colors"
                       >
                         Change Engineer
                       </button>
                       <button 
                         onClick={handleAssign}
                         disabled={isAssigning}
-                        className="px-[1.4vw] h-[2.3vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-medium text-[0.78vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-60"
+                        className="px-[1.4vw] h-[2.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.5vw] font-semibold text-[0.78vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] cursor-pointer disabled:opacity-60"
                       >
                         {isAssigning ? (
                           <>
@@ -783,7 +765,7 @@ export default function ServiceCallAssignment() {
         {/* Right cluster: Date Range, Clear, Count & Priority */}
         <div className="flex items-center gap-[0.6vw] flex-shrink-0">
           {/* Unified Date Range Capsule */}
-          <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+          <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
             <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
             <input
               ref={fromDateRef}
@@ -970,7 +952,7 @@ export default function ServiceCallAssignment() {
                             >
                               {g.callNumber}
                             </button>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-semibold leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-normal leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const d = new Date(g.timestamp || g.dateTime);
@@ -987,9 +969,9 @@ export default function ServiceCallAssignment() {
                                   });
                                   return (
                                     <>
-                                      <span className="text-[#4a2810]">{datePart}</span>
+                                      <span className="text-[#4a2810] font-normal">{datePart}</span>
                                       <span className="text-[#8c5835] font-normal">|</span>
-                                      <span className="text-[#5c3317]">{timePart}</span>
+                                      <span className="text-[#5c3317] font-normal">{timePart}</span>
                                     </>
                                   );
                                 } catch {

@@ -62,9 +62,9 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
               {history.map((call) => (
                 <div
                   key={call._id}
-                  className="bg-white border border-slate-300 rounded-[0.6vw] p-[1vw] shadow-sm"
+                  className="bg-white border border-slate-400 rounded-[0.6vw] p-[1vw] shadow-sm"
                 >
-                  <div className="flex justify-between items-center border-b border-slate-200 pb-[0.5vw] mb-[0.6vw]">
+                  <div className="flex justify-between items-center border-b border-slate-400 pb-[0.5vw] mb-[0.6vw]">
                     <div className="flex items-center gap-[0.6vw]">
                       <span className="font-bold text-[0.9vw] text-slate-800">
                         Call ID : {call.callNumber}
@@ -110,7 +110,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                       return (
                         <div
                           key={idx}
-                          className="bg-slate-50 border border-slate-200 p-[1vw] rounded-[0.5vw]"
+                          className="bg-slate-50 border border-slate-400 p-[1vw] rounded-[0.5vw]"
                         >
                           <div className="grid grid-cols-2 gap-[0.8vw] text-[0.85vw] text-slate-700 leading-relaxed">
                             <div>

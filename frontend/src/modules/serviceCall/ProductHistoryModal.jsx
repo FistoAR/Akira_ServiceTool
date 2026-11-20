@@ -81,7 +81,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
   });
 
   return (
-    <div className={hideHeader ? "" : "mt-[1vw] pt-[1vw] border-t border-slate-300"}>
+    <div className={hideHeader ? "" : "mt-[1vw] pt-[1vw] border-t border-slate-400"}>
       {!hideHeader && (
         <div className="flex justify-between items-center mb-[0.6vw]">
           <h3 className="text-[0.85vw] font-black text-slate-800 flex items-center gap-[0.4vw]">
@@ -135,7 +135,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                     )}
                   </div>
                   <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-xs bg-white border ${
-                    isSlaBreached ? 'border-rose-200' : 'border-slate-200'
+                    isSlaBreached ? 'border-rose-200' : 'border-slate-400'
                   }`}>
                     <div className="flex justify-between items-start mb-[0.2vw]">
                       <span className={`text-[0.9vw] font-semibold ${isSlaBreached ? 'text-rose-700' : 'text-slate-850'} flex items-center gap-[0.4vw]`}>
@@ -180,7 +180,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                 <div className={`flex-1 rounded-[0.5vw] p-[0.6vw] shadow-xs bg-white border ${
                   isHighlightedEvent 
                     ? 'border-blue-300' 
-                    : 'border-slate-200'
+                    : 'border-slate-400'
                 }`}>
                   <div className="flex justify-between items-start mb-[0.2vw]">
                     <span className={`text-[0.9vw] font-semibold ${isHighlightedEvent ? 'text-blue-900' : 'text-slate-850'}`}>
@@ -218,7 +218,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                     </div>
                   )}
                   {h.remarks && (
-                    <div className="text-[0.8vw] text-slate-700 bg-slate-50 border border-slate-200/80 rounded-[0.4vw] p-[0.5vw] mt-[0.35vw] font-normal leading-relaxed">
+                    <div className="text-[0.8vw] text-slate-700 bg-slate-50 border border-slate-400/80 rounded-[0.4vw] p-[0.5vw] mt-[0.35vw] font-normal leading-relaxed">
                       {h.remarks}
                     </div>
                   )}
@@ -247,7 +247,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
                           return (
                             <div
                               key={dIdx}
-                              className="text-[0.74vw] bg-slate-50/60 rounded-[0.35vw] p-[0.4vw] border border-slate-200/60"
+                              className="text-[0.74vw] bg-slate-50/60 rounded-[0.35vw] p-[0.4vw] border border-slate-400/60"
                             >
                               <div className="font-medium text-slate-500 text-[0.68vw] uppercase tracking-wide mb-[0.2vw]">
                                 {label}
@@ -255,7 +255,7 @@ export const ProductHistoryTimeline = ({ history, employees, currentUser, forceS
 
                               <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
                                 {/* Previous Value */}
-                                <div className="bg-white rounded-[0.3vw] px-[0.4vw] py-[0.28vw] border border-slate-200/80">
+                                <div className="bg-white rounded-[0.3vw] px-[0.4vw] py-[0.28vw] border border-slate-400/80">
                                   <div className="text-[0.6vw] font-medium text-slate-400 uppercase tracking-wider mb-[0.05vw]">
                                     Previous
                                   </div>
@@ -311,7 +311,7 @@ export const ProductHistoryModal = ({ history, employees, currentUser, onClose }
         className="bg-slate-50 w-full max-w-[40vw] max-h-[80vh] rounded-[1vw] shadow-2xl flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-[1.1vw] border-b border-slate-200 bg-white flex justify-between items-center">
+        <div className="p-[1.1vw] border-b border-slate-400 bg-white flex justify-between items-center">
           <h2 className="text-[1.1vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
             <History className="w-[1.3vw] h-[1.3vw] text-indigo-600" />
             Product History

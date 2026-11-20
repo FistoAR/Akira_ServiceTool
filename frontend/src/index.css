@@ -183,35 +183,101 @@ html {
   -moz-appearance: textfield;
 }
 
-/* Input and form control border thickness & crisp visibility */
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]),
+/* Global input fields & custom controls border enhancement (exclude transparent/borderless/table inputs & capsule date-pickers) */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):not([class*="border-none"]),
 textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]),
 select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]),
 [data-custom-dropdown-trigger],
-.custom-dropdown-trigger {
+.custom-dropdown-trigger,
+.form-cancel-btn,
+div:has(> input.no-native-calendar),
+div:has(> .no-native-calendar),
+.date-range-capsule {
   border-width: 1.5px !important;
-  border-color: #cbd5e1 !important; /* crisp slate-300 */
+  border-color: #94a3b8 !important; /* solid slate-400 for crisp, visible form borders */
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):hover,
 textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):hover,
 [data-custom-dropdown-trigger]:hover,
-.custom-dropdown-trigger:hover {
-  border-color: #94a3b8 !important; /* slate-400 on hover */
+.custom-dropdown-trigger:hover,
+.form-cancel-btn:hover,
+div:has(> input.no-native-calendar):hover,
+div:has(> .no-native-calendar):hover,
+.date-range-capsule:hover {
+  border-color: #64748b !important;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):focus,
 textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):focus,
+select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):focus,
 [data-custom-dropdown-trigger]:focus,
-.custom-dropdown-trigger:focus {
-  border-color: #2563eb !important; /* blue-600 focus */
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+.custom-dropdown-trigger:focus,
+.form-cancel-btn:focus,
+div:has(> input.no-native-calendar):focus-within,
+div:has(> .no-native-calendar):focus-within,
+.date-range-capsule:focus-within {
+  border-color: #073761 !important; /* deep rich navy/logo blue */
+  box-shadow: 0 0 0 2.5px rgba(7, 55, 97, 0.25) !important;
 }
 
-/* Ensure borderless/capsule date inputs stay clean */
+/* Override utility classes so Tailwind's focus styles also align with the deep dark logo blue */
+.focus\:border-blue-500:focus,
+.focus\:border-blue-600:focus,
+.focus\:border-indigo-500:focus,
+.focus\:border-indigo-400:focus {
+  border-color: #073761 !important;
+}
+.focus\:ring-blue-500\/15:focus,
+.focus\:ring-blue-400\/20:focus,
+.focus\:ring-blue-500:focus,
+.focus\:ring-blue-200:focus,
+.focus\:ring-indigo-500\/10:focus,
+.focus\:ring-indigo-500\/30:focus,
+.focus\:ring-indigo-500:focus {
+  --tw-ring-color: rgba(7, 55, 97, 0.25) !important;
+  box-shadow: 0 0 0 2.5px rgba(7, 55, 97, 0.25) !important;
+}
+
+/* Explicitly ensure embedded date inputs inside unified capsule filters remain borderless */
 .no-native-calendar,
 input.no-native-calendar {
   border: none !important;
   border-width: 0 !important;
   box-shadow: none !important;
+}
+
+/* Global Table Cells Border Color (#777777) & Odd/Even Row Striping across the entire application */
+table {
+  border-color: #777777 !important;
+}
+
+table th,
+table td {
+  border-color: #777777 !important;
+}
+
+thead.border-b,
+thead tr,
+tbody tr {
+  border-color: #777777 !important;
+}
+
+/* Base zebra striping on table rows across all tables in the application: #f8fafc (even) vs #ffffff (odd) */
+tbody tr:nth-child(even) {
+  background-color: #f8fafc !important;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff !important;
+}
+
+/* Force all regular and spanned cells inside even rows to adopt #f8fafc, overriding hardcoded bg-white utility classes without colliding with #E9EDF7 header */
+tbody tr:nth-child(even) > td:not([class*="bg-blue-500"]):not([class*="bg-indigo-500"]):not([class*="bg-amber-500"]):not([class*="bg-rose-500"]):not([class*="bg-red-500"]):not([class*="bg-emerald-500"]):not([class*="bg-slate-800"]) {
+  background-color: #f8fafc !important;
+}
+
+/* Force all regular and spanned cells inside odd rows to adopt #ffffff, maintaining clean high-contrast alternating rows */
+tbody tr:nth-child(odd) > td:not([class*="bg-blue-500"]):not([class*="bg-indigo-500"]):not([class*="bg-amber-500"]):not([class*="bg-rose-500"]):not([class*="bg-red-500"]):not([class*="bg-emerald-500"]):not([class*="bg-slate-800"]) {
+  background-color: #ffffff !important;
 }

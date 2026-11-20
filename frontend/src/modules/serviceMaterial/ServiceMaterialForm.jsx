@@ -55,7 +55,7 @@ const getTypeColor = (type, types = []) => {
     case "Dealer":
       return "bg-orange-100 text-orange-700 border-orange-200";
     default:
-      return "bg-gray-100 text-gray-700 border-slate-300";
+      return "bg-gray-100 text-gray-700 border-slate-400";
   }
 };
 
@@ -119,7 +119,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 p-[1.8vw] w-[22vw]"
+        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-400 p-[1.8vw] w-[22vw]"
       >
         <div className="flex items-center gap-[0.6vw] mb-[1.2vw]">
           <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-100 flex items-center justify-center">
@@ -138,7 +138,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             −
           </button>
@@ -150,12 +150,12 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
             onChange={(e) =>
               setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))
             }
-            className="flex-1 border border-slate-200 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
+            className="flex-1 border border-slate-400 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
           />
           <button
             type="button"
             onClick={() => setCount((c) => Math.min(50, c + 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             +
           </button>
@@ -167,7 +167,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-slate-200 rounded-[0.5vw] text-[0.78vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
+            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.78vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
           >
             Cancel
           </button>
@@ -197,7 +197,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 p-[1.8vw] w-[22vw]"
+        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-400 p-[1.8vw] w-[22vw]"
       >
         <div className="flex items-center gap-[0.6vw] mb-[1.2vw]">
           <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-blue-100 flex items-center justify-center">
@@ -216,7 +216,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             −
           </button>
@@ -228,12 +228,12 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
             onChange={(e) =>
               setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))
             }
-            className="flex-1 border border-slate-200 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
+            className="flex-1 border border-slate-400 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
           />
           <button
             type="button"
             onClick={() => setCount((c) => Math.min(50, c + 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             +
           </button>
@@ -245,7 +245,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-slate-200 rounded-[0.5vw] text-[0.78vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
+            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.78vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
           >
             Cancel
           </button>
@@ -274,7 +274,7 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 p-[1.4vw] w-[21vw]"
+        className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-400 p-[1.4vw] w-[21vw]"
       >
         <div className="flex items-start gap-[0.7vw] mb-[1.2vw]">
           <div className="w-[2vw] h-[2vw] rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0 mt-[0.1vw]">
@@ -294,7 +294,7 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1vw] h-[2vw] border border-slate-300 rounded-[0.45vw] text-[0.76vw] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
+            className="px-[1vw] h-[2vw] border border-slate-400 rounded-[0.45vw] text-[0.76vw] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
           >
             Cancel
           </button>
@@ -826,12 +826,12 @@ const ServiceMaterialForm = ({
       </AnimatePresence>
 
       {/* Top Header Card (Styled exactly like ServiceCallForm) */}
-      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 mb-[0.6vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-400 mb-[0.6vw] shrink-0">
         <div className="flex items-center gap-[0.9vw]">
           <button
             type="button"
             onClick={handleBackClick}
-            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors"
+            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-400 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors"
           >
             <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
             <span>Back</span>
@@ -864,7 +864,7 @@ const ServiceMaterialForm = ({
         <div className="flex-1 min-h-0 overflow-y-auto pr-[0.4vw] flex flex-col gap-[0.9vw] pb-[0.8vw] custom-scrollbar">
 
           {/* SECTION 1: Customer Information */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 p-[1.2vw]">
             <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
               <User className="w-[1vw] h-[1vw] text-blue-600" />
@@ -882,7 +882,7 @@ const ServiceMaterialForm = ({
                 <input
                   readOnly
                   value={fmtDate(base.date)}
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               </div>
@@ -898,7 +898,7 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoCustomer", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter customer ref no…"
-                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
@@ -913,7 +913,7 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoInternal", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter internal ref no…"
-                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
@@ -939,7 +939,7 @@ const ServiceMaterialForm = ({
                       label: t.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
 
@@ -982,7 +982,7 @@ const ServiceMaterialForm = ({
                       }}
                       disabled={isReadOnly}
                       placeholder="Search & select customer…"
-                      className="w-full border border-slate-200 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                      className="w-full border border-slate-400 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1031,7 +1031,7 @@ const ServiceMaterialForm = ({
                 </div>
 
                 {showCustDrop && !isReadOnly && (
-                  <div className="absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[14vw] overflow-y-auto z-30">
+                  <div className="absolute top-full left-0 w-full bg-white border border-slate-400 shadow-xl rounded-[0.5vw] mt-[0.3vw] max-h-[14vw] overflow-y-auto z-30">
                     <div className="cust-drop-container">
                       {filteredCustomers.map((c, i) => (
                         <div
@@ -1083,7 +1083,7 @@ const ServiceMaterialForm = ({
                       label: u.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
 
@@ -1104,14 +1104,14 @@ const ServiceMaterialForm = ({
                       label: s.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
             </div>
           </div>
 
           {/* SECTION 2: Product & Service Details */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 p-[1.2vw]">
             <div className="flex items-center justify-between mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <div className="flex items-center gap-[0.45vw]">
                 <span className="w-[0.25vw] h-[0.9vw] bg-indigo-600 rounded-full inline-block" />
@@ -1170,11 +1170,11 @@ const ServiceMaterialForm = ({
         </div>
 
         {/* Footer Action Bar (Exact ServiceCallForm Style) */}
-        <div className="flex justify-end gap-[0.8vw] bg-white border border-slate-200 py-[0.65vw] px-[1.2vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] mt-[0.5vw] shrink-0">
+        <div className="flex justify-end gap-[0.8vw] bg-white border border-slate-400 py-[0.65vw] px-[1.2vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] mt-[0.5vw] shrink-0">
           <button
             type="button"
             onClick={handleBackClick}
-            className="px-[1.4vw] h-[2.2vw] border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
+            className="px-[1.4vw] h-[2.2vw] border border-slate-400 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
           >
             <X className="w-[0.9vw] h-[0.9vw]" />
             <span>{isReadOnly ? "Close" : "Cancel"}</span>
@@ -1200,7 +1200,7 @@ const ServiceMaterialForm = ({
             exit={{ opacity: 0, scale: 0.95 }}
             className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
           >
-            <div className="px-[1vw] py-[0.7vw] border-b border-slate-200 flex justify-between items-center bg-slate-50">
+            <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-slate-50">
               <h2 className="text-[1.1vw] font-semibold text-slate-800">
                 Add Customer &amp; Items
               </h2>
@@ -1215,7 +1215,7 @@ const ServiceMaterialForm = ({
               onSubmit={handleAddCustomerSubmit}
               className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto"
             >
-              <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-200">
+              <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-400">
                 <h3 className="text-[0.85vw] font-semibold text-slate-700 mb-[0.8vw]">
                   Party Details
                 </h3>
@@ -1233,7 +1233,7 @@ const ServiceMaterialForm = ({
                           partyCode: e.target.value,
                         })
                       }
-                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                       placeholder="e.g. CUS-001"
                     />
                   </div>
@@ -1250,7 +1250,7 @@ const ServiceMaterialForm = ({
                         })
                       }
                       options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
-                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-200 text-[0.8vw]"
+                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-400 text-[0.8vw]"
                     />
                   </div>
                 </div>
@@ -1267,7 +1267,7 @@ const ServiceMaterialForm = ({
                         partyDescription: e.target.value,
                       })
                     }
-                    className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                    className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                     placeholder="Company Name"
                   />
                 </div>
@@ -1283,7 +1283,7 @@ const ServiceMaterialForm = ({
                           state: e.target.value,
                         })
                       }
-                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                       placeholder="e.g. Tamil Nadu"
                     />
                   </div>
@@ -1300,14 +1300,14 @@ const ServiceMaterialForm = ({
                           districtCity: e.target.value,
                         })
                       }
-                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
                       placeholder="e.g. Coimbatore"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[1vw]">
+              <div className="bg-white border border-slate-400 rounded-[0.6vw] p-[1vw]">
                 <div className="flex justify-between items-center mb-[0.6vw]">
                   <h3 className="text-[0.85vw] font-semibold text-slate-800">
                     Product Items
@@ -1344,7 +1344,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Segment"
                         />
                       </div>
@@ -1364,7 +1364,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Code"
                         />
                       </div>
@@ -1384,7 +1384,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Description"
                         />
                       </div>
@@ -1406,7 +1406,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
                           placeholder="Days"
                         />
                       </div>
@@ -1431,7 +1431,7 @@ const ServiceMaterialForm = ({
                 <button
                   type="button"
                   onClick={() => setShowAddCustModal(false)}
-                  className="px-[1.4vw] h-[2.2vw] border border-slate-200 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.78vw] font-medium transition-colors"
+                  className="px-[1.4vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.78vw] font-medium transition-colors"
                 >
                   Cancel
                 </button>

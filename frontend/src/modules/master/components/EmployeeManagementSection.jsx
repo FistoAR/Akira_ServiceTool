@@ -59,8 +59,8 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[2vw]">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-200 w-full max-w-[28vw] overflow-hidden flex flex-col max-h-[80vh]">
-        <div className="px-[1.2vw] py-[0.9vw] border-b border-gray-200 flex items-center justify-between bg-slate-50/70">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-400 w-full max-w-[28vw] overflow-hidden flex flex-col max-h-[80vh]">
+        <div className="px-[1.2vw] py-[0.9vw] border-b border-slate-400 flex items-center justify-between bg-slate-50/70">
           <h3 className="text-[0.92vw] font-bold text-gray-900 flex items-center gap-[0.5vw]">
             <Briefcase className="w-[1vw] h-[1vw] text-blue-600" />
             Manage Departments
@@ -75,7 +75,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
               value={newDept}
               onChange={(e) => setNewDept(e.target.value)}
               placeholder="Enter department name..."
-              className="flex-1 border border-gray-300 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw]"
+              className="flex-1 border border-slate-400 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw]"
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             />
             <button onClick={handleAdd} className="bg-blue-600 text-white px-[0.9vw] rounded-[0.4vw] hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center"><Plus className="w-[1vw] h-[1vw]" /></button>
@@ -83,7 +83,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
 
           <div className="flex flex-col gap-[0.4vw]">
             {localDepts.map((dept, idx) => (
-              <div key={idx} className="flex items-center justify-between px-[0.7vw] py-[0.5vw] bg-gray-50 border border-gray-200 rounded-[0.4vw] hover:bg-blue-50/40 hover:border-blue-200 transition-colors group">
+              <div key={idx} className="flex items-center justify-between px-[0.7vw] py-[0.5vw] bg-gray-50 border border-slate-400 rounded-[0.4vw] hover:bg-blue-50/40 hover:border-blue-200 transition-colors group">
                 <span className="text-[0.8vw] font-medium text-gray-700">{dept}</span>
                 <button onClick={() => handleRemove(dept)} className="text-gray-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"><Trash2 className="w-[0.85vw] h-[0.85vw]" /></button>
               </div>
@@ -92,7 +92,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
           </div>
         </div>
 
-        <div className="px-[1.2vw] py-[0.8vw] border-t border-gray-200 bg-slate-50/70 flex justify-end gap-[0.6vw]">
+        <div className="px-[1.2vw] py-[0.8vw] border-t border-slate-400 bg-slate-50/70 flex justify-end gap-[0.6vw]">
           <button onClick={onClose} className="px-[1vw] py-[0.45vw] text-gray-600 hover:bg-gray-200/60 rounded-[0.4vw] text-[0.8vw] font-semibold transition-colors cursor-pointer">Cancel</button>
           <button onClick={handleSave} className="bg-blue-600 text-white px-[1.1vw] py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer">Save Changes</button>
         </div>
@@ -465,7 +465,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           <input
             type="text"
             placeholder="Search employees by name, ID or department..."
-            className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-gray-300 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+            className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-slate-400 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -474,7 +474,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           {canWrite && (
             <button
               onClick={() => setShowDeptModal(true)}
-              className="flex items-center gap-[0.45vw] border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.8vw] cursor-pointer transition-all shadow-none"
+              className="flex items-center gap-[0.45vw] border border-slate-400 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.8vw] cursor-pointer transition-all shadow-none"
             >
               <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw] text-gray-500" /> Dept Master
             </button>
@@ -490,11 +490,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-[0.6vw] overflow-hidden shadow-none flex-1 min-h-0 flex flex-col">
+      <div className="bg-white border border-slate-400 rounded-[0.6vw] overflow-hidden shadow-none flex-1 min-h-0 flex flex-col">
         <div className="flex-1 min-h-0 overflow-auto">
           <table className="w-full text-left border-collapse">
             <thead className="sticky top-0 z-20 bg-gray-50/90 backdrop-blur-xs">
-              <tr className="border-b border-gray-200">
+              <tr className="border-b border-slate-400">
                 <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
                 <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
@@ -589,7 +589,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         )}
 
         {/* Pagination UI */}
-        <div className="border-t border-gray-200 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center flex-shrink-0">
+        <div className="border-t border-slate-400 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center flex-shrink-0">
           <div className="text-[0.74vw] text-gray-500 font-medium">
             Showing <span className="text-gray-900 font-semibold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-semibold">{filtered.length}</span> employees
           </div>
@@ -597,7 +597,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+              className="p-[0.35vw] border border-slate-400 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
               <ChevronLeft className="w-[0.95vw] h-[0.95vw]" />
             </button>
@@ -613,7 +613,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
+                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-slate-400 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
                   >
                     {pNum}
                   </button>
@@ -623,7 +623,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-[0.35vw] border border-gray-200 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+              className="p-[0.35vw] border border-slate-400 rounded-[0.4vw] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
             >
               <ChevronRight className="w-[0.95vw] h-[0.95vw]" />
             </button>
@@ -635,9 +635,9 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
       <AnimatePresence>
         {showRegModal && (
           <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[1.5vw]">
-            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-gray-200 w-full max-w-[50vw] overflow-hidden flex flex-col max-h-[90vh]">
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-400 w-full max-w-[50vw] overflow-hidden flex flex-col max-h-[90vh]">
               {/* Modal Header */}
-              <div className="px-[1.4vw] py-[0.9vw] border-b border-gray-200 flex items-center justify-between bg-slate-50/70 flex-shrink-0">
+              <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-400 flex items-center justify-between bg-slate-50/70 flex-shrink-0">
                 <div className="flex items-center gap-[0.7vw]">
                   <div className="w-[2vw] h-[2vw] rounded-[0.45vw] bg-blue-600 text-white flex items-center justify-center shadow-xs">
                     {editingEmp ? <Icon icon="solar:user-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> : <UserPlus className="w-[1.05vw] h-[1.05vw]" />}
@@ -672,7 +672,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                 {/* 1. Personal Details Section */}
                 <div className="space-y-[0.8vw]">
-                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
+                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
                     <User className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                     <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Personal Details</span>
                   </div>
@@ -689,7 +689,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.name}
                         onChange={e => setRegData({ ...regData, name: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="John Doe"
                       />
                     </div>
@@ -706,8 +706,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         onChange={e => setRegData({ ...regData, userId: e.target.value })}
                         disabled={!!editingEmp}
                         className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.78vw] transition-colors ${editingEmp
-                            ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed"
-                            : "border-gray-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
+                            ? "bg-gray-100 text-gray-500 border-slate-400 cursor-not-allowed"
+                            : "border-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
                           }`}
                         placeholder="EMP001"
                       />
@@ -723,7 +723,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="new-email"
                         value={regData.email}
                         onChange={e => setRegData({ ...regData, email: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="john@akira.com"
                       />
                     </div>
@@ -737,7 +737,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.phoneNumber}
                         onChange={e => setRegData({ ...regData, phoneNumber: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="+91 ..."
                       />
                     </div>
@@ -751,7 +751,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.dob}
                         onChange={e => setRegData({ ...regData, dob: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
@@ -772,7 +772,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                 {/* 2. Professional Details Section */}
                 <div className="space-y-[0.8vw]">
-                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
+                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
                     <Briefcase className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                     <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Professional Details</span>
                   </div>
@@ -796,7 +796,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <button
                           type="button"
                           onClick={() => setShowDeptModal(true)}
-                          className="h-[2.1vw] min-h-[2.1vw] px-[0.6vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.35vw] transition-colors cursor-pointer border border-gray-200 flex items-center justify-center flex-shrink-0"
+                          className="h-[2.1vw] min-h-[2.1vw] px-[0.6vw] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-[0.35vw] transition-colors cursor-pointer border border-slate-400 flex items-center justify-center flex-shrink-0"
                           title="Manage Departments"
                         >
                           <Settings className="w-[0.95vw] h-[0.95vw]" />
@@ -812,7 +812,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         required
                         value={regData.designation}
                         onChange={e => setRegData({ ...regData, designation: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Senior Engineer"
                       />
                     </div>
@@ -853,7 +853,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             setRegData({ ...regData, ctc: val });
                           }
                         }}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Enter monthly CTC"
                       />
                     </div>
@@ -867,7 +867,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         required
                         value={regData.dateOfJoining}
                         onChange={e => setRegData({ ...regData, dateOfJoining: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
@@ -890,7 +890,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 <div
                   className={`space-y-[0.5vw] p-[0.9vw] rounded-[0.6vw] border-2 transition-all ${isDraggingFile
                       ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/30"
-                      : "border-gray-200 bg-gray-50/50 hover:border-gray-300"
+                      : "border-slate-400 bg-gray-50/50 hover:border-slate-400"
                     }`}
                   onDragOver={(e) => {
                     e.preventDefault();
@@ -927,7 +927,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                   <div className="flex items-center gap-[1.2vw]">
                     <div
-                      className="w-[3.6vw] h-[3.6vw] rounded-full bg-white border border-gray-300 flex items-center justify-center overflow-hidden shadow-2xs cursor-pointer flex-shrink-0"
+                      className="w-[3.6vw] h-[3.6vw] rounded-full bg-white border border-slate-400 flex items-center justify-center overflow-hidden shadow-2xs cursor-pointer flex-shrink-0"
                       onClick={() => fileInputRef.current?.click()}
                       title="Click to select image"
                     >
@@ -943,7 +943,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         onClick={() => fileInputRef.current?.click()}
                         className={`flex items-center justify-between px-[0.8vw] py-[0.55vw] border border-dashed rounded-[0.45vw] cursor-pointer transition-all ${isDraggingFile
                             ? "border-blue-500 bg-blue-100/50"
-                            : "border-gray-300 hover:border-blue-400 hover:bg-white bg-white/70"
+                            : "border-slate-400 hover:border-blue-400 hover:bg-white bg-white/70"
                           }`}
                       >
                         <div className="flex items-center gap-[0.6vw]">
@@ -991,7 +991,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
 
                 {/* 4. Security Section */}
                 <div className="space-y-[0.8vw]">
-                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-gray-200">
+                  <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
                     <Lock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                     <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Security</span>
                   </div>
@@ -1014,7 +1014,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.password}
                           onChange={e => setRegData({ ...regData, password: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Enter password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
                         <button
                           type="button"
@@ -1043,7 +1043,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.confirmPassword}
                           onChange={e => setRegData({ ...regData, confirmPassword: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Confirm password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-gray-300 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
                         <button
                           type="button"
@@ -1058,7 +1058,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 </div>
 
                 {/* Form Action Buttons (Sticky Footer) */}
-                <div className="pt-[1vw] border-t border-gray-200 flex justify-end gap-[0.6vw] flex-shrink-0">
+                <div className="pt-[1vw] border-t border-slate-400 flex justify-end gap-[0.6vw] flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => setShowRegModal(false)}

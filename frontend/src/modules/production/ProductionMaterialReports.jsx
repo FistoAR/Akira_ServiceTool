@@ -59,7 +59,7 @@ const DateRangeFilter = ({ from, setFrom, to, setTo }) => {
   const toRef = useRef(null);
 
   return (
-    <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
+    <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
       <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
       <input
         ref={fromRef}

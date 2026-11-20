@@ -544,7 +544,7 @@ const ServiceCallForm = ({
               <input
                 readOnly
                 value={formData.callNumber}
-                className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-mono outline-none"
+                className="bg-slate-100/70 border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-mono outline-none"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
@@ -573,7 +573,7 @@ const ServiceCallForm = ({
                       timestamp: d.toISOString(),
                     }));
                   }}
-                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
+                  className="bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
                 />
               ) : (
                 <input
@@ -597,7 +597,7 @@ const ServiceCallForm = ({
                       return formData.dateTime || "";
                     }
                   })()}
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               )}
@@ -619,7 +619,7 @@ const ServiceCallForm = ({
                 onChange={(val) => set("mode", val)}
                 options={modes.map((m) => ({ value: m, label: m }))}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
-                  errors.mode ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-300"
+                  errors.mode ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-400"
                 }`}
               />
             </div>
@@ -632,7 +632,7 @@ const ServiceCallForm = ({
                 onChange={(val) => set("priority", val)}
                 options={PRIORITIES.map((p) => ({ value: p, label: p }))}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] font-medium ${
-                  errors.priority ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-300"
+                  errors.priority ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-400"
                 } ${
                   formData.priority === "Critical"
                     ? "!text-rose-600 !font-semibold"
@@ -674,7 +674,7 @@ const ServiceCallForm = ({
                   { value: "All", label: "All Types" },
                   ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
               />
             </div>
             <div
@@ -700,10 +700,10 @@ const ServiceCallForm = ({
                     }}
                     onFocus={() => setShowCustSearch(true)}
                     placeholder="Search & select customer…"
-                    className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                    className={`w-full border-[1.5px] rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                       errors.customerName
                         ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                        : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                        : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                     }`}
                   />
                   {formData.customerName && (
@@ -799,10 +799,10 @@ const ServiceCallForm = ({
                 value={formData.contactPerson}
                 onChange={(e) => set("contactPerson", e.target.value)}
                 placeholder="e.g. John Doe"
-                className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactPerson
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                    : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
             </div>
@@ -814,10 +814,10 @@ const ServiceCallForm = ({
                 value={formData.contactNumber}
                 onChange={(e) => set("contactNumber", e.target.value)}
                 placeholder="e.g. +91 9876543210"
-                className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactNumber
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                    : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
             </div>
@@ -828,7 +828,7 @@ const ServiceCallForm = ({
                 value={formData.emailId}
                 onChange={(e) => set("emailId", e.target.value)}
                 placeholder="e.g. client@example.com"
-                className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
@@ -858,7 +858,7 @@ const ServiceCallForm = ({
                   { value: "IPR", label: "IPR" },
                   { value: "Site", label: "Site" },
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw] col-span-2" data-error-field="location">
@@ -873,10 +873,10 @@ const ServiceCallForm = ({
                 value={formData.location}
                 onChange={(e) => set("location", e.target.value)}
                 placeholder={formData.locationType === "Site" ? "Enter site address" : "City, State"}
-                className={`border rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.location
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                    : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                    : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                 }`}
               />
             </div>
@@ -896,7 +896,7 @@ const ServiceCallForm = ({
                   })),
                 ]}
                 triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
-                  errors.site ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-300"
+                  errors.site ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-400"
                 }`}
               />
             </div>
@@ -1088,10 +1088,10 @@ const ServiceCallForm = ({
                             ? "Select customer first"
                             : "Search product…"
                         }
-                        className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
+                        className={`w-full border-[1.5px] rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
                           errors[`product_${idx}_productModel`]
                             ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                            : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                            : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                         }`}
                       />
                       {showProdSearch[idx] && formData.partyCode && (
@@ -1163,7 +1163,7 @@ const ServiceCallForm = ({
                         { value: "", label: "-- Select Segment --" },
                         ...uniqueSegments.map((seg) => ({ value: seg, label: seg })),
                       ]}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
                     />
                   </div>
                   <div className="col-span-1 flex flex-col gap-[0.35vw]">
@@ -1175,7 +1175,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "serialNumber", e.target.value)
                       }
-                      className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="e.g. SN-12345"
                     />
                   </div>
@@ -1191,7 +1191,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "warrantyPeriodDays", e.target.value)
                       }
-                      className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="Days"
                     />
                   </div>
@@ -1205,7 +1205,7 @@ const ServiceCallForm = ({
                         changeProduct(idx, "warrantyStatus", val)
                       }
                       options={WARRANTY_STATUS.map((s) => ({ value: s, label: s }))}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
                     />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
@@ -1217,7 +1217,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "errorCode", e.target.value)
                       }
-                      className="border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="e.g. E-404"
                     />
                   </div>
@@ -1235,7 +1235,7 @@ const ServiceCallForm = ({
                         { value: "Yes", label: "Yes" },
                         { value: "No", label: "No" },
                       ]}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
                     />
                   </div>
 
@@ -1249,10 +1249,10 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "callDescription", e.target.value)
                       }
-                      className={`border rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
+                      className={`border-[1.5px] rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
                         errors[`product_${idx}_callDescription`]
                           ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
-                          : "border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                          : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                       }`}
                       placeholder="Describe the issue…"
                     />
@@ -1264,7 +1264,7 @@ const ServiceCallForm = ({
                         <label className="font-semibold text-slate-700 text-[0.76vw] mb-[0.35vw]">
                           Media Attachments
                         </label>
-                        <div className="flex-1 border-2 border-dashed border-slate-300 rounded-[0.6vw] p-[0.8vw] bg-blue-50/20 min-h-[7vw] flex flex-wrap gap-[0.6vw]">
+                        <div className="flex-1 border-2 border-dashed border-slate-400 rounded-[0.6vw] p-[0.8vw] bg-blue-50/20 min-h-[7vw] flex flex-wrap gap-[0.6vw]">
                           {/* Image Previews */}
                           {product.mediaFiles?.map((file, fIdx) => {
                             const isImage =
@@ -1500,7 +1500,7 @@ const ServiceCallForm = ({
           <button
             type="button"
             onClick={onBack}
-            className="px-[1.4vw] h-[2.2vw] border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
+            className="form-cancel-btn px-[1.4vw] h-[2.2vw] border-2 border-slate-400 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
           >
             <X className="w-[0.9vw] h-[0.9vw]" />
             <span>Cancel</span>

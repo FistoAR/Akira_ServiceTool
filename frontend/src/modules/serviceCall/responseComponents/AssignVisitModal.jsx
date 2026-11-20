@@ -148,7 +148,7 @@ export const AssignVisitModal = ({
           className={`border rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-normal outline-none transition-all bg-white shadow-2xs text-slate-800 ${
             errors.visitDate
               ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
-              : "border-slate-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+              : "border-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
           }`}
         />
         {errors.visitDate && (

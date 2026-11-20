@@ -130,12 +130,12 @@ const SitesSection = ({ sites = [], setSites }) => {
                 placeholder="Search sites..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-gray-200 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-slate-400 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
 
-          <div className="border border-gray-200 rounded-[0.6vw] bg-white overflow-hidden shadow-2xs flex flex-col">
+          <div className="border border-slate-400 rounded-[0.6vw] bg-white overflow-hidden shadow-2xs flex flex-col">
             <div className="divide-y divide-gray-100 min-h-[18vw]">
               {paginatedSites.length === 0 ? (
                 <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
@@ -241,7 +241,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                     type="button"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-[0.3vw] border border-gray-200 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    className="p-[0.3vw] border border-slate-400 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                     title="Previous page"
                   >
                     <ChevronLeft className="w-[0.85vw] h-[0.85vw]" />
@@ -260,7 +260,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                           onClick={() => setCurrentPage(pNum)}
                           className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${currentPage === pNum
                               ? "bg-blue-600 text-white shadow-2xs"
-                              : "bg-white border border-gray-200 text-gray-700 hover:border-blue-400 hover:text-blue-600"
+                              : "bg-white border border-slate-400 text-gray-700 hover:border-blue-400 hover:text-blue-600"
                             }`}
                         >
                           {pNum}
@@ -272,7 +272,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                     type="button"
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="p-[0.3vw] border border-gray-200 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
+                    className="p-[0.3vw] border border-slate-400 rounded-[0.35vw] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed bg-white transition-all cursor-pointer text-gray-600"
                     title="Next page"
                   >
                     <ChevronRight className="w-[0.85vw] h-[0.85vw]" />
@@ -284,9 +284,9 @@ const SitesSection = ({ sites = [], setSites }) => {
         </div>
 
         {/* Right Column: Quick Add Workspace */}
-        <div className="lg:col-span-5 bg-gray-50/60 border border-gray-200 rounded-[0.6vw] p-[1.2vw]">
+        <div className="lg:col-span-5 bg-gray-50/60 border border-slate-400 rounded-[0.6vw] p-[1.2vw]">
           <div className="space-y-[1vw]">
-            <div className="pb-[0.5vw] border-b border-gray-200">
+            <div className="pb-[0.5vw] border-b border-slate-400">
               <h4 className="text-[0.88vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
                 <Icon icon="solar:map-point-wave-bold-duotone" className="w-[1.05vw] h-[1.05vw] text-blue-600" />
                 Add Plant / Site
@@ -306,7 +306,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                       if (e.key === "Enter") handleAdd();
                     }}
                     placeholder="e.g. Unit 1, Unit 2, Unit 3…"
-                    className="w-full bg-white border border-gray-300 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
                   />
                 </div>
 

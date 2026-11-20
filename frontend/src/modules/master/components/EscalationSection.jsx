@@ -896,7 +896,7 @@ const [expandedType, setExpandedType] = useState(null);
           <button
             onClick={() => onRefresh && onRefresh("escalation", true)}
             disabled={isRefreshing}
-            className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-blue-600 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
+            className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-400 hover:bg-slate-50 hover:text-blue-600 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
             title="Refresh latest data from server"
           >
             <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
@@ -907,7 +907,7 @@ const [expandedType, setExpandedType] = useState(null);
               <button
                 type="button"
                 onClick={handleResetAll}
-                className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs"
+                className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-400 hover:bg-slate-50 hover:text-slate-900 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs"
               >
                 <RotateCcw className="w-[0.75vw] h-[0.75vw] text-slate-500" />
                 <span>Reset All</span>
@@ -934,14 +934,14 @@ const [expandedType, setExpandedType] = useState(null);
       </div>
 
       {/* Sub Navigation Bar for Escalation Mode - Fixed */}
-      <div className="flex-shrink-0 flex items-center justify-between px-[1.2vw] py-[0.35vw] bg-slate-50/90 border-b border-slate-200">
-        <div className="flex items-center gap-[0.2vw] bg-slate-200/70 p-[0.2vw] rounded-[0.45vw] border border-slate-200">
+      <div className="flex-shrink-0 flex items-center justify-between px-[1.2vw] py-[0.35vw] bg-slate-50/90 border-b border-slate-400">
+        <div className="flex items-center gap-[0.2vw] bg-slate-200/70 p-[0.2vw] rounded-[0.45vw] border border-slate-400">
           <button
             type="button"
             onClick={() => setActiveSubTab("forward")}
             className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
               activeSubTab === "forward"
-                ? "bg-white text-blue-700 shadow-2xs border border-slate-200/80"
+                ? "bg-white text-blue-700 shadow-2xs border border-slate-400/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
             }`}
           >
@@ -953,7 +953,7 @@ const [expandedType, setExpandedType] = useState(null);
             onClick={() => setActiveSubTab("reverse")}
             className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
               activeSubTab === "reverse"
-                ? "bg-white text-indigo-700 shadow-2xs border border-slate-200/80"
+                ? "bg-white text-indigo-700 shadow-2xs border border-slate-400/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
             }`}
           >
@@ -971,15 +971,15 @@ const [expandedType, setExpandedType] = useState(null);
       <div className="flex-1 overflow-y-auto min-h-0 p-[1.2vw] flex flex-col gap-[1vw]">
         {activeSubTab === "reverse" ? (
           /* ── REVERSE ESCALATION DEDICATED VIEW (TABLE VIEW) ── */
-          <div className="bg-white border border-slate-300 rounded-[0.4vw] shadow-2xs flex flex-col">
+          <div className="bg-white border border-slate-400 rounded-[0.4vw] shadow-2xs flex flex-col">
             <div className="overflow-visible">
-              <table className="w-full border-collapse border border-slate-200 text-left font-sans text-slate-800">
+              <table className="w-full border-collapse border border-slate-400 text-left font-sans text-slate-800">
                 <thead>
-                  <tr className="bg-slate-100 border-b border-slate-300 text-[0.72vw] font-bold text-slate-700 tracking-wider">
-                    <th className="py-[0.65vw] px-[1vw] w-[4vw] text-center border-r border-slate-200 whitespace-nowrap">S.No</th>
-                    <th className="py-[0.65vw] px-[1.2vw] w-[14vw] border-r border-slate-200 whitespace-nowrap">Customer / Party Type</th>
-                    <th className="py-[0.65vw] px-[1vw] w-[8vw] text-center border-r border-slate-200 whitespace-nowrap">Status</th>
-                    <th className="py-[0.65vw] px-[1.2vw] w-[24vw] border-r border-slate-200 whitespace-nowrap">Return SLA Timer (Grace Period)</th>
+                  <tr className="bg-slate-100 border-b border-slate-400 text-[0.72vw] font-bold text-slate-700 tracking-wider">
+                    <th className="py-[0.65vw] px-[1vw] w-[4vw] text-center border-r border-slate-400 whitespace-nowrap">S.No</th>
+                    <th className="py-[0.65vw] px-[1.2vw] w-[14vw] border-r border-slate-400 whitespace-nowrap">Customer / Party Type</th>
+                    <th className="py-[0.65vw] px-[1vw] w-[8vw] text-center border-r border-slate-400 whitespace-nowrap">Status</th>
+                    <th className="py-[0.65vw] px-[1.2vw] w-[24vw] border-r border-slate-400 whitespace-nowrap">Return SLA Timer (Grace Period)</th>
                     <th className="py-[0.65vw] px-[1.2vw] whitespace-nowrap">Timeout Action (If Not Attended)</th>
                   </tr>
                 </thead>
@@ -992,17 +992,17 @@ const [expandedType, setExpandedType] = useState(null);
                     return (
                       <tr
                         key={type.id || type.name}
-                        className={`border-b border-slate-200 transition-colors ${
+                        className={`border-b border-slate-400 transition-colors ${
                           !isEnabled ? "bg-slate-50/60 opacity-60" : "hover:bg-slate-50/80"
                         }`}
                       >
                         {/* S.No */}
-                        <td className="py-[0.75vw] px-[1vw] text-center text-slate-500 font-semibold text-[0.75vw] border-r border-slate-200">
+                        <td className="py-[0.75vw] px-[1vw] text-center text-slate-500 font-semibold text-[0.75vw] border-r border-slate-400">
                           {tIdx + 1}
                         </td>
 
                         {/* Customer / Party Type */}
-                        <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-200">
+                        <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-400">
                           <div className="flex items-center gap-[0.4vw]">
                             <span className="font-bold text-slate-900 text-[0.82vw]">
                               {type.name}
@@ -1016,7 +1016,7 @@ const [expandedType, setExpandedType] = useState(null);
                         </td>
 
                         {/* Status Toggle - Pure Clean Checkbox + Plain Text (No Pill) */}
-                        <td className="py-[0.75vw] px-[1vw] text-center border-r border-slate-200">
+                        <td className="py-[0.75vw] px-[1vw] text-center border-r border-slate-400">
                           <label className="inline-flex items-center justify-center gap-[0.4vw] cursor-pointer select-none">
                             <input
                               type="checkbox"
@@ -1024,7 +1024,7 @@ const [expandedType, setExpandedType] = useState(null);
                               onChange={(e) =>
                                 updateReverseConfig(type.name, "Default", { enabled: e.target.checked })
                               }
-                              className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-[0.95vw] h-[0.95vw] cursor-pointer"
+                              className="rounded border-slate-400 text-blue-600 focus:ring-blue-500 w-[0.95vw] h-[0.95vw] cursor-pointer"
                             />
                             <span className={`text-[0.76vw] font-semibold ${isEnabled ? "text-slate-800" : "text-slate-400"}`}>
                               {isEnabled ? "Enabled" : "Disabled"}
@@ -1033,7 +1033,7 @@ const [expandedType, setExpandedType] = useState(null);
                         </td>
 
                         {/* Return SLA Timer */}
-                        <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-200 whitespace-nowrap">
+                        <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-400 whitespace-nowrap">
                           <div className={`flex items-center gap-[0.6vw] whitespace-nowrap ${!isEnabled ? "pointer-events-none" : ""}`}>
                             <div className="flex items-center gap-[0.25vw]">
                               <input
@@ -1047,7 +1047,7 @@ const [expandedType, setExpandedType] = useState(null);
                                   })
                                 }
                                 disabled={!isEnabled}
-                                className="w-[3.6vw] border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
+                                className="w-[3.6vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
                               />
                               <span className="text-[0.72vw] text-slate-600 font-medium">hrs</span>
                             </div>
@@ -1064,7 +1064,7 @@ const [expandedType, setExpandedType] = useState(null);
                                   })
                                 }
                                 disabled={!isEnabled}
-                                className="w-[3.6vw] border border-slate-300 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
+                                className="w-[3.6vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
                               />
                               <span className="text-[0.72vw] text-slate-600 font-medium">mins</span>
                             </div>
@@ -1090,7 +1090,7 @@ const [expandedType, setExpandedType] = useState(null);
                                 { value: "critical", label: "Mark as Critical Unresolved (Trigger Admin Alert)" },
                               ]}
                               disabled={!isEnabled}
-                              triggerClassName="w-full !rounded-[0.3vw] text-[0.74vw] font-medium border-slate-300 text-slate-800 bg-white"
+                              triggerClassName="w-full !rounded-[0.3vw] text-[0.74vw] font-medium border-slate-400 text-slate-800 bg-white"
                             />
                           </div>
                         </td>
