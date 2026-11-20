@@ -338,18 +338,19 @@ const CustomDropdown = ({
         ref={triggerRef}
         type="button"
         disabled={disabled}
+        data-custom-dropdown-trigger="true"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
-        className={`w-full bg-white border flex items-center justify-between gap-[0.5vw] text-left transition-all shadow-none select-none cursor-pointer ${
+        className={`w-full bg-white border-[1.5px] flex items-center justify-between gap-[0.5vw] text-left transition-all shadow-none select-none cursor-pointer custom-dropdown-trigger ${
           sizeClasses.trigger
         } ${
           disabled
-            ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+            ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
             : error
             ? "border-rose-400 focus:border-rose-500 ring-2 ring-rose-100"
             : isOpen
-            ? "border-blue-500 ring-2 ring-blue-500/10"
-            : "border-gray-300 hover:border-gray-400 text-gray-800"
+            ? "border-[#073761] ring-2 ring-[#073761]/25"
+            : "border-slate-400 hover:border-slate-500 text-gray-800"
         } ${triggerClassName}`}
       >
         <div className="flex items-center gap-[0.45vw] truncate flex-1 min-w-0">

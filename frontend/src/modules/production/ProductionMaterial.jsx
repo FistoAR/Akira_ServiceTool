@@ -106,7 +106,7 @@ const ReportsModal = ({ row, onClose }) => {
         <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
           <div className="grid grid-cols-3 gap-[1vw]">
             <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-bold text-slate-500 tracking-wider mb-[0.6vw]">Entry Details</div>
+              <div className="text-[0.7vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Entry Details</div>
               <div className="space-y-[0.4vw]">
                 <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Date:</span> {fmtDate(row.date)}</div>
                 <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Job Order:</span> <span className="text-blue-600 font-semibold">{row.jobOrderNo || "—"}</span></div>
@@ -114,14 +114,14 @@ const ReportsModal = ({ row, onClose }) => {
               </div>
             </div>
             <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-bold text-slate-500 tracking-wider mb-[0.6vw]">Customer</div>
+              <div className="text-[0.7vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Customer</div>
               <div className="space-y-[0.4vw]">
                 <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Name:</span> <span className="font-medium text-slate-800">{row.customerName || "—"}</span></div>
                 <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Code:</span> <span className="font-mono text-slate-600">{row.customerCode || "—"}</span></div>
               </div>
             </div>
             <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-bold text-slate-500 tracking-wider mb-[0.6vw]">Audit Details</div>
+              <div className="text-[0.7vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Audit Details</div>
               <div className="space-y-[0.4vw]">
                 <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Created By:</span> {row.creatorName || "Admin"}</div>
                 <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Last updated:</span> {fmtDate(row.updatedAt || row.createdAt)}</div>
@@ -164,7 +164,7 @@ const ReportsModal = ({ row, onClose }) => {
                     <div className="border-t border-slate-100">
                       {/* Registration Info */}
                       <div className="p-[1.2vw] bg-white border-b border-slate-200/80">
-                        <div className="text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
+                        <div className="text-[0.72vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
                           <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" />
                           <Target className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Registration Information
                         </div>
@@ -201,7 +201,7 @@ const ReportsModal = ({ row, onClose }) => {
 
                       {/* Technical Resolution Report */}
                       <div className="p-[1.2vw] bg-slate-50/50">
-                        <div className="text-[0.72vw] font-bold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
+                        <div className="text-[0.72vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
                           <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full inline-block" />
                           <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" /> Technical Resolution Report
                         </div>
@@ -245,10 +245,10 @@ const ReportsModal = ({ row, onClose }) => {
                             </div>
 
                             <div className="grid grid-cols-4 gap-[0.8vw]">
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">Assembler</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">Tester</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">FI By</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-bold text-slate-400 uppercase">Final Status</div><div className="text-[0.75vw] font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">Assembler</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">Tester</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">FI By</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">Final Status</div><div className="text-[0.75vw] font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
                             </div>
                           </div>
                         ) : (
@@ -342,7 +342,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
 
         <div className="p-[1.4vw] space-y-[1.1vw] bg-white">
           <div className="bg-slate-50/70 p-[0.9vw] rounded-[0.6vw] border border-slate-200/80">
-            <div className="text-[0.68vw] font-bold text-blue-600 uppercase tracking-wider mb-[0.35vw]">Product Context</div>
+            <div className="text-[0.68vw] font-medium text-blue-600 uppercase tracking-wider mb-[0.35vw]">Product Context</div>
             <div className="text-[0.85vw] font-semibold text-slate-800">{prod.productDescription}</div>
             <div className="text-[0.72vw] text-slate-500 mt-[0.15vw]">
               <span className="font-semibold text-slate-600">S/N:</span> <span className="font-mono">{prod.serialNumber || "—"}</span> · <span className="font-semibold text-slate-600">JO:</span> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span>
@@ -1020,7 +1020,7 @@ const HistoryCellButton = ({ prod, row }) => {
               {/* Header */}
               <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
                 <div>
-                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
+                  <h3 className="text-[1.05vw] font-bold text-slate-800 flex items-center gap-[0.45vw]">
                     <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
                     Status & Edit History
                   </h3>
@@ -1371,7 +1371,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
         <AnimatePresence>
           {open && (
             <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-200 shadow-xl rounded-[0.7vw] z-40 w-[17vw] p-[0.9vw] text-left">
-              <div className="text-[0.74vw] font-bold text-slate-800 mb-[0.5vw]">Update Final Status</div>
+              <div className="text-[0.74vw] font-semibold text-slate-800 mb-[0.5vw]">Update Final Status</div>
               <div className="grid grid-cols-3 gap-[0.35vw] mb-[0.7vw]">
                 {FINAL_STATUS_OPTIONS.map((opt) => (
                   <button key={opt} onClick={() => setStatus(opt)} className={`py-[0.32vw] rounded-full border text-[0.66vw] font-normal cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300 font-medium" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
@@ -1683,7 +1683,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
         </div>
         <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.8vw] flex items-center gap-[0.4vw]">
           <span className="text-slate-500 font-medium">Ref No:</span>
-          <span className="font-mono font-bold text-blue-600">
+          <span className="font-mono font-medium text-blue-600">
             {base.refNoInternal}
           </span>
         </div>
@@ -1859,7 +1859,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 <button
                   type="button"
                   onClick={addProduct}
-                  className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-full text-[0.74vw] transition-all shadow-2xs active:scale-95"
+                  className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.78vw] transition-all shadow-2xs active:scale-95"
                 >
                   <Plus className="w-[0.85vw] h-[0.85vw]" />
                   <span>Add Item Row</span>
@@ -1889,14 +1889,14 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
           <button
             type="button"
             onClick={onBack}
-            className="px-[1.4vw] h-[2.2vw] border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-full cursor-pointer flex items-center gap-[0.4vw] font-semibold text-[0.76vw] transition-all"
+            className="px-[1.4vw] h-[2.2vw] border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-all"
           >
             <X className="w-[0.85vw] h-[0.85vw]" /> Cancel
           </button>
           {((initialData._id ? canUpdate : canWrite) && !isReadOnly) && (
             <button
               type="submit"
-              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-full flex items-center gap-[0.4vw] cursor-pointer font-bold text-[0.76vw] shadow-xs transition-all active:scale-95"
+              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.78vw] shadow-xs transition-all active:scale-95"
             >
               <Save className="w-[0.85vw] h-[0.85vw]" /> {initialData._id ? "Update Registration" : "Register Inward"}
             </button>
@@ -1917,7 +1917,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
               <div className="px-[1.2vw] py-[0.8vw] border-b border-slate-200 flex justify-between items-center bg-slate-50">
                 <div className="flex items-center gap-[0.5vw]">
                   <UserPlus className="w-[1.1vw] h-[1.1vw] text-blue-600" />
-                  <h2 className="text-[1vw] font-bold text-slate-800">
+                  <h2 className="text-[1vw] font-semibold text-slate-800">
                     Add Customer &amp; Items
                   </h2>
                 </div>
@@ -1934,7 +1934,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto custom-scrollbar"
               >
                 <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-200">
-                  <h3 className="text-[0.82vw] font-bold text-slate-700 mb-[0.8vw] uppercase tracking-wider">
+                  <h3 className="text-[0.82vw] font-semibold text-slate-700 mb-[0.8vw] uppercase tracking-wider">
                     Party Details
                   </h3>
                   <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
@@ -2532,7 +2532,7 @@ export default function ProductionMaterial() {
                 placeholder="Search by ref, JO, customer, product..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-semibold text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
               {searchTerm && (
                 <button

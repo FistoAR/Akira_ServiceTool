@@ -368,8 +368,7 @@ export default function ServiceCallAssignment() {
 
       toast(`Assigned to ${selectedEngineer.name} successfully`, "success");
       setGroups(prev => prev.filter(g => g.groupKey !== selectedGroup.groupKey));
-      setSelectedGroup(null);
-      setSelectedEngineer(null);
+      handleCloseAssignView();
     } catch (err) {
       toast("Failed to assign call", "error");
     } finally {
@@ -377,10 +376,389 @@ export default function ServiceCallAssignment() {
     }
   };
 
-  return (
-    <div className="w-full h-full flex flex-col gap-[0.7vw] font-sans text-[0.82vw]">
+  const handleCloseAssignView = () => {
+    setSelectedGroup(null);
+    setSelectedEngineer(null);
+    setEngSearch("");
+  };
 
-      {/* ── FILTER & SEARCH TOOLBAR ── */}
+  return (
+    <div className="w-full h-full font-sans text-[0.82vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+      <AnimatePresence mode="wait">
+        {selectedGroup ? (
+          <motion.div
+            key="assign-view"
+            initial={{ opacity: 0, x: 25 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -25 }}
+            transition={{ duration: 0.2 }}
+            className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden gap-[0.7vw]"
+          >
+            {/* Top Navigation & Action Header */}
+            <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.6vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 shrink-0">
+              <div className="flex items-center gap-[0.8vw]">
+                <button
+                  type="button"
+                  onClick={handleCloseAssignView}
+                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-semibold transition-colors"
+                >
+                  <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+                  <span>Back to Queue</span>
+                </button>
+                <div className="h-[1.4vw] w-[1px] bg-slate-200 mx-[0.2vw]" />
+                <div className="flex items-center gap-[0.6vw]">
+                  <div className="w-[2.2vw] h-[2.2vw] bg-blue-600 rounded-[0.55vw] flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]">
+                    <UserPlus className="w-[1.1vw] h-[1.1vw]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-[0.5vw]">
+                      <h2 className="text-[1.05vw] font-semibold text-slate-800 leading-tight">
+                        Allocate Field Engineer
+                      </h2>
+                      <span className="text-[0.68vw] bg-blue-100 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
+                        {selectedGroup.callNumber}
+                      </span>
+                    </div>
+                    <div className="text-[0.72vw] text-slate-500 font-medium">
+                      Assign engineer and define initial SLA response window
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-[0.6vw]">
+                <button
+                  type="button"
+                  onClick={handleCloseAssignView}
+                  className="px-[0.9vw] h-[2.1vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-medium text-[0.75vw] cursor-pointer transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAssign}
+                  disabled={isAssigning || !selectedEngineer}
+                  className="px-[1.2vw] h-[2.1vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-medium text-[0.75vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.45vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isAssigning ? (
+                    <>
+                      <Loader2 className="w-[0.85vw] h-[0.85vw] animate-spin" />
+                      <span>Allocating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Confirm Assignment</span>
+                      <ArrowRight className="w-[0.85vw] h-[0.85vw]" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* SLA Warning Ribbon */}
+            {!slaLoading && !slaIsConfigured && selectedGroup && (
+              <div className="flex items-center gap-[0.6vw] bg-amber-50 border border-amber-200/90 rounded-[0.6vw] px-[0.9vw] py-[0.45vw] shrink-0">
+                <AlertTriangle className="w-[0.9vw] h-[0.9vw] text-amber-600 shrink-0" />
+                <span className="text-[0.72vw] text-amber-800 font-medium">
+                  No custom SLA registered for {selectedGroup.customerType} / {selectedGroup.segment} — using standard Level-1 flow default.
+                </span>
+              </div>
+            )}
+
+            {/* Call Details Summary Ribbon */}
+            <div className="bg-white rounded-[0.8vw] border border-slate-200 p-[0.9vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.04)] grid grid-cols-5 gap-[1vw] shrink-0">
+              <div className="flex flex-col">
+                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                  <User className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Customer
+                </span>
+                <span className="text-[0.82vw] text-slate-800 font-semibold truncate mt-[0.1vw]" title={selectedGroup.customerName}>
+                  {selectedGroup.customerName}
+                </span>
+                <span className="text-[0.66vw] text-blue-600 font-mono font-medium">{selectedGroup.partyCode}</span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                  <MapPin className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Location &amp; Site
+                </span>
+                <span className="text-[0.8vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
+                  {selectedGroup.location || "—"}
+                </span>
+                {selectedGroup.site && (
+                  <span className="text-[0.66vw] text-slate-600 font-medium">Site: {selectedGroup.site}</span>
+                )}
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                  <Phone className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Contact
+                </span>
+                <span className="text-[0.8vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
+                  {selectedGroup.contactPerson || "—"}
+                </span>
+                <span className="text-[0.66vw] text-slate-600 font-mono">{selectedGroup.contactNumber || "—"}</span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                  <Tag className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Segment
+                </span>
+                <span className="text-[0.8vw] text-indigo-700 font-semibold truncate mt-[0.1vw]">
+                  {selectedGroup.segment}
+                </span>
+                <span className="text-[0.66vw] text-slate-600 font-medium">Type: {selectedGroup.customerType}</span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-[0.65vw] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                  <AlertCircle className="w-[0.7vw] h-[0.7vw] text-blue-600" /> Priority Level
+                </span>
+                <span className={`text-[0.8vw] font-semibold truncate mt-[0.1vw] ${
+                  selectedGroup.priority === 'Critical' ? 'text-rose-600' :
+                  selectedGroup.priority === 'High' ? 'text-amber-600' :
+                  'text-blue-600'
+                }`}>
+                  {selectedGroup.priority}
+                </span>
+                <span className="text-[0.66vw] text-slate-600 font-medium">{selectedGroup.products.length} product(s)</span>
+              </div>
+            </div>
+
+            {/* Split Workspace View: Eligible Engineers & Assignment Review */}
+            <div className="flex-1 min-h-0 bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex overflow-hidden">
+              {/* Left Column: Eligible Engineer Roster */}
+              <div className="w-[42%] flex flex-col border-r border-slate-200 overflow-hidden bg-slate-50/40">
+                <div className="p-[0.9vw] border-b border-slate-200 bg-white">
+                  <div className="relative">
+                    <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-slate-500" />
+                    <input 
+                      type="text" 
+                      placeholder="Search qualified engineers..." 
+                      value={engSearch} 
+                      onChange={e => setEngSearch(e.target.value)} 
+                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.76vw] text-slate-800 font-normal transition-all" 
+                    />
+                    {engSearch && (
+                      <button 
+                        onClick={() => setEngSearch("")} 
+                        className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      >
+                        <X className="w-[0.8vw] h-[0.8vw]" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-[0.9vw] space-y-[0.55vw]">
+                  {employeeListLoading ? (
+                    <div className="h-full flex flex-col items-center justify-center gap-[0.8vw] text-center py-[6vh]">
+                      <Loader2 className="w-[2vw] h-[2vw] animate-spin text-blue-600" />
+                      <div className="text-[0.82vw] font-semibold text-slate-700">Checking SLA eligible engineers...</div>
+                      <div className="text-[0.68vw] text-slate-500 font-normal max-w-[15vw]">
+                        Matching against department requirements &amp; current active queue.
+                      </div>
+                    </div>
+                  ) : filteredEmployees.length === 0 ? (
+                    <div className="text-center py-[6vh] text-slate-500 font-medium text-[0.76vw]">
+                      No eligible engineers found matching query.
+                    </div>
+                  ) : (
+                    filteredEmployees.map(emp => {
+                      const isSelected = selectedEngineer?.userId === emp.userId;
+                      return (
+                        <div 
+                          key={emp.userId} 
+                          onClick={() => setSelectedEngineer(emp)} 
+                          className={`flex items-center gap-[0.7vw] p-[0.7vw] rounded-[0.6vw] border transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
+                              : 'bg-white border-slate-200/90 hover:border-blue-300 hover:bg-blue-50/30'
+                          }`}
+                        >
+                          <div className={`w-[2.4vw] h-[2.4vw] rounded-full flex items-center justify-center font-bold text-[0.85vw] bg-gradient-to-br ${
+                            isSelected ? 'from-white/30 to-white/10' : avatarColor(emp.name)
+                          } text-white shadow-2xs shrink-0`}>
+                            {initials(emp.name)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-medium text-[0.82vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
+                              {emp.name}
+                            </div>
+                            <div className="flex items-center gap-[0.35vw] mt-[0.2vw]">
+                              <span className={`text-[0.68vw] font-medium ${isSelected ? 'text-blue-100' : 'text-slate-600'}`}>
+                                {emp.department || "Engineer"}
+                              </span>
+                              {emp.activeTasks > 0 ? (
+                                <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-medium border ${
+                                  isSelected 
+                                    ? 'bg-amber-400/20 text-amber-100 border-amber-300/30' 
+                                    : 'bg-amber-50 text-amber-700 border-amber-200'
+                                }`}>
+                                  {emp.activeTasks} Active
+                                </span>
+                              ) : (
+                                <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-medium border ${
+                                  isSelected 
+                                    ? 'bg-emerald-400/20 text-emerald-100 border-emerald-300/30' 
+                                    : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                }`}>
+                                  Available
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          {isSelected && (
+                            <CheckCircle className="w-[1.1vw] h-[1.1vw] text-white shrink-0" />
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Selected Engineer & Allocation Config */}
+              <div className="flex-1 bg-white flex flex-col overflow-hidden">
+                {selectedEngineer ? (
+                  <div className="p-[1.4vw] flex flex-col h-full overflow-y-auto custom-scrollbar justify-between">
+                    <div className="space-y-[1.3vw]">
+                      {/* Selected Engineer Banner */}
+                      <div className="bg-slate-50 rounded-[0.7vw] p-[1vw] border border-slate-200 flex items-center justify-between">
+                        <div className="flex items-center gap-[0.85vw]">
+                          <div className={`w-[2.8vw] h-[2.8vw] rounded-full flex items-center justify-center text-[0.95vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
+                            {initials(selectedEngineer.name)}
+                          </div>
+                          <div>
+                            <div className="text-[1vw] font-semibold text-slate-800 leading-tight">
+                              {selectedEngineer.name}
+                            </div>
+                            <div className="text-[0.74vw] text-slate-600 font-medium mt-[0.15vw]">
+                              {selectedEngineer.department} &bull; {selectedEngineer.role || "Specialist"}
+                            </div>
+                          </div>
+                        </div>
+                        <span className={`px-[0.7vw] py-[0.2vw] rounded-full text-[0.68vw] font-medium border ${
+                          selectedEngineer.activeTasks > 0 
+                            ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                            : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        }`}>
+                          {selectedEngineer.activeTasks} Active Tasks
+                        </span>
+                      </div>
+
+                      {/* Allocated Products List */}
+                      <div>
+                        <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-medium text-slate-500 uppercase tracking-wider mb-[0.55vw]">
+                          <Package className="w-[0.9vw] h-[0.9vw] text-blue-600" />
+                          <span>Allocated Products ({selectedGroup.products.length})</span>
+                        </div>
+                        <div className="space-y-[0.4vw] max-h-[14vw] overflow-y-auto custom-scrollbar pr-[0.3vw]">
+                          {selectedGroup.products.map(({ p, productIdx }) => (
+                            <div key={productIdx} className="bg-slate-50 p-[0.7vw] rounded-[0.5vw] border border-slate-200 flex items-center justify-between text-[0.78vw]">
+                              <div>
+                                <div className="text-slate-800 font-medium">{p.productModel || p.itemCode}</div>
+                                {p.errorCode && (
+                                  <div className="text-[0.66vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
+                                )}
+                              </div>
+                              <span className="text-slate-600 font-mono text-[0.72vw] bg-white px-[0.45vw] py-[0.15vw] rounded border border-slate-200 font-medium">
+                                SN: {p.serialNumber || "—"}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* SLA Delivery Window */}
+                      <div>
+                        <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-medium text-slate-500 uppercase tracking-wider mb-[0.55vw]">
+                          <Clock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
+                          <span>SLA Delivery Window</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-[1vw]">
+                          <div className="flex flex-col gap-[0.25vw]">
+                            <span className="text-[0.65vw] font-medium text-slate-600 uppercase">Target Hours</span>
+                            <input 
+                              type="number" 
+                              min="0"
+                              value={resHours} 
+                              onChange={e => setResHours(e.target.value)} 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-medium text-slate-800 transition-all" 
+                            />
+                          </div>
+                          <div className="flex flex-col gap-[0.25vw]">
+                            <span className="text-[0.65vw] font-medium text-slate-600 uppercase">Target Minutes</span>
+                            <input 
+                              type="number" 
+                              min="0" 
+                              max="59"
+                              value={resMins} 
+                              onChange={e => setResMins(e.target.value)} 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-slate-50 border border-slate-200 rounded-[0.5vw] outline-none focus:border-blue-500 focus:bg-white text-[0.88vw] font-medium text-slate-800 transition-all" 
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-[0.45vw] p-[0.7vw] bg-blue-50/70 rounded-[0.5vw] border border-blue-200/60 mt-[0.7vw]">
+                          <Info className="w-[0.85vw] h-[0.85vw] text-blue-600 shrink-0" />
+                          <span className="text-[0.7vw] text-blue-800 font-medium">
+                            Resolution target starts counting upon assignment confirmation.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Action Footer */}
+                    <div className="pt-[1.2vw] border-t border-slate-200 flex justify-end gap-[0.6vw] mt-[1.2vw]">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedEngineer(null)}
+                        className="px-[1.1vw] h-[2.3vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-medium text-[0.78vw] cursor-pointer transition-colors"
+                      >
+                        Change Engineer
+                      </button>
+                      <button 
+                        onClick={handleAssign}
+                        disabled={isAssigning}
+                        className="px-[1.4vw] h-[2.3vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-medium text-[0.78vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-60"
+                      >
+                        {isAssigning ? (
+                          <>
+                            <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" />
+                            <span>Allocating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Confirm Assignment</span>
+                            <ArrowRight className="w-[0.9vw] h-[0.9vw]" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-[2vw]">
+                    <div className="w-[4.2vw] h-[4.2vw] bg-blue-50 rounded-full flex items-center justify-center mb-[0.9vw] text-blue-500">
+                      <UserPlus className="w-[2vw] h-[2vw]" />
+                    </div>
+                    <div className="text-[1.05vw] font-semibold text-slate-700">Select an Eligible Engineer</div>
+                    <div className="text-[0.76vw] text-slate-500 max-w-[22vw] mt-[0.35vw]">
+                      Pick a qualified engineer from the list on the left to set SLA deadlines and confirm allocation.
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="table-view"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+            className="w-full h-full flex flex-col gap-[0.7vw] flex-1 min-h-0 overflow-hidden"
+          >
+            {/* ── FILTER & SEARCH TOOLBAR ── */}
       <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200/90 gap-[0.7vw] shrink-0">
         {/* Left side: Soft Pill Search Box */}
         <div className="relative w-[18vw]">
@@ -807,346 +1185,7 @@ export default function ServiceCallAssignment() {
         </div>
       </div>
 
-      {/* ── MODERN ASSIGNMENT MODAL ── */}
-      <AnimatePresence>
-        {selectedGroup && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-[2vw]">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-              onClick={() => { setSelectedGroup(null); setSelectedEngineer(null); }}
-            />
-            <motion.div
-              initial={{ scale: 0.96, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.96, opacity: 0, y: 10 }}
-              className="relative w-[72vw] max-h-[88vh] bg-white rounded-[1vw] flex flex-col overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-slate-200"
-            >
-              {/* Modal Top Header */}
-              <div className="px-[1.4vw] py-[0.9vw] border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-blue-50/50 via-white to-slate-50">
-                <div className="flex items-center gap-[0.8vw]">
-                  <div className="w-[2.4vw] h-[2.4vw] bg-blue-600 rounded-[0.6vw] flex items-center justify-center text-white shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)]">
-                    <UserPlus className="w-[1.2vw] h-[1.2vw]" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-[0.6vw]">
-                      <h2 className="text-[1.1vw] font-bold text-slate-800 leading-tight">
-                        Allocate Field Engineer
-                      </h2>
-                      <span className="text-[0.68vw] bg-blue-100 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
-                        {selectedGroup.callNumber}
-                      </span>
-                    </div>
-                    <div className="text-[0.72vw] text-slate-500 font-medium">
-                      Assign engineer and define initial SLA response window
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => { setSelectedGroup(null); setSelectedEngineer(null); }}
-                  className="p-[0.4vw] hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                >
-                  <X className="w-[1.1vw] h-[1.1vw]" />
-                </button>
-              </div>
-
-              {/* SLA warning ribbon */}
-              {!slaLoading && !slaIsConfigured && selectedGroup && (
-                <div className="mx-[1.4vw] mt-[0.8vw] flex items-center gap-[0.6vw] bg-amber-50 border border-amber-200/90 rounded-[0.5vw] px-[0.8vw] py-[0.4vw]">
-                  <AlertTriangle className="w-[0.9vw] h-[0.9vw] text-amber-600 shrink-0" />
-                  <span className="text-[0.72vw] text-amber-800 font-medium">
-                    No custom SLA registered for {selectedGroup.customerType} / {selectedGroup.segment} — using standard Level-1 flow default.
-                  </span>
-                </div>
-              )}
-
-              {/* Call Details Bar */}
-              <div className="px-[1.4vw] py-[0.8vw] bg-slate-50/80 border-b border-slate-200 grid grid-cols-5 gap-[1vw]">
-                <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <User className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Customer
-                  </span>
-                  <span className="text-[0.8vw] text-slate-800 font-bold truncate mt-[0.1vw]" title={selectedGroup.customerName}>
-                    {selectedGroup.customerName}
-                  </span>
-                  <span className="text-[0.64vw] text-blue-600 font-mono font-medium">{selectedGroup.partyCode}</span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <MapPin className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Location &amp; Site
-                  </span>
-                  <span className="text-[0.78vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
-                    {selectedGroup.location || "—"}
-                  </span>
-                  {selectedGroup.site && (
-                    <span className="text-[0.64vw] text-slate-500 font-medium">Site: {selectedGroup.site}</span>
-                  )}
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <Phone className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Contact
-                  </span>
-                  <span className="text-[0.78vw] text-slate-800 font-semibold truncate mt-[0.1vw]">
-                    {selectedGroup.contactPerson || "—"}
-                  </span>
-                  <span className="text-[0.64vw] text-slate-500 font-mono">{selectedGroup.contactNumber || "—"}</span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <Tag className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Segment
-                  </span>
-                  <span className="text-[0.78vw] text-indigo-700 font-bold truncate mt-[0.1vw]">
-                    {selectedGroup.segment}
-                  </span>
-                  <span className="text-[0.64vw] text-slate-400 font-medium">Type: {selectedGroup.customerType}</span>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-[0.25vw]">
-                    <AlertCircle className="w-[0.65vw] h-[0.65vw] text-blue-600" /> Priority Level
-                  </span>
-                  <span className={`text-[0.78vw] font-bold truncate mt-[0.1vw] ${
-                    selectedGroup.priority === 'Critical' ? 'text-rose-600' :
-                    selectedGroup.priority === 'High' ? 'text-amber-600' :
-                    'text-blue-600'
-                  }`}>
-                    {selectedGroup.priority}
-                  </span>
-                  <span className="text-[0.64vw] text-slate-400 font-medium">{selectedGroup.products.length} product(s)</span>
-                </div>
-              </div>
-
-              {/* 2-Column Split: Available Engineers vs Selected Review */}
-              <div className="flex-1 flex overflow-hidden min-h-0">
-                {/* Left Side: Eligible Engineer Roster */}
-                <div className="w-[44%] flex flex-col border-r border-slate-200 overflow-hidden bg-slate-50/40">
-                  <div className="p-[0.9vw] border-b border-slate-200 bg-white">
-                    <div className="relative">
-                      <Search className="absolute left-[0.7vw] top-1/2 -translate-y-1/2 w-[0.85vw] h-[0.85vw] text-gray-400" />
-                      <input 
-                        type="text" 
-                        placeholder="Search qualified engineers..." 
-                        value={engSearch} 
-                        onChange={e => setEngSearch(e.target.value)} 
-                        className="w-full pl-[2vw] pr-[2vw] h-[2vw] bg-slate-50 border border-gray-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.74vw] text-slate-800 font-normal transition-all" 
-                      />
-                      {engSearch && (
-                        <button 
-                          onClick={() => setEngSearch("")} 
-                          className="absolute right-[0.6vw] top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-                        >
-                          <X className="w-[0.8vw] h-[0.8vw]" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto custom-scrollbar p-[0.8vw] space-y-[0.5vw]">
-                    {employeeListLoading ? (
-                      <div className="h-full flex flex-col items-center justify-center gap-[0.8vw] text-center py-[6vh]">
-                        <Loader2 className="w-[2vw] h-[2vw] animate-spin text-blue-600" />
-                        <div className="text-[0.82vw] font-semibold text-slate-700">Checking SLA eligible engineers...</div>
-                        <div className="text-[0.68vw] text-slate-400 font-normal max-w-[15vw]">
-                          Matching against department requirements &amp; current active queue.
-                        </div>
-                      </div>
-                    ) : filteredEmployees.length === 0 ? (
-                      <div className="text-center py-[6vh] text-slate-400 text-[0.76vw]">
-                        No eligible engineers found matching query.
-                      </div>
-                    ) : (
-                      filteredEmployees.map(emp => {
-                        const isSelected = selectedEngineer?.userId === emp.userId;
-                        return (
-                          <div 
-                            key={emp.userId} 
-                            onClick={() => setSelectedEngineer(emp)} 
-                            className={`flex items-center gap-[0.7vw] p-[0.65vw] rounded-[0.6vw] border transition-all cursor-pointer ${
-                              isSelected
-                                ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
-                                : 'bg-white border-slate-200/90 hover:border-blue-300 hover:bg-blue-50/30'
-                            }`}
-                          >
-                            <div className={`w-[2.2vw] h-[2.2vw] rounded-full flex items-center justify-center font-bold text-[0.85vw] bg-gradient-to-br ${
-                              isSelected ? 'from-white/30 to-white/10' : avatarColor(emp.name)
-                            } text-white shadow-2xs shrink-0`}>
-                              {initials(emp.name)}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className={`font-bold text-[0.8vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
-                                {emp.name}
-                              </div>
-                              <div className="flex items-center gap-[0.35vw] mt-[0.2vw]">
-                                <span className={`text-[0.65vw] font-medium ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>
-                                  {emp.department || "Engineer"}
-                                </span>
-                                {emp.activeTasks > 0 ? (
-                                  <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.58vw] font-bold border ${
-                                    isSelected 
-                                      ? 'bg-amber-400/20 text-amber-100 border-amber-300/30' 
-                                      : 'bg-amber-50 text-amber-700 border-amber-200'
-                                  }`}>
-                                    {emp.activeTasks} Active
-                                  </span>
-                                ) : (
-                                  <span className={`px-[0.35vw] py-[0.05vw] rounded-full text-[0.58vw] font-bold border ${
-                                    isSelected 
-                                      ? 'bg-emerald-400/20 text-emerald-100 border-emerald-300/30' 
-                                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                  }`}>
-                                    Available
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            {isSelected && (
-                              <CheckCircle className="w-[1.1vw] h-[1.1vw] text-white shrink-0" />
-                            )}
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-
-                {/* Right Side: Assignment Details & Confirmation */}
-                <div className="flex-1 bg-white flex flex-col overflow-hidden">
-                  {selectedEngineer ? (
-                    <div className="p-[1.4vw] flex flex-col h-full overflow-y-auto custom-scrollbar justify-between">
-                      <div className="space-y-[1.2vw]">
-                        {/* Selected Engineer Banner */}
-                        <div className="bg-slate-50 rounded-[0.7vw] p-[0.9vw] border border-slate-200 flex items-center justify-between">
-                          <div className="flex items-center gap-[0.8vw]">
-                            <div className={`w-[2.6vw] h-[2.6vw] rounded-full flex items-center justify-center text-[0.9vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
-                              {initials(selectedEngineer.name)}
-                            </div>
-                            <div>
-                              <div className="text-[0.95vw] font-bold text-slate-800 leading-tight">
-                                {selectedEngineer.name}
-                              </div>
-                              <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.1vw]">
-                                {selectedEngineer.department} &bull; {selectedEngineer.role || "Specialist"}
-                              </div>
-                            </div>
-                          </div>
-                          <span className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.66vw] font-bold border ${
-                            selectedEngineer.activeTasks > 0 
-                              ? 'bg-amber-50 text-amber-700 border-amber-200' 
-                              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          }`}>
-                            {selectedEngineer.activeTasks} Active Tasks
-                          </span>
-                        </div>
-
-                        {/* Units Included */}
-                        <div>
-                          <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.5vw]">
-                            <Package className="w-[0.85vw] h-[0.85vw] text-blue-600" />
-                            <span>Allocated Products ({selectedGroup.products.length})</span>
-                          </div>
-                          <div className="space-y-[0.35vw] max-h-[12vw] overflow-y-auto custom-scrollbar pr-[0.3vw]">
-                            {selectedGroup.products.map(({ p, productIdx }) => (
-                              <div key={productIdx} className="bg-slate-50/70 p-[0.65vw] rounded-[0.5vw] border border-slate-200 flex items-center justify-between text-[0.76vw]">
-                                <div>
-                                  <div className="text-slate-800 font-bold">{p.productModel || p.itemCode}</div>
-                                  {p.errorCode && (
-                                    <div className="text-[0.64vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
-                                  )}
-                                </div>
-                                <span className="text-slate-500 font-mono text-[0.7vw] bg-white px-[0.4vw] py-[0.1vw] rounded border border-slate-200">
-                                  SN: {p.serialNumber || "—"}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* SLA Resolution Target */}
-                        <div>
-                          <div className="flex items-center gap-[0.4vw] text-[0.68vw] font-bold text-slate-500 uppercase tracking-wider mb-[0.5vw]">
-                            <Clock className="w-[0.85vw] h-[0.85vw] text-blue-600" />
-                            <span>SLA Delivery Window</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-[0.8vw]">
-                            <div className="flex flex-col gap-[0.2vw]">
-                              <span className="text-[0.64vw] font-bold text-slate-600 uppercase">Target Hours</span>
-                              <input 
-                                type="number" 
-                                min="0"
-                                value={resHours} 
-                                onChange={e => setResHours(e.target.value)} 
-                                className="w-full px-[0.7vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.85vw] font-bold text-slate-800 transition-all" 
-                              />
-                            </div>
-                            <div className="flex flex-col gap-[0.2vw]">
-                              <span className="text-[0.64vw] font-bold text-slate-600 uppercase">Target Minutes</span>
-                              <input 
-                                type="number" 
-                                min="0"
-                                max="59"
-                                value={resMins} 
-                                onChange={e => setResMins(e.target.value)} 
-                                className="w-full px-[0.7vw] h-[2.2vw] bg-slate-50 border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-500 focus:bg-white text-[0.85vw] font-bold text-slate-800 transition-all" 
-                              />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-[0.4vw] p-[0.6vw] bg-blue-50/70 rounded-[0.5vw] border border-blue-200/60 mt-[0.6vw]">
-                            <Info className="w-[0.8vw] h-[0.8vw] text-blue-600 shrink-0" />
-                            <span className="text-[0.68vw] text-blue-800 font-medium">
-                              Resolution target starts counting upon assignment confirmation.
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Confirm Action Button */}
-                      <div className="pt-[1.2vw] border-t border-slate-200 flex justify-end gap-[0.6vw] mt-[1vw]">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedEngineer(null)}
-                          className="px-[1vw] h-[2.2vw] border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.76vw] cursor-pointer transition-colors"
-                        >
-                          Change Engineer
-                        </button>
-                        <button 
-                          onClick={handleAssign}
-                          disabled={isAssigning}
-                          className="px-[1.2vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] font-bold text-[0.76vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] cursor-pointer disabled:opacity-60"
-                        >
-                          {isAssigning ? (
-                            <>
-                              <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" />
-                              <span>Allocating...</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>Confirm Assignment</span>
-                              <ArrowRight className="w-[0.9vw] h-[0.9vw]" />
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center text-center p-[2vw]">
-                      <div className="w-[3.8vw] h-[3.8vw] bg-blue-50 rounded-full flex items-center justify-center mb-[0.8vw] text-blue-500">
-                        <UserPlus className="w-[1.8vw] h-[1.8vw]" />
-                      </div>
-                      <div className="text-[1vw] font-bold text-slate-700">Select an Eligible Engineer</div>
-                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw] mt-[0.3vw]">
-                        Pick a qualified engineer from the list on the left to set SLA deadlines and confirm allocation.
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

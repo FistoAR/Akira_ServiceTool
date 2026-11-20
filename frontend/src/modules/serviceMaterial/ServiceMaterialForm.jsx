@@ -126,7 +126,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
             <Copy className="w-[1.1vw] h-[1.1vw] text-blue-600" />
           </div>
           <div>
-            <div className="text-[0.9vw] font-bold text-slate-800">
+            <div className="text-[0.9vw] font-semibold text-slate-800">
               Duplicate Product Row
             </div>
             <div className="text-[0.72vw] text-slate-500">
@@ -138,7 +138,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             −
           </button>
@@ -150,12 +150,12 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
             onChange={(e) =>
               setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))
             }
-            className="flex-1 border border-slate-200 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-bold outline-none focus:border-blue-500 shadow-none"
+            className="flex-1 border border-slate-200 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
           />
           <button
             type="button"
             onClick={() => setCount((c) => Math.min(50, c + 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             +
           </button>
@@ -204,7 +204,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
             <Plus className="w-[1.1vw] h-[1.1vw] text-blue-600" />
           </div>
           <div>
-            <div className="text-[0.9vw] font-bold text-slate-800">
+            <div className="text-[0.9vw] font-semibold text-slate-800">
               Add Product Rows
             </div>
             <div className="text-[0.72vw] text-slate-500">
@@ -216,7 +216,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             −
           </button>
@@ -228,12 +228,12 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
             onChange={(e) =>
               setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))
             }
-            className="flex-1 border border-slate-200 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-bold outline-none focus:border-blue-500 shadow-none"
+            className="flex-1 border border-slate-200 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
           />
           <button
             type="button"
             onClick={() => setCount((c) => Math.min(50, c + 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             +
           </button>
@@ -281,7 +281,7 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
             <AlertCircle className="w-[1vw] h-[1vw] text-rose-600" />
           </div>
           <div className="flex-1">
-            <h4 className="text-[0.9vw] font-bold text-slate-800 leading-tight">
+            <h4 className="text-[0.9vw] font-semibold text-slate-800 leading-tight">
               Discard Changes?
             </h4>
             <p className="text-[0.75vw] text-slate-500 mt-[0.3vw] leading-relaxed">
@@ -294,7 +294,7 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1vw] h-[2vw] border border-slate-300 rounded-[0.45vw] text-[0.76vw] font-medium text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
+            className="px-[1vw] h-[2vw] border border-slate-300 rounded-[0.45vw] text-[0.76vw] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
           >
             Cancel
           </button>
@@ -836,7 +836,7 @@ const ServiceMaterialForm = ({
             <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
             <span>Back</span>
           </button>
-          <h2 className="text-[1.05vw] font-semibold text-slate-800">
+          <h2 className="text-[1.05vw] font-bold text-slate-800">
             {isReadOnly
               ? "View Inward Entry"
               : isEdit
@@ -868,7 +868,7 @@ const ServiceMaterialForm = ({
             <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
               <User className="w-[1vw] h-[1vw] text-blue-600" />
-              <h3 className="text-[0.82vw] font-semibold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
                 Customer Information
               </h3>
             </div>
@@ -876,20 +876,20 @@ const ServiceMaterialForm = ({
             <div className="grid grid-cols-4 gap-[1.2vw]">
               {/* Row 1, Col 1: Date */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Date
                 </label>
                 <input
                   readOnly
                   value={fmtDate(base.date)}
-                  className="bg-slate-100/70 border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               </div>
 
               {/* Row 1, Col 2: Reference No (Customer) */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Reference No <span className="text-slate-400 font-normal ml-1">(Customer)</span>
                 </label>
                 <input
@@ -898,13 +898,13 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoCustomer", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter customer ref no…"
-                  className="w-full border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
               {/* Row 1, Col 3: Reference No (Internal) */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Reference No <span className="text-slate-400 font-normal ml-1">(Internal)</span>
                 </label>
                 <input
@@ -913,13 +913,13 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoInternal", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter internal ref no…"
-                  className="w-full border border-slate-300 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
               {/* Row 1, Col 4: Category */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Category
                 </label>
                 <CustomDropdown
@@ -939,13 +939,13 @@ const ServiceMaterialForm = ({
                       label: t.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
 
               {/* Row 2, Col 1-2: Customer Name (col-span-2) */}
               <div className="col-span-2 flex flex-col gap-[0.35vw] relative" ref={custRef}>
-                <label className="text-[0.76vw] font-medium text-slate-700 flex justify-between items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex justify-between items-center h-[1.3vw]">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                     {base.customerCode && (
@@ -982,7 +982,7 @@ const ServiceMaterialForm = ({
                       }}
                       disabled={isReadOnly}
                       placeholder="Search & select customer…"
-                      className="w-full border border-slate-300 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                      className="w-full border border-slate-200 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1068,7 +1068,7 @@ const ServiceMaterialForm = ({
 
               {/* Row 2, Col 3: Unit (comes before site) */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Unit
                 </label>
                 <CustomDropdown
@@ -1083,13 +1083,13 @@ const ServiceMaterialForm = ({
                       label: u.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
 
               {/* Row 2, Col 4: Site (mandatory with *) */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-medium text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Site <span className="text-rose-500">*</span>
                 </label>
                 <CustomDropdown
@@ -1104,7 +1104,7 @@ const ServiceMaterialForm = ({
                       label: s.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-300 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-200 text-[0.8vw] text-slate-800 bg-white"
                 />
               </div>
             </div>
@@ -1201,7 +1201,7 @@ const ServiceMaterialForm = ({
             className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
           >
             <div className="px-[1vw] py-[0.7vw] border-b border-slate-200 flex justify-between items-center bg-slate-50">
-              <h2 className="text-[1.1vw] font-bold text-slate-800">
+              <h2 className="text-[1.1vw] font-semibold text-slate-800">
                 Add Customer &amp; Items
               </h2>
               <button
@@ -1216,7 +1216,7 @@ const ServiceMaterialForm = ({
               className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto"
             >
               <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-200">
-                <h3 className="text-[0.85vw] font-bold text-slate-700 mb-[0.8vw]">
+                <h3 className="text-[0.85vw] font-semibold text-slate-700 mb-[0.8vw]">
                   Party Details
                 </h3>
                 <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
@@ -1250,7 +1250,7 @@ const ServiceMaterialForm = ({
                         })
                       }
                       options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
-                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-300 text-[0.8vw]"
+                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-200 text-[0.8vw]"
                     />
                   </div>
                 </div>
@@ -1309,7 +1309,7 @@ const ServiceMaterialForm = ({
 
               <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[1vw]">
                 <div className="flex justify-between items-center mb-[0.6vw]">
-                  <h3 className="text-[0.85vw] font-bold text-slate-800">
+                  <h3 className="text-[0.85vw] font-semibold text-slate-800">
                     Product Items
                   </h3>
                   <button
@@ -1431,7 +1431,7 @@ const ServiceMaterialForm = ({
                 <button
                   type="button"
                   onClick={() => setShowAddCustModal(false)}
-                  className="px-[1.4vw] h-[2.2vw] border border-slate-300 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.78vw] font-medium transition-colors"
+                  className="px-[1.4vw] h-[2.2vw] border border-slate-200 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.78vw] font-medium transition-colors"
                 >
                   Cancel
                 </button>

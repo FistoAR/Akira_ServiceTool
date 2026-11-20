@@ -159,3 +159,59 @@ html {
 .no-native-calendar {
   -moz-appearance: textfield;
 }
+
+/* Global input fields & custom controls border enhancement (exclude transparent/borderless/table inputs & capsule date-pickers) */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):not([class*="border-none"]),
+textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]),
+select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]) {
+  border-width: 1.5px !important;
+  border-color: #94a3b8 !important; /* solid slate-400 for crisp, visible form borders */
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):focus,
+textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):focus,
+select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):focus {
+  border-color: #073761 !important; /* deep rich navy/logo blue */
+  box-shadow: 0 0 0 2.5px rgba(7, 55, 97, 0.25) !important;
+}
+
+/* Override utility classes so Tailwind's focus styles also align with the deep dark logo blue */
+.focus\:border-blue-500:focus,
+.focus\:border-blue-600:focus,
+.focus\:border-indigo-500:focus,
+.focus\:border-indigo-400:focus {
+  border-color: #073761 !important;
+}
+.focus\:ring-blue-500\/15:focus,
+.focus\:ring-blue-400\/20:focus,
+.focus\:ring-blue-500:focus,
+.focus\:ring-blue-200:focus,
+.focus\:ring-indigo-500\/10:focus,
+.focus\:ring-indigo-500\/30:focus,
+.focus\:ring-indigo-500:focus {
+  --tw-ring-color: rgba(7, 55, 97, 0.25) !important;
+  box-shadow: 0 0 0 2.5px rgba(7, 55, 97, 0.25) !important;
+}
+
+/* Explicitly ensure embedded date inputs inside unified capsule filters remain borderless */
+.no-native-calendar,
+input.no-native-calendar {
+  border: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Custom dropdown triggers, search boxes, and input control borders */
+[data-custom-dropdown-trigger],
+.custom-dropdown-trigger {
+  border-width: 1.5px !important;
+  border-color: #94a3b8 !important;
+}
+
+[data-custom-dropdown-trigger]:hover,
+.custom-dropdown-trigger:hover {
+  border-color: #64748b !important;
+}
+
+
+

@@ -46,6 +46,7 @@ import {
   MoreVertical,
   Calendar,
   RotateCcw,
+  Info,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -120,57 +121,68 @@ const getProductStatus = (p, callStatus) => {
 const PROD_STATUS_CFG = {
   resolved: {
     label: "Resolved",
-    dot: "bg-green-500",
+    dot: "bg-emerald-500",
+    badge: "bg-emerald-600 text-white",
     cls: "bg-green-50 border-green-300 text-green-700",
   },
   closed: {
     label: "Resolved",
-    dot: "bg-green-500",
+    dot: "bg-emerald-500",
+    badge: "bg-emerald-600 text-white",
     cls: "bg-green-50 border-green-300 text-green-700",
   },
   pending: {
     label: "Pending",
-    dot: "bg-yellow-500",
+    dot: "bg-amber-500",
+    badge: "bg-amber-500 text-white",
     cls: "bg-yellow-50 border-yellow-300 text-yellow-700",
   },
   support: {
     label: "Supporting",
     dot: "bg-orange-500",
+    badge: "bg-orange-500 text-white",
     cls: "bg-orange-50 border-orange-300 text-orange-700",
   },
   field_visit: {
     label: "Field Visit",
     dot: "bg-teal-500",
+    badge: "bg-teal-600 text-white",
     cls: "bg-teal-50 border-teal-300 text-teal-700",
   },
   registered: {
     label: "Registered",
-    dot: "bg-purple-400",
+    dot: "bg-purple-500",
+    badge: "bg-purple-600 text-white",
     cls: "bg-purple-50 border-purple-300 text-purple-700",
   },
   assigned: {
     label: "Assigned",
-    dot: "bg-blue-400",
+    dot: "bg-blue-500",
+    badge: "bg-blue-600 text-white",
     cls: "bg-blue-50 border-blue-300 text-blue-700",
   },
   attended: {
     label: "Assigned",
-    dot: "bg-blue-400",
+    dot: "bg-blue-500",
+    badge: "bg-blue-600 text-white",
     cls: "bg-blue-50 border-blue-300 text-blue-700",
   },
   escalated: {
     label: "Escalating",
     dot: "bg-orange-500",
+    badge: "bg-orange-500 text-white",
     cls: "bg-orange-50 border-orange-300 text-orange-700",
   },
   critical: {
     label: "Critical",
     dot: "bg-red-500",
+    badge: "bg-red-600 text-white",
     cls: "bg-red-50 border-red-300 text-red-700",
   },
   critical_unresolved: {
     label: "Critical",
     dot: "bg-red-500",
+    badge: "bg-red-600 text-white",
     cls: "bg-red-50 border-red-300 text-red-700",
   },
 };
@@ -182,6 +194,7 @@ const getStatusCfg = (statusKey) => {
     PROD_STATUS_CFG[key] || {
       label: key.charAt(0).toUpperCase() + key.slice(1),
       dot: "bg-gray-400",
+      badge: "bg-slate-600 text-white",
       cls: "bg-gray-50 border-gray-300 text-gray-700",
     }
   );
@@ -2161,15 +2174,15 @@ export default function ServiceCall() {
                                 >
                                   {row.customerType && row.customerType !== "All" ? (
                                     <span
-                                      className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                      className={`inline-flex items-center justify-center px-[0.65vw] py-[0.16vw] rounded-full text-[0.74vw] font-semibold border shadow-2xs whitespace-nowrap ${
                                         row.customerType === "OEM"
-                                          ? "bg-blue-50 text-blue-700 border-blue-200"
+                                          ? "bg-blue-50 text-blue-700 border-blue-300"
                                           : row.customerType === "End Customer"
-                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-300"
                                           : row.customerType === "Distributor"
-                                          ? "bg-purple-50 text-purple-700 border-purple-200"
+                                          ? "bg-purple-50 text-purple-700 border-purple-300"
                                           : row.customerType === "Dealer"
-                                          ? "bg-amber-50 text-amber-700 border-amber-200"
+                                          ? "bg-amber-50 text-amber-700 border-amber-300"
                                           : "bg-slate-50 text-slate-700 border-slate-300"
                                       }`}
                                     >
@@ -2236,12 +2249,12 @@ export default function ServiceCall() {
                                 >
                                   {(() => {
                                     const p = row.priority || "Medium";
-                                    let badgeStyle = "bg-amber-50 text-amber-700 border border-amber-200";
-                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border border-rose-200";
-                                    else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
-                                    else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                                    let badgeStyle = "bg-amber-50 text-amber-700 border-amber-300";
+                                    if (p === "Urgent" || p === "Critical") badgeStyle = "bg-rose-50 text-rose-700 border-rose-300";
+                                    else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border-orange-300";
+                                    else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-300";
                                     return (
-                                      <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                      <span className={`inline-flex items-center justify-center px-[0.65vw] py-[0.16vw] rounded-full text-[0.74vw] font-semibold border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                         {p}
                                       </span>
                                     );
@@ -2263,18 +2276,39 @@ export default function ServiceCall() {
                                     row.assignedEngineer ||
                                     (row.assignedTo ? employees?.find(e => e.userId === row.assignedTo || e._id === row.assignedTo)?.name : null);
                                   return (
-                                    <div>
-                                      <div className="inline-flex items-center gap-[0.35vw] text-[0.78vw] font-medium text-black">
-                                        <span className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
-                                        <span>{cfg.label}</span>
-                                      </div>
-                                      <div className="mt-[0.1vw] text-[0.68vw] text-slate-700 font-medium">
-                                        {engineerName ? (
-                                          <span>to: <span className="text-black font-medium">{engineerName}</span></span>
-                                        ) : (
-                                          <span className="text-slate-600 font-medium italic">Unassigned</span>
-                                        )}
-                                      </div>
+                                    <div className="flex items-center gap-[0.4vw]">
+                                      <span className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.72vw] font-semibold tracking-wide shadow-2xs ${cfg.badge || "bg-slate-600 text-white"}`}>
+                                        {cfg.label}
+                                      </span>
+                                      <CustomTooltip
+                                        position="top-start"
+                                        content={
+                                          <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
+                                            <div className="font-semibold text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw] flex items-center gap-[0.35vw]">
+                                              <span className={`px-[0.4vw] py-[0.05vw] rounded text-[0.65vw] font-bold ${cfg.badge || "bg-slate-600 text-white"}`}>
+                                                {cfg.label}
+                                              </span>
+                                            </div>
+                                            <div className="flex items-center gap-[0.35vw] text-[0.72vw]">
+                                              <span className="text-slate-400">Assigned To:</span>
+                                              {engineerName ? (
+                                                <span className="text-sky-300 font-semibold">{engineerName}</span>
+                                              ) : (
+                                                <span className="text-amber-300 italic">Unassigned</span>
+                                              )}
+                                            </div>
+                                          </div>
+                                        }
+                                      >
+                                        <button
+                                          type="button"
+                                          tabIndex={-1}
+                                          className="p-[0.15vw] text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors cursor-pointer shrink-0"
+                                          title="View Assignment Info"
+                                        >
+                                          <Info className="w-[0.75vw] h-[0.75vw]" />
+                                        </button>
+                                      </CustomTooltip>
                                     </div>
                                   );
                                 })()}
@@ -2308,9 +2342,14 @@ export default function ServiceCall() {
                                           setActionMenuCoords(null);
                                         } else {
                                           const rect = e.currentTarget.getBoundingClientRect();
+                                          const spaceBelow = window.innerHeight - rect.bottom;
+                                          const menuHeightApprox = 170;
+                                          const openUpward = spaceBelow < menuHeightApprox;
+
                                           setActionMenuCoords({
-                                            top: rect.bottom + 4,
+                                            top: openUpward ? rect.top - 4 : rect.bottom + 4,
                                             right: window.innerWidth - rect.right,
+                                            openUpward,
                                           });
                                           setActiveActionMenuId(rowId);
                                         }
@@ -2327,15 +2366,16 @@ export default function ServiceCall() {
                                       <div
                                         className="action-menu-portal fixed z-[9999]"
                                         style={{
-                                          top: `${actionMenuCoords.top}px`,
+                                          top: actionMenuCoords.openUpward ? undefined : `${actionMenuCoords.top}px`,
+                                          bottom: actionMenuCoords.openUpward ? `${window.innerHeight - actionMenuCoords.top}px` : undefined,
                                           right: `${actionMenuCoords.right}px`,
                                         }}
                                         onClick={(e) => e.stopPropagation()}
                                       >
                                         <motion.div
-                                          initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                                          initial={{ opacity: 0, scale: 0.95, y: actionMenuCoords.openUpward ? 5 : -5 }}
                                           animate={{ opacity: 1, scale: 1, y: 0 }}
-                                          exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                                          exit={{ opacity: 0, scale: 0.95, y: actionMenuCoords.openUpward ? 5 : -5 }}
                                           transition={{ duration: 0.12 }}
                                           className="min-w-[10vw] w-max whitespace-nowrap bg-white rounded-[0.5vw] shadow-2xl border border-slate-300 py-[0.4vw] text-left"
                                         >
