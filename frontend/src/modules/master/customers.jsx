@@ -1133,13 +1133,13 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-[0.77vw] font-normal text-slate-700 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-[0.77vw] font-medium text-slate-800 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
         return (
           <td key={col.key} {...spanProps} className={baseClass + " text-center"}>
-            <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+            <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border shadow-2xs whitespace-nowrap ${
               row.partyType === "OEM"
                 ? "bg-blue-50 text-blue-700 border-blue-200"
                 : row.partyType === "End Customer"
@@ -1158,7 +1158,7 @@ const CustomerDatabase = () => {
         return (
           <td key={col.key} className={baseClass}>
             {row.productSegment ? (
-              <span className="inline-block bg-indigo-50 text-indigo-700 px-[0.45vw] py-[0.08vw] rounded text-[0.68vw] border border-indigo-200/80 font-normal">
+              <span className="inline-block bg-indigo-50 text-indigo-700 px-[0.45vw] py-[0.08vw] rounded text-[0.68vw] border border-indigo-200/80 font-medium">
                 {row.productSegment}
               </span>
             ) : "—"}
@@ -1166,39 +1166,39 @@ const CustomerDatabase = () => {
         );
       case "partyCode":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-600"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-800 font-medium font-mono"}>
             {row.partyCode}
           </td>
         );
       case "partyDescription":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-normal truncate max-w-[14vw]"} title={row.partyDescription}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-900 font-medium truncate max-w-[14vw]"} title={row.partyDescription}>
             {row.partyDescription}
           </td>
         );
       case "itemCode":
-        return <td key={col.key} className={baseClass + " text-slate-700 font-mono text-[0.74vw]"}>{row.itemCode}</td>;
+        return <td key={col.key} className={baseClass + " text-slate-800 font-mono text-[0.74vw] font-medium"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
-          <td key={col.key} className={baseClass + " text-slate-700 truncate max-w-[16vw] text-[0.74vw]"} title={row.itemDescription}>
+          <td key={col.key} className={baseClass + " text-slate-800 truncate max-w-[16vw] text-[0.74vw] font-medium"} title={row.itemDescription}>
             {row.itemDescription}
           </td>
         );
       case "warrantyPeriodDays":
         return (
-          <td key={col.key} className={baseClass + " text-slate-700 text-center font-normal"}>
+          <td key={col.key} className={baseClass + " text-slate-800 text-center font-medium"}>
             {row.warrantyPeriodDays}
           </td>
         );
       case "state":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700 min-w-[8vw] w-[8vw] whitespace-nowrap"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-800 min-w-[8vw] w-[8vw] whitespace-nowrap font-medium"}>
             {row.state || "—"}
           </td>
         );
       case "districtCity":
         return (
-          <td key={col.key} {...spanProps} className={baseClass + " text-slate-700"}>
+          <td key={col.key} {...spanProps} className={baseClass + " text-slate-800 font-medium"}>
             {row.districtCity || "—"}
           </td>
         );
@@ -1426,7 +1426,7 @@ const CustomerDatabase = () => {
                           </button>
                         </td>
                       )}
-                      <td className="py-[0.7vw] px-[0.7vw] text-slate-700 font-normal border-r border-b border-slate-400 text-center text-[0.76vw]">
+                      <td className="py-[0.7vw] px-[0.7vw] text-slate-800 font-medium border-r border-b border-slate-400 text-center text-[0.76vw]">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>

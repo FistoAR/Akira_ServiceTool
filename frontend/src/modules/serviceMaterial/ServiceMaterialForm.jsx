@@ -826,7 +826,7 @@ const ServiceMaterialForm = ({
       </AnimatePresence>
 
       {/* Top Header Card (Styled exactly like ServiceCallForm) */}
-      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-400 mb-[0.6vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border-2 border-slate-300 mb-[0.6vw] shrink-0">
         <div className="flex items-center gap-[0.9vw]">
           <button
             type="button"
@@ -864,7 +864,7 @@ const ServiceMaterialForm = ({
         <div className="flex-1 min-h-0 overflow-y-auto pr-[0.4vw] flex flex-col gap-[0.9vw] pb-[0.8vw] custom-scrollbar">
 
           {/* SECTION 1: Customer Information */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 p-[1.2vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-2 border-slate-300 p-[1.2vw]">
             <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
               <User className="w-[1vw] h-[1vw] text-blue-600" />
@@ -1111,7 +1111,7 @@ const ServiceMaterialForm = ({
           </div>
 
           {/* SECTION 2: Product & Service Details */}
-          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 p-[1.2vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-2 border-slate-300 p-[1.2vw]">
             <div className="flex items-center justify-between mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <div className="flex items-center gap-[0.45vw]">
                 <span className="w-[0.25vw] h-[0.9vw] bg-indigo-600 rounded-full inline-block" />

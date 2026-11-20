@@ -499,7 +499,7 @@ const ServiceCallForm = ({
       className="w-full h-full flex flex-col font-sans flex-1 min-h-0 overflow-hidden pr-[0.3vw]"
     >
       {/* Top Header Card (Static) */}
-      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border border-slate-200 mb-[0.6vw] shrink-0">
+      <div className="flex items-center justify-between bg-white px-[1.2vw] py-[0.7vw] rounded-[0.8vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] border-2 border-slate-300 mb-[0.6vw] shrink-0">
         <div className="flex items-center gap-[0.9vw]">
           <button
             type="button"
@@ -530,7 +530,7 @@ const ServiceCallForm = ({
         {/* Scrollable Middle Content */}
         <div className="flex-1 min-h-0 overflow-y-auto pr-[0.4vw] flex flex-col gap-[0.9vw] pb-[0.8vw] custom-scrollbar">
         {/* SECTION 1: Call Details */}
-        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
+        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-2 border-slate-300 p-[1.2vw]">
           <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
             <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
             <Clock className="w-[1vw] h-[1vw] text-blue-600" />
@@ -646,7 +646,7 @@ const ServiceCallForm = ({
         </div>
 
         {/* SECTION 2: Customer Information */}
-        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
+        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-2 border-slate-300 p-[1.2vw]">
           <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
             <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
             <User className="w-[1vw] h-[1vw] text-blue-600" />
@@ -1015,7 +1015,7 @@ const ServiceCallForm = ({
         </div>
 
         {/* SECTION 3: Product Details */}
-        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 p-[1.2vw]">
+        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-2 border-slate-300 p-[1.2vw]">
           <div className="flex justify-between items-center mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
             <div className="flex items-center gap-[0.45vw]">
               <span className="w-[0.25vw] h-[0.9vw] bg-indigo-600 rounded-full inline-block" />
@@ -1043,7 +1043,7 @@ const ServiceCallForm = ({
             {formData.products.map((product, idx) => (
               <div
                 key={idx}
-                className="border border-slate-200 rounded-[0.7vw] p-[1.1vw] bg-slate-50/50 relative shadow-2xs"
+                className="border-2 border-slate-300 rounded-[0.7vw] p-[1.1vw] bg-slate-50/50 relative shadow-2xs"
               >
                 {formData.products.length > 1 && (
                   <button

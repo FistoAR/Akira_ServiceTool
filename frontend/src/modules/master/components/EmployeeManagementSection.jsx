@@ -673,14 +673,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 {/* 1. Personal Details Section */}
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
-                    <User className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Personal Details</span>
+                    <User className="w-[0.9vw] h-[0.9vw] text-[#0E4E92]" />
+                    <span className="text-[0.76vw] font-bold text-[#0E4E92] uppercase tracking-wider">Personal Details</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Full Name *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Users className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Full Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -694,8 +694,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Employee ID *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Employee ID <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -713,8 +713,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Mail className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Email Address *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Mail className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Email Address <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="email"
@@ -728,8 +728,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Phone className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Phone Number
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Phone className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Phone Number
                       </label>
                       <input
                         type="tel"
@@ -742,8 +742,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Birth *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Calendar className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Date of Birth <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="date"
@@ -755,8 +755,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Users className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Gender *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Users className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Gender <span className="text-red-500">*</span>
                       </label>
                       <CustomDropdown
                         options={["Male", "Female", "Other"]}
@@ -773,14 +773,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 {/* 2. Professional Details Section */}
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
-                    <Briefcase className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Professional Details</span>
+                    <Briefcase className="w-[0.9vw] h-[0.9vw] text-[#0E4E92]" />
+                    <span className="text-[0.76vw] font-bold text-[#0E4E92] uppercase tracking-wider">Professional Details</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Briefcase className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Department *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Briefcase className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Department <span className="text-red-500">*</span>
                       </label>
                       <div className="flex items-center gap-[0.4vw]">
                         <div className="flex-1 min-w-0">
@@ -804,8 +804,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       </div>
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Tag className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Designation *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Tag className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Designation <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -818,8 +818,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     </div>
 
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Role *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Role <span className="text-red-500">*</span>
                       </label>
                       <CustomDropdown
                         options={isCurrentRequesterAdmin ? ["User", "Supervisor", "Admin"] : ["User", "Supervisor"]}
@@ -840,8 +840,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       )}
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <IndianRupee className="w-[0.85vw] h-[0.85vw] text-gray-400" /> CTC (Monthly)
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <IndianRupee className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> CTC (Monthly)
                       </label>
                       <input
                         type="number"
@@ -859,8 +859,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     </div>
 
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Calendar className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Date of Joining *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Calendar className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Date of Joining <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="date"
@@ -871,8 +871,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Activity className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Working Status *
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Activity className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Working Status <span className="text-red-500">*</span>
                       </label>
                       <CustomDropdown
                         options={["Active", "Inactive", "On Leave"]}
@@ -919,8 +919,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.35vw]">
-                      <ImageIcon className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Profile Picture
+                    <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.35vw]">
+                      <ImageIcon className="w-[0.9vw] h-[0.9vw] text-[#530000]" /> Profile Picture
                     </label>
                     <span className="text-[0.68vw] text-gray-400">Optional: Max 2MB</span>
                   </div>
@@ -992,13 +992,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 {/* 4. Security Section */}
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
-                    <Lock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                    <span className="text-[0.76vw] font-bold text-gray-800 uppercase tracking-wider">Security</span>
+                    <Lock className="w-[0.9vw] h-[0.9vw] text-[#0E4E92]" />
+                    <span className="text-[0.76vw] font-bold text-[#0E4E92] uppercase tracking-wider">Security</span>
                   </div>
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Password {!editingEmp && "*"}
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Lock className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Password {!editingEmp && <span className="text-red-500">*</span>}
                       </label>
                       <div className="relative">
                         <input
@@ -1026,8 +1026,8 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       </div>
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-gray-700 flex items-center gap-[0.3vw]">
-                        <Lock className="w-[0.85vw] h-[0.85vw] text-gray-400" /> Confirm Password {!editingEmp && "*"}
+                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                        <Lock className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Confirm Password {!editingEmp && <span className="text-red-500">*</span>}
                       </label>
                       <div className="relative">
                         <input

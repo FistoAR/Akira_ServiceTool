@@ -183,7 +183,7 @@ html {
   -moz-appearance: textfield;
 }
 
-/* Input fields, textareas, and dropdowns - dark blue border (#0D569D) with crisp 1.5px thickness */
+/* Global input fields & custom controls border enhancement (exclude transparent/borderless/table inputs & capsule date-pickers) */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):not([class*="border-none"]):not([class*="border-rose-"]):not([class*="border-red-"]),
 textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-rose-"]):not([class*="border-red-"]),
 select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-rose-"]):not([class*="border-red-"]),
@@ -193,7 +193,7 @@ select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"])
 .custom-dropdown:not([class*="border-rose-"]):not([class*="border-red-"]),
 .app-input:not([class*="border-rose-"]):not([class*="border-red-"]) {
   border-width: 1.5px !important;
-  border-color: #0D569D !important; /* dark blue border */
+  border-color: #94a3b8 !important; /* solid slate-400 */
 }
 
 /* Capsule filters, cancel buttons, and status pill tracks retain clean slate border */
@@ -220,10 +220,7 @@ button:has(> svg.lucide-rotate-ccw):has(> span):hover,
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="file"]):not(.no-native-calendar):not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):not([class*="border-b"]):hover,
 textarea:not(.border-none):not(.border-transparent):not([class*="bg-transparent"]):hover,
 [data-custom-dropdown-trigger]:hover,
-.custom-dropdown-trigger:hover {
-  border-color: #083c6e !important;
-}
-
+.custom-dropdown-trigger:hover,
 .form-cancel-btn:hover,
 div:has(> input.no-native-calendar):hover,
 div:has(> .no-native-calendar):hover,
@@ -240,8 +237,8 @@ select:not(.border-none):not(.border-transparent):not([class*="bg-transparent"])
 div:has(> input.no-native-calendar):focus-within,
 div:has(> .no-native-calendar):focus-within,
 .date-range-capsule:focus-within {
-  border-color: #0D569D !important; /* dark blue */
-  box-shadow: 0 0 0 2.5px rgba(13, 86, 157, 0.25) !important;
+  border-color: #073761 !important; /* deep rich navy/logo blue */
+  box-shadow: 0 0 0 2.5px rgba(7, 55, 97, 0.25) !important;
 }
 
 .form-cancel-btn:focus {
@@ -249,12 +246,12 @@ div:has(> .no-native-calendar):focus-within,
   box-shadow: 0 0 0 2.5px rgba(100, 116, 139, 0.25) !important;
 }
 
-/* Override utility classes so Tailwind's focus styles also align with dark blue #0D569D */
+/* Override utility classes so Tailwind's focus styles also align with the deep dark logo blue */
 .focus\:border-blue-500:focus,
 .focus\:border-blue-600:focus,
 .focus\:border-indigo-500:focus,
 .focus\:border-indigo-400:focus {
-  border-color: #0D569D !important;
+  border-color: #073761 !important;
 }
 .focus\:ring-blue-500\/15:focus,
 .focus\:ring-blue-400\/20:focus,
@@ -263,8 +260,8 @@ div:has(> .no-native-calendar):focus-within,
 .focus\:ring-indigo-500\/10:focus,
 .focus\:ring-indigo-500\/30:focus,
 .focus\:ring-indigo-500:focus {
-  --tw-ring-color: rgba(13, 86, 157, 0.25) !important;
-  box-shadow: 0 0 0 2.5px rgba(13, 86, 157, 0.25) !important;
+  --tw-ring-color: rgba(7, 55, 97, 0.25) !important;
+  box-shadow: 0 0 0 2.5px rgba(7, 55, 97, 0.25) !important;
 }
 
 /* Explicitly ensure embedded date inputs inside unified capsule filters remain borderless */
