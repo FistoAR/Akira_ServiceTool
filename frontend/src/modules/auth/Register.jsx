@@ -178,7 +178,7 @@ const RegisterPage = () => {
             <div className="flex items-center justify-between mb-[1vw]">
                <button 
                 onClick={() => navigate("/")}
-                className="flex items-center gap-[0.3vw] text-[0.85vw] text-gray-500 hover:text-blue-600 transition-colors"
+                className="flex items-center gap-[0.3vw] text-[0.9vw] text-gray-500 hover:text-blue-600 transition-colors"
                >
                  <ArrowLeft size={"1vw"} /> Back to Login
                </button>
@@ -186,8 +186,8 @@ const RegisterPage = () => {
             </div>
 
             <div className="text-center mb-[1.5vw]">
-              <h1 className="text-[1.8vw] md:text-[1.5vw] font-bold text-gray-800">Employee Registration</h1>
-              <p className="text-[1vw] md:text-[0.8vw] text-gray-500 mt-1">
+              <h1 className="text-[1.85vw] md:text-[1.55vw] font-bold text-gray-800">Employee Registration</h1>
+              <p className="text-[1.05vw] md:text-[0.85vw] text-gray-500 mt-1">
                 Step {step} of 2: {step === 1 ? "Personal Details" : "Professional Details"}
               </p>
             </div>
@@ -196,7 +196,7 @@ const RegisterPage = () => {
             {error && (
               <div className="mb-[1vw] px-[1vw] py-[0.5vw] bg-red-50 border border-red-300 rounded-lg flex items-center gap-[0.5vw]">
                 <div className="w-[0.5vw] h-[0.5vw] bg-red-500 rounded-full flex-shrink-0"></div>
-                <p className="text-red-600 text-[0.85vw] font-medium">{error}</p>
+                <p className="text-red-600 text-[0.9vw] font-medium">{error}</p>
               </div>
             )}
 
@@ -204,7 +204,7 @@ const RegisterPage = () => {
             {success && (
               <div className="mb-[1vw] px-[1vw] py-[0.5vw] bg-green-50 border border-green-300 rounded-lg flex items-center gap-[0.5vw]">
                 <div className="w-[0.5vw] h-[0.5vw] bg-green-500 rounded-full flex-shrink-0"></div>
-                <p className="text-green-600 text-[0.85vw] font-medium">{success}</p>
+                <p className="text-green-600 text-[0.9vw] font-medium">{success}</p>
               </div>
             )}
 
@@ -212,7 +212,7 @@ const RegisterPage = () => {
               {step === 1 ? (
                 <>
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Full Name *
                     </label>
                     <div className="relative">
@@ -222,14 +222,14 @@ const RegisterPage = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Enter full name"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Employee ID / User ID *
                     </label>
                     <div className="relative">
@@ -239,14 +239,14 @@ const RegisterPage = () => {
                         name="userId"
                         value={formData.userId}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="e.g. Fisto9"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Email Address *
                     </label>
                     <div className="relative">
@@ -256,14 +256,14 @@ const RegisterPage = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="example@akira.com"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Phone Number *
                     </label>
                     <div className="relative">
@@ -273,14 +273,14 @@ const RegisterPage = () => {
                         name="phoneNumber"
                         value={formData.phoneNumber}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Enter phone number"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Date of Birth *
                     </label>
                     <div className="relative">
@@ -290,13 +290,13 @@ const RegisterPage = () => {
                         name="dob"
                         value={formData.dob}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Gender *
                     </label>
                     <div className="relative">
@@ -305,7 +305,7 @@ const RegisterPage = () => {
                         name="gender"
                         value={formData.gender}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="">Select Gender</option>
                         <option value="Male">Male</option>
@@ -316,7 +316,7 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Password *
                     </label>
                     <div className="relative">
@@ -326,7 +326,7 @@ const RegisterPage = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[3vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[3vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Create password"
                       />
                       <button
@@ -340,7 +340,7 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Confirm Password *
                     </label>
                     <div className="relative">
@@ -350,7 +350,7 @@ const RegisterPage = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[3vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[3vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Confirm password"
                       />
                       <button
@@ -366,7 +366,7 @@ const RegisterPage = () => {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="col-span-1 md:col-span-2 mt-[1vw] text-[1.1vw] md:text-[1vw] w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
+                    className="col-span-1 md:col-span-2 mt-[1vw] text-[1.15vw] md:text-[1.05vw] w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
                   >
                     Next Step
                   </button>
@@ -374,7 +374,7 @@ const RegisterPage = () => {
               ) : (
                 <>
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Role *
                     </label>
                     <div className="relative">
@@ -383,7 +383,7 @@ const RegisterPage = () => {
                         name="role"
                         value={formData.role}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="User">User</option>
                         <option value="Admin">Admin</option>
@@ -392,7 +392,7 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Department *
                     </label>
                     <div className="relative">
@@ -401,7 +401,7 @@ const RegisterPage = () => {
                         name="department"
                         value={formData.department}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="">Select Department</option>
                         {departments.map(dept => (
@@ -412,7 +412,7 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Designation *
                     </label>
                     <div className="relative">
@@ -422,14 +422,14 @@ const RegisterPage = () => {
                         name="designation"
                         value={formData.designation}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="e.g. Senior Engineer"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       CTC (Monthly) *
                     </label>
                     <div className="relative">
@@ -440,14 +440,14 @@ const RegisterPage = () => {
                         min="0"
                         value={formData.ctc}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                         placeholder="Enter monthly CTC"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Date of Joining *
                     </label>
                     <div className="relative">
@@ -457,13 +457,13 @@ const RegisterPage = () => {
                         name="dateOfJoining"
                         value={formData.dateOfJoining}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Working Status *
                     </label>
                     <div className="relative">
@@ -472,7 +472,7 @@ const RegisterPage = () => {
                         name="workingStatus"
                         value={formData.workingStatus}
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1vw] md:text-[0.85vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[1.05vw] md:text-[0.9vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
                       >
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
@@ -482,7 +482,7 @@ const RegisterPage = () => {
                   </div>
 
                   <div className="relative group md:col-span-2">
-                    <label className="block text-[0.9vw] md:text-[0.8vw] font-medium text-gray-700 mb-[0.4vw]">
+                    <label className="block text-[0.95vw] md:text-[0.85vw] font-medium text-gray-700 mb-[0.4vw]">
                       Profile Picture
                     </label>
                     <div className="relative">
@@ -492,7 +492,7 @@ const RegisterPage = () => {
                         accept="image/*"
                         name="profilePicture"
                         onChange={handleInputChange}
-                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[0.9vw] md:text-[0.75vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[0.8vw] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        className="w-full pl-[2.5vw] md:pl-[2.2vw] text-[0.95vw] md:text-[0.8vw] pr-[1vw] py-[0.6vw] md:py-[0.5vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[0.85vw] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                       />
                     </div>
                     {formData.profilePicture && (
@@ -509,13 +509,13 @@ const RegisterPage = () => {
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="text-[1.1vw] md:text-[1vw] w-full bg-gray-200 text-gray-700 py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow hover:bg-gray-300 transition-all duration-300"
+                      className="text-[1.15vw] md:text-[1.05vw] w-full bg-gray-200 text-gray-700 py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow hover:bg-gray-300 transition-all duration-300"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
-                      className="text-[1.1vw] md:text-[1vw] w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
+                      className="text-[1.15vw] md:text-[1.05vw] w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-[0.8vw] md:py-[0.7vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300"
                     >
                       Complete Registration
                     </button>

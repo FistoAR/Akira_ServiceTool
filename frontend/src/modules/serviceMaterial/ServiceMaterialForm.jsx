@@ -126,10 +126,10 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
             <Copy className="w-[1.1vw] h-[1.1vw] text-blue-600" />
           </div>
           <div>
-            <div className="text-[0.9vw] font-semibold text-slate-800">
+            <div className="text-[0.95vw] font-semibold text-slate-800">
               Duplicate Product Row
             </div>
-            <div className="text-[0.72vw] text-slate-500">
+            <div className="text-[0.77vw] text-slate-500">
               How many copies do you need?
             </div>
           </div>
@@ -138,7 +138,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.15vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             −
           </button>
@@ -150,24 +150,24 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
             onChange={(e) =>
               setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))
             }
-            className="flex-1 border border-slate-400 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
+            className="flex-1 border border-slate-400 rounded-[0.5vw] p-[0.5vw] text-center text-[1.05vw] font-medium outline-none focus:border-blue-500 shadow-none"
           />
           <button
             type="button"
             onClick={() => setCount((c) => Math.min(50, c + 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.15vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             +
           </button>
         </div>
-        <div className="text-[0.72vw] text-slate-600 mb-[1.2vw] bg-blue-50 rounded-[0.5vw] p-[0.6vw] border border-blue-200">
+        <div className="text-[0.77vw] text-slate-600 mb-[1.2vw] bg-blue-50 rounded-[0.5vw] p-[0.6vw] border border-blue-200">
           This will add <strong>{count}</strong> copy{count > 1 ? "ies" : ""} of this product row.
         </div>
         <div className="flex gap-[0.6vw] justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.78vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
+            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.83vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
           >
             Cancel
           </button>
@@ -177,7 +177,7 @@ const DuplicateModal = ({ onConfirm, onClose }) => {
               onConfirm(count);
               onClose();
             }}
-            className="px-[1.4vw] py-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] text-[0.78vw] font-semibold cursor-pointer flex items-center gap-[0.4vw] transition-colors"
+            className="px-[1.4vw] py-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] text-[0.83vw] font-semibold cursor-pointer flex items-center gap-[0.4vw] transition-colors"
           >
             <Copy className="w-[0.85vw] h-[0.85vw]" />
             Add {count} {count > 1 ? "Copies" : "Copy"}
@@ -204,10 +204,10 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
             <Plus className="w-[1.1vw] h-[1.1vw] text-blue-600" />
           </div>
           <div>
-            <div className="text-[0.9vw] font-semibold text-slate-800">
+            <div className="text-[0.95vw] font-semibold text-slate-800">
               Add Product Rows
             </div>
-            <div className="text-[0.72vw] text-slate-500">
+            <div className="text-[0.77vw] text-slate-500">
               How many rows do you want to add?
             </div>
           </div>
@@ -216,7 +216,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={() => setCount((c) => Math.max(1, c - 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.15vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             −
           </button>
@@ -228,24 +228,24 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
             onChange={(e) =>
               setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))
             }
-            className="flex-1 border border-slate-400 rounded-[0.5vw] p-[0.5vw] text-center text-[1vw] font-medium outline-none focus:border-blue-500 shadow-none"
+            className="flex-1 border border-slate-400 rounded-[0.5vw] p-[0.5vw] text-center text-[1.05vw] font-medium outline-none focus:border-blue-500 shadow-none"
           />
           <button
             type="button"
             onClick={() => setCount((c) => Math.min(50, c + 1))}
-            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.1vw] flex items-center justify-center cursor-pointer transition-colors"
+            className="w-[2.4vw] h-[2.4vw] rounded-[0.5vw] border border-slate-400 text-slate-700 hover:bg-slate-100 font-medium text-[1.15vw] flex items-center justify-center cursor-pointer transition-colors"
           >
             +
           </button>
         </div>
-        <div className="text-[0.72vw] text-slate-600 mb-[1.2vw] bg-blue-50 rounded-[0.5vw] p-[0.6vw] border border-blue-200">
+        <div className="text-[0.77vw] text-slate-600 mb-[1.2vw] bg-blue-50 rounded-[0.5vw] p-[0.6vw] border border-blue-200">
           This will add <strong>{count}</strong> new empty product row{count > 1 ? "s" : ""}.
         </div>
         <div className="flex gap-[0.6vw] justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.78vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
+            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.83vw] text-slate-600 hover:bg-slate-50 cursor-pointer font-medium transition-colors"
           >
             Cancel
           </button>
@@ -255,7 +255,7 @@ const AddRowsModal = ({ onConfirm, onClose }) => {
               onConfirm(count);
               onClose();
             }}
-            className="px-[1.4vw] py-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] text-[0.78vw] font-semibold cursor-pointer flex items-center gap-[0.4vw] transition-colors"
+            className="px-[1.4vw] py-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] text-[0.83vw] font-semibold cursor-pointer flex items-center gap-[0.4vw] transition-colors"
           >
             <Plus className="w-[0.85vw] h-[0.85vw]" />
             Add {count} Row{count > 1 ? "s" : ""}
@@ -281,10 +281,10 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
             <AlertCircle className="w-[1vw] h-[1vw] text-rose-600" />
           </div>
           <div className="flex-1">
-            <h4 className="text-[0.9vw] font-semibold text-slate-800 leading-tight">
+            <h4 className="text-[0.95vw] font-semibold text-slate-800 leading-tight">
               Discard Changes?
             </h4>
-            <p className="text-[0.75vw] text-slate-500 mt-[0.3vw] leading-relaxed">
+            <p className="text-[0.8vw] text-slate-500 mt-[0.3vw] leading-relaxed">
               You have unsaved changes. Leaving now will discard them.
             </p>
           </div>
@@ -294,14 +294,14 @@ const UnsavedChangesModal = ({ onConfirm, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1vw] h-[2vw] border border-slate-400 rounded-[0.45vw] text-[0.76vw] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
+            className="px-[1vw] h-[2vw] border border-slate-400 rounded-[0.45vw] text-[0.81vw] font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="px-[1.1vw] h-[2vw] bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-[0.45vw] text-[0.76vw] font-medium cursor-pointer transition-all shadow-xs"
+            className="px-[1.1vw] h-[2vw] bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-[0.45vw] text-[0.81vw] font-medium cursor-pointer transition-all shadow-xs"
           >
             Discard
           </button>
@@ -831,12 +831,12 @@ const ServiceMaterialForm = ({
           <button
             type="button"
             onClick={handleBackClick}
-            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-400 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors"
+            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-400 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.83vw] font-medium transition-colors"
           >
             <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
             <span>Back</span>
           </button>
-          <h2 className="text-[1.05vw] font-bold text-slate-800">
+          <h2 className="text-[1.1vw] font-bold text-slate-800">
             {isReadOnly
               ? "View Inward Entry"
               : isEdit
@@ -844,13 +844,13 @@ const ServiceMaterialForm = ({
                 : "New Service Material Inward"}
           </h2>
           {isReadOnly && (
-            <span className="text-[0.74vw] bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.15vw] rounded-full flex items-center gap-[0.3vw] font-semibold">
+            <span className="text-[0.79vw] bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.15vw] rounded-full flex items-center gap-[0.3vw] font-semibold">
               <Eye className="w-[0.85vw] h-[0.85vw]" />
               Read Only Mode
             </span>
           )}
           {!isReadOnly && !isEdit && products.length > 1 && (
-            <span className="text-[0.74vw] bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.15vw] rounded-full font-semibold">
+            <span className="text-[0.79vw] bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.15vw] rounded-full font-semibold">
               {products.length} products in this entry
             </span>
           )}
@@ -868,7 +868,7 @@ const ServiceMaterialForm = ({
             <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
               <User className="w-[1vw] h-[1vw] text-blue-600" />
-              <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
                 Customer Information
               </h3>
             </div>
@@ -876,21 +876,21 @@ const ServiceMaterialForm = ({
             <div className="grid grid-cols-4 gap-[1.2vw]">
               {/* Row 1, Col 1: Date */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Date
                 </label>
                 <input
                   readOnly
                   value={fmtDate(base.date)}
-                  className="bg-slate-100/70 border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               </div>
 
               {/* Row 1, Col 2: Reference No (Customer) */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
-                  Reference No <span className="text-slate-400 font-normal ml-1">(Customer)</span>
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                  Reference No <span className="text-slate-400 font-medium ml-1">(Customer)</span>
                 </label>
                 <input
                   type="text"
@@ -898,14 +898,14 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoCustomer", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter customer ref no…"
-                  className="w-full border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
               {/* Row 1, Col 3: Reference No (Internal) */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
-                  Reference No <span className="text-slate-400 font-normal ml-1">(Internal)</span>
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                  Reference No <span className="text-slate-400 font-medium ml-1">(Internal)</span>
                 </label>
                 <input
                   type="text"
@@ -913,13 +913,13 @@ const ServiceMaterialForm = ({
                   onChange={(e) => sb("refNoInternal", e.target.value)}
                   disabled={isReadOnly}
                   placeholder="Enter internal ref no…"
-                  className="w-full border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                  className="w-full border border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                 />
               </div>
 
               {/* Row 1, Col 4: Category */}
               <div className="flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Category
                 </label>
                 <CustomDropdown
@@ -939,22 +939,22 @@ const ServiceMaterialForm = ({
                       label: t.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.85vw] text-slate-800 bg-white"
                 />
               </div>
 
               {/* Row 2, Col 1-2: Customer Name (col-span-2) */}
               <div className="col-span-2 flex flex-col gap-[0.35vw] relative" ref={custRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex justify-between items-center h-[1.3vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex justify-between items-center h-[1.3vw]">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                     {base.customerCode && (
-                      <span className="ml-[0.5vw] text-[0.7vw] font-mono text-slate-400 font-normal">
+                      <span className="ml-[0.5vw] text-[0.75vw] font-mono text-slate-400 font-medium">
                         ({base.customerCode})
                       </span>
                     )}
                   </span>
-                  <span className="text-[0.72vw] text-slate-400 font-normal">
+                  <span className="text-[0.77vw] text-slate-400 font-medium">
                     ({filteredCustomers.length} available)
                   </span>
                 </label>
@@ -982,7 +982,7 @@ const ServiceMaterialForm = ({
                       }}
                       disabled={isReadOnly}
                       placeholder="Search & select customer…"
-                      className="w-full border border-slate-400 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
+                      className="w-full border border-slate-400 rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-100/70 disabled:cursor-not-allowed transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1022,7 +1022,7 @@ const ServiceMaterialForm = ({
                         });
                         setShowAddCustModal(true);
                       }}
-                      className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors shrink-0 shadow-xs"
+                      className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.83vw] font-medium transition-colors shrink-0 shadow-xs"
                     >
                       <UserPlus className="w-[0.9vw] h-[0.9vw]" />
                       <span>New</span>
@@ -1042,15 +1042,15 @@ const ServiceMaterialForm = ({
                           }`}
                         >
                           <div>
-                            <div className="font-semibold text-slate-800 text-[0.8vw]">
+                            <div className="font-semibold text-slate-800 text-[0.85vw]">
                               {c.name}
                             </div>
-                            <div className="text-[0.68vw] text-slate-400 font-mono">
+                            <div className="text-[0.73vw] text-slate-400 font-mono">
                               {c.code}
                             </div>
                           </div>
                           <span
-                            className={`text-[0.68vw] px-[0.5vw] py-[0.15vw] rounded-full font-medium border ${getTypeColor(c.type, partyTypes)}`}
+                            className={`text-[0.73vw] px-[0.5vw] py-[0.15vw] rounded-full font-medium border ${getTypeColor(c.type, partyTypes)}`}
                           >
                             {c.type}
                           </span>
@@ -1058,7 +1058,7 @@ const ServiceMaterialForm = ({
                       ))}
                     </div>
                     {filteredCustomers.length === 0 && (
-                      <div className="p-[1vw] text-slate-400 text-center text-[0.76vw]">
+                      <div className="p-[1vw] text-slate-400 text-center text-[0.81vw]">
                         No customers found
                       </div>
                     )}
@@ -1068,7 +1068,7 @@ const ServiceMaterialForm = ({
 
               {/* Row 2, Col 3: Unit (comes before site) */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Unit
                 </label>
                 <CustomDropdown
@@ -1083,13 +1083,13 @@ const ServiceMaterialForm = ({
                       label: u.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.85vw] text-slate-800 bg-white"
                 />
               </div>
 
               {/* Row 2, Col 4: Site (mandatory with *) */}
               <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                   Site <span className="text-rose-500">*</span>
                 </label>
                 <CustomDropdown
@@ -1104,7 +1104,7 @@ const ServiceMaterialForm = ({
                       label: s.name,
                     })),
                   ]}
-                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.8vw] text-slate-800 bg-white"
+                  triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-slate-400 text-[0.85vw] text-slate-800 bg-white"
                 />
               </div>
             </div>
@@ -1116,11 +1116,11 @@ const ServiceMaterialForm = ({
               <div className="flex items-center gap-[0.45vw]">
                 <span className="w-[0.25vw] h-[0.9vw] bg-indigo-600 rounded-full inline-block" />
                 <Package className="w-[1vw] h-[1vw] text-indigo-600" />
-                <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+                <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
                   Product &amp; Service Details
                 </h3>
                 {base.customerCode && (
-                  <span className="ml-[0.5vw] text-[0.7vw] bg-blue-50 text-blue-600 border border-blue-200 px-[0.5vw] py-[0.1vw] rounded-full font-semibold">
+                  <span className="ml-[0.5vw] text-[0.75vw] bg-blue-50 text-blue-600 border border-blue-200 px-[0.5vw] py-[0.1vw] rounded-full font-semibold">
                     {products.length} count{products.length > 1 ? "s" : ""}
                   </span>
                 )}
@@ -1129,7 +1129,7 @@ const ServiceMaterialForm = ({
                 <button
                   type="button"
                   onClick={() => setShowAddRowsModal(true)}
-                  className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.78vw] font-medium cursor-pointer transition-colors shadow-xs"
+                  className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.83vw] font-medium cursor-pointer transition-colors shadow-xs"
                 >
                   <PlusCircle className="w-[0.9vw] h-[0.9vw]" />
                   <span>Add Product Row</span>
@@ -1138,7 +1138,7 @@ const ServiceMaterialForm = ({
             </div>
 
             {!base.customerCode && !isReadOnly && (
-              <div className="text-[0.78vw] font-medium text-blue-700 bg-blue-50/70 border border-dashed border-blue-300 rounded-[0.6vw] p-[1.6vw] text-center mb-[0.4vw]">
+              <div className="text-[0.83vw] font-medium text-blue-700 bg-blue-50/70 border border-dashed border-blue-300 rounded-[0.6vw] p-[1.6vw] text-center mb-[0.4vw]">
                 Please search and select a Customer from the dropdown above to enable product entry.
               </div>
             )}
@@ -1174,7 +1174,7 @@ const ServiceMaterialForm = ({
           <button
             type="button"
             onClick={handleBackClick}
-            className="px-[1.4vw] h-[2.2vw] border border-slate-400 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
+            className="px-[1.4vw] h-[2.2vw] border border-slate-400 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.83vw] transition-colors"
           >
             <X className="w-[0.9vw] h-[0.9vw]" />
             <span>{isReadOnly ? "Close" : "Cancel"}</span>
@@ -1182,7 +1182,7 @@ const ServiceMaterialForm = ({
           {!isReadOnly && (isEdit ? canUpdate : canWrite) && (
             <button
               type="submit"
-              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.78vw] shadow-sm hover:shadow transition-all"
+              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.83vw] shadow-sm hover:shadow transition-all"
             >
               <Save className="w-[0.9vw] h-[0.9vw]" />
               <span>{isEdit ? "Update Entry" : "Register Inward"}</span>
@@ -1201,7 +1201,7 @@ const ServiceMaterialForm = ({
             className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
           >
             <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-slate-50">
-              <h2 className="text-[1.1vw] font-semibold text-slate-800">
+              <h2 className="text-[1.15vw] font-semibold text-slate-800">
                 Add Customer &amp; Items
               </h2>
               <button
@@ -1216,12 +1216,12 @@ const ServiceMaterialForm = ({
               className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto"
             >
               <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-400">
-                <h3 className="text-[0.85vw] font-semibold text-slate-700 mb-[0.8vw]">
+                <h3 className="text-[0.9vw] font-semibold text-slate-700 mb-[0.8vw]">
                   Party Details
                 </h3>
                 <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.76vw] text-slate-700 font-medium">
+                    <label className="text-[0.81vw] text-slate-700 font-medium">
                       Party Code <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -1233,12 +1233,12 @@ const ServiceMaterialForm = ({
                           partyCode: e.target.value,
                         })
                       }
-                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                       placeholder="e.g. CUS-001"
                     />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.76vw] text-slate-700 font-medium">
+                    <label className="text-[0.81vw] text-slate-700 font-medium">
                       Party Type
                     </label>
                     <CustomDropdown
@@ -1250,12 +1250,12 @@ const ServiceMaterialForm = ({
                         })
                       }
                       options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
-                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-400 text-[0.8vw]"
+                      triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-400 text-[0.85vw]"
                     />
                   </div>
                 </div>
                 <div className="flex flex-col gap-[0.35vw] mb-[0.8vw]">
-                  <label className="text-[0.76vw] text-slate-700 font-medium">
+                  <label className="text-[0.81vw] text-slate-700 font-medium">
                     Party Description <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -1267,13 +1267,13 @@ const ServiceMaterialForm = ({
                         partyDescription: e.target.value,
                       })
                     }
-                    className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                    className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                     placeholder="Company Name"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-[1.2vw]">
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.76vw] text-slate-700 font-medium">State</label>
+                    <label className="text-[0.81vw] text-slate-700 font-medium">State</label>
                     <input
                       value={newCustomer.state}
                       list="mat-ctx-states-datalist"
@@ -1283,12 +1283,12 @@ const ServiceMaterialForm = ({
                           state: e.target.value,
                         })
                       }
-                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                       placeholder="e.g. Tamil Nadu"
                     />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="text-[0.76vw] text-slate-700 font-medium">
+                    <label className="text-[0.81vw] text-slate-700 font-medium">
                       District / City
                     </label>
                     <input
@@ -1300,7 +1300,7 @@ const ServiceMaterialForm = ({
                           districtCity: e.target.value,
                         })
                       }
-                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-400 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                       placeholder="e.g. Coimbatore"
                     />
                   </div>
@@ -1309,13 +1309,13 @@ const ServiceMaterialForm = ({
 
               <div className="bg-white border border-slate-400 rounded-[0.6vw] p-[1vw]">
                 <div className="flex justify-between items-center mb-[0.6vw]">
-                  <h3 className="text-[0.85vw] font-semibold text-slate-800">
+                  <h3 className="text-[0.9vw] font-semibold text-slate-800">
                     Product Items
                   </h3>
                   <button
                     type="button"
                     onClick={handleAddCustItemRow}
-                    className="text-blue-600 hover:text-blue-800 text-[0.78vw] font-semibold flex items-center gap-1 cursor-pointer"
+                    className="text-blue-600 hover:text-blue-800 text-[0.83vw] font-semibold flex items-center gap-1 cursor-pointer"
                   >
                     <PlusCircle className="w-[0.9vw] h-[0.9vw]" />
                     Add Another Item
@@ -1329,7 +1329,7 @@ const ServiceMaterialForm = ({
                     >
                       <div className="flex-1 flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.72vw] text-slate-500 font-medium">
+                          <label className="text-[0.77vw] text-slate-500 font-medium">
                             Product Segment
                           </label>
                         )}
@@ -1344,13 +1344,13 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                           placeholder="Segment"
                         />
                       </div>
                       <div className="flex-1 flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.72vw] text-slate-500 font-medium">
+                          <label className="text-[0.77vw] text-slate-500 font-medium">
                             Item Code
                           </label>
                         )}
@@ -1364,13 +1364,13 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                           placeholder="Code"
                         />
                       </div>
                       <div className="flex-[2] flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.72vw] text-slate-500 font-medium">
+                          <label className="text-[0.77vw] text-slate-500 font-medium">
                             Description
                           </label>
                         )}
@@ -1384,13 +1384,13 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                           placeholder="Description"
                         />
                       </div>
                       <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.72vw] text-slate-500 font-medium">
+                          <label className="text-[0.77vw] text-slate-500 font-medium">
                             Warranty (days)
                           </label>
                         )}
@@ -1406,7 +1406,7 @@ const ServiceMaterialForm = ({
                               e.target.value,
                             )
                           }
-                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                          className="border border-slate-400 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                           placeholder="Days"
                         />
                       </div>
@@ -1431,13 +1431,13 @@ const ServiceMaterialForm = ({
                 <button
                   type="button"
                   onClick={() => setShowAddCustModal(false)}
-                  className="px-[1.4vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.78vw] font-medium transition-colors"
+                  className="px-[1.4vw] h-[2.2vw] border border-slate-400 rounded-[0.5vw] hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.83vw] font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.5vw] hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-colors shadow-xs"
+                  className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.5vw] hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.83vw] font-medium transition-colors shadow-xs"
                 >
                   Save All
                 </button>

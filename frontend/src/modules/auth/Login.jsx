@@ -138,19 +138,19 @@ const LoginPage = () => {
           <div className="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl shadow-2xl p-[1.5vw] border border-white border-opacity-20">
             <div className="flex flex-col items-center text-center mb-[1vw]">
               <img src={logo} alt="App Logo" className="mb-[0.8vw] w-[8vw]" />
-              <p className="text-gray-600 text-[1vw]">Welcome back! Please sign in to your account.</p>
+              <p className="text-gray-600 text-[1.05vw]">Welcome back! Please sign in to your account.</p>
             </div>
 
             {error && (
               <div className="mb-[0.8vw] px-[1vw] py-[0.5vw] bg-red-50 border border-red-300 rounded-lg flex items-center gap-[0.5vw]">
                 <div className="w-[0.5vw] h-[0.5vw] bg-red-500 rounded-full flex-shrink-0"></div>
-                <p className="text-red-600 text-[0.85vw]">{error}</p>
+                <p className="text-red-600 text-[0.9vw]">{error}</p>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="relative group">
-                <label className="block text-[0.9vw] font-medium text-gray-700 mb-[0.6vw]">Emp ID or Email *</label>
+                <label className="block text-[0.95vw] font-medium text-gray-700 mb-[0.6vw]">Emp ID or Email *</label>
                 <div className="relative">
                   <User className="absolute z-1 top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={"1vw"} />
                   <input
@@ -159,14 +159,14 @@ const LoginPage = () => {
                     disabled={isLoading}
                     value={formData.emailOrUsername}
                     onChange={handleInputChange}
-                    className="w-full pl-[2.2vw] text-[0.9vw] pr-[1vw] py-[0.6vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white bg-opacity-50 backdrop-blur-sm hover:bg-opacity-70 focus:bg-opacity-90 placeholder:text-[0.85vw]"
+                    className="w-full pl-[2.2vw] text-[0.95vw] pr-[1vw] py-[0.6vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white bg-opacity-50 backdrop-blur-sm hover:bg-opacity-70 focus:bg-opacity-90 placeholder:text-[0.9vw]"
                     placeholder="Enter your Emp ID (e.g., Fisto1)"
                   />
                 </div>
               </div>
 
               <div className="relative group">
-                <label className="block text-[0.9vw] font-medium text-gray-700 mb-[0.6vw]">Password *</label>
+                <label className="block text-[0.95vw] font-medium text-gray-700 mb-[0.6vw]">Password *</label>
                 <div className="relative">
                   <Shield className="absolute z-1 top-1/2 -translate-y-1/2 left-3 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={"1vw"} />
                   <input
@@ -175,7 +175,7 @@ const LoginPage = () => {
                     disabled={isLoading}
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="w-full pl-[2.2vw] text-[0.9vw] pr-[1vw] py-[0.6vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white bg-opacity-50 backdrop-blur-sm hover:bg-opacity-70 focus:bg-opacity-90 placeholder:text-[0.85vw]"
+                    className="w-full pl-[2.2vw] text-[0.95vw] pr-[1vw] py-[0.6vw] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white bg-opacity-50 backdrop-blur-sm hover:bg-opacity-70 focus:bg-opacity-90 placeholder:text-[0.9vw]"
                     placeholder="Enter your password"
                   />
                   <button
@@ -198,7 +198,7 @@ const LoginPage = () => {
                     onChange={handleInputChange}
                     className="w-[1.2vw] h-[1.2vw] text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="ml-[0.5vw] text-[0.9vw] text-gray-700">Remember me</span>
+                  <span className="ml-[0.5vw] text-[0.95vw] text-gray-700">Remember me</span>
                 </label>
                 
               </div>
@@ -207,7 +207,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="text-[1vw] w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-[0.6vw] px-[0.2vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                className="text-[1.05vw] w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-[0.6vw] px-[0.2vw] rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isLoading ? (
                   <>
@@ -223,15 +223,15 @@ const LoginPage = () => {
             {/* Demo Credentials Hint with 1-Click Quick Use Buttons */}
             <div className="mt-[1vw] p-[0.8vw] bg-blue-50/70 rounded-lg border border-blue-200 space-y-[0.5vw]">
               <div className="flex items-center justify-between">
-                <p className="text-[0.75vw] text-blue-700 font-semibold">Demo Credentials:</p>
-                <span className="text-[0.65vw] text-blue-500 font-medium bg-blue-100/70 px-[0.4vw] py-[0.1vw] rounded">
+                <p className="text-[0.8vw] text-blue-700 font-semibold">Demo Credentials:</p>
+                <span className="text-[0.7vw] text-blue-500 font-medium bg-blue-100/70 px-[0.4vw] py-[0.1vw] rounded">
                   Quick Login
                 </span>
               </div>
 
               {/* Admin Quick Login Row */}
               <div className="flex items-center justify-between bg-white px-[0.6vw] py-[0.4vw] rounded border border-blue-100 shadow-2xs">
-                <div className="text-[0.7vw] text-gray-700">
+                <div className="text-[0.75vw] text-gray-700">
                   <span className="font-semibold text-purple-700 bg-purple-50 px-[0.35vw] py-[0.05vw] rounded border border-purple-200 mr-[0.3vw]">
                     Admin
                   </span>
@@ -241,7 +241,7 @@ const LoginPage = () => {
                   type="button"
                   disabled={isLoading}
                   onClick={() => handleQuickLogin("ak12", "123456")}
-                  className="px-[0.65vw] py-[0.2vw] text-[0.7vw] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                  className="px-[0.65vw] py-[0.2vw] text-[0.75vw] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded shadow-xs transition-all cursor-pointer disabled:opacity-50"
                 >
                   Use & Login
                 </button>
@@ -249,7 +249,7 @@ const LoginPage = () => {
 
               {/* User Quick Login Row */}
               <div className="flex items-center justify-between bg-white px-[0.6vw] py-[0.4vw] rounded border border-blue-100 shadow-2xs">
-                <div className="text-[0.7vw] text-gray-700">
+                <div className="text-[0.75vw] text-gray-700">
                   <span className="font-semibold text-blue-700 bg-blue-50 px-[0.35vw] py-[0.05vw] rounded border border-blue-200 mr-[0.3vw]">
                     User
                   </span>
@@ -259,7 +259,7 @@ const LoginPage = () => {
                   type="button"
                   disabled={isLoading}
                   onClick={() => handleQuickLogin("AK1234", "123456")}
-                  className="px-[0.65vw] py-[0.2vw] text-[0.7vw] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                  className="px-[0.65vw] py-[0.2vw] text-[0.75vw] font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded shadow-xs transition-all cursor-pointer disabled:opacity-50"
                 >
                   Use & Login
                 </button>

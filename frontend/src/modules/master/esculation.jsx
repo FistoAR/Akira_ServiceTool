@@ -65,7 +65,7 @@ const Badge = ({ label, color = "gray" }) => {
     purple: "bg-purple-100 text-purple-700 border-purple-300",
   };
   return (
-    <span className={`text-[0.68vw] px-[0.5vw] py-[0.15vw] rounded-full border font-semibold whitespace-nowrap ${map[color] || map.gray}`}>
+    <span className={`text-[0.73vw] px-[0.5vw] py-[0.15vw] rounded-full border font-semibold whitespace-nowrap ${map[color] || map.gray}`}>
       {label}
     </span>
   );
@@ -125,40 +125,40 @@ const SupportEscalationModal = ({ product, entry, currentUser, onConfirm, onClos
         <div className="bg-orange-50 border-b border-orange-200 px-[1.2vw] py-[0.8vw] flex justify-between items-center">
           <div className="flex items-center gap-[0.6vw]">
             <HelpCircle className="w-[1.2vw] h-[1.2vw] text-orange-600" />
-            <h3 className="text-[1vw] font-bold text-orange-800">{showAll ? "Ask Another Support Person" : "Request Support — Product Only"}</h3>
+            <h3 className="text-[1.05vw] font-bold text-orange-800">{showAll ? "Ask Another Support Person" : "Request Support — Product Only"}</h3>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700 cursor-pointer"><X className="w-[1.1vw] h-[1.1vw]" /></button>
         </div>
         <div className="p-[1.2vw] flex flex-col gap-[0.9vw] overflow-y-auto flex-1">
-          <div className="bg-orange-50 border border-orange-200 rounded-[0.4vw] p-[0.6vw] text-[0.75vw] text-orange-700">
+          <div className="bg-orange-50 border border-orange-200 rounded-[0.4vw] p-[0.6vw] text-[0.8vw] text-orange-700">
             <strong>Note:</strong> {showAll
               ? "You can reassign this support request to any available person in your organisation."
               : "Only this product will be reassigned. Other products in the call remain with you."}
           </div>
           <div className="bg-gray-50 border border-slate-400 rounded-[0.5vw] p-[0.8vw]">
-            <div className="text-[0.82vw] font-bold text-gray-700">{product.productModel || product.itemCode}</div>
-            {product.serialNumber   && <div className="text-[0.72vw] text-gray-500 font-mono">SN: {product.serialNumber}</div>}
-            {product.callDescription && <div className="text-[0.72vw] text-gray-600 mt-[0.3vw]"><strong>Issue:</strong> {product.callDescription}</div>}
+            <div className="text-[0.87vw] font-bold text-gray-700">{product.productModel || product.itemCode}</div>
+            {product.serialNumber   && <div className="text-[0.77vw] text-gray-500 font-mono">SN: {product.serialNumber}</div>}
+            {product.callDescription && <div className="text-[0.77vw] text-gray-600 mt-[0.3vw]"><strong>Issue:</strong> {product.callDescription}</div>}
           </div>
           <div className="flex flex-col gap-[0.4vw]">
-            <label className="text-[0.8vw] font-semibold text-gray-600">Select Support Person *</label>
+            <label className="text-[0.85vw] font-semibold text-gray-600">Select Support Person *</label>
             <div className="relative" ref={dropdownRef}>
               <input type="text" value={search} 
                 onFocus={() => setShowDropdown(true)}
                 onChange={e => { setSearch(e.target.value); setSelectedPerson(null); setShowDropdown(true); }}
                 placeholder="Search by name or department…"
-                className="w-full border border-gray-400 rounded-[0.4vw] px-[0.8vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-orange-400" />
+                className="w-full border border-gray-400 rounded-[0.4vw] px-[0.8vw] py-[0.5vw] text-[0.87vw] outline-none focus:border-orange-400" />
               {showDropdown && candidates.length > 0 && (
                 <div className="absolute top-full left-0 right-0 z-20 bg-white border border-slate-400 rounded-[0.4vw] max-h-[14vw] overflow-y-auto divide-y divide-gray-50 shadow-lg">
                   {candidates.map(emp => (
                     <div key={emp.userId} onClick={() => { setSelectedPerson(emp); setSearch(emp.name); setShowDropdown(false); }}
                       className={`flex items-center gap-[0.7vw] px-[0.8vw] py-[0.6vw] cursor-pointer ${selectedPerson?.userId === emp.userId ? "bg-orange-50 border-l-2 border-orange-400" : "hover:bg-gray-50"}`}>
                       <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center flex-shrink-0">
-                        <span className="text-white text-[0.6vw] font-bold">{emp.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)}</span>
+                        <span className="text-white text-[0.65vw] font-bold">{emp.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[0.82vw] font-semibold text-gray-700">{emp.name}</div>
-                        <div className="text-[0.7vw] text-gray-400">{emp.department} · {emp.userId}</div>
+                        <div className="text-[0.87vw] font-semibold text-gray-700">{emp.name}</div>
+                        <div className="text-[0.75vw] text-gray-400">{emp.department} · {emp.userId}</div>
                       </div>
                       {selectedPerson?.userId === emp.userId && <CheckCircle className="w-[1vw] h-[1vw] text-orange-500 flex-shrink-0" />}
                     </div>
@@ -166,26 +166,26 @@ const SupportEscalationModal = ({ product, entry, currentUser, onConfirm, onClos
                 </div>
               )}
               {showDropdown && candidates.length === 0 && (
-                <div className="absolute top-full left-0 right-0 z-20 bg-white border border-slate-400 rounded-b-[0.4vw] p-[1vw] text-center text-gray-400 text-[0.78vw] shadow-lg">
+                <div className="absolute top-full left-0 right-0 z-20 bg-white border border-slate-400 rounded-b-[0.4vw] p-[1vw] text-center text-gray-400 text-[0.83vw] shadow-lg">
                   No eligible support personnel found
                 </div>
               )}
             </div>
           </div>
           <div className="flex flex-col gap-[0.3vw]">
-            <label className="text-[0.8vw] font-semibold text-gray-600">Handover Notes *</label>
+            <label className="text-[0.85vw] font-semibold text-gray-600">Handover Notes *</label>
             <textarea rows="3" value={notes} onChange={e => setNotes(e.target.value)}
               placeholder="Describe the issue, what you've tried, what they need to know…"
-              className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.82vw] outline-none resize-none focus:border-orange-400" />
+              className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.87vw] outline-none resize-none focus:border-orange-400" />
           </div>
         </div>
         <div className="px-[1.2vw] py-[0.8vw] border-t border-slate-400 bg-gray-50 flex justify-end gap-[0.7vw]">
-          <button onClick={onClose} className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white rounded-[0.4vw] text-[0.82vw] font-medium cursor-pointer hover:bg-gray-50">Cancel</button>
+          <button onClick={onClose} className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white rounded-[0.4vw] text-[0.87vw] font-medium cursor-pointer hover:bg-gray-50">Cancel</button>
           <button onClick={() => {
             if (!selectedPerson) { alert("Please select a support person."); return; }
             if (!notes.trim())   { alert("Please add handover notes."); return; }
             onConfirm({ supportPerson: selectedPerson, notes });
-          }} className="px-[1.2vw] py-[0.5vw] bg-orange-600 hover:bg-orange-700 text-white rounded-[0.4vw] text-[0.82vw] font-semibold cursor-pointer flex items-center gap-[0.4vw]">
+          }} className="px-[1.2vw] py-[0.5vw] bg-orange-600 hover:bg-orange-700 text-white rounded-[0.4vw] text-[0.87vw] font-semibold cursor-pointer flex items-center gap-[0.4vw]">
             <Send className="w-[0.9vw] h-[0.9vw]" />Reassign This Product
           </button>
         </div>
@@ -214,14 +214,14 @@ const AssignVisitModal = ({ type, entry, product, currentUser, onSave, onClose, 
     <div className="flex flex-col gap-[0.9vw]">
       {product && (
         <div className={`border rounded-[0.4vw] p-[0.6vw] ${isFV ? "bg-blue-50 border-blue-200" : "bg-purple-50 border-purple-200"}`}>
-          <div className={`text-[0.75vw] font-semibold ${isFV ? "text-blue-700" : "text-purple-700"}`}>
+          <div className={`text-[0.8vw] font-semibold ${isFV ? "text-blue-700" : "text-purple-700"}`}>
             {isFV ? "📍" : "🔧"} For product: <strong>{product.productModel || product.itemCode}</strong>
           </div>
-          {product.serialNumber && <div className={`text-[0.7vw] font-mono ${isFV ? "text-blue-600" : "text-purple-600"}`}>SN: {product.serialNumber}</div>}
+          {product.serialNumber && <div className={`text-[0.75vw] font-mono ${isFV ? "text-blue-600" : "text-purple-600"}`}>SN: {product.serialNumber}</div>}
         </div>
       )}
       <div className="flex flex-col gap-[0.3vw]">
-        <label className="text-[0.8vw] font-semibold text-gray-600">Assign To *</label>
+        <label className="text-[0.85vw] font-semibold text-gray-600">Assign To *</label>
         <CustomDropdown
           searchable
           placeholder="-- Select person --"
@@ -242,28 +242,28 @@ const AssignVisitModal = ({ type, entry, product, currentUser, onSave, onClose, 
       </div>
       <div className="grid grid-cols-2 gap-[0.8vw]">
         <div className="flex flex-col gap-[0.3vw]">
-          <label className="text-[0.8vw] font-semibold text-gray-600">Assignment Date</label>
+          <label className="text-[0.85vw] font-semibold text-gray-600">Assignment Date</label>
           <input type="datetime-local" value={form.assignmentDate} onChange={e => sf("assignmentDate", e.target.value)}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.82vw] outline-none" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.87vw] outline-none" />
         </div>
         <div className="flex flex-col gap-[0.3vw]">
-          <label className="text-[0.8vw] font-semibold text-gray-600">Visit Date</label>
+          <label className="text-[0.85vw] font-semibold text-gray-600">Visit Date</label>
           <input type="date" value={form.visitDate} onChange={e => sf("visitDate", e.target.value)}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.82vw] outline-none" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.87vw] outline-none" />
         </div>
       </div>
       <div className="flex flex-col gap-[0.3vw]">
-        <label className="text-[0.8vw] font-semibold text-gray-600">Initial Diagnosis Summary</label>
+        <label className="text-[0.85vw] font-semibold text-gray-600">Initial Diagnosis Summary</label>
         <textarea rows="2" value={form.diagnosisSummary} onChange={e => sf("diagnosisSummary", e.target.value)}
           placeholder="Describe reported issue / initial findings…"
-          className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.82vw] outline-none resize-none" />
+          className="border border-gray-400 rounded-[0.4vw] p-[0.6vw] text-[0.87vw] outline-none resize-none" />
       </div>
     </div>
   );
 
   const saveBtn = (
     <button onClick={() => { if (!form.assignedTo) { alert("Please select a person."); return; } onSave(form); }}
-      className={`px-[1.2vw] py-[0.5vw] ${isFV ? "bg-blue-600 hover:bg-blue-700" : "bg-purple-600 hover:bg-purple-700"} text-white rounded-[0.4vw] text-[0.82vw] font-semibold cursor-pointer flex items-center gap-[0.4vw]`}>
+      className={`px-[1.2vw] py-[0.5vw] ${isFV ? "bg-blue-600 hover:bg-blue-700" : "bg-purple-600 hover:bg-purple-700"} text-white rounded-[0.4vw] text-[0.87vw] font-semibold cursor-pointer flex items-center gap-[0.4vw]`}>
       <CheckCircle className="w-[0.9vw] h-[0.9vw]" />Save Assignment
     </button>
   );
@@ -280,13 +280,13 @@ const AssignVisitModal = ({ type, entry, product, currentUser, onSave, onClose, 
         <div className={`border-b px-[1.2vw] py-[0.8vw] flex justify-between items-center ${isFV ? "bg-blue-50 border-blue-200" : "bg-purple-50 border-purple-200"}`}>
           <div className="flex items-center gap-[0.6vw]">
             {isFV ? <MapPin className="w-[1.2vw] h-[1.2vw] text-blue-600" /> : <Wrench className="w-[1.2vw] h-[1.2vw] text-purple-600" />}
-            <h3 className={`text-[1vw] font-bold ${isFV ? "text-blue-800" : "text-purple-800"}`}>Assign {type}</h3>
+            <h3 className={`text-[1.05vw] font-bold ${isFV ? "text-blue-800" : "text-purple-800"}`}>Assign {type}</h3>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700 cursor-pointer"><X className="w-[1.1vw] h-[1.1vw]" /></button>
         </div>
         <div className="p-[1.2vw] overflow-y-auto flex-1">{formBody}</div>
         <div className="px-[1.2vw] py-[0.8vw] border-t border-slate-400 bg-gray-50 flex justify-end gap-[0.7vw]">
-          <button onClick={onClose} className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white rounded-[0.4vw] text-[0.82vw] font-medium cursor-pointer hover:bg-gray-50">Cancel</button>
+          <button onClick={onClose} className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white rounded-[0.4vw] text-[0.87vw] font-medium cursor-pointer hover:bg-gray-50">Cancel</button>
           {saveBtn}
         </div>
       </div>
@@ -309,10 +309,10 @@ const ProductClosurePanel = ({ prod, prodIdx, entry, currentUser, onAssignFieldV
   if (saved === "Resolved") return (
     <div className="mt-[0.5vw] bg-green-50 border border-green-200 rounded-[0.4vw] px-[0.7vw] py-[0.4vw] flex items-center gap-[0.5vw]">
       <CheckCircle className="w-[0.85vw] h-[0.85vw] text-green-600 flex-shrink-0" />
-      <span className="text-[0.72vw] font-bold text-green-700">
+      <span className="text-[0.77vw] font-bold text-green-700">
         Resolved & Closed {existing.resolutionType ? `(${existing.resolutionType})` : ""}
       </span>
-      {existing.remarks && <span className="text-[0.68vw] text-green-600 truncate">· {existing.remarks}</span>}
+      {existing.remarks && <span className="text-[0.73vw] text-green-600 truncate">· {existing.remarks}</span>}
     </div>
   );
 
@@ -359,7 +359,7 @@ const ProductClosurePanel = ({ prod, prodIdx, entry, currentUser, onAssignFieldV
         {actionTabs.map(({ key, label, emoji, cls, hov }) => (
           <button key={key} type="button"
             onClick={() => setSelected(selected === key ? "" : key)}
-            className={`py-[0.5vw] text-[0.68vw] font-bold rounded-[0.4vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.25vw] ${selected === key ? cls : `bg-white border-slate-400 ${hov}`}`}>
+            className={`py-[0.5vw] text-[0.73vw] font-bold rounded-[0.4vw] border transition-all cursor-pointer flex items-center justify-center gap-[0.25vw] ${selected === key ? cls : `bg-white border-slate-400 ${hov}`}`}>
             <span>{emoji}</span><span>{label}</span>
           </button>
         ))}
@@ -368,28 +368,28 @@ const ProductClosurePanel = ({ prod, prodIdx, entry, currentUser, onAssignFieldV
       <AnimatePresence>
         {selected === "Resolved" && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-green-50 border border-green-200 rounded-[0.5vw] p-[0.7vw] space-y-[0.5vw] overflow-hidden">
-            <div className="text-[0.65vw] font-bold text-green-700 uppercase">Resolution Details</div>
+            <div className="text-[0.7vw] font-bold text-green-700 uppercase">Resolution Details</div>
             <div className="grid grid-cols-2 gap-[0.3vw]">
               {["Fixed", "Replaced", "No Fault Found", "Partially Fixed"].map(t => (
-                <button key={t} onClick={() => setResolutionType(t)} className={`py-[0.35vw] rounded-[0.3vw] border text-[0.7vw] font-bold ${resolutionType === t ? "bg-green-600 text-white" : "bg-white text-gray-500 hover:border-green-300"}`}>{t}</button>
+                <button key={t} onClick={() => setResolutionType(t)} className={`py-[0.35vw] rounded-[0.3vw] border text-[0.75vw] font-bold ${resolutionType === t ? "bg-green-600 text-white" : "bg-white text-gray-500 hover:border-green-300"}`}>{t}</button>
               ))}
             </div>
-            <textarea rows="2" value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="How was it resolved?..." className="w-full border border-green-200 rounded-[0.4vw] p-[0.5vw] text-[0.75vw] outline-none" />
-            <button onClick={() => handleStatusUpdate("Resolved")} className="w-full py-[0.5vw] bg-green-600 text-white rounded-[0.4vw] font-bold text-[0.75vw]">Confirm Resolution</button>
+            <textarea rows="2" value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="How was it resolved?..." className="w-full border border-green-200 rounded-[0.4vw] p-[0.5vw] text-[0.8vw] outline-none" />
+            <button onClick={() => handleStatusUpdate("Resolved")} className="w-full py-[0.5vw] bg-green-600 text-white rounded-[0.4vw] font-bold text-[0.8vw]">Confirm Resolution</button>
           </motion.div>
         )}
 
         {selected === "Pending" && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-yellow-50 border border-yellow-200 rounded-[0.5vw] p-[0.7vw] space-y-[0.5vw] overflow-hidden">
-            <div className="text-[0.65vw] font-bold text-yellow-700 uppercase">Pending Reason</div>
-            <textarea rows="2" value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Why is this pending?..." className="w-full border border-yellow-200 rounded-[0.4vw] p-[0.5vw] text-[0.75vw] outline-none" />
-            <button onClick={() => handleStatusUpdate("Pending")} className="w-full py-[0.5vw] bg-yellow-500 text-white rounded-[0.4vw] font-bold text-[0.75vw]">Mark Pending</button>
+            <div className="text-[0.7vw] font-bold text-yellow-700 uppercase">Pending Reason</div>
+            <textarea rows="2" value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Why is this pending?..." className="w-full border border-yellow-200 rounded-[0.4vw] p-[0.5vw] text-[0.8vw] outline-none" />
+            <button onClick={() => handleStatusUpdate("Pending")} className="w-full py-[0.5vw] bg-yellow-500 text-white rounded-[0.4vw] font-bold text-[0.8vw]">Mark Pending</button>
           </motion.div>
         )}
 
         {selected === "FVRequired" && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-blue-50 border border-blue-200 rounded-[0.5vw] p-[0.7vw] overflow-hidden">
-            <div className="text-[0.65vw] font-bold text-blue-700 uppercase mb-[0.4vw]">Field Visit Assignment</div>
+            <div className="text-[0.7vw] font-bold text-blue-700 uppercase mb-[0.4vw]">Field Visit Assignment</div>
             <AssignVisitModal 
               type="Field Visit" entry={entry} product={prod} currentUser={currentUser}
               inlineMode onClose={() => setSelected("")}
@@ -403,15 +403,15 @@ const ProductClosurePanel = ({ prod, prodIdx, entry, currentUser, onAssignFieldV
 
         {selected === "Received" && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-purple-50 border border-purple-200 rounded-[0.5vw] p-[0.7vw] space-y-[0.5vw] overflow-hidden">
-            <div className="text-[0.65vw] font-bold text-purple-700 uppercase">Material Reception Details</div>
+            <div className="text-[0.7vw] font-bold text-purple-700 uppercase">Material Reception Details</div>
             <div className="grid grid-cols-2 gap-[0.5vw]">
               <div>
-                <label className="text-[0.6vw] text-purple-600 font-bold ml-[0.2vw]">RECEIVE DATE</label>
-                <input type="date" value={receiveDate} onChange={e => setReceiveDate(e.target.value)} className="w-full border border-purple-200 rounded-[0.4vw] px-[0.5vw] py-[0.35vw] text-[0.75vw]" />
+                <label className="text-[0.65vw] text-purple-600 font-bold ml-[0.2vw]">RECEIVE DATE</label>
+                <input type="date" value={receiveDate} onChange={e => setReceiveDate(e.target.value)} className="w-full border border-purple-200 rounded-[0.4vw] px-[0.5vw] py-[0.35vw] text-[0.8vw]" />
               </div>
             </div>
-            <textarea rows="2" value={materialDetails} onChange={e => setMaterialDetails(e.target.value)} placeholder="Material details, condition, serial mismatch?..." className="w-full border border-purple-200 rounded-[0.4vw] p-[0.5vw] text-[0.75vw] outline-none" />
-            <button onClick={() => handleStatusUpdate("Received", { receiveDate, materialDetails })} className="w-full py-[0.5vw] bg-purple-600 text-white rounded-[0.4vw] font-bold text-[0.75vw]">Confirm Reception</button>
+            <textarea rows="2" value={materialDetails} onChange={e => setMaterialDetails(e.target.value)} placeholder="Material details, condition, serial mismatch?..." className="w-full border border-purple-200 rounded-[0.4vw] p-[0.5vw] text-[0.8vw] outline-none" />
+            <button onClick={() => handleStatusUpdate("Received", { receiveDate, materialDetails })} className="w-full py-[0.5vw] bg-purple-600 text-white rounded-[0.4vw] font-bold text-[0.8vw]">Confirm Reception</button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -439,84 +439,84 @@ const VisitCompletionForm = ({ record, type, currentUser, onSave }) => {
   return (
     <div className={`border rounded-[0.5vw] overflow-hidden mt-[0.8vw] ${isClosed ? "border-green-200 bg-green-50/30" : "border-slate-400 bg-white"}`}>
       <div className="bg-gray-50 border-b border-slate-400 px-[0.8vw] py-[0.5vw] flex items-center justify-between">
-        <span className="text-[0.78vw] font-bold text-gray-600">
-          Completion Details {!isAssignee && <span className="text-gray-400 font-normal">(read-only)</span>}
+        <span className="text-[0.83vw] font-bold text-gray-600">
+          Completion Details {!isAssignee && <span className="text-gray-400 font-medium">(read-only)</span>}
         </span>
         {isClosed && <Badge label="✓ Completed" color="green" />}
       </div>
       <div className="p-[0.8vw] grid grid-cols-2 gap-[0.7vw]">
         <div className="col-span-2 flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Field Diagnosis Summary</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Field Diagnosis Summary</label>
           <textarea rows="2" value={form.fieldDiagnosisSummary} onChange={e => sf("fieldDiagnosisSummary", e.target.value)}
             disabled={!isAssignee || isClosed}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.78vw] outline-none resize-none disabled:bg-gray-50 disabled:text-gray-500" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.83vw] outline-none resize-none disabled:bg-gray-50 disabled:text-gray-500" />
         </div>
         <div className="flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Visit Completion Date</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Visit Completion Date</label>
           <input type="date" value={form.visitCompletionDate} onChange={e => sf("visitCompletionDate", e.target.value)}
             disabled={!isAssignee || isClosed}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.78vw] outline-none disabled:bg-gray-50" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.83vw] outline-none disabled:bg-gray-50" />
         </div>
         <div className="flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">SLA Status</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">SLA Status</label>
           <div className="flex gap-[0.4vw]">
             {SLA_OPTIONS.map(o => (
               <button key={o} type="button" disabled={!isAssignee || isClosed} onClick={() => sf("sla", o)}
-                className={`flex-1 py-[0.4vw] rounded-[0.3vw] border text-[0.75vw] font-medium cursor-pointer transition-all disabled:cursor-default ${form.sla === o ? (o === "Breached" ? "bg-red-500 text-white border-red-500" : "bg-green-500 text-white border-green-500") : "bg-white border-gray-400 text-gray-500"}`}>
+                className={`flex-1 py-[0.4vw] rounded-[0.3vw] border text-[0.8vw] font-medium cursor-pointer transition-all disabled:cursor-default ${form.sla === o ? (o === "Breached" ? "bg-red-500 text-white border-red-500" : "bg-green-500 text-white border-green-500") : "bg-white border-gray-400 text-gray-500"}`}>
                 {o}
               </button>
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Escalation Required?</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Escalation Required?</label>
           <div className="flex gap-[0.4vw]">
             {["Yes", "No"].map(o => (
               <button key={o} type="button" disabled={!isAssignee || isClosed} onClick={() => sf("escalation", o)}
-                className={`flex-1 py-[0.4vw] rounded-[0.3vw] border text-[0.75vw] font-medium cursor-pointer disabled:cursor-default ${form.escalation === o ? (o === "Yes" ? "bg-orange-500 text-white border-orange-500" : "bg-gray-600 text-white border-gray-600") : "bg-white border-gray-400 text-gray-500"}`}>
+                className={`flex-1 py-[0.4vw] rounded-[0.3vw] border text-[0.8vw] font-medium cursor-pointer disabled:cursor-default ${form.escalation === o ? (o === "Yes" ? "bg-orange-500 text-white border-orange-500" : "bg-gray-600 text-white border-gray-600") : "bg-white border-gray-400 text-gray-500"}`}>
                 {o}
               </button>
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Spare Used Details</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Spare Used Details</label>
           <input value={form.spareUsedDetails} onChange={e => sf("spareUsedDetails", e.target.value)}
             disabled={!isAssignee || isClosed}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.78vw] outline-none disabled:bg-gray-50" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.83vw] outline-none disabled:bg-gray-50" />
         </div>
         <div className="col-span-2 flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Resolution Type</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Resolution Type</label>
           <div className="grid grid-cols-4 gap-[0.4vw]">
             {["Fixed", "Replaced", "No Fault Found", "Partially Fixed"].map(t => (
               <button key={t} type="button" disabled={!isAssignee || isClosed} onClick={() => sf("resolutionType", t)}
-                className={`py-[0.4vw] rounded-[0.3vw] border text-[0.72vw] font-medium cursor-pointer disabled:cursor-default ${form.resolutionType === t ? "bg-green-600 text-white border-green-600" : "bg-white border-gray-400 text-gray-600"}`}>
+                className={`py-[0.4vw] rounded-[0.3vw] border text-[0.77vw] font-medium cursor-pointer disabled:cursor-default ${form.resolutionType === t ? "bg-green-600 text-white border-green-600" : "bg-white border-gray-400 text-gray-600"}`}>
                 {t}
               </button>
             ))}
           </div>
         </div>
         <div className="col-span-2 flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Resolution Remarks</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Resolution Remarks</label>
           <textarea rows="2" value={form.resolutionRemarks} onChange={e => sf("resolutionRemarks", e.target.value)}
             disabled={!isAssignee || isClosed}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.78vw] outline-none resize-none disabled:bg-gray-50" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.83vw] outline-none resize-none disabled:bg-gray-50" />
         </div>
         <div className="col-span-2 flex flex-col gap-[0.2vw]">
-          <label className="text-[0.75vw] font-semibold text-gray-500">Remarks</label>
+          <label className="text-[0.8vw] font-semibold text-gray-500">Remarks</label>
           <textarea rows="1" value={form.remarks} onChange={e => sf("remarks", e.target.value)}
             disabled={!isAssignee || isClosed}
-            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.78vw] outline-none resize-none disabled:bg-gray-50" />
+            className="border border-gray-400 rounded-[0.4vw] p-[0.5vw] text-[0.83vw] outline-none resize-none disabled:bg-gray-50" />
         </div>
       </div>
       {isAssignee && !isClosed && (
         <div className="px-[0.8vw] pb-[0.8vw] flex gap-[0.5vw] justify-end">
           <button onClick={() => onSave({ ...form, visitStatus: "Open" })}
-            className="px-[1vw] py-[0.45vw] border border-gray-400 bg-white hover:bg-gray-50 text-gray-700 rounded-[0.4vw] text-[0.78vw] font-medium cursor-pointer">
+            className="px-[1vw] py-[0.45vw] border border-gray-400 bg-white hover:bg-gray-50 text-gray-700 rounded-[0.4vw] text-[0.83vw] font-medium cursor-pointer">
             Save Progress
           </button>
           <button onClick={() => onSave({ ...form, visitStatus: "Closed", closedAt: new Date().toISOString() })}
-            className="px-[1vw] py-[0.45vw] bg-green-600 hover:bg-green-700 text-white rounded-[0.4vw] text-[0.78vw] font-semibold cursor-pointer flex items-center gap-[0.3vw]">
+            className="px-[1vw] py-[0.45vw] bg-green-600 hover:bg-green-700 text-white rounded-[0.4vw] text-[0.83vw] font-semibold cursor-pointer flex items-center gap-[0.3vw]">
             <CheckCircle className="w-[0.85vw] h-[0.85vw]" />Close & Resolve
           </button>
         </div>
@@ -543,12 +543,12 @@ const ReportDetailsModal = ({ rec, onClose }) => {
           <div className="flex items-center gap-[0.8vw]">
             <Eye className="w-[1.2vw] h-[1.2vw] text-white" />
             <div>
-              <h3 className="text-[1vw] font-bold text-white">{rec.callNumber}</h3>
-              <p className="text-[0.72vw] text-blue-200">{rec.customerName}</p>
+              <h3 className="text-[1.05vw] font-bold text-white">{rec.callNumber}</h3>
+              <p className="text-[0.77vw] text-blue-200">{rec.customerName}</p>
             </div>
           </div>
           <div className="flex items-center gap-[0.7vw]">
-            <span className={`text-[0.72vw] px-[0.6vw] py-[0.2vw] rounded font-bold ${getStatusColor(rec.status)}`}>
+            <span className={`text-[0.77vw] px-[0.6vw] py-[0.2vw] rounded font-bold ${getStatusColor(rec.status)}`}>
               {rec.status === "Critical_Unresolved" ? "CRITICAL" : rec.status}
             </span>
             <button onClick={onClose} className="text-white/70 hover:text-white cursor-pointer"><X className="w-[1.1vw] h-[1.1vw]" /></button>
@@ -559,12 +559,12 @@ const ReportDetailsModal = ({ rec, onClose }) => {
           {/* Contact Person Info */}
           {(rec.contactPerson || rec.contactNumber || rec.emailId || rec.location) && (
             <div className="bg-gray-50 border border-slate-400 rounded-[0.5vw] p-[0.8vw]">
-              <div className="text-[0.68vw] font-bold text-gray-400 uppercase mb-[0.4vw]">Contact Details</div>
+              <div className="text-[0.73vw] font-bold text-gray-400 uppercase mb-[0.4vw]">Contact Details</div>
               <div className="flex items-center gap-[1.5vw] flex-wrap">
-                {rec.contactPerson  && <div className="flex items-center gap-[0.3vw] text-[0.78vw] text-gray-700"><User className="w-[0.85vw] h-[0.85vw] text-gray-400" /><strong>Person:</strong> {rec.contactPerson}</div>}
-                {rec.contactNumber  && <div className="text-[0.78vw] text-gray-700"><strong>Ph:</strong> {rec.contactNumber}</div>}
-                {rec.emailId        && <div className="text-[0.78vw] text-gray-700"><strong>Email:</strong> {rec.emailId}</div>}
-                {rec.location       && <div className="flex items-center gap-[0.3vw] text-[0.78vw] text-gray-700"><MapPin className="w-[0.85vw] h-[0.85vw] text-gray-400" />{rec.location}</div>}
+                {rec.contactPerson  && <div className="flex items-center gap-[0.3vw] text-[0.83vw] text-gray-700"><User className="w-[0.85vw] h-[0.85vw] text-gray-400" /><strong>Person:</strong> {rec.contactPerson}</div>}
+                {rec.contactNumber  && <div className="text-[0.83vw] text-gray-700"><strong>Ph:</strong> {rec.contactNumber}</div>}
+                {rec.emailId        && <div className="text-[0.83vw] text-gray-700"><strong>Email:</strong> {rec.emailId}</div>}
+                {rec.location       && <div className="flex items-center gap-[0.3vw] text-[0.83vw] text-gray-700"><MapPin className="w-[0.85vw] h-[0.85vw] text-gray-400" />{rec.location}</div>}
               </div>
             </div>
           )}
@@ -572,9 +572,9 @@ const ReportDetailsModal = ({ rec, onClose }) => {
           {/* Start → Current Banner */}
           <div className="bg-gray-50 border border-slate-400 rounded-[0.5vw] p-[0.8vw] flex items-center gap-[1vw]">
             <div className="flex-1">
-              <div className="text-[0.68vw] font-semibold text-gray-400 uppercase mb-[0.2vw]">Started</div>
-              <div className="text-[0.82vw] font-bold text-gray-700">{startHistory ? `${startHistory.department} → ${startHistory.engineerName}` : "—"}</div>
-              <div className="text-[0.7vw] text-gray-400 mt-[0.1vw]">{startDate}</div>
+              <div className="text-[0.73vw] font-semibold text-gray-400 uppercase mb-[0.2vw]">Started</div>
+              <div className="text-[0.87vw] font-bold text-gray-700">{startHistory ? `${startHistory.department} → ${startHistory.engineerName}` : "—"}</div>
+              <div className="text-[0.75vw] text-gray-400 mt-[0.1vw]">{startDate}</div>
             </div>
             <div className="flex items-center gap-[0.4vw] text-gray-300">
               <div className="w-[3vw] h-[0.1vw] bg-gray-300" />
@@ -582,9 +582,9 @@ const ReportDetailsModal = ({ rec, onClose }) => {
               <div className="w-[3vw] h-[0.1vw] bg-gray-300" />
             </div>
             <div className="flex-1 text-right">
-              <div className="text-[0.68vw] font-semibold text-gray-400 uppercase mb-[0.2vw]">Current</div>
-              <div className="text-[0.82vw] font-bold text-gray-700">{rec.currentEngineerName} ({rec.currentDepartment})</div>
-              <span className={`inline-block text-[0.7vw] px-[0.5vw] py-[0.1vw] rounded mt-[0.1vw] font-semibold ${getStatusColor(rec.status)}`}>
+              <div className="text-[0.73vw] font-semibold text-gray-400 uppercase mb-[0.2vw]">Current</div>
+              <div className="text-[0.87vw] font-bold text-gray-700">{rec.currentEngineerName} ({rec.currentDepartment})</div>
+              <span className={`inline-block text-[0.75vw] px-[0.5vw] py-[0.1vw] rounded mt-[0.1vw] font-semibold ${getStatusColor(rec.status)}`}>
                 {rec.status === "Critical_Unresolved" ? "CRITICAL" : rec.status}
               </span>
             </div>
@@ -594,7 +594,7 @@ const ReportDetailsModal = ({ rec, onClose }) => {
           <div className="bg-white border border-slate-400 rounded-[0.5vw] overflow-hidden">
             <div className="bg-gray-50 border-b border-slate-400 px-[0.8vw] py-[0.5vw] flex items-center gap-[0.4vw]">
               <Package className="w-[0.9vw] h-[0.9vw] text-green-500" />
-              <span className="text-[0.8vw] font-bold text-gray-700">Products ({rec.products?.length || 0}) — Individual Status</span>
+              <span className="text-[0.85vw] font-bold text-gray-700">Products ({rec.products?.length || 0}) — Individual Status</span>
             </div>
             <div className="divide-y divide-gray-100">
               {rec.products?.map((p, i) => {
@@ -604,17 +604,17 @@ const ReportDetailsModal = ({ rec, onClose }) => {
                     <div className="flex items-center justify-between mb-[0.25vw]">
                       <div className="flex items-center gap-[0.5vw]">
                         <div className={`w-[0.6vw] h-[0.6vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
-                        <span className="text-[0.8vw] font-semibold text-gray-700">{p.productModel || p.itemCode || `Product ${i+1}`}</span>
-                        {p.serialNumber && <span className="text-[0.65vw] text-gray-400 font-mono">SN: {p.serialNumber}</span>}
+                        <span className="text-[0.85vw] font-semibold text-gray-700">{p.productModel || p.itemCode || `Product ${i+1}`}</span>
+                        {p.serialNumber && <span className="text-[0.7vw] text-gray-400 font-mono">SN: {p.serialNumber}</span>}
                       </div>
-                      <span className={`text-[0.65vw] px-[0.45vw] py-[0.12vw] rounded-full border font-bold ${cfg.cls}`}>{cfg.label}</span>
+                      <span className={`text-[0.7vw] px-[0.45vw] py-[0.12vw] rounded-full border font-bold ${cfg.cls}`}>{cfg.label}</span>
                     </div>
                     {p._escalationHistory?.length > 0 && (
                       <div className="mt-[0.3vw] ml-[1vw] pl-[0.5vw] border-l-2 border-blue-100 space-y-[0.2vw]">
-                        <div className="text-[0.62vw] font-bold text-gray-400 uppercase">Product Escalation</div>
+                        <div className="text-[0.67vw] font-bold text-gray-400 uppercase">Product Escalation</div>
                         {p._escalationHistory.map((h, hi) => (
-                          <div key={hi} className="flex items-center gap-[0.4vw] text-[0.68vw]">
-                            <span className={`px-[0.35vw] rounded text-[0.58vw] font-bold text-white ${hi === 0 ? "bg-blue-500" : hi === 1 ? "bg-yellow-500" : "bg-red-500"}`}>L{hi+1}</span>
+                          <div key={hi} className="flex items-center gap-[0.4vw] text-[0.73vw]">
+                            <span className={`px-[0.35vw] rounded text-[0.63vw] font-bold text-white ${hi === 0 ? "bg-blue-500" : hi === 1 ? "bg-yellow-500" : "bg-red-500"}`}>L{hi+1}</span>
                             <span className="text-gray-600">{h.department} → {h.engineerName}</span>
                             <span className="text-gray-400 ml-auto">{new Date(h.assignedAt).toLocaleString()}</span>
                           </div>
@@ -622,7 +622,7 @@ const ReportDetailsModal = ({ rec, onClose }) => {
                       </div>
                     )}
                     {p._resolutionRemarks && (
-                      <div className="text-[0.7vw] text-green-700 mt-[0.2vw] ml-[1vw]">Resolution: {p._resolutionRemarks}</div>
+                      <div className="text-[0.75vw] text-green-700 mt-[0.2vw] ml-[1vw]">Resolution: {p._resolutionRemarks}</div>
                     )}
                   </div>
                 );
@@ -635,13 +635,13 @@ const ReportDetailsModal = ({ rec, onClose }) => {
             <div className="bg-white border border-slate-400 rounded-[0.5vw] overflow-hidden">
               <div className="bg-gray-50 border-b border-slate-400 px-[0.8vw] py-[0.5vw] flex items-center gap-[0.4vw]">
                 <History className="w-[0.9vw] h-[0.9vw] text-purple-500" />
-                <span className="text-[0.8vw] font-bold text-gray-700">Call Escalation Flow</span>
+                <span className="text-[0.85vw] font-bold text-gray-700">Call Escalation Flow</span>
               </div>
               <div className="p-[0.8vw] space-y-[0.5vw]">
                 {rec.escalationHistory.map((h, i) => (
                   <div key={i} className="flex gap-[0.6vw]">
                     <div className="flex flex-col items-center">
-                      <div className={`w-[1.6vw] h-[1.6vw] rounded-full flex items-center justify-center text-white text-[0.6vw] font-bold flex-shrink-0 ${h.level === 0 ? "bg-blue-500" : h.level === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
+                      <div className={`w-[1.6vw] h-[1.6vw] rounded-full flex items-center justify-center text-white text-[0.65vw] font-bold flex-shrink-0 ${h.level === 0 ? "bg-blue-500" : h.level === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
                         L{h.level + 1}
                       </div>
                       {i < rec.escalationHistory.length - 1 && <div className="w-[0.1vw] flex-1 bg-gray-200 my-[0.2vw]" />}
@@ -649,12 +649,12 @@ const ReportDetailsModal = ({ rec, onClose }) => {
                     <div className="flex-1 bg-gray-50 border border-slate-400 rounded-[0.4vw] p-[0.5vw] mb-[0.2vw]">
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="text-[0.8vw] font-bold text-gray-700">{h.department}</span>
-                          <span className="text-[0.72vw] text-gray-500 ml-[0.4vw]">→ {h.engineerName}</span>
+                          <span className="text-[0.85vw] font-bold text-gray-700">{h.department}</span>
+                          <span className="text-[0.77vw] text-gray-500 ml-[0.4vw]">→ {h.engineerName}</span>
                         </div>
-                        <span className="text-[0.68vw] text-gray-400">{new Date(h.assignedAt).toLocaleString()}</span>
+                        <span className="text-[0.73vw] text-gray-400">{new Date(h.assignedAt).toLocaleString()}</span>
                       </div>
-                      {h.reason && <p className="text-[0.7vw] text-orange-600 mt-[0.2vw] flex items-center gap-[0.25vw]"><AlertTriangle className="w-[0.7vw] h-[0.7vw]" />{h.reason}</p>}
+                      {h.reason && <p className="text-[0.75vw] text-orange-600 mt-[0.2vw] flex items-center gap-[0.25vw]"><AlertTriangle className="w-[0.7vw] h-[0.7vw]" />{h.reason}</p>}
                     </div>
                   </div>
                 ))}
@@ -667,21 +667,21 @@ const ReportDetailsModal = ({ rec, onClose }) => {
             <div className="bg-blue-50 border border-blue-200 rounded-[0.5vw] overflow-hidden">
               <div className="bg-blue-100 border-b border-blue-200 px-[0.8vw] py-[0.5vw] flex items-center gap-[0.4vw]">
                 <MapPin className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-                <span className="text-[0.8vw] font-bold text-blue-700">Field Visits</span>
+                <span className="text-[0.85vw] font-bold text-blue-700">Field Visits</span>
               </div>
               <div className="p-[0.8vw] space-y-[0.4vw]">
                 {rec._fieldVisits.map((f, i) => (
                   <div key={i} className="bg-white border border-blue-100 rounded-[0.4vw] p-[0.5vw]">
                     <div className="flex justify-between">
-                      <span className="text-[0.78vw] font-semibold">Assigned to: {f.assignedToName}</span>
+                      <span className="text-[0.83vw] font-semibold">Assigned to: {f.assignedToName}</span>
                       <Badge label={f.visitStatus === "Closed" ? "Completed" : "Open"} color={f.visitStatus === "Closed" ? "green" : "blue"} />
                     </div>
                     {f.productIdx !== null && f.productIdx !== undefined && (
-                      <div className="text-[0.68vw] text-blue-600 mt-[0.1vw]">Product: P{f.productIdx + 1}</div>
+                      <div className="text-[0.73vw] text-blue-600 mt-[0.1vw]">Product: P{f.productIdx + 1}</div>
                     )}
-                    {f.visitDate && <div className="text-[0.72vw] text-gray-500">Visit: {f.visitDate}</div>}
-                    {f.fieldDiagnosisSummary && <div className="text-[0.72vw] text-gray-600 mt-[0.1vw]">Diagnosis: {f.fieldDiagnosisSummary}</div>}
-                    {f.resolutionRemarks && <div className="text-[0.72vw] text-green-700">Resolution: {f.resolutionRemarks}</div>}
+                    {f.visitDate && <div className="text-[0.77vw] text-gray-500">Visit: {f.visitDate}</div>}
+                    {f.fieldDiagnosisSummary && <div className="text-[0.77vw] text-gray-600 mt-[0.1vw]">Diagnosis: {f.fieldDiagnosisSummary}</div>}
+                    {f.resolutionRemarks && <div className="text-[0.77vw] text-green-700">Resolution: {f.resolutionRemarks}</div>}
                   </div>
                 ))}
               </div>
@@ -690,7 +690,7 @@ const ReportDetailsModal = ({ rec, onClose }) => {
         </div>
 
         <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-400 bg-gray-50 flex justify-end">
-          <button onClick={onClose} className="px-[1.5vw] py-[0.5vw] bg-gray-800 hover:bg-gray-900 text-white rounded-[0.4vw] text-[0.82vw] font-semibold cursor-pointer">Close</button>
+          <button onClick={onClose} className="px-[1.5vw] py-[0.5vw] bg-gray-800 hover:bg-gray-900 text-white rounded-[0.4vw] text-[0.87vw] font-semibold cursor-pointer">Close</button>
         </div>
       </div>
     </div>
@@ -758,15 +758,15 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-[0.8vw]">
               <div className={`w-[2.2vw] h-[2.2vw] rounded-full ${getLevelColor(entry.currentLevel)} flex items-center justify-center flex-shrink-0`}>
-                <span className="text-white text-[0.78vw] font-bold">L{entry.currentLevel + 1}</span>
+                <span className="text-white text-[0.83vw] font-bold">L{entry.currentLevel + 1}</span>
               </div>
               <div>
                 <div className="flex items-center gap-[0.4vw] flex-wrap">
-                  <span className="font-mono text-[0.88vw] font-bold text-gray-800">{entry.callNumber}</span>
-                  <span className={`text-[0.65vw] px-[0.45vw] py-[0.1vw] rounded-full border font-semibold ${getStatusColor(entry.status)}`}>
+                  <span className="font-mono text-[0.93vw] font-bold text-gray-800">{entry.callNumber}</span>
+                  <span className={`text-[0.7vw] px-[0.45vw] py-[0.1vw] rounded-full border font-semibold ${getStatusColor(entry.status)}`}>
                     {isCritical ? "CRITICAL" : entry.status}
                   </span>
-                  <span className={`text-[0.65vw] px-[0.4vw] py-[0.1vw] rounded font-semibold ${
+                  <span className={`text-[0.7vw] px-[0.4vw] py-[0.1vw] rounded font-semibold ${
                     entry.priority === "Critical" ? "bg-red-50 text-red-600" : entry.priority === "High" ? "bg-orange-50 text-orange-600"
                     : entry.priority === "Medium" ? "bg-yellow-50 text-yellow-600" : "bg-green-50 text-green-600"}`}>
                     {entry.priority}
@@ -777,10 +777,10 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                       const cfg = PROD_STATUS_CFG[getProductStatus(p)];
                       return <div key={i} title={`P${i+1}: ${cfg.label}`} className={`w-[0.52vw] h-[0.52vw] rounded-full ${cfg.dot}`} />;
                     })}
-                    <span className="text-[0.6vw] text-gray-400 ml-[0.2vw]">{resolvedCount}/{totalProducts}</span>
+                    <span className="text-[0.65vw] text-gray-400 ml-[0.2vw]">{resolvedCount}/{totalProducts}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-[0.6vw] mt-[0.2vw] text-[0.72vw] text-gray-500">
+                <div className="flex items-center gap-[0.6vw] mt-[0.2vw] text-[0.77vw] text-gray-500">
                   <span className="flex items-center gap-[0.25vw]"><User className="w-[0.75vw] h-[0.75vw]" />{entry.customerName}</span>
                   <span className="flex items-center gap-[0.25vw]"><Shield className="w-[0.75vw] h-[0.75vw]" />{entry.currentEngineerName} ({entry.currentDepartment})</span>
                   {entry.contactPerson && (
@@ -794,7 +794,7 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
             </div>
             <div className="flex items-center gap-[0.5vw]">
               {timer && entry.status !== "Resolved" && (
-                <div className={`flex items-center gap-[0.25vw] px-[0.5vw] py-[0.3vw] rounded-[0.4vw] font-mono text-[0.78vw] font-bold ${timer.isExpired ? "bg-red-100 text-red-600 animate-pulse" : timer.isUrgent ? "bg-orange-100 text-orange-600 animate-pulse" : "bg-blue-50 text-blue-600"}`}>
+                <div className={`flex items-center gap-[0.25vw] px-[0.5vw] py-[0.3vw] rounded-[0.4vw] font-mono text-[0.83vw] font-bold ${timer.isExpired ? "bg-red-100 text-red-600 animate-pulse" : timer.isUrgent ? "bg-orange-100 text-orange-600 animate-pulse" : "bg-blue-50 text-blue-600"}`}>
                   <Clock className="w-[0.82vw] h-[0.82vw]" />{timer.isExpired ? "ESCALATING" : timer.remainingFormatted}
                 </div>
               )}
@@ -810,11 +810,11 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
             {/* Take Call Button */}
             {isCurrentOwner && !entry._taken && (
               <div className="p-[0.8vw] bg-orange-50 border-b border-orange-200 flex justify-between items-center">
-                <span className="text-[0.8vw] text-orange-800 font-semibold flex items-center gap-[0.4vw]">
+                <span className="text-[0.85vw] text-orange-800 font-semibold flex items-center gap-[0.4vw]">
                   <Shield className="w-[1vw] h-[1vw]" />
                   You must take this call to start working and pause escalations.
                 </span>
-                <button onClick={() => onTakeCall(entry.callId)} className="bg-orange-600 hover:bg-orange-700 text-white px-[1vw] py-[0.5vw] rounded-[0.4vw] text-[0.8vw] font-bold shadow-sm transition-all">
+                <button onClick={() => onTakeCall(entry.callId)} className="bg-orange-600 hover:bg-orange-700 text-white px-[1vw] py-[0.5vw] rounded-[0.4vw] text-[0.85vw] font-bold shadow-sm transition-all">
                   Take Call
                 </button>
               </div>
@@ -829,11 +829,11 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                   return (
                     <button key={realIdx} type="button"
                       onClick={(e) => { e.stopPropagation(); setActiveProductIdx(tabIdx); }}
-                      className={`flex items-center gap-[0.3vw] px-[0.75vw] py-[0.45vw] rounded-t-[0.4vw] border-b-2 text-[0.72vw] font-semibold cursor-pointer whitespace-nowrap transition-all ${isActive ? "border-blue-500 text-blue-700 bg-blue-50/80" : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
+                      className={`flex items-center gap-[0.3vw] px-[0.75vw] py-[0.45vw] rounded-t-[0.4vw] border-b-2 text-[0.77vw] font-semibold cursor-pointer whitespace-nowrap transition-all ${isActive ? "border-blue-500 text-blue-700 bg-blue-50/80" : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}>
                       <div className={`w-[0.5vw] h-[0.5vw] rounded-full flex-shrink-0 ${cfg.dot}`} />
                       <Layers className="w-[0.72vw] h-[0.72vw]" />
                       <span>P{realIdx + 1}</span>
-                      <span className="text-[0.62vw] max-w-[5vw] truncate text-gray-400">{prod.productModel || prod.itemCode || ""}</span>
+                      <span className="text-[0.67vw] max-w-[5vw] truncate text-gray-400">{prod.productModel || prod.itemCode || ""}</span>
                     </button>
                   );
                 })}
@@ -843,7 +843,7 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
             {/* Active product detail — only open (non-handled) products reach here */}
             {openProducts.length === 0 ? (
               <div className="p-[0.8vw]">
-                <div className="bg-gray-50 border border-slate-400 rounded-[0.4vw] px-[0.8vw] py-[0.6vw] text-center text-[0.78vw] text-gray-400">
+                <div className="bg-gray-50 border border-slate-400 rounded-[0.4vw] px-[0.8vw] py-[0.6vw] text-center text-[0.83vw] text-gray-400">
                   All products have been handled — check the Pending or Support tabs.
                 </div>
               </div>
@@ -854,22 +854,22 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                 <div className="rounded-[0.5vw] border p-[0.75vw] bg-white border-slate-400">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-[0.55vw]">
-                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-blue-500 flex items-center justify-center text-[0.6vw] font-bold text-white flex-shrink-0">
+                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-blue-500 flex items-center justify-center text-[0.65vw] font-bold text-white flex-shrink-0">
                         {safeActiveIdx + 1}
                       </div>
                       <div>
-                        <div className="text-[0.82vw] font-bold text-gray-800">{activeProd.productModel || activeProd.itemCode || `Product ${safeActiveIdx + 1}`}</div>
+                        <div className="text-[0.87vw] font-bold text-gray-800">{activeProd.productModel || activeProd.itemCode || `Product ${safeActiveIdx + 1}`}</div>
                         <div className="flex items-center gap-[0.4vw] mt-[0.12vw] flex-wrap">
-                          {activeProd.serialNumber   && <span className="text-[0.65vw] text-gray-400 font-mono">SN: {activeProd.serialNumber}</span>}
+                          {activeProd.serialNumber   && <span className="text-[0.7vw] text-gray-400 font-mono">SN: {activeProd.serialNumber}</span>}
                           {activeProd.warrantyStatus && <Badge label={activeProd.warrantyStatus} color={activeProd.warrantyStatus === "In Warranty" ? "green" : "red"} />}
-                          {activeProd.errorCode      && <span className="text-[0.63vw] font-mono bg-red-50 text-red-600 border border-red-200 px-[0.35vw] py-[0.04vw] rounded">{activeProd.errorCode}</span>}
+                          {activeProd.errorCode      && <span className="text-[0.68vw] font-mono bg-red-50 text-red-600 border border-red-200 px-[0.35vw] py-[0.04vw] rounded">{activeProd.errorCode}</span>}
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-[0.2vw]">
-                      {(() => { const cfg = PROD_STATUS_CFG[getProductStatus(activeProd)]; return <span className={`text-[0.63vw] px-[0.45vw] py-[0.12vw] rounded-full border font-bold ${cfg.cls}`}>{cfg.label}</span>; })()}
+                      {(() => { const cfg = PROD_STATUS_CFG[getProductStatus(activeProd)]; return <span className={`text-[0.68vw] px-[0.45vw] py-[0.12vw] rounded-full border font-bold ${cfg.cls}`}>{cfg.label}</span>; })()}
                       {activeProd._escalationLevel !== undefined && (
-                        <span className={`text-[0.58vw] px-[0.35vw] rounded font-bold text-white ${activeProd._escalationLevel === 0 ? "bg-blue-500" : activeProd._escalationLevel === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
+                        <span className={`text-[0.63vw] px-[0.35vw] rounded font-bold text-white ${activeProd._escalationLevel === 0 ? "bg-blue-500" : activeProd._escalationLevel === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
                           L{activeProd._escalationLevel + 1}
                         </span>
                       )}
@@ -877,20 +877,20 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                   </div>
 
                   {activeProd.callDescription && (
-                    <div className="text-[0.7vw] text-gray-600 bg-gray-50 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] mt-[0.4vw] border border-slate-400">
+                    <div className="text-[0.75vw] text-gray-600 bg-gray-50 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] mt-[0.4vw] border border-slate-400">
                       <strong>Issue:</strong> {activeProd.callDescription}
                     </div>
                   )}
 
                   {activeProd._escalationHistory?.length > 0 && (
                     <div className="mt-[0.5vw] pt-[0.4vw] border-t border-slate-400">
-                      <div className="text-[0.62vw] font-bold text-gray-400 uppercase tracking-wider mb-[0.25vw]">Product Escalation Trail</div>
+                      <div className="text-[0.67vw] font-bold text-gray-400 uppercase tracking-wider mb-[0.25vw]">Product Escalation Trail</div>
                       {activeProd._escalationHistory.map((h, hi) => (
-                        <div key={hi} className="flex items-center gap-[0.4vw] text-[0.67vw] py-[0.1vw]">
-                          <span className={`px-[0.32vw] rounded text-[0.56vw] font-bold text-white ${hi === 0 ? "bg-blue-500" : hi === 1 ? "bg-yellow-500" : "bg-red-500"}`}>L{hi+1}</span>
+                        <div key={hi} className="flex items-center gap-[0.4vw] text-[0.72vw] py-[0.1vw]">
+                          <span className={`px-[0.32vw] rounded text-[0.61vw] font-bold text-white ${hi === 0 ? "bg-blue-500" : hi === 1 ? "bg-yellow-500" : "bg-red-500"}`}>L{hi+1}</span>
                           <span className="text-gray-600 font-medium">{h.department}</span>
                           <span className="text-gray-400">→ {h.engineerName}</span>
-                          <span className="text-gray-300 ml-auto text-[0.62vw]">{new Date(h.assignedAt).toLocaleTimeString()}</span>
+                          <span className="text-gray-300 ml-auto text-[0.67vw]">{new Date(h.assignedAt).toLocaleTimeString()}</span>
                         </div>
                       ))}
                     </div>
@@ -901,7 +901,7 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                 {(isCurrentOwner || isCritical) && activeProductIsActionable && isCurrentOwner && (
                   <div className="flex gap-[0.4vw] flex-wrap">
                     <button onClick={() => setPM(safeActiveIdx, "support", true)}
-                      className="flex items-center gap-[0.25vw] bg-orange-100 hover:bg-orange-200 text-orange-700 border border-orange-300 px-[0.75vw] py-[0.35vw] rounded-[0.3vw] text-[0.72vw] font-semibold cursor-pointer">
+                      className="flex items-center gap-[0.25vw] bg-orange-100 hover:bg-orange-200 text-orange-700 border border-orange-300 px-[0.75vw] py-[0.35vw] rounded-[0.3vw] text-[0.77vw] font-semibold cursor-pointer">
                       <HelpCircle className="w-[0.8vw] h-[0.8vw]" />Request Support
                     </button>
                   </div>
@@ -925,13 +925,13 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
             {/* Call-level escalation timeline */}
             {isCurrentOwner && entry.escalationHistory?.length > 0 && (
               <div className="mx-[0.8vw] mb-[0.8vw] bg-white rounded-[0.4vw] border border-slate-400 p-[0.7vw]">
-                <h4 className="text-[0.75vw] font-bold text-gray-600 flex items-center gap-[0.3vw] mb-[0.5vw]">
+                <h4 className="text-[0.8vw] font-bold text-gray-600 flex items-center gap-[0.3vw] mb-[0.5vw]">
                   <History className="w-[0.82vw] h-[0.82vw] text-purple-500" />Call Escalation Timeline
                 </h4>
                 {entry.escalationHistory.map((hist, idx) => (
                   <div key={idx} className="flex gap-[0.5vw] mb-[0.5vw] last:mb-0">
                     <div className="flex flex-col items-center">
-                      <div className={`w-[1.3vw] h-[1.3vw] rounded-full flex items-center justify-center flex-shrink-0 text-white text-[0.55vw] font-bold ${hist.level === 0 ? "bg-blue-500" : hist.level === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
+                      <div className={`w-[1.3vw] h-[1.3vw] rounded-full flex items-center justify-center flex-shrink-0 text-white text-[0.6vw] font-bold ${hist.level === 0 ? "bg-blue-500" : hist.level === 1 ? "bg-yellow-500" : "bg-red-500"}`}>
                         {hist.level + 1}
                       </div>
                       {idx < entry.escalationHistory.length - 1 && <div className="w-[0.1vw] flex-1 bg-gray-200 my-[0.1vw]" />}
@@ -939,12 +939,12 @@ const EscalationCard = ({ entry, currentUser, timer, isExpanded, onToggle,
                     <div className="flex-1 bg-gray-50 rounded-[0.35vw] p-[0.45vw] border border-slate-400">
                       <div className="flex justify-between items-center">
                         <div>
-                          <span className="text-[0.75vw] font-bold text-gray-700">{hist.department}</span>
-                          <span className="text-[0.68vw] text-gray-500 ml-[0.35vw]">→ {hist.engineerName}</span>
+                          <span className="text-[0.8vw] font-bold text-gray-700">{hist.department}</span>
+                          <span className="text-[0.73vw] text-gray-500 ml-[0.35vw]">→ {hist.engineerName}</span>
                         </div>
-                        <span className="text-[0.64vw] text-gray-400">{new Date(hist.assignedAt).toLocaleString()}</span>
+                        <span className="text-[0.69vw] text-gray-400">{new Date(hist.assignedAt).toLocaleString()}</span>
                       </div>
-                      {hist.reason && <p className="text-[0.67vw] text-orange-600 mt-[0.15vw] flex items-center gap-[0.2vw]"><AlertTriangle className="w-[0.65vw] h-[0.65vw]" />{hist.reason}</p>}
+                      {hist.reason && <p className="text-[0.72vw] text-orange-600 mt-[0.15vw] flex items-center gap-[0.2vw]"><AlertTriangle className="w-[0.65vw] h-[0.65vw]" />{hist.reason}</p>}
                     </div>
                   </div>
                 ))}
@@ -1013,17 +1013,17 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
     <div className="mt-[0.5vw]">
       <div className="flex gap-[0.3vw] mb-[0.8vw] bg-white border border-slate-400 rounded-[0.5vw] p-[0.25vw]">
         <button onClick={() => setViewMode("assigned")}
-          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] font-semibold cursor-pointer transition-all ${viewMode === "assigned" ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
+          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.83vw] font-semibold cursor-pointer transition-all ${viewMode === "assigned" ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
           <MapPin className="w-[0.85vw] h-[0.85vw]" />Assigned Records
           {mine.length > 0 && (
-            <span className={`text-[0.62vw] px-[0.4vw] rounded-full font-bold ${viewMode === "assigned" ? "bg-white text-blue-600" : "bg-gray-200 text-gray-600"}`}>{mine.length}</span>
+            <span className={`text-[0.67vw] px-[0.4vw] rounded-full font-bold ${viewMode === "assigned" ? "bg-white text-blue-600" : "bg-gray-200 text-gray-600"}`}>{mine.length}</span>
           )}
         </button>
         <button onClick={() => setViewMode("open")}
-          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] font-semibold cursor-pointer transition-all ${viewMode === "open" ? "bg-orange-500 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
+          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.83vw] font-semibold cursor-pointer transition-all ${viewMode === "open" ? "bg-orange-500 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
           <AlertCircle className="w-[0.85vw] h-[0.85vw]" />Open Calls
           {openCalls.length > 0 && (
-            <span className={`text-[0.62vw] px-[0.4vw] rounded-full font-bold ${viewMode === "open" ? "bg-white text-orange-500" : "bg-orange-100 text-orange-600"}`}>{openCalls.length}</span>
+            <span className={`text-[0.67vw] px-[0.4vw] rounded-full font-bold ${viewMode === "open" ? "bg-white text-orange-500" : "bg-orange-100 text-orange-600"}`}>{openCalls.length}</span>
           )}
         </button>
       </div>
@@ -1033,7 +1033,7 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
           ? (
             <div className="bg-white rounded-[0.5vw] p-[3vw] text-center border border-slate-400">
               <MapPin className="w-[3vw] h-[3vw] text-gray-300 mx-auto mb-[0.8vw]" />
-              <p className="text-[1vw] text-gray-400 font-medium">No field visit records</p>
+              <p className="text-[1.05vw] text-gray-400 font-medium">No field visit records</p>
             </div>
           ) : (
             <div className="space-y-[0.8vw]">
@@ -1051,21 +1051,21 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
                           </div>
                           <div>
                             <div className="flex items-center gap-[0.4vw]">
-                              <span className="font-mono text-[0.85vw] font-bold text-gray-800">{rec.callNumber}</span>
+                              <span className="font-mono text-[0.9vw] font-bold text-gray-800">{rec.callNumber}</span>
                               <Badge label={isClosed ? "Completed" : "Open"} color={isClosed ? "green" : "blue"} />
                               {!isAssignee && <Badge label="Assigned by you" color="gray" />}
                               {rec.productIdx !== null && rec.productIdx !== undefined && (
                                 <Badge label={`P${rec.productIdx + 1}`} color="blue" />
                               )}
                             </div>
-                            <div className="text-[0.72vw] text-gray-500 mt-[0.15vw]">
+                            <div className="text-[0.77vw] text-gray-500 mt-[0.15vw]">
                               {rec.customerName} · To: <strong>{rec.assignedToName}</strong>
                               {rec.visitDate && ` · ${rec.visitDate}`}
                             </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-[0.5vw]">
-                          <span className="text-[0.68vw] text-gray-400">{new Date(rec.assignmentDate).toLocaleString()}</span>
+                          <span className="text-[0.73vw] text-gray-400">{new Date(rec.assignmentDate).toLocaleString()}</span>
                           {isExp ? <ChevronUp className="w-[1vw] h-[1vw] text-gray-400" /> : <ChevronDown className="w-[1vw] h-[1vw] text-gray-400" />}
                         </div>
                       </div>
@@ -1088,7 +1088,7 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
           ? (
             <div className="bg-white rounded-[0.5vw] p-[3vw] text-center border border-slate-400">
               <CheckCircle className="w-[3vw] h-[3vw] text-gray-300 mx-auto mb-[0.8vw]" />
-              <p className="text-[1vw] text-gray-400 font-medium">All calls covered</p>
+              <p className="text-[1.05vw] text-gray-400 font-medium">All calls covered</p>
             </div>
           ) : (
             <div className="space-y-[0.6vw]">
@@ -1104,7 +1104,7 @@ const VisitsTab = ({ type, currentUser, onAssignVisit }) => {
                           </div>
                           <div>
                             <div className="flex items-center gap-[0.4vw]">
-                              <span className="font-mono text-[0.85vw] font-bold text-gray-800">{entry.callNumber}</span>
+                              <span className="font-mono text-[0.9vw] font-bold text-gray-800">{entry.callNumber}</span>
                               <Badge label={entry.status} color={entry.status === "Escalated" ? "orange" : "blue"} />
                             </div>
                           </div>
@@ -1149,31 +1149,31 @@ const ReceivedGoodsTab = ({ currentUser }) => {
         <div className="flex justify-between items-center mb-[1vw]">
           <div className="flex items-center gap-[0.5vw]">
             <Package className="w-[1.2vw] h-[1.2vw] text-purple-600" />
-            <h2 className="text-[1.1vw] font-bold text-gray-800">Products to be Received</h2>
+            <h2 className="text-[1.15vw] font-bold text-gray-800">Products to be Received</h2>
           </div>
-          <span className="text-[0.8vw] text-gray-400">{records.length} items expected</span>
+          <span className="text-[0.85vw] text-gray-400">{records.length} items expected</span>
         </div>
 
         {records.length === 0 ? (
           <div className="text-center py-[3vw] text-gray-300">
             <Package className="w-[2vw] h-[2vw] mx-auto opacity-20 mb-[0.5vw]" />
-            <p className="text-[0.9vw]">No incoming products for your current queue</p>
+            <p className="text-[0.95vw]">No incoming products for your current queue</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-[0.8vw]">
             {records.map(rec => (
               <div key={rec.id} className="border border-slate-400 rounded-[0.5vw] p-[0.8vw] flex justify-between items-center hover:bg-gray-50 transition-colors">
                 <div>
-                  <div className="text-[0.85vw] font-bold text-gray-700">{rec.callNumber} • {rec.customerName}</div>
-                  <div className="text-[0.75vw] text-purple-600 font-semibold mt-[0.1vw]">
+                  <div className="text-[0.9vw] font-bold text-gray-700">{rec.callNumber} • {rec.customerName}</div>
+                  <div className="text-[0.8vw] text-purple-600 font-semibold mt-[0.1vw]">
                     Expected: {rec.product?.productModel}
                   </div>
-                  <div className="text-[0.7vw] text-gray-400 mt-[0.2vw]">
+                  <div className="text-[0.75vw] text-gray-400 mt-[0.2vw]">
                     Materials: {rec.materialDetails || "None provided"}
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-[0.3vw]">
-                   <span className="text-[0.7vw] font-bold text-gray-400">MARK AS RECEIVED</span>
+                   <span className="text-[0.75vw] font-bold text-gray-400">MARK AS RECEIVED</span>
                    <button onClick={() => {
                      const all = load(RECEIVED_PRODS_KEY, []);
                      const updated = all.filter(a => a.id !== rec.id);
@@ -1261,8 +1261,8 @@ const SupportReqActionPanel = ({ req, currentUser, onDone }) => {
   if (isResolved) {
     return (
       <div className="bg-green-50 border border-green-200 rounded-[0.4vw] p-[0.6vw]">
-        <p className="text-[0.75vw] font-bold text-green-700 mb-[0.2vw]">{req.status}</p>
-        <p className="text-[0.75vw] text-green-800">{req.resolutionNotes || `Assigned to: ${req.assignedVisitTo || req.escalatedTo || ""}`}</p>
+        <p className="text-[0.8vw] font-bold text-green-700 mb-[0.2vw]">{req.status}</p>
+        <p className="text-[0.8vw] text-green-800">{req.resolutionNotes || `Assigned to: ${req.assignedVisitTo || req.escalatedTo || ""}`}</p>
       </div>
     );
   }
@@ -1276,8 +1276,8 @@ const SupportReqActionPanel = ({ req, currentUser, onDone }) => {
           { key: "received", label: "Receive Good",   emoji: "📦", cls: "bg-purple-600 text-white", hov: "hover:bg-purple-50 text-gray-600"  },
         ].map(({ key, label, emoji, cls, hov }) => (
           <button key={key} type="button" onClick={() => setAction(action === key ? "" : key)}
-            className={`py-[0.5vw] text-[0.68vw] font-semibold cursor-pointer flex items-center justify-center gap-[0.25vw] border-b border-slate-400 transition-all ${action === key ? cls : `bg-gray-50 ${hov}`}`}>
-            <span className="text-[0.75vw]">{emoji}</span>
+            className={`py-[0.5vw] text-[0.73vw] font-semibold cursor-pointer flex items-center justify-center gap-[0.25vw] border-b border-slate-400 transition-all ${action === key ? cls : `bg-gray-50 ${hov}`}`}>
+            <span className="text-[0.8vw]">{emoji}</span>
             <span>{label}</span>
           </button>
         ))}
@@ -1285,20 +1285,20 @@ const SupportReqActionPanel = ({ req, currentUser, onDone }) => {
 
       {action === "close" && (
         <div className="p-[0.6vw] border border-green-200 rounded-[0.4vw] bg-green-50/40 space-y-[0.4vw]">
-          <div className="text-[0.65vw] font-bold text-gray-400 uppercase tracking-wider">Resolution Type</div>
+          <div className="text-[0.7vw] font-bold text-gray-400 uppercase tracking-wider">Resolution Type</div>
           <div className="grid grid-cols-2 gap-[0.3vw]">
             {["Fixed","Replaced","No Fault Found","Partially Fixed"].map(t => (
               <button key={t} type="button" onClick={() => setResType(t)}
-                className={`py-[0.35vw] rounded-[0.3vw] border text-[0.68vw] font-medium cursor-pointer ${resolutionType === t ? "bg-green-600 text-white border-green-600" : "bg-white border-slate-400 text-gray-600 hover:border-green-300"}`}>
+                className={`py-[0.35vw] rounded-[0.3vw] border text-[0.73vw] font-medium cursor-pointer ${resolutionType === t ? "bg-green-600 text-white border-green-600" : "bg-white border-slate-400 text-gray-600 hover:border-green-300"}`}>
                 {t}
               </button>
             ))}
           </div>
           <textarea rows="2" value={remarks} onChange={e => setRemarks(e.target.value)}
             placeholder="Closure remarks…"
-            className="w-full border border-slate-400 rounded-[0.3vw] p-[0.4vw] text-[0.7vw] outline-none resize-none focus:border-green-400 bg-white" />
+            className="w-full border border-slate-400 rounded-[0.3vw] p-[0.4vw] text-[0.75vw] outline-none resize-none focus:border-green-400 bg-white" />
           <button onClick={handleClose}
-            className="w-full py-[0.42vw] bg-green-600 hover:bg-green-700 text-white rounded-[0.3vw] text-[0.7vw] font-semibold cursor-pointer flex items-center justify-center gap-[0.3vw]">
+            className="w-full py-[0.42vw] bg-green-600 hover:bg-green-700 text-white rounded-[0.3vw] text-[0.75vw] font-semibold cursor-pointer flex items-center justify-center gap-[0.3vw]">
             <CheckCircle className="w-[0.75vw] h-[0.75vw]" />Confirm Close
           </button>
         </div>
@@ -1310,13 +1310,13 @@ const SupportReqActionPanel = ({ req, currentUser, onDone }) => {
       )}
       {action === "received" && (
         <div className="p-[0.6vw] border border-purple-200 rounded-[0.4vw] bg-purple-50 space-y-[0.35vw]">
-          <div className="text-[0.65vw] font-bold text-gray-400 uppercase">Mark as Received</div>
+          <div className="text-[0.7vw] font-bold text-gray-400 uppercase">Mark as Received</div>
           <button onClick={() => {
             const all = load(RECEIVED_PRODS_KEY, []);
             all.push({ id: Date.now(), ...req, assignedTo: currentUser?.userId });
             save(RECEIVED_PRODS_KEY, all);
             setAction("");
-          }} className="w-full py-[0.4vw] bg-purple-600 hover:bg-purple-700 text-white rounded-[0.3vw] text-[0.7vw] font-semibold cursor-pointer">
+          }} className="w-full py-[0.4vw] bg-purple-600 hover:bg-purple-700 text-white rounded-[0.3vw] text-[0.75vw] font-semibold cursor-pointer">
             Confirm Reception
           </button>
         </div>
@@ -1347,11 +1347,11 @@ const SupportRequestsTab = ({ currentUser }) => {
     <div className="mt-[0.5vw]">
       <div className="flex gap-[0.3vw] mb-[0.8vw] bg-white border border-slate-400 rounded-[0.5vw] p-[0.25vw]">
         <button onClick={() => setSubTab("assigned")}
-          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] font-semibold cursor-pointer transition-all ${subTab === "assigned" ? "bg-orange-500 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
+          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.83vw] font-semibold cursor-pointer transition-all ${subTab === "assigned" ? "bg-orange-500 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
           <HelpCircle className="w-[0.85vw] h-[0.85vw]" />Request Assigned
         </button>
         <button onClick={() => setSubTab("raised")}
-          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] font-semibold cursor-pointer transition-all ${subTab === "raised" ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
+          className={`flex-1 flex items-center justify-center gap-[0.35vw] py-[0.45vw] rounded-[0.35vw] text-[0.83vw] font-semibold cursor-pointer transition-all ${subTab === "raised" ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
           <Send className="w-[0.85vw] h-[0.85vw]" />Request Raised
         </button>
       </div>
@@ -1359,7 +1359,7 @@ const SupportRequestsTab = ({ currentUser }) => {
       {activeList.length === 0 ? (
         <div className="bg-white rounded-[0.5vw] p-[3vw] text-center border border-slate-400">
           <HelpCircle className="w-[3vw] h-[3vw] text-gray-300 mx-auto mb-[0.8vw]" />
-          <p className="text-[1vw] text-gray-400 font-medium">No requests</p>
+          <p className="text-[1.05vw] text-gray-400 font-medium">No requests</p>
         </div>
       ) : (
         <div className="space-y-[0.7vw]">
@@ -1376,7 +1376,7 @@ const SupportRequestsTab = ({ currentUser }) => {
                       </div>
                       <div>
                         <div className="flex items-center gap-[0.4vw]">
-                          <span className="font-mono text-[0.85vw] font-bold text-gray-800">{req.callNumber}</span>
+                          <span className="font-mono text-[0.9vw] font-bold text-gray-800">{req.callNumber}</span>
                           <Badge label={req.status || "Pending"} color={isDone ? "green" : "orange"} />
                         </div>
                       </div>
@@ -1388,7 +1388,7 @@ const SupportRequestsTab = ({ currentUser }) => {
                   <div className="border-t border-slate-400 p-[0.9vw] bg-gray-50 space-y-[0.6vw]">
                     {subTab === "assigned"
                       ? <SupportReqActionPanel req={req} currentUser={currentUser} onDone={reload} />
-                      : <div className="bg-gray-50 border border-slate-400 rounded-[0.4vw] p-[0.6vw] text-[0.75vw] text-gray-500 italic">Status: {req.status}</div>
+                      : <div className="bg-gray-50 border border-slate-400 rounded-[0.4vw] p-[0.6vw] text-[0.8vw] text-gray-500 italic">Status: {req.status}</div>
                     }
                   </div>
                 )}
@@ -1417,7 +1417,7 @@ const PendingTab = ({ queue, currentUser, onAssignFieldVisit }) => {
   if (pendingItems.length === 0) return (
     <div className="bg-white rounded-[0.5vw] p-[3vw] text-center border border-slate-400 mt-[1vw]">
       <CheckCircle className="w-[3vw] h-[3vw] text-gray-300 mx-auto mb-[0.8vw]" />
-      <p className="text-[1vw] text-gray-400 font-medium">No pending items</p>
+      <p className="text-[1.05vw] text-gray-400 font-medium">No pending items</p>
     </div>
   );
 
@@ -1437,7 +1437,7 @@ const PendingTab = ({ queue, currentUser, onAssignFieldVisit }) => {
                   </div>
                   <div>
                     <div className="flex items-center gap-[0.4vw]">
-                      <span className="font-mono text-[0.88vw] font-bold text-gray-800">{entry.callNumber}</span>
+                      <span className="font-mono text-[0.93vw] font-bold text-gray-800">{entry.callNumber}</span>
                       <Badge label="Products Pending" color="yellow" />
                     </div>
                   </div>
@@ -1451,7 +1451,7 @@ const PendingTab = ({ queue, currentUser, onAssignFieldVisit }) => {
                   const realIdx = entry.products.findIndex(p => p === prod);
                   return (
                     <div key={realIdx} className="rounded-[0.4vw] border border-yellow-200 bg-yellow-50/40 p-[0.6vw]">
-                      <div className="text-[0.8vw] font-bold text-gray-700 mb-[0.3vw]">{prod.productModel || prod.itemCode}</div>
+                      <div className="text-[0.85vw] font-bold text-gray-700 mb-[0.3vw]">{prod.productModel || prod.itemCode}</div>
                       <AssignVisitModal type="Field Visit" entry={entry} product={prod} currentUser={currentUser}
                         inlineMode onClose={() => setExpanded(null)}
                         onSave={(form) => onAssignFieldVisit(entry.callId, "Field Visit", form, realIdx)} />
@@ -1513,7 +1513,7 @@ const ReportsTab = ({ currentUser }) => {
   if (allRecords.length === 0) return (
     <div className="bg-white rounded-[0.5vw] p-[3vw] text-center border border-slate-400 mt-[1vw]">
       <BarChart2 className="w-[3vw] h-[3vw] text-gray-300 mx-auto mb-[0.8vw]" />
-      <p className="text-[1vw] text-gray-400 font-medium">No records found</p>
+      <p className="text-[1.05vw] text-gray-400 font-medium">No records found</p>
     </div>
   );
 
@@ -1522,25 +1522,25 @@ const ReportsTab = ({ currentUser }) => {
       <div className="flex items-center gap-[0.8vw] mb-[0.8vw]">
         <input type="text" value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search by customer, call no…"
-          className="flex-1 border border-gray-400 rounded-[0.4vw] px-[0.8vw] py-[0.45vw] text-[0.8vw] outline-none focus:border-blue-400 bg-white" />
+          className="flex-1 border border-gray-400 rounded-[0.4vw] px-[0.8vw] py-[0.45vw] text-[0.85vw] outline-none focus:border-blue-400 bg-white" />
       </div>
       <div className="bg-white rounded-[0.5vw] border border-slate-400 overflow-hidden shadow-sm">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-50 border-b border-slate-400">
               {["Call No","Customer","Status","View"].map(h => (
-                <th key={h} className="px-[0.7vw] py-[0.6vw] text-left text-[0.72vw] font-bold text-gray-600">{h}</th>
+                <th key={h} className="px-[0.7vw] py-[0.6vw] text-left text-[0.77vw] font-bold text-gray-600">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {filteredRecords.map((rec) => (
               <tr key={rec.callId} className="hover:bg-blue-50/30 transition-colors">
-                <td className="px-[0.7vw] py-[0.6vw]"><span className="text-[0.78vw] font-bold text-blue-600 font-mono">{rec.callNumber}</span></td>
-                <td className="px-[0.7vw] py-[0.6vw] text-[0.78vw] font-bold text-gray-800">{rec.customerName}</td>
+                <td className="px-[0.7vw] py-[0.6vw]"><span className="text-[0.83vw] font-bold text-blue-600 font-mono">{rec.callNumber}</span></td>
+                <td className="px-[0.7vw] py-[0.6vw] text-[0.83vw] font-bold text-gray-800">{rec.customerName}</td>
                 <td className="px-[0.7vw] py-[0.6vw]"><Badge label={rec.status} color="gray" /></td>
                 <td className="px-[0.7vw] py-[0.6vw]">
-                  <button onClick={() => setDetailRec(rec)} className="bg-blue-600 text-white px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.72vw] font-semibold cursor-pointer">Details</button>
+                  <button onClick={() => setDetailRec(rec)} className="bg-blue-600 text-white px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.77vw] font-semibold cursor-pointer">Details</button>
                 </td>
               </tr>
             ))}
@@ -1826,16 +1826,16 @@ const EscalationPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-full text-[0.85vw]">
+    <div className="flex flex-col h-full text-[0.9vw]">
       {/* Tab bar */}
       <div className="flex gap-[0.3vw] mb-[1vw] bg-white border border-slate-400 rounded-[0.6vw] p-[0.3vw] shadow-sm sticky top-0 z-10">
         {tabs.map(({ id, label, icon: Icon, color, count }) => (
           <button key={id} onClick={() => setActiveTab(id)}
-            className={`flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] rounded-[0.4vw] text-[0.78vw] font-semibold cursor-pointer transition-all flex-1 justify-center ${activeTab === id ? TAB_ACTIVE[color] : "text-gray-600 hover:bg-gray-100"}`}>
+            className={`flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] rounded-[0.4vw] text-[0.83vw] font-semibold cursor-pointer transition-all flex-1 justify-center ${activeTab === id ? TAB_ACTIVE[color] : "text-gray-600 hover:bg-gray-100"}`}>
             <Icon className="w-[0.88vw] h-[0.88vw]" />
             {label}
             {count > 0 && (
-              <span className={`text-[0.6vw] px-[0.4vw] py-[0.04vw] rounded-full font-bold ${activeTab === id ? BADGE_ACTIVE[color] : BADGE_INACTIVE[color]}`}>
+              <span className={`text-[0.65vw] px-[0.4vw] py-[0.04vw] rounded-full font-bold ${activeTab === id ? BADGE_ACTIVE[color] : BADGE_INACTIVE[color]}`}>
                 {count}
               </span>
             )}
@@ -1851,8 +1851,8 @@ const EscalationPage = () => {
           <div key={`alert-${e.callId}`} className="mb-[1vw] bg-red-100 border border-red-400 text-red-800 rounded-[0.5vw] p-[0.7vw] shadow-sm flex items-center gap-[0.5vw]">
             <AlertTriangle className="w-[1.2vw] h-[1.2vw] text-red-600 animate-pulse flex-shrink-0" />
             <div className="flex-1">
-              <strong className="text-[0.85vw]">CRITICAL ALERT: Call {e.callNumber} is in critical stage.</strong>
-              <div className="text-[0.75vw] mt-[0.2vw]">All escalation levels exhausted. Currently escalated back to the first allocated person: <span className="font-bold underline">{e.currentEngineerName}</span>.</div>
+              <strong className="text-[0.9vw]">CRITICAL ALERT: Call {e.callNumber} is in critical stage.</strong>
+              <div className="text-[0.8vw] mt-[0.2vw]">All escalation levels exhausted. Currently escalated back to the first allocated person: <span className="font-bold underline">{e.currentEngineerName}</span>.</div>
             </div>
           </div>
         ))}
@@ -1864,16 +1864,16 @@ const EscalationPage = () => {
               <div className="bg-gradient-to-r from-blue-50 via-yellow-50 to-red-50 rounded-[0.5vw] p-[0.7vw] mb-[1vw] border border-slate-400">
                 <div className="flex items-center gap-[0.4vw] mb-[0.4vw]">
                   <RefreshCw className="w-[0.9vw] h-[0.9vw] text-blue-500 animate-spin" />
-                  <span className="text-[0.82vw] font-bold text-gray-700">Live Escalation Timers</span>
+                  <span className="text-[0.87vw] font-bold text-gray-700">Live Escalation Timers</span>
                 </div>
                 <div className="flex flex-wrap gap-[0.6vw]">
                   {timers.map(t => (
                     <div key={t.callId}
-                      className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] rounded-[0.4vw] border text-[0.78vw] font-mono font-bold ${t.isExpired ? "bg-red-100 border-red-300 text-red-700" : t.isUrgent ? "bg-orange-100 border-orange-300 text-orange-700 animate-pulse" : "bg-white border-gray-400 text-gray-700"}`}>
+                      className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] rounded-[0.4vw] border text-[0.83vw] font-mono font-bold ${t.isExpired ? "bg-red-100 border-red-300 text-red-700" : t.isUrgent ? "bg-orange-100 border-orange-300 text-orange-700 animate-pulse" : "bg-white border-gray-400 text-gray-700"}`}>
                       <Clock className="w-[0.8vw] h-[0.8vw]" />
                       <span>{t.callNumber}</span>
                       <span>{t.isExpired ? "ESCALATING..." : t.remainingFormatted}</span>
-                      <span className={`text-[0.6vw] px-[0.35vw] rounded-full ${t.currentLevel === 0 ? "bg-blue-100 text-blue-600" : t.currentLevel === 1 ? "bg-yellow-100 text-yellow-600" : "bg-red-100 text-red-600"}`}>
+                      <span className={`text-[0.65vw] px-[0.35vw] rounded-full ${t.currentLevel === 0 ? "bg-blue-100 text-blue-600" : t.currentLevel === 1 ? "bg-yellow-100 text-yellow-600" : "bg-red-100 text-red-600"}`}>
                         {t.currentDepartment}
                       </span>
                     </div>
@@ -1885,8 +1885,8 @@ const EscalationPage = () => {
             {myEscalations.length === 0 ? (
               <div className="bg-white rounded-[0.5vw] p-[3vw] text-center border border-slate-400">
                 <Shield className="w-[3vw] h-[3vw] text-gray-300 mx-auto mb-[0.8vw]" />
-                <p className="text-[1vw] text-gray-400 font-medium">No active escalations</p>
-                <p className="text-[0.8vw] text-gray-300 mt-[0.3vw]">Service calls assigned to you will appear here</p>
+                <p className="text-[1.05vw] text-gray-400 font-medium">No active escalations</p>
+                <p className="text-[0.85vw] text-gray-300 mt-[0.3vw]">Service calls assigned to you will appear here</p>
               </div>
             ) : (
               <div className="space-y-[0.8vw]">

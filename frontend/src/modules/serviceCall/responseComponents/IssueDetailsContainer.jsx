@@ -10,19 +10,19 @@ export const IssueDetailsContainer = ({ product }) => {
       {hasExtra && (
         <div className="flex flex-wrap gap-[0.8vw] items-center border-b border-slate-200 pb-[0.6vw]">
           {product.serialNumber && (
-            <div className="flex items-center gap-[0.3vw] text-[0.75vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
+            <div className="flex items-center gap-[0.3vw] text-[0.8vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
               <span className="font-bold">Serial Num:</span>{" "}
               {product.serialNumber}
             </div>
           )}
           {product.errorCode && (
-            <div className="flex items-center gap-[0.3vw] text-[0.75vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
+            <div className="flex items-center gap-[0.3vw] text-[0.8vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
               <span className="font-bold text-slate-900">Error code :</span>{" "}
               {product.errorCode}
             </div>
           )}
           {product.warrantyStatus && (
-            <div className="flex items-center gap-[0.3vw] text-[0.75vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
+            <div className="flex items-center gap-[0.3vw] text-[0.8vw] text-slate-700 bg-slate-50 border border-slate-200 px-[0.6vw] py-[0.3vw] rounded-[0.4vw] shadow-sm">
               <span className="font-bold text-slate-900">Warranty:</span>{" "}
               {product.warrantyStatus}
             </div>
@@ -32,10 +32,10 @@ export const IssueDetailsContainer = ({ product }) => {
 
       <div className="flex items-start justify-between gap-[1vw]">
         <div className="flex-1">
-          <div className="text-[0.85vw] font-bold text-slate-500 mb-[0.3vw]">
+          <div className="text-[0.9vw] font-bold text-slate-500 mb-[0.3vw]">
             Reported Issue Details
           </div>
-          <div className="text-[0.85vw] text-slate-800 font-semibold leading-relaxed">
+          <div className="text-[0.9vw] text-slate-800 font-semibold leading-relaxed">
             {product.callDescription || "No description provided"}
           </div>
         </div>
@@ -71,7 +71,7 @@ export const IssueDetailsContainer = ({ product }) => {
                   ) : (
                     <div className="flex flex-col items-center justify-center p-[0.5vw] text-slate-500">
                       <FileText className="w-[1.2vw] h-[1.2vw] mb-[0.2vw]" />
-                      <span className="text-[0.5vw] truncate w-[4vw] text-center font-medium">
+                      <span className="text-[0.55vw] truncate w-[4vw] text-center font-medium">
                         {file.name}
                       </span>
                     </div>
@@ -83,7 +83,7 @@ export const IssueDetailsContainer = ({ product }) => {
                       href={displayUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white/95 hover:bg-white text-slate-800 rounded px-[0.5vw] py-[0.15vw] text-[0.6vw] font-bold shadow-sm transition-colors flex items-center gap-[0.2vw]"
+                      className="bg-white/95 hover:bg-white text-slate-800 rounded px-[0.5vw] py-[0.15vw] text-[0.65vw] font-bold shadow-sm transition-colors flex items-center gap-[0.2vw]"
                     >
                       <Eye className="w-[0.7vw] h-[0.7vw]" /> View
                     </a>
@@ -99,7 +99,7 @@ export const IssueDetailsContainer = ({ product }) => {
                             link.click();
                           });
                       }}
-                      className="bg-indigo-600/95 hover:bg-indigo-500 text-white rounded px-[0.5vw] py-[0.15vw] text-[0.6vw] font-bold shadow-sm transition-colors flex items-center gap-[0.2vw]"
+                      className="bg-indigo-600/95 hover:bg-indigo-500 text-white rounded px-[0.5vw] py-[0.15vw] text-[0.65vw] font-bold shadow-sm transition-colors flex items-center gap-[0.2vw]"
                     >
                       <Download className="w-[0.7vw] h-[0.7vw]" /> Save
                     </button>

@@ -89,11 +89,11 @@ const ToastItem = ({ toast, onRemove }) => {
       {/* Message Text */}
       <div className="flex-1 min-w-0 pr-[0.3vw]">
         {React.isValidElement(toast.message) ? (
-          <div className={`text-[0.85vw] leading-normal font-medium truncate ${styles.text}`}>
+          <div className={`text-[0.9vw] leading-normal font-medium truncate ${styles.text}`}>
             {toast.message}
           </div>
         ) : (
-          <p className={`text-[0.85vw] leading-normal font-medium ${styles.text}`}>
+          <p className={`text-[0.9vw] leading-normal font-medium ${styles.text}`}>
             {toast.message}
           </p>
         )}
@@ -203,10 +203,10 @@ export const NotificationProvider = ({ children }) => {
                     {confirmData.type === "danger" ? <AlertTriangle className="w-[1.8vw] h-[1.8vw]" /> : <HelpCircle className="w-[1.8vw] h-[1.8vw]" />}
                   </div> */}
                   <div className="flex-1">
-                    <h3 className="text-[1.2vw] font-bold text-slate-900 mb-[0.4vw]">
+                    <h3 className="text-[1.25vw] font-bold text-slate-900 mb-[0.4vw]">
                       {confirmData.title || "Confirm Action"}
                     </h3>
-                    <div className="text-[0.9vw] text-slate-600 leading-relaxed">
+                    <div className="text-[0.95vw] text-slate-600 leading-relaxed">
                       {typeof confirmData.message === "string" ? confirmData.message : confirmData.message}
                     </div>
                   </div>
@@ -214,7 +214,7 @@ export const NotificationProvider = ({ children }) => {
 
                 {confirmData.confirmTextMatch && (
                   <div className="flex flex-col gap-[0.4vw] mt-[0.4vw] bg-red-50/70 p-[0.8vw] rounded-[0.6vw] border border-red-100">
-                    <label className="text-[0.8vw] font-semibold text-slate-700">
+                    <label className="text-[0.85vw] font-semibold text-slate-700">
                       Type <span className="font-bold text-red-600 select-all">"{confirmData.confirmTextMatch}"</span> to confirm deletion:
                     </label>
                     <input
@@ -222,7 +222,7 @@ export const NotificationProvider = ({ children }) => {
                       value={confirmInput}
                       onChange={(e) => setConfirmInput(e.target.value)}
                       placeholder={`Type "${confirmData.confirmTextMatch}" here`}
-                      className="w-full border border-slate-300 rounded-[0.4vw] p-[0.5vw] text-[0.85vw] outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 bg-white"
+                      className="w-full border border-slate-300 rounded-[0.4vw] p-[0.5vw] text-[0.9vw] outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 bg-white"
                       autoFocus
                     />
                   </div>
@@ -231,7 +231,7 @@ export const NotificationProvider = ({ children }) => {
                 <div className="flex items-center justify-end gap-[0.8vw] mt-[0.6vw]">
                   <button
                     onClick={() => handleConfirm(false)}
-                    className="px-[1.2vw] py-[0.6vw] rounded-[0.6vw] text-[0.85vw] font-semibold text-slate-600 hover:bg-slate-100 transition-all cursor-pointer"
+                    className="px-[1.2vw] py-[0.6vw] rounded-[0.6vw] text-[0.9vw] font-semibold text-slate-600 hover:bg-slate-100 transition-all cursor-pointer"
                   >
                     {confirmData.cancelText || "Cancel"}
                   </button>
@@ -239,7 +239,7 @@ export const NotificationProvider = ({ children }) => {
                     onClick={() => handleConfirm(true)}
                     disabled={isConfirmDisabled}
                     className={`
-                      px-[1.5vw] py-[0.6vw] rounded-[0.6vw] text-[0.85vw] font-bold text-white shadow-lg transition-all
+                      px-[1.5vw] py-[0.6vw] rounded-[0.6vw] text-[0.9vw] font-bold text-white shadow-lg transition-all
                       ${isConfirmDisabled 
                         ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none" 
                         : confirmData.type === "danger" 

@@ -354,7 +354,7 @@ const NotificationsDropdown = () => {
       >
         <Bell className={`w-[1.1vw] h-[1.1vw] transition-colors ${isOpen ? 'text-indigo-650' : 'text-slate-800 group-hover:text-indigo-600'}`} />
         {unreadCount > 0 && (
-          <span className="absolute -top-[0.1vw] -right-[0.1vw] bg-indigo-600 text-white text-[0.6vw] font-bold px-[0.35vw] py-[0.05vw] rounded-full border border-white">
+          <span className="absolute -top-[0.1vw] -right-[0.1vw] bg-indigo-600 text-white text-[0.65vw] font-bold px-[0.35vw] py-[0.05vw] rounded-full border border-white">
             {unreadCount}
           </span>
         )}
@@ -371,20 +371,20 @@ const NotificationsDropdown = () => {
           >
             {/* Header */}
             <div className="p-[1vw] pb-[0.6vw] flex items-center justify-between bg-white relative">
-              <h3 className="text-[1.05vw] font-bold text-indigo-950">Notifications</h3>
+              <h3 className="text-[1.1vw] font-bold text-indigo-950">Notifications</h3>
 
               {/* Action Icons */}
               <div className="flex items-center gap-[0.7vw]">
                 <button
                   onClick={markAllAsRead}
-                  className="flex items-center gap-[0.2vw] px-[0.4vw] py-[0.2vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer text-[0.72vw] font-bold"
+                  className="flex items-center gap-[0.2vw] px-[0.4vw] py-[0.2vw] text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-[0.4vw] transition-all cursor-pointer text-[0.77vw] font-bold"
                 >
                   <CheckCheck className="w-[0.9vw] h-[0.9vw]" />
                   Mark all as read
                 </button>
                 <button
                   onClick={clearAllNotifications}
-                  className="flex items-center gap-[0.2vw] px-[0.4vw] py-[0.2vw] text-slate-500 hover:text-red-650 hover:bg-red-50 rounded-[0.4vw] transition-all cursor-pointer text-[0.72vw] font-bold"
+                  className="flex items-center gap-[0.2vw] px-[0.4vw] py-[0.2vw] text-slate-500 hover:text-red-650 hover:bg-red-50 rounded-[0.4vw] transition-all cursor-pointer text-[0.77vw] font-bold"
                 >
                   <Trash2 className="w-[0.9vw] h-[0.9vw]" />
                   Clear all
@@ -408,7 +408,7 @@ const NotificationsDropdown = () => {
                         className="absolute right-0 mt-[0.4vw] w-[12vw] bg-white rounded-[0.8vw] border border-slate-200 shadow-lg z-[2100] p-[0.6vw] flex flex-col gap-[0.4vw]"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.75vw] font-semibold text-indigo-955">Only Unread</span>
+                          <span className="text-[0.8vw] font-semibold text-indigo-955">Only Unread</span>
                           <button
                             onClick={() => {
                               const nextVal = !onlyUnread;
@@ -421,8 +421,8 @@ const NotificationsDropdown = () => {
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[0.75vw] font-semibold text-indigo-955">Sort</span>
-                          <span className="text-[0.68vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.4vw] py-[0.1vw] rounded">
+                          <span className="text-[0.8vw] font-semibold text-indigo-955">Sort</span>
+                          <span className="text-[0.73vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.4vw] py-[0.1vw] rounded">
                             Latest First
                           </span>
                         </div>
@@ -449,7 +449,7 @@ const NotificationsDropdown = () => {
                         setActiveMainTab(tab.id === 'all' ? 'All' : tab.id);
                         setActiveSubTab('all');
                       }}
-                      className={`px-[0.65vw] py-[0.25vw] rounded-[0.4vw] text-[0.74vw] font-semibold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+                      className={`px-[0.65vw] py-[0.25vw] rounded-[0.4vw] text-[0.79vw] font-semibold transition-all cursor-pointer flex items-center gap-[0.35vw] ${
                         isActive 
                           ? 'bg-slate-900 text-white shadow-2xs' 
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -457,7 +457,7 @@ const NotificationsDropdown = () => {
                     >
                       <span>{tab.label}</span>
                       {tab.count > 0 && (
-                        <span className={`text-[0.6vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
+                        <span className={`text-[0.65vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ${
                           isActive ? 'bg-white text-slate-900' : 'bg-indigo-50 text-indigo-700'
                         }`}>
                           {tab.count}
@@ -476,8 +476,8 @@ const NotificationsDropdown = () => {
                   <div className="w-[3.6vw] h-[3.6vw] rounded-full border border-slate-200/80 bg-white shadow-sm flex items-center justify-center mb-[0.8vw]">
                     <Inbox className="w-[1.6vw] h-[1.6vw] text-slate-350" />
                   </div>
-                  <p className="text-[0.9vw] font-bold text-slate-800">You're all caught up!</p>
-                  <p className="text-[0.72vw] text-slate-500 max-w-[75%] mt-[0.2vw] leading-relaxed">
+                  <p className="text-[0.95vw] font-bold text-slate-800">You're all caught up!</p>
+                  <p className="text-[0.77vw] text-slate-500 max-w-[75%] mt-[0.2vw] leading-relaxed">
                     No new alerts or escalations pending in this category.
                   </p>
                 </div>
@@ -515,7 +515,7 @@ const NotificationsDropdown = () => {
                           <div className="flex-1 min-w-0 pr-[0.2vw]">
                             {/* Row 1: Title without noisy badge tags */}
                             <div className="flex items-center justify-between">
-                              <h4 className={`text-[0.82vw] truncate ${
+                              <h4 className={`text-[0.87vw] truncate ${
                                 isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-800'
                               }`}>
                                 {cleanTitle}
@@ -523,15 +523,15 @@ const NotificationsDropdown = () => {
                             </div>
 
                             {/* Row 2: Clean, straightforward message */}
-                            <p className="text-[0.74vw] text-slate-650 leading-snug mt-[0.1vw] line-clamp-2 break-words">
+                            <p className="text-[0.79vw] text-slate-650 leading-snug mt-[0.1vw] line-clamp-2 break-words">
                               {cleanMessage}
                             </p>
 
                             {/* Row 3: Timestamp & Call Number */}
-                            <div className="flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.68vw] text-slate-500 font-medium">
+                            <div className="flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.73vw] text-slate-500 font-medium">
                               <span>{formatTimeShort(n.createdAt)}</span>
                               <span>•</span>
-                              <span className="text-slate-600 font-semibold font-mono text-[0.66vw]">
+                              <span className="text-slate-600 font-semibold font-mono text-[0.71vw]">
                                 {n.data?.callNumber || (n.type === 'Service Material' ? 'Material Dispatch' : 'Akira Service')}
                               </span>
                             </div>
@@ -563,11 +563,11 @@ const NotificationsDropdown = () => {
 
             {/* Footer */}
             <div className="px-[1vw] py-[0.6vw] border-t border-slate-100 flex items-center justify-between bg-slate-50/20">
-              <div className="flex items-center gap-[0.3vw] text-[0.72vw] font-bold text-indigo-955 opacity-70">
+              <div className="flex items-center gap-[0.3vw] text-[0.77vw] font-bold text-indigo-955 opacity-70">
                 <Bell className="w-[0.8vw] h-[0.8vw] text-indigo-650" />
                 Akira Service Tool
               </div>
-              <div className="text-[0.65vw] font-bold text-slate-400">
+              <div className="text-[0.7vw] font-bold text-slate-400">
                 {unreadCount > 0 ? `${unreadCount} unread` : 'All read'}
               </div>
             </div>
@@ -597,14 +597,14 @@ const NotificationsDropdown = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-[0.4vw]">
-                        <span className={`text-[0.65vw] font-bold px-[0.4vw] py-[0.08vw] rounded-[0.25vw] border uppercase tracking-wider ${visuals.badgeBg}`}>
+                        <span className={`text-[0.7vw] font-bold px-[0.4vw] py-[0.08vw] rounded-[0.25vw] border uppercase tracking-wider ${visuals.badgeBg}`}>
                           {visuals.badgeText}
                         </span>
-                        <span className="text-[0.68vw] text-slate-400 font-medium">
+                        <span className="text-[0.73vw] text-slate-400 font-medium">
                           {formatTimeShort(selectedNotification.createdAt)}
                         </span>
                       </div>
-                      <h3 className="text-[1vw] font-bold text-slate-900 mt-[0.3vw] leading-tight">
+                      <h3 className="text-[1.05vw] font-bold text-slate-900 mt-[0.3vw] leading-tight">
                         {selectedNotification.title}
                       </h3>
                     </div>
@@ -622,41 +622,41 @@ const NotificationsDropdown = () => {
             {/* Modal Body */}
             <div className="p-[1.2vw] space-y-[0.9vw] text-slate-700">
               <div className="bg-slate-50 border border-slate-200/80 rounded-[0.6vw] p-[0.9vw]">
-                <p className="text-[0.8vw] text-slate-700 leading-relaxed font-medium">
+                <p className="text-[0.85vw] text-slate-700 leading-relaxed font-medium">
                   {selectedNotification.message}
                 </p>
               </div>
 
               {/* Context Details Grid */}
-              <div className="grid grid-cols-2 gap-[0.7vw] text-[0.75vw]">
+              <div className="grid grid-cols-2 gap-[0.7vw] text-[0.8vw]">
                 {selectedNotification.data?.callNumber && (
                   <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Call Number</span>
-                    <span className="font-bold text-indigo-700 text-[0.82vw]">
+                    <span className="text-[0.7vw] font-semibold text-slate-400 block uppercase">Call Number</span>
+                    <span className="font-bold text-indigo-700 text-[0.87vw]">
                       #{selectedNotification.data.callNumber}
                     </span>
                   </div>
                 )}
                 {selectedNotification.priority && (
                   <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Priority</span>
-                    <span className="font-bold text-slate-800 text-[0.82vw]">
+                    <span className="text-[0.7vw] font-semibold text-slate-400 block uppercase">Priority</span>
+                    <span className="font-bold text-slate-800 text-[0.87vw]">
                       {selectedNotification.priority}
                     </span>
                   </div>
                 )}
                 {selectedNotification.type && (
                   <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Notification Type</span>
-                    <span className="font-bold text-slate-800 text-[0.82vw]">
+                    <span className="text-[0.7vw] font-semibold text-slate-400 block uppercase">Notification Type</span>
+                    <span className="font-bold text-slate-800 text-[0.87vw]">
                       {selectedNotification.type}
                     </span>
                   </div>
                 )}
                 {selectedNotification.createdAt && (
                   <div className="bg-white border border-slate-200 rounded-[0.5vw] p-[0.6vw]">
-                    <span className="text-[0.65vw] font-semibold text-slate-400 block uppercase">Received Time</span>
-                    <span className="font-semibold text-slate-700 text-[0.75vw]">
+                    <span className="text-[0.7vw] font-semibold text-slate-400 block uppercase">Received Time</span>
+                    <span className="font-semibold text-slate-700 text-[0.8vw]">
                       {new Date(selectedNotification.createdAt).toLocaleString("en-IN", {
                         dateStyle: "medium",
                         timeStyle: "short",
@@ -671,14 +671,14 @@ const NotificationsDropdown = () => {
             <div className="p-[1vw] border-t border-slate-100 flex items-center justify-end gap-[0.6vw] bg-slate-50/60">
               <button
                 onClick={() => setSelectedNotification(null)}
-                className="px-[0.9vw] py-[0.4vw] rounded-[0.5vw] border border-slate-300 text-[0.75vw] font-semibold text-slate-700 hover:bg-white transition-all cursor-pointer"
+                className="px-[0.9vw] py-[0.4vw] rounded-[0.5vw] border border-slate-300 text-[0.8vw] font-semibold text-slate-700 hover:bg-white transition-all cursor-pointer"
               >
                 Close
               </button>
               {(selectedNotification.data?.callNumber || selectedNotification.type === 'Service Material') && (
                 <button
                   onClick={() => handleNavigateToTarget(selectedNotification)}
-                  className="px-[1vw] py-[0.4vw] rounded-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white text-[0.75vw] font-bold flex items-center gap-[0.35vw] shadow-sm transition-all cursor-pointer"
+                  className="px-[1vw] py-[0.4vw] rounded-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white text-[0.8vw] font-bold flex items-center gap-[0.35vw] shadow-sm transition-all cursor-pointer"
                 >
                   <span>View Details</span>
                   <ArrowUpRight className="w-[0.9vw] h-[0.9vw]" />

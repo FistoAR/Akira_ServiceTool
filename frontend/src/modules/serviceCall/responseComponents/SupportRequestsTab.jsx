@@ -68,7 +68,7 @@ const SupportRequestsTab = ({
       {/* Top Toggle Bar */}
       <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-300 bg-white shrink-0">
         <div className="flex items-center gap-[0.7vw]">
-          <span className="flex items-center gap-[0.35vw] text-[0.82vw] font-medium text-slate-800">
+          <span className="flex items-center gap-[0.35vw] text-[0.87vw] font-medium text-slate-800">
             <HelpCircle className="w-[0.95vw] h-[0.95vw] text-[#1a73e8]" />
             Support Desk
           </span>
@@ -78,12 +78,12 @@ const SupportRequestsTab = ({
             <button
               type="button"
               onClick={() => { setSubView("assigned"); setPage(1); }}
-              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.74vw] font-medium transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.79vw] font-medium transition-all cursor-pointer flex items-center gap-[0.35vw] ${
                 subView === "assigned" ? "bg-white text-[#1a73e8] shadow-xs" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               <span>Assigned to Me</span>
-              <span className={`text-[0.62vw] px-[0.4vw] py-[0.02vw] rounded-full font-medium ${
+              <span className={`text-[0.67vw] px-[0.4vw] py-[0.02vw] rounded-full font-medium ${
                 subView === "assigned" ? "bg-blue-100 text-[#1a73e8]" : "bg-slate-200 text-slate-700"
               }`}>
                 {assignedForSupportCalls.length}
@@ -93,12 +93,12 @@ const SupportRequestsTab = ({
             <button
               type="button"
               onClick={() => { setSubView("asked"); setPage(1); }}
-              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.74vw] font-medium transition-all cursor-pointer flex items-center gap-[0.35vw] ${
+              className={`px-[0.7vw] py-[0.2vw] rounded-[0.4vw] text-[0.79vw] font-medium transition-all cursor-pointer flex items-center gap-[0.35vw] ${
                 subView === "asked" ? "bg-white text-[#1a73e8] shadow-xs" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               <span>Asked by Me</span>
-              <span className={`text-[0.62vw] px-[0.4vw] py-[0.02vw] rounded-full font-medium ${
+              <span className={`text-[0.67vw] px-[0.4vw] py-[0.02vw] rounded-full font-medium ${
                 subView === "asked" ? "bg-blue-100 text-[#1a73e8]" : "bg-slate-200 text-slate-700"
               }`}>
                 {askedForSupportCalls.length}
@@ -107,7 +107,7 @@ const SupportRequestsTab = ({
           </div>
         </div>
 
-        <div className="text-[0.76vw] text-slate-500 font-medium">
+        <div className="text-[0.81vw] text-slate-500 font-medium">
           Showing <span className="font-medium text-slate-800">{currentItems.length}</span> requests
         </div>
       </div>
@@ -115,7 +115,7 @@ const SupportRequestsTab = ({
       {/* Table Area */}
       <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
         <table className="w-full text-left border-collapse">
-          <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+          <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
             <tr>
               <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 whitespace-nowrap min-w-[9.5vw]">
                 Date & Time
@@ -140,7 +140,7 @@ const SupportRequestsTab = ({
               </th>
             </tr>
           </thead>
-          <tbody className="text-[0.8vw]">
+          <tbody className="text-[0.85vw]">
             {paginatedCalls.length > 0 ? (
               paginatedCalls.map((row) => {
                 const targetProds = (row.products || []).filter((p) =>
@@ -169,7 +169,7 @@ const SupportRequestsTab = ({
                           {(() => {
                             try {
                               const d = new Date(row.dateTime || row.timestamp || row.createdAt);
-                              if (isNaN(d.getTime())) return <span className="text-[0.74vw] text-slate-800 font-normal">{row.dateTime || "—"}</span>;
+                              if (isNaN(d.getTime())) return <span className="text-[0.79vw] text-slate-800 font-medium">{row.dateTime || "—"}</span>;
                               const datePart = d.toLocaleDateString("en-GB", {
                                 day: "2-digit",
                                 month: "2-digit",
@@ -181,13 +181,13 @@ const SupportRequestsTab = ({
                                 hour12: true,
                               });
                               return (
-                                <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
+                                <div className="flex flex-col text-[0.79vw] text-slate-800 font-medium leading-normal">
                                   <span>{datePart}</span>
-                                  <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">{timePart}</span>
+                                  <span className="text-[0.73vw] text-slate-500 mt-[0.14vw]">{timePart}</span>
                                 </div>
                               );
                             } catch {
-                              return <span className="text-[0.74vw] text-slate-800 font-normal">{row.dateTime || "—"}</span>;
+                              return <span className="text-[0.79vw] text-slate-800 font-medium">{row.dateTime || "—"}</span>;
                             }
                           })()}
                         </td>
@@ -202,11 +202,11 @@ const SupportRequestsTab = ({
                             type="button"
                             onClick={() => onOpenInfo && onOpenInfo(row)}
                             title="View Call Details"
-                            className="font-mono text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
+                            className="font-mono text-[0.87vw] font-medium text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
                           >
                             {row.callNumber || row.callNo}
                           </button>
-                          <div className="text-[0.66vw] text-slate-400 mt-[0.14vw]">
+                          <div className="text-[0.71vw] text-slate-400 mt-[0.14vw]">
                             {rowCount} Support Item{rowCount > 1 ? "s" : ""}
                           </div>
                         </td>
@@ -225,7 +225,7 @@ const SupportRequestsTab = ({
                           {row.customerType && (
                             <div className="mt-[0.2vw]">
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border shadow-2xs whitespace-nowrap ${getTypeColor(
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.71vw] font-medium border shadow-2xs whitespace-nowrap ${getTypeColor(
                                   row.customerType,
                                 )}`}
                               >
@@ -242,34 +242,34 @@ const SupportRequestsTab = ({
                           className="max-w-full"
                           content={
                             <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                              <div className="font-normal text-slate-200">
+                              <div className="font-medium text-slate-200">
                                 {prod?.productModel || prod?.itemCode || "—"}
                               </div>
                               {prod?.serialNumber && (
-                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   <span className="text-slate-400 font-sans">SN: </span>
                                   <span>{prod.serialNumber}</span>
                                 </div>
                               )}
                               {prod?.callDescription && (
-                                <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   {prod.callDescription}
                                 </div>
                               )}
                             </div>
                           }
                         >
-                          <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-slate-800 text-[0.85vw] truncate cursor-default">
                             {prod?.productModel || prod?.itemCode || "—"}
                           </div>
                         </CustomTooltip>
                         {prod?.serialNumber && (
-                          <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.1vw]">
+                          <div className="text-[0.71vw] text-slate-400 font-mono mt-[0.1vw]">
                             SN: {prod.serialNumber}
                           </div>
                         )}
                         {prod?.callDescription && (
-                          <div className="text-[0.68vw] text-slate-500 italic mt-[0.1vw] truncate">
+                          <div className="text-[0.73vw] text-slate-500 italic mt-[0.1vw] truncate">
                             {prod.callDescription}
                           </div>
                         )}
@@ -287,7 +287,7 @@ const SupportRequestsTab = ({
                             else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                             else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                             return (
-                              <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                              <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.75vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                 {p}
                               </span>
                             );
@@ -298,19 +298,19 @@ const SupportRequestsTab = ({
                       <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle">
                         {subView === "assigned" ? (
                           <div className="text-left leading-tight">
-                            <div className="text-[0.74vw] font-normal text-slate-800">
+                            <div className="text-[0.79vw] font-medium text-slate-800">
                               From: {prod._assignedEngineerName || row.currentEngineerName || "Engineer"}
                             </div>
-                            <div className="text-[0.68vw] text-slate-500 italic truncate mt-[0.14vw]">
+                            <div className="text-[0.73vw] text-slate-500 italic truncate mt-[0.14vw]">
                               {prod._supportNotes || prod._productClosure?.remarks || "Need support"}
                             </div>
                           </div>
                         ) : (
                           <div className="text-left leading-tight">
-                            <div className="text-[0.74vw] font-normal text-slate-800">
+                            <div className="text-[0.79vw] font-medium text-slate-800">
                               Assigned to: {prod._supportPersonName || "Support Engineer"}
                             </div>
-                            <span className="inline-block mt-[0.15vw] text-[0.64vw] bg-blue-50 text-[#1a73e8] px-[0.4vw] py-[0.05vw] rounded border border-blue-200 font-normal">
+                            <span className="inline-block mt-[0.15vw] text-[0.69vw] bg-blue-50 text-[#1a73e8] px-[0.4vw] py-[0.05vw] rounded border border-blue-200 font-medium">
                               Awaiting Return
                             </span>
                           </div>
@@ -322,7 +322,7 @@ const SupportRequestsTab = ({
                           <button
                             type="button"
                             onClick={() => onOpenRespond({ entry: row, callId: row.callId || row._id, prod, pIdx: safeIdx })}
-                            className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                            className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap"
                             title="Respond to Request"
                           >
                             <Edit3 className="w-[0.7vw] h-[0.7vw]" />
@@ -359,8 +359,8 @@ const SupportRequestsTab = ({
                     <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
                       <HelpCircle className="w-[1.6vw] h-[1.6vw] text-slate-400" />
                     </div>
-                    <p className="text-[0.9vw] font-medium text-slate-700">No support requests in this queue</p>
-                    <p className="text-[0.75vw] text-slate-400">Everything is in sync.</p>
+                    <p className="text-[0.95vw] font-medium text-slate-700">No support requests in this queue</p>
+                    <p className="text-[0.8vw] text-slate-400">Everything is in sync.</p>
                   </div>
                 </td>
               </tr>
@@ -371,7 +371,7 @@ const SupportRequestsTab = ({
 
       {/* Pagination Footer */}
       <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-300 bg-white shrink-0">
-        <div className="text-[0.75vw] text-slate-600 font-medium">
+        <div className="text-[0.8vw] text-slate-600 font-medium">
           Showing <span className="font-semibold text-slate-800">{currentItems.length > 0 ? (page - 1) * pageSize + 1 : 0}</span> to{" "}
           <span className="font-semibold text-slate-800">{Math.min(page * pageSize, currentItems.length)}</span> of{" "}
           <span className="font-semibold text-slate-800">{currentItems.length}</span> entries
@@ -391,7 +391,7 @@ const SupportRequestsTab = ({
                 <button
                   key={pNum}
                   onClick={() => setPage(pNum)}
-                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer ${
                     page === pNum
                       ? "bg-[#1a73e8] text-white shadow-2xs"
                       : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"

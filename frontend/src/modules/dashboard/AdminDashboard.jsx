@@ -102,7 +102,7 @@ export function KpiCard({
     >
       <div className="flex items-start justify-between">
         <p
-          className={`text-[0.62vw] font-semibold uppercase tracking-wider ${
+          className={`text-[0.67vw] font-semibold uppercase tracking-wider ${
             isAlert ? "text-rose-600" : "text-slate-500"
           }`}
         >
@@ -118,7 +118,7 @@ export function KpiCard({
       <div className="mt-[0.6vw] flex items-end justify-between gap-[0.4vw]">
         <div>
           <h3
-            className={`text-[1.35vw] font-bold leading-none tracking-tight ${
+            className={`text-[1.4vw] font-bold leading-none tracking-tight ${
               isAlert ? "text-rose-600" : "text-slate-800"
             }`}
           >
@@ -126,7 +126,7 @@ export function KpiCard({
           </h3>
           {sub && (
             <p
-              className={`text-[0.65vw] mt-[0.3vw] font-normal truncate ${
+              className={`text-[0.7vw] mt-[0.3vw] font-medium truncate ${
                 isAlert ? "text-rose-500" : "text-slate-400"
               }`}
             >
@@ -150,11 +150,11 @@ export function PanelHeader({ icon: Icon, title, count, actionLabel, onAction, t
   };
   return (
     <div className="flex items-center justify-between px-[0.8vw] py-[0.6vw] border-b border-slate-100 flex-shrink-0">
-      <h3 className={`text-[0.76vw] font-semibold flex items-center gap-[0.4vw] ${tones[tone]}`}>
+      <h3 className={`text-[0.81vw] font-semibold flex items-center gap-[0.4vw] ${tones[tone]}`}>
         <Icon className="w-[0.85vw] h-[0.85vw]" strokeWidth={2} />
         {title}
         {count !== undefined && (
-          <span className="text-[0.65vw] font-normal px-[0.4vw] py-[0.1vw] rounded-full bg-slate-100 text-slate-600">
+          <span className="text-[0.7vw] font-medium px-[0.4vw] py-[0.1vw] rounded-full bg-slate-100 text-slate-600">
             {count}
           </span>
         )}
@@ -162,7 +162,7 @@ export function PanelHeader({ icon: Icon, title, count, actionLabel, onAction, t
       {actionLabel && (
         <button
           onClick={onAction}
-          className="text-[0.68vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
+          className="text-[0.73vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
         >
           {actionLabel}
           <ChevronRight className="w-[0.75vw] h-[0.75vw]" />
@@ -178,7 +178,7 @@ export function EmptyState({ icon: Icon, title }) {
       <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-slate-50 flex items-center justify-center mb-[0.4vw]">
         <Icon className="w-[1.1vw] h-[1.1vw] text-slate-400" strokeWidth={2} />
       </div>
-      <p className="text-[0.68vw] font-medium text-slate-400">{title}</p>
+      <p className="text-[0.73vw] font-medium text-slate-400">{title}</p>
     </div>
   );
 }
@@ -279,10 +279,10 @@ function DonutChart({ segments, total, label = "Total Calls", size = 160 }) {
 
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-        <span className="text-[1.8vw] font-bold leading-none text-slate-800">
+        <span className="text-[1.85vw] font-bold leading-none text-slate-800">
           {total}
         </span>
-        <span className="text-[0.72vw] font-medium text-slate-400 mt-[0.3vw]">
+        <span className="text-[0.77vw] font-medium text-slate-400 mt-[0.3vw]">
           {label}
         </span>
       </div>
@@ -413,7 +413,7 @@ export default function AdminDashboard({
       <div className="grid grid-cols-2 gap-[0.55vw] flex-1 min-h-0">
         {/* Card: Service Calls Breakdown */}
         <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col justify-between min-h-0 overflow-hidden">
-          <div className="flex items-center gap-[0.4vw] text-indigo-700 font-semibold text-[0.76vw] flex-shrink-0">
+          <div className="flex items-center gap-[0.4vw] text-indigo-700 font-semibold text-[0.81vw] flex-shrink-0">
             <Activity className="w-[0.85vw] h-[0.85vw]" strokeWidth={2} />
             <span>Service Calls Breakdown</span>
           </div>
@@ -437,7 +437,7 @@ export default function AdminDashboard({
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between text-[0.8vw]"
+                    className="flex items-center justify-between text-[0.85vw]"
                   >
                     <div className="flex items-center gap-[0.55vw]">
                       <span
@@ -449,10 +449,10 @@ export default function AdminDashboard({
                       </span>
                     </div>
                     <div className="flex items-center gap-[0.8vw]">
-                      <span className="font-semibold text-slate-800 font-mono text-[0.82vw]">
+                      <span className="font-semibold text-slate-800 font-mono text-[0.87vw]">
                         {item.value}
                       </span>
-                      <span className="text-slate-400 font-mono text-[0.8vw] w-[2.2vw] text-right">
+                      <span className="text-slate-400 font-mono text-[0.85vw] w-[2.2vw] text-right">
                         {pct}%
                       </span>
                     </div>
@@ -465,7 +465,7 @@ export default function AdminDashboard({
           <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
             <button
               onClick={() => navigate("/serviceCall")}
-              className="text-[0.75vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
+              className="text-[0.8vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
             >
               <span>View all service calls</span>
               <span className="group-hover:translate-x-0.5 transition-transform">
@@ -477,7 +477,7 @@ export default function AdminDashboard({
 
         {/* Card: Service Materials Breakdown */}
         <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col justify-between min-h-0 overflow-hidden">
-          <div className="flex items-center gap-[0.4vw] text-indigo-700 font-semibold text-[0.76vw] flex-shrink-0">
+          <div className="flex items-center gap-[0.4vw] text-indigo-700 font-semibold text-[0.81vw] flex-shrink-0">
             <Boxes className="w-[0.85vw] h-[0.85vw]" strokeWidth={2} />
             <span>Service Materials Breakdown</span>
           </div>
@@ -501,7 +501,7 @@ export default function AdminDashboard({
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between text-[0.8vw]"
+                    className="flex items-center justify-between text-[0.85vw]"
                   >
                     <div className="flex items-center gap-[0.55vw]">
                       <span
@@ -513,10 +513,10 @@ export default function AdminDashboard({
                       </span>
                     </div>
                     <div className="flex items-center gap-[0.8vw]">
-                      <span className="font-semibold text-slate-800 font-mono text-[0.82vw]">
+                      <span className="font-semibold text-slate-800 font-mono text-[0.87vw]">
                         {item.value}
                       </span>
-                      <span className="text-slate-400 font-mono text-[0.8vw] w-[2.2vw] text-right">
+                      <span className="text-slate-400 font-mono text-[0.85vw] w-[2.2vw] text-right">
                         {pct}%
                       </span>
                     </div>
@@ -529,7 +529,7 @@ export default function AdminDashboard({
           <div className="pt-[0.4vw] border-t border-slate-100 flex items-center justify-center flex-shrink-0">
             <button
               onClick={() => navigate("/serviceMaterial")}
-              className="text-[0.75vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
+              className="text-[0.8vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.3vw] transition-colors cursor-pointer group"
             >
               <span>View materials</span>
               <span className="group-hover:translate-x-0.5 transition-transform">
@@ -545,16 +545,16 @@ export default function AdminDashboard({
         {/* Materials Awaiting Approval */}
         <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col min-h-0 overflow-hidden">
           <div className="flex items-center justify-between pb-[0.35vw] border-b border-slate-100 flex-shrink-0">
-            <div className="flex items-center gap-[0.4vw] text-indigo-700 font-semibold text-[0.76vw]">
+            <div className="flex items-center gap-[0.4vw] text-indigo-700 font-semibold text-[0.81vw]">
               <CheckSquare className="w-[0.85vw] h-[0.85vw]" strokeWidth={2} />
               <span>Materials Awaiting Approval</span>
-              <span className="ml-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full bg-slate-100 text-slate-600 font-medium text-[0.65vw]">
+              <span className="ml-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full bg-slate-100 text-slate-600 font-medium text-[0.7vw]">
                 {stats.pendingAdminReviews.length}
               </span>
             </div>
             <button
               onClick={() => navigate("/serviceMaterial")}
-              className="text-[0.68vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
+              className="text-[0.73vw] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
             >
               <span>Review all</span>
               <span>&rarr;</span>
@@ -567,10 +567,10 @@ export default function AdminDashboard({
                 <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-indigo-50/70 border border-indigo-100 flex items-center justify-center mb-[0.35vw] text-indigo-500 shadow-2xs">
                   <ClipboardList className="w-[1.1vw] h-[1.1vw]" strokeWidth={1.8} />
                 </div>
-                <h4 className="text-[0.76vw] font-semibold text-slate-700">
+                <h4 className="text-[0.81vw] font-semibold text-slate-700">
                   No pending reviews — all clear!
                 </h4>
-                <p className="text-[0.65vw] text-slate-400 mt-[0.1vw]">
+                <p className="text-[0.7vw] text-slate-400 mt-[0.1vw]">
                   Great job! There are currently no materials awaiting approval.
                 </p>
               </div>
@@ -583,15 +583,15 @@ export default function AdminDashboard({
                     className="flex items-center justify-between p-[0.4vw] rounded-[0.4vw] border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors cursor-pointer"
                   >
                     <div>
-                      <div className="font-semibold text-slate-800 text-[0.68vw]">
+                      <div className="font-semibold text-slate-800 text-[0.73vw]">
                         {product.productDescription || "—"}
                       </div>
-                      <div className="text-[0.62vw] text-slate-500">
+                      <div className="text-[0.67vw] text-slate-500">
                         {entry.customerName || "—"} • SN:{" "}
                         {product.serialNumber || "—"}
                       </div>
                     </div>
-                    <span className="text-[0.62vw] font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-[0.4vw] py-[0.1vw] rounded">
+                    <span className="text-[0.67vw] font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-[0.4vw] py-[0.1vw] rounded">
                       {product.assignedToName || "Assigned"}
                     </span>
                   </div>
@@ -604,16 +604,16 @@ export default function AdminDashboard({
         {/* Active SLA Breaches */}
         <section className="bg-white rounded-[0.7vw] border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] px-[0.8vw] py-[0.6vw] flex flex-col min-h-0 overflow-hidden">
           <div className="flex items-center justify-between pb-[0.35vw] border-b border-slate-100 flex-shrink-0">
-            <div className="flex items-center gap-[0.4vw] text-rose-600 font-semibold text-[0.76vw]">
+            <div className="flex items-center gap-[0.4vw] text-rose-600 font-semibold text-[0.81vw]">
               <AlertTriangle className="w-[0.85vw] h-[0.85vw]" strokeWidth={2} />
               <span>Active SLA Breaches</span>
-              <span className="ml-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full bg-rose-100 text-rose-700 font-medium text-[0.65vw]">
+              <span className="ml-[0.2vw] px-[0.45vw] py-[0.1vw] rounded-full bg-rose-100 text-rose-700 font-medium text-[0.7vw]">
                 {stats.criticalCalls.length}
               </span>
             </div>
             <button
               onClick={() => navigate("/serviceCall/escalations")}
-              className="text-[0.68vw] font-medium text-rose-600 hover:text-rose-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
+              className="text-[0.73vw] font-medium text-rose-600 hover:text-rose-800 flex items-center gap-[0.2vw] transition-colors cursor-pointer"
             >
               <span>Manage all</span>
               <span>&rarr;</span>
@@ -626,10 +626,10 @@ export default function AdminDashboard({
                 <div className="w-[2.2vw] h-[2.2vw] rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-[0.35vw] text-emerald-600">
                   <Shield className="w-[1.1vw] h-[1.1vw]" strokeWidth={1.8} />
                 </div>
-                <h4 className="text-[0.76vw] font-semibold text-slate-700">
+                <h4 className="text-[0.81vw] font-semibold text-slate-700">
                   No SLA breaches — system healthy
                 </h4>
-                <p className="text-[0.65vw] text-slate-400 mt-[0.1vw]">
+                <p className="text-[0.7vw] text-slate-400 mt-[0.1vw]">
                   All current service calls are operating within expected time limits.
                 </p>
               </div>
@@ -642,18 +642,18 @@ export default function AdminDashboard({
                     className="flex items-center justify-between p-[0.45vw] rounded-[0.4vw] border-[1.5px] border-rose-400 bg-rose-50/30 hover:bg-rose-50/70 hover:border-rose-200 transition-colors cursor-pointer"
                   >
                     <div>
-                      <div className="font-mono font-medium text-rose-600 text-[0.68vw]">
+                      <div className="font-mono font-medium text-rose-600 text-[0.73vw]">
                         {call.callNumber}
                       </div>
-                      <div className="text-[0.68vw] font-medium text-slate-700 mt-[0.05vw]">
+                      <div className="text-[0.73vw] font-medium text-slate-700 mt-[0.05vw]">
                         {call.customerName || "—"}
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-[0.58vw] font-bold uppercase tracking-wide text-rose-600 bg-rose-100/70 border border-rose-200 px-[0.35vw] py-[0.1vw] rounded">
+                      <span className="text-[0.63vw] font-bold uppercase tracking-wide text-rose-600 bg-rose-100/70 border border-rose-200 px-[0.35vw] py-[0.1vw] rounded">
                         BREACH
                       </span>
-                      <div className="text-[0.62vw] text-slate-400 mt-[0.05vw]">
+                      <div className="text-[0.67vw] text-slate-400 mt-[0.05vw]">
                         {formatBreachTime(call)}
                       </div>
                     </div>

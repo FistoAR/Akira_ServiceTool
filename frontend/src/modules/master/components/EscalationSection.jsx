@@ -64,7 +64,7 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
         className={`min-h-[2.2vw] border rounded-[0.4vw] px-[0.6vw] py-[0.35vw] bg-white cursor-pointer flex items-center gap-[0.35vw] flex-wrap transition-all duration-200 ${open ? "border-blue-400 ring-2 ring-blue-100 shadow-sm" : "border-slate-400 hover:border-blue-300"}`}
       >
         {selectedEngs.length === 0 ? (
-          <span className="text-slate-400 text-[0.72vw] italic select-none flex-1">
+          <span className="text-slate-400 text-[0.77vw] italic select-none flex-1">
             {deptEngs.length === 0
               ? "⚠ No engineers in this department"
               : "Auto-assign (least busy)"}
@@ -73,9 +73,9 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
           selectedEngs.map((eng) => (
             <span
               key={eng.userId}
-              className="flex items-center gap-[0.25vw] bg-blue-50 text-blue-700 border border-blue-200 rounded-full pl-[0.25vw] pr-[0.45vw] py-[0.1vw] text-[0.68vw] font-semibold"
+              className="flex items-center gap-[0.25vw] bg-blue-50 text-blue-700 border border-blue-200 rounded-full pl-[0.25vw] pr-[0.45vw] py-[0.1vw] text-[0.73vw] font-semibold"
             >
-              <span className="w-[1.3vw] h-[1.3vw] rounded-full bg-blue-600 text-white flex items-center justify-center text-[0.5vw] font-bold flex-shrink-0">
+              <span className="w-[1.3vw] h-[1.3vw] rounded-full bg-blue-600 text-white flex items-center justify-center text-[0.55vw] font-bold flex-shrink-0">
                 {initials(eng.name)}
               </span>
               {eng.name}
@@ -108,7 +108,7 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search engineer..."
-                  className="w-full pl-[1.8vw] pr-[0.5vw] py-[0.4vw] text-[0.78vw] border border-slate-400 rounded-[0.3vw] outline-none focus:border-blue-400"
+                  className="w-full pl-[1.8vw] pr-[0.5vw] py-[0.4vw] text-[0.83vw] border border-slate-400 rounded-[0.3vw] outline-none focus:border-blue-400"
                 />
               </div>
             </div>
@@ -118,15 +118,15 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
               <button
                 type="button"
                 onClick={() => onChange(deptEngs.map((e) => e.userId))}
-                className="text-[0.7vw] text-blue-600 hover:underline cursor-pointer font-semibold"
+                className="text-[0.75vw] text-blue-600 hover:underline cursor-pointer font-semibold"
               >
                 Select all
               </button>
-              <span className="text-slate-300 text-[0.7vw]">|</span>
+              <span className="text-slate-300 text-[0.75vw]">|</span>
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="text-[0.7vw] text-gray-800 hover:underline cursor-pointer"
+                className="text-[0.75vw] text-gray-800 hover:underline cursor-pointer"
               >
                 Clear (auto)
               </button>
@@ -134,13 +134,13 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
           )}
           <div className="max-h-[13vw] overflow-y-auto">
             {suggestions.length === 0 ? (
-              <div className="p-[1vw] text-center text-slate-400 text-[0.75vw]">
+              <div className="p-[1vw] text-center text-slate-400 text-[0.8vw]">
                 {deptEngs.length === 0
                   ? `No engineers in "${dept}"`
                   : "All available engineers are assigned to other levels"}
               </div>
             ) : filtered.length === 0 ? (
-              <div className="p-[1vw] text-center text-slate-400 text-[0.75vw]">
+              <div className="p-[1vw] text-center text-slate-400 text-[0.8vw]">
                 No results
               </div>
             ) : (
@@ -160,15 +160,15 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
                       )}
                     </div>
                     <div className="w-[1.8vw] h-[1.8vw] rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0">
-                      <span className="text-white text-[0.6vw] font-bold">
+                      <span className="text-white text-[0.65vw] font-bold">
                         {initials(eng.name)}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[0.8vw] font-semibold text-slate-700 truncate">
+                      <div className="text-[0.85vw] font-semibold text-slate-700 truncate">
                         {eng.name}
                       </div>
-                      <div className="text-[0.67vw] text-slate-400 font-mono">
+                      <div className="text-[0.72vw] text-slate-400 font-mono">
                         {eng.userId}
                       </div>
                     </div>
@@ -181,7 +181,7 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
             )}
           </div>
           <div className="px-[0.7vw] py-[0.5vw] border-t border-slate-400 bg-slate-50/50 flex justify-between items-center">
-            <span className="text-[0.68vw] text-slate-400">
+            <span className="text-[0.73vw] text-slate-400">
               {selectedEngs.length === 0
                 ? "Auto-assign (load balanced)"
                 : `${selectedEngs.length} selected`}
@@ -189,7 +189,7 @@ const EngineerPicker = ({ dept, employees = [], selectedIds, otherLevelsIds = []
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-[0.7vw] bg-blue-600 text-white px-[0.7vw] py-[0.3vw] rounded-[0.3vw] cursor-pointer font-semibold hover:bg-blue-700"
+              className="text-[0.75vw] bg-blue-600 text-white px-[0.7vw] py-[0.3vw] rounded-[0.3vw] cursor-pointer font-semibold hover:bg-blue-700"
             >
               Done
             </button>
@@ -224,7 +224,7 @@ const DurationPicker = ({ hours = 0, mins = 0, onChange }) => {
     <div className="flex items-center gap-[0.5vw]">
       <Clock className="w-[0.85vw] h-[0.85vw] text-slate-400 flex-shrink-0" />
       <div className="flex items-center gap-[0.3vw]">
-        <span className="text-[0.7vw] text-gray-800">Escalate after:</span>
+        <span className="text-[0.75vw] text-gray-800">Escalate after:</span>
         <div className="flex items-center gap-[0.2vw]">
           <input
             type="number"
@@ -244,9 +244,9 @@ const DurationPicker = ({ hours = 0, mins = 0, onChange }) => {
               if (val > 24) val = 24;
               onChange(val, mins);
             }}
-            className="w-[3.5vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.75vw] font-semibold text-slate-700 bg-white outline-none focus:border-blue-400 cursor-text"
+            className="w-[3.5vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-semibold text-slate-700 bg-white outline-none focus:border-blue-400 cursor-text"
           />
-          <span className="text-[0.75vw] text-slate-600 font-semibold">h</span>
+          <span className="text-[0.8vw] text-slate-600 font-semibold">h</span>
           <datalist id="hours-suggestions">
             {[0, 1, 2, 3, 4, 6, 8, 12, 24].map((h) => (
               <option key={h} value={h} />
@@ -272,9 +272,9 @@ const DurationPicker = ({ hours = 0, mins = 0, onChange }) => {
               if (val > 60) val = 60;
               onChange(hours, val);
             }}
-            className="w-[3.5vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.75vw] font-semibold text-slate-700 bg-white outline-none focus:border-blue-400 cursor-text"
+            className="w-[3.5vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-semibold text-slate-700 bg-white outline-none focus:border-blue-400 cursor-text"
           />
-          <span className="text-[0.75vw] text-slate-600 font-semibold">m</span>
+          <span className="text-[0.8vw] text-slate-600 font-semibold">m</span>
           <datalist id="mins-suggestions">
             {[0, 5, 15, 30, 45].map((m) => (
               <option key={m} value={m} />
@@ -291,7 +291,7 @@ const DurationPicker = ({ hours = 0, mins = 0, onChange }) => {
               key={p.label}
               type="button"
               onClick={() => onChange(p.hours, p.mins)}
-              className={`text-[0.62vw] px-[0.45vw] py-[0.18vw] rounded-[0.25vw] border cursor-pointer transition-all ${isActive ? "bg-blue-600 text-white border-blue-600" : "border-slate-400 text-gray-800 hover:border-blue-300 hover:text-blue-600"}`}
+              className={`text-[0.67vw] px-[0.45vw] py-[0.18vw] rounded-[0.25vw] border cursor-pointer transition-all ${isActive ? "bg-blue-600 text-white border-blue-600" : "border-slate-400 text-gray-800 hover:border-blue-300 hover:text-blue-600"}`}
             >
               {p.label}
             </button>
@@ -344,7 +344,7 @@ export const StepCard = ({
         <div
           className={`w-[1.6vw] h-[1.6vw] rounded-full ${LEVEL_COLORS[index] || "bg-slate-500"} flex items-center justify-center flex-shrink-0 shadow-sm`}
         >
-          <span className="text-white text-[0.58vw] font-bold">
+          <span className="text-white text-[0.63vw] font-bold">
             L{index + 1}
           </span>
         </div>
@@ -366,7 +366,7 @@ export const StepCard = ({
           />
         </div>
         {hasWarning && (
-          <span className="text-[0.62vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.4vw] py-[0.1vw] rounded-full flex items-center gap-[0.2vw] whitespace-nowrap">
+          <span className="text-[0.67vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.4vw] py-[0.1vw] rounded-full flex items-center gap-[0.2vw] whitespace-nowrap">
             <AlertTriangle className="w-[0.65vw] h-[0.65vw]" /> 0 engineers
           </span>
         )}
@@ -399,7 +399,7 @@ export const StepCard = ({
 
       {/* Engineers row */}
       <div className="px-[0.8vw] py-[0.5vw] flex items-start gap-[0.5vw] border-b border-slate-400">
-        <div className="text-[0.7vw] text-gray-800 font-semibold whitespace-nowrap mt-[0.55vw] flex-shrink-0 flex items-center gap-[0.25vw] w-[4.5vw]">
+        <div className="text-[0.75vw] text-gray-800 font-semibold whitespace-nowrap mt-[0.55vw] flex-shrink-0 flex items-center gap-[0.25vw] w-[4.5vw]">
           <Users className="w-[0.8vw] h-[0.8vw]" /> Engineers
         </div>
         <div className="flex-1">
@@ -411,7 +411,7 @@ export const StepCard = ({
             onChange={(ids) => onUpdate({ ...step, engineerIds: ids })}
           />
           {step.engineerIds?.length === 0 && deptEngs.length > 0 && (
-            <p className="text-[0.64vw] text-slate-400 mt-[0.2vw] flex items-center gap-[0.25vw]">
+            <p className="text-[0.69vw] text-slate-400 mt-[0.2vw] flex items-center gap-[0.25vw]">
               <Info className="w-[0.65vw] h-[0.65vw]" /> Auto-assign (least-busy
               from {deptEngs.length})
             </p>
@@ -479,7 +479,7 @@ const FlowEditor = ({ steps, departments, employees = [], onChange }) => {
   return (
     <div className="flex flex-col gap-[0.5vw]">
       {steps.length === 0 ? (
-        <div className="text-center py-[1.5vw] text-slate-400 text-[0.78vw] border-2 border-dashed border-slate-400 rounded-[0.4vw] bg-slate-50/50">
+        <div className="text-center py-[1.5vw] text-slate-400 text-[0.83vw] border-2 border-dashed border-slate-400 rounded-[0.4vw] bg-slate-50/50">
           No levels yet — add at least one escalation level
         </div>
       ) : (
@@ -508,7 +508,7 @@ const FlowEditor = ({ steps, departments, employees = [], onChange }) => {
           type="button"
           onClick={() => setShowPicker(!showPicker)}
           disabled={availableToAdd.length === 0}
-          className="w-full flex items-center justify-center gap-[0.4vw] border-2 border-dashed border-blue-200 text-blue-600 hover:bg-blue-50/50 hover:border-blue-300 rounded-[0.4vw] py-[0.6vw] text-[0.78vw] font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="w-full flex items-center justify-center gap-[0.4vw] border-2 border-dashed border-blue-200 text-blue-600 hover:bg-blue-50/50 hover:border-blue-300 rounded-[0.4vw] py-[0.6vw] text-[0.83vw] font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Escalation Level
         </button>
@@ -524,11 +524,11 @@ const FlowEditor = ({ steps, departments, employees = [], onChange }) => {
                   onClick={() => addStep(dept)}
                   className="flex items-center justify-between px-[0.8vw] py-[0.65vw] hover:bg-blue-50/60 cursor-pointer border-b border-slate-50 last:border-0"
                 >
-                  <span className="text-[0.82vw] font-semibold text-slate-700">
+                  <span className="text-[0.87vw] font-semibold text-slate-700">
                     {dept}
                   </span>
                   <span
-                    className={`text-[0.62vw] px-[0.45vw] py-[0.12vw] rounded-full font-semibold ${cnt === 0 ? "bg-amber-50 text-amber-600 border border-amber-200" : "bg-slate-100 text-gray-800"}`}
+                    className={`text-[0.67vw] px-[0.45vw] py-[0.12vw] rounded-full font-semibold ${cnt === 0 ? "bg-amber-50 text-amber-600 border border-amber-200" : "bg-slate-100 text-gray-800"}`}
                   >
                     {cnt} eng
                   </span>
@@ -554,12 +554,12 @@ const ChainPreview = ({ steps, employees = [] }) => {
   };
   return (
     <div className="bg-slate-50/80 border border-slate-400 rounded-[0.5vw] p-[0.8vw]">
-      <h4 className="text-[0.78vw] font-bold text-slate-700 mb-[0.6vw] flex items-center gap-[0.3vw]">
+      <h4 className="text-[0.83vw] font-bold text-slate-700 mb-[0.6vw] flex items-center gap-[0.3vw]">
         <ArrowRight className="w-[0.85vw] h-[0.85vw] text-blue-500" />{" "}
         Escalation Chain Preview
       </h4>
       {steps.length === 0 ? (
-        <span className="text-[0.72vw] text-slate-400 italic">
+        <span className="text-[0.77vw] text-slate-400 italic">
           No levels configured
         </span>
       ) : (
@@ -580,7 +580,7 @@ const ChainPreview = ({ steps, employees = [] }) => {
                   <div
                     className={`w-[1.5vw] h-[1.5vw] rounded-full ${LEVEL_COLORS[i] || "bg-slate-500"} flex items-center justify-center flex-shrink-0 shadow-sm`}
                   >
-                    <span className="text-white text-[0.52vw] font-bold">
+                    <span className="text-white text-[0.57vw] font-bold">
                       L{i + 1}
                     </span>
                   </div>
@@ -588,7 +588,7 @@ const ChainPreview = ({ steps, employees = [] }) => {
                     <div className="flex flex-col items-center">
                       <div className="w-[0.12vw] h-[0.4vw] bg-blue-200" />
                       {dur && (
-                        <span className="text-[0.52vw] text-blue-500 bg-blue-50 border border-blue-100 px-[0.3vw] py-[0.05vw] rounded-full font-semibold">
+                        <span className="text-[0.57vw] text-blue-500 bg-blue-50 border border-blue-100 px-[0.3vw] py-[0.05vw] rounded-full font-semibold">
                           {dur}
                         </span>
                       )}
@@ -598,11 +598,11 @@ const ChainPreview = ({ steps, employees = [] }) => {
                 </div>
                 <div className="flex-1 bg-white rounded-[0.3vw] border border-slate-400 px-[0.55vw] py-[0.3vw]">
                   <div className="flex items-center justify-between">
-                    <div className="text-[0.75vw] font-bold text-slate-700">
+                    <div className="text-[0.8vw] font-bold text-slate-700">
                       {step.dept}
                     </div>
                     {dur && (
-                      <span className="text-[0.58vw] text-amber-600 bg-amber-50 border border-amber-100 px-[0.35vw] py-[0.05vw] rounded flex items-center gap-[0.2vw]">
+                      <span className="text-[0.63vw] text-amber-600 bg-amber-50 border border-amber-100 px-[0.35vw] py-[0.05vw] rounded flex items-center gap-[0.2vw]">
                         <Clock className="w-[0.55vw] h-[0.55vw]" /> {dur}
                       </span>
                     )}
@@ -612,9 +612,9 @@ const ChainPreview = ({ steps, employees = [] }) => {
                       {selEngs.map((eng) => (
                         <span
                           key={eng.userId}
-                          className="flex items-center gap-[0.2vw] text-[0.62vw] bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-[0.4vw] py-[0.05vw]"
+                          className="flex items-center gap-[0.2vw] text-[0.67vw] bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-[0.4vw] py-[0.05vw]"
                         >
-                          <span className="w-[1vw] h-[1vw] rounded-full bg-blue-600 text-white flex items-center justify-center text-[0.45vw] font-bold">
+                          <span className="w-[1vw] h-[1vw] rounded-full bg-blue-600 text-white flex items-center justify-center text-[0.5vw] font-bold">
                             {initials(eng.name)}
                           </span>
                           {eng.name.split(" ")[0]}
@@ -622,7 +622,7 @@ const ChainPreview = ({ steps, employees = [] }) => {
                       ))}
                     </div>
                   ) : (
-                    <span className="text-[0.62vw] text-slate-400 italic">
+                    <span className="text-[0.67vw] text-slate-400 italic">
                       {deptEngs.length === 0
                         ? "⚠ No engineers"
                         : `Auto from ${deptEngs.length}`}
@@ -636,7 +636,7 @@ const ChainPreview = ({ steps, employees = [] }) => {
             <div className="w-[1.5vw] h-[1.5vw] rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
               <CheckCircle className="w-[0.85vw] h-[0.85vw] text-blue-500" />
             </div>
-            <span className="text-[0.67vw] text-slate-400 italic">
+            <span className="text-[0.72vw] text-slate-400 italic">
               Resolved
             </span>
           </div>
@@ -879,15 +879,15 @@ const [expandedType, setExpandedType] = useState(null);
             <PhoneCall className="w-[0.9vw] h-[0.9vw] text-white" />
           </div>
           <div>
-            <h2 className="text-[0.9vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
+            <h2 className="text-[0.95vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
               Call Escalation Flows
               {hasChanges && (
-                <span className="text-[0.6vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.4vw] py-[0.1vw] rounded-[0.3vw] uppercase tracking-wider font-bold">
+                <span className="text-[0.65vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.4vw] py-[0.1vw] rounded-[0.3vw] uppercase tracking-wider font-bold">
                   Pending Changes
                 </span>
               )}
             </h2>
-            <p className="text-[0.7vw] text-gray-800">
+            <p className="text-[0.75vw] text-gray-800">
               Define per-level escalation paths, engineers & SLA durations
             </p>
           </div>
@@ -896,7 +896,7 @@ const [expandedType, setExpandedType] = useState(null);
           <button
             onClick={() => onRefresh && onRefresh("escalation", true)}
             disabled={isRefreshing}
-            className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-400 hover:bg-slate-50 hover:text-blue-600 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
+            className="inline-flex items-center gap-[0.35vw] text-[0.77vw] font-medium text-slate-700 bg-white border border-slate-400 hover:bg-slate-50 hover:text-blue-600 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs disabled:opacity-50"
             title="Refresh latest data from server"
           >
             <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
@@ -907,7 +907,7 @@ const [expandedType, setExpandedType] = useState(null);
               <button
                 type="button"
                 onClick={handleResetAll}
-                className="inline-flex items-center gap-[0.35vw] text-[0.72vw] font-medium text-slate-700 bg-white border border-slate-400 hover:bg-slate-50 hover:text-slate-900 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs"
+                className="inline-flex items-center gap-[0.35vw] text-[0.77vw] font-medium text-slate-700 bg-white border border-slate-400 hover:bg-slate-50 hover:text-slate-900 rounded-[0.35vw] px-[0.75vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs"
               >
                 <RotateCcw className="w-[0.75vw] h-[0.75vw] text-slate-500" />
                 <span>Reset All</span>
@@ -915,7 +915,7 @@ const [expandedType, setExpandedType] = useState(null);
               <button
                 type="button"
                 onClick={handleSave}
-                className={`inline-flex items-center gap-[0.35vw] text-[0.74vw] font-semibold rounded-[0.35vw] px-[0.95vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs ${
+                className={`inline-flex items-center gap-[0.35vw] text-[0.79vw] font-semibold rounded-[0.35vw] px-[0.95vw] py-[0.38vw] transition-all cursor-pointer shadow-2xs ${
                   saved
                     ? "bg-emerald-600 text-white"
                     : "bg-blue-600 hover:bg-blue-700 text-white"
@@ -939,7 +939,7 @@ const [expandedType, setExpandedType] = useState(null);
           <button
             type="button"
             onClick={() => setActiveSubTab("forward")}
-            className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.79vw] font-semibold transition-all cursor-pointer ${
               activeSubTab === "forward"
                 ? "bg-white text-blue-700 shadow-2xs border border-slate-400/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
@@ -951,7 +951,7 @@ const [expandedType, setExpandedType] = useState(null);
           <button
             type="button"
             onClick={() => setActiveSubTab("reverse")}
-            className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-[0.35vw] px-[0.85vw] py-[0.32vw] rounded-[0.35vw] text-[0.79vw] font-semibold transition-all cursor-pointer ${
               activeSubTab === "reverse"
                 ? "bg-white text-indigo-700 shadow-2xs border border-slate-400/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
@@ -961,7 +961,7 @@ const [expandedType, setExpandedType] = useState(null);
             <span>Reverse Escalation Rules</span>
           </button>
         </div>
-        <div className="text-[0.72vw] text-slate-500 font-normal">
+        <div className="text-[0.77vw] text-slate-500 font-medium">
           {activeSubTab === "forward"
             ? "Configure tiered departments, engineer assignment & step timeouts"
             : "Configure return SLA timers and timeout behaviors when sending back calls"}
@@ -975,7 +975,7 @@ const [expandedType, setExpandedType] = useState(null);
             <div className="overflow-visible">
               <table className="w-full border-collapse border border-slate-400 text-left font-sans text-slate-800">
                 <thead>
-                  <tr className="bg-slate-100 border-b border-slate-400 text-[0.72vw] font-bold text-slate-700 tracking-wider">
+                  <tr className="bg-slate-100 border-b border-slate-400 text-[0.77vw] font-bold text-slate-700 tracking-wider">
                     <th className="py-[0.65vw] px-[1vw] w-[4vw] text-center border-r border-slate-400 whitespace-nowrap">S.No</th>
                     <th className="py-[0.65vw] px-[1.2vw] w-[14vw] border-r border-slate-400 whitespace-nowrap">Customer / Party Type</th>
                     <th className="py-[0.65vw] px-[1vw] w-[8vw] text-center border-r border-slate-400 whitespace-nowrap">Status</th>
@@ -983,7 +983,7 @@ const [expandedType, setExpandedType] = useState(null);
                     <th className="py-[0.65vw] px-[1.2vw] whitespace-nowrap">Timeout Action (If Not Attended)</th>
                   </tr>
                 </thead>
-                <tbody className="text-[0.78vw]">
+                <tbody className="text-[0.83vw]">
                   {partyTypes.map((type, tIdx) => {
                     const color = TYPE_COLORS[tIdx % TYPE_COLORS.length];
                     const rev = getReverseConfig(type.name, "Default");
@@ -997,18 +997,18 @@ const [expandedType, setExpandedType] = useState(null);
                         }`}
                       >
                         {/* S.No */}
-                        <td className="py-[0.75vw] px-[1vw] text-center text-slate-500 font-semibold text-[0.75vw] border-r border-slate-400">
+                        <td className="py-[0.75vw] px-[1vw] text-center text-slate-500 font-semibold text-[0.8vw] border-r border-slate-400">
                           {tIdx + 1}
                         </td>
 
                         {/* Customer / Party Type */}
                         <td className="py-[0.75vw] px-[1.2vw] border-r border-slate-400">
                           <div className="flex items-center gap-[0.4vw]">
-                            <span className="font-bold text-slate-900 text-[0.82vw]">
+                            <span className="font-bold text-slate-900 text-[0.87vw]">
                               {type.name}
                             </span>
                             {type.code && (
-                              <span className="text-[0.7vw] text-slate-400 font-mono font-medium">
+                              <span className="text-[0.75vw] text-slate-400 font-mono font-medium">
                                 ({type.code})
                               </span>
                             )}
@@ -1026,7 +1026,7 @@ const [expandedType, setExpandedType] = useState(null);
                               }
                               className="rounded border-slate-400 text-blue-600 focus:ring-blue-500 w-[0.95vw] h-[0.95vw] cursor-pointer"
                             />
-                            <span className={`text-[0.76vw] font-semibold ${isEnabled ? "text-slate-800" : "text-slate-400"}`}>
+                            <span className={`text-[0.81vw] font-semibold ${isEnabled ? "text-slate-800" : "text-slate-400"}`}>
                               {isEnabled ? "Enabled" : "Disabled"}
                             </span>
                           </label>
@@ -1047,9 +1047,9 @@ const [expandedType, setExpandedType] = useState(null);
                                   })
                                 }
                                 disabled={!isEnabled}
-                                className="w-[3.6vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
+                                className="w-[3.6vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.85vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
                               />
-                              <span className="text-[0.72vw] text-slate-600 font-medium">hrs</span>
+                              <span className="text-[0.77vw] text-slate-600 font-medium">hrs</span>
                             </div>
 
                             <div className="flex items-center gap-[0.25vw]">
@@ -1064,12 +1064,12 @@ const [expandedType, setExpandedType] = useState(null);
                                   })
                                 }
                                 disabled={!isEnabled}
-                                className="w-[3.6vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.8vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
+                                className="w-[3.6vw] border border-slate-400 rounded-[0.3vw] px-[0.4vw] py-[0.25vw] text-[0.85vw] font-mono text-center font-bold text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 outline-none bg-white disabled:bg-slate-100"
                               />
-                              <span className="text-[0.72vw] text-slate-600 font-medium">mins</span>
+                              <span className="text-[0.77vw] text-slate-600 font-medium">mins</span>
                             </div>
 
-                            <span className="text-[0.7vw] text-slate-400 italic ml-[0.4vw] whitespace-nowrap inline-block">
+                            <span className="text-[0.75vw] text-slate-400 italic ml-[0.4vw] whitespace-nowrap inline-block">
                               (Halts on attend)
                             </span>
                           </div>
@@ -1090,7 +1090,7 @@ const [expandedType, setExpandedType] = useState(null);
                                 { value: "critical", label: "Mark as Critical Unresolved (Trigger Admin Alert)" },
                               ]}
                               disabled={!isEnabled}
-                              triggerClassName="w-full !rounded-[0.3vw] text-[0.74vw] font-medium border-slate-400 text-slate-800 bg-white"
+                              triggerClassName="w-full !rounded-[0.3vw] text-[0.79vw] font-medium border-slate-400 text-slate-800 bg-white"
                             />
                           </div>
                         </td>
@@ -1105,10 +1105,10 @@ const [expandedType, setExpandedType] = useState(null);
         ) : partyTypes.length === 0 ? (
           <div className="bg-slate-50 border border-slate-400 rounded-[0.6vw] p-[3vw] text-center">
             <Shield className="w-[3vw] h-[3vw] text-slate-300 mx-auto mb-[1vw]" />
-            <p className="text-slate-400 text-[1vw]">
+            <p className="text-slate-400 text-[1.05vw]">
               No party types configured
             </p>
-            <p className="text-slate-300 text-[0.8vw] mt-[0.3vw]">
+            <p className="text-slate-300 text-[0.85vw] mt-[0.3vw]">
               Add categories in the Party Types tab first
             </p>
           </div>
@@ -1135,7 +1135,7 @@ const [expandedType, setExpandedType] = useState(null);
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-[0.55vw] flex-wrap">
                         <span
-                          className={`text-[0.8vw] font-bold px-[0.7vw] py-[0.25vw] rounded-[0.4vw] ${color.badge} shadow-sm border border-slate-400/20`}
+                          className={`text-[0.85vw] font-bold px-[0.7vw] py-[0.25vw] rounded-[0.4vw] ${color.badge} shadow-sm border border-slate-400/20`}
                         >
                           {type.name}
                         </span>
@@ -1155,11 +1155,11 @@ const [expandedType, setExpandedType] = useState(null);
                   <div className="flex border-t border-slate-400 min-h-[25vw] max-h-[35vw]">
                     {/* Left Side: Segment Selector Sidebar */}
                     <div className="w-[12vw] bg-slate-50/50 border-r border-slate-400 p-[0.6vw] flex flex-col gap-[0.4vw] overflow-y-auto">
-                      <p className="text-[0.65vw] font-bold text-slate-400 uppercase tracking-widest px-[0.4vw] mb-[0.2vw]">Product Segments</p>
+                      <p className="text-[0.7vw] font-bold text-slate-400 uppercase tracking-widest px-[0.4vw] mb-[0.2vw]">Product Segments</p>
                       
                       <button 
                         onClick={() => setSelectedSegment(prev => ({...prev, [type.id]: "Default"}))}
-                        className={`flex items-center justify-between px-[0.8vw] py-[0.6vw] rounded-[0.4vw] text-[0.75vw] font-bold transition-all ${curSeg === "Default" ? "bg-white text-blue-600 shadow-sm border border-blue-100 italic" : "text-gray-800 hover:bg-slate-200/50 hover:text-slate-700"}`}
+                        className={`flex items-center justify-between px-[0.8vw] py-[0.6vw] rounded-[0.4vw] text-[0.8vw] font-bold transition-all ${curSeg === "Default" ? "bg-white text-blue-600 shadow-sm border border-blue-100 italic" : "text-gray-800 hover:bg-slate-200/50 hover:text-slate-700"}`}
                       >
                         Default SLA
                         {curSeg === "Default" && <ChevronRight className="w-[0.8vw] h-[0.8vw]" />}
@@ -1175,7 +1175,7 @@ const [expandedType, setExpandedType] = useState(null);
                             onClick={() => setSelectedSegment(prev => ({...prev, [type.id]: s.name}))}
                             className={`flex flex-col px-[0.8vw] py-[0.65vw] rounded-[0.4vw] transition-all text-left border ${isSel ? "bg-white border-blue-200 text-blue-700 shadow-sm ring-2 ring-blue-50" : "border-transparent text-gray-800 hover:bg-slate-200/40 hover:text-slate-700"}`}
                           >
-                            <span className="text-[0.8vw] font-bold flex items-center justify-between">
+                            <span className="text-[0.85vw] font-bold flex items-center justify-between">
                               {s.name}
                               {isSel && <div className="w-[0.5vw] h-[0.5vw] rounded-full bg-blue-600" />}
                             </span>
@@ -1188,7 +1188,7 @@ const [expandedType, setExpandedType] = useState(null);
                     <div className="flex-1 p-[1.2vw] bg-white overflow-y-auto">
                       <div className="flex items-center justify-between mb-[1vw]">
                          <div>
-                            <h4 className="text-[0.9vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
+                            <h4 className="text-[0.95vw] font-bold text-slate-800 flex items-center gap-[0.4vw]">
                               Configuring Flow for <span className="text-blue-600 underline decoration-blue-200 decoration-2 underline-offset-4">{curSeg === "Default" ? `All ${type.name} Segments` : curSeg}</span>
                             </h4>
 
@@ -1204,7 +1204,7 @@ const [expandedType, setExpandedType] = useState(null);
                                 });
                                 if (confirmed) resetType(type.name, curSeg);
                               }}
-                              className="text-[0.68vw] text-slate-400 hover:text-slate-700 border border-slate-400 hover:border-slate-400 bg-white px-[0.6vw] py-[0.3vw] rounded-[0.3vw] cursor-pointer flex items-center gap-[0.3vw] transition-all font-bold"
+                              className="text-[0.73vw] text-slate-400 hover:text-slate-700 border border-slate-400 hover:border-slate-400 bg-white px-[0.6vw] py-[0.3vw] rounded-[0.3vw] cursor-pointer flex items-center gap-[0.3vw] transition-all font-bold"
                             >
                                 Reset Segment
                             </button>
@@ -1224,10 +1224,10 @@ const [expandedType, setExpandedType] = useState(null);
                         <div className="col-span-2 flex flex-col gap-[0.8vw]">
                           <ChainPreview steps={steps} employees={employees} />
                           <div className="bg-slate-50/80 border border-slate-400 rounded-[0.5vw] p-[0.7vw]">
-                            <h4 className="text-[0.72vw] font-bold text-slate-600 mb-[0.4vw]">
+                            <h4 className="text-[0.77vw] font-bold text-slate-600 mb-[0.4vw]">
                               Legend
                             </h4>
-                            <div className="flex flex-col gap-[0.3vw] text-[0.68vw] text-gray-800">
+                            <div className="flex flex-col gap-[0.3vw] text-[0.73vw] text-gray-800">
                               <div className="flex items-center gap-[0.35vw]">
                                 <UserCheck className="w-[0.75vw] h-[0.75vw] text-blue-500" />{" "}
                                 Selected engineers tried first (round-robin)
@@ -1260,12 +1260,12 @@ const [expandedType, setExpandedType] = useState(null);
 
       {hasChanges && (
         <div className="flex-shrink-0 bg-white border-t border-amber-200 p-[0.8vw] flex items-center justify-between shadow-lg">
-          <span className="text-[0.78vw] text-amber-700 flex items-center gap-[0.4vw]">
+          <span className="text-[0.83vw] text-amber-700 flex items-center gap-[0.4vw]">
             <AlertTriangle className="w-[0.9vw] h-[0.9vw]" /> Unsaved Changes — Please save to apply these updates
           </span>
           <button
             onClick={handleSave}
-            className="flex items-center gap-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.5vw] py-[0.6vw] rounded-[0.4vw] font-semibold cursor-pointer text-[0.85vw] transition-all shadow-sm"
+            className="flex items-center gap-[0.5vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.5vw] py-[0.6vw] rounded-[0.4vw] font-semibold cursor-pointer text-[0.9vw] transition-all shadow-sm"
           >
             <Save className="w-[1vw] h-[1vw]" /> Save Now
           </button>

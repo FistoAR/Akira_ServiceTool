@@ -92,7 +92,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
               <p className="text-amber-700 font-semibold flex items-center gap-[0.4vw]">
                 <AlertTriangle className="w-[1vw] h-[1vw]" /> {usageCount} records affected
               </p>
-              <p className="text-amber-600 text-[0.75vw] mt-[0.2vw]">Configuration and history for this segment will be lost.</p>
+              <p className="text-amber-600 text-[0.8vw] mt-[0.2vw]">Configuration and history for this segment will be lost.</p>
             </div>
           )}
         </div>
@@ -136,8 +136,8 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
         <div className="lg:col-span-7 flex flex-col">
           <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100 gap-[1vw]">
             <div>
-              <h3 className="text-[0.88vw] font-bold text-gray-900">Configured Product Segments</h3>
-              <p className="text-[0.72vw] text-gray-500">Auto-completion product lines and families</p>
+              <h3 className="text-[0.93vw] font-bold text-gray-900">Configured Product Segments</h3>
+              <p className="text-[0.77vw] text-gray-500">Auto-completion product lines and families</p>
             </div>
             <div className="relative">
               <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
@@ -146,7 +146,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                 placeholder="Search segments..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-slate-400 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-slate-400 rounded-[0.4vw] text-[0.8vw] outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
@@ -154,7 +154,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
           <div className="border border-slate-400 rounded-[0.6vw] bg-white overflow-hidden shadow-2xs flex flex-col">
             <div className="divide-y divide-gray-100 min-h-[18vw]">
               {paginatedSegments.length === 0 ? (
-                <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
+                <div className="p-[3vw] text-center text-gray-400 text-[0.85vw]">
                   {searchTerm ? "No product segments match your search." : "No segments defined yet."}
                 </div>
               ) : (
@@ -184,7 +184,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                               if (e.key === "Enter") handleUpdate();
                               if (e.key === "Escape") setEditingSegment(null);
                             }}
-                            className="flex-1 bg-white border border-teal-400 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.82vw] outline-none ring-2 ring-teal-100 font-medium"
+                            className="flex-1 bg-white border border-teal-400 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.87vw] outline-none ring-2 ring-teal-100 font-medium"
                           />
                           <button
                             type="button"
@@ -204,14 +204,14 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                       ) : (
                         <>
                           <div className="flex items-center gap-[0.65vw]">
-                            <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-teal-50 text-teal-700 flex items-center justify-center text-[0.72vw] font-bold">
+                            <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-teal-50 text-teal-700 flex items-center justify-center text-[0.77vw] font-bold">
                               {globalIdx + 1}
                             </span>
-                            <span className="text-[0.82vw] font-semibold text-gray-800">
+                            <span className="text-[0.87vw] font-semibold text-gray-800">
                               {seg.name}
                             </span>
                             {seg.isFromDb && (
-                              <span className="text-[0.62vw] bg-amber-50 text-amber-700 border border-amber-200 px-[0.4vw] py-[0.08vw] rounded-full font-semibold">
+                              <span className="text-[0.67vw] bg-amber-50 text-amber-700 border border-amber-200 px-[0.4vw] py-[0.08vw] rounded-full font-semibold">
                                 In Customer Records
                               </span>
                             )}
@@ -254,7 +254,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
             {/* Pagination Controls */}
             {filteredSegments.length > 0 && (
               <div className="border-t border-gray-100 px-[1vw] py-[0.55vw] bg-gray-50/50 flex justify-between items-center flex-shrink-0">
-                <div className="text-[0.74vw] text-gray-500 font-medium">
+                <div className="text-[0.79vw] text-gray-500 font-medium">
                   Showing <span className="text-gray-900 font-semibold">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filteredSegments.length)}</span> of <span className="text-gray-900 font-semibold">{filteredSegments.length}</span> segments
                 </div>
                 <div className="flex items-center gap-[0.5vw]">
@@ -271,7 +271,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                     {[...Array(totalPages)].map((_, i) => {
                       const pNum = i + 1;
                       if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.7vw]">...</span>;
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
                         return null;
                       }
                       return (
@@ -279,7 +279,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                           key={pNum}
                           type="button"
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${
+                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.79vw] font-semibold transition-all cursor-pointer ${
                             currentPage === pNum
                               ? "bg-teal-600 text-white shadow-2xs"
                               : "bg-white border border-slate-400 text-gray-700 hover:border-teal-400 hover:text-teal-600"
@@ -309,17 +309,17 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
         <div className="lg:col-span-5 bg-gray-50/60 border border-slate-400 rounded-[0.6vw] p-[1.2vw]">
           <div className="space-y-[1vw]">
             <div className="pb-[0.5vw] border-b border-slate-400">
-              <h4 className="text-[0.88vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
+              <h4 className="text-[0.93vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
                 <Icon icon="solar:box-bold-duotone" className="w-[1.05vw] h-[1.05vw] text-teal-600" />
                 Add Product Segment
               </h4>
-              <p className="text-[0.7vw] text-gray-500">Define a new segment for ticket classification</p>
+              <p className="text-[0.75vw] text-gray-500">Define a new segment for ticket classification</p>
             </div>
 
             {canWrite ? (
               <div className="space-y-[0.8vw]">
                 <div className="space-y-[0.35vw]">
-                  <label className="text-[0.74vw] font-semibold text-gray-700">Segment Name *</label>
+                  <label className="text-[0.79vw] font-semibold text-gray-700">Segment Name *</label>
                   <input
                     type="text"
                     value={newSegmentName}
@@ -328,7 +328,7 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                       if (e.key === "Enter") handleAdd();
                     }}
                     placeholder="e.g. Inverters, Stabilizers, Batteries…"
-                    className="w-full bg-white border border-slate-400 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 transition-all font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.87vw] outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 transition-all font-medium"
                   />
                 </div>
 
@@ -336,13 +336,13 @@ const ProductSegmentsSection = ({ segments = [], setSegments }) => {
                   type="button"
                   onClick={handleAdd}
                   disabled={!newSegmentName.trim()}
-                  className="w-full flex items-center justify-center gap-[0.4vw] bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer shadow-sm"
+                  className="w-full flex items-center justify-center gap-[0.4vw] bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.87vw] font-semibold transition-all cursor-pointer shadow-sm"
                 >
                   <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Segment
                 </button>
               </div>
             ) : (
-              <div className="p-[2vw] text-center text-gray-400 text-[0.78vw] flex flex-col items-center justify-center gap-[0.4vw]">
+              <div className="p-[2vw] text-center text-gray-400 text-[0.83vw] flex flex-col items-center justify-center gap-[0.4vw]">
                 <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.8vw] h-[1.8vw] text-gray-300" />
                 <span>Read-only access. You can view existing product segments on the left.</span>
               </div>

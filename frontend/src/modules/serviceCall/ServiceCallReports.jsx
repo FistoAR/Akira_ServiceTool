@@ -313,7 +313,7 @@ const formatDurationFrom = (startDateStr, endDateStr = null) => {
 
 
 
-const UserAvatar = ({ name, image, size = "1.6vw", textClass = "text-[0.68vw]" }) => {
+const UserAvatar = ({ name, image, size = "1.6vw", textClass = "text-[0.73vw]" }) => {
   const [imgError, setImgError] = useState(false);
 
   if (image && !imgError) {
@@ -333,7 +333,7 @@ const UserAvatar = ({ name, image, size = "1.6vw", textClass = "text-[0.68vw]" }
   return (
     <div
       style={{ width: size, height: size }}
-      className={`rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-normal ${textClass} shrink-0`}
+      className={`rounded-full bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center font-medium ${textClass} shrink-0`}
     >
       {initial}
     </div>
@@ -346,7 +346,7 @@ const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => {
   return (
     <div className="flex items-center gap-[0.35vw] max-w-full">
       <CustomTooltip text={customerName} position="top-start" className="min-w-0 flex-1">
-        <span className="font-normal text-slate-900 text-[0.82vw] truncate block">
+        <span className="font-medium text-slate-900 text-[0.87vw] truncate block">
           {customerName || "—"}
         </span>
       </CustomTooltip>
@@ -366,7 +366,7 @@ const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => {
                 </div>
               )}
               {partyCode && (
-                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.64vw]">
+                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.69vw]">
                   <span className="text-slate-500 font-sans">ID:</span>
                   <span>{partyCode}</span>
                 </div>
@@ -450,7 +450,7 @@ const CustomTooltip = ({ children, text, content: tooltipContent, position = "to
                   : "translate(-50%, -100%)",
               zIndex: 99999,
             }}
-            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.73vw] font-medium tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
           >
             {tooltipContent ? tooltipContent : <span>{text}</span>}
             <div
@@ -1680,7 +1680,7 @@ const buildEscalationHistoryString = (call, prod) => {
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
+    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.9vw] bg-slate-100/70 p-[0.6vw] overflow-hidden">
       {/* ── Top Header Bar ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-[0.8vw] mb-[0.6vw] shrink-0">
         {/* Main Tab Navigation: Sleek Segmented Capsule */}
@@ -1693,7 +1693,7 @@ const buildEscalationHistoryString = (call, prod) => {
               setCurrentPage(1);
             }}
             disabled={!!selectedEmployee}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
               selectedEmployee
                 ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
                 : activeMainView === "registered"
@@ -1705,7 +1705,7 @@ const buildEscalationHistoryString = (call, prod) => {
             <Layers className="w-[0.85vw] h-[0.85vw]" />
             <span>All Calls</span>
             <span
-              className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+              className={`text-[0.71vw] font-medium ml-[0.15vw] transition-all ${
                 !selectedEmployee && activeMainView === "registered"
                   ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                   : "text-slate-400"
@@ -1723,7 +1723,7 @@ const buildEscalationHistoryString = (call, prod) => {
               setCurrentPage(1);
             }}
             disabled={!!selectedEmployee}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
               selectedEmployee
                 ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
                 : activeMainView === "escalations"
@@ -1735,7 +1735,7 @@ const buildEscalationHistoryString = (call, prod) => {
             <Flame className="w-[0.85vw] h-[0.85vw]" />
             <span>Escalation View</span>
             <span
-              className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+              className={`text-[0.71vw] font-medium ml-[0.15vw] transition-all ${
                 !selectedEmployee && activeMainView === "escalations"
                   ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                   : "text-slate-400"
@@ -1754,7 +1754,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 setCurrentPage(1);
               }}
               disabled={!!selectedEmployee}
-              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.76vw] font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
                 selectedEmployee
                   ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
                   : activeMainView === "assignments"
@@ -1766,7 +1766,7 @@ const buildEscalationHistoryString = (call, prod) => {
               <UserCheck className="w-[0.85vw] h-[0.85vw]" />
               <span>Employee & Assignment Report</span>
               <span
-                className={`text-[0.66vw] font-medium ml-[0.15vw] transition-all ${
+                className={`text-[0.71vw] font-medium ml-[0.15vw] transition-all ${
                   !selectedEmployee && activeMainView === "assignments"
                     ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                     : "text-slate-400"
@@ -1791,7 +1791,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 setCurrentPage(1);
               }}
               placeholder="Search call, customer, item, SN..."
-              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[15vw] rounded-full border border-slate-200/90 text-[0.76vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
+              className="pl-[2.2vw] pr-[2vw] h-[2.2vw] w-[15vw] rounded-full border border-slate-200/90 text-[0.81vw] font-medium text-slate-700 bg-white hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400 shadow-2xs transition-all"
             />
             {search && (
               <button
@@ -1811,7 +1811,7 @@ const buildEscalationHistoryString = (call, prod) => {
           <div className="relative">
             <button
               onClick={() => setShowFilterPopover(!showFilterPopover)}
-              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+              className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.81vw] transition-all cursor-pointer shadow-2xs ${
                 showFilterPopover || fromDate || toDate || selectedEmployee || categoryFilter !== "All"
                   ? "bg-blue-50 border-blue-300 text-blue-700"
                   : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
@@ -1835,7 +1835,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 <div className="absolute right-0 top-full mt-[0.4vw] w-[17.5vw] bg-white border border-slate-300 rounded-[0.5vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
                   {/* Header */}
                   <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
-                    <span className="text-[0.76vw] font-bold text-slate-800">Quick Filters</span>
+                    <span className="text-[0.81vw] font-bold text-slate-800">Quick Filters</span>
                     {(fromDate || toDate || selectedEmployee || categoryFilter !== "All") && (
                       <button
                         onClick={() => {
@@ -1845,7 +1845,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           setCategoryFilter("All");
                           setCurrentPage(1);
                         }}
-                        className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
+                        className="text-[0.73vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer"
                       >
                         Reset
                       </button>
@@ -1854,10 +1854,10 @@ const buildEscalationHistoryString = (call, prod) => {
 
                   {/* Date Range */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                    <label className="block text-[0.75vw] text-slate-700 font-medium mb-[0.2vw]">
                       Date Range
                     </label>
-                    <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[1.9vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
+                    <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[1.9vw] px-[0.5vw] text-[0.75vw] hover:border-slate-400 transition-colors">
                       <input
                         type="date"
                         value={fromDate}
@@ -1865,7 +1865,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           setFromDate(e.target.value);
                           setCurrentPage(1);
                         }}
-                        className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                        className="bg-transparent text-slate-700 font-medium outline-none cursor-pointer flex-1 min-w-0"
                       />
                       <span className="text-slate-400 mx-[0.25vw] shrink-0">—</span>
                       <input
@@ -1876,7 +1876,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           setToDate(e.target.value);
                           setCurrentPage(1);
                         }}
-                        className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                        className="bg-transparent text-slate-700 font-medium outline-none cursor-pointer flex-1 min-w-0"
                       />
                     </div>
                   </div>
@@ -1884,7 +1884,7 @@ const buildEscalationHistoryString = (call, prod) => {
                   {/* Assigned Employee (Admin only) */}
                   {isAdmin && (
                     <div>
-                      <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                      <label className="block text-[0.75vw] text-slate-700 font-medium mb-[0.2vw]">
                         Assigned Employee
                       </label>
                       <CustomDropdown
@@ -1903,14 +1903,14 @@ const buildEscalationHistoryString = (call, prod) => {
                             label: `${emp.name} (${emp.department || "No Dept"})`,
                           })),
                         ]}
-                        triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                        triggerClassName="!h-[1.9vw] !text-[0.77vw] border-slate-300 rounded-[0.35vw] font-medium !text-slate-700"
                       />
                     </div>
                   )}
 
                   {/* Customer Category */}
                   <div>
-                    <label className="block text-[0.7vw] text-slate-700 font-medium mb-[0.2vw]">
+                    <label className="block text-[0.75vw] text-slate-700 font-medium mb-[0.2vw]">
                       Customer Category
                     </label>
                     <CustomDropdown
@@ -1927,7 +1927,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         { value: "Distributor", label: "Distributor" },
                         { value: "Dealer", label: "Dealer" },
                       ]}
-                      triggerClassName="!h-[1.9vw] !text-[0.72vw] border-slate-300 rounded-[0.35vw] font-normal !text-slate-700"
+                      triggerClassName="!h-[1.9vw] !text-[0.77vw] border-slate-300 rounded-[0.35vw] font-medium !text-slate-700"
                     />
                   </div>
 
@@ -1942,7 +1942,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           setCategoryFilter("All");
                           setCurrentPage(1);
                         }}
-                        className="inline-flex items-center gap-[0.3vw] text-[0.7vw] font-normal text-slate-800 hover:text-rose-600 transition-colors cursor-pointer py-[0.1vw]"
+                        className="inline-flex items-center gap-[0.3vw] text-[0.75vw] font-medium text-slate-800 hover:text-rose-600 transition-colors cursor-pointer py-[0.1vw]"
                       >
                         <Filter className="w-[0.75vw] h-[0.75vw] text-slate-800" />
                         <span>Clear Filters</span>
@@ -1965,7 +1965,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 ]);
               }
             }}
-            className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+            className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.81vw] transition-all cursor-pointer shadow-2xs ${
               showCustomFilterBar || customFilters.some((cf) => cf.field && cf.value.trim())
                 ? "bg-indigo-50 border-indigo-300 text-indigo-700"
                 : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
@@ -1975,7 +1975,7 @@ const buildEscalationHistoryString = (call, prod) => {
             <SlidersHorizontal className="w-[0.8vw] h-[0.8vw]" />
             <span>Custom Filters</span>
             {customFilters.some((cf) => cf.field && cf.value.trim()) && (
-              <span className="px-[0.35vw] py-[0.02vw] rounded-full bg-indigo-600 text-white text-[0.62vw] font-bold">
+              <span className="px-[0.35vw] py-[0.02vw] rounded-full bg-indigo-600 text-white text-[0.67vw] font-bold">
                 {customFilters.filter((cf) => cf.field && cf.value.trim()).length}
               </span>
             )}
@@ -1989,7 +1989,7 @@ const buildEscalationHistoryString = (call, prod) => {
             >
               <button
                 onClick={() => setShowColPicker(!showColPicker)}
-                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.76vw] transition-all cursor-pointer shadow-2xs ${
+                className={`flex items-center gap-[0.35vw] px-[0.85vw] h-[2.2vw] rounded-full border font-medium text-[0.81vw] transition-all cursor-pointer shadow-2xs ${
                   showColPicker
                     ? "bg-blue-50 border-blue-300 text-blue-700"
                     : "bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50"
@@ -2012,21 +2012,21 @@ const buildEscalationHistoryString = (call, prod) => {
                   <div className="p-[0.65vw] border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
                     <div className="flex items-center gap-[0.35vw]">
                       <Columns className="w-[0.85vw] h-[0.85vw] text-slate-600" />
-                      <span className="text-[0.78vw] font-bold text-slate-800">
+                      <span className="text-[0.83vw] font-bold text-slate-800">
                         Export Columns
                       </span>
                     </div>
                     <div className="flex items-center gap-[0.4vw]">
                       <button
                         onClick={selectAllExportCols}
-                        className="text-[0.7vw] font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                        className="text-[0.75vw] font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer"
                       >
                         Select All
                       </button>
-                      <span className="text-slate-300 text-[0.7vw]">|</span>
+                      <span className="text-slate-300 text-[0.75vw]">|</span>
                       <button
                         onClick={unselectAllExportCols}
-                        className="text-[0.7vw] font-medium text-slate-500 hover:text-slate-700 cursor-pointer"
+                        className="text-[0.75vw] font-medium text-slate-500 hover:text-slate-700 cursor-pointer"
                       >
                         Unselect All
                       </button>
@@ -2036,13 +2036,13 @@ const buildEscalationHistoryString = (call, prod) => {
                   {/* Template Dropdown Selector */}
                   <div className="px-[0.65vw] py-[0.5vw] bg-slate-50/90 border-b border-slate-100 flex flex-col gap-[0.35vw]">
                     <div className="flex items-center justify-between">
-                      <label className="text-[0.68vw] font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
+                      <label className="text-[0.73vw] font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-[0.25vw]">
                         <Bookmark className="w-[0.7vw] h-[0.7vw] text-indigo-500" />
                         Template Presets
                       </label>
                       <button
                         onClick={() => setShowSaveTplInput(!showSaveTplInput)}
-                        className="text-[0.68vw] font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer flex items-center gap-[0.15vw]"
+                        className="text-[0.73vw] font-medium text-indigo-600 hover:text-indigo-800 cursor-pointer flex items-center gap-[0.15vw]"
                         title="Save current selection as a new template"
                       >
                         <Plus className="w-[0.68vw] h-[0.68vw]" />
@@ -2061,12 +2061,12 @@ const buildEscalationHistoryString = (call, prod) => {
                             if (e.key === "Enter") saveCurrentAsTemplate(newTemplateName);
                           }}
                           placeholder="New template name..."
-                          className="flex-1 text-[0.7vw] px-[0.4vw] py-[0.2vw] border border-slate-200 rounded-[0.25vw] outline-none focus:border-indigo-500 text-slate-800 placeholder-slate-400"
+                          className="flex-1 text-[0.75vw] px-[0.4vw] py-[0.2vw] border border-slate-200 rounded-[0.25vw] outline-none focus:border-indigo-500 text-slate-800 placeholder-slate-400"
                           autoFocus
                         />
                         <button
                           onClick={() => saveCurrentAsTemplate(newTemplateName)}
-                          className="px-[0.55vw] py-[0.2vw] bg-indigo-600 hover:bg-indigo-700 text-white text-[0.68vw] font-semibold rounded-[0.25vw] cursor-pointer"
+                          className="px-[0.55vw] py-[0.2vw] bg-indigo-600 hover:bg-indigo-700 text-white text-[0.73vw] font-semibold rounded-[0.25vw] cursor-pointer"
                         >
                           Save
                         </button>
@@ -2092,7 +2092,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           const tpl = colTemplates.find((t) => t.id === val);
                           if (tpl) applyTemplate(tpl);
                         }}
-                        className="w-full appearance-none bg-white border border-slate-200 hover:border-indigo-300 rounded-[0.4vw] px-[0.55vw] py-[0.3vw] pr-[1.5vw] text-[0.72vw] text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
+                        className="w-full appearance-none bg-white border border-slate-200 hover:border-indigo-300 rounded-[0.4vw] px-[0.55vw] py-[0.3vw] pr-[1.5vw] text-[0.77vw] text-slate-700 font-medium outline-none cursor-pointer transition-all shadow-2xs"
                       >
                         <option value="" disabled>
                           {selectedTemplateId ? "Select a template..." : "Custom selection active"}
@@ -2124,12 +2124,12 @@ const buildEscalationHistoryString = (call, prod) => {
                                   if (e.key === "Enter") renameTemplate(curTpl.id, editingTemplateName);
                                 }}
                                 placeholder="Rename template..."
-                                className="flex-1 text-[0.7vw] px-[0.35vw] py-[0.15vw] border border-slate-200 rounded-[0.2vw] outline-none focus:border-indigo-500 text-slate-800"
+                                className="flex-1 text-[0.75vw] px-[0.35vw] py-[0.15vw] border border-slate-200 rounded-[0.2vw] outline-none focus:border-indigo-500 text-slate-800"
                                 autoFocus
                               />
                               <button
                                 onClick={() => renameTemplate(curTpl.id, editingTemplateName)}
-                                className="px-[0.45vw] py-[0.18vw] bg-indigo-600 hover:bg-indigo-700 text-white text-[0.66vw] font-semibold rounded-[0.2vw] cursor-pointer"
+                                className="px-[0.45vw] py-[0.18vw] bg-indigo-600 hover:bg-indigo-700 text-white text-[0.71vw] font-semibold rounded-[0.2vw] cursor-pointer"
                               >
                                 Save
                               </button>
@@ -2144,7 +2144,7 @@ const buildEscalationHistoryString = (call, prod) => {
                               </button>
                             </div>
                           ) : (
-                            <div className="flex items-center justify-between text-[0.66vw] text-slate-500 px-[0.1vw]">
+                            <div className="flex items-center justify-between text-[0.71vw] text-slate-500 px-[0.1vw]">
                               <span className="flex items-center gap-[0.25vw] truncate">
                                 <span className={`w-[0.35vw] h-[0.35vw] rounded-full inline-block shrink-0 ${isExactMatch ? "bg-emerald-500" : "bg-amber-400"}`}></span>
                                 <span className="truncate">
@@ -2199,7 +2199,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         <div
                           key={col.key}
                           onClick={() => toggleExportCol(col.key)}
-                          className="flex items-center gap-[0.5vw] px-[0.6vw] py-[0.3vw] rounded-[0.35vw] cursor-pointer text-[0.75vw] font-normal text-slate-700 hover:bg-slate-50 transition-colors select-none"
+                          className="flex items-center gap-[0.5vw] px-[0.6vw] py-[0.3vw] rounded-[0.35vw] cursor-pointer text-[0.8vw] font-medium text-slate-700 hover:bg-slate-50 transition-colors select-none"
                         >
                           <input
                             type="checkbox"
@@ -2216,12 +2216,12 @@ const buildEscalationHistoryString = (call, prod) => {
 
                   {/* Footer */}
                   <div className="p-[0.5vw] border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
-                    <span className="text-[0.7vw] text-slate-500">
+                    <span className="text-[0.75vw] text-slate-500">
                       {selectedExportCols.length} of {activeExportConfig.length} selected
                     </span>
                     <button
                       onClick={() => setShowColPicker(false)}
-                      className="px-[0.6vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[0.72vw] rounded-[0.35vw] cursor-pointer shadow-2xs"
+                      className="px-[0.6vw] py-[0.25vw] bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[0.77vw] rounded-[0.35vw] cursor-pointer shadow-2xs"
                     >
                       Done
                     </button>
@@ -2234,7 +2234,7 @@ const buildEscalationHistoryString = (call, prod) => {
           {/* Export Excel Button */}
           <button
             onClick={executeExportExcel}
-            className="flex items-center gap-[0.35vw] px-[1vw] h-[2.2vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-[0.76vw] transition-all cursor-pointer shadow-sm"
+            className="flex items-center gap-[0.35vw] px-[1vw] h-[2.2vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-[0.81vw] transition-all cursor-pointer shadow-sm"
             title="Export filtered reports to Excel"
           >
             <Download className="w-[0.85vw] h-[0.85vw]" />
@@ -2249,8 +2249,8 @@ const buildEscalationHistoryString = (call, prod) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[0.4vw]">
               <SlidersHorizontal className="w-[0.85vw] h-[0.85vw] text-indigo-600" />
-              <span className="text-[0.76vw] font-bold text-slate-800">Custom Filters</span>
-              <span className="text-[0.68vw] text-slate-500">
+              <span className="text-[0.81vw] font-bold text-slate-800">Custom Filters</span>
+              <span className="text-[0.73vw] text-slate-500">
                 (Select field and type search query to filter table records)
               </span>
             </div>
@@ -2266,7 +2266,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     { id: Date.now() + Math.random(), field: unused?.key || "customerName", value: "" },
                   ]);
                 }}
-                className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.2vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-md text-[0.7vw] font-bold cursor-pointer transition-colors shadow-2xs"
+                className="flex items-center gap-[0.25vw] px-[0.6vw] py-[0.2vw] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-md text-[0.75vw] font-bold cursor-pointer transition-colors shadow-2xs"
               >
                 <Plus className="w-[0.75vw] h-[0.75vw]" />
                 <span>Add Filter</span>
@@ -2278,7 +2278,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     setCustomFilters([]);
                     setCurrentPage(1);
                   }}
-                  className="text-[0.68vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer px-[0.3vw]"
+                  className="text-[0.73vw] text-rose-600 hover:text-rose-700 font-medium cursor-pointer px-[0.3vw]"
                 >
                   Clear All
                 </button>
@@ -2288,7 +2288,7 @@ const buildEscalationHistoryString = (call, prod) => {
 
           {/* Filter Rows */}
           {customFilters.length === 0 ? (
-            <div className="py-[0.5vw] text-center text-slate-400 text-[0.7vw] italic bg-slate-50 border border-dashed border-slate-200 rounded-md">
+            <div className="py-[0.5vw] text-center text-slate-400 text-[0.75vw] italic bg-slate-50 border border-dashed border-slate-200 rounded-md">
               No custom filters active. Click &quot;Add Filter&quot; above to select any column header and enter a value.
             </div>
           ) : (
@@ -2309,7 +2309,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         );
                         setCurrentPage(1);
                       }}
-                      className="h-[1.8vw] pl-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 font-bold outline-none cursor-pointer appearance-none hover:border-slate-400"
+                      className="h-[1.8vw] pl-[0.5vw] pr-[1.4vw] bg-white border border-slate-300 rounded text-[0.75vw] text-slate-800 font-bold outline-none cursor-pointer appearance-none hover:border-slate-400"
                     >
                       {SERVICE_CALL_CUSTOM_FILTER_FIELDS.map((f) => (
                         <option key={f.key} value={f.key}>
@@ -2332,7 +2332,7 @@ const buildEscalationHistoryString = (call, prod) => {
                       setCurrentPage(1);
                     }}
                     placeholder="Type value..."
-                    className="h-[1.8vw] w-[11vw] px-[0.5vw] bg-white border border-slate-300 rounded text-[0.7vw] text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                    className="h-[1.8vw] w-[11vw] px-[0.5vw] bg-white border border-slate-300 rounded text-[0.75vw] text-slate-800 outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
                   />
 
                   {/* Delete button */}
@@ -2359,7 +2359,7 @@ const buildEscalationHistoryString = (call, prod) => {
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-[0.8vw] text-slate-500">
             <div className="w-[2.5vw] h-[2.5vw] border-[3px] border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
-            <span className="text-[0.9vw] font-bold">Loading comprehensive reports...</span>
+            <span className="text-[0.95vw] font-bold">Loading comprehensive reports...</span>
           </div>
         ) : (
           <>
@@ -2368,7 +2368,7 @@ const buildEscalationHistoryString = (call, prod) => {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div className="flex-1 overflow-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw]">
                       <tr>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10.5vw] whitespace-nowrap">Registered Date</th>
@@ -2383,7 +2383,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5.5vw]">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="text-[0.8vw]">
+                    <tbody className="text-[0.85vw]">
                       {paginatedData.length === 0 ? (
                         <tr>
                           <td colSpan={11} className="py-[10vh] text-center text-slate-400 font-bold">
@@ -2421,7 +2421,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center font-medium text-slate-700 bg-white whitespace-nowrap text-[0.81vw]"
                                   >
                                     {callSno}
                                   </td>
@@ -2436,14 +2436,14 @@ const buildEscalationHistoryString = (call, prod) => {
                                     {(() => {
                                       const { date, time } = fmtDateParts(call.createdAt || call.dateTime);
                                       return (
-                                        <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
+                                        <div className="flex flex-col text-[0.79vw] text-slate-800 font-medium leading-normal">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.68vw] text-slate-700 font-medium mt-[0.14vw]">{time}</span>}
+                                          {time && <span className="text-[0.73vw] text-slate-700 font-medium mt-[0.14vw]">{time}</span>}
                                         </div>
                                       );
                                     })()}
                                     {call.registeredByName && call.registeredByName !== "System" ? (
-                                      <div className="text-[0.68vw] text-slate-700 font-medium mt-[0.1vw]">
+                                      <div className="text-[0.73vw] text-slate-700 font-medium mt-[0.1vw]">
                                         By: <span className="text-black font-medium">{call.registeredByName}</span>
                                       </div>
                                     ) : null}
@@ -2457,7 +2457,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                   >
                                     <div className="flex items-center gap-[0.35vw]">
-                                       <span className="font-mono font-medium text-[0.82vw] text-black block leading-tight select-text">
+                                       <span className="font-mono font-medium text-[0.87vw] text-black block leading-tight select-text">
                                          {call.callNumber}
                                        </span>
                                       {hasEdits && (
@@ -2478,11 +2478,11 @@ const buildEscalationHistoryString = (call, prod) => {
                                     className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center whitespace-nowrap bg-white"
                                   >
                                     {isSelf ? (
-                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
                                         Self Assigned
                                       </span>
                                     ) : (
-                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">
+                                      <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">
                                         Registered
                                       </span>
                                     )}
@@ -2507,14 +2507,14 @@ const buildEscalationHistoryString = (call, prod) => {
                                 {pIdx === 0 && (
                                   <td
                                     rowSpan={rowCount}
-                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-normal text-[0.78vw]"
+                                    className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-medium text-[0.83vw]"
                                   >
                                     {call.customerType && call.customerType !== "All" ? (
-                                      <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${getCustomerTypeBadgeStyle(call.customerType)}`}>
+                                      <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${getCustomerTypeBadgeStyle(call.customerType)}`}>
                                         {call.customerType}
                                       </span>
                                     ) : (
-                                      <span className="text-slate-300 font-normal">—</span>
+                                      <span className="text-slate-300 font-medium">—</span>
                                     )}
                                   </td>
                                 )}
@@ -2526,11 +2526,11 @@ const buildEscalationHistoryString = (call, prod) => {
                                     className="max-w-full"
                                     content={
                                       <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                                        <div className="font-normal text-slate-200">
+                                        <div className="font-medium text-slate-200">
                                           {prod.productModel || prod.itemCode || "—"}
                                         </div>
                                         {prod.serialNumber && (
-                                          <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                          <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                             <span className="text-slate-400 font-sans">SN: </span>
                                             <span>{prod.serialNumber}</span>
                                           </div>
@@ -2538,7 +2538,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                       </div>
                                     }
                                   >
-                                    <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
+                                    <div className="font-medium text-slate-900 text-[0.85vw] truncate cursor-default">
                                       {prod.productModel || prod.itemCode || "—"}
                                     </div>
                                   </CustomTooltip>
@@ -2550,7 +2550,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                     const engName = prod._assignedEngineerName || call.currentEngineerName;
                                     const engId = prod._assignedEngineerId || call.currentEngineerId;
                                     if (!engName) {
-                                      return <span className="text-slate-600 font-medium italic text-[0.72vw]">Unassigned</span>;
+                                      return <span className="text-slate-600 font-medium italic text-[0.77vw]">Unassigned</span>;
                                     }
                                     const matchedEmp = employees.find(e => (engId && (e.userId === engId || e._id === engId)) || (e.name && e.name.toLowerCase() === engName.toLowerCase()));
                                     const userImg = matchedEmp?.profilePicture || matchedEmp?.image || null;
@@ -2561,8 +2561,8 @@ const buildEscalationHistoryString = (call, prod) => {
                                         position="top-start"
                                       >
                                         <div className="flex items-center gap-[0.45vw] cursor-default">
-                                          <UserAvatar name={engName} image={userImg} size="1.6vw" textClass="text-[0.68vw]" />
-                                          <div className="font-medium text-black text-[0.75vw]">
+                                          <UserAvatar name={engName} image={userImg} size="1.6vw" textClass="text-[0.73vw]" />
+                                          <div className="font-medium text-black text-[0.8vw]">
                                             {engName}
                                           </div>
                                         </div>
@@ -2578,12 +2578,12 @@ const buildEscalationHistoryString = (call, prod) => {
                                       text={`Open duration: ${formatDurationFrom(prod._assignedAt || call.createdAt)}`}
                                       position="top"
                                     >
-                                      <span className="text-[0.75vw] text-slate-800 font-normal hover:text-slate-900 transition-colors cursor-default">
+                                      <span className="text-[0.8vw] text-slate-800 font-medium hover:text-slate-900 transition-colors cursor-default">
                                         Level {prod._escalationLevel || call.escalationLevel || 1}
                                       </span>
                                     </CustomTooltip>
                                   ) : (
-                                    <span className="text-slate-300 font-normal text-[0.75vw]">—</span>
+                                    <span className="text-slate-300 font-medium text-[0.8vw]">—</span>
                                   )}
                                 </td>
 
@@ -2606,11 +2606,11 @@ const buildEscalationHistoryString = (call, prod) => {
 
                                     return (
                                       <div className="flex flex-col items-center justify-center">
-                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
+                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.77vw] font-medium min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
                                           {displayStatus}
                                         </span>
                                         {isClosed && (prod._productClosure?.closedAt || prod._productClosure?.date) && (
-                                          <div className="text-[0.68vw] text-slate-700 font-medium mt-[0.15vw]">
+                                          <div className="text-[0.73vw] text-slate-700 font-medium mt-[0.15vw]">
                                             {fmtDateTime(prod._productClosure?.closedAt || prod._productClosure?.date)}
                                           </div>
                                         )}
@@ -2624,7 +2624,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                   <div className="flex items-center justify-center gap-[0.3vw]">
                                     <button
                                       onClick={() => setSelectedInfoCall(call)}
-                                      className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                      className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                     >
                                       View Reports
                                     </button>
@@ -2664,7 +2664,7 @@ const buildEscalationHistoryString = (call, prod) => {
               <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 <div className="flex-1 overflow-auto">
                   <table className="w-full text-left border-collapse">
-                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+                    <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw]">
                       <tr>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9vw] whitespace-nowrap">Call No</th>
@@ -2679,7 +2679,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="text-[0.8vw]">
+                    <tbody className="text-[0.85vw]">
                       {paginatedData.length === 0 ? (
                         <tr>
                           <td colSpan={11} className="py-[10vh] text-center text-slate-400 font-bold">
@@ -2690,13 +2690,13 @@ const buildEscalationHistoryString = (call, prod) => {
                         paginatedData.map((item, idx) => (
                           <tr key={idx} className="hover:bg-slate-50 transition-colors">
                             {/* 0. S.No */}
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-medium text-slate-700 bg-white whitespace-nowrap text-[0.81vw]">
                               {(currentPage - 1) * rowsPerPage + idx + 1}
                             </td>
 
                             {/* 1. Call No */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white">
-                              <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
+                              <span className="font-mono font-medium text-[0.87vw] text-slate-800 block leading-tight select-text">
                                   {item.call.callNumber}
                                 </span>
                             </td>
@@ -2711,13 +2711,13 @@ const buildEscalationHistoryString = (call, prod) => {
                             </td>
 
                             {/* 3. Customer Type */}
-                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-normal text-[0.78vw]">
+                            <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white font-medium text-[0.83vw]">
                               {item.call.customerType && item.call.customerType !== "All" ? (
-                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${getCustomerTypeBadgeStyle(item.call.customerType)}`}>
+                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${getCustomerTypeBadgeStyle(item.call.customerType)}`}>
                                   {item.call.customerType}
                                 </span>
                               ) : (
-                                <span className="text-slate-300 font-normal">—</span>
+                                <span className="text-slate-300 font-medium">—</span>
                               )}
                             </td>
 
@@ -2728,11 +2728,11 @@ const buildEscalationHistoryString = (call, prod) => {
                                 className="max-w-full"
                                 content={
                                   <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                                    <div className="font-normal text-slate-200">
+                                    <div className="font-medium text-slate-200">
                                       {item.prod.productModel || item.prod.itemCode || "—"}
                                     </div>
                                     {item.prod.serialNumber && (
-                                      <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                      <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                         <span className="text-slate-400 font-sans">SN: </span>
                                         <span>{item.prod.serialNumber}</span>
                                       </div>
@@ -2740,7 +2740,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                   </div>
                                 }
                               >
-                                <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                                <div className="font-medium text-slate-800 text-[0.85vw] truncate cursor-default">
                                   {item.prod.productModel || item.prod.itemCode || "—"}
                                 </div>
                               </CustomTooltip>
@@ -2753,15 +2753,15 @@ const buildEscalationHistoryString = (call, prod) => {
                                   const isSystem = !item.escalatedById && (item.escalatedBy === "System Automation" || item.escalatedBy === "System");
                                   if (isSystem) {
                                     return (
-                                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-100 text-slate-500 border border-slate-300 flex items-center justify-center text-[0.72vw] shrink-0">
+                                      <div className="w-[1.6vw] h-[1.6vw] rounded-full bg-slate-100 text-slate-500 border border-slate-300 flex items-center justify-center text-[0.77vw] shrink-0">
                                         <Icon icon="solar:cpu-bolt-linear" className="w-[0.95vw] h-[0.95vw] text-slate-500" />
                                       </div>
                                     );
                                   }
                                   const matchedEmp = employees.find(e => (e.userId === item.escalatedById || (e.name && e.name.toLowerCase() === (item.escalatedBy || '').toLowerCase())));
-                                  return <UserAvatar name={item.escalatedBy} image={matchedEmp?.profilePicture || matchedEmp?.image} size="1.6vw" textClass="text-[0.68vw]" />;
+                                  return <UserAvatar name={item.escalatedBy} image={matchedEmp?.profilePicture || matchedEmp?.image} size="1.6vw" textClass="text-[0.73vw]" />;
                                 })()}
-                                <div className="font-normal text-slate-800 text-[0.75vw]">
+                                <div className="font-medium text-slate-800 text-[0.8vw]">
                                   {item.escalatedBy}
                                 </div>
                               </div>
@@ -2772,9 +2772,9 @@ const buildEscalationHistoryString = (call, prod) => {
                               {(() => {
                                 const { date, time } = fmtDateParts(item.escalatedAt);
                                 return (
-                                  <div className="flex flex-col text-[0.72vw] text-gray-800 font-normal leading-normal">
+                                  <div className="flex flex-col text-[0.77vw] text-gray-800 font-medium leading-normal">
                                     <span>{date}</span>
-                                    {time && <span className="text-[0.66vw] text-slate-500 mt-[0.25vw]">{time}</span>}
+                                    {time && <span className="text-[0.71vw] text-slate-500 mt-[0.25vw]">{time}</span>}
                                   </div>
                                 );
                               })()}
@@ -2783,7 +2783,7 @@ const buildEscalationHistoryString = (call, prod) => {
                             {/* 7. Why (Reason) */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 max-w-[13vw] align-middle">
                               <CustomTooltip text={item.reason} position="top-start" className="max-w-full">
-                                <span className="font-normal text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.72vw] inline-block truncate max-w-full">
+                                <span className="font-medium text-rose-700 bg-rose-50 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.77vw] inline-block truncate max-w-full">
                                   {item.reason}
                                 </span>
                               </CustomTooltip>
@@ -2791,14 +2791,14 @@ const buildEscalationHistoryString = (call, prod) => {
 
                             {/* 8. Open Duration */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-center align-middle">
-                              <span className="text-[0.74vw] font-normal text-slate-700">
+                              <span className="text-[0.79vw] font-medium text-slate-700">
                                 {item.openDuration}
                               </span>
                             </td>
 
                             {/* 9. Status */}
                             <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap">
-                              <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${
+                              <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.77vw] font-medium min-w-[6.2vw] shadow-xs tracking-wide ${
                                 item.isClosed ? "bg-[#05a854] text-white" : "bg-[#e53935] text-white"
                               }`}>
                                 {item.isClosed ? "Completed" : "Critical"}
@@ -2810,7 +2810,7 @@ const buildEscalationHistoryString = (call, prod) => {
                               <div className="flex items-center justify-center gap-[0.3vw]">
                                 <button
                                   onClick={() => setSelectedInfoCall(item.call)}
-                                  className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                  className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                 >
                                   View Reports
                                 </button>
@@ -2839,7 +2839,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 {!selectedEmployee ? (
                   <div className="flex-1 overflow-auto">
                     <table className="w-full text-left border-collapse">
-                      <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+                      <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw]">
                         <tr>
                           <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No.</th>
                           <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[14vw] whitespace-nowrap">Employee</th>
@@ -2852,7 +2852,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="text-[0.8vw]">
+                      <tbody className="text-[0.85vw]">
                         {paginatedData.length === 0 ? (
                           <tr>
                             <td colSpan={9} className="py-[10vh] text-center text-slate-400 font-bold">
@@ -2866,29 +2866,29 @@ const buildEscalationHistoryString = (call, prod) => {
                               className="hover:bg-slate-50 transition-colors"
                             >
                               {/* Index */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-medium text-slate-700 bg-white whitespace-nowrap text-[0.81vw]">
                                 {(currentPage - 1) * rowsPerPage + idx + 1}
                               </td>
 
                               {/* User */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white">
                                 <div className="flex items-center gap-[0.55vw]">
-                                  <UserAvatar name={emp.name} image={emp.profilePicture || emp.image} size="1.8vw" textClass="text-[0.74vw]" />
+                                  <UserAvatar name={emp.name} image={emp.profilePicture || emp.image} size="1.8vw" textClass="text-[0.79vw]" />
                                   <div>
-                                    <div className="font-normal text-slate-900 leading-tight text-[0.8vw]">{emp.name}</div>
-                                    <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.05vw]">{emp.userId}</div>
+                                    <div className="font-medium text-slate-900 leading-tight text-[0.85vw]">{emp.name}</div>
+                                    <div className="text-[0.71vw] text-slate-400 font-mono mt-[0.05vw]">{emp.userId}</div>
                                   </div>
                                 </div>
                               </td>
 
                               {/* Department */}
-                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-slate-700 whitespace-nowrap font-normal text-[0.76vw]">
+                              <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-slate-700 whitespace-nowrap font-medium text-[0.81vw]">
                                 {emp.department || "—"}
                               </td>
 
                               {/* Total Calls */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
-                                <span className={`font-normal text-[0.78vw] ${emp.callsPerUser > 0 ? "text-slate-900" : "text-slate-300"}`}>
+                                <span className={`font-medium text-[0.83vw] ${emp.callsPerUser > 0 ? "text-slate-900" : "text-slate-300"}`}>
                                   {emp.callsPerUser}
                                 </span>
                               </td>
@@ -2896,7 +2896,7 @@ const buildEscalationHistoryString = (call, prod) => {
                               {/* Self Assigned */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.selfAssignedCount > 0 ? (
-                                  <span className="font-normal text-[0.74vw] text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                  <span className="font-medium text-[0.79vw] text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.selfAssignedCount}
                                   </span>
                                 ) : (
@@ -2907,34 +2907,34 @@ const buildEscalationHistoryString = (call, prod) => {
                               {/* Open */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.openCount > 0 ? (
-                                  <span className="font-normal text-[0.74vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                  <span className="font-medium text-[0.79vw] text-amber-700 bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.openCount}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300 font-normal">0</span>
+                                  <span className="text-slate-300 font-medium">0</span>
                                 )}
                               </td>
 
                               {/* Closed */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.closedCount > 0 ? (
-                                  <span className="font-normal text-[0.74vw] text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.45vw] py-[0.08vw] rounded-full">
+                                  <span className="font-medium text-[0.79vw] text-emerald-700 bg-emerald-50 border border-emerald-200 px-[0.45vw] py-[0.08vw] rounded-full">
                                     {emp.closedCount}
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300 font-normal">0</span>
+                                  <span className="text-slate-300 font-medium">0</span>
                                 )}
                               </td>
 
                               {/* Avg Response */}
                               <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap">
                                 {emp.avgResponseTime !== "—" ? (
-                                  <span className="inline-flex items-center gap-[0.25vw] text-slate-700 text-[0.74vw] font-normal">
+                                  <span className="inline-flex items-center gap-[0.25vw] text-slate-700 text-[0.79vw] font-medium">
                                     <Clock className="w-[0.65vw] h-[0.65vw] text-slate-400" />
                                     <span>{emp.avgResponseTime}</span>
                                   </span>
                                 ) : (
-                                  <span className="text-slate-300 font-normal">—</span>
+                                  <span className="text-slate-300 font-medium">—</span>
                                 )}
                               </td>
 
@@ -2950,7 +2950,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                       setCurrentPage(1);
                                     }}
                                     disabled={emp.callsPerUser === 0}
-                                    className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                                    className={`px-[0.7vw] py-[0.3vw] rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap ${
                                       emp.callsPerUser > 0
                                         ? "bg-[#1a73e8] hover:bg-[#1557b0] text-white"
                                         : "bg-slate-200 text-slate-400 cursor-not-allowed opacity-50"
@@ -2976,20 +2976,20 @@ const buildEscalationHistoryString = (call, prod) => {
                             setSelectedEmployee(null);
                             setCurrentPage(1);
                           }}
-                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.2vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-normal text-[0.72vw] cursor-pointer shadow-2xs transition-colors"
+                          className="flex items-center gap-[0.25vw] px-[0.55vw] py-[0.2vw] bg-white border border-slate-300 rounded-full text-slate-700 hover:text-slate-900 hover:bg-slate-100 font-medium text-[0.77vw] cursor-pointer shadow-2xs transition-colors"
                         >
                           <ArrowLeft className="w-[0.75vw] h-[0.75vw]" />
                           <span>Back to All Employees</span>
                         </button>
                         <div className="flex items-center gap-[0.4vw]">
-                          <span className="text-[0.8vw] font-normal text-slate-900">
+                          <span className="text-[0.85vw] font-medium text-slate-900">
                             {selectedEmployee.name}
                           </span>
-                          <span className="text-slate-300 text-[0.72vw]">/</span>
-                          <span className="text-[0.72vw] text-slate-500 font-normal">
+                          <span className="text-slate-300 text-[0.77vw]">/</span>
+                          <span className="text-[0.77vw] text-slate-500 font-medium">
                             {selectedEmployee.department}
                           </span>
-                          <span className="ml-[0.2vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.68vw] font-normal bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
+                          <span className="ml-[0.2vw] px-[0.45vw] py-[0.08vw] rounded-full text-[0.73vw] font-medium bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
                             {selectedEmployeeCalls.length} Assigned Calls
                           </span>
                         </div>
@@ -2998,7 +2998,7 @@ const buildEscalationHistoryString = (call, prod) => {
 
                     <div className="flex-1 overflow-auto">
                       <table className="w-full text-left border-collapse">
-                        <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+                        <thead className="sticky top-0 bg-[#E9EDF7] z-10 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw]">
                           <tr>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">S.No</th>
                             <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[9.5vw] whitespace-nowrap">Registered Date</th>
@@ -3012,7 +3012,7 @@ const buildEscalationHistoryString = (call, prod) => {
                             <th className="py-[0.7vw] px-[0.7vw] text-center sticky right-0 top-0 bg-[#E9EDF7] shadow-[-4px_0_10px_-3px_rgba(0,0,0,0.06)] whitespace-nowrap w-[5vw]">Actions</th>
                           </tr>
                         </thead>
-                        <tbody className="text-[0.8vw]">
+                        <tbody className="text-[0.85vw]">
                           {paginatedData.map((call, cIdx) => {
                             const prods = call.products && call.products.length > 0 ? call.products : [{}];
                             const callSno = (currentPage - 1) * rowsPerPage + cIdx + 1;
@@ -3031,7 +3031,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                   {pIdx === 0 && (
                                     <td
                                       rowSpan={prods.length}
-                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]"
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center font-medium text-slate-700 bg-white whitespace-nowrap text-[0.81vw]"
                                     >
                                       {callSno}
                                     </td>
@@ -3039,14 +3039,14 @@ const buildEscalationHistoryString = (call, prod) => {
                                   {pIdx === 0 && (
                                     <td
                                       rowSpan={prods.length}
-                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white text-slate-700 text-[0.72vw] font-normal leading-normal align-middle"
+                                      className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap bg-white text-slate-700 text-[0.77vw] font-medium leading-normal align-middle"
                                     >
                                       {(() => {
                                         const { date, time } = fmtDateParts(call.createdAt || call.dateTime);
                                         return (
                                           <div className="flex flex-col">
                                             <span>{date}</span>
-                                            {time && <span className="text-[0.66vw] text-slate-500 mt-[0.14vw]">{time}</span>}
+                                            {time && <span className="text-[0.71vw] text-slate-500 mt-[0.14vw]">{time}</span>}
                                           </div>
                                         );
                                       })()}
@@ -3058,7 +3058,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                       className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle whitespace-nowrap bg-white"
                                     >
                                       <div className="flex items-center gap-[0.35vw]">
-                                        <span className="font-mono font-normal text-[0.82vw] text-slate-800 block leading-tight select-text">
+                                        <span className="font-mono font-medium text-[0.87vw] text-slate-800 block leading-tight select-text">
                                           {call.callNumber}
                                         </span>
                                         {(call.editHistory?.length > 0 || call.isEdited) && (
@@ -3077,11 +3077,11 @@ const buildEscalationHistoryString = (call, prod) => {
                                       className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center whitespace-nowrap bg-white align-middle"
                                     >
                                       {isSelf ? (
-                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
+                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
                                           Self Assigned
                                         </span>
                                       ) : (
-                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">
+                                        <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs whitespace-nowrap">
                                           Registered
                                         </span>
                                       )}
@@ -3105,11 +3105,11 @@ const buildEscalationHistoryString = (call, prod) => {
                                       className="max-w-full"
                                       content={
                                         <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                                          <div className="font-normal text-slate-200">
+                                          <div className="font-medium text-slate-200">
                                             {prod.productModel || prod.itemCode || "—"}
                                           </div>
                                           {prod.serialNumber && (
-                                            <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                            <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                               <span className="text-slate-400 font-sans">SN: </span>
                                               <span>{prod.serialNumber}</span>
                                             </div>
@@ -3117,29 +3117,29 @@ const buildEscalationHistoryString = (call, prod) => {
                                         </div>
                                       }
                                     >
-                                      <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                                      <div className="font-medium text-slate-800 text-[0.85vw] truncate cursor-default">
                                         {prod.productModel || prod.itemCode || "—"}
                                       </div>
                                     </CustomTooltip>
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-normal">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.77vw] font-medium leading-normal">
                                     {(() => {
                                       const { date, time } = fmtDateParts(prod._assignedAt || call.createdAt);
                                       return (
                                         <div className="flex flex-col">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.13vw]">{time}</span>}
+                                          {time && <span className="text-[0.71vw] text-slate-500 mt-[0.13vw]">{time}</span>}
                                         </div>
                                       );
                                     })()}
                                   </td>
-                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.72vw] font-normal leading-normal">
+                                  <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 whitespace-nowrap text-slate-700 text-[0.77vw] font-medium leading-normal">
                                     {isClosed ? (() => {
                                       const { date, time } = fmtDateParts(prod._productClosure?.closedAt || prod._productClosure?.date);
                                       return (
                                         <div className="flex flex-col">
                                           <span>{date}</span>
-                                          {time && <span className="text-[0.66vw] text-slate-500 mt-[0.13vw]">{time}</span>}
+                                          {time && <span className="text-[0.71vw] text-slate-500 mt-[0.13vw]">{time}</span>}
                                         </div>
                                       );
                                     })() : (
@@ -3162,7 +3162,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                         badgeStyle = "bg-[#5551f3] text-white";
                                       }
                                       return (
-                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.72vw] font-normal min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
+                                        <span className={`inline-flex items-center justify-center px-[1vw] py-[0.35vw] rounded-lg text-[0.77vw] font-medium min-w-[6.2vw] shadow-xs tracking-wide ${badgeStyle}`}>
                                           {displayStatus}
                                         </span>
                                       );
@@ -3172,7 +3172,7 @@ const buildEscalationHistoryString = (call, prod) => {
                                     <div className="flex items-center justify-center gap-[0.3vw]">
                                       <button
                                         onClick={() => setSelectedInfoCall(call)}
-                                        className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap"
+                                        className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap"
                                       >
                                         View Reports
                                       </button>
@@ -3210,7 +3210,7 @@ const buildEscalationHistoryString = (call, prod) => {
 
             {/* ── Modern Pagination Footer (matching ServiceCall) ────────── */}
             <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-t border-slate-300 bg-white shrink-0">
-              <div className="text-[0.74vw] text-slate-500 font-medium">
+              <div className="text-[0.79vw] text-slate-500 font-medium">
                 Showing{" "}
                 <span className="font-semibold text-slate-900">
                   {activeDataset.length === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1}
@@ -3246,7 +3246,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         return (
                           <span
                             key={pNum}
-                            className="px-1 text-gray-400 text-[0.75vw]"
+                            className="px-1 text-gray-400 text-[0.8vw]"
                           >
                             ...
                           </span>
@@ -3257,7 +3257,7 @@ const buildEscalationHistoryString = (call, prod) => {
                       <button
                         key={pNum}
                         onClick={() => setCurrentPage(pNum)}
-                        className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                        className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-bold transition-all cursor-pointer ${
                           currentPage === pNum
                             ? "bg-[#1a73e8] text-white shadow-2xs"
                             : "bg-white border border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600"
@@ -3301,11 +3301,11 @@ const buildEscalationHistoryString = (call, prod) => {
                     <Edit3 className="w-[1vw] h-[1vw]" />
                   </div>
                   <div>
-                    <h3 className="text-[1vw] font-semibold text-slate-800 leading-tight">
+                    <h3 className="text-[1.05vw] font-semibold text-slate-800 leading-tight">
                       Edit Submitted Report
                     </h3>
-                    <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.15vw] flex items-center gap-[0.35vw]">
-                      <span className="font-normal text-[#6e000a] font-mono">{editingReportItem.callNumber}</span>
+                    <div className="text-[0.77vw] text-slate-500 font-medium mt-[0.15vw] flex items-center gap-[0.35vw]">
+                      <span className="font-medium text-[#6e000a] font-mono">{editingReportItem.callNumber}</span>
                       <span className="text-slate-300">•</span>
                       <span className="truncate max-w-[18vw] text-slate-600">
                         {editingReportItem.product.productModel || editingReportItem.product.productDescription || editingReportItem.product.itemCode || "Equipment"}
@@ -3326,7 +3326,7 @@ const buildEscalationHistoryString = (call, prod) => {
               <form onSubmit={handleSaveEditReport} className="p-[1.4vw] flex flex-col gap-[1.1vw]">
                 {/* Status Segmented Selection (from ProductClosurePanel / Response modal) */}
                 <div className="flex flex-col gap-[0.35vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700">
+                  <label className="text-[0.81vw] font-medium text-slate-700">
                     Report Outcome / Status
                   </label>
                   <div className="flex items-center gap-[0.4vw] w-full">
@@ -3377,7 +3377,7 @@ const buildEscalationHistoryString = (call, prod) => {
                           type="button"
                           key={tab.k}
                           onClick={() => setEditForm((prev) => ({ ...prev, status: tab.k }))}
-                          className={`flex-1 min-w-0 flex items-center justify-center gap-[0.3vw] py-[0.5vw] px-[0.4vw] rounded-[0.45vw] border text-[0.74vw] font-medium transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
+                          className={`flex-1 min-w-0 flex items-center justify-center gap-[0.3vw] py-[0.5vw] px-[0.4vw] rounded-[0.45vw] border text-[0.79vw] font-medium transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
                             isActive
                               ? tab.activeStyle
                               : `bg-white border-slate-200 text-slate-650 ${tab.hoverStyle}`
@@ -3393,7 +3393,7 @@ const buildEscalationHistoryString = (call, prod) => {
 
                 {/* Reverse Escalate Info Notice (if ReverseEscalate selected) */}
                 {editForm.status === "ReverseEscalate" && (
-                  <div className="bg-rose-50/70 border border-rose-200/80 rounded-[0.55vw] p-[0.75vw] text-[0.72vw] text-rose-800 flex items-center gap-[0.5vw]">
+                  <div className="bg-rose-50/70 border border-rose-200/80 rounded-[0.55vw] p-[0.75vw] text-[0.77vw] text-rose-800 flex items-center gap-[0.5vw]">
                     <RotateCcw className="w-[0.85vw] h-[0.85vw] text-rose-600 shrink-0" />
                     <span>
                       This report will be sent back to previous assignee:{" "}
@@ -3406,7 +3406,7 @@ const buildEscalationHistoryString = (call, prod) => {
 
                 {/* Resolution / Outcome Remarks */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                  <label className="text-[0.81vw] font-medium text-slate-700 flex items-center justify-between">
                     <span>
                       {editForm.status === "Resolved"
                         ? "Resolution Details / Solution Notes"
@@ -3417,7 +3417,7 @@ const buildEscalationHistoryString = (call, prod) => {
                         : "Report Remarks / Findings"}{" "}
                       <span className="text-rose-500">*</span>
                     </span>
-                    <span className="text-[0.68vw] text-slate-400 font-normal">Mandatory</span>
+                    <span className="text-[0.73vw] text-slate-400 font-medium">Mandatory</span>
                   </label>
                   <textarea
                     rows={3}
@@ -3429,18 +3429,18 @@ const buildEscalationHistoryString = (call, prod) => {
                         ? "Enter reason for sending this report back to the previous engineer..."
                         : "Enter comprehensive findings, steps taken, or reason..."
                     }
-                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
+                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.81vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-medium resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
                   />
                 </div>
 
                 {/* Mandatory Edit Reason (only needed when updating report, not when reverse escalating) */}
                 {editForm.status !== "ReverseEscalate" && (
                   <div className="flex flex-col gap-[0.3vw]">
-                    <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                    <label className="text-[0.81vw] font-medium text-slate-700 flex items-center justify-between">
                       <span>
                         Mandatory Reason for Editing Report <span className="text-rose-500">*</span>
                       </span>
-                      <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
+                      <span className="text-[0.73vw] text-slate-400 font-medium">Required for audit trail</span>
                     </label>
                     <input
                       type="text"
@@ -3448,7 +3448,7 @@ const buildEscalationHistoryString = (call, prod) => {
                       value={editForm.editReason}
                       onChange={(e) => setEditForm((prev) => ({ ...prev, editReason: e.target.value }))}
                       placeholder="e.g. Corrected faulty capacitor replaced details, customer update..."
-                      className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-normal placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
+                      className="w-full px-[0.8vw] py-[0.55vw] text-[0.81vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/10 text-slate-800 font-medium placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
                     />
                   </div>
                 )}
@@ -3459,7 +3459,7 @@ const buildEscalationHistoryString = (call, prod) => {
                     type="button"
                     disabled={isSubmittingEdit}
                     onClick={() => setEditingReportItem(null)}
-                    className="px-[0.95vw] py-[0.45vw] text-[0.75vw] font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-[0.4vw] transition-colors cursor-pointer"
+                    className="px-[0.95vw] py-[0.45vw] text-[0.8vw] font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-[0.4vw] transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -3470,7 +3470,7 @@ const buildEscalationHistoryString = (call, prod) => {
                       !editForm.remarks.trim() ||
                       (editForm.status !== "ReverseEscalate" && !editForm.editReason.trim())
                     }
-                    className={`px-[1.1vw] py-[0.45vw] text-[0.75vw] font-semibold text-white rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50 active:scale-98 ${
+                    className={`px-[1.1vw] py-[0.45vw] text-[0.8vw] font-semibold text-white rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50 active:scale-98 ${
                       editForm.status === "ReverseEscalate"
                         ? "bg-rose-600 hover:bg-rose-700 active:bg-rose-800 shadow-rose-500/20"
                         : "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 shadow-indigo-500/20"

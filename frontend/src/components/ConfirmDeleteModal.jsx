@@ -64,10 +64,10 @@ export default function ConfirmDeleteModal({
                 <AlertTriangle className="w-[1.2vw] h-[1.2vw] text-rose-600" />
               </div>
               <div className="flex-1 min-w-0 pr-[0.5vw]">
-                <h3 className="text-[0.95vw] font-bold text-slate-850 leading-snug">
+                <h3 className="text-[1vw] font-bold text-slate-850 leading-snug">
                   {title}
                 </h3>
-                <p className="text-[0.78vw] text-slate-500 mt-[0.2vw] leading-relaxed">
+                <p className="text-[0.83vw] text-slate-500 mt-[0.2vw] leading-relaxed">
                   {message || (
                     <>
                       Are you sure you want to delete{" "}
@@ -106,7 +106,7 @@ export default function ConfirmDeleteModal({
             {/* Warning Callout */}
             <div className="mx-[1.2vw] mb-[1vw] px-[0.8vw] py-[0.5vw] bg-rose-50/60 rounded-[0.5vw] border border-rose-150 flex items-center gap-[0.5vw]">
               <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-rose-500 shrink-0" />
-              <span className="text-[0.72vw] font-semibold text-rose-800">
+              <span className="text-[0.77vw] font-semibold text-rose-800">
                 All associated product records and history will be permanently removed.
               </span>
             </div>
@@ -117,7 +117,7 @@ export default function ConfirmDeleteModal({
                 type="button"
                 disabled={isLoading}
                 onClick={onClose}
-                className="px-[1vw] py-[0.45vw] text-[0.8vw] font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-200/70 border border-slate-300/80 bg-white rounded-[0.5vw] transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+                className="px-[1vw] py-[0.45vw] text-[0.85vw] font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-200/70 border border-slate-300/80 bg-white rounded-[0.5vw] transition-colors shadow-xs cursor-pointer disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -125,7 +125,7 @@ export default function ConfirmDeleteModal({
                 type="button"
                 disabled={isLoading}
                 onClick={onConfirm}
-                className="px-[1.1vw] py-[0.45vw] text-[0.8vw] font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.5vw] transition-all shadow-sm hover:shadow-md flex items-center gap-[0.4vw] cursor-pointer disabled:opacity-60"
+                className="px-[1.1vw] py-[0.45vw] text-[0.85vw] font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.5vw] transition-all shadow-sm hover:shadow-md flex items-center gap-[0.4vw] cursor-pointer disabled:opacity-60"
               >
                 {isLoading ? (
                   <span className="inline-block w-[0.85vw] h-[0.85vw] border-2 border-white/30 border-t-white rounded-full animate-spin" />

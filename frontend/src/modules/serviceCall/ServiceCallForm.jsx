@@ -504,21 +504,21 @@ const ServiceCallForm = ({
           <button
             type="button"
             onClick={onBack}
-            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors"
+            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.83vw] font-medium transition-colors"
           >
             <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
             <span>Back</span>
           </button>
-          <h2 className="text-[1.05vw] font-bold text-slate-800">
+          <h2 className="text-[1.1vw] font-bold text-slate-800">
             {isEdit ? "Edit Service Call" : "New Service Call Entry"}
           </h2>
           {isEdit && (
-            <span className="text-[0.74vw] bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.15vw] rounded-full font-semibold">
+            <span className="text-[0.79vw] bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.15vw] rounded-full font-semibold">
               Adding products will sync to escalation queue
             </span>
           )}
         </div>
-        <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.8vw] flex items-center gap-[0.4vw]">
+        <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.85vw] flex items-center gap-[0.4vw]">
           <span className="text-slate-500 font-medium">Call No:</span>
           <span className="font-mono font-bold text-blue-600">
             {formData.callNumber}
@@ -534,21 +534,21 @@ const ServiceCallForm = ({
           <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
             <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
             <Clock className="w-[1vw] h-[1vw] text-blue-600" />
-            <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+            <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
               Call Details
             </h3>
           </div>
           <div className="grid grid-cols-4 gap-[1.2vw]">
             <div className="flex flex-col gap-[0.35vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Call Number</label>
+              <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Call Number</label>
               <input
                 readOnly
                 value={formData.callNumber}
-                className="bg-slate-100/70 border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-mono outline-none"
+                className="bg-slate-100/70 border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-600 cursor-not-allowed font-mono outline-none"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Date & Time</label>
+              <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Date & Time</label>
               {allowEditDate ? (
                 <input
                   type="datetime-local"
@@ -573,7 +573,7 @@ const ServiceCallForm = ({
                       timestamp: d.toISOString(),
                     }));
                   }}
-                  className="bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
+                  className="bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 cursor-pointer transition-all"
                 />
               ) : (
                 <input
@@ -597,13 +597,13 @@ const ServiceCallForm = ({
                       return formData.dateTime || "";
                     }
                   })()}
-                  className="bg-slate-100/70 border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed font-medium outline-none"
+                  className="bg-slate-100/70 border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-600 cursor-not-allowed font-medium outline-none"
                   title="Auto date (read only)"
                 />
               )}
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="mode">
-              <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
+              <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
                 <span>Mode of Call <span className="text-rose-500">*</span></span>
                 <button
                   type="button"
@@ -618,20 +618,20 @@ const ServiceCallForm = ({
                 value={formData.mode}
                 onChange={(val) => set("mode", val)}
                 options={modes.map((m) => ({ value: m, label: m }))}
-                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.85vw] text-slate-800 ${
                   errors.mode ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-400"
                 }`}
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="priority">
-              <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
+              <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">
                 Priority <span className="text-rose-500">*</span>
               </label>
               <CustomDropdown
                 value={formData.priority}
                 onChange={(val) => set("priority", val)}
                 options={PRIORITIES.map((p) => ({ value: p, label: p }))}
-                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] font-medium ${
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.85vw] font-medium ${
                   errors.priority ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-400"
                 } ${
                   formData.priority === "Critical"
@@ -650,13 +650,13 @@ const ServiceCallForm = ({
           <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
             <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
             <User className="w-[1vw] h-[1vw] text-blue-600" />
-            <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+            <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
               Customer Information
             </h3>
           </div>
           <div className="grid grid-cols-5 gap-[1vw]">
             <div className="flex flex-col gap-[0.35vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">
+              <label className="text-[0.81vw] font-semibold text-slate-700">
                 Customer Type
               </label>
               <CustomDropdown
@@ -674,7 +674,7 @@ const ServiceCallForm = ({
                   { value: "All", label: "All Types" },
                   ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.85vw] text-slate-800"
               />
             </div>
             <div
@@ -682,9 +682,9 @@ const ServiceCallForm = ({
               ref={custRef}
               data-error-field="customerName"
             >
-              <label className="text-[0.76vw] font-semibold text-slate-700 flex justify-between">
+              <label className="text-[0.81vw] font-semibold text-slate-700 flex justify-between">
                 <span>Customer Name <span className="text-rose-500">*</span></span>
-                <span className="text-[0.72vw] text-slate-400 font-normal">
+                <span className="text-[0.77vw] text-slate-400 font-medium">
                   ({filteredCustomers.length} available)
                 </span>
               </label>
@@ -700,7 +700,7 @@ const ServiceCallForm = ({
                     }}
                     onFocus={() => setShowCustSearch(true)}
                     placeholder="Search & select customer…"
-                    className={`w-full border-[1.5px] rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                    className={`w-full border-[1.5px] rounded-[0.5vw] pl-[2.2vw] pr-[2vw] h-[2.3vw] bg-white text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                       errors.customerName
                         ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
@@ -744,7 +744,7 @@ const ServiceCallForm = ({
                     });
                     setShowAddCustModal(true);
                   }}
-                  className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors shrink-0 shadow-xs"
+                  className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.83vw] font-medium transition-colors shrink-0 shadow-xs"
                 >
                   <UserPlus className="w-[0.9vw] h-[0.9vw]" />
                   <span>New</span>
@@ -765,15 +765,15 @@ const ServiceCallForm = ({
                         className="p-[0.65vw] hover:bg-blue-50/70 cursor-pointer border-b border-slate-100 last:border-0 flex justify-between items-center transition-colors"
                       >
                         <div>
-                          <div className="font-medium text-slate-800 text-[0.8vw]">
+                          <div className="font-medium text-slate-800 text-[0.85vw]">
                             {c.name}
                           </div>
-                          <div className="text-[0.68vw] text-slate-400 font-mono">
+                          <div className="text-[0.73vw] text-slate-400 font-mono">
                             {c.code}
                           </div>
                         </div>
                         <span
-                          className={`text-[0.68vw] px-[0.45vw] py-[0.1vw] rounded font-medium border ${getTypeColor(c.type)}`}
+                          className={`text-[0.73vw] px-[0.45vw] py-[0.1vw] rounded font-medium border ${getTypeColor(c.type)}`}
                         >
                           {c.type}
                         </span>
@@ -784,7 +784,7 @@ const ServiceCallForm = ({
                       .toLowerCase()
                       .includes(formData.customerName.toLowerCase()),
                   ).length === 0 && (
-                    <div className="p-[1vw] text-slate-400 text-center text-[0.76vw]">
+                    <div className="p-[1vw] text-slate-400 text-center text-[0.81vw]">
                       No customers found
                     </div>
                   )}
@@ -792,14 +792,14 @@ const ServiceCallForm = ({
               )}
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="contactPerson">
-              <label className="text-[0.76vw] font-semibold text-slate-700">
+              <label className="text-[0.81vw] font-semibold text-slate-700">
                 Contact Person <span className="text-rose-500">*</span>
               </label>
               <input
                 value={formData.contactPerson}
                 onChange={(e) => set("contactPerson", e.target.value)}
                 placeholder="e.g. John Doe"
-                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactPerson
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                     : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
@@ -807,14 +807,14 @@ const ServiceCallForm = ({
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="contactNumber">
-              <label className="text-[0.76vw] font-semibold text-slate-700">
+              <label className="text-[0.81vw] font-semibold text-slate-700">
                 Contact Number
               </label>
               <input
                 value={formData.contactNumber}
                 onChange={(e) => set("contactNumber", e.target.value)}
                 placeholder="e.g. +91 9876543210"
-                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.contactNumber
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                     : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
@@ -822,17 +822,17 @@ const ServiceCallForm = ({
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">Email ID</label>
+              <label className="text-[0.81vw] font-semibold text-slate-700">Email ID</label>
               <input
                 type="email"
                 value={formData.emailId}
                 onChange={(e) => set("emailId", e.target.value)}
                 placeholder="e.g. client@example.com"
-                className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">
+              <label className="text-[0.81vw] font-semibold text-slate-700">
                 Location Type
               </label>
               <CustomDropdown
@@ -858,11 +858,11 @@ const ServiceCallForm = ({
                   { value: "IPR", label: "IPR" },
                   { value: "Site", label: "Site" },
                 ]}
-                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
+                triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.85vw] text-slate-800"
               />
             </div>
             <div className="flex flex-col gap-[0.35vw] col-span-2" data-error-field="location">
-              <label className="text-[0.76vw] font-semibold text-slate-700">
+              <label className="text-[0.81vw] font-semibold text-slate-700">
                 {formData.locationType === "Site" ? (
                   <>Site Address <span className="text-rose-500">*</span></>
                 ) : (
@@ -873,7 +873,7 @@ const ServiceCallForm = ({
                 value={formData.location}
                 onChange={(e) => set("location", e.target.value)}
                 placeholder={formData.locationType === "Site" ? "Enter site address" : "City, State"}
-                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
+                className={`border-[1.5px] rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none transition-all ${
                   errors.location
                     ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                     : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
@@ -881,7 +881,7 @@ const ServiceCallForm = ({
               />
             </div>
             <div className="flex flex-col gap-[0.35vw]" data-error-field="site">
-              <label className="text-[0.76vw] font-semibold text-slate-700">
+              <label className="text-[0.81vw] font-semibold text-slate-700">
                 Site <span className="text-rose-500">*</span>
               </label>
               <CustomDropdown
@@ -895,18 +895,18 @@ const ServiceCallForm = ({
                     label: s.name,
                   })),
                 ]}
-                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.8vw] text-slate-800 ${
+                triggerClassName={`h-[2.3vw] !rounded-[0.5vw] text-[0.85vw] text-slate-800 ${
                   errors.site ? "!border-rose-300 ring-2 ring-rose-100 bg-rose-50/20" : "border-slate-400"
                 }`}
               />
             </div>
             {formData.partyCode && (
               <div className="col-span-5 flex flex-col gap-[0.35vw] mt-[0.3vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center gap-[0.5vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center gap-[0.5vw]">
                   <History className="w-[0.95vw] h-[0.95vw] text-blue-600" />
                   <span>Customer History</span>
                   {customerHistory.length > 0 && (
-                    <span className="text-[0.68vw] bg-blue-50 text-blue-700 px-[0.55vw] py-[0.1vw] rounded-full font-bold border border-blue-200">
+                    <span className="text-[0.73vw] bg-blue-50 text-blue-700 px-[0.55vw] py-[0.1vw] rounded-full font-bold border border-blue-200">
                       {customerHistory.length} Call
                       {customerHistory.length > 1 ? "s" : ""}
                     </span>
@@ -922,23 +922,23 @@ const ServiceCallForm = ({
                         <div className="flex flex-col mb-[0.4vw]">
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-[0.6vw]">
-                              <span className="font-mono text-[0.8vw] font-bold text-slate-900">
+                              <span className="font-mono text-[0.85vw] font-bold text-slate-900">
                                 {call.callNumber}
                               </span>
-                              <span className="text-[0.68vw] text-slate-400 font-medium">
+                              <span className="text-[0.73vw] text-slate-400 font-medium">
                                 {new Date(call.timestamp).toLocaleDateString(
                                   "en-GB",
                                 )}
                               </span>
                             </div>
                             <span
-                              className={`px-[0.45vw] py-[0.1vw] rounded text-[0.66vw] font-medium border ${call.status === "Resolved" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}
+                              className={`px-[0.45vw] py-[0.1vw] rounded text-[0.71vw] font-medium border ${call.status === "Resolved" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}
                             >
                               {call.status}
                             </span>
                           </div>
                           {(call.contactPerson || call.contactNumber) && (
-                            <div className="flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.72vw] text-slate-600">
+                            <div className="flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.77vw] text-slate-600">
                               <User className="w-[0.8vw] h-[0.8vw] text-slate-400" />
                               <span className="font-medium">
                                 {call.contactPerson || "N/A"}
@@ -963,18 +963,18 @@ const ServiceCallForm = ({
                               >
                                 <div className="flex justify-between items-start">
                                   <div className="flex flex-wrap items-center gap-[0.4vw]">
-                                    <span className="text-[0.74vw] text-slate-800 font-medium">
+                                    <span className="text-[0.79vw] text-slate-800 font-medium">
                                       {p.productModel ||
                                         p.itemCode ||
                                         "Unknown Product"}
                                     </span>
                                     {p.serialNumber && (
-                                      <span className="text-[0.66vw] text-slate-500 font-mono">
+                                      <span className="text-[0.71vw] text-slate-500 font-mono">
                                         SN: {p.serialNumber}
                                       </span>
                                     )}
                                     {p.errorCode && (
-                                      <span className="text-[0.64vw] bg-rose-50 text-rose-600 border border-rose-200 px-[0.35vw] py-[0.05vw] rounded font-mono font-medium uppercase">
+                                      <span className="text-[0.69vw] bg-rose-50 text-rose-600 border border-rose-200 px-[0.35vw] py-[0.05vw] rounded font-mono font-medium uppercase">
                                         {p.errorCode}
                                       </span>
                                     )}
@@ -984,13 +984,13 @@ const ServiceCallForm = ({
                                     onClick={() =>
                                       setSelectedHistoryProduct(historyList)
                                     }
-                                    className="text-[0.68vw] text-blue-600 hover:text-blue-800 font-medium underline cursor-pointer"
+                                    className="text-[0.73vw] text-blue-600 hover:text-blue-800 font-medium underline cursor-pointer"
                                   >
                                     View History
                                   </button>
                                 </div>
                                 {latestRemark && (
-                                  <div className="text-[0.72vw] text-slate-600 italic bg-white p-[0.35vw] rounded border border-slate-200">
+                                  <div className="text-[0.77vw] text-slate-600 italic bg-white p-[0.35vw] rounded border border-slate-200">
                                     "{latestRemark}"
                                   </div>
                                 )}
@@ -1003,7 +1003,7 @@ const ServiceCallForm = ({
                   ) : (
                     <div className="flex flex-col items-center justify-center py-[2vw] text-slate-400">
                       <History className="w-[1.5vw] h-[1.5vw] mb-[0.4vw] opacity-30" />
-                      <p className="text-[0.78vw]">
+                      <p className="text-[0.83vw]">
                         No previous call records found
                       </p>
                     </div>
@@ -1020,11 +1020,11 @@ const ServiceCallForm = ({
             <div className="flex items-center gap-[0.45vw]">
               <span className="w-[0.25vw] h-[0.9vw] bg-indigo-600 rounded-full inline-block" />
               <Package className="w-[1vw] h-[1vw] text-indigo-600" />
-              <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
                 Product Details
               </h3>
               {isEdit && (
-                <span className="text-[0.72vw] bg-amber-50 text-amber-700 border border-amber-200 px-[0.5vw] py-[0.1vw] rounded-full font-medium ml-[0.4vw]">
+                <span className="text-[0.77vw] bg-amber-50 text-amber-700 border border-amber-200 px-[0.5vw] py-[0.1vw] rounded-full font-medium ml-[0.4vw]">
                   New products will be added to escalation queue
                 </span>
               )}
@@ -1033,7 +1033,7 @@ const ServiceCallForm = ({
               type="button"
               onClick={addProduct}
               disabled={!formData.partyCode}
-              className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.78vw] font-medium cursor-pointer disabled:opacity-50 transition-colors shadow-xs"
+              className="flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.83vw] font-medium cursor-pointer disabled:opacity-50 transition-colors shadow-xs"
             >
               <PlusCircle className="w-[0.9vw] h-[0.9vw]" />
               <span>Add Product</span>
@@ -1055,7 +1055,7 @@ const ServiceCallForm = ({
                     <Trash2 className="w-[0.95vw] h-[0.95vw]" />
                   </button>
                 )}
-                <div className="text-[0.82vw] font-bold text-slate-700 mb-[0.8vw] flex items-center gap-[0.4vw]">
+                <div className="text-[0.87vw] font-bold text-slate-700 mb-[0.8vw] flex items-center gap-[0.4vw]">
                   <Smartphone className="w-[0.95vw] h-[0.95vw] text-blue-600" />
                   Product #{idx + 1}
                 </div>
@@ -1065,7 +1065,7 @@ const ServiceCallForm = ({
                     ref={(el) => (prodRefs.current[idx] = el)}
                     data-error-field={`product_${idx}_productModel`}
                   >
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Product Model <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
@@ -1088,7 +1088,7 @@ const ServiceCallForm = ({
                             ? "Select customer first"
                             : "Search product…"
                         }
-                        className={`w-full border-[1.5px] rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.8vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
+                        className={`w-full border-[1.5px] rounded-[0.5vw] pl-[2.2vw] pr-[0.8vw] h-[2.3vw] bg-white text-[0.85vw] text-slate-800 placeholder-slate-400 outline-none disabled:bg-slate-100 disabled:cursor-not-allowed transition-all ${
                           errors[`product_${idx}_productModel`]
                             ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                             : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
@@ -1134,10 +1134,10 @@ const ServiceCallForm = ({
                                   onClick={() => selectProduct(idx, prod)}
                                   className="p-[0.65vw] hover:bg-blue-50/70 cursor-pointer border-b border-slate-100 last:border-0 transition-colors"
                                 >
-                                  <div className="font-medium text-slate-800 text-[0.8vw]">
+                                  <div className="font-medium text-slate-800 text-[0.85vw]">
                                     {prod.itemDescription}
                                   </div>
-                                  <div className="text-[0.68vw] text-slate-400 font-mono mt-[0.1vw]">
+                                  <div className="text-[0.73vw] text-slate-400 font-mono mt-[0.1vw]">
                                     {prod.itemCode}
                                     {prod.productSegment &&
                                       ` • ${prod.productSegment}`}
@@ -1150,7 +1150,7 @@ const ServiceCallForm = ({
                     </div>
                   </div>
                   <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Product Segment
                     </label>
                     <CustomDropdown
@@ -1163,11 +1163,11 @@ const ServiceCallForm = ({
                         { value: "", label: "-- Select Segment --" },
                         ...uniqueSegments.map((seg) => ({ value: seg, label: seg })),
                       ]}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.85vw] text-slate-800"
                     />
                   </div>
                   <div className="col-span-1 flex flex-col gap-[0.35vw]">
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Serial Number
                     </label>
                     <input
@@ -1175,13 +1175,13 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "serialNumber", e.target.value)
                       }
-                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.85vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="e.g. SN-12345"
                     />
                   </div>
 
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Warranty Days
                     </label>
                     <input
@@ -1191,12 +1191,12 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "warrantyPeriodDays", e.target.value)
                       }
-                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.85vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="Days"
                     />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Warranty Status
                     </label>
                     <CustomDropdown
@@ -1205,11 +1205,11 @@ const ServiceCallForm = ({
                         changeProduct(idx, "warrantyStatus", val)
                       }
                       options={WARRANTY_STATUS.map((s) => ({ value: s, label: s }))}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.85vw] text-slate-800"
                     />
                   </div>
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Error Code
                     </label>
                     <input
@@ -1217,13 +1217,13 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "errorCode", e.target.value)
                       }
-                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.8vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="border-[1.5px] border-slate-400 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] outline-none text-[0.85vw] text-slate-800 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       placeholder="e.g. E-404"
                     />
                   </div>
 
                   <div className="flex flex-col gap-[0.35vw]">
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Photo/Video Received?
                     </label>
                     <CustomDropdown
@@ -1235,12 +1235,12 @@ const ServiceCallForm = ({
                         { value: "Yes", label: "Yes" },
                         { value: "No", label: "No" },
                       ]}
-                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.8vw] text-slate-800"
+                      triggerClassName="h-[2.3vw] !rounded-[0.5vw] border-[1.5px] border-slate-400 text-[0.85vw] text-slate-800"
                     />
                   </div>
 
                   <div className="col-span-2 flex flex-col gap-[0.35vw]" data-error-field={`product_${idx}_callDescription`}>
-                    <label className="font-semibold text-slate-700 text-[0.76vw]">
+                    <label className="font-semibold text-slate-700 text-[0.81vw]">
                       Call Description / Fault <span className="text-rose-500">*</span>
                     </label>
                     <textarea
@@ -1249,7 +1249,7 @@ const ServiceCallForm = ({
                       onChange={(e) =>
                         changeProduct(idx, "callDescription", e.target.value)
                       }
-                      className={`border-[1.5px] rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.8vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
+                      className={`border-[1.5px] rounded-[0.5vw] p-[0.75vw] outline-none resize-none text-[0.85vw] text-slate-800 placeholder-slate-400 transition-all h-full ${
                         errors[`product_${idx}_callDescription`]
                           ? "border-rose-300 ring-2 ring-rose-100 bg-rose-50/20"
                           : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
@@ -1261,7 +1261,7 @@ const ServiceCallForm = ({
                   <div className="col-span-2">
                     {product.mediaReceived === "Yes" ? (
                       <div className="flex flex-col h-full">
-                        <label className="font-semibold text-slate-700 text-[0.76vw] mb-[0.35vw]">
+                        <label className="font-semibold text-slate-700 text-[0.81vw] mb-[0.35vw]">
                           Media Attachments
                         </label>
                         <div className="flex-1 border-2 border-dashed border-slate-400 rounded-[0.6vw] p-[0.8vw] bg-blue-50/20 min-h-[7vw] flex flex-wrap gap-[0.6vw]">
@@ -1303,7 +1303,7 @@ const ServiceCallForm = ({
                                 ) : (
                                   <div className="text-slate-400 flex flex-col items-center gap-[0.2vw]">
                                     <FileText className="w-[1.4vw] h-[1.4vw]" />
-                                    <span className="text-[0.6vw] truncate w-[4vw] text-center font-medium">
+                                    <span className="text-[0.65vw] truncate w-[4vw] text-center font-medium">
                                       {file.name}
                                     </span>
                                   </div>
@@ -1410,7 +1410,7 @@ const ServiceCallForm = ({
                             ) : (
                               <Plus className="w-[1.2vw] h-[1.2vw] text-blue-500 mb-[0.2vw]" />
                             )}
-                            <span className="text-[0.66vw] font-bold text-blue-600 text-center leading-tight">
+                            <span className="text-[0.71vw] font-bold text-blue-600 text-center leading-tight">
                               {uploadingMedia[idx] ? (
                                 "Uploading..."
                               ) : (
@@ -1481,7 +1481,7 @@ const ServiceCallForm = ({
                       </div>
                     ) : (
                       <div className="h-full flex items-center justify-center bg-slate-100/50 rounded-[0.6vw] border border-slate-200">
-                        <p className="text-[0.74vw] text-slate-400 italic">
+                        <p className="text-[0.79vw] text-slate-400 italic">
                           No media required
                         </p>
                       </div>
@@ -1500,7 +1500,7 @@ const ServiceCallForm = ({
           <button
             type="button"
             onClick={onBack}
-            className="form-cancel-btn px-[1.4vw] h-[2.2vw] border-2 border-slate-400 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-colors"
+            className="form-cancel-btn px-[1.4vw] h-[2.2vw] border-2 border-slate-400 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.83vw] transition-colors"
           >
             <X className="w-[0.9vw] h-[0.9vw]" />
             <span>Cancel</span>
@@ -1508,7 +1508,7 @@ const ServiceCallForm = ({
           {(isEdit ? canUpdate : canWrite) && (
             <button
               type="submit"
-              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.78vw] shadow-sm hover:shadow transition-all"
+              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.83vw] shadow-sm hover:shadow transition-all"
             >
               <Save className="w-[0.9vw] h-[0.9vw]" />
               <span>{isEdit ? "Update Record" : "Save Service Call"}</span>
@@ -1554,7 +1554,7 @@ const ServiceCallForm = ({
             className="bg-white w-[58vw] rounded-[0.8vw] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
           >
             <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-              <h2 className="text-[1.2vw] font-semibold text-gray-900">
+              <h2 className="text-[1.25vw] font-semibold text-gray-900">
                 Add Customer & Items
               </h2>
               <button
@@ -1569,7 +1569,7 @@ const ServiceCallForm = ({
               className="p-[1vw] flex flex-col gap-[1vw] overflow-y-auto"
             >
               <div className="bg-gray-50 p-[1vw] rounded-[0.5vw] border border-slate-400">
-                <h3 className="text-[0.9vw] font-bold text-gray-700 mb-[0.8vw]">
+                <h3 className="text-[0.95vw] font-bold text-gray-700 mb-[0.8vw]">
                   Party Details
                 </h3>
                 <div className="grid grid-cols-2 gap-[1.5vw] mb-[0.8vw]">
@@ -1662,13 +1662,13 @@ const ServiceCallForm = ({
 
               <div className="bg-white border border-slate-400 rounded-[0.5vw] p-[1vw]">
                 <div className="flex justify-between items-center mb-[0.5vw]">
-                  <h3 className="text-[0.9vw] font-bold text-gray-700">
+                  <h3 className="text-[0.95vw] font-bold text-gray-700">
                     Product Items
                   </h3>
                   <button
                     type="button"
                     onClick={handleAddCustItemRow}
-                    className="text-blue-600 hover:text-blue-800 text-[0.8vw] font-semibold flex items-center gap-1 cursor-pointer"
+                    className="text-blue-600 hover:text-blue-800 text-[0.85vw] font-semibold flex items-center gap-1 cursor-pointer"
                   >
                     <PlusCircle className="w-[1vw] h-[1vw]" /> Add Item
                   </button>
@@ -1681,7 +1681,7 @@ const ServiceCallForm = ({
                     >
                       <div className="flex-1 flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.75vw] text-gray-500">
+                          <label className="text-[0.8vw] text-gray-500">
                             Product Segment
                           </label>
                         )}
@@ -1696,13 +1696,13 @@ const ServiceCallForm = ({
                               e.target.value,
                             )
                           }
-                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.9vw]"
                           placeholder="Segment"
                         />
                       </div>
                       <div className="flex-1 flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.75vw] text-gray-500">
+                          <label className="text-[0.8vw] text-gray-500">
                             Item Code
                           </label>
                         )}
@@ -1716,13 +1716,13 @@ const ServiceCallForm = ({
                               e.target.value,
                             )
                           }
-                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.9vw]"
                           placeholder="Code"
                         />
                       </div>
                       <div className="flex-[2] flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.75vw] text-gray-500">
+                          <label className="text-[0.8vw] text-gray-500">
                             Description
                           </label>
                         )}
@@ -1736,13 +1736,13 @@ const ServiceCallForm = ({
                               e.target.value,
                             )
                           }
-                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.9vw]"
                           placeholder="Description"
                         />
                       </div>
                       <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
                         {idx === 0 && (
-                          <label className="text-[0.75vw] text-gray-500">
+                          <label className="text-[0.8vw] text-gray-500">
                             Warranty (days)
                           </label>
                         )}
@@ -1758,7 +1758,7 @@ const ServiceCallForm = ({
                               e.target.value,
                             )
                           }
-                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.85vw]"
+                          className="border p-[0.5vw] rounded-[0.3vw] text-[0.9vw]"
                           placeholder="Days"
                         />
                       </div>

@@ -369,9 +369,9 @@ const avatarColor = (name = "") => {
 
 const Avatar = ({ name, size = "md", ring = false, title }) => {
   const sz = {
-    sm: "w-[1.4vw] h-[1.4vw] text-[0.52vw]",
-    md: "w-[1.8vw] h-[1.8vw] text-[0.65vw]",
-    lg: "w-[2.4vw] h-[2.4vw] text-[0.82vw]",
+    sm: "w-[1.4vw] h-[1.4vw] text-[0.57vw]",
+    md: "w-[1.8vw] h-[1.8vw] text-[0.7vw]",
+    lg: "w-[2.4vw] h-[2.4vw] text-[0.87vw]",
   };
   return (
     <div
@@ -782,10 +782,10 @@ const CallSummaryModal = ({ row, employees, onClose }) => {
               <ClipboardList className="w-[1.2vw] h-[1.2vw] text-gray-600" />
             </div>
             <div>
-              <h2 className="text-gray-900 text-[1.1vw] font-bold leading-tight">
+              <h2 className="text-gray-900 text-[1.15vw] font-bold leading-tight">
                 Call Summary
               </h2>
-              <p className="text-gray-500 text-[0.7vw] font-medium mt-[0.1vw]">
+              <p className="text-gray-500 text-[0.75vw] font-medium mt-[0.1vw]">
                 {row.callNumber}
               </p>
             </div>
@@ -794,20 +794,20 @@ const CallSummaryModal = ({ row, employees, onClose }) => {
             <div className="flex bg-gray-100 rounded-[0.4vw] p-[0.2vw] border border-gray-200 shadow-inner">
               <button
                 onClick={() => setSummaryType("latest")}
-                className={`px-[1vw] py-[0.35vw] text-[0.7vw] font-bold rounded-[0.3vw] transition-all cursor-pointer ${summaryType === "latest" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-700"}`}
+                className={`px-[1vw] py-[0.35vw] text-[0.75vw] font-bold rounded-[0.3vw] transition-all cursor-pointer ${summaryType === "latest" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-700"}`}
               >
                 Latest Summary
               </button>
               <button
                 onClick={() => setSummaryType("full")}
-                className={`px-[1vw] py-[0.35vw] text-[0.7vw] font-bold rounded-[0.3vw] transition-all cursor-pointer ${summaryType === "full" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-700"}`}
+                className={`px-[1vw] py-[0.35vw] text-[0.75vw] font-bold rounded-[0.3vw] transition-all cursor-pointer ${summaryType === "full" ? "bg-white text-gray-900 shadow-sm border border-gray-200" : "text-gray-500 hover:text-gray-700"}`}
               >
                 Full Summary
               </button>
             </div>
             <button
               onClick={handleCopy}
-              className="flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vw] bg-white hover:bg-gray-50 transition-colors rounded-[0.4vw] text-gray-700 text-[0.75vw] font-semibold border border-gray-300 shadow-sm"
+              className="flex items-center gap-[0.4vw] px-[0.8vw] py-[0.4vw] bg-white hover:bg-gray-50 transition-colors rounded-[0.4vw] text-gray-700 text-[0.8vw] font-semibold border border-gray-300 shadow-sm"
             >
               {copied ? (
                 <Check className="w-[0.9vw] h-[0.9vw] text-green-600" />
@@ -827,7 +827,7 @@ const CallSummaryModal = ({ row, employees, onClose }) => {
 
         {/* Content */}
         <div className="flex-1 overflow-auto p-[1.5vw] bg-gray-50/50">
-          <pre className="whitespace-pre-wrap text-[0.82vw] font-mono text-gray-800 bg-white p-[1.2vw] rounded-[0.5vw] border border-gray-200 shadow-sm leading-relaxed">
+          <pre className="whitespace-pre-wrap text-[0.87vw] font-mono text-gray-800 bg-white p-[1.2vw] rounded-[0.5vw] border border-gray-200 shadow-sm leading-relaxed">
             {generateSummary()}
           </pre>
         </div>
@@ -880,10 +880,10 @@ const EscalationTimer = ({ target, isCritical }) => {
           <AlertCircle className="w-[1.2vw] h-[1.2vw] text-white animate-pulse" />
         </div>
         <div className="flex flex-col">
-          <span className="text-[0.65vw] text-red-100 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
+          <span className="text-[0.7vw] text-red-100 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
             System Priority
           </span>
-          <span className="text-[1.1vw] font-black text-white leading-none uppercase tracking-tight">
+          <span className="text-[1.15vw] font-black text-white leading-none uppercase tracking-tight">
             Moved to Critical Zone
           </span>
         </div>
@@ -897,19 +897,19 @@ const EscalationTimer = ({ target, isCritical }) => {
         <Clock className="w-[1.1vw] h-[1.1vw] text-amber-600 animate-pulse" />
       </div>
       <div className="flex flex-col">
-        <span className="text-[0.6vw] text-amber-600 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
+        <span className="text-[0.65vw] text-amber-600 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
           Next Escalation In
         </span>
-        <span className="text-[1vw] font-mono font-black text-amber-700 leading-none">
+        <span className="text-[1.05vw] font-mono font-black text-amber-700 leading-none">
           {timeLeft}
         </span>
       </div>
       {target.dept && (
         <div className="ml-auto flex flex-col items-end border-l border-amber-200 pl-[1vw]">
-          <span className="text-[0.6vw] text-amber-500 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
+          <span className="text-[0.65vw] text-amber-500 font-extrabold uppercase tracking-widest leading-none mb-[0.2vw]">
             To Department
           </span>
-          <span className="text-[0.85vw] font-bold text-slate-700 leading-none">
+          <span className="text-[0.9vw] font-bold text-slate-700 leading-none">
             {target.dept}
           </span>
         </div>
@@ -980,7 +980,7 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-white w-[32vw] rounded-[0.6vw] shadow-2xl flex flex-col max-h-[80vh]">
         <div className="px-[1.2vw] py-[0.8vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-          <h2 className="text-[1vw] font-semibold text-gray-800 flex items-center gap-[0.5vw]">
+          <h2 className="text-[1.05vw] font-semibold text-gray-800 flex items-center gap-[0.5vw]">
             <Icon className="w-[1.1vw] h-[1.1vw]" />
             {title}
           </h2>
@@ -999,13 +999,13 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
               value={newValue}
               onChange={(e) => setNewValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              className="flex-1 border border-gray-400 rounded-[0.4vw] px-[0.7vw] py-[0.55vw] text-[0.85vw] outline-none focus:border-gray-400"
+              className="flex-1 border border-gray-400 rounded-[0.4vw] px-[0.7vw] py-[0.55vw] text-[0.9vw] outline-none focus:border-gray-400"
             />
             <button
               type="button"
               onClick={handleAdd}
               disabled={!newValue.trim()}
-              className="px-[0.9vw] py-[0.55vw] bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-[0.4vw] flex items-center gap-[0.3vw] text-[0.8vw] font-medium cursor-pointer"
+              className="px-[0.9vw] py-[0.55vw] bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white rounded-[0.4vw] flex items-center gap-[0.3vw] text-[0.85vw] font-medium cursor-pointer"
             >
               <Plus className="w-[0.9vw] h-[0.9vw]" />
               Add
@@ -1029,7 +1029,7 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
                       if (e.key === "Enter") handleSaveEdit(idx);
                       if (e.key === "Escape") setEditingIdx(null);
                     }}
-                    className="flex-1 border border-gray-400 rounded-[0.3vw] px-[0.6vw] py-[0.4vw] text-[0.85vw] outline-none"
+                    className="flex-1 border border-gray-400 rounded-[0.3vw] px-[0.6vw] py-[0.4vw] text-[0.9vw] outline-none"
                   />
                   <button
                     type="button"
@@ -1048,10 +1048,10 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
                 </>
               ) : (
                 <>
-                  <div className="w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 flex items-center justify-center text-[0.65vw] text-gray-500 font-bold">
+                  <div className="w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 flex items-center justify-center text-[0.7vw] text-gray-500 font-bold">
                     {idx + 1}
                   </div>
-                  <span className="flex-1 text-[0.85vw] text-gray-800 font-medium">
+                  <span className="flex-1 text-[0.9vw] text-gray-800 font-medium">
                     {item}
                   </span>
                   <button
@@ -1081,7 +1081,7 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white text-gray-700 rounded-[0.4vw] cursor-pointer text-[0.85vw] font-medium"
+            className="px-[1.2vw] py-[0.5vw] border border-gray-400 bg-white text-gray-700 rounded-[0.4vw] cursor-pointer text-[0.9vw] font-medium"
           >
             Cancel
           </button>
@@ -1091,7 +1091,7 @@ const ConfigManagerModal = ({ title, icon: Icon, items, onClose, onSave }) => {
               onSave(localItems);
               onClose();
             }}
-            className="px-[1.2vw] py-[0.5vw] bg-gray-800 hover:bg-gray-900 text-white rounded-[0.4vw] cursor-pointer flex items-center gap-[0.4vw] text-[0.85vw] font-medium"
+            className="px-[1.2vw] py-[0.5vw] bg-gray-800 hover:bg-gray-900 text-white rounded-[0.4vw] cursor-pointer flex items-center gap-[0.4vw] text-[0.9vw] font-medium"
           >
             <Save className="w-[0.9vw] h-[0.9vw]" />
             Save Changes
@@ -1130,13 +1130,13 @@ const AvatarStack = ({ people, onClick }) => {
         {extra > 0 && (
           <div
             style={{ zIndex: 0, marginLeft: "-0.45vw" }}
-            className="w-[1.4vw] h-[1.4vw] rounded-full bg-gray-200 border-[0.12vw] border-white flex items-center justify-center text-[0.52vw] font-bold text-gray-600 flex-shrink-0"
+            className="w-[1.4vw] h-[1.4vw] rounded-full bg-gray-200 border-[0.12vw] border-white flex items-center justify-center text-[0.57vw] font-bold text-gray-600 flex-shrink-0"
           >
             +{extra}
           </div>
         )}
       </div>
-      <span className="text-[0.62vw] text-gray-400 ml-[0.3vw] group-hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100">
+      <span className="text-[0.67vw] text-gray-400 ml-[0.3vw] group-hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100">
         View flow
       </span>
     </button>
@@ -1149,7 +1149,7 @@ const ProductStatusCell = ({ prod, callStatus }) => {
   const cfg = getStatusCfg(status);
   return (
     <span
-      className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.2vw] rounded text-[0.7vw] font-semibold border ${cfg.cls}`}
+      className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.2vw] rounded text-[0.75vw] font-semibold border ${cfg.cls}`}
     >
       <span
         className={`w-[0.45vw] h-[0.45vw] rounded-full flex-shrink-0 ${cfg.dot}`}
@@ -1706,7 +1706,7 @@ export default function ServiceCall() {
   }, [enrichedCalls, filterFromDate, filterToDate, searchTerm, filterPriority]);
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <AnimatePresence mode="wait">
         {view === "form" ? (
           <ServiceCallForm
@@ -1745,7 +1745,7 @@ export default function ServiceCall() {
                   placeholder="Search customer, call no, engineer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
                 {searchTerm && (
                   <button
@@ -1760,14 +1760,14 @@ export default function ServiceCall() {
               {/* Right cluster: Date Range, Clear, Priority & Register Call */}
               <div className="flex items-center gap-[0.6vw] flex-shrink-0">
                 {/* Unified Date Range Capsule */}
-                <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-                  <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+                <div className="flex items-center gap-[0.35vw] border border-slate-200 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+                  <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
                   <input
                     ref={fromDateRef}
                     type="date"
                     value={filterFromDate || ""}
                     onChange={(e) => setFilterFromDate(e.target.value)}
-                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                    className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
                   <button
                     type="button"
@@ -1781,15 +1781,15 @@ export default function ServiceCall() {
                   >
                     <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
                   </button>
-                  <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-                  <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+                  <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+                  <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
                   <input
                     ref={toDateRef}
                     type="date"
                     value={filterToDate || ""}
                     min={filterFromDate || undefined}
                     onChange={(e) => setFilterToDate(e.target.value)}
-                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                    className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
                   <button
                     type="button"
@@ -1812,7 +1812,7 @@ export default function ServiceCall() {
                       setFilterFromDate("");
                       setFilterToDate("");
                     }}
-                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                     title="Clear date filter"
                   >
                     <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -1828,7 +1828,7 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={clearAllSelected}
-                      className="flex items-center gap-[0.35vw] bg-slate-100 hover:bg-slate-200/80 text-slate-700 border-[1.5px] border-slate-400 status-pills-track px-[0.8vw] h-[2.2vw] rounded-full font-medium text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                      className="flex items-center gap-[0.35vw] bg-slate-100 hover:bg-slate-200/80 text-slate-700 border-[1.5px] border-slate-400 status-pills-track px-[0.8vw] h-[2.2vw] rounded-full font-medium text-[0.79vw] transition-all cursor-pointer shadow-2xs"
                       title="Unselect all selected calls"
                     >
                       <X className="w-[0.8vw] h-[0.8vw] text-slate-500" />
@@ -1845,7 +1845,7 @@ export default function ServiceCall() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.8vw] h-[2.2vw] rounded-full font-semibold text-[0.72vw] transition-all cursor-pointer shadow-2xs"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.8vw] h-[2.2vw] rounded-full font-semibold text-[0.77vw] transition-all cursor-pointer shadow-2xs"
                     >
                       <Trash2 className="w-[0.85vw] h-[0.85vw]" />
                       Delete ({selectedItems.size})
@@ -1863,7 +1863,7 @@ export default function ServiceCall() {
                       { value: "All", label: "All Priorities" },
                       ...PRIORITIES.map((p) => ({ value: p, label: p })),
                     ]}
-                    triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+                    triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.8vw]"
                   />
                 </div>
 
@@ -1871,7 +1871,7 @@ export default function ServiceCall() {
                 {canWrite && !isSupervisor && (
                   <button
                     onClick={goToForm}
-                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
+                    className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.81vw] transition-all shadow-[0_2px_8px_-1px_rgba(37,99,235,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(37,99,235,0.5)]"
                   >
                     <Plus className="w-[0.9vw] h-[0.9vw]" />
                     Register Call
@@ -1904,7 +1904,7 @@ export default function ServiceCall() {
                       <button
                         key={label}
                         onClick={() => setFilterStatus(label === "All" ? "All" : label)}
-                        className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                        className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.8vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                           isActive
                             ? "bg-blue-600 text-white shadow-xs font-semibold"
                             : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -1915,7 +1915,7 @@ export default function ServiceCall() {
                           {label}
                         </span>
                         <span
-                          className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                          className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
                             isActive
                               ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                               : "text-slate-400"
@@ -1929,9 +1929,9 @@ export default function ServiceCall() {
                 </div>
 
                 {/* Scoped Result Count */}
-                <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+                <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
                   <span>Showing</span>
-                  <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+                  <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
                     {filteredData.length}
                   </span>
                   <span>calls</span>
@@ -1940,7 +1940,7 @@ export default function ServiceCall() {
 
               <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
                 <table className="w-full text-left border-collapse border border-[#777777]">
-                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-[#777777] text-slate-800 font-bold text-[0.74vw] uppercase tracking-wider">
+                  <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-[#777777] text-slate-800 font-bold text-[0.79vw] uppercase tracking-wider">
                     <tr>
                       {canDelete && !isSupervisor && (
                         <th className="py-[0.7vw] px-[0.7vw] border-r border-[#777777] w-[3%] text-center">
@@ -1988,7 +1988,7 @@ export default function ServiceCall() {
                       <tr>
                         <td
                           colSpan={canDelete && !isSupervisor ? 9 : 8}
-                          className="bg-blue-50/80 border-b border-blue-200 px-[1.2vw] py-[0.45vw] text-center text-[0.76vw] text-slate-700 font-medium"
+                          className="bg-blue-50/80 border-b border-blue-200 px-[1.2vw] py-[0.45vw] text-center text-[0.81vw] text-slate-700 font-medium"
                         >
                           {!isAllFilteredSelected ? (
                             <div className="flex items-center justify-center gap-[0.5vw]">
@@ -2025,7 +2025,7 @@ export default function ServiceCall() {
                         <td colSpan={9} className="py-[10vh] text-center border-b border-slate-300">
                           <div className="flex flex-col items-center justify-center gap-[1vw]">
                             <Loader2 className="w-[3vw] h-[3vw] animate-spin text-blue-600" />
-                            <span className="text-[1vw] font-medium text-blue-600">
+                            <span className="text-[1.05vw] font-medium text-blue-600">
                               Loading Service Calls...
                             </span>
                           </div>
@@ -2112,7 +2112,7 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap font-medium text-slate-800 text-[0.76vw] ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap font-medium text-slate-800 text-[0.81vw] ${cellBg}`}
                                 >
                                   {(currentPage - 1) * ITEMS_PER_PAGE + rowIdx + 1}
                                 </td>
@@ -2126,11 +2126,11 @@ export default function ServiceCall() {
                                 >
                                   <button
                                     onClick={() => setSummaryModalRow(row)}
-                                    className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
+                                    className="font-mono text-left text-[0.87vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                                   >
                                     {row.callNumber}
                                   </button>
-                                  <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-normal leading-normal mt-[0.2vw]">
+                                  <div className="flex items-center gap-[0.35vw] text-[0.78vw] text-[#4a2810] font-medium leading-normal mt-[0.2vw]">
                                     {(() => {
                                       try {
                                         const d = new Date(row.timestamp || row.dateTime);
@@ -2147,9 +2147,9 @@ export default function ServiceCall() {
                                         });
                                         return (
                                           <>
-                                            <span className="text-[#4a2810] font-normal">{datePart}</span>
-                                            <span className="text-[#8c5835] font-normal">|</span>
-                                            <span className="text-[#5c3317] font-normal">{timePart}</span>
+                                            <span className="text-[#4a2810] font-medium">{datePart}</span>
+                                            <span className="text-[#8c5835] font-medium">|</span>
+                                            <span className="text-[#5c3317] font-medium">{timePart}</span>
                                           </>
                                         );
                                       } catch {
@@ -2178,11 +2178,11 @@ export default function ServiceCall() {
                               {pIdx === 0 && (
                                 <td
                                   rowSpan={rowCount}
-                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap text-[0.78vw] font-normal ${cellBg}`}
+                                  className={`py-[0.7vw] px-[0.7vw] border-r border-b border-[#777777] text-center align-middle whitespace-nowrap text-[0.83vw] font-medium ${cellBg}`}
                                 >
                                   {row.customerType && row.customerType !== "All" ? (
                                     <span
-                                      className={`inline-flex items-center justify-center px-[0.65vw] py-[0.16vw] rounded-full text-[0.74vw] font-semibold border shadow-2xs whitespace-nowrap ${
+                                      className={`inline-flex items-center justify-center px-[0.65vw] py-[0.16vw] rounded-full text-[0.79vw] font-semibold border shadow-2xs whitespace-nowrap ${
                                         row.customerType === "OEM"
                                           ? "bg-blue-50 text-blue-700 border-blue-300"
                                           : row.customerType === "End Customer"
@@ -2197,7 +2197,7 @@ export default function ServiceCall() {
                                       {row.customerType}
                                     </span>
                                   ) : (
-                                    <span className="text-slate-400 font-normal">—</span>
+                                    <span className="text-slate-400 font-medium">—</span>
                                   )}
                                 </td>
                               )}
@@ -2209,40 +2209,40 @@ export default function ServiceCall() {
                                   className="max-w-full"
                                   content={
                                     <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                                      <div className="font-normal text-slate-200">
+                                      <div className="font-medium text-slate-200">
                                         {prod?.productModel || prod?.itemCode || "—"}
                                       </div>
                                       {prod?.serialNumber && (
-                                        <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                        <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                           <span className="text-slate-400 font-sans">SN: </span>
                                           <span>{prod.serialNumber}</span>
                                         </div>
                                       )}
                                       {prod?.callDescription && (
-                                        <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                        <div className="text-[0.69vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                           {prod.callDescription}
                                         </div>
                                       )}
                                     </div>
                                   }
                                 >
-                                  <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
+                                  <div className="font-medium text-slate-900 text-[0.85vw] truncate cursor-default">
                                     {prod?.productModel || prod?.itemCode || "—"}
                                   </div>
                                 </CustomTooltip>
                                 <div className="flex items-center gap-[0.3vw] mt-[0.1vw] flex-wrap">
                                   {prod?.serialNumber && (
-                                    <span className="text-[0.66vw] text-black font-medium font-mono">
+                                    <span className="text-[0.71vw] text-black font-medium font-mono">
                                       SN: {prod.serialNumber}
                                     </span>
                                   )}
                                   {prod?.errorCode && (
-                                    <span className="text-[0.66vw] text-rose-600 font-mono">
+                                    <span className="text-[0.71vw] text-rose-600 font-mono">
                                       Err: {prod.errorCode}
                                     </span>
                                   )}
                                   {allProducts.length > 1 && (
-                                    <span className="text-[0.64vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                                    <span className="text-[0.69vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
                                       +{allProducts.length - 1} more
                                     </span>
                                   )}
@@ -2262,7 +2262,7 @@ export default function ServiceCall() {
                                     else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border-orange-300";
                                     else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-300";
                                     return (
-                                      <span className={`inline-flex items-center justify-center px-[0.65vw] py-[0.16vw] rounded-full text-[0.74vw] font-semibold border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                      <span className={`inline-flex items-center justify-center px-[0.65vw] py-[0.16vw] rounded-full text-[0.79vw] font-semibold border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                         {p}
                                       </span>
                                     );
@@ -2285,7 +2285,7 @@ export default function ServiceCall() {
                                     (row.assignedTo ? employees?.find(e => e.userId === row.assignedTo || e._id === row.assignedTo)?.name : null);
                                   return (
                                     <div className="flex items-center gap-[0.4vw]">
-                                      <span className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.72vw] font-semibold tracking-wide shadow-2xs ${cfg.badge || "bg-slate-600 text-white"}`}>
+                                      <span className={`px-[0.6vw] py-[0.15vw] rounded-full text-[0.77vw] font-semibold tracking-wide shadow-2xs ${cfg.badge || "bg-slate-600 text-white"}`}>
                                         {cfg.label}
                                       </span>
                                       <CustomTooltip
@@ -2293,11 +2293,11 @@ export default function ServiceCall() {
                                         content={
                                           <div className="flex flex-col gap-[0.2vw] text-left py-[0.1vw]">
                                             <div className="font-semibold text-slate-200 border-b border-slate-700/80 pb-[0.2vw] mb-[0.1vw] flex items-center gap-[0.35vw]">
-                                              <span className={`px-[0.4vw] py-[0.05vw] rounded text-[0.65vw] font-bold ${cfg.badge || "bg-slate-600 text-white"}`}>
+                                              <span className={`px-[0.4vw] py-[0.05vw] rounded text-[0.7vw] font-bold ${cfg.badge || "bg-slate-600 text-white"}`}>
                                                 {cfg.label}
                                               </span>
                                             </div>
-                                            <div className="flex items-center gap-[0.35vw] text-[0.72vw]">
+                                            <div className="flex items-center gap-[0.35vw] text-[0.77vw]">
                                               <span className="text-slate-400">Assigned To:</span>
                                               {engineerName ? (
                                                 <span className="text-sky-300 font-semibold">{engineerName}</span>
@@ -2392,7 +2392,7 @@ export default function ServiceCall() {
                                               setActiveActionMenuId(null);
                                               setSummaryModalRow(row);
                                             }}
-                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.83vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
                                           >
                                             <ClipboardList className="w-[0.9vw] h-[0.9vw] shrink-0" />
                                             <span>View Summary</span>
@@ -2404,7 +2404,7 @@ export default function ServiceCall() {
                                                 setActiveActionMenuId(null);
                                                 goToEdit(row);
                                               }}
-                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
+                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.83vw] font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
                                             >
                                               <Edit3 className="w-[0.9vw] h-[0.9vw] shrink-0" />
                                               <span>Edit Call</span>
@@ -2416,7 +2416,7 @@ export default function ServiceCall() {
                                               setActiveActionMenuId(null);
                                               setHistoryModalProduct(row);
                                             }}
-                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
+                                            className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.83vw] font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer"
                                           >
                                             <History className="w-[0.9vw] h-[0.9vw] shrink-0" />
                                             <span>Call History</span>
@@ -2432,7 +2432,7 @@ export default function ServiceCall() {
                                                   isBulk: false,
                                                 });
                                               }}
-                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer border-t border-slate-100"
+                                              className="w-full flex items-center gap-[0.6vw] px-[0.9vw] py-[0.45vw] text-[0.83vw] font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer border-t border-slate-100"
                                             >
                                               <Trash2 className="w-[0.9vw] h-[0.9vw] shrink-0 text-rose-500" />
                                               <span>Delete Call</span>
@@ -2458,8 +2458,8 @@ export default function ServiceCall() {
                             <div className="w-[3.6vw] h-[3.6vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                               <PhoneCall className="w-[1.8vw] h-[1.8vw]" />
                             </div>
-                            <span className="text-[0.9vw] font-bold text-slate-700">No service calls found</span>
-                            <span className="text-[0.76vw] text-slate-400 max-w-[22vw]">
+                            <span className="text-[0.95vw] font-bold text-slate-700">No service calls found</span>
+                            <span className="text-[0.81vw] text-slate-400 max-w-[22vw]">
                               {searchTerm || filterFromDate || filterToDate || filterStatus !== "All" || filterPriority !== "All"
                                 ? "No records match your active filters. Try adjusting your dates, search query or status tab."
                                 : "Click 'Register Call' to create your first service ticket."}
@@ -2474,7 +2474,7 @@ export default function ServiceCall() {
 
               {/* Pagination */}
               <div className="border-t border-slate-300 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
-                <div className="text-[0.75vw] text-slate-600 font-medium">
+                <div className="text-[0.8vw] text-slate-600 font-medium">
                   Showing{" "}
                   <span className="font-semibold text-slate-800">
                     {paginatedData.length > 0
@@ -2506,14 +2506,14 @@ export default function ServiceCall() {
                     {[...Array(totalPages)].map((_, i) => {
                       const pNum = i + 1;
                       if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-slate-400 text-[0.75vw]">...</span>;
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-slate-400 text-[0.8vw]">...</span>;
                         return null;
                       }
                       return (
                         <button
                           key={pNum}
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                          className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer ${
                             currentPage === pNum
                               ? "bg-[#1a73e8] text-white shadow-2xs"
                               : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"

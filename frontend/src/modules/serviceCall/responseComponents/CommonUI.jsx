@@ -70,7 +70,7 @@ export const CustomTooltip = ({
                   : "translate(-50%, -100%)",
               zIndex: 99999,
             }}
-            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.68vw] font-normal tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
+            className="flex items-center bg-slate-900 text-white rounded-md px-[0.55vw] py-[0.25vw] text-[0.73vw] font-medium tracking-wide shadow-xl pointer-events-none whitespace-nowrap border border-slate-700 animate-fadeIn"
           >
             {tooltipContent ? tooltipContent : <span>{text}</span>}
             <div
@@ -99,7 +99,7 @@ export const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => 
   return (
     <div className="flex items-center gap-[0.35vw] max-w-full">
       <CustomTooltip text={customerName} position="top-start" className="min-w-0 flex-1">
-        <span className="font-medium text-black text-[0.82vw] truncate block">
+        <span className="font-medium text-black text-[0.87vw] truncate block">
           {customerName || "—"}
         </span>
       </CustomTooltip>
@@ -119,7 +119,7 @@ export const CustomerInfoCell = ({ customerName, contactNumber, partyCode }) => 
                 </div>
               )}
               {partyCode && (
-                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.64vw]">
+                <div className="flex items-center gap-[0.3vw] text-slate-400 font-mono text-[0.69vw]">
                   <span className="text-slate-500 font-sans">ID:</span>
                   <span>{partyCode}</span>
                 </div>

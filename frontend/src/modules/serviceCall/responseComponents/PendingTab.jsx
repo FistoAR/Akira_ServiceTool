@@ -53,15 +53,15 @@ const PendingTab = ({
       {/* Top Bar */}
       <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
         <div className="flex items-center gap-[0.5vw]">
-          <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-medium text-slate-800">
+          <span className="flex items-center gap-[0.35vw] text-[0.85vw] font-medium text-slate-800">
             <AlertCircle className="w-[0.95vw] h-[0.95vw] text-amber-500" />
             Pending Checks Queue
           </span>
-          <span className="text-[0.68vw] bg-amber-50 border border-amber-200 text-amber-700 px-[0.45vw] py-[0.1vw] rounded-full font-medium">
+          <span className="text-[0.73vw] bg-amber-50 border border-amber-200 text-amber-700 px-[0.45vw] py-[0.1vw] rounded-full font-medium">
             {items.length} Pending
           </span>
         </div>
-        <div className="text-[0.76vw] text-slate-500 font-medium">
+        <div className="text-[0.81vw] text-slate-500 font-medium">
           Showing <span className="font-medium text-slate-800">{items.length}</span> calls
         </div>
       </div>
@@ -69,7 +69,7 @@ const PendingTab = ({
       {/* Table Area */}
       <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
         <table className="w-full text-left border-collapse">
-          <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+          <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw]">
             <tr>
               <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 w-[10.5vw] whitespace-nowrap">
                 Date & Time
@@ -97,7 +97,7 @@ const PendingTab = ({
               </th>
             </tr>
           </thead>
-          <tbody className="text-[0.8vw]">
+          <tbody className="text-[0.85vw]">
             {paginatedCalls.length > 0 ? (
               paginatedCalls.map((row) => {
                 const userProds = (row.products || []).filter(
@@ -139,7 +139,7 @@ const PendingTab = ({
                               );
                               if (isNaN(d.getTime()))
                                 return (
-                                  <span className="text-[0.74vw] text-slate-800 font-normal">
+                                  <span className="text-[0.79vw] text-slate-800 font-medium">
                                     {row.dateTime || "—"}
                                   </span>
                                 );
@@ -154,16 +154,16 @@ const PendingTab = ({
                                 hour12: true,
                               });
                               return (
-                                <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
+                                <div className="flex flex-col text-[0.79vw] text-slate-800 font-medium leading-normal">
                                   <span>{datePart}</span>
-                                  <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">
+                                  <span className="text-[0.73vw] text-slate-500 mt-[0.14vw]">
                                     {timePart}
                                   </span>
                                 </div>
                               );
                             } catch {
                               return (
-                                <span className="text-[0.74vw] text-slate-800 font-normal">
+                                <span className="text-[0.79vw] text-slate-800 font-medium">
                                   {row.dateTime || "—"}
                                 </span>
                               );
@@ -181,11 +181,11 @@ const PendingTab = ({
                             type="button"
                             onClick={() => onOpenInfo && onOpenInfo(row)}
                             title="View Call Details"
-                            className="font-mono text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
+                            className="font-mono text-[0.87vw] font-medium text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
                           >
                             {row.callNumber || row.callNo}
                           </button>
-                          <div className="text-[0.66vw] text-slate-400 mt-[0.14vw]">
+                          <div className="text-[0.71vw] text-slate-400 mt-[0.14vw]">
                             {rowCount} Pending Item{rowCount > 1 ? "s" : ""}
                           </div>
                         </td>
@@ -206,7 +206,7 @@ const PendingTab = ({
                           {row.customerType && (
                             <div className="mt-[0.2vw]">
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border shadow-2xs whitespace-nowrap ${getTypeColor(
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.71vw] font-medium border shadow-2xs whitespace-nowrap ${getTypeColor(
                                   row.customerType,
                                 )}`}
                               >
@@ -223,11 +223,11 @@ const PendingTab = ({
                           className="max-w-full"
                           content={
                             <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                              <div className="font-normal text-slate-200">
+                              <div className="font-medium text-slate-200">
                                 {prod?.productModel || prod?.itemCode || "—"}
                               </div>
                               {prod?.serialNumber && (
-                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   <span className="text-slate-400 font-sans">
                                     SN:{" "}
                                   </span>
@@ -235,24 +235,24 @@ const PendingTab = ({
                                 </div>
                               )}
                               {prod?.callDescription && (
-                                <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   {prod.callDescription}
                                 </div>
                               )}
                             </div>
                           }
                         >
-                          <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-slate-800 text-[0.85vw] truncate cursor-default">
                             {prod?.productModel || prod?.itemCode || "—"}
                           </div>
                         </CustomTooltip>
                         {prod?.serialNumber && (
-                          <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.1vw]">
+                          <div className="text-[0.71vw] text-slate-400 font-mono mt-[0.1vw]">
                             SN: {prod.serialNumber}
                           </div>
                         )}
                         {prod?.callDescription && (
-                          <div className="text-[0.7vw] text-slate-500 line-clamp-1 italic mt-[0.1vw]">
+                          <div className="text-[0.75vw] text-slate-500 line-clamp-1 italic mt-[0.1vw]">
                             {prod.callDescription}
                           </div>
                         )}
@@ -260,11 +260,11 @@ const PendingTab = ({
 
                       <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white">
                         {prod?.errorCode ? (
-                          <span className="bg-rose-50 text-rose-700 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.72vw] font-mono font-normal">
+                          <span className="bg-rose-50 text-rose-700 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.77vw] font-mono font-medium">
                             {prod.errorCode}
                           </span>
                         ) : (
-                          <span className="text-slate-300 font-normal">—</span>
+                          <span className="text-slate-300 font-medium">—</span>
                         )}
                       </td>
 
@@ -288,7 +288,7 @@ const PendingTab = ({
                                 "bg-emerald-50 text-emerald-700 border-emerald-200";
                             return (
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}
                               >
                                 {p}
                               </span>
@@ -298,11 +298,11 @@ const PendingTab = ({
                       )}
 
                       <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle">
-                        <span className="inline-flex items-center gap-[0.25vw] text-amber-700 font-normal text-[0.68vw] bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full mb-[0.15vw]">
+                        <span className="inline-flex items-center gap-[0.25vw] text-amber-700 font-medium text-[0.73vw] bg-amber-50 border border-amber-200 px-[0.45vw] py-[0.08vw] rounded-full mb-[0.15vw]">
                           <AlertCircle className="w-[0.65vw] h-[0.65vw] text-amber-500" />{" "}
                           Pending Check
                         </span>
-                        <div className="text-[0.74vw] text-slate-700 font-normal line-clamp-2">
+                        <div className="text-[0.79vw] text-slate-700 font-medium line-clamp-2">
                           {prod._productClosure?.remarks ||
                             "No pending remarks recorded"}
                         </div>
@@ -320,7 +320,7 @@ const PendingTab = ({
                                 pIdx: safeIdx,
                               })
                             }
-                            className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
+                            className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
                             title="Respond / Resolve"
                           >
                             <Edit3 className="w-[0.7vw] h-[0.7vw]" />
@@ -367,8 +367,8 @@ const PendingTab = ({
                     <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-50 flex items-center justify-center border border-slate-200">
                       <AlertCircle className="w-[1.6vw] h-[1.6vw] text-slate-400" />
                     </div>
-                    <p className="text-[0.9vw] font-medium text-slate-700">No pending checks in this queue</p>
-                    <p className="text-[0.75vw] text-slate-400">All checks and tasks are up to date.</p>
+                    <p className="text-[0.95vw] font-medium text-slate-700">No pending checks in this queue</p>
+                    <p className="text-[0.8vw] text-slate-400">All checks and tasks are up to date.</p>
                   </div>
                 </td>
               </tr>
@@ -379,7 +379,7 @@ const PendingTab = ({
 
       {/* Pagination Footer */}
       <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-300 bg-white shrink-0">
-        <div className="text-[0.75vw] text-slate-600 font-medium">
+        <div className="text-[0.8vw] text-slate-600 font-medium">
           Showing{" "}
           <span className="font-bold text-slate-800">
             {items.length > 0 ? (page - 1) * pageSize + 1 : 0}
@@ -406,7 +406,7 @@ const PendingTab = ({
                 <button
                   key={pNum}
                   onClick={() => setPage(pNum)}
-                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-bold transition-all cursor-pointer ${
                     page === pNum
                       ? "bg-[#1a73e8] text-white shadow-2xs"
                       : "bg-white border border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600"

@@ -62,16 +62,16 @@ export const EscalationQueueTab = ({
         {/* Top Bar for Escalations */}
         <div className="flex items-center justify-between px-[0.9vw] py-[0.55vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
           <div className="flex items-center gap-[0.5vw]">
-            <span className="flex items-center gap-[0.35vw] text-[0.8vw] font-medium text-slate-800">
+            <span className="flex items-center gap-[0.35vw] text-[0.85vw] font-medium text-slate-800">
               <Shield className="w-[0.95vw] h-[0.95vw] text-indigo-600" />
               Escalated & Assigned Queue
             </span>
-            <span className="text-[0.68vw] bg-indigo-50 border border-indigo-200 text-indigo-700 px-[0.45vw] py-[0.1vw] rounded-full font-medium">
+            <span className="text-[0.73vw] bg-indigo-50 border border-indigo-200 text-indigo-700 px-[0.45vw] py-[0.1vw] rounded-full font-medium">
               {myEscalations.length} Active Calls
             </span>
           </div>
 
-          <div className="text-[0.76vw] text-slate-500 font-medium">
+          <div className="text-[0.81vw] text-slate-500 font-medium">
             Showing <span className="font-bold text-slate-800">{myEscalations.length}</span> calls
           </div>
         </div>
@@ -79,7 +79,7 @@ export const EscalationQueueTab = ({
         {/* Table area */}
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw]">
+            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw]">
               <tr>
                 <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[3vw] whitespace-nowrap">
                   S.No
@@ -116,7 +116,7 @@ export const EscalationQueueTab = ({
                 </th>
               </tr>
             </thead>
-            <tbody className="text-[0.8vw]">
+            <tbody className="text-[0.85vw]">
               {escalationPaginatedCalls.length > 0 ? (
                 escalationPaginatedCalls.map((row, rIdx) => {
                   const allProducts =
@@ -146,7 +146,7 @@ export const EscalationQueueTab = ({
                         {pIdx === 0 && (
                           <td
                             rowSpan={rowCount}
-                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center font-normal text-slate-700 bg-white whitespace-nowrap text-[0.76vw]"
+                            className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 align-middle text-center font-medium text-slate-700 bg-white whitespace-nowrap text-[0.81vw]"
                           >
                             {(escalationPage - 1) * escalationPageSize + rIdx + 1}
                           </td>
@@ -161,7 +161,7 @@ export const EscalationQueueTab = ({
                             {(() => {
                               try {
                                 const d = new Date(row.dateTime || row.timestamp || row.createdAt);
-                                if (isNaN(d.getTime())) return <span className="text-[0.74vw] text-slate-800 font-normal">{row.dateTime || "—"}</span>;
+                                if (isNaN(d.getTime())) return <span className="text-[0.79vw] text-slate-800 font-medium">{row.dateTime || "—"}</span>;
                                 const datePart = d.toLocaleDateString("en-GB", {
                                   day: "2-digit",
                                   month: "2-digit",
@@ -173,13 +173,13 @@ export const EscalationQueueTab = ({
                                   hour12: true,
                                 });
                                 return (
-                                  <div className="flex flex-col text-[0.74vw] text-slate-800 font-normal leading-normal">
+                                  <div className="flex flex-col text-[0.79vw] text-slate-800 font-medium leading-normal">
                                     <span>{datePart}</span>
-                                    <span className="text-[0.68vw] text-slate-500 mt-[0.14vw]">{timePart}</span>
+                                    <span className="text-[0.73vw] text-slate-500 mt-[0.14vw]">{timePart}</span>
                                   </div>
                                 );
                               } catch {
-                                return <span className="text-[0.74vw] text-slate-800 font-normal">{row.dateTime || "—"}</span>;
+                                return <span className="text-[0.79vw] text-slate-800 font-medium">{row.dateTime || "—"}</span>;
                               }
                             })()}
                           </td>
@@ -195,11 +195,11 @@ export const EscalationQueueTab = ({
                               type="button"
                               onClick={() => onOpenInfo && onOpenInfo(row)}
                               title="View Call Details"
-                              className="font-mono text-[0.82vw] font-normal text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
+                              className="font-mono text-[0.87vw] font-medium text-slate-800 hover:text-blue-600 block leading-tight select-text text-left cursor-pointer"
                             >
                               {row.callNumber || row.callNo}
                             </button>
-                            <div className="text-[0.66vw] text-slate-400 mt-[0.14vw]">
+                            <div className="text-[0.71vw] text-slate-400 mt-[0.14vw]">
                               {rowCount} Product{rowCount > 1 ? "s" : ""}
                             </div>
                           </td>
@@ -219,7 +219,7 @@ export const EscalationQueueTab = ({
                             {row.customerType && (
                               <div className="mt-[0.2vw]">
                                 <span
-                                  className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border shadow-2xs whitespace-nowrap ${getTypeColor(
+                                  className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.71vw] font-medium border shadow-2xs whitespace-nowrap ${getTypeColor(
                                     row.customerType,
                                   )}`}
                                 >
@@ -237,34 +237,34 @@ export const EscalationQueueTab = ({
                             className="max-w-full"
                             content={
                               <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                                <div className="font-normal text-slate-200">
+                                <div className="font-medium text-slate-200">
                                   {prod?.productModel || prod?.itemCode || "—"}
                                 </div>
                                 {prod?.serialNumber && (
-                                  <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                  <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                     <span className="text-slate-400 font-sans">SN: </span>
                                     <span>{prod.serialNumber}</span>
                                   </div>
                                 )}
                                 {prod?.callDescription && (
-                                  <div className="text-[0.64vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                  <div className="text-[0.69vw] text-slate-300 italic border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                     {prod.callDescription}
                                   </div>
                                 )}
                               </div>
                             }
                           >
-                            <div className="font-normal text-slate-800 text-[0.8vw] truncate cursor-default">
+                            <div className="font-medium text-slate-800 text-[0.85vw] truncate cursor-default">
                               {prod?.productModel || prod?.itemCode || "—"}
                             </div>
                           </CustomTooltip>
                           {prod?.serialNumber && (
-                            <div className="text-[0.66vw] text-slate-400 font-mono mt-[0.1vw]">
+                            <div className="text-[0.71vw] text-slate-400 font-mono mt-[0.1vw]">
                               SN: {prod.serialNumber}
                             </div>
                           )}
                           {prod?.callDescription && (
-                            <div className="text-[0.7vw] text-slate-500 line-clamp-1 italic mt-[0.1vw]">
+                            <div className="text-[0.75vw] text-slate-500 line-clamp-1 italic mt-[0.1vw]">
                               {prod.callDescription}
                             </div>
                           )}
@@ -273,11 +273,11 @@ export const EscalationQueueTab = ({
                         {/* Error Code */}
                         <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white">
                           {prod?.errorCode ? (
-                            <span className="bg-rose-50 text-rose-700 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.72vw] font-mono font-normal">
+                            <span className="bg-rose-50 text-rose-700 border border-rose-200 px-[0.45vw] py-[0.12vw] rounded text-[0.77vw] font-mono font-medium">
                               {prod.errorCode}
                             </span>
                           ) : (
-                            <span className="text-slate-300 font-normal">—</span>
+                            <span className="text-slate-300 font-medium">—</span>
                           )}
                         </td>
 
@@ -297,7 +297,7 @@ export const EscalationQueueTab = ({
                               else if (p === "Low")
                                 badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-200";
                               return (
-                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                   {p}
                                 </span>
                               );
@@ -309,13 +309,13 @@ export const EscalationQueueTab = ({
                         <td className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white">
                           <div className="inline-flex items-center justify-center gap-[0.35vw]">
                             {prod._attended ? (
-                              <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-normal text-[0.7vw] bg-emerald-50 border border-emerald-200 px-[0.55vw] py-[0.12vw] rounded-full shadow-2xs">
+                              <span className="inline-flex items-center gap-[0.25vw] text-emerald-700 font-medium text-[0.75vw] bg-emerald-50 border border-emerald-200 px-[0.55vw] py-[0.12vw] rounded-full shadow-2xs">
                                 <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
                                 Attended
                               </span>
                             ) : callTimer ? (
                               <span
-                                className={`inline-flex items-center gap-[0.3vw] font-mono text-[0.72vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs ${
+                                className={`inline-flex items-center gap-[0.3vw] font-mono text-[0.77vw] font-medium px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs ${
                                   prod._isReverseEscalated
                                     ? callTimer.isExpired
                                       ? "bg-rose-100 text-rose-800 border-rose-400 animate-pulse"
@@ -328,7 +328,7 @@ export const EscalationQueueTab = ({
                                 {prod._isReverseEscalated && (
                                   <span
                                     title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                    className="inline-flex items-center justify-center w-[1vw] h-[1vw] rounded bg-rose-200/80 text-rose-800 font-bold text-[0.6vw] border border-rose-300 select-none cursor-help mr-[0.1vw]"
+                                    className="inline-flex items-center justify-center w-[1vw] h-[1vw] rounded bg-rose-200/80 text-rose-800 font-bold text-[0.65vw] border border-rose-300 select-none cursor-help mr-[0.1vw]"
                                   >
                                     R
                                   </span>
@@ -346,14 +346,14 @@ export const EscalationQueueTab = ({
                                 const isExpired = remainingMs === 0;
 
                                 return isExpired ? (
-                                  <span className="inline-flex items-center gap-[0.25vw] text-rose-700 font-normal text-[0.7vw] bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.12vw] rounded-full animate-pulse shadow-2xs">
+                                  <span className="inline-flex items-center gap-[0.25vw] text-rose-700 font-medium text-[0.75vw] bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.12vw] rounded-full animate-pulse shadow-2xs">
                                     <AlertTriangle className="w-[0.7vw] h-[0.7vw]" /> SLA Expired
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-[0.3vw] font-mono text-[0.72vw] font-normal px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs bg-rose-50 text-rose-800 border-rose-200">
+                                  <span className="inline-flex items-center gap-[0.3vw] font-mono text-[0.77vw] font-medium px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs bg-rose-50 text-rose-800 border-rose-200">
                                     <span
                                       title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` by ${prod._reverseEscalatedFromName}` : ""}${prod._reverseEscalationReason ? `: ${prod._reverseEscalationReason}` : ""}`}
-                                      className="inline-flex items-center justify-center w-[1vw] h-[1vw] rounded bg-rose-200/80 text-rose-800 font-bold text-[0.6vw] border border-rose-300 select-none cursor-help mr-[0.1vw]"
+                                      className="inline-flex items-center justify-center w-[1vw] h-[1vw] rounded bg-rose-200/80 text-rose-800 font-bold text-[0.65vw] border border-rose-300 select-none cursor-help mr-[0.1vw]"
                                     >
                                       R
                                     </span>
@@ -363,11 +363,11 @@ export const EscalationQueueTab = ({
                                 );
                               })()
                             ) : row.status === "Critical" ? (
-                              <span className="inline-flex items-center gap-[0.25vw] text-rose-700 font-normal text-[0.7vw] bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.12vw] rounded-full animate-pulse shadow-2xs">
+                              <span className="inline-flex items-center gap-[0.25vw] text-rose-700 font-medium text-[0.75vw] bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.12vw] rounded-full animate-pulse shadow-2xs">
                                 <AlertTriangle className="w-[0.7vw] h-[0.7vw]" /> SLA Expired
                               </span>
                             ) : (
-                              <span className="text-slate-300 font-normal text-[0.75vw]">—</span>
+                              <span className="text-slate-300 font-medium text-[0.8vw]">—</span>
                             )}
                           </div>
                         </td>
@@ -379,11 +379,11 @@ export const EscalationQueueTab = ({
                             className="py-[0.7vw] px-[0.7vw] border-r border-b border-slate-300 text-center align-middle whitespace-nowrap bg-white"
                           >
                             {row.isSelfAssigned || row.registeredBy === loggedInUser?.userId || row.registeredByName === loggedInUser?.name ? (
-                              <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
+                              <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium bg-teal-50 text-teal-700 border border-teal-200 shadow-2xs whitespace-nowrap">
                                 Self Assigned
                               </span>
                             ) : (
-                              <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
+                              <span className="inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs whitespace-nowrap">
                                 Assigned
                               </span>
                             )}
@@ -398,20 +398,20 @@ export const EscalationQueueTab = ({
                             return (
                               <div className="flex flex-col items-center justify-center">
                                 <div className="flex items-center gap-[0.3vw]">
-                                  <span className="text-[0.75vw] text-slate-800 font-normal">
+                                  <span className="text-[0.8vw] text-slate-800 font-medium">
                                     {statusText}
                                   </span>
                                   {prod._isReverseEscalated && (
                                     <span
                                       title={`Reverse Escalated${prod._reverseEscalatedFromName ? ` from ${prod._reverseEscalatedFromName}` : ""}`}
-                                      className="inline-flex items-center gap-[0.15vw] px-[0.35vw] py-[0.05vw] rounded text-[0.62vw] font-normal bg-rose-50 text-rose-700 border border-rose-200"
+                                      className="inline-flex items-center gap-[0.15vw] px-[0.35vw] py-[0.05vw] rounded text-[0.67vw] font-medium bg-rose-50 text-rose-700 border border-rose-200"
                                     >
                                       <RotateCcw className="w-[0.6vw] h-[0.6vw]" />
                                       Rev
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-[0.66vw] text-slate-400 font-normal mt-[0.1vw]">
+                                <div className="text-[0.71vw] text-slate-400 font-medium mt-[0.1vw]">
                                   {prod._assignedEngineerName || row.currentEngineerName || "Assigned"}
                                 </div>
                               </div>
@@ -427,7 +427,7 @@ export const EscalationQueueTab = ({
                               <button
                                 type="button"
                                 onClick={() => handleProductAttend(row.callId || row._id, pIdx)}
-                                className="px-[0.7vw] py-[0.3vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
+                                className="px-[0.7vw] py-[0.3vw] bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
                                 title="Attend to halt auto-escalation timer"
                               >
                                 <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
@@ -450,7 +450,7 @@ export const EscalationQueueTab = ({
                                   setCancelReason("");
                                   setNewAssignee("");
                                 }}
-                                className="px-[0.6vw] py-[0.25vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-[0.68vw] font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap flex items-center gap-[0.2vw]"
+                                className="px-[0.6vw] py-[0.25vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-[0.73vw] font-medium transition-all cursor-pointer shadow-2xs whitespace-nowrap flex items-center gap-[0.2vw]"
                                 title="Stop Escalation & Re-assign"
                               >
                                 <Slash className="w-[0.65vw] h-[0.65vw]" />
@@ -470,7 +470,7 @@ export const EscalationQueueTab = ({
                                     pIdx,
                                   });
                                 }}
-                                className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.7vw] font-normal transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
+                                className="px-[0.7vw] py-[0.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-medium transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-[0.25vw]"
                                 title="Respond or Close Product"
                               >
                                 <Edit3 className="w-[0.7vw] h-[0.7vw]" />
@@ -522,7 +522,7 @@ export const EscalationQueueTab = ({
 
         {/* Pagination Footer */}
         <div className="flex items-center justify-between px-[0.9vw] py-[0.6vw] border-t border-slate-300 bg-white shrink-0">
-          <div className="text-[0.75vw] text-slate-600 font-medium">
+          <div className="text-[0.8vw] text-slate-600 font-medium">
             Showing{" "}
             <span className="font-bold text-slate-800">
               {myEscalations.length > 0 ? (escalationPage - 1) * escalationPageSize + 1 : 0}
@@ -552,7 +552,7 @@ export const EscalationQueueTab = ({
                   <button
                     key={pNum}
                     onClick={() => setEscalationPage(pNum)}
-                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${
+                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-bold transition-all cursor-pointer ${
                       escalationPage === pNum
                         ? "bg-[#1a73e8] text-white shadow-2xs"
                         : "bg-white border border-gray-300 text-gray-700 hover:border-blue-400 hover:text-blue-600"
@@ -582,11 +582,11 @@ export const EscalationQueueTab = ({
           <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-full max-w-[32vw] overflow-hidden flex flex-col font-sans">
             <div className="px-[1.2vw] py-[0.85vw] border-b border-slate-200 bg-rose-50/70 flex items-center justify-between">
               <div>
-                <h3 className="text-[0.95vw] font-bold text-rose-900 flex items-center gap-[0.4vw]">
+                <h3 className="text-[1vw] font-bold text-rose-900 flex items-center gap-[0.4vw]">
                   <Slash className="w-[1vw] h-[1vw] text-rose-600" />
                   Stop / Cancel Escalation
                 </h3>
-                <div className="text-[0.72vw] text-rose-700 font-mono mt-[0.1vw]">
+                <div className="text-[0.77vw] text-rose-700 font-mono mt-[0.1vw]">
                   {cancelModal.callNumber} • Product: {cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Product'}
                 </div>
               </div>
@@ -623,16 +623,16 @@ export const EscalationQueueTab = ({
               }}
               className="p-[1.2vw] flex flex-col gap-[0.85vw]"
             >
-              <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.7vw] text-[0.74vw] text-slate-700">
+              <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.7vw] text-[0.79vw] text-slate-700">
                 <span className="font-bold">Current Assignee:</span>{" "}
                 <span className="text-indigo-700 font-semibold">{cancelModal.currentAssignee || "None"}</span>
-                <p className="text-[0.7vw] text-slate-500 mt-[0.2vw]">
+                <p className="text-[0.75vw] text-slate-500 mt-[0.2vw]">
                   Stopping the escalation will halt the timer and notify the current engineer.
                 </p>
               </div>
 
               <div>
-                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                <label className="block text-[0.8vw] font-bold text-slate-700 mb-[0.25vw]">
                   Reason for Stopping Escalation *
                 </label>
                 <textarea
@@ -641,18 +641,18 @@ export const EscalationQueueTab = ({
                   value={cancelReason}
                   onChange={(e) => setCancelReason(e.target.value)}
                   placeholder="e.g. Handled over phone directly, false escalation, reassigning to senior tech..."
-                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-slate-800 font-medium resize-none"
+                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.83vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-slate-800 font-medium resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[0.75vw] font-bold text-slate-700 mb-[0.25vw]">
+                <label className="block text-[0.8vw] font-bold text-slate-700 mb-[0.25vw]">
                   Re-assign To (Optional)
                 </label>
                 <select
                   value={newAssignee}
                   onChange={(e) => setNewAssignee(e.target.value)}
-                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.78vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 bg-white"
+                  className="w-full px-[0.7vw] py-[0.45vw] text-[0.83vw] border border-slate-300 rounded-[0.45vw] outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-800 bg-white"
                 >
                   <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
                   {(employees || []).map((emp) => (
@@ -668,14 +668,14 @@ export const EscalationQueueTab = ({
                   type="button"
                   disabled={isSubmittingCancel}
                   onClick={() => setCancelModal(null)}
-                  className="px-[0.9vw] py-[0.4vw] text-[0.78vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 rounded-[0.4vw] transition-colors cursor-pointer"
+                  className="px-[0.9vw] py-[0.4vw] text-[0.83vw] font-bold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 rounded-[0.4vw] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingCancel || !cancelReason.trim()}
-                  className="px-[1.1vw] py-[0.4vw] text-[0.78vw] font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
+                  className="px-[1.1vw] py-[0.4vw] text-[0.83vw] font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-[0.4vw] transition-colors cursor-pointer flex items-center gap-[0.35vw] shadow-sm disabled:opacity-50"
                 >
                   {isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}
                 </button>

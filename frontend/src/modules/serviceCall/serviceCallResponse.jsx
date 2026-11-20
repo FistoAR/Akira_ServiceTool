@@ -1141,7 +1141,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
 
   if (view === "form") {
     return (
-      <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
         <ServiceCallForm
           initialData={editingCall || defaultFormData()}
           customerDb={customerDb}
@@ -1166,7 +1166,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.85vw] bg-slate-100/70 overflow-hidden pb-[0.4vw]">
+    <div className="flex flex-col flex-1 min-h-0 w-full text-[0.9vw] bg-slate-100/70 overflow-hidden pb-[0.4vw]">
       {/* Top Header Toolbar with Sleek Pill Tabs & Action Controls */}
       <div className="flex items-center gap-[0.8vw] mb-[0.6vw] sticky top-0 z-10 shrink-0">
         {/* Sleek Pill Tab Container */}
@@ -1184,7 +1184,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                   });
                 }
               }}
-              className={`flex-1 flex items-center justify-center gap-[0.4vw] py-[0.45vw] px-[0.8vw] rounded-full text-[0.78vw] font-semibold transition-all duration-200 relative cursor-pointer whitespace-nowrap ${
+              className={`flex-1 flex items-center justify-center gap-[0.4vw] py-[0.45vw] px-[0.8vw] rounded-full text-[0.83vw] font-semibold transition-all duration-200 relative cursor-pointer whitespace-nowrap ${
                 activeTab === t.id
                   ? "bg-indigo-600 text-white shadow-sm"
                   : newActivityTabs[t.id]
@@ -1196,7 +1196,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
               <span>{t.label}</span>
               {t.count !== undefined && (
                 <span
-                  className={`text-[0.65vw] px-[0.45vw] py-[0.05vw] rounded-full font-bold transition-colors ${
+                  className={`text-[0.7vw] px-[0.45vw] py-[0.05vw] rounded-full font-bold transition-colors ${
                     activeTab === t.id
                       ? "bg-white/20 text-white"
                       : newActivityTabs[t.id]
@@ -1228,7 +1228,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
               setEditingCall(null);
               setView("form");
             }}
-            className="flex items-center gap-[0.35vw] px-[0.95vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-full shadow-xs hover:shadow transition-all duration-200 cursor-pointer text-[0.78vw]"
+            className="flex items-center gap-[0.35vw] px-[0.95vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-full shadow-xs hover:shadow transition-all duration-200 cursor-pointer text-[0.83vw]"
           >
             <Plus className="w-[0.9vw] h-[0.9vw] stroke-[2.5]" />
             <span>Register Call</span>
@@ -1249,7 +1249,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
               setSearchQuery(e.target.value);
               setSelfAssignedPage(1);
             }}
-            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchQuery && (
             <button
@@ -1264,8 +1264,8 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
         {/* Right side: Unified Capsule Date Range & Priority Filter */}
         <div className="flex items-center gap-[0.6vw] flex-shrink-0">
           {/* Unified Date Range Capsule */}
-          <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-            <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+          <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+            <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
             <input
               ref={fromDateRef}
               type="date"
@@ -1274,7 +1274,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                 setFilterFromDate(e.target.value);
                 setSelfAssignedPage(1);
               }}
-              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -1288,8 +1288,8 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
             >
               <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
             </button>
-            <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-            <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+            <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+            <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
             <input
               ref={toDateRef}
               type="date"
@@ -1299,7 +1299,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                 setFilterToDate(e.target.value);
                 setSelfAssignedPage(1);
               }}
-              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -1323,7 +1323,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                 setFilterToDate("");
                 setSelfAssignedPage(1);
               }}
-              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
               <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -1345,7 +1345,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
                 { value: "All", label: "All Priorities" },
                 ...PRIORITIES.map((p) => ({ value: p, label: p })),
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.8vw]"
             />
           </div>
         </div>
@@ -1356,7 +1356,7 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full min-h-[60vh] bg-slate-100/70 p-[1.2vw] rounded-[1vw] border border-slate-400 shadow-inner">
             <RefreshCw className="w-[3vw] h-[3vw] text-indigo-650 animate-spin mb-[1vw]" />
-            <span className="text-[1vw] font-bold text-slate-800">
+            <span className="text-[1.05vw] font-bold text-slate-800">
               Fetching latest tasks...
             </span>
           </div>
@@ -1493,20 +1493,20 @@ const [selectedSelfAssigned, setSelectedSelfAssigned] = useState(new Set());
             {/* Header */}
             <div className="flex items-center justify-between px-[1.2vw] py-[0.8vw] border-b border-slate-200 bg-slate-50/80 shrink-0">
               <div>
-                <h3 className="text-[0.9vw] font-medium text-slate-800 flex items-center gap-[0.4vw]">
+                <h3 className="text-[0.95vw] font-medium text-slate-800 flex items-center gap-[0.4vw]">
                   Respond to Product
-                  <span className="text-[0.76vw] font-normal font-mono text-indigo-600 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded">
+                  <span className="text-[0.81vw] font-medium font-mono text-indigo-600 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded">
                     {activeModalProduct.entry?.callNumber}
                   </span>
                 </h3>
-                <p className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw]">
+                <p className="text-[0.77vw] text-slate-500 font-medium mt-[0.1vw]">
                   {activeModalProduct.prod?.productName || activeModalProduct.prod?.model || ('Product #' + ((activeModalProduct.pIdx ?? 0) + 1))}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveModalProduct(null)}
-                className="p-[0.35vw] text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-full transition-all cursor-pointer font-normal text-[0.85vw]"
+                className="p-[0.35vw] text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-full transition-all cursor-pointer font-medium text-[0.9vw]"
               >
                 ✕
               </button>

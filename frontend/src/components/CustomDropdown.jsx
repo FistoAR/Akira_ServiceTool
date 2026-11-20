@@ -251,32 +251,32 @@ const CustomDropdown = ({
   // Size variations
   const sizeClasses = {
     sm: {
-      trigger: "py-[0.25vw] px-[0.55vw] text-[0.72vw] rounded-[0.3vw] min-h-[1.7vw]",
+      trigger: "py-[0.25vw] px-[0.55vw] text-[0.77vw] rounded-[0.3vw] min-h-[1.7vw]",
       icon: "w-[0.8vw] h-[0.8vw]",
       arrow: "w-[0.75vw] h-[0.75vw]",
-      option: "py-[0.25vw] px-[0.55vw] text-[0.72vw]",
-      badge: "text-[0.62vw] px-[0.3vw] py-[0.05vw]",
+      option: "py-[0.25vw] px-[0.55vw] text-[0.77vw]",
+      badge: "text-[0.67vw] px-[0.3vw] py-[0.05vw]",
     },
     md: {
-      trigger: "py-[0.38vw] px-[0.75vw] text-[0.78vw] rounded-[0.35vw] min-h-[2.1vw]",
+      trigger: "py-[0.38vw] px-[0.75vw] text-[0.83vw] rounded-[0.35vw] min-h-[2.1vw]",
       icon: "w-[0.95vw] h-[0.95vw]",
       arrow: "w-[0.85vw] h-[0.85vw]",
-      option: "py-[0.38vw] px-[0.65vw] text-[0.78vw]",
-      badge: "text-[0.66vw] px-[0.4vw] py-[0.08vw]",
+      option: "py-[0.38vw] px-[0.65vw] text-[0.83vw]",
+      badge: "text-[0.71vw] px-[0.4vw] py-[0.08vw]",
     },
     lg: {
-      trigger: "py-[0.5vw] px-[0.9vw] text-[0.85vw] rounded-[0.4vw] min-h-[2.5vw]",
+      trigger: "py-[0.5vw] px-[0.9vw] text-[0.9vw] rounded-[0.4vw] min-h-[2.5vw]",
       icon: "w-[1.1vw] h-[1.1vw]",
       arrow: "w-[1vw] h-[1vw]",
-      option: "py-[0.5vw] px-[0.8vw] text-[0.85vw]",
-      badge: "text-[0.72vw] px-[0.5vw] py-[0.1vw]",
+      option: "py-[0.5vw] px-[0.8vw] text-[0.9vw]",
+      badge: "text-[0.77vw] px-[0.5vw] py-[0.1vw]",
     },
   }[size] || {
-    trigger: "py-[0.38vw] px-[0.75vw] text-[0.78vw] rounded-[0.35vw]",
+    trigger: "py-[0.38vw] px-[0.75vw] text-[0.83vw] rounded-[0.35vw]",
     icon: "w-[0.95vw] h-[0.95vw]",
     arrow: "w-[0.85vw] h-[0.85vw]",
-    option: "py-[0.38vw] px-[0.65vw] text-[0.78vw]",
-    badge: "text-[0.66vw] px-[0.4vw] py-[0.08vw]",
+    option: "py-[0.38vw] px-[0.65vw] text-[0.83vw]",
+    badge: "text-[0.71vw] px-[0.4vw] py-[0.08vw]",
   };
 
   const handleSelect = (opt) => {
@@ -319,13 +319,13 @@ const CustomDropdown = ({
     <div className={`relative flex flex-col ${className}`} ref={containerRef}>
       {/* Optional Label */}
       {label && (
-        <label className="text-[0.76vw] font-medium text-gray-700 mb-[0.25vw] flex items-center justify-between">
+        <label className="text-[0.81vw] font-medium text-gray-700 mb-[0.25vw] flex items-center justify-between">
           <span>{label}</span>
           {multiple && clearable && Array.isArray(value) && value.length > 0 && (
             <button
               type="button"
               onClick={handleClear}
-              className="text-[0.68vw] text-blue-600 hover:text-blue-800 cursor-pointer font-normal underline"
+              className="text-[0.73vw] text-blue-600 hover:text-blue-800 cursor-pointer font-medium underline"
             >
               Clear
             </button>
@@ -368,13 +368,13 @@ const CustomDropdown = ({
           ) : multiple ? (
             <span className="truncate">
               {Array.isArray(selectedOptions) && selectedOptions.length > 0 ? (
-                <span className="font-normal text-slate-700">
+                <span className="font-medium text-slate-700">
                   {selectedOptions.length === 1
                     ? selectedOptions[0].label
                     : `${selectedOptions.length} items selected`}
                 </span>
               ) : (
-                <span className="text-gray-400 font-normal">{placeholder}</span>
+                <span className="text-gray-400 font-medium">{placeholder}</span>
               )}
             </span>
           ) : selectedOptions ? (
@@ -392,7 +392,7 @@ const CustomDropdown = ({
                   className={`${sizeClasses.icon} text-blue-600 flex-shrink-0`}
                 />
               )}
-              <span className="truncate font-normal text-slate-700">
+              <span className="truncate font-medium text-slate-700">
                 {selectedOptions.label}
               </span>
               {selectedOptions.badge && (
@@ -406,7 +406,7 @@ const CustomDropdown = ({
               )}
             </div>
           ) : (
-            <span className="text-gray-400 font-normal truncate">{placeholder}</span>
+            <span className="text-gray-400 font-medium truncate">{placeholder}</span>
           )}
         </div>
 
@@ -433,7 +433,7 @@ const CustomDropdown = ({
       {/* Helper / Error Text */}
       {(error || helperText) && (
         <span
-          className={`text-[0.7vw] mt-[0.2vw] ${
+          className={`text-[0.75vw] mt-[0.2vw] ${
             error ? "text-rose-500 font-medium" : "text-gray-500"
           }`}
         >
@@ -472,7 +472,7 @@ const CustomDropdown = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={searchPlaceholder}
-                  className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.3vw] text-[0.76vw] border border-gray-200 rounded-[0.3vw] outline-none focus:border-blue-500 bg-gray-50/50"
+                  className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.3vw] text-[0.81vw] border border-gray-200 rounded-[0.3vw] outline-none focus:border-blue-500 bg-gray-50/50"
                   onClick={(e) => e.stopPropagation()}
                 />
                 {searchQuery && (
@@ -488,7 +488,7 @@ const CustomDropdown = ({
 
               {/* Multi-select Quick Actions */}
               {multiple && (
-                <div className="flex items-center justify-between pt-[0.3vw] px-[0.2vw] text-[0.7vw]">
+                <div className="flex items-center justify-between pt-[0.3vw] px-[0.2vw] text-[0.75vw]">
                   <button
                     type="button"
                     onClick={handleSelectAll}
@@ -575,7 +575,7 @@ const CustomDropdown = ({
                           <div className="flex flex-col truncate">
                             <span className="truncate">{opt.label}</span>
                             {opt.description && (
-                              <span className="text-[0.66vw] text-gray-400 font-normal truncate">
+                              <span className="text-[0.71vw] text-gray-400 font-medium truncate">
                                 {opt.description}
                               </span>
                             )}
@@ -608,7 +608,7 @@ const CustomDropdown = ({
                 );
               })
             ) : (
-              <div className="py-[0.8vw] px-[0.6vw] text-center text-gray-400 text-[0.76vw]">
+              <div className="py-[0.8vw] px-[0.6vw] text-center text-gray-400 text-[0.81vw]">
                 No options found
               </div>
             )}

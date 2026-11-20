@@ -95,8 +95,8 @@ const ReportsModal = ({ row, onClose }) => {
               <FileText className="w-[1.2vw] h-[1.2vw]" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Full Production Report</h3>
-              <p className="text-[0.74vw] text-slate-500 font-medium">{row.refNoInternal} · {row.jobOrderNo || "No Job Order"}</p>
+              <h3 className="text-[1.1vw] font-bold text-slate-800">Full Production Report</h3>
+              <p className="text-[0.79vw] text-slate-500 font-medium">{row.refNoInternal} · {row.jobOrderNo || "No Job Order"}</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 cursor-pointer transition-all hover:bg-slate-100 p-[0.35vw] rounded-full">
@@ -106,31 +106,31 @@ const ReportsModal = ({ row, onClose }) => {
         <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
           <div className="grid grid-cols-3 gap-[1vw]">
             <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Entry Details</div>
+              <div className="text-[0.75vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Entry Details</div>
               <div className="space-y-[0.4vw]">
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Date:</span> {fmtDate(row.date)}</div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Job Order:</span> <span className="text-blue-600 font-semibold">{row.jobOrderNo || "—"}</span></div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Products:</span> {products.length}</div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Date:</span> {fmtDate(row.date)}</div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Job Order:</span> <span className="text-blue-600 font-semibold">{row.jobOrderNo || "—"}</span></div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Products:</span> {products.length}</div>
               </div>
             </div>
             <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Customer</div>
+              <div className="text-[0.75vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Customer</div>
               <div className="space-y-[0.4vw]">
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Name:</span> <span className="font-medium text-slate-800">{row.customerName || "—"}</span></div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Code:</span> <span className="font-mono text-slate-600">{row.customerCode || "—"}</span></div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Name:</span> <span className="font-medium text-slate-800">{row.customerName || "—"}</span></div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Code:</span> <span className="font-mono text-slate-600">{row.customerCode || "—"}</span></div>
               </div>
             </div>
             <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.7vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Audit Details</div>
+              <div className="text-[0.75vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Audit Details</div>
               <div className="space-y-[0.4vw]">
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Created By:</span> {row.creatorName || "Admin"}</div>
-                <div className="text-[0.76vw] text-slate-700"><span className="font-semibold text-slate-500">Last updated:</span> {fmtDate(row.updatedAt || row.createdAt)}</div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Created By:</span> {row.creatorName || "Admin"}</div>
+                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Last updated:</span> {fmtDate(row.updatedAt || row.createdAt)}</div>
               </div>
             </div>
           </div>
 
           {products.length === 0 ? (
-            <div className="text-center py-[4vw] text-[0.85vw] text-slate-400">No product records available for this entry.</div>
+            <div className="text-center py-[4vw] text-[0.9vw] text-slate-400">No product records available for this entry.</div>
           ) : products.map((prod, idx) => (
             <div key={prod._pid} className="border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs bg-white">
               <div
@@ -138,8 +138,8 @@ const ReportsModal = ({ row, onClose }) => {
                 className="bg-slate-50/80 px-[1.2vw] py-[0.8vw] flex items-center justify-between gap-[1vw] cursor-pointer hover:bg-slate-100/70 transition-colors border-b border-slate-200/80"
               >
                 <div>
-                  <div className="text-[0.88vw] font-semibold text-slate-800">{prod.productDescription || "Unnamed Product"}</div>
-                  <div className="text-[0.72vw] text-slate-500 mt-[0.2vw] flex flex-wrap gap-[0.8vw]">
+                  <div className="text-[0.93vw] font-semibold text-slate-800">{prod.productDescription || "Unnamed Product"}</div>
+                  <div className="text-[0.77vw] text-slate-500 mt-[0.2vw] flex flex-wrap gap-[0.8vw]">
                     <span>JO: <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span></span>
                     <span>Code: <span className="font-mono text-slate-700">{prod.productCode || "—"}</span></span>
                     <span>Qty: <span className="font-medium text-slate-700">{prod.qty || "—"}</span></span>
@@ -147,7 +147,7 @@ const ReportsModal = ({ row, onClose }) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-[0.8vw]">
-                  <span className="text-[0.7vw] px-[0.6vw] py-[0.15vw] rounded-full bg-slate-200/70 text-slate-700 font-semibold">Item {idx + 1}</span>
+                  <span className="text-[0.75vw] px-[0.6vw] py-[0.15vw] rounded-full bg-slate-200/70 text-slate-700 font-semibold">Item {idx + 1}</span>
                   <ChevronDown className={`w-[1vw] h-[1vw] text-slate-500 transition-transform duration-200 ${expanded.has(prod._pid) ? "rotate-180" : ""}`} />
                 </div>
               </div>
@@ -164,26 +164,26 @@ const ReportsModal = ({ row, onClose }) => {
                     <div className="border-t border-slate-100">
                       {/* Registration Info */}
                       <div className="p-[1.2vw] bg-white border-b border-slate-200/80">
-                        <div className="text-[0.72vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
+                        <div className="text-[0.77vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
                           <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" />
                           <Target className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Registration Information
                         </div>
                         <div className="grid grid-cols-6 gap-[1.2vw] mb-[0.9vw]">
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Stage</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.stage || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Category</div><div className="text-slate-800 font-medium text-[0.78vw]">{row.category || prod.category || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">NC Type</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.ncType || "Internal"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Problem Type</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.problemType || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Inspected By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.inspectedByName || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Designators</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.designators || "—"}</div></div>
+                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Stage</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.stage || "—"}</div></div>
+                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Category</div><div className="text-slate-800 font-medium text-[0.83vw]">{row.category || prod.category || "—"}</div></div>
+                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">NC Type</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.ncType || "Internal"}</div></div>
+                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Problem Type</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.problemType || "—"}</div></div>
+                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Inspected By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.inspectedByName || "—"}</div></div>
+                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Designators</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.designators || "—"}</div></div>
                         </div>
                         <div className="flex gap-[1.2vw] mb-[0.9vw]">
                           <div className="flex-1">
-                            <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Initial Problem Description</div>
-                            <div className="text-[0.78vw] text-slate-800 leading-relaxed bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-200">{prod.problem || "No description provided."}</div>
+                            <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Initial Problem Description</div>
+                            <div className="text-[0.83vw] text-slate-800 leading-relaxed bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-200">{prod.problem || "No description provided."}</div>
                           </div>
                           {prod.boardImage && (
                             <div className="w-[10vw]">
-                              <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Board Image</div>
+                              <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Board Image</div>
                               <img 
                                 src={`${API_URL}${prod.boardImage}`} 
                                 alt="Board" 
@@ -194,67 +194,67 @@ const ReportsModal = ({ row, onClose }) => {
                           )}
                         </div>
                         <div className="grid grid-cols-6 gap-[1.2vw]">
-                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Assembled By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report?.assembledByName || prod.assembledByName || "—"}</div></div>
-                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Tested By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report?.testedByName || prod.testedByName || "—"}</div></div>
+                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Assembled By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report?.assembledByName || prod.assembledByName || "—"}</div></div>
+                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Tested By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report?.testedByName || prod.testedByName || "—"}</div></div>
                         </div>
                       </div>
 
                       {/* Technical Resolution Report */}
                       <div className="p-[1.2vw] bg-slate-50/50">
-                        <div className="text-[0.72vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
+                        <div className="text-[0.77vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
                           <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full inline-block" />
                           <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" /> Technical Resolution Report
                         </div>
                         {prod.report ? (
                           <div className="space-y-[1vw]">
                             <div className="grid grid-cols-4 gap-[1.2vw]">
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Start Date</div><div className="text-slate-800 font-medium text-[0.78vw]">{fmtDate(prod.report.startDate)}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">4M Category</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report.fourMCategory || "—"}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">CAE</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report.cae || "—"}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Status</div><div className="text-blue-600 font-semibold text-[0.78vw]">{prod.report.status || "—"}</div></div>
+                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Start Date</div><div className="text-slate-800 font-medium text-[0.83vw]">{fmtDate(prod.report.startDate)}</div></div>
+                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">4M Category</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report.fourMCategory || "—"}</div></div>
+                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">CAE</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report.cae || "—"}</div></div>
+                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Status</div><div className="text-blue-600 font-semibold text-[0.83vw]">{prod.report.status || "—"}</div></div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-[1vw]">
                               <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Root Cause Analysis</div>
-                                <div className="text-[0.78vw] text-slate-800 leading-relaxed">{prod.report.rootCause || "—"}</div>
+                                <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Root Cause Analysis</div>
+                                <div className="text-[0.83vw] text-slate-800 leading-relaxed">{prod.report.rootCause || "—"}</div>
                               </div>
                               <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Corrective Action Taken</div>
-                                <div className="text-[0.78vw] text-slate-800 leading-relaxed">{prod.report.correctiveAction || "—"}</div>
+                                <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Corrective Action Taken</div>
+                                <div className="text-[0.83vw] text-slate-800 leading-relaxed">{prod.report.correctiveAction || "—"}</div>
                               </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-[1vw]">
                               <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.65vw] text-slate-500 font-semibold uppercase mb-[0.5vw]">Parts Replaced</div>
+                                <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.5vw]">Parts Replaced</div>
                                 {prod.report && prod.report.partsReplacement && prod.report.partsReplacement.trim() ? (
                                   <ul className="list-disc list-inside space-y-[0.2vw]">
                                     {parseParts(prod.report.partsReplacement).map((part, pidx) => (
-                                      <li key={pidx} className="text-[0.76vw] text-slate-800 leading-tight">{part}</li>
+                                      <li key={pidx} className="text-[0.81vw] text-slate-800 leading-tight">{part}</li>
                                     ))}
                                   </ul>
-                                ) : <div className="text-[0.76vw] text-slate-400 italic">No parts replaced.</div>}
+                                ) : <div className="text-[0.81vw] text-slate-400 italic">No parts replaced.</div>}
                               </div>
                               <div className="grid grid-cols-2 gap-[0.8vw]">
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Closed Date</div><div className="text-slate-800 font-medium text-[0.78vw]">{fmtDate(prod.report.closedDate)}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Verified Date</div><div className="text-slate-800 font-medium text-[0.78vw]">{fmtDate(prod.report.verifiedDate)}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Verified By</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.report.verifiedByName || "—"}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.64vw] font-semibold">Disposition</div><div className="text-slate-800 font-medium text-[0.78vw]">{prod.disposition || "—"}</div></div>
+                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Closed Date</div><div className="text-slate-800 font-medium text-[0.83vw]">{fmtDate(prod.report.closedDate)}</div></div>
+                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Verified Date</div><div className="text-slate-800 font-medium text-[0.83vw]">{fmtDate(prod.report.verifiedDate)}</div></div>
+                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Verified By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report.verifiedByName || "—"}</div></div>
+                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Disposition</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.disposition || "—"}</div></div>
                               </div>
                             </div>
 
                             <div className="grid grid-cols-4 gap-[0.8vw]">
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">Assembler</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">Tester</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">FI By</div><div className="text-[0.75vw] font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.58vw] font-medium text-slate-500 uppercase">Final Status</div><div className="text-[0.75vw] font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">Assembler</div><div className="text-[0.8vw] font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">Tester</div><div className="text-[0.8vw] font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">FI By</div><div className="text-[0.8vw] font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
+                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">Final Status</div><div className="text-[0.8vw] font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
                             </div>
                           </div>
                         ) : (
                           <div className="py-[2.5vw] text-center">
                             <Clock className="w-[1.8vw] h-[1.8vw] text-slate-300 mx-auto mb-[0.6vw]" />
-                            <div className="text-[0.82vw] text-slate-400 font-medium">No technical report submitted yet.</div>
+                            <div className="text-[0.87vw] text-slate-400 font-medium">No technical report submitted yet.</div>
                           </div>
                         )}
                       </div>
@@ -266,7 +266,7 @@ const ReportsModal = ({ row, onClose }) => {
           ))}
         </div>
         <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex justify-end">
-          <button onClick={onClose} className="px-[1.5vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[0.76vw] font-semibold cursor-pointer transition-all">Close</button>
+          <button onClick={onClose} className="px-[1.5vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[0.81vw] font-semibold cursor-pointer transition-all">Close</button>
         </div>
       </motion.div>
     </div>
@@ -331,8 +331,8 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
               <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Verify Resolution</h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">Verify completion & CAE for this product</p>
+              <h3 className="text-[1.1vw] font-bold text-slate-800">Verify Resolution</h3>
+              <p className="text-[0.77vw] text-slate-500 font-medium">Verify completion & CAE for this product</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
@@ -342,16 +342,16 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
 
         <div className="p-[1.4vw] space-y-[1.1vw] bg-white">
           <div className="bg-slate-50/70 p-[0.9vw] rounded-[0.6vw] border border-slate-200/80">
-            <div className="text-[0.68vw] font-medium text-blue-600 uppercase tracking-wider mb-[0.35vw]">Product Context</div>
-            <div className="text-[0.85vw] font-semibold text-slate-800">{prod.productDescription}</div>
-            <div className="text-[0.72vw] text-slate-500 mt-[0.15vw]">
+            <div className="text-[0.73vw] font-medium text-blue-600 uppercase tracking-wider mb-[0.35vw]">Product Context</div>
+            <div className="text-[0.9vw] font-semibold text-slate-800">{prod.productDescription}</div>
+            <div className="text-[0.77vw] text-slate-500 mt-[0.15vw]">
               <span className="font-semibold text-slate-600">S/N:</span> <span className="font-mono">{prod.serialNumber || "—"}</span> · <span className="font-semibold text-slate-600">JO:</span> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span>
             </div>
           </div>
 
           <div className="space-y-[0.9vw]">
             <div className="flex flex-col gap-[0.3vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">Verified By <span className="text-rose-500">*</span></label>
+              <label className="text-[0.81vw] font-semibold text-slate-700">Verified By <span className="text-rose-500">*</span></label>
               <CustomDropdown
                 value={formData.verifiedBy}
                 onChange={val => {
@@ -361,22 +361,22 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                 options={employees.map(e => ({ value: e.userId || e._id, label: e.name }))}
                 placeholder="Select Employee"
                 usePortal={true}
-                triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+                triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
               />
             </div>
 
             <div className="flex flex-col gap-[0.3vw]">
-              <label className="text-[0.76vw] font-semibold text-slate-700">Verified Date <span className="text-rose-500">*</span></label>
+              <label className="text-[0.81vw] font-semibold text-slate-700">Verified Date <span className="text-rose-500">*</span></label>
               <input
                 type="date"
                 value={formData.verifiedDate}
                 onChange={e => setFormData(p => ({ ...p, verifiedDate: e.target.value }))}
-                className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.78vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all cursor-pointer"
+                className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.83vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all cursor-pointer"
               />
             </div>
 
             <div className="flex flex-col gap-[0.3vw] relative">
-              <label className="text-[0.76vw] font-semibold text-slate-700">CAE (Corrective Action Effectiveness)</label>
+              <label className="text-[0.81vw] font-semibold text-slate-700">CAE (Corrective Action Effectiveness)</label>
               <div className="relative">
                 <input
                   value={formData.cae}
@@ -385,7 +385,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                   onBlur={() => setTimeout(() => setShowCaeSuggestions(false), 200)}
                   onKeyDown={onKeyDown}
                   placeholder="Enter or select CAE..."
-                  className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.78vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all"
+                  className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.83vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all"
                 />
                 <AnimatePresence>
                   {showCaeSuggestions && filteredCaeSuggestions.length > 0 && (
@@ -399,7 +399,7 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
                         <div 
                           key={i} 
                           onClick={() => { setFormData(p => ({ ...p, cae: opt })); setShowCaeSuggestions(false); }} 
-                          className={`px-[0.9vw] py-[0.45vw] text-[0.78vw] font-medium transition-colors border-b border-slate-100 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-slate-700 hover:bg-slate-50"}`}
+                          className={`px-[0.9vw] py-[0.45vw] text-[0.83vw] font-medium transition-colors border-b border-slate-100 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-slate-700 hover:bg-slate-50"}`}
                         >
                           {opt}
                         </div>
@@ -413,8 +413,8 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
         </div>
 
         <div className="p-[1vw] border-t border-slate-200 bg-slate-50/70 flex justify-end gap-[0.6vw] rounded-b-[0.8vw]">
-          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white text-slate-700 font-semibold rounded-full text-[0.76vw] hover:bg-slate-50 cursor-pointer transition-all">Cancel</button>
-          <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white font-semibold rounded-full text-[0.76vw] hover:bg-blue-700 active:scale-95 transition-all shadow-xs">Save Verification</button>
+          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white text-slate-700 font-semibold rounded-full text-[0.81vw] hover:bg-slate-50 cursor-pointer transition-all">Cancel</button>
+          <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white font-semibold rounded-full text-[0.81vw] hover:bg-blue-700 active:scale-95 transition-all shadow-xs">Save Verification</button>
         </div>
       </motion.div>
     </div>
@@ -486,8 +486,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               <ClipboardList className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Master Data Configuration</h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">Manage system-wide production material categories</p>
+              <h3 className="text-[1.1vw] font-bold text-slate-800">Master Data Configuration</h3>
+              <p className="text-[0.77vw] text-slate-500 font-medium">Manage system-wide production material categories</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer"><X className="w-[1.2vw] h-[1.2vw]" /></button>
@@ -497,7 +497,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
           {/* Sidebar with distinctive background & active pill styling */}
           <div className="w-[15vw] border-r border-slate-200 flex flex-col bg-[#F3F6FA] p-[0.7vw] gap-[0.35vw]">
             <div className="px-[0.6vw] py-[0.3vw] mb-[0.2vw]">
-              <span className="text-[0.68vw] font-medium uppercase tracking-wider text-slate-400">Categories</span>
+              <span className="text-[0.73vw] font-medium uppercase tracking-wider text-slate-400">Categories</span>
             </div>
             {TABS.map(tab => {
               const isSelected = activeTab === tab.id;
@@ -508,7 +508,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center justify-between px-[0.85vw] py-[0.65vw] text-[0.78vw] rounded-[0.55vw] transition-all text-left cursor-pointer ${
+                  className={`flex items-center justify-between px-[0.85vw] py-[0.65vw] text-[0.83vw] rounded-[0.55vw] transition-all text-left cursor-pointer ${
                     isSelected
                       ? "bg-white text-blue-700 shadow-sm border-[1.5px] border-slate-400 status-pills-track font-medium"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium"
@@ -518,7 +518,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                     <tab.icon className={`w-[1vw] h-[1vw] ${isSelected ? "text-blue-600" : "text-slate-400"}`} />
                     <span className="font-medium">{tab.label}</span>
                   </div>
-                  <span className={`text-[0.68vw] px-[0.45vw] py-[0.05vw] rounded-full font-medium ${
+                  <span className={`text-[0.73vw] px-[0.45vw] py-[0.05vw] rounded-full font-medium ${
                     isSelected ? "bg-blue-50 text-blue-600 border border-blue-100" : "bg-slate-200/70 text-slate-500"
                   }`}>
                     {count}
@@ -534,8 +534,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "stages" && (
                 <motion.div key="stages" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Work Stages</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure workflow stages available during production and inspection</p>
+                    <h4 className="text-[1vw] font-medium text-slate-800">Work Stages</h4>
+                    <p className="text-[0.77vw] text-slate-500 font-medium">Configure workflow stages available during production and inspection</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
@@ -544,11 +544,11 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewStage(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addStage()} 
                       placeholder="Enter new work stage name..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.83vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-medium placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addStage} 
-                      className="bg-blue-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-blue-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-blue-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.81vw] font-medium hover:bg-blue-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Stage
                     </button>
@@ -557,7 +557,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                        <tr className="text-slate-700 font-medium text-[0.77vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Stage Name</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
@@ -571,10 +571,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "stages" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.77vw] text-slate-400 border-r border-slate-100 font-medium w-[4.5vw]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.81vw] text-slate-800 font-medium">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -582,7 +582,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.81vw] font-medium outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     s
@@ -640,8 +640,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "dispositions" && (
                 <motion.div key="dispositions" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Disposition Outcomes</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure disposition resolution statuses for rejected or verified items</p>
+                    <h4 className="text-[1vw] font-medium text-slate-800">Disposition Outcomes</h4>
+                    <p className="text-[0.77vw] text-slate-500 font-medium">Configure disposition resolution statuses for rejected or verified items</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
@@ -650,11 +650,11 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewDisposition(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addDisposition()} 
                       placeholder="Enter new disposition outcome..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.83vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-medium placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addDisposition} 
-                      className="bg-emerald-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-emerald-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-emerald-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.81vw] font-medium hover:bg-emerald-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Outcome
                     </button>
@@ -663,7 +663,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                        <tr className="text-slate-700 font-medium text-[0.77vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Outcome Description</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
@@ -677,10 +677,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "dispositions" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.77vw] text-slate-400 border-r border-slate-100 font-medium w-[4.5vw]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.81vw] text-slate-800 font-medium">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -688,7 +688,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.81vw] font-medium outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     d
@@ -746,8 +746,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "problems" && (
                 <motion.div key="problems" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Problem Types</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Categorize issue classifications identified on production boards</p>
+                    <h4 className="text-[1vw] font-medium text-slate-800">Problem Types</h4>
+                    <p className="text-[0.77vw] text-slate-500 font-medium">Categorize issue classifications identified on production boards</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
@@ -756,11 +756,11 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewProblemType(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addProblemType()} 
                       placeholder="Enter new problem classification..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.83vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-medium placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addProblemType} 
-                      className="bg-orange-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-orange-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-orange-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.81vw] font-medium hover:bg-orange-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Type
                     </button>
@@ -769,7 +769,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                        <tr className="text-slate-700 font-medium text-[0.77vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Problem Classification</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
@@ -783,10 +783,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "problems" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.77vw] text-slate-400 border-r border-slate-100 font-medium w-[4.5vw]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.81vw] text-slate-800 font-medium">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -794,7 +794,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.81vw] font-medium outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     p
@@ -852,8 +852,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
               {activeTab === "products" && (
                 <motion.div key="products" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="space-y-[1.2vw] flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="shrink-0">
-                    <h4 className="text-[0.95vw] font-medium text-slate-800">Product Types</h4>
-                    <p className="text-[0.72vw] text-slate-500 font-normal">Configure manufacturing assembly and board types</p>
+                    <h4 className="text-[1vw] font-medium text-slate-800">Product Types</h4>
+                    <p className="text-[0.77vw] text-slate-500 font-medium">Configure manufacturing assembly and board types</p>
                   </div>
 
                   <div className="flex gap-[0.6vw] bg-[#F8FAFC] p-[0.7vw] rounded-[0.7vw] border border-slate-200 shadow-2xs shrink-0">
@@ -862,11 +862,11 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                       onChange={e => setNewProductType(e.target.value)} 
                       onKeyPress={e => e.key === 'Enter' && addProductType()} 
                       placeholder="Enter new product type..." 
-                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.78vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-normal placeholder:text-slate-400" 
+                      className="flex-1 border border-slate-200 rounded-full py-[0.45vw] px-[1vw] text-[0.83vw] outline-none focus:border-blue-500 bg-white shadow-2xs text-slate-700 font-medium placeholder:text-slate-400" 
                     />
                     <button 
                       onClick={addProductType} 
-                      className="bg-purple-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.76vw] font-medium hover:bg-purple-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
+                      className="bg-purple-600 text-white px-[1.2vw] h-[2.2vw] rounded-full text-[0.81vw] font-medium hover:bg-purple-700 shadow-xs active:scale-95 transition-all flex items-center gap-[0.35vw] cursor-pointer"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Product Type
                     </button>
@@ -875,7 +875,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                   <div className="flex-1 border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs flex flex-col min-h-0">
                     <table className="w-full border-collapse table-fixed">
                       <thead className="bg-[#E9EDF7] shrink-0 border-b border-slate-300">
-                        <tr className="text-slate-700 font-medium text-[0.72vw] uppercase tracking-wider">
+                        <tr className="text-slate-700 font-medium text-[0.77vw] uppercase tracking-wider">
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[4.5vw] border-r border-slate-300 font-medium">#</th>
                           <th className="py-[0.55vw] px-[0.9vw] text-left font-medium">Product Type</th>
                           <th className="py-[0.55vw] px-[0.8vw] text-center w-[7vw] font-medium">Action</th>
@@ -889,10 +889,10 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                             const isEditing = editingItem?.category === "products" && editingItem?.index === idx;
                             return (
                               <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.72vw] text-slate-400 border-r border-slate-100 font-normal w-[4.5vw]">
+                                <td className="py-[0.5vw] px-[0.8vw] text-center font-mono text-[0.77vw] text-slate-400 border-r border-slate-100 font-medium w-[4.5vw]">
                                   {idx + 1}
                                 </td>
-                                <td className="py-[0.45vw] px-[0.9vw] text-[0.76vw] text-slate-800 font-normal">
+                                <td className="py-[0.45vw] px-[0.9vw] text-[0.81vw] text-slate-800 font-medium">
                                   {isEditing ? (
                                     <input
                                       type="text"
@@ -900,7 +900,7 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
                                       value={editingItem.value}
                                       onChange={e => setEditingItem({ ...editingItem, value: e.target.value })}
                                       onKeyDown={e => { if (e.key === 'Enter') saveEdit(); else if (e.key === 'Escape') setEditingItem(null); }}
-                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.76vw] font-normal outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                                      className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.25vw] text-[0.81vw] font-medium outline-none focus:ring-1 focus:ring-blue-400 bg-white"
                                     />
                                   ) : (
                                     p
@@ -959,8 +959,8 @@ const MasterDataModal = ({ open, onClose, stageOptions, dispositionOptions, prob
         </div>
 
         <div className="flex justify-end gap-[0.6vw] p-[1vw] border-t border-slate-200 bg-slate-50/70 shrink-0 rounded-b-[0.9vw]">
-          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] rounded-full border border-slate-200 text-[0.76vw] text-slate-700 font-semibold hover:bg-slate-100 cursor-pointer">Cancel</button>
-          <button onClick={() => onSave(stages, dispositions, problemTypes, productTypes)} className="px-[1.4vw] h-[2.2vw] rounded-full bg-blue-600 text-white text-[0.76vw] font-semibold hover:bg-blue-700 shadow-xs transition-all active:scale-95 cursor-pointer">Save Master Data</button>
+          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] rounded-full border border-slate-200 text-[0.81vw] text-slate-700 font-semibold hover:bg-slate-100 cursor-pointer">Cancel</button>
+          <button onClick={() => onSave(stages, dispositions, problemTypes, productTypes)} className="px-[1.4vw] h-[2.2vw] rounded-full bg-blue-600 text-white text-[0.81vw] font-semibold hover:bg-blue-700 shadow-xs transition-all active:scale-95 cursor-pointer">Save Master Data</button>
         </div>
       </motion.div>
     </div>
@@ -975,14 +975,14 @@ const EmpSelectCell = ({ val, employees, onSelect }) => {
   return (
     <div className="relative" ref={ref}>
       <div onClick={() => setOpen(!open)} className={`flex items-center justify-center gap-[0.4vw] bg-white border rounded-[0.3vw] px-[0.5vw] py-[0.25vw] transition-all cursor-pointer hover:border-blue-400 mx-auto w-max ${val ? "border-slate-300" : "border-dashed border-slate-300"}`}>
-        <span className={`text-[0.7vw] font-bold truncate max-w-[6vw] ${val ? "text-black" : "text-gray-400"}`}>{selected ? selected.name : "Assign"}</span>
+        <span className={`text-[0.75vw] font-bold truncate max-w-[6vw] ${val ? "text-black" : "text-gray-400"}`}>{selected ? selected.name : "Assign"}</span>
       </div>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full left-0 mt-[0.2vw] bg-white border border-slate-300 shadow-xl rounded-[0.4vw] w-[14vw] max-h-[12vw] overflow-y-auto z-[200] py-[0.2vw]">
             {employees.map(u => (
               <div key={u.userId} onClick={() => { onSelect(u); setOpen(false); }} className="px-[0.6vw] py-[0.4vw] flex items-center gap-[0.5vw] hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-0">
-                <div className="flex-1 min-w-0"><div className="text-[0.7vw] font-bold text-black truncate">{u.name}</div><div className="text-[0.55vw] text-gray-400 font-bold truncate">{u.department}</div></div>
+                <div className="flex-1 min-w-0"><div className="text-[0.75vw] font-bold text-black truncate">{u.name}</div><div className="text-[0.6vw] text-gray-400 font-bold truncate">{u.department}</div></div>
               </div>
             ))}
           </motion.div>
@@ -1002,7 +1002,7 @@ const HistoryCellButton = ({ prod, row }) => {
         type="button"
         onClick={() => setShowHistory(true)}
         title="View History"
-        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
+        className="px-[0.6vw] py-[0.2vw] text-[0.75vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
       >
         View
       </button>
@@ -1020,11 +1020,11 @@ const HistoryCellButton = ({ prod, row }) => {
               {/* Header */}
               <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
                 <div>
-                  <h3 className="text-[1.05vw] font-bold text-slate-800 flex items-center gap-[0.45vw]">
+                  <h3 className="text-[1.1vw] font-bold text-slate-800 flex items-center gap-[0.45vw]">
                     <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
+                  <p className="text-[0.79vw] text-slate-600 font-medium mt-[0.15vw]">
                     {prod.productDescription || "Product"} (
                     <span className="font-mono font-medium text-slate-800">{prod.serialNumber || prod.identification || "—"}</span>)
                   </p>
@@ -1129,7 +1129,7 @@ const HistoryCellButton = ({ prod, row }) => {
                     return (
                       <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-700">
                         <Clock className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
-                        <span className="text-[0.82vw] font-semibold text-slate-800">
+                        <span className="text-[0.87vw] font-semibold text-slate-800">
                           Not yet updated or assigned.
                         </span>
                       </div>
@@ -1176,16 +1176,16 @@ const HistoryCellButton = ({ prod, row }) => {
                             <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
                               <div className="flex items-center justify-between gap-[0.5vw] flex-wrap">
                                 {entry.type === "assigned" ? (
-                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                                  <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
                                     {entry.label} → {entry.name}
                                   </span>
                                 ) : entry.type === "verification" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+                                    <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                      <span className="text-[0.73vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-medium">
                                         Verified By: {entry.adminName}
                                       </span>
                                     )}
@@ -1193,7 +1193,7 @@ const HistoryCellButton = ({ prod, row }) => {
                                 ) : entry.type === "admin" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                      className={`text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                         entry.status.includes("Approved")
                                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : "bg-rose-50 text-rose-700 border-rose-200"
@@ -1202,32 +1202,32 @@ const HistoryCellButton = ({ prod, row }) => {
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-normal">
+                                      <span className="text-[0.73vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-medium">
                                         Admin: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "adminEdit" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
+                                    <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                      <span className="text-[0.73vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-medium">
                                         By: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "closureEdit" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
+                                    <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
                                       {entry.status}
                                     </span>
                                   </div>
                                 ) : (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                      className={`text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                         entry.status === "Completed"
                                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : entry.status === "Under Testing"
@@ -1241,14 +1241,14 @@ const HistoryCellButton = ({ prod, row }) => {
                                 )}
 
                                 {tsLabel && (
-                                  <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
+                                  <span className="text-[0.73vw] text-slate-500 font-mono font-medium whitespace-nowrap">
                                     {tsLabel}
                                   </span>
                                 )}
                               </div>
 
                               {entry.remark && (
-                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
+                                <div className="mt-[0.35vw] text-[0.81vw] text-slate-700 leading-relaxed font-medium">
                                   <span className="text-slate-500 font-medium mr-[0.3vw]">
                                     Remarks / Reason:
                                   </span>
@@ -1259,7 +1259,7 @@ const HistoryCellButton = ({ prod, row }) => {
                               {/* Diffs display for edits */}
                               {entry.diffs && entry.diffs.length > 0 && (
                                 <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
-                                  <div className="flex items-center justify-between text-[0.72vw]">
+                                  <div className="flex items-center justify-between text-[0.77vw]">
                                     <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
                                       <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
                                       Changed Fields ({entry.diffs.length})
@@ -1270,28 +1270,28 @@ const HistoryCellButton = ({ prod, row }) => {
                                     {entry.diffs.map((d, di) => (
                                       <div
                                         key={di}
-                                        className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                        className="text-[0.79vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
                                       >
-                                        <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
+                                        <div className="font-medium text-slate-700 text-[0.75vw] mb-[0.2vw]">
                                           {d.field}
                                         </div>
                                         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
                                           <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
-                                            <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                            <div className="text-[0.65vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
                                               Previous
                                             </div>
-                                            <div className="text-rose-700 font-normal text-[0.72vw] break-words">
+                                            <div className="text-rose-700 font-medium text-[0.77vw] break-words">
                                               {String(d.originalValue || "—")}
                                             </div>
                                           </div>
-                                          <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                          <div className="text-slate-400 font-medium text-[0.8vw] px-[0.1vw]">
                                             →
                                           </div>
                                           <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
-                                            <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                            <div className="text-[0.65vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
                                               Updated
                                             </div>
-                                            <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
+                                            <div className="text-emerald-900 font-medium text-[0.77vw] break-words">
                                               {String(d.editedValue || "—")}
                                             </div>
                                           </div>
@@ -1315,7 +1315,7 @@ const HistoryCellButton = ({ prod, row }) => {
                 <button
                   type="button"
                   onClick={() => setShowHistory(false)}
-                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="px-[1.3vw] h-[2vw] text-[0.79vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   Close
                 </button>
@@ -1363,7 +1363,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
       <div className="relative" ref={ref}>
         <button 
           onClick={() => !isSupervisor && setOpen(!open)} 
-          className={`text-[0.68vw] px-[0.55vw] py-[0.18vw] rounded-full border font-normal flex items-center gap-[0.3vw] transition-all shadow-2xs ${cls} ${isSupervisor ? "cursor-default" : "cursor-pointer"}`}
+          className={`text-[0.73vw] px-[0.55vw] py-[0.18vw] rounded-full border font-medium flex items-center gap-[0.3vw] transition-all shadow-2xs ${cls} ${isSupervisor ? "cursor-default" : "cursor-pointer"}`}
         >
           <span>{status}</span>
           {!isSupervisor && <ChevronDown className="w-[0.65vw] h-[0.65vw] opacity-70" />}
@@ -1371,17 +1371,17 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct, isSupervisor }) => {
         <AnimatePresence>
           {open && (
             <motion.div initial={{ opacity: 0, scale: 0.95, y: -4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute top-full right-0 mt-[0.3vw] bg-white border border-slate-200 shadow-xl rounded-[0.7vw] z-40 w-[17vw] p-[0.9vw] text-left">
-              <div className="text-[0.74vw] font-semibold text-slate-800 mb-[0.5vw]">Update Final Status</div>
+              <div className="text-[0.79vw] font-semibold text-slate-800 mb-[0.5vw]">Update Final Status</div>
               <div className="grid grid-cols-3 gap-[0.35vw] mb-[0.7vw]">
                 {FINAL_STATUS_OPTIONS.map((opt) => (
-                  <button key={opt} onClick={() => setStatus(opt)} className={`py-[0.32vw] rounded-full border text-[0.66vw] font-normal cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300 font-medium" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
+                  <button key={opt} onClick={() => setStatus(opt)} className={`py-[0.32vw] rounded-full border text-[0.71vw] font-medium cursor-pointer transition-all ${status === opt ? FINAL_STATUS_COLORS[opt] + " ring-2 ring-offset-1 ring-blue-300 font-medium" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
                     {opt}
                   </button>
                 ))}
               </div>
-              <div className="mb-[0.6vw]"><label className="text-[0.65vw] font-semibold text-slate-700 block mb-[0.25vw]">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-slate-200 rounded-[0.4vw] px-[0.5vw] py-[0.35vw] text-[0.72vw] outline-none focus:border-blue-500 font-normal text-slate-700" /></div>
-              <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-slate-200 rounded-[0.4vw] p-[0.5vw] text-[0.72vw] outline-none focus:border-blue-500 resize-none mb-[0.6vw] font-normal text-slate-700" />
-              <div className="flex justify-end gap-[0.4vw]"><button onClick={() => setOpen(false)} className="px-[0.85vw] py-[0.3vw] text-[0.7vw] border border-slate-200 rounded-full text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">Cancel</button><button onClick={handleSave} className="px-[0.9vw] py-[0.3vw] text-[0.7vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium flex items-center gap-[0.3vw] shadow-2xs cursor-pointer"><Save className="w-[0.7vw] h-[0.7vw]" />Save</button></div>
+              <div className="mb-[0.6vw]"><label className="text-[0.7vw] font-semibold text-slate-700 block mb-[0.25vw]">Status Date</label><input type="date" value={statusDate} onChange={e => setStatusDate(e.target.value)} className="w-full border border-slate-200 rounded-[0.4vw] px-[0.5vw] py-[0.35vw] text-[0.77vw] outline-none focus:border-blue-500 font-medium text-slate-700" /></div>
+              <textarea rows={2} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Add remarks…" className="w-full border border-slate-200 rounded-[0.4vw] p-[0.5vw] text-[0.77vw] outline-none focus:border-blue-500 resize-none mb-[0.6vw] font-medium text-slate-700" />
+              <div className="flex justify-end gap-[0.4vw]"><button onClick={() => setOpen(false)} className="px-[0.85vw] py-[0.3vw] text-[0.75vw] border border-slate-200 rounded-full text-slate-600 hover:bg-slate-50 font-medium cursor-pointer">Cancel</button><button onClick={handleSave} className="px-[0.9vw] py-[0.3vw] text-[0.75vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium flex items-center gap-[0.3vw] shadow-2xs cursor-pointer"><Save className="w-[0.7vw] h-[0.7vw]" />Save</button></div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1672,16 +1672,16 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
           <button
             type="button"
             onClick={onBack}
-            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-medium transition-colors"
+            className="flex items-center gap-[0.4vw] text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-[0.75vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.83vw] font-medium transition-colors"
           >
             <ArrowLeft className="w-[0.9vw] h-[0.9vw]" />
             <span>Back</span>
           </button>
-          <h2 className="text-[1.05vw] font-bold text-slate-800">
+          <h2 className="text-[1.1vw] font-bold text-slate-800">
             {initialData._id ? "Edit Production NC" : "New Production NC Registration"}
           </h2>
         </div>
-        <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.8vw] flex items-center gap-[0.4vw]">
+        <div className="bg-blue-50/80 border border-blue-200 px-[0.9vw] py-[0.35vw] rounded-[0.5vw] text-[0.85vw] flex items-center gap-[0.4vw]">
           <span className="text-slate-500 font-medium">Ref No:</span>
           <span className="font-mono font-medium text-blue-600">
             {base.refNoInternal}
@@ -1697,37 +1697,37 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
             <div className="flex items-center gap-[0.45vw] mb-[0.9vw] pb-[0.6vw] border-b border-slate-100">
               <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
               <ClipboardList className="w-[1vw] h-[1vw] text-blue-600" />
-              <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+              <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
                 Primary Order Details
               </h3>
             </div>
             <div className="grid grid-cols-12 gap-[1.2vw]">
               <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Registration Date</label>
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Registration Date</label>
                 <input
                   type="date"
                   value={base.date}
                   onChange={e => setBase({ ...base, date: e.target.value })}
                   disabled={isReadOnly}
-                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
               <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Job Order Number <span className="text-rose-500">*</span></label>
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Job Order Number <span className="text-rose-500">*</span></label>
                 <input
                   value={base.jobOrderNo}
                   onChange={e => setBase({ ...base, jobOrderNo: e.target.value })}
                   placeholder="Enter Job Order..."
                   disabled={isReadOnly}
-                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                  className="bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                 />
               </div>
               <div className="col-span-4 flex flex-col gap-[0.35vw] relative" ref={custRef}>
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center justify-between h-[1.3vw]">
                   <span>
                     Customer Name <span className="text-rose-500">*</span>
                   </span>
-                  <span className="text-[0.68vw] text-slate-400 font-normal">
+                  <span className="text-[0.73vw] text-slate-400 font-medium">
                     ({filteredCustomers.length})
                   </span>
                 </label>
@@ -1747,7 +1747,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                       onKeyDown={onCustKeyDown}
                       placeholder="Search & select customer..."
                       disabled={isReadOnly}
-                      className="w-full bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] pl-[2.2vw] pr-[2vw] text-[0.8vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="w-full bg-white border border-slate-200 rounded-[0.5vw] h-[2.3vw] pl-[2.2vw] pr-[2vw] text-[0.85vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                     {custSearch && !isReadOnly && (
                       <button
@@ -1793,7 +1793,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                         });
                         setShowAddCustModal(true);
                       }}
-                      className="flex items-center gap-[0.3vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[0.75vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.74vw] font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
+                      className="flex items-center gap-[0.3vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-[0.75vw] h-[2.3vw] rounded-[0.5vw] cursor-pointer text-[0.79vw] font-semibold transition-all shrink-0 shadow-2xs active:scale-95"
                       title="Add New Customer"
                     >
                       <UserPlus className="w-[0.85vw] h-[0.85vw]" />
@@ -1811,11 +1811,11 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                           className={`px-[1vw] py-[0.5vw] cursor-pointer flex justify-between items-center border-b border-slate-100 last:border-0 transition-colors ${custSelectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-slate-50"}`}
                         >
                           <div className="flex-1">
-                            <div className={`text-[0.8vw] font-semibold ${custSelectedIndex === i ? "text-white" : "text-slate-800"}`}>{c.name}</div>
-                            <div className={`text-[0.68vw] font-mono ${custSelectedIndex === i ? "text-white/80" : "text-slate-400"}`}>{c.code}</div>
+                            <div className={`text-[0.85vw] font-semibold ${custSelectedIndex === i ? "text-white" : "text-slate-800"}`}>{c.name}</div>
+                            <div className={`text-[0.73vw] font-mono ${custSelectedIndex === i ? "text-white/80" : "text-slate-400"}`}>{c.code}</div>
                           </div>
                           {c.type && (
-                            <span className={`text-[0.6vw] px-[0.4vw] py-[0.1vw] rounded font-semibold uppercase ${custSelectedIndex === i ? "bg-white/20 text-white border border-white/30" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{c.type}</span>
+                            <span className={`text-[0.65vw] px-[0.4vw] py-[0.1vw] rounded font-semibold uppercase ${custSelectedIndex === i ? "bg-white/20 text-white border border-white/30" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{c.type}</span>
                           )}
                         </div>
                       ))}
@@ -1824,19 +1824,19 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 </AnimatePresence>
               </div>
               <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Customer Code</label>
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Customer Code</label>
                 <input
                   value={base.customerCode}
                   readOnly
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] font-mono text-slate-600 cursor-not-allowed outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] font-mono text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
               <div className="col-span-2 flex flex-col gap-[0.35vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Category</label>
+                <label className="text-[0.81vw] font-semibold text-slate-700 flex items-center h-[1.3vw]">Category</label>
                 <input
                   value={base.category}
                   readOnly
-                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.8vw] text-slate-600 cursor-not-allowed outline-none"
+                  className="bg-slate-100/70 border border-slate-200 rounded-[0.5vw] h-[2.3vw] px-[0.75vw] text-[0.85vw] text-slate-600 cursor-not-allowed outline-none"
                 />
               </div>
             </div>
@@ -1848,9 +1848,9 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
               <div className="flex items-center gap-[0.45vw]">
                 <span className="w-[0.25vw] h-[0.9vw] bg-blue-600 rounded-full inline-block" />
                 <Package className="w-[1vw] h-[1vw] text-blue-600" />
-                <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-[0.5vw]">
+                <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-[0.5vw]">
                   Manifest & Assembly Specs
-                  <span className="text-[0.68vw] bg-blue-50 text-blue-700 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-full font-semibold">
+                  <span className="text-[0.73vw] bg-blue-50 text-blue-700 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-full font-semibold">
                     {products.length} {products.length === 1 ? 'Item' : 'Items'}
                   </span>
                 </h3>
@@ -1859,7 +1859,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 <button
                   type="button"
                   onClick={addProduct}
-                  className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.78vw] transition-all shadow-2xs active:scale-95"
+                  className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.83vw] transition-all shadow-2xs active:scale-95"
                 >
                   <Plus className="w-[0.85vw] h-[0.85vw]" />
                   <span>Add Item Row</span>
@@ -1889,14 +1889,14 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
           <button
             type="button"
             onClick={onBack}
-            className="px-[1.4vw] h-[2.2vw] border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.78vw] transition-all"
+            className="px-[1.4vw] h-[2.2vw] border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded-[0.5vw] cursor-pointer flex items-center gap-[0.4vw] font-medium text-[0.83vw] transition-all"
           >
             <X className="w-[0.85vw] h-[0.85vw]" /> Cancel
           </button>
           {((initialData._id ? canUpdate : canWrite) && !isReadOnly) && (
             <button
               type="submit"
-              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.78vw] shadow-xs transition-all active:scale-95"
+              className="px-[1.6vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-[0.5vw] flex items-center gap-[0.4vw] cursor-pointer font-medium text-[0.83vw] shadow-xs transition-all active:scale-95"
             >
               <Save className="w-[0.85vw] h-[0.85vw]" /> {initialData._id ? "Update Registration" : "Register Inward"}
             </button>
@@ -1917,7 +1917,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
               <div className="px-[1.2vw] py-[0.8vw] border-b border-slate-200 flex justify-between items-center bg-slate-50">
                 <div className="flex items-center gap-[0.5vw]">
                   <UserPlus className="w-[1.1vw] h-[1.1vw] text-blue-600" />
-                  <h2 className="text-[1vw] font-semibold text-slate-800">
+                  <h2 className="text-[1.05vw] font-semibold text-slate-800">
                     Add Customer &amp; Items
                   </h2>
                 </div>
@@ -1934,12 +1934,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 className="p-[1.2vw] flex flex-col gap-[1vw] overflow-y-auto custom-scrollbar"
               >
                 <div className="bg-slate-50/80 p-[1vw] rounded-[0.6vw] border border-slate-200">
-                  <h3 className="text-[0.82vw] font-semibold text-slate-700 mb-[0.8vw] uppercase tracking-wider">
+                  <h3 className="text-[0.87vw] font-semibold text-slate-700 mb-[0.8vw] uppercase tracking-wider">
                     Party Details
                   </h3>
                   <div className="grid grid-cols-2 gap-[1.2vw] mb-[0.8vw]">
                     <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                      <label className="text-[0.81vw] text-slate-700 font-semibold">
                         Party Code <span className="text-rose-500">*</span>
                       </label>
                       <input
@@ -1951,12 +1951,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             partyCode: e.target.value,
                           })
                         }
-                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                         placeholder="e.g. CUS-001"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                      <label className="text-[0.81vw] text-slate-700 font-semibold">
                         Party Type
                       </label>
                       <CustomDropdown
@@ -1968,12 +1968,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                           })
                         }
                         options={(partyTypes.length > 0 ? partyTypes : [{ name: "OEM" }, { name: "End Customer" }]).map((t) => ({ value: t.name, label: t.name }))}
-                        triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-300 text-[0.8vw]"
+                        triggerClassName="!p-[0.55vw] !rounded-[0.4vw] bg-white border-slate-300 text-[0.85vw]"
                       />
                     </div>
                   </div>
                   <div className="flex flex-col gap-[0.35vw] mb-[0.8vw]">
-                    <label className="text-[0.76vw] text-slate-700 font-semibold">
+                    <label className="text-[0.81vw] text-slate-700 font-semibold">
                       Party Description / Customer Name <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -1985,13 +1985,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                           partyDescription: e.target.value,
                         })
                       }
-                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                      className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                       placeholder="Company Name"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-[1.2vw]">
                     <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">State</label>
+                      <label className="text-[0.81vw] text-slate-700 font-semibold">State</label>
                       <input
                         value={newCustomer.state}
                         list="prod-cust-states-datalist"
@@ -2001,12 +2001,12 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             state: e.target.value,
                           })
                         }
-                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                         placeholder="e.g. Tamil Nadu"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.35vw]">
-                      <label className="text-[0.76vw] text-slate-700 font-semibold">
+                      <label className="text-[0.81vw] text-slate-700 font-semibold">
                         District / City
                       </label>
                       <input
@@ -2018,7 +2018,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                             districtCity: e.target.value,
                           })
                         }
-                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.8vw]"
+                        className="border border-slate-300 p-[0.55vw] rounded-[0.4vw] bg-white focus:ring-2 ring-blue-100 outline-none text-[0.85vw]"
                         placeholder="e.g. Coimbatore"
                       />
                     </div>
@@ -2027,13 +2027,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
 
                 <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[1vw]">
                   <div className="flex justify-between items-center mb-[0.6vw]">
-                    <h3 className="text-[0.82vw] font-bold text-slate-800 uppercase tracking-wider">
+                    <h3 className="text-[0.87vw] font-bold text-slate-800 uppercase tracking-wider">
                       Product Items
                     </h3>
                     <button
                       type="button"
                       onClick={handleAddCustItemRow}
-                      className="text-blue-600 hover:text-blue-800 text-[0.76vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer"
+                      className="text-blue-600 hover:text-blue-800 text-[0.81vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer"
                     >
                       <PlusCircle className="w-[0.85vw] h-[0.85vw]" />
                       Add Another Item
@@ -2047,7 +2047,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                       >
                         <div className="flex-1 flex flex-col gap-[0.3vw]">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-[0.77vw] text-slate-500 font-medium">
                               Product Segment
                             </label>
                           )}
@@ -2062,13 +2062,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                             placeholder="Segment"
                           />
                         </div>
                         <div className="flex-1 flex flex-col gap-[0.3vw]">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-[0.77vw] text-slate-500 font-medium">
                               Item Code
                             </label>
                           )}
@@ -2082,13 +2082,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                             placeholder="Code"
                           />
                         </div>
                         <div className="flex-[2] flex flex-col gap-[0.3vw]">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-[0.77vw] text-slate-500 font-medium">
                               Description
                             </label>
                           )}
@@ -2102,13 +2102,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                             placeholder="Description"
                           />
                         </div>
                         <div className="flex-[0.7] flex flex-col gap-[0.3vw]">
                           {idx === 0 && (
-                            <label className="text-[0.72vw] text-slate-500 font-medium">
+                            <label className="text-[0.77vw] text-slate-500 font-medium">
                               Warranty (days)
                             </label>
                           )}
@@ -2124,7 +2124,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                                 e.target.value,
                               )
                             }
-                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.8vw] bg-white outline-none"
+                            className="border border-slate-300 p-[0.45vw] rounded-[0.4vw] text-[0.85vw] bg-white outline-none"
                             placeholder="Days"
                           />
                         </div>
@@ -2149,13 +2149,13 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                   <button
                     type="button"
                     onClick={() => setShowAddCustModal(false)}
-                    className="px-[1.4vw] h-[2.2vw] border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.76vw] font-medium transition-colors"
+                    className="px-[1.4vw] h-[2.2vw] border border-slate-300 rounded-full hover:bg-slate-50 cursor-pointer text-slate-700 text-[0.81vw] font-medium transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.76vw] font-semibold transition-colors shadow-xs"
+                    className="px-[1.6vw] h-[2.2vw] bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center gap-[0.4vw] cursor-pointer text-[0.81vw] font-semibold transition-colors shadow-xs"
                   >
                     Save All
                   </button>
@@ -2462,7 +2462,7 @@ export default function ProductionMaterial() {
   if (loading) return (
     <div className="flex flex-col items-center justify-center p-[10vw] gap-[1.5vw]">
       <div className="w-[3vw] h-[3vw] border-[0.35vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-      <div className="text-blue-600 font-bold text-[1vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
+      <div className="text-blue-600 font-bold text-[1.05vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
     </div>
   );
 
@@ -2519,7 +2519,7 @@ export default function ProductionMaterial() {
           />
         )}
       </AnimatePresence>
-      <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
         <AnimatePresence>{reportsRow && <ReportsModal row={reportsRow} onClose={() => setReportsRow(null)} />}</AnimatePresence>
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0">
           {/* ── 1. Top Level Scoping Toolbar: Pill Search, Date Range, Clear & Actions ── */}
@@ -2532,7 +2532,7 @@ export default function ProductionMaterial() {
                 placeholder="Search by ref, JO, customer, product..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-semibold text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-semibold text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
               {searchTerm && (
                 <button
@@ -2548,14 +2548,14 @@ export default function ProductionMaterial() {
             {/* Right cluster: Date Range, Clear, Bulk Delete, Master Data & New Registration */}
             <div className="flex items-center gap-[0.6vw] flex-shrink-0">
               {/* Unified Date Range Capsule */}
-              <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-                <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+              <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+                <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
                 <input
                   ref={fromDateRef}
                   type="date"
                   value={dateFrom || ""}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                  className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                 />
                 <button
                   type="button"
@@ -2569,15 +2569,15 @@ export default function ProductionMaterial() {
                 >
                   <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
                 </button>
-                <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-                <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+                <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+                <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
                 <input
                   ref={toDateRef}
                   type="date"
                   value={dateTo || ""}
                   min={dateFrom || undefined}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                  className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                 />
                 <button
                   type="button"
@@ -2601,7 +2601,7 @@ export default function ProductionMaterial() {
                     setDateFrom("");
                     setDateTo("");
                   }}
-                  className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+                  className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                   title="Clear date filter"
                 >
                   <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -2618,7 +2618,7 @@ export default function ProductionMaterial() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     onClick={handleBulkDelete}
-                    className="flex items-center gap-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-[0.85vw] h-[2.2vw] rounded-full font-semibold text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-[0.85vw] h-[2.2vw] rounded-full font-semibold text-[0.79vw] transition-all cursor-pointer shadow-2xs"
                   >
                     <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                     Delete ({selectedItems.size})
@@ -2631,7 +2631,7 @@ export default function ProductionMaterial() {
                   <button
                     type="button"
                     onClick={() => setShowMasterData(true)}
-                    className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs"
+                    className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.79vw] transition-all shadow-2xs"
                   >
                     <ClipboardList className="w-[0.8vw] h-[0.8vw] text-slate-500" />
                     <span>Master Data</span>
@@ -2639,7 +2639,7 @@ export default function ProductionMaterial() {
                   <button
                     type="button"
                     onClick={() => setView("form")}
-                    className="cursor-pointer flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-[1.1vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs active:scale-95"
+                    className="cursor-pointer flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-[1.1vw] h-[2.2vw] rounded-full text-[0.79vw] transition-all shadow-2xs active:scale-95"
                   >
                     <Plus className="w-[0.9vw] h-[0.9vw] text-white" />
                     <span>New Registration</span>
@@ -2667,7 +2667,7 @@ export default function ProductionMaterial() {
                       key={label}
                       type="button"
                       onClick={() => setActiveFilter(label)}
-                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.8vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                         isActive
                           ? "bg-blue-600 text-white shadow-xs font-semibold"
                           : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -2677,7 +2677,7 @@ export default function ProductionMaterial() {
                         {label}
                       </span>
                       <span
-                        className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                        className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
                           isActive
                             ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                             : "text-slate-400"
@@ -2691,9 +2691,9 @@ export default function ProductionMaterial() {
               </div>
 
               {/* Scoped Result Count */}
-              <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+              <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
                 <span>Showing</span>
-                <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+                <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
                   {filteredData.length}
                 </span>
                 <span>entries</span>
@@ -2703,7 +2703,7 @@ export default function ProductionMaterial() {
             <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
               <table className="w-full text-left border-collapse border-spacing-0">
                 {/* ── THEAD (Sticky 0 & 1.8vw) ── */}
-                <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-xs">
+                <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider shadow-xs">
                   <tr className="bg-[#E9EDF7]">
                     {canDelete && !isSupervisor && (
                       <th
@@ -2723,7 +2723,7 @@ export default function ProductionMaterial() {
                             }`}
                           >
                             {isPageSelected && (
-                              <span className="text-[0.75vw] leading-none font-bold text-white">
+                              <span className="text-[0.8vw] leading-none font-bold text-white">
                                 ✓
                               </span>
                             )}
@@ -2733,13 +2733,13 @@ export default function ProductionMaterial() {
                     )}
                     <th
                       rowSpan={2}
-                      className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3.5%] sticky top-0 z-40 bg-[#E9EDF7]"
+                      className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.79vw] align-middle w-[3.5%] sticky top-0 z-40 bg-[#E9EDF7]"
                     >
                       S. No
                     </th>
                     <th
                       colSpan={8}
-                      className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-40 bg-[#E9EDF7]"
+                      className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.79vw] sticky top-0 z-40 bg-[#E9EDF7]"
                     >
                       Product Manifest Details
                     </th>
@@ -2761,7 +2761,7 @@ export default function ProductionMaterial() {
                               ? "6.5vw"
                               : "8vw",
                         }}
-                        className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
+                        className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-[0.79vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
                       >
                         {h}
                       </th>
@@ -2781,7 +2781,7 @@ export default function ProductionMaterial() {
                       <th
                         key={name}
                         style={{ minWidth: minW }}
-                        className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
+                        className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.79vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
                       >
                         {name}
                       </th>
@@ -2803,7 +2803,7 @@ export default function ProductionMaterial() {
                         >
                           <td
                             colSpan={totalCols}
-                            className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
+                            className="px-[0.7vw] py-[0.55vw] h-[2.4vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
                           >
                             <div className="flex items-center gap-[0.5vw]">
                               {isCustomerCollapsed ? (
@@ -2812,7 +2812,7 @@ export default function ProductionMaterial() {
                                 <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0 transition-transform" />
                               )}
 
-                              <span className="font-semibold text-slate-800 text-[0.76vw] tracking-wide">
+                              <span className="font-semibold text-[#0043a9] text-[0.89vw] tracking-wide">
                                 {customerName}
                               </span>
 
@@ -2833,17 +2833,17 @@ export default function ProductionMaterial() {
                               {expandedCustomerDetails[customerName] && (
                                 <div className="flex items-center gap-[0.35vw] flex-wrap animate-in fade-in duration-200">
                                   {rows[0]?.customerCode && (
-                                    <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.2vw]">
+                                    <span className="text-[0.75vw] text-slate-500 font-medium ml-[0.2vw]">
                                       Code: {rows[0].customerCode}
                                     </span>
                                   )}
                                   {rows[0]?.category && (
-                                    <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                    <span className="text-[0.77vw] font-medium text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                       Category: {rows[0].category}
                                     </span>
                                   )}
                                   {rows[0]?.refNoInternal && (
-                                    <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                                    <span className="text-[0.77vw] font-medium bg-blue-50 text-blue-700 border border-blue-200 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                       Ref: {rows[0].refNoInternal}
                                     </span>
                                   )}
@@ -2851,7 +2851,7 @@ export default function ProductionMaterial() {
                               )}
 
                               <div className="ml-auto flex items-center gap-[0.5vw]">
-                                <span className="text-[0.68vw] text-slate-500 font-medium bg-white px-[0.5vw] py-[0.1vw] rounded-full border border-slate-300">
+                                <span className="text-[0.73vw] text-slate-500 font-medium bg-white px-[0.5vw] py-[0.1vw] rounded-full border border-slate-300">
                                   {rows.length} {rows.length === 1 ? "order" : "orders"}
                                 </span>
                               </div>
@@ -2872,16 +2872,16 @@ export default function ProductionMaterial() {
                               });
 
                               return [
-                                // ── STICKY HEADER 2: JOB ORDER / REGISTRATION ROW (sticky top-[5.6vw]) ──
+                                // ── STICKY HEADER 2: JOB ORDER / REGISTRATION ROW (sticky top-[6vw]) ──
                                 <tr
                                   key={`entry-hdr-${row.id}`}
-                                  className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
+                                  className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[6vw] z-20 shadow-xs ${
                                     isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9] hover:bg-[#E2E8F0]"
                                   }`}
                                 >
                                   {canDelete && !isSupervisor && (
                                     <td
-                                      className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${
+                                      className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${
                                         isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                       }`}
                                       onClick={(e) => {
@@ -2901,7 +2901,7 @@ export default function ProductionMaterial() {
                                           }`}
                                         >
                                           {isSelected && (
-                                            <span className="text-[0.65vw] leading-none font-bold">
+                                            <span className="text-[0.7vw] leading-none font-bold">
                                               ✓
                                             </span>
                                           )}
@@ -2912,7 +2912,7 @@ export default function ProductionMaterial() {
 
                                   {/* S.No */}
                                   <td
-                                    className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${
+                                    className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.77vw] font-medium text-slate-700 align-middle ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
                                     onClick={() => toggleEntry(row.id)}
@@ -2923,7 +2923,7 @@ export default function ProductionMaterial() {
                                   {/* Date + Job Order No + Summary Spanning remaining columns */}
                                   <td
                                     colSpan={8 + 6}
-                                    className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${
+                                    className={`px-[0.6vw] py-[0.5vw] h-[2.3vw] align-middle border-b border-slate-300 ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
                                     onClick={() => toggleEntry(row.id)}
@@ -2942,21 +2942,21 @@ export default function ProductionMaterial() {
 
                                       {/* Date */}
                                       <div className="flex items-center gap-[0.35vw] ml-[0.3vw]">
-                                        <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-500 flex-shrink-0" />
-                                        <span className="text-[0.72vw] font-medium text-slate-700 whitespace-nowrap">
+                                        <Calendar className="w-[0.9vw] h-[0.9vw] text-[#550000] flex-shrink-0" />
+                                        <span className="text-[0.83vw] font-medium text-[#550000] whitespace-nowrap">
                                           {fmtDate(row.date)}
                                         </span>
                                       </div>
 
                                       {/* Job Order Number Badge */}
                                       <div className="flex items-center gap-[0.35vw] ml-[0.4vw]">
-                                        <span className="text-[0.68vw] text-slate-500 font-semibold">JO:</span>
+                                        <span className="text-[0.77vw] text-slate-600 font-semibold">JO:</span>
                                         <span
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             setReportsRow(row);
                                           }}
-                                          className="text-[0.74vw] font-mono font-semibold text-blue-600 hover:underline cursor-pointer bg-blue-50/80 px-[0.45vw] py-[0.05vw] rounded border border-blue-200"
+                                          className="text-[0.83vw] font-mono font-semibold text-blue-600 hover:underline cursor-pointer bg-blue-50/80 px-[0.45vw] py-[0.05vw] rounded border border-blue-200"
                                         >
                                           {row.jobOrderNo || "—"}
                                         </span>
@@ -2985,7 +2985,7 @@ export default function ProductionMaterial() {
                                         const rowPending = Math.max(0, rowTotal - rowCompleted);
 
                                         return (
-                                          <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[0.6vw] animate-in fade-in duration-200">
+                                          <div className="flex items-center gap-[0.8vw] text-[0.77vw] text-slate-600 font-medium ml-[0.6vw] animate-in fade-in duration-200">
                                             <span>Total Qty: <strong className="text-slate-800">{rowTotal}</strong></span>
                                             <span className="text-slate-300">|</span>
                                             <span>Completed: <strong className="text-emerald-700">{rowCompleted}</strong></span>
@@ -3075,7 +3075,7 @@ export default function ProductionMaterial() {
 
                                           {/* S.No sub-number */}
                                           <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
-                                            <span className="text-[0.72vw] font-bold text-slate-500">
+                                            <span className="text-[0.77vw] font-bold text-slate-500">
                                               {globalSn}.{pi + 1}
                                             </span>
                                           </td>
@@ -3085,31 +3085,31 @@ export default function ProductionMaterial() {
                                             {showReadyHighlight && (
                                               <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
                                                 <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
-                                                <span className="text-[0.6vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
+                                                <span className="text-[0.65vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
                                               </div>
                                             )}
-                                            <div className="font-mono text-slate-800 text-[0.72vw] font-medium">
+                                            <div className="font-mono text-slate-800 text-[0.77vw] font-medium">
                                               {prod.productCode || "—"}
                                             </div>
                                           </td>
 
                                           {/* Product Description */}
                                           <td
-                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-[0.76vw] truncate max-w-[14vw]"
+                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-medium text-slate-900 text-[0.81vw] truncate max-w-[14vw]"
                                             title={prod.productDescription}
                                           >
                                             {prod.productDescription || "—"}
                                           </td>
 
                                           {/* Product Segment */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.74vw] text-slate-800 font-medium align-middle text-center">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.79vw] text-slate-800 font-medium align-middle text-center">
                                             {prod.productSegment || "—"}
                                           </td>
 
                                           {/* NC Type */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
                                             <span
-                                              className={`inline-flex items-center justify-center text-[0.68vw] font-medium px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${
+                                              className={`inline-flex items-center justify-center text-[0.73vw] font-medium px-[0.55vw] py-[0.12vw] rounded-full border shadow-2xs whitespace-nowrap ${
                                                 prod.ncType === "External"
                                                   ? "bg-orange-50 text-orange-700 border-orange-200"
                                                   : "bg-blue-50 text-blue-700 border-blue-200"
@@ -3120,18 +3120,18 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Detection Stage */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.76vw]">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.81vw]">
                                             {prod.stage || "Assembly"}
                                           </td>
 
                                           {/* Qty */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-black text-[0.76vw]">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-black text-[0.81vw]">
                                             {prod.qty || "1"}
                                           </td>
 
                                           {/* Repeatability */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.74vw]">
-                                            <span className={`inline-block px-[0.5vw] py-[0.08vw] rounded-[0.25vw] font-mono text-[0.72vw] ${
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-slate-800 text-[0.79vw]">
+                                            <span className={`inline-block px-[0.5vw] py-[0.08vw] rounded-[0.25vw] font-mono text-[0.77vw] ${
                                               Number(prod.repeatability) > 0 
                                                 ? "bg-amber-50 text-amber-700 border border-amber-200 font-medium" 
                                                 : "text-slate-700 font-medium"
@@ -3141,12 +3141,12 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Serial Number */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-mono text-black text-[0.72vw] font-medium">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-mono text-black text-[0.77vw] font-medium">
                                             {prod.serialNumber || "—"}
                                           </td>
 
                                           {/* Assigned To */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-700 text-[0.76vw]">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium text-slate-700 text-[0.81vw]">
                                             {canUpdate && !isSupervisor ? (
                                               <EmpSelectCell
                                                 val={prod.assignedTo}
@@ -3164,19 +3164,19 @@ export default function ProductionMaterial() {
                                           </td>
 
                                           {/* Resolution Verification */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
                                             {prod.report?.verifiedByName ? (
                                               <div className="flex flex-col items-center">
-                                                <span className="text-[0.74vw] font-medium text-emerald-800">{prod.report.verifiedByName}</span>
-                                                <span className="text-[0.66vw] text-slate-700 font-medium">{fmtDate(prod.report.verifiedDate)}</span>
+                                                <span className="text-[0.79vw] font-medium text-emerald-800">{prod.report.verifiedByName}</span>
+                                                <span className="text-[0.71vw] text-slate-700 font-medium">{fmtDate(prod.report.verifiedDate)}</span>
                                               </div>
                                             ) : (
-                                              <span className="text-slate-500 font-medium text-[0.72vw]">—</span>
+                                              <span className="text-slate-500 font-medium text-[0.77vw]">—</span>
                                             )}
                                           </td>
 
                                           {/* Final Status */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal">
+                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
                                             <FinalStatusCell
                                               row={row}
                                               prod={prod}
@@ -3187,7 +3187,7 @@ export default function ProductionMaterial() {
 
                                           {/* Final Remarks */}
                                           <td
-                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-normal text-slate-600 text-[0.72vw] truncate max-w-[10vw]"
+                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium text-slate-600 text-[0.77vw] truncate max-w-[10vw]"
                                             title={prod.finalStatusRemarks}
                                           >
                                             {prod.finalStatusRemarks || "—"}
@@ -3251,7 +3251,7 @@ export default function ProductionMaterial() {
                     })
                   ) : (
                     <tr>
-                      <td colSpan={20} className="py-[6vw] text-center text-slate-400 text-[0.85vw] font-medium">
+                      <td colSpan={20} className="py-[6vw] text-center text-slate-400 text-[0.9vw] font-medium">
                         No records found.
                       </td>
                     </tr>
@@ -3262,7 +3262,7 @@ export default function ProductionMaterial() {
 
                         {/* Pagination Footer */}
             <div className="border-t border-slate-200 px-[1vw] py-[0.55vw] bg-slate-50/70 flex justify-between items-center rounded-b-[0.8vw] shrink-0">
-              <div className="text-[0.74vw] font-medium text-slate-500">
+              <div className="text-[0.79vw] font-medium text-slate-500">
                 Showing <strong className="text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</strong> to <strong className="text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</strong> of <strong className="text-slate-800">{filteredData.length}</strong> entries
               </div>
               <div className="flex items-center gap-[0.5vw]">
@@ -3280,7 +3280,7 @@ export default function ProductionMaterial() {
                       <button
                         key={pNum}
                         onClick={() => setCurrentPage(pNum)}
-                        className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+                        className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.79vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
                       >
                         {pNum}
                       </button>

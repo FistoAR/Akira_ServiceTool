@@ -77,12 +77,12 @@ const NavBar = ({ type }) => {
       <div className="sticky top-0 p-[0.3vw] z-48 shrink-0">
         <div className="flex justify-between items-center">
           {type === "Service Call" ? (
-            <h1 className="text-[1.3vw] font-semibold text-black flex items-center gap-[0.8vw]">
+            <h1 className="text-[1.35vw] font-semibold text-black flex items-center gap-[0.8vw]">
               <Phone className="w-[1.1vw] h-[1.1vw] text-slate-700" />
               Service Call Entry
             </h1>
           ) : (
-            <h1 className="text-[1.3vw] font-semibold text-black">{type}</h1>
+            <h1 className="text-[1.35vw] font-semibold text-black">{type}</h1>
           )}
 
           <div className={`flex gap-[0.8vw] items-center`}>
@@ -91,7 +91,7 @@ const NavBar = ({ type }) => {
               type="button"
               onClick={toggleFullScreen}
               title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
-              className="flex items-center gap-[0.35vw] bg-white border border-gray-300 rounded-full px-[0.6vw] py-[0.38vw] hover:shadow-md hover:border-gray-400 text-slate-700 hover:text-blue-600 transition-all cursor-pointer font-semibold text-[0.72vw]"
+              className="flex items-center gap-[0.35vw] bg-white border border-gray-300 rounded-full px-[0.6vw] py-[0.38vw] hover:shadow-md hover:border-gray-400 text-slate-700 hover:text-blue-600 transition-all cursor-pointer font-semibold text-[0.77vw]"
             >
               {isFullScreen ? (
                 <>
@@ -125,7 +125,7 @@ const NavBar = ({ type }) => {
                     />
                   ) : (
                     <div className="w-full h-full bg-indigo-600 flex items-center justify-center">
-                      <span className="text-white text-[0.65vw] font-bold select-none">
+                      <span className="text-white text-[0.7vw] font-bold select-none">
                         {loggedInUser ? getInitials(loggedInUser.name) : "U"}
                       </span>
                     </div>
@@ -146,7 +146,7 @@ const NavBar = ({ type }) => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <span className="text-white text-[1.1vw] font-bold tracking-wider">
+                            <span className="text-white text-[1.15vw] font-bold tracking-wider">
                               {getInitials(loggedInUser.name)}
                             </span>
                           )}
@@ -155,7 +155,7 @@ const NavBar = ({ type }) => {
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-[0.35vw]">
-                          <h3 className="text-white text-[1.05vw] font-semibold leading-tight truncate">
+                          <h3 className="text-white text-[1.1vw] font-semibold leading-tight truncate">
                             {loggedInUser.name}
                           </h3>
                           <span title="Verified User">
@@ -163,11 +163,11 @@ const NavBar = ({ type }) => {
                           </span>
                         </div>
                         <div className="flex items-center gap-[0.35vw] mt-[0.25vw] flex-wrap">
-                          <span className="inline-flex items-center px-[0.45vw] py-[0.1vw] rounded-[0.25vw] text-[0.62vw] font-semibold bg-white text-[#166498] shadow-2xs">
+                          <span className="inline-flex items-center px-[0.45vw] py-[0.1vw] rounded-[0.25vw] text-[0.67vw] font-semibold bg-white text-[#166498] shadow-2xs">
                             {loggedInUser.department || "Staff"}
                           </span>
                           {loggedInUser.role && (
-                            <span className="text-[0.6vw] font-medium text-white/95 bg-[#125887]/50 border border-white/25 px-[0.35vw] py-[0.08vw] rounded-[0.25vw] uppercase tracking-wider">
+                            <span className="text-[0.65vw] font-medium text-white/95 bg-[#125887]/50 border border-white/25 px-[0.35vw] py-[0.08vw] rounded-[0.25vw] uppercase tracking-wider">
                               {loggedInUser.role}
                             </span>
                           )}
@@ -181,9 +181,9 @@ const NavBar = ({ type }) => {
                       <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
                         <div className="flex items-center gap-[0.6vw]">
                           <IdCard className="w-[1vw] h-[1vw] text-indigo-600" />
-                          <span className="text-[0.74vw] font-normal text-slate-650">Employee ID</span>
+                          <span className="text-[0.79vw] font-medium text-slate-650">Employee ID</span>
                         </div>
-                        <span className="font-semibold text-slate-800 font-mono text-[0.8vw]">
+                        <span className="font-semibold text-slate-800 font-mono text-[0.85vw]">
                           {loggedInUser.userId || "—"}
                         </span>
                       </div>
@@ -192,9 +192,9 @@ const NavBar = ({ type }) => {
                       <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
                         <div className="flex items-center gap-[0.6vw]">
                           <User className="w-[1vw] h-[1vw] text-emerald-600" />
-                          <span className="text-[0.74vw] font-normal text-slate-650">Full Name</span>
+                          <span className="text-[0.79vw] font-medium text-slate-650">Full Name</span>
                         </div>
-                        <span className="font-medium text-slate-800 text-[0.8vw] truncate max-w-[11vw]">
+                        <span className="font-medium text-slate-800 text-[0.85vw] truncate max-w-[11vw]">
                           {loggedInUser.name || "—"}
                         </span>
                       </div>
@@ -203,9 +203,9 @@ const NavBar = ({ type }) => {
                       <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
                         <div className="flex items-center gap-[0.6vw]">
                           <Building2 className="w-[1vw] h-[1vw] text-purple-600" />
-                          <span className="text-[0.74vw] font-normal text-slate-650">Department</span>
+                          <span className="text-[0.79vw] font-medium text-slate-650">Department</span>
                         </div>
-                        <span className="font-medium text-slate-800 text-[0.8vw] truncate max-w-[11vw]">
+                        <span className="font-medium text-slate-800 text-[0.85vw] truncate max-w-[11vw]">
                           {loggedInUser.department || "—"}
                         </span>
                       </div>
@@ -215,9 +215,9 @@ const NavBar = ({ type }) => {
                         <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
                           <div className="flex items-center gap-[0.6vw]">
                             <Mail className="w-[1vw] h-[1vw] text-amber-600" />
-                            <span className="text-[0.74vw] font-normal text-slate-650">Email</span>
+                            <span className="text-[0.79vw] font-medium text-slate-650">Email</span>
                           </div>
-                          <span className="font-medium text-slate-800 font-mono text-[0.75vw] truncate max-w-[11vw]" title={loggedInUser.email}>
+                          <span className="font-medium text-slate-800 font-mono text-[0.8vw] truncate max-w-[11vw]" title={loggedInUser.email}>
                             {loggedInUser.email}
                           </span>
                         </div>
@@ -228,9 +228,9 @@ const NavBar = ({ type }) => {
                         <div className="flex items-center justify-between py-[0.55vw] px-[0.2vw] hover:bg-slate-50/70 rounded transition-colors">
                           <div className="flex items-center gap-[0.6vw]">
                             <Gift className="w-[1vw] h-[1vw] text-rose-500" />
-                            <span className="text-[0.74vw] font-normal text-slate-650">Date of Birth</span>
+                            <span className="text-[0.79vw] font-medium text-slate-650">Date of Birth</span>
                           </div>
-                          <span className="font-medium text-slate-800 text-[0.8vw]">
+                          <span className="font-medium text-slate-800 text-[0.85vw]">
                             {formatDate(loggedInUser.dob)}
                           </span>
                         </div>
@@ -241,7 +241,7 @@ const NavBar = ({ type }) => {
                     <div className="p-[0.75vw] bg-white border-t border-slate-100">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-[0.5vw] py-[0.45vw] px-[0.8vw] rounded-[0.55vw] text-rose-600 hover:text-white bg-rose-50 hover:bg-rose-600 border border-rose-200 hover:border-rose-600 transition-all duration-150 cursor-pointer text-[0.78vw] font-semibold shadow-2xs hover:shadow-xs group"
+                        className="w-full flex items-center justify-center gap-[0.5vw] py-[0.45vw] px-[0.8vw] rounded-[0.55vw] text-rose-600 hover:text-white bg-rose-50 hover:bg-rose-600 border border-rose-200 hover:border-rose-600 transition-all duration-150 cursor-pointer text-[0.83vw] font-semibold shadow-2xs hover:shadow-xs group"
                       >
                         <LogOut className="w-[0.95vw] h-[0.95vw] group-hover:-translate-x-0.5 transition-transform" />
                         <span>Sign Out</span>

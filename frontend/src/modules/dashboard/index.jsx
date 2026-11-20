@@ -254,7 +254,7 @@ export default function Dashboard() {
     return (
       <div className="w-full h-[90vh] flex flex-col items-center justify-center text-slate-500">
         <RefreshCw className="w-[2.4vw] h-[2.4vw] animate-spin text-indigo-500 mb-[0.8vw]" />
-        <p className="text-[0.8vw] font-semibold">Syncing dashboard…</p>
+        <p className="text-[0.85vw] font-semibold">Syncing dashboard…</p>
       </div>
     );
   }
@@ -266,13 +266,13 @@ export default function Dashboard() {
       {/* Header */}
       <header className="flex items-center justify-between mb-[0.6vw] flex-shrink-0">
         <div>
-          <h1 className="text-[1.1vw] font-bold tracking-tight leading-tight text-slate-900">
+          <h1 className="text-[1.15vw] font-bold tracking-tight leading-tight text-slate-900">
             {getGreeting()},{" "}
             <span className="text-indigo-600 font-bold">
               {loggedInUser?.name || "User"}
             </span>
           </h1>
-          <p className="text-[0.68vw] font-medium text-slate-500 mt-[0.1vw] flex items-center gap-[0.35vw]">
+          <p className="text-[0.73vw] font-medium text-slate-500 mt-[0.1vw] flex items-center gap-[0.35vw]">
             <Calendar className="w-[0.75vw] h-[0.75vw] text-slate-400" />
             {new Date().toLocaleDateString(undefined, {
               weekday: "long",
@@ -286,7 +286,7 @@ export default function Dashboard() {
 
         <button
           onClick={fetchData}
-          className="group flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-700
+          className="group flex items-center gap-[0.35vw] text-[0.73vw] font-semibold text-slate-700
             bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-600
             rounded-full px-[0.7vw] py-[0.25vw] transition-all cursor-pointer shadow-xs"
         >

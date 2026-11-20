@@ -708,7 +708,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <div className="w-[1.9vw] h-[1.05vw] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.11vw] after:left-[0.14vw] after:bg-white after:border-slate-400 after:border after:rounded-full after:h-[0.82vw] after:w-[0.82vw] after:transition-all peer-checked:bg-blue-600"></div>
           </label>
 
-          <span className={`text-[0.82vw] font-semibold truncate ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
+          <span className={`text-[0.87vw] font-semibold truncate ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
             {mod.label}
           </span>
         </div>
@@ -727,7 +727,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               <button
                 type="button"
                 onClick={() => togglePermission(mod.id, "read")}
-                className={`px-[0.65vw] py-[0.2vw] text-[0.72vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
+                className={`px-[0.65vw] py-[0.2vw] text-[0.77vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
                   mState.read
                     ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
                     : "bg-white text-gray-400 border-slate-400 hover:border-slate-400"
@@ -756,7 +756,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     };
                   });
                 }}
-                className={`px-[0.65vw] py-[0.2vw] text-[0.72vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
+                className={`px-[0.65vw] py-[0.2vw] text-[0.77vw] font-semibold rounded-[0.3vw] transition-all cursor-pointer border ${
                   mState.write || mState.update
                     ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
                     : "bg-white text-gray-400 border-slate-400 hover:border-slate-400"
@@ -782,7 +782,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     key={act}
                     type="button"
                     onClick={() => togglePermission(mod.id, act)}
-                    className={`px-[0.6vw] py-[0.2vw] text-[0.72vw] font-semibold capitalize rounded-[0.3vw] transition-all cursor-pointer border ${
+                    className={`px-[0.6vw] py-[0.2vw] text-[0.77vw] font-semibold capitalize rounded-[0.3vw] transition-all cursor-pointer border ${
                       isActive
                         ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs"
                         : "bg-white text-gray-400 border-slate-400 hover:border-slate-400 hover:text-gray-600"
@@ -878,9 +878,9 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               {selectedEmployeesList.slice(0, 2).map((emp) => (
                 <span
                   key={emp.userId}
-                  className="inline-flex items-center gap-[0.25vw] bg-blue-50/70 border border-blue-200 text-blue-900 rounded-full pl-[0.2vw] pr-[0.45vw] py-[0.1vw] text-[0.7vw] font-semibold flex-shrink-0"
+                  className="inline-flex items-center gap-[0.25vw] bg-blue-50/70 border border-blue-200 text-blue-900 rounded-full pl-[0.2vw] pr-[0.45vw] py-[0.1vw] text-[0.75vw] font-semibold flex-shrink-0"
                 >
-                  <span className="w-[1.1vw] h-[1.1vw] rounded-full overflow-hidden bg-blue-200 text-blue-700 flex items-center justify-center text-[0.55vw] font-bold">
+                  <span className="w-[1.1vw] h-[1.1vw] rounded-full overflow-hidden bg-blue-200 text-blue-700 flex items-center justify-center text-[0.6vw] font-bold">
                     {emp.profilePicture ? (
                       <img src={emp.profilePicture} alt="" className="w-full h-full object-cover" />
                     ) : (
@@ -903,7 +903,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 <button
                   type="button"
                   onClick={() => setIsEmployeeDropdownOpen(true)}
-                  className="text-[0.68vw] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded-full flex-shrink-0 cursor-pointer transition-colors"
+                  className="text-[0.73vw] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 border border-blue-200 px-[0.45vw] py-[0.1vw] rounded-full flex-shrink-0 cursor-pointer transition-colors"
                   title="Click to view and edit all selected employees in dropdown"
                 >
                   +{selectedEmployeesList.length - 2} more
@@ -913,7 +913,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               <button
                 type="button"
                 onClick={handleClearSelection}
-                className="text-[0.66vw] text-gray-400 hover:text-rose-600 underline cursor-pointer ml-[0.2vw] flex-shrink-0"
+                className="text-[0.71vw] text-gray-400 hover:text-rose-600 underline cursor-pointer ml-[0.2vw] flex-shrink-0"
                 title="Clear all selected"
               >
                 Clear
@@ -924,7 +924,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           {/* Compact Discrepancy Indicator */}
           {hasAnyDiscrepancy && (
             <div 
-              className="flex items-center gap-[0.3vw] text-[0.7vw] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-[0.55vw] py-[0.25vw] rounded-full flex-shrink-0"
+              className="flex items-center gap-[0.3vw] text-[0.75vw] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-[0.55vw] py-[0.25vw] rounded-full flex-shrink-0"
               title="Selected users currently have differing permissions. Saving will standardize them."
             >
               <Icon icon="solar:danger-triangle-bold" className="w-[0.8vw] h-[0.8vw] text-amber-600" />
@@ -935,7 +935,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           {/* Protected Admin Alert */}
           {containsProtectedAdmin && (
             <div 
-              className="flex items-center gap-[0.3vw] text-[0.7vw] font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.25vw] rounded-full flex-shrink-0"
+              className="flex items-center gap-[0.3vw] text-[0.75vw] font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-[0.55vw] py-[0.25vw] rounded-full flex-shrink-0"
               title="Admin account selected (Locked from non-admin editing)"
             >
               <Icon icon="solar:lock-keyhole-bold" className="w-[0.8vw] h-[0.8vw] text-rose-600" />
@@ -951,7 +951,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => setAccessMode("preset")}
-              className={`px-[0.9vw] py-[0.32vw] text-[0.74vw] font-bold rounded-full transition-all cursor-pointer ${
+              className={`px-[0.9vw] py-[0.32vw] text-[0.79vw] font-bold rounded-full transition-all cursor-pointer ${
                 accessMode === "preset"
                   ? "bg-blue-600 text-white shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -962,7 +962,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <button
               type="button"
               onClick={() => setAccessMode("custom")}
-              className={`px-[0.9vw] py-[0.32vw] text-[0.74vw] font-bold rounded-full transition-all cursor-pointer ${
+              className={`px-[0.9vw] py-[0.32vw] text-[0.79vw] font-bold rounded-full transition-all cursor-pointer ${
                 accessMode === "custom"
                   ? "bg-blue-600 text-white shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -978,7 +978,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               type="button"
               onClick={handleSaveMatrix}
               disabled={!hasSelectedEmployee || saving || containsProtectedAdmin}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-semibold text-[0.76vw] px-[1.1vw] py-[0.4vw] rounded-[0.4vw] flex items-center gap-[0.4vw] transition-colors cursor-pointer shadow-xs"
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-semibold text-[0.81vw] px-[1.1vw] py-[0.4vw] rounded-[0.4vw] flex items-center gap-[0.4vw] transition-colors cursor-pointer shadow-xs"
             >
               {saving ? (
                 <>
@@ -1002,10 +1002,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
             <div className="w-[4.2vw] h-[4.2vw] rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 mb-[1vw] shadow-xs">
               <Icon icon="solar:user-hand-up-bold-duotone" className="w-[2.4vw] h-[2.4vw]" />
             </div>
-            <h3 className="text-[1.05vw] font-bold text-gray-800">
+            <h3 className="text-[1.1vw] font-bold text-gray-800">
               Select an Employee First
             </h3>
-            <p className="text-[0.78vw] text-gray-500 max-w-[28vw] mt-[0.35vw] leading-relaxed">
+            <p className="text-[0.83vw] text-gray-500 max-w-[28vw] mt-[0.35vw] leading-relaxed">
               Please choose at least one employee from the <span className="font-semibold text-gray-700">"Employees"</span> dropdown above to {accessMode === "preset" ? "apply role presets" : "view, configure, and customize module permissions"}.
             </p>
           </div>
@@ -1014,8 +1014,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           <div className="flex-1 p-[1.5vw] overflow-y-auto min-h-0 bg-slate-50/40 flex flex-col justify-center items-center">
             <div className="w-full max-w-[76vw] space-y-[1.4vw]">
               <div className="text-center space-y-[0.35vw]">
-                <h3 className="text-[1.25vw] font-bold text-gray-900">Select Role Preset</h3>
-                <p className="text-[0.82vw] text-gray-500">
+                <h3 className="text-[1.3vw] font-bold text-gray-900">Select Role Preset</h3>
+                <p className="text-[0.87vw] text-gray-500">
                   Click a role to immediately apply standard operational permissions to the selected employee(s).
                 </p>
               </div>
@@ -1029,12 +1029,12 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <Icon icon="solar:shield-user-bold-duotone" className="w-[1.4vw] h-[1.4vw]" />
                       </div>
                       <div>
-                        <h4 className="text-[1.08vw] font-bold text-gray-900">Administrator</h4>
-                        <span className="text-[0.76vw] text-purple-600 font-semibold tracking-wide">Full System Access</span>
+                        <h4 className="text-[1.13vw] font-bold text-gray-900">Administrator</h4>
+                        <span className="text-[0.81vw] text-purple-600 font-semibold tracking-wide">Full System Access</span>
                       </div>
                     </div>
                     
-                    <ul className="text-[0.82vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
+                    <ul className="text-[0.87vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
                       <li><span className="font-semibold text-gray-900">Dashboard Admin</span></li>
                       <li><span className="font-semibold text-gray-900">Master Page</span> (All Master data & Customer)</li>
                       <li><span className="font-semibold text-gray-900">Service Call</span> Registry & Report pages</li>
@@ -1048,7 +1048,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       type="button"
                       disabled={saving || containsProtectedAdmin || !canEditRoleAccess}
                       onClick={() => requestApplyPreset("Admin")}
-                      className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                      className="w-full py-[0.55vw] text-[0.9vw] font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
                       title={!canEditRoleAccess ? "Read-only access: Cannot apply role presets" : undefined}
                     >
                       Set as Admin
@@ -1064,12 +1064,12 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <Icon icon="solar:user-check-bold-duotone" className="w-[1.4vw] h-[1.4vw]" />
                       </div>
                       <div>
-                        <h4 className="text-[1.08vw] font-bold text-gray-900">Supervisor</h4>
-                        <span className="text-[0.76vw] text-indigo-600 font-semibold tracking-wide">Operations Management</span>
+                        <h4 className="text-[1.13vw] font-bold text-gray-900">Supervisor</h4>
+                        <span className="text-[0.81vw] text-indigo-600 font-semibold tracking-wide">Operations Management</span>
                       </div>
                     </div>
                     
-                    <ul className="text-[0.82vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
+                    <ul className="text-[0.87vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
                       <li><span className="font-semibold text-gray-900">Normal User Privileges</span> (Response & Reports)</li>
                       <li><span className="font-semibold text-gray-900">Production NC</span> Supervisor / Management page</li>
                       <li><span className="font-semibold text-gray-900">Service Call & Material</span> Workspaces</li>
@@ -1082,7 +1082,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       type="button"
                       disabled={saving || containsProtectedAdmin || !canEditRoleAccess}
                       onClick={() => requestApplyPreset("Supervisor")}
-                      className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                      className="w-full py-[0.55vw] text-[0.9vw] font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
                       title={!canEditRoleAccess ? "Read-only access: Cannot apply role presets" : undefined}
                     >
                       Set as Supervisor
@@ -1098,12 +1098,12 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                         <Icon icon="solar:user-speak-rounded-bold-duotone" className="w-[1.4vw] h-[1.4vw]" />
                       </div>
                       <div>
-                        <h4 className="text-[1.08vw] font-bold text-gray-900">Field / Workshop User</h4>
-                        <span className="text-[0.76vw] text-blue-600 font-semibold tracking-wide">Technician & Workspaces</span>
+                        <h4 className="text-[1.13vw] font-bold text-gray-900">Field / Workshop User</h4>
+                        <span className="text-[0.81vw] text-blue-600 font-semibold tracking-wide">Technician & Workspaces</span>
                       </div>
                     </div>
                     
-                    <ul className="text-[0.82vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
+                    <ul className="text-[0.87vw] text-gray-600 space-y-[0.65vw] list-disc list-inside leading-relaxed pl-[0.2vw]">
                       <li><span className="font-semibold text-gray-900">Dashboard Employee</span></li>
                       <li><span className="font-semibold text-gray-900">Service Call</span> Response & Report pages</li>
                       <li><span className="font-semibold text-gray-900">Service Material</span> Response & Report pages</li>
@@ -1117,7 +1117,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                       type="button"
                       disabled={saving || containsProtectedAdmin || !canEditRoleAccess}
                       onClick={() => requestApplyPreset("User")}
-                      className="w-full py-[0.55vw] text-[0.85vw] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
+                      className="w-full py-[0.55vw] text-[0.9vw] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed rounded-[0.45vw] transition-all cursor-pointer shadow-sm hover:shadow"
                       title={!canEditRoleAccess ? "Read-only access: Cannot apply role presets" : undefined}
                     >
                       Set as User
@@ -1132,7 +1132,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
           <>
             {/* Left Side: Modules Navigation */}
             <div className="w-[13vw] border-r border-slate-400 flex flex-col p-[0.6vw] gap-[0.2vw] overflow-y-auto h-full bg-white flex-shrink-0">
-              <p className="text-[0.68vw] font-semibold uppercase tracking-wider text-gray-400 px-[0.5vw] mb-[0.3vw]">
+              <p className="text-[0.73vw] font-semibold uppercase tracking-wider text-gray-400 px-[0.5vw] mb-[0.3vw]">
                 Categories
               </p>
               {groups.map((g) => {
@@ -1144,14 +1144,14 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     key={g.id}
                     type="button"
                     onClick={() => setActiveGroup(g.id)}
-                    className={`flex items-center justify-between px-[0.65vw] py-[0.45vw] rounded-[0.35vw] text-[0.78vw] transition-colors text-left cursor-pointer ${
+                    className={`flex items-center justify-between px-[0.65vw] py-[0.45vw] rounded-[0.35vw] text-[0.83vw] transition-colors text-left cursor-pointer ${
                       isActive
                         ? "bg-blue-50 text-blue-700 font-semibold"
-                        : "text-gray-700 hover:bg-gray-50 font-normal"
+                        : "text-gray-700 hover:bg-gray-50 font-medium"
                     }`}
                   >
                     <span>{g.label}</span>
-                    <span className={`text-[0.66vw] px-[0.4vw] py-[0.08vw] rounded-full font-medium ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-500 bg-gray-100"}`}>
+                    <span className={`text-[0.71vw] px-[0.4vw] py-[0.08vw] rounded-full font-medium ${isActive ? "bg-blue-100 text-blue-800" : "text-gray-500 bg-gray-100"}`}>
                       {count}
                     </span>
                   </button>
@@ -1164,7 +1164,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
               {loadingConfig ? (
                 <div className="w-full h-full min-h-[40vh] flex flex-col items-center justify-center gap-2 bg-white/70 rounded-[0.5vw]">
                   <Loader2 className="w-7 h-7 animate-spin text-blue-600" />
-                  <span className="text-[0.8vw] text-gray-600 font-medium">Loading Permissions...</span>
+                  <span className="text-[0.85vw] text-gray-600 font-medium">Loading Permissions...</span>
                 </div>
               ) : (
                 groups.filter((g) => g.id !== "all" && (activeGroup === "all" || activeGroup === g.id)).map((g) => {
@@ -1176,8 +1176,8 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     {/* Header for group */}
                     <div className="flex items-center justify-between border-b border-gray-100 pb-[0.45vw]">
                       <div className="flex items-center gap-[0.5vw]">
-                        <h3 className="text-[0.9vw] font-bold text-blue-600">{g.label}</h3>
-                        <span className="text-[0.7vw] text-gray-400 font-normal">({groupMods.length} modules)</span>
+                        <h3 className="text-[0.95vw] font-bold text-blue-600">{g.label}</h3>
+                        <span className="text-[0.75vw] text-gray-400 font-medium">({groupMods.length} modules)</span>
                       </div>
 
                       {/* Bulk toggles (hidden for Dashboard since it's mutually exclusive) */}
@@ -1187,7 +1187,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             type="button"
                             disabled={containsProtectedAdmin}
                             onClick={() => handleBulkToggleGroup(g.id, "enable")}
-                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 shadow-2xs hover:border-blue-300"
+                            className="px-[0.55vw] py-[0.18vw] text-[0.77vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 shadow-2xs hover:border-blue-300"
                           >
                             Enable All
                           </button>
@@ -1195,7 +1195,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             type="button"
                             disabled={containsProtectedAdmin}
                             onClick={() => handleBulkToggleGroup(g.id, "disable")}
-                            className="px-[0.55vw] py-[0.18vw] text-[0.72vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-slate-600 bg-white hover:bg-slate-100 hover:text-slate-800 border border-slate-400 hover:border-slate-400 shadow-2xs"
+                            className="px-[0.55vw] py-[0.18vw] text-[0.77vw] font-medium rounded-[0.3vw] transition-all cursor-pointer disabled:opacity-40 text-slate-600 bg-white hover:bg-slate-100 hover:text-slate-800 border border-slate-400 hover:border-slate-400 shadow-2xs"
                           >
                             Disable All
                           </button>
@@ -1210,7 +1210,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                           const mState = matrix[mod.id] || { enabled: false };
                           return (
                             <div key={mod.id} className="flex items-center gap-[0.6vw]">
-                              <span className={`text-[0.82vw] font-semibold ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
+                              <span className={`text-[0.87vw] font-semibold ${mState.enabled ? "text-gray-900" : "text-gray-500"}`}>
                                 {mod.label}
                               </span>
                               <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
@@ -1248,7 +1248,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             {adminMods.length > 0 && (
                               <div className="space-y-[0.35vw]">
                                 <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
-                                  <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
+                                  <span className="text-[0.73vw] font-bold text-gray-500 uppercase tracking-wider">
                                     Admin Pages ({adminMods.length})
                                   </span>
                                 </div>
@@ -1262,7 +1262,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                             {userMods.length > 0 && (
                               <div className="space-y-[0.35vw]">
                                 <div className="flex items-center gap-[0.4vw] pb-[0.2vw] border-b border-gray-100">
-                                  <span className="text-[0.68vw] font-bold text-gray-500 uppercase tracking-wider">
+                                  <span className="text-[0.73vw] font-bold text-gray-500 uppercase tracking-wider">
                                     User Pages ({userMods.length})
                                   </span>
                                 </div>
@@ -1309,10 +1309,10 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-[1vw] font-bold text-gray-900 leading-snug">
+                <h3 className="text-[1.05vw] font-bold text-gray-900 leading-snug">
                   {confirmModal.title}
                 </h3>
-                <p className="text-[0.74vw] text-gray-500 mt-[0.2vw] leading-relaxed">
+                <p className="text-[0.79vw] text-gray-500 mt-[0.2vw] leading-relaxed">
                   {confirmModal.subtitle}
                 </p>
               </div>
@@ -1320,18 +1320,18 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
 
             {/* Target Employees Preview List */}
             <div className="p-[1.1vw] bg-gray-50/60 max-h-[14vw] overflow-y-auto space-y-[0.45vw] border-b border-gray-100">
-              <span className="text-[0.68vw] font-bold text-gray-400 uppercase tracking-wider block mb-[0.2vw]">
+              <span className="text-[0.73vw] font-bold text-gray-400 uppercase tracking-wider block mb-[0.2vw]">
                 Affected Employees ({confirmModal.targets.length})
               </span>
               <div className="flex flex-wrap gap-[0.35vw]">
                 {confirmModal.targets.map((emp) => (
                   <span
                     key={emp.userId || emp._id}
-                    className="inline-flex items-center gap-[0.3vw] bg-white border border-slate-400 px-[0.55vw] py-[0.25vw] rounded-[0.3vw] text-[0.72vw] text-gray-800 shadow-2xs font-medium"
+                    className="inline-flex items-center gap-[0.3vw] bg-white border border-slate-400 px-[0.55vw] py-[0.25vw] rounded-[0.3vw] text-[0.77vw] text-gray-800 shadow-2xs font-medium"
                   >
                     <Icon icon="solar:user-bold" className="w-[0.75vw] h-[0.75vw] text-gray-400" />
                     {emp.name || emp.username}
-                    <span className="text-gray-400 text-[0.65vw]">({emp.role || emp.department})</span>
+                    <span className="text-gray-400 text-[0.7vw]">({emp.role || emp.department})</span>
                   </span>
                 ))}
               </div>
@@ -1343,7 +1343,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                 type="button"
                 disabled={saving}
                 onClick={() => setConfirmModal({ isOpen: false, type: null, presetType: null, title: "", subtitle: "", targets: [] })}
-                className="px-[0.9vw] py-[0.45vw] text-[0.76vw] font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-[0.35vw] transition-colors cursor-pointer"
+                className="px-[0.9vw] py-[0.45vw] text-[0.81vw] font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-[0.35vw] transition-colors cursor-pointer"
               >
                 Cancel
               </button>
@@ -1357,7 +1357,7 @@ const RoleAccessSection = ({ employees = [], setEmployees }) => {
                     executeSaveMatrix(confirmModal.targets);
                   }
                 }}
-                className={`px-[1.1vw] py-[0.45vw] text-[0.76vw] font-bold text-white rounded-[0.35vw] transition-colors cursor-pointer flex items-center gap-[0.4vw] shadow-xs ${
+                className={`px-[1.1vw] py-[0.45vw] text-[0.81vw] font-bold text-white rounded-[0.35vw] transition-colors cursor-pointer flex items-center gap-[0.4vw] shadow-xs ${
                   confirmModal.type === "preset" && confirmModal.presetType === "Admin"
                     ? "bg-purple-600 hover:bg-purple-700"
                     : confirmModal.type === "preset" && confirmModal.presetType === "Supervisor"

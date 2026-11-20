@@ -36,7 +36,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
         <div className="bg-indigo-950 px-[1.4vw] py-[1vw] flex justify-between items-center border-b border-indigo-800">
           <div className="flex items-center gap-[0.6vw]">
             <History className="w-[1.2vw] h-[1.2vw] text-indigo-400" />
-            <h3 className="text-[1vw] font-bold text-white">
+            <h3 className="text-[1.05vw] font-bold text-white">
               Service History: {identifier}
             </h3>
           </div>
@@ -54,7 +54,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
               <div className="w-[2vw] h-[2vw] border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
             </div>
           ) : history.length === 0 ? (
-            <div className="text-center text-slate-500 font-bold text-[0.9vw] p-[2vw]">
+            <div className="text-center text-slate-500 font-bold text-[0.95vw] p-[2vw]">
               No past service calls found for this customer.
             </div>
           ) : (
@@ -66,10 +66,10 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                 >
                   <div className="flex justify-between items-center border-b border-slate-400 pb-[0.5vw] mb-[0.6vw]">
                     <div className="flex items-center gap-[0.6vw]">
-                      <span className="font-bold text-[0.9vw] text-slate-800">
+                      <span className="font-bold text-[0.95vw] text-slate-800">
                         Call ID : {call.callNumber}
                       </span>
-                      <span className="text-[0.85vw] text-slate-700 bg-slate-100 px-[0.4vw] py-[0.1vw] rounded">
+                      <span className="text-[0.9vw] text-slate-700 bg-slate-100 px-[0.4vw] py-[0.1vw] rounded">
                         {new Date(call.createdAt).toLocaleDateString()}
                       </span>
                     </div>
@@ -112,7 +112,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                           key={idx}
                           className="bg-slate-50 border border-slate-400 p-[1vw] rounded-[0.5vw]"
                         >
-                          <div className="grid grid-cols-2 gap-[0.8vw] text-[0.85vw] text-slate-700 leading-relaxed">
+                          <div className="grid grid-cols-2 gap-[0.8vw] text-[0.9vw] text-slate-700 leading-relaxed">
                             <div>
                               <span className="font-bold text-slate-500">
                                 Product:
@@ -149,7 +149,7 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
                               </span>{" "}
                               {p.callDescription || "No description"}
                             </div>
-                            <div className="col-span-2 flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.9vw]">
+                            <div className="col-span-2 flex items-center gap-[0.4vw] mt-[0.2vw] text-[0.95vw]">
                               <span className="font-bold text-slate-500">
                                 Status:
                               </span>
@@ -181,11 +181,11 @@ export const CustomerHistoryModal = ({ identifier, onClose }) => {
 
                                   return (
                                     <div className="flex flex-col gap-[0.3vw]">
-                                      <div className="text-[0.75vw] text-emerald-800 font-bold">
+                                      <div className="text-[0.8vw] text-emerald-800 font-bold">
                                         Resolved by: {resolvedBy}
                                       </div>
                                       {remarks && (
-                                        <div className="text-[0.8vw] text-slate-700 italic border-l-2 border-emerald-300 pl-[0.5vw] mt-[0.2vw]">
+                                        <div className="text-[0.85vw] text-slate-700 italic border-l-2 border-emerald-300 pl-[0.5vw] mt-[0.2vw]">
                                           "{remarks}"
                                         </div>
                                       )}

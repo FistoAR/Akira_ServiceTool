@@ -383,7 +383,7 @@ export default function ServiceCallAssignment() {
   };
 
   return (
-    <div className="w-full h-full font-sans text-[0.82vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-[0.87vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <AnimatePresence mode="wait">
         {selectedGroup ? (
           <motion.div
@@ -400,7 +400,7 @@ export default function ServiceCallAssignment() {
                 <button
                   type="button"
                   onClick={handleCloseAssignView}
-                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border-[1.5px] border-slate-400 bg-white hover:bg-slate-50 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.78vw] font-semibold transition-colors"
+                  className="flex items-center gap-[0.35vw] text-slate-700 hover:text-slate-900 border-[1.5px] border-slate-400 bg-white hover:bg-slate-50 px-[0.7vw] py-[0.35vw] rounded-[0.5vw] cursor-pointer text-[0.83vw] font-semibold transition-colors"
                 >
                   <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
                   <span>Back to Queue</span>
@@ -412,14 +412,14 @@ export default function ServiceCallAssignment() {
                   </div>
                   <div>
                     <div className="flex items-center gap-[0.5vw]">
-                      <h2 className="text-[1.05vw] font-bold text-slate-900 leading-tight">
+                      <h2 className="text-[1.1vw] font-bold text-slate-900 leading-tight">
                         Allocate Field Engineer
                       </h2>
-                      <span className="text-[0.68vw] bg-blue-50 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
+                      <span className="text-[0.73vw] bg-blue-50 text-blue-700 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-blue-200">
                         {selectedGroup.callNumber}
                       </span>
                     </div>
-                    <div className="text-[0.72vw] text-slate-500 font-medium mt-[0.25vw]">
+                    <div className="text-[0.77vw] text-slate-500 font-medium mt-[0.25vw]">
                       Assign engineer and define initial SLA response window
                     </div>
                   </div>
@@ -431,7 +431,7 @@ export default function ServiceCallAssignment() {
             {!slaLoading && !slaIsConfigured && selectedGroup && (
               <div className="flex items-center gap-[0.6vw] bg-amber-50 border border-amber-200/90 rounded-[0.6vw] px-[0.9vw] py-[0.45vw] shrink-0">
                 <AlertTriangle className="w-[0.9vw] h-[0.9vw] text-amber-600 shrink-0" />
-                <span className="text-[0.72vw] text-amber-800 font-medium">
+                <span className="text-[0.77vw] text-amber-800 font-medium">
                   No custom SLA registered for {selectedGroup.customerType} / {selectedGroup.segment} — using standard Level-1 flow default.
                 </span>
               </div>
@@ -441,25 +441,25 @@ export default function ServiceCallAssignment() {
             <div className="bg-white rounded-[0.8vw] border-2 border-slate-300 px-[1.2vw] py-[0.85vw] shadow-[0_2px_10px_-2px_rgba(0,0,0,0.04)] grid grid-cols-5 divide-x-2 divide-slate-200 shrink-0">
               <div className="flex flex-col items-center justify-center pr-[1vw]">
                 <div className="flex flex-col items-start text-left max-w-full">
-                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                  <span className="text-[0.79vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
                     <User className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Customer
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={selectedGroup.customerName}>
+                  <span className="text-[0.83vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={selectedGroup.customerName}>
                     {selectedGroup.customerName}
                   </span>
-                  <span className="text-[0.66vw] text-slate-600 font-mono font-medium">{selectedGroup.partyCode}</span>
+                  <span className="text-[0.71vw] text-slate-600 font-mono font-medium">{selectedGroup.partyCode}</span>
                 </div>
               </div>
 
               <div className="flex flex-col items-center justify-center px-[1vw]">
                 <div className="flex flex-col items-start text-left max-w-full">
-                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                  <span className="text-[0.79vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
                     <MapPin className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Location &amp; Site
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={`${selectedGroup.site ? selectedGroup.site + " • " : ""}${selectedGroup.location || "—"}`}>
+                  <span className="text-[0.83vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={`${selectedGroup.site ? selectedGroup.site + " • " : ""}${selectedGroup.location || "—"}`}>
                     {selectedGroup.location || "—"}
                   </span>
-                  <span className="text-[0.66vw] text-slate-600 font-medium">
+                  <span className="text-[0.71vw] text-slate-600 font-medium">
                     Site: {selectedGroup.site || "—"}
                   </span>
                 </div>
@@ -467,13 +467,13 @@ export default function ServiceCallAssignment() {
 
               <div className="flex flex-col items-center justify-center px-[1vw]">
                 <div className="flex flex-col items-start text-left max-w-full">
-                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                  <span className="text-[0.79vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
                     <Phone className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Contact
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={selectedGroup.contactPerson || "—"}>
+                  <span className="text-[0.83vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full" title={selectedGroup.contactPerson || "—"}>
                     {selectedGroup.contactPerson || "—"}
                   </span>
-                  <span className="text-[0.66vw] text-slate-600 font-mono font-medium">
+                  <span className="text-[0.71vw] text-slate-600 font-mono font-medium">
                     {selectedGroup.contactNumber || "—"}
                   </span>
                 </div>
@@ -481,13 +481,13 @@ export default function ServiceCallAssignment() {
 
               <div className="flex flex-col items-center justify-center px-[1vw]">
                 <div className="flex flex-col items-start text-left max-w-full">
-                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                  <span className="text-[0.79vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
                     <Tag className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Segment
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full">
+                  <span className="text-[0.83vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full">
                     {selectedGroup.segment}
                   </span>
-                  <span className="text-[0.66vw] text-slate-600 font-medium">
+                  <span className="text-[0.71vw] text-slate-600 font-medium">
                     Type: {selectedGroup.customerType}
                   </span>
                 </div>
@@ -495,13 +495,13 @@ export default function ServiceCallAssignment() {
 
               <div className="flex flex-col items-center justify-center pl-[1vw]">
                 <div className="flex flex-col items-start text-left max-w-full">
-                  <span className="text-[0.74vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
+                  <span className="text-[0.79vw] font-bold text-[#530000] uppercase tracking-wider flex items-center gap-[0.3vw]">
                     <AlertCircle className="w-[0.78vw] h-[0.78vw] text-[#530000]" /> Priority Level
                   </span>
-                  <span className="text-[0.78vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full">
+                  <span className="text-[0.83vw] text-slate-800 font-medium truncate mt-[0.2vw] max-w-full">
                     {selectedGroup.priority}
                   </span>
-                  <span className="text-[0.66vw] text-slate-600 font-medium">{selectedGroup.products.length} product(s)</span>
+                  <span className="text-[0.71vw] text-slate-600 font-medium">{selectedGroup.products.length} product(s)</span>
                 </div>
               </div>
             </div>
@@ -518,7 +518,7 @@ export default function ServiceCallAssignment() {
                       placeholder="Search qualified engineers..." 
                       value={engSearch} 
                       onChange={e => setEngSearch(e.target.value)} 
-                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.76vw] text-slate-800 font-medium transition-all" 
+                      className="w-full pl-[2vw] pr-[2vw] h-[2.2vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.81vw] text-slate-800 font-medium transition-all" 
                     />
                     {engSearch && (
                       <button 
@@ -535,13 +535,13 @@ export default function ServiceCallAssignment() {
                   {employeeListLoading ? (
                     <div className="h-full flex flex-col items-center justify-center gap-[0.8vw] text-center py-[6vh]">
                       <Loader2 className="w-[2vw] h-[2vw] animate-spin text-blue-600" />
-                      <div className="text-[0.82vw] font-semibold text-slate-700">Checking SLA eligible engineers...</div>
-                      <div className="text-[0.68vw] text-slate-500 font-normal max-w-[15vw]">
+                      <div className="text-[0.87vw] font-semibold text-slate-700">Checking SLA eligible engineers...</div>
+                      <div className="text-[0.73vw] text-slate-500 font-medium max-w-[15vw]">
                         Matching against department requirements &amp; current active queue.
                       </div>
                     </div>
                   ) : filteredEmployees.length === 0 ? (
-                    <div className="text-center py-[6vh] text-slate-500 font-medium text-[0.76vw]">
+                    <div className="text-center py-[6vh] text-slate-500 font-medium text-[0.81vw]">
                       No eligible engineers found matching query.
                     </div>
                   ) : (
@@ -557,21 +557,21 @@ export default function ServiceCallAssignment() {
                               : 'bg-white border-slate-300 hover:border-blue-400 hover:bg-blue-50/40 shadow-2xs'
                           }`}
                         >
-                          <div className={`w-[2.4vw] h-[2.4vw] rounded-full flex items-center justify-center font-bold text-[0.85vw] bg-gradient-to-br ${
+                          <div className={`w-[2.4vw] h-[2.4vw] rounded-full flex items-center justify-center font-bold text-[0.9vw] bg-gradient-to-br ${
                             isSelected ? 'from-white/30 to-white/10' : avatarColor(emp.name)
                           } text-white shadow-2xs shrink-0`}>
                             {initials(emp.name)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className={`font-semibold text-[0.84vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                            <div className={`font-semibold text-[0.89vw] leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>
                               {emp.name}
                             </div>
                             <div className="flex items-center gap-[0.35vw] mt-[0.2vw]">
-                              <span className={`text-[0.68vw] font-medium ${isSelected ? 'text-blue-100' : 'text-slate-600'}`}>
+                              <span className={`text-[0.73vw] font-medium ${isSelected ? 'text-blue-100' : 'text-slate-600'}`}>
                                 {emp.department || "Engineer"}
                               </span>
                               {emp.activeTasks > 0 ? (
-                                <span className={`px-[0.4vw] py-[0.06vw] rounded-full text-[0.6vw] font-medium border ${
+                                <span className={`px-[0.4vw] py-[0.06vw] rounded-full text-[0.65vw] font-medium border ${
                                   isSelected 
                                     ? 'bg-amber-400/25 text-amber-100 border-amber-300/40' 
                                     : 'bg-amber-50 text-amber-800 border-amber-300'
@@ -579,7 +579,7 @@ export default function ServiceCallAssignment() {
                                   {emp.activeTasks} Active
                                 </span>
                               ) : (
-                                <span className={`px-[0.4vw] py-[0.06vw] rounded-full text-[0.6vw] font-medium border ${
+                                <span className={`px-[0.4vw] py-[0.06vw] rounded-full text-[0.65vw] font-medium border ${
                                   isSelected 
                                     ? 'bg-emerald-400/25 text-emerald-100 border-emerald-300/40' 
                                     : 'bg-emerald-50 text-emerald-800 border-emerald-300'
@@ -607,19 +607,19 @@ export default function ServiceCallAssignment() {
                       {/* Selected Engineer Banner */}
                       <div className="bg-slate-50/80 rounded-[0.7vw] p-[1vw] border-2 border-slate-300 flex items-center justify-between">
                         <div className="flex items-center gap-[0.85vw]">
-                          <div className={`w-[2.8vw] h-[2.8vw] rounded-full flex items-center justify-center text-[0.95vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
+                          <div className={`w-[2.8vw] h-[2.8vw] rounded-full flex items-center justify-center text-[1vw] font-bold text-white bg-gradient-to-br ${avatarColor(selectedEngineer.name)} shadow-sm`}>
                             {initials(selectedEngineer.name)}
                           </div>
                           <div>
-                            <div className="text-[1.05vw] font-bold text-slate-900 leading-tight">
+                            <div className="text-[1.1vw] font-bold text-slate-900 leading-tight">
                               {selectedEngineer.name}
                             </div>
-                            <div className="text-[0.74vw] text-slate-600 font-medium mt-[0.15vw]">
+                            <div className="text-[0.79vw] text-slate-600 font-medium mt-[0.15vw]">
                               {selectedEngineer.department} &bull; {selectedEngineer.role || "Specialist"}
                             </div>
                           </div>
                         </div>
-                        <span className={`px-[0.7vw] py-[0.2vw] rounded-full text-[0.68vw] font-semibold border ${
+                        <span className={`px-[0.7vw] py-[0.2vw] rounded-full text-[0.73vw] font-semibold border ${
                           selectedEngineer.activeTasks > 0 
                             ? 'bg-amber-50 text-amber-800 border-amber-300' 
                             : 'bg-emerald-50 text-emerald-800 border-emerald-300'
@@ -630,20 +630,20 @@ export default function ServiceCallAssignment() {
 
                       {/* Allocated Products List */}
                       <div>
-                        <div className="flex items-center gap-[0.4vw] text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider mb-[0.55vw]">
+                        <div className="flex items-center gap-[0.4vw] text-[0.71vw] font-semibold text-[#530000] uppercase tracking-wider mb-[0.55vw]">
                           <Package className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                           <span>Allocated Products ({selectedGroup.products.length})</span>
                         </div>
                         <div className="space-y-[0.4vw] max-h-[14vw] overflow-y-auto custom-scrollbar pr-[0.3vw]">
                           {selectedGroup.products.map(({ p, productIdx }) => (
-                            <div key={productIdx} className="bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border-2 border-slate-200 flex items-center justify-between text-[0.78vw]">
+                            <div key={productIdx} className="bg-slate-50/80 p-[0.75vw] rounded-[0.5vw] border-2 border-slate-200 flex items-center justify-between text-[0.83vw]">
                               <div>
                                 <div className="text-slate-900 font-semibold">{p.productModel || p.itemCode}</div>
                                 {p.errorCode && (
-                                  <div className="text-[0.66vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
+                                  <div className="text-[0.71vw] text-rose-600 font-medium">Issue Code: {p.errorCode}</div>
                                 )}
                               </div>
-                              <span className="text-slate-700 font-mono text-[0.72vw] bg-white px-[0.5vw] py-[0.15vw] rounded border-2 border-slate-300 font-semibold">
+                              <span className="text-slate-700 font-mono text-[0.77vw] bg-white px-[0.5vw] py-[0.15vw] rounded border-2 border-slate-300 font-semibold">
                                 SN: {p.serialNumber || "—"}
                               </span>
                             </div>
@@ -653,36 +653,36 @@ export default function ServiceCallAssignment() {
 
                       {/* SLA Delivery Window */}
                       <div>
-                        <div className="flex items-center gap-[0.4vw] text-[0.66vw] font-semibold text-[#530000] uppercase tracking-wider mb-[0.55vw]">
+                        <div className="flex items-center gap-[0.4vw] text-[0.71vw] font-semibold text-[#530000] uppercase tracking-wider mb-[0.55vw]">
                           <Clock className="w-[0.9vw] h-[0.9vw] text-blue-600" />
                           <span>SLA Delivery Window</span>
                         </div>
                         <div className="grid grid-cols-2 gap-[1vw]">
                           <div className="flex flex-col gap-[0.25vw]">
-                            <span className="text-[0.66vw] font-semibold text-slate-700 uppercase">Target Hours</span>
+                            <span className="text-[0.71vw] font-semibold text-slate-700 uppercase">Target Hours</span>
                             <input 
                               type="number" 
                               min="0"
                               value={resHours} 
                               onChange={e => setResHours(e.target.value)} 
-                              className="w-full px-[0.8vw] h-[2.3vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.88vw] font-bold text-slate-900 transition-all" 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.93vw] font-bold text-slate-900 transition-all" 
                             />
                           </div>
                           <div className="flex flex-col gap-[0.25vw]">
-                            <span className="text-[0.66vw] font-semibold text-slate-700 uppercase">Target Minutes</span>
+                            <span className="text-[0.71vw] font-semibold text-slate-700 uppercase">Target Minutes</span>
                             <input 
                               type="number" 
                               min="0" 
                               max="59"
                               value={resMins} 
                               onChange={e => setResMins(e.target.value)} 
-                              className="w-full px-[0.8vw] h-[2.3vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.88vw] font-bold text-slate-900 transition-all" 
+                              className="w-full px-[0.8vw] h-[2.3vw] bg-white border-[1.5px] border-slate-400 rounded-[0.5vw] outline-none focus:border-blue-500 text-[0.93vw] font-bold text-slate-900 transition-all" 
                             />
                           </div>
                         </div>
                         <div className="flex items-center gap-[0.45vw] p-[0.7vw] bg-blue-50/70 rounded-[0.5vw] border-2 border-blue-200/60 mt-[0.7vw]">
                           <Info className="w-[0.85vw] h-[0.85vw] text-blue-600 shrink-0" />
-                          <span className="text-[0.7vw] text-blue-900 font-medium">
+                          <span className="text-[0.75vw] text-blue-900 font-medium">
                             Resolution target starts counting upon assignment confirmation.
                           </span>
                         </div>
@@ -694,14 +694,14 @@ export default function ServiceCallAssignment() {
                       <button
                         type="button"
                         onClick={() => setSelectedEngineer(null)}
-                        className="form-cancel-btn px-[1.1vw] h-[2.3vw] border-[1.5px] border-slate-400 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.78vw] cursor-pointer transition-colors"
+                        className="form-cancel-btn px-[1.1vw] h-[2.3vw] border-[1.5px] border-slate-400 hover:bg-slate-50 text-slate-700 rounded-[0.5vw] font-semibold text-[0.83vw] cursor-pointer transition-colors"
                       >
                         Change Engineer
                       </button>
                       <button 
                         onClick={handleAssign}
                         disabled={isAssigning}
-                        className="px-[1.4vw] h-[2.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.5vw] font-semibold text-[0.78vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] cursor-pointer disabled:opacity-60"
+                        className="px-[1.4vw] h-[2.3vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-[0.5vw] font-semibold text-[0.83vw] active:scale-[0.98] transition-all flex items-center justify-center gap-[0.5vw] shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] cursor-pointer disabled:opacity-60"
                       >
                         {isAssigning ? (
                           <>
@@ -722,8 +722,8 @@ export default function ServiceCallAssignment() {
                     <div className="w-[4.2vw] h-[4.2vw] bg-blue-50 rounded-full flex items-center justify-center mb-[0.9vw] text-blue-500">
                       <UserPlus className="w-[2vw] h-[2vw]" />
                     </div>
-                    <div className="text-[1.05vw] font-semibold text-slate-700">Select an Eligible Engineer</div>
-                    <div className="text-[0.76vw] text-slate-500 max-w-[22vw] mt-[0.35vw]">
+                    <div className="text-[1.1vw] font-semibold text-slate-700">Select an Eligible Engineer</div>
+                    <div className="text-[0.81vw] text-slate-500 max-w-[22vw] mt-[0.35vw]">
                       Pick a qualified engineer from the list on the left to set SLA deadlines and confirm allocation.
                     </div>
                   </div>
@@ -750,7 +750,7 @@ export default function ServiceCallAssignment() {
             placeholder="Search customer, call no, engineer..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchTerm && (
             <button
@@ -765,14 +765,14 @@ export default function ServiceCallAssignment() {
         {/* Right cluster: Date Range, Clear, Count & Priority */}
         <div className="flex items-center gap-[0.6vw] flex-shrink-0">
           {/* Unified Date Range Capsule */}
-          <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-            <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+          <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+            <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
             <input
               ref={fromDateRef}
               type="date"
               value={filterFromDate || ""}
               onChange={(e) => setFilterFromDate(e.target.value)}
-              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -786,15 +786,15 @@ export default function ServiceCallAssignment() {
             >
               <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
             </button>
-            <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-            <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+            <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+            <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
             <input
               ref={toDateRef}
               type="date"
               value={filterToDate || ""}
               min={filterFromDate || undefined}
               onChange={(e) => setFilterToDate(e.target.value)}
-              className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+              className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
             />
             <button
               type="button"
@@ -817,7 +817,7 @@ export default function ServiceCallAssignment() {
                 setFilterFromDate("");
                 setFilterToDate("");
               }}
-              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
               title="Clear date filter"
             >
               <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -836,7 +836,7 @@ export default function ServiceCallAssignment() {
                 { value: "All", label: "All Types" },
                 ...availableCustomerTypes.map((t) => ({ value: t, label: t })),
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.8vw]"
             />
           </div>
 
@@ -854,7 +854,7 @@ export default function ServiceCallAssignment() {
                 { value: "Medium", label: "Medium Priority" },
                 { value: "Low", label: "Low Priority" },
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.8vw]"
             />
           </div>
 
@@ -863,7 +863,7 @@ export default function ServiceCallAssignment() {
             type="button"
             onClick={fetchData}
             disabled={isLoading}
-            className="flex items-center gap-[0.35vw] h-[2.2vw] px-[0.85vw] rounded-full text-[0.75vw] font-bold text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 border border-slate-200 transition-all cursor-pointer shadow-2xs shrink-0 disabled:opacity-50"
+            className="flex items-center gap-[0.35vw] h-[2.2vw] px-[0.85vw] rounded-full text-[0.8vw] font-bold text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 border border-slate-200 transition-all cursor-pointer shadow-2xs shrink-0 disabled:opacity-50"
             title="Refresh pending calls"
           >
             <RefreshCw className={`w-[0.8vw] h-[0.8vw] text-slate-500 ${isLoading ? "animate-spin text-blue-600" : ""}`} />
@@ -875,7 +875,7 @@ export default function ServiceCallAssignment() {
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
               <tr>
                 <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
@@ -900,13 +900,13 @@ export default function ServiceCallAssignment() {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-[0.8vw]">
+            <tbody className="text-[0.85vw]">
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="py-[12vh] text-center border-b border-slate-300">
                     <div className="flex flex-col items-center justify-center gap-[0.8vw]">
                       <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-[#1a73e8]" />
-                      <span className="text-[0.85vw] font-normal text-slate-700">Loading assignments queue...</span>
+                      <span className="text-[0.9vw] font-medium text-slate-700">Loading assignments queue...</span>
                     </div>
                   </td>
                 </tr>
@@ -917,8 +917,8 @@ export default function ServiceCallAssignment() {
                       <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                         <CheckCircle2 className="w-[1.8vw] h-[1.8vw] text-emerald-500" />
                       </div>
-                      <div className="text-[0.95vw] font-medium text-slate-700">All Calls Assigned!</div>
-                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw]">
+                      <div className="text-[1vw] font-medium text-slate-700">All Calls Assigned!</div>
+                      <div className="text-[0.79vw] text-slate-400 max-w-[20vw]">
                         There are no pending service calls requiring allocation right now.
                       </div>
                     </div>
@@ -939,7 +939,7 @@ export default function ServiceCallAssignment() {
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-black font-medium text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-black font-medium text-[0.81vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
@@ -947,12 +947,12 @@ export default function ServiceCallAssignment() {
                           <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             <button
                               onClick={() => setSelectedInfoCall(g.rawCall || g)}
-                              className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
+                              className="font-mono text-left text-[0.87vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                               title="View Call Details"
                             >
                               {g.callNumber}
                             </button>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-normal leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.78vw] text-[#4a2810] font-medium leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const d = new Date(g.timestamp || g.dateTime);
@@ -969,9 +969,9 @@ export default function ServiceCallAssignment() {
                                   });
                                   return (
                                     <>
-                                      <span className="text-[#4a2810] font-normal">{datePart}</span>
-                                      <span className="text-[#8c5835] font-normal">|</span>
-                                      <span className="text-[#5c3317] font-normal">{timePart}</span>
+                                      <span className="text-[#4a2810] font-medium">{datePart}</span>
+                                      <span className="text-[#8c5835] font-medium">|</span>
+                                      <span className="text-[#5c3317] font-medium">{timePart}</span>
                                     </>
                                   );
                                 } catch {
@@ -989,7 +989,7 @@ export default function ServiceCallAssignment() {
                               partyCode={g.partyCode}
                             />
                             {(g.location || g.site) && (
-                              <div className="text-[0.68vw] text-slate-600 font-medium flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
+                              <div className="text-[0.73vw] text-slate-600 font-medium flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${g.site ? g.site + " • " : ""}${g.location || ""}`}>
                                 <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
                                 <span className="truncate font-medium text-slate-700">{g.site ? `${g.site} • ` : ""}{g.location}</span>
                               </div>
@@ -997,10 +997,10 @@ export default function ServiceCallAssignment() {
                           </td>
 
                           {/* 4. Customer Type */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-medium">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.83vw] font-medium">
                             {g.customerType && g.customerType !== "All" ? (
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border shadow-2xs whitespace-nowrap ${
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${
                                   g.customerType === "OEM"
                                     ? "bg-blue-50 text-blue-700 border-blue-200"
                                     : g.customerType === "End Customer"
@@ -1028,45 +1028,45 @@ export default function ServiceCallAssignment() {
                           className="max-w-full"
                           content={
                             <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                              <div className="font-normal text-slate-200">
+                              <div className="font-medium text-slate-200">
                                 {item.p.productModel || item.p.itemCode || "—"}
                               </div>
                               {item.p.serialNumber && (
-                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   <span className="text-slate-400 font-sans">SN: </span>
                                   <span>{item.p.serialNumber}</span>
                                 </div>
                               )}
                               {item.p.errorCode && (
-                                <div className="text-[0.64vw] text-rose-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-rose-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   <span>Error: {item.p.errorCode}</span>
                                 </div>
                               )}
                             </div>
                           }
                         >
-                          <div className="font-medium text-black text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-black text-[0.85vw] truncate cursor-default">
                             {item.p.productModel || item.p.itemCode}
                           </div>
                         </CustomTooltip>
                         <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
                           {g.segment && g.segment !== "—" && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-medium">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.69vw] font-medium">
                               {g.segment}
                             </span>
                           )}
                           {item.p.serialNumber && (
-                            <span className="text-[0.66vw] text-slate-700 font-medium font-mono">
+                            <span className="text-[0.71vw] text-slate-700 font-medium font-mono">
                               SN: {item.p.serialNumber}
                             </span>
                           )}
                           {item.p.errorCode && (
-                            <span className="text-[0.66vw] text-rose-700 font-medium font-mono">
+                            <span className="text-[0.71vw] text-rose-700 font-medium font-mono">
                               Err: {item.p.errorCode}
                             </span>
                           )}
                           {g.products.length > 1 && (
-                            <span className="text-[0.64vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
+                            <span className="text-[0.69vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.35vw] py-[0.05vw] rounded-full">
                               +{g.products.length - 1} more
                             </span>
                           )}
@@ -1084,7 +1084,7 @@ export default function ServiceCallAssignment() {
                               else if (p === "High") badgeStyle = "bg-orange-50 text-orange-700 border border-orange-200";
                               else if (p === "Low") badgeStyle = "bg-emerald-50 text-emerald-700 border border-emerald-200";
                               return (
-                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.7vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
+                                <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.1vw] rounded-full text-[0.75vw] font-medium border shadow-2xs whitespace-nowrap ${badgeStyle}`}>
                                   {p}
                                 </span>
                               );
@@ -1106,13 +1106,13 @@ export default function ServiceCallAssignment() {
                               {canAssign ? (
                                 <button
                                   onClick={() => setSelectedGroup(g)}
-                                  className="cursor-pointer inline-flex items-center gap-[0.25vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.75vw] py-[0.3vw] rounded-full font-medium text-[0.7vw] transition-all shadow-xs"
+                                  className="cursor-pointer inline-flex items-center gap-[0.25vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white px-[0.75vw] py-[0.3vw] rounded-full font-medium text-[0.75vw] transition-all shadow-xs"
                                 >
                                   <span>Assign</span>
                                   <ArrowRight className="w-[0.7vw] h-[0.7vw]" />
                                 </button>
                               ) : (
-                                <span className="text-[0.68vw] text-slate-600 italic font-medium px-[0.5vw] py-[0.15vw] bg-slate-50 border border-slate-200 rounded-full">
+                                <span className="text-[0.73vw] text-slate-600 italic font-medium px-[0.5vw] py-[0.15vw] bg-slate-50 border border-slate-200 rounded-full">
                                   View Only
                                 </span>
                               )}
@@ -1130,7 +1130,7 @@ export default function ServiceCallAssignment() {
 
         {/* ── PAGINATION CONTROLS ── */}
         <div className="py-[0.6vw] px-[1vw] border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
-          <p className="text-[0.75vw] text-slate-600 font-medium">
+          <p className="text-[0.8vw] text-slate-600 font-medium">
             Showing <span className="font-semibold text-slate-800">{filteredGroups.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredGroups.length)}</span> of <span className="font-semibold text-slate-800">{filteredGroups.length}</span> records
           </p>
           <div className="flex items-center gap-[0.5vw]">
@@ -1146,7 +1146,7 @@ export default function ServiceCallAssignment() {
                 <button
                   key={p}
                   onClick={() => setCurrentPage(p)}
-                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer ${
                     currentPage === p
                       ? "bg-[#1a73e8] text-white shadow-2xs"
                       : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"

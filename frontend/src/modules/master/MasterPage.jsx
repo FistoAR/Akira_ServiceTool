@@ -28,7 +28,7 @@ import ColumnVisibilitySection from "./components/ColumnVisibilitySection";
 const TabContentLoader = () => (
   <div className="flex-1 w-full flex flex-col items-center justify-center gap-3 p-[3vw] bg-white min-h-[40vh]">
     <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-    <span className="text-[0.82vw] text-slate-500 font-medium">Loading details...</span>
+    <span className="text-[0.87vw] text-slate-500 font-medium">Loading details...</span>
   </div>
 );
 
@@ -201,7 +201,7 @@ const SystemSettingsPage = () => {
     <button
       onClick={() => fetchActiveTabData(activeTab, true)}
       disabled={isRefreshing}
-      className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.3vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+      className="flex items-center gap-[0.35vw] text-[0.73vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.3vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
       title="Refresh latest data from server"
     >
       <Icon icon="solar:restart-bold-duotone" className={`w-[0.85vw] h-[0.85vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
@@ -210,7 +210,7 @@ const SystemSettingsPage = () => {
   );
 
   return (
-    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[0.85vw] pr-[0.4vw] pb-[0.3vw]">
+    <div className="w-full flex-1 min-h-0 flex flex-col font-sans text-[0.9vw] pr-[0.4vw] pb-[0.3vw]">
        
         <div className="flex-1 bg-white border border-slate-400 rounded-[0.6vw] shadow-sm mb-[1vw] overflow-hidden flex flex-col">
           {/* ── Tab: Categories ── */}
@@ -221,16 +221,16 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:tag-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">
                     Party Type Categories
                   </h2>
-                  <p className="text-[0.7vw] text-gray-800">
+                  <p className="text-[0.75vw] text-gray-800">
                     Manage customer categories used across the system
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
+                  <span className="text-[0.77vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
                     {partyTypes.length} categories
                   </span>
                 </div>
@@ -252,16 +252,16 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:shield-keyhole-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">
                     Warranty Rule Master
                   </h2>
-                  <p className="text-[0.7vw] text-gray-800">
+                  <p className="text-[0.75vw] text-gray-800">
                     Manage serial decoders and SLA days per product segment
                   </p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
+                  <span className="text-[0.77vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full">
                     {warrantyRules.length} rules
                   </span>
                 </div>
@@ -284,12 +284,12 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:box-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">Product Segments</h2>
-                  <p className="text-[0.7vw] text-gray-800">Define product lines for auto-completion</p>
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">Product Segments</h2>
+                  <p className="text-[0.75vw] text-gray-800">Define product lines for auto-completion</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-teal-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                  <span className="text-[0.77vw] text-gray-700 bg-teal-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {segments.length} segments
                   </span>
                 </div>
@@ -308,12 +308,12 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:widget-2-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">4M Categories</h2>
-                  <p className="text-[0.7vw] text-gray-800">Manage Man, Machine, Material, Method categories for Service Materials</p>
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">4M Categories</h2>
+                  <p className="text-[0.75vw] text-gray-800">Manage Man, Machine, Material, Method categories for Service Materials</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-cyan-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                  <span className="text-[0.77vw] text-gray-700 bg-cyan-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {fourMCategories.length} categories
                   </span>
                 </div>
@@ -332,12 +332,12 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:tuning-2-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">Units</h2>
-                  <p className="text-[0.7vw] text-gray-800">Manage Unit values for Service Materials</p>
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">Units</h2>
+                  <p className="text-[0.75vw] text-gray-800">Manage Unit values for Service Materials</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-emerald-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                  <span className="text-[0.77vw] text-gray-700 bg-emerald-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {units.length} units
                   </span>
                 </div>
@@ -356,12 +356,12 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:map-point-wave-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">Site Master</h2>
-                  <p className="text-[0.7vw] text-gray-800">Manage plant and warehouse site locations</p>
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">Site Master</h2>
+                  <p className="text-[0.75vw] text-gray-800">Manage plant and warehouse site locations</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                  <span className="text-[0.77vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {sites.length} sites
                   </span>
                 </div>
@@ -411,12 +411,12 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:users-group-rounded-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">Employee Management</h2>
-                  <p className="text-[0.7vw] text-gray-800">Register and manage employee profiles and departments</p>
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">Employee Management</h2>
+                  <p className="text-[0.75vw] text-gray-800">Register and manage employee profiles and departments</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-purple-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                  <span className="text-[0.77vw] text-gray-700 bg-purple-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {employees.length} employees
                   </span>
                 </div>
@@ -440,12 +440,12 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:shield-user-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">Role Access Management</h2>
-                  <p className="text-[0.7vw] text-gray-800">Manage employee permissions for read, write, and delete operations</p>
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">Role Access Management</h2>
+                  <p className="text-[0.75vw] text-gray-800">Manage employee permissions for read, write, and delete operations</p>
                 </div>
                 <div className="ml-auto flex items-center gap-[0.6vw]">
                   {renderRefreshButton()}
-                  <span className="text-[0.72vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
+                  <span className="text-[0.77vw] text-gray-700 bg-blue-100 px-[0.6vw] py-[0.25vw] rounded-full font-bold">
                     {employees.length} users
                   </span>
                 </div>
@@ -467,10 +467,10 @@ const SystemSettingsPage = () => {
                   <Icon icon="solar:table-bold-duotone" className="w-[1.1vw] h-[1.1vw] text-white" />
                 </div>
                 <div>
-                  <h2 className="text-[0.9vw] font-bold text-slate-900">
+                  <h2 className="text-[0.95vw] font-bold text-slate-900">
                     Database Column Visibility
                   </h2>
-                  <p className="text-[0.7vw] text-gray-800">
+                  <p className="text-[0.75vw] text-gray-800">
                     Show or hide columns in the Customer Database table
                   </p>
                 </div>

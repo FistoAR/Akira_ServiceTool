@@ -399,7 +399,7 @@ export default function Sidebar() {
                     </div>
 
                     <span
-                      className={`whitespace-nowrap flex-1 text-[0.85vw] transition-all duration-500 ease-out ${
+                      className={`whitespace-nowrap flex-1 text-[0.9vw] transition-all duration-500 ease-out ${
                         isCollapsed
                           ? "w-0 opacity-0 translate-x-[-1vw] pointer-events-none"
                           : "w-auto opacity-100 translate-x-0"
@@ -411,10 +411,10 @@ export default function Sidebar() {
                     {hasSubItems && !isCollapsed && (
                       <div className="flex items-center gap-[0.3vw] flex-shrink-0">
                         <span
-                          className={`text-[0.6vw] rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
+                          className={`text-[0.65vw] rounded-full w-[1.2vw] h-[1.2vw] flex items-center justify-center transition-all duration-200 ${
                             active
                               ? "bg-blue-200/80 text-blue-800 font-medium"
-                              : "bg-slate-100 text-slate-400 font-normal"
+                              : "bg-slate-100 text-slate-400 font-medium"
                           }`}
                         >
                           {item.subItems.length}
@@ -476,18 +476,18 @@ export default function Sidebar() {
                                   <Link
                                     to={subItem.path}
                                     className={`
-                                      relative flex items-center gap-[0.6vw] px-[0.7vw] py-[0.8vh] rounded-lg text-[0.76vw]
+                                      relative flex items-center gap-[0.6vw] px-[0.7vw] py-[0.8vh] rounded-lg text-[0.81vw]
                                       transition-all duration-200 ease-out
                                       ${
                                         isSubActive
-                                          ? "bg-white text-blue-600 font-normal shadow-xs border border-blue-200"
-                                          : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-normal"
+                                          ? "bg-white text-blue-600 font-medium shadow-xs border border-blue-200"
+                                          : "text-slate-600 hover:bg-white/80 hover:text-slate-900 font-medium"
                                       }
                                     `}
                                   >
                                     <div
                                       className={`
-                                        flex-shrink-0 rounded-md flex items-center justify-center text-[0.6vw] font-medium
+                                        flex-shrink-0 rounded-md flex items-center justify-center text-[0.65vw] font-medium
                                         transition-all duration-200 w-[1.4vw] h-[1.4vw]
                                         ${
                                           isSubActive
@@ -536,7 +536,7 @@ export default function Sidebar() {
 
                   {/* Collapsed tooltip */}
                   {isCollapsed && hoveredItem === item.path && (
-                    <div className="absolute left-[120%] top-1/2 -translate-y-1/2 z-[100] bg-gray-900 text-white text-[0.75vw] font-medium px-[0.8vw] py-[0.5vh] rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
+                    <div className="absolute left-[120%] top-1/2 -translate-y-1/2 z-[100] bg-gray-900 text-white text-[0.8vw] font-medium px-[0.8vw] py-[0.5vh] rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
                       {item.label}
                       <div className="absolute right-full top-1/2 -translate-y-1/2 border-[0.4vw] border-transparent border-r-gray-900" />
                     </div>
@@ -568,7 +568,7 @@ export default function Sidebar() {
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {!isCollapsed && (
-            <span className="text-[0.76vw] font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">
+            <span className="text-[0.81vw] font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">
               Collapse menu
             </span>
           )}

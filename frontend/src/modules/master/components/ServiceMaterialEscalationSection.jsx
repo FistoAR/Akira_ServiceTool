@@ -132,15 +132,15 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
             <Wrench className="w-[0.9vw] h-[0.9vw] text-white" />
           </div>
           <div>
-            <h2 className="text-[0.9vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
+            <h2 className="text-[0.95vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
               Service Material Inward SLA
               {hasChanges && (
-                <span className="text-[0.6vw] bg-amber-50 border border-amber-200 text-amber-700 px-[0.4vw] py-[0.1vw] rounded-[0.3vw] uppercase tracking-wider font-bold">
+                <span className="text-[0.65vw] bg-amber-50 border border-amber-200 text-amber-700 px-[0.4vw] py-[0.1vw] rounded-[0.3vw] uppercase tracking-wider font-bold">
                   Pending Changes
                 </span>
               )}
             </h2>
-            <p className="text-[0.7vw] text-gray-800">
+            <p className="text-[0.75vw] text-gray-800">
               Define escalation levels, teams & SLA durations for service material cases
             </p>
           </div>
@@ -150,7 +150,7 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
             type="button"
             onClick={() => onRefresh && onRefresh("service-escalation", true)}
             disabled={isRefreshing}
-            className="flex items-center gap-[0.35vw] text-[0.68vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            className="flex items-center gap-[0.35vw] text-[0.73vw] font-semibold text-slate-600 bg-white ring-1 ring-slate-300 hover:ring-blue-400 hover:text-blue-600 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] transition-all cursor-pointer shadow-sm disabled:opacity-50"
             title="Refresh latest data from server"
           >
             <RefreshCw className={`w-[0.75vw] h-[0.75vw] ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
@@ -159,14 +159,14 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.42vw] border border-slate-400 bg-white hover:bg-slate-50 rounded-[0.4vw] text-slate-600 text-[0.78vw] font-semibold cursor-pointer transition-all"
+            className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.42vw] border border-slate-400 bg-white hover:bg-slate-50 rounded-[0.4vw] text-slate-600 text-[0.83vw] font-semibold cursor-pointer transition-all"
           >
             <RotateCcw className="w-[0.85vw] h-[0.85vw]" /> Reset
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.42vw] rounded-[0.4vw] text-[0.8vw] font-semibold cursor-pointer transition-all shadow-sm ${saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.42vw] rounded-[0.4vw] text-[0.85vw] font-semibold cursor-pointer transition-all shadow-sm ${saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
           >
             {saved ? (
               <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
@@ -180,7 +180,7 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
       <div className="p-[1.2vw]">
 
       {/* Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-[0.5vw] p-[0.8vw] mb-[1.2vw] text-[0.75vw] text-blue-800 leading-relaxed">
+      <div className="bg-blue-50 border border-blue-200 rounded-[0.5vw] p-[0.8vw] mb-[1.2vw] text-[0.8vw] text-blue-800 leading-relaxed">
         <strong>Service Material Escalation Levels:</strong> Each level auto-escalates
         to the next team if not resolved within the SLA duration. Drag to reorder,
         or select specific engineers per level for manual routing.
@@ -213,7 +213,7 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
           type="button"
           onClick={() => setShowPicker(!showPicker)}
           disabled={availableToAdd.length === 0}
-          className="flex items-center gap-[0.4vw] px-[1vw] py-[0.5vw] border-2 border-dashed border-blue-300 hover:border-blue-400 hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed rounded-[0.4vw] text-blue-600 text-[0.8vw] font-semibold cursor-pointer transition-all"
+          className="flex items-center gap-[0.4vw] px-[1vw] py-[0.5vw] border-2 border-dashed border-blue-300 hover:border-blue-400 hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed rounded-[0.4vw] text-blue-600 text-[0.85vw] font-semibold cursor-pointer transition-all"
         >
           <Plus className="w-[0.9vw] h-[0.9vw]" /> Add Level
         </button>
@@ -224,7 +224,7 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
                 key={d}
                 type="button"
                 onClick={() => addStep(d)}
-                className="w-full text-left px-[0.8vw] py-[0.5vw] hover:bg-blue-50 text-[0.78vw] font-semibold text-slate-700 border-b border-slate-400 last:border-0 cursor-pointer transition-colors"
+                className="w-full text-left px-[0.8vw] py-[0.5vw] hover:bg-blue-50 text-[0.83vw] font-semibold text-slate-700 border-b border-slate-400 last:border-0 cursor-pointer transition-colors"
               >
                 {d}
               </button>
@@ -234,7 +234,7 @@ const ServiceMaterialEscalationSection = ({ departments, onRefresh, isRefreshing
       </div>
 
       {flow.length === 0 && (
-        <div className="text-center py-[2vw] text-slate-400 text-[0.75vw]">
+        <div className="text-center py-[2vw] text-slate-400 text-[0.8vw]">
           No escalation levels configured
         </div>
       )}

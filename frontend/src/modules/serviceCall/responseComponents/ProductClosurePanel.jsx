@@ -97,12 +97,12 @@ const ProductClosurePanel = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] rounded-[0.5vw] border text-[0.75vw] font-bold ${currentBadge.bg} shadow-2xs`}
+        className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.35vw] rounded-[0.5vw] border text-[0.8vw] font-bold ${currentBadge.bg} shadow-2xs`}
       >
         {currentBadge.icon}
         <span>{currentBadge.label}</span>
         {existing.remarks && (
-          <span className="text-[0.7vw] text-slate-600 truncate max-w-[12vw] font-normal">
+          <span className="text-[0.75vw] text-slate-600 truncate max-w-[12vw] font-medium">
             - {existing.remarks}
           </span>
         )}
@@ -403,7 +403,7 @@ const ProductClosurePanel = ({
       <div className="flex flex-col gap-[0.6vw]">
         {savedBadge ? (
           <div className="flex items-center justify-between border-b border-slate-400 pb-[0.6vw]">
-            <span className="text-[0.72vw] font-normal text-slate-400 uppercase tracking-wider">
+            <span className="text-[0.77vw] font-medium text-slate-400 uppercase tracking-wider">
               Current Status
             </span>
             {savedBadge}
@@ -424,7 +424,7 @@ const ProductClosurePanel = ({
                     setNotes("");
                     setErrors({});
                   }}
-                  className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.74vw] font-normal transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
+                  className={`flex-1 min-w-0 flex items-center justify-center gap-[0.35vw] py-[0.55vw] px-[0.5vw] rounded-[0.5vw] border text-[0.79vw] font-medium transition-all cursor-pointer shadow-2xs whitespace-nowrap ${
                     isActive
                       ? t.activeStyle
                       : `bg-white border-slate-400 text-slate-700 ${t.hoverStyle}`
@@ -450,7 +450,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-blue-50 border border-blue-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-visible shadow-inner"
               >
-                <div className="text-[0.85vw] font-semibold text-blue-900">
+                <div className="text-[0.9vw] font-semibold text-blue-900">
                   Request Support / Escalate
                 </div>
                 <div className="flex flex-col gap-[0.5vw]">
@@ -469,14 +469,14 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, supportPerson: null }));
                       }}
                       placeholder="Search person or department..."
-                      className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.7vw] py-[0.55vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm ${
+                      className={`w-full border rounded-[0.5vw] pl-[2.2vw] pr-[0.7vw] py-[0.55vw] text-[0.79vw] font-medium outline-none bg-white transition-all shadow-sm ${
                         errors.supportPerson
                           ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
                           : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.supportPerson && (
-                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.7vw] font-normal mt-[0.15vw]">
+                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.75vw] font-medium mt-[0.15vw]">
                         <AlertCircle className="w-[0.7vw] h-[0.7vw]" />
                         {errors.supportPerson}
                       </div>
@@ -492,7 +492,7 @@ const ProductClosurePanel = ({
                               setShowDropdown(false);
                               setErrors((p) => ({ ...p, supportPerson: null }));
                             }}
-                            className={`px-[0.7vw] py-[0.5vw] text-[0.72vw] font-normal cursor-pointer hover:bg-blue-50/60 flex justify-between items-center transition-colors ${
+                            className={`px-[0.7vw] py-[0.5vw] text-[0.77vw] font-medium cursor-pointer hover:bg-blue-50/60 flex justify-between items-center transition-colors ${
                               selectedPerson?.userId === emp.userId
                                 ? "bg-blue-50 text-blue-900 font-medium border-l-2 border-blue-600"
                                 : "text-slate-700"
@@ -518,14 +518,14 @@ const ProductClosurePanel = ({
                         setErrors((p) => ({ ...p, notes: null }));
                       }}
                       placeholder="Provide handover notes..."
-                      className={`w-full border rounded-[0.5vw] p-[0.6vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
+                      className={`w-full border rounded-[0.5vw] p-[0.6vw] text-[0.79vw] font-medium outline-none bg-white transition-all shadow-sm resize-none ${
                         errors.notes
                           ? "border-rose-500 focus:ring-2 focus:ring-rose-100 bg-rose-50/10"
                           : "border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                       }`}
                     />
                     {errors.notes && (
-                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.7vw] font-normal mt-[0.15vw]">
+                      <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.75vw] font-medium mt-[0.15vw]">
                         <AlertCircle className="w-[0.7vw] h-[0.7vw]" />
                         {errors.notes}
                       </div>
@@ -535,7 +535,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={handleSupport}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-blue-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-blue-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.79vw] hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md shadow-blue-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -552,7 +552,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-emerald-50 border border-emerald-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-semibold text-emerald-900">
+                <div className="text-[0.9vw] font-semibold text-emerald-900">
                   Resolution Details
                 </div>
                 <div>
@@ -564,14 +564,14 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter details of fixed parts, logical adjustments, or resolution explanation..."
-                    className={`w-full border rounded-[0.5vw] p-[0.8vw] text-[0.74vw] font-normal outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-[0.5vw] p-[0.8vw] text-[0.79vw] font-medium outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.77vw] font-bold mt-[0.1vw]">
                       <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
                       {errors.remarks}
                     </div>
@@ -580,7 +580,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Resolved")}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-emerald-600 to-teal-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md shadow-emerald-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-emerald-600 to-teal-600 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.79vw] hover:from-emerald-700 hover:to-teal-700 transition-all shadow-md shadow-emerald-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -597,7 +597,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-amber-50 border border-amber-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-semibold text-amber-900">
+                <div className="text-[0.9vw] font-semibold text-amber-900">
                   Pending Reason
                 </div>
                 <div>
@@ -609,14 +609,14 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Why is this call pending? (e.g., waiting for parts, client unavailable)"
-                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.8vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-amber-400 focus:ring-4 focus:ring-amber-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.77vw] font-bold mt-[0.1vw]">
                       <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
                       {errors.remarks}
                     </div>
@@ -625,7 +625,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Pending")}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-amber-500 to-orange-500 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.74vw] hover:from-amber-600 hover:to-orange-655 transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-amber-500 to-orange-500 text-white disabled:opacity-70 rounded-[0.5vw] font-medium text-[0.79vw] hover:from-amber-600 hover:to-orange-655 transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -673,23 +673,23 @@ const ProductClosurePanel = ({
                 className="bg-rose-50 border border-rose-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-[0.85vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
+                  <div className="text-[0.9vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
                     <RotateCcw className="w-[0.9vw] h-[0.9vw]" /> Reverse Escalate (Send Back)
                   </div>
-                  <span className="text-[0.68vw] bg-rose-100 text-rose-800 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-rose-200">
+                  <span className="text-[0.73vw] bg-rose-100 text-rose-800 px-[0.45vw] py-[0.1vw] rounded font-semibold border border-rose-200">
                     Returns with SLA
                   </span>
                 </div>
                 {reverseTargetInfo.targetName && (
                   <div className="bg-white/95 border border-rose-200 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] flex items-center justify-between shadow-2xs">
-                    <span className="text-[0.72vw] text-slate-600 font-medium">
+                    <span className="text-[0.77vw] text-slate-600 font-medium">
                       Will be returned back to:
                     </span>
-                    <span className="text-[0.76vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
+                    <span className="text-[0.81vw] font-bold text-rose-900 flex items-center gap-[0.35vw]">
                       <span className="w-[0.45vw] h-[0.45vw] rounded-full bg-rose-600 inline-block"></span>
                       {reverseTargetInfo.targetName}
                       {reverseTargetInfo.targetDept && (
-                        <span className="text-[0.66vw] font-medium text-slate-500 font-mono">
+                        <span className="text-[0.71vw] font-medium text-slate-500 font-mono">
                           ({reverseTargetInfo.targetDept})
                         </span>
                       )}
@@ -705,14 +705,14 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter reason for sending this call back to the previous engineer..."
-                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.8vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-rose-400 focus:ring-4 focus:ring-rose-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.77vw] font-bold mt-[0.1vw]">
                       <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
                       {errors.remarks}
                     </div>
@@ -737,7 +737,7 @@ const ProductClosurePanel = ({
                       setIsSubmitting(false);
                     }
                   }}
-                  className="w-full py-[0.55vw] bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-[0.5vw] font-medium text-[0.74vw] transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.55vw] bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white disabled:opacity-60 rounded-[0.5vw] font-medium text-[0.79vw] transition-all shadow-md shadow-rose-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
@@ -756,7 +756,7 @@ const ProductClosurePanel = ({
                 exit={{ height: 0, opacity: 0 }}
                 className="bg-purple-50 border border-purple-300 rounded-[0.6vw] p-[0.8vw] space-y-[0.7vw] overflow-hidden shadow-inner"
               >
-                <div className="text-[0.85vw] font-bold text-purple-900">
+                <div className="text-[0.9vw] font-bold text-purple-900">
                   Return to Assigned Person
                 </div>
                 <div>
@@ -768,14 +768,14 @@ const ProductClosurePanel = ({
                       setErrors((p) => ({ ...p, remarks: null }));
                     }}
                     placeholder="Enter reason or instructions for returning this request..."
-                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.75vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
+                    className={`w-full border rounded-[0.5vw] p-[0.7vw] text-[0.8vw] font-semibold outline-none bg-white transition-all shadow-sm resize-none ${
                       errors.remarks
                         ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                         : "border-slate-400 focus:border-purple-400 focus:ring-4 focus:ring-purple-100"
                     }`}
                   />
                   {errors.remarks && (
-                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+                    <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.77vw] font-bold mt-[0.1vw]">
                       <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
                       {errors.remarks}
                     </div>
@@ -784,7 +784,7 @@ const ProductClosurePanel = ({
                 <button
                   disabled={isSubmitting}
                   onClick={() => handleUpdate("Returned")}
-                  className="w-full py-[0.6vw] bg-gradient-to-r from-purple-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.75vw] hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md shadow-purple-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
+                  className="w-full py-[0.6vw] bg-gradient-to-r from-purple-600 to-indigo-600 text-white disabled:opacity-70 rounded-[0.5vw] font-bold text-[0.8vw] hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md shadow-purple-500/10 cursor-pointer flex items-center justify-center gap-[0.4vw]"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />

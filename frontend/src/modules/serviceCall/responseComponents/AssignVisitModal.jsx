@@ -61,7 +61,7 @@ export const AssignVisitModal = ({
   const formBody = (
     <div className="flex flex-col gap-[0.9vw]">
       <div className="flex flex-col gap-[0.3vw] relative" ref={dropdownRef}>
-        <label className="text-[0.85vw] font-normal text-slate-800">
+        <label className="text-[0.9vw] font-medium text-slate-800">
           Assign To *
         </label>
         <div className="relative flex items-center">
@@ -82,7 +82,7 @@ export const AssignVisitModal = ({
             }}
             onFocus={() => setShowDropdown(true)}
             placeholder="Search and select specialist..."
-            className={`w-full border pl-[2vw] p-[0.6vw] text-[0.85vw] outline-none bg-white transition-all shadow-sm ${
+            className={`w-full border pl-[2vw] p-[0.6vw] text-[0.9vw] outline-none bg-white transition-all shadow-sm ${
               errors.assignedTo
                 ? "border-rose-500 rounded-[0.5vw] focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
                 : showDropdown
@@ -92,7 +92,7 @@ export const AssignVisitModal = ({
           />
         </div>
         {errors.assignedTo && (
-          <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+          <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.77vw] font-bold mt-[0.1vw]">
             <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
             {errors.assignedTo}
           </div>
@@ -110,7 +110,7 @@ export const AssignVisitModal = ({
                     setShowDropdown(false);
                     setErrors((p) => ({ ...p, assignedTo: null }));
                   }}
-                  className={`p-[0.6vw] flex items-center justify-between rounded-[0.4vw] cursor-pointer font-bold text-[0.85vw] transition-colors ${
+                  className={`p-[0.6vw] flex items-center justify-between rounded-[0.4vw] cursor-pointer font-bold text-[0.9vw] transition-colors ${
                     form.assignedTo === emp.userId
                       ? "bg-indigo-50 text-indigo-800"
                       : "text-slate-700 hover:bg-slate-100"
@@ -118,7 +118,7 @@ export const AssignVisitModal = ({
                 >
                   <div className="flex flex-col">
                     <span>{emp.name}</span>
-                    <span className="text-[0.75vw] text-slate-500 font-semibold">
+                    <span className="text-[0.8vw] text-slate-500 font-semibold">
                       {emp.department}
                     </span>
                   </div>
@@ -128,7 +128,7 @@ export const AssignVisitModal = ({
                 </div>
               ))
             ) : (
-              <div className="p-[0.8vw] text-center text-[0.75vw] text-slate-500 italic font-bold">
+              <div className="p-[0.8vw] text-center text-[0.8vw] text-slate-500 italic font-bold">
                 No matching personnel found
               </div>
             )}
@@ -137,7 +137,7 @@ export const AssignVisitModal = ({
       </div>
 
       <div className="flex flex-col gap-[0.3vw]">
-        <label className="text-[0.85vw] font-normal text-slate-800">
+        <label className="text-[0.9vw] font-medium text-slate-800">
           {isFV ? "Scheduled Visit Date *" : "Received Date *"}
         </label>
         <input
@@ -145,14 +145,14 @@ export const AssignVisitModal = ({
           value={form.visitDate}
           min={new Date().toISOString().split("T")[0]}
           onChange={(e) => sf("visitDate", e.target.value)}
-          className={`border rounded-[0.5vw] p-[0.6vw] text-[0.85vw] font-normal outline-none transition-all bg-white shadow-2xs text-slate-800 ${
+          className={`border rounded-[0.5vw] p-[0.6vw] text-[0.9vw] font-medium outline-none transition-all bg-white shadow-2xs text-slate-800 ${
             errors.visitDate
               ? "border-rose-500 focus:ring-4 focus:ring-rose-100 bg-rose-50/20"
               : "border-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
           }`}
         />
         {errors.visitDate && (
-          <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.72vw] font-bold mt-[0.1vw]">
+          <div className="flex items-center gap-[0.25vw] text-rose-600 text-[0.77vw] font-bold mt-[0.1vw]">
             <AlertCircle className="w-[0.72vw] h-[0.72vw]" />
             {errors.visitDate}
           </div>
@@ -160,7 +160,7 @@ export const AssignVisitModal = ({
       </div>
 
       <div className="flex flex-col gap-[0.3vw]">
-        <label className="text-[0.85vw] font-normal text-slate-800">
+        <label className="text-[0.9vw] font-medium text-slate-800">
           Diagnosis Summary
         </label>
         <textarea
@@ -168,7 +168,7 @@ export const AssignVisitModal = ({
           value={form.diagnosisSummary}
           onChange={(e) => sf("diagnosisSummary", e.target.value)}
           placeholder="Initial findings or instructions for the field visit..."
-          className="border border-slate-400 rounded-[0.5vw] p-[0.6vw] text-[0.78vw] font-semibold outline-none resize-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all bg-white"
+          className="border border-slate-400 rounded-[0.5vw] p-[0.6vw] text-[0.83vw] font-semibold outline-none resize-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all bg-white"
         />
       </div>
     </div>
@@ -200,7 +200,7 @@ export const AssignVisitModal = ({
           setIsSubmitting(false);
         }
       }}
-      className="px-[1.2vw] py-[0.5vw] bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 text-white rounded-[0.5vw] text-[0.8vw] font-bold cursor-pointer flex items-center justify-center gap-[0.4vw] transition-colors shadow-md shadow-indigo-600/15"
+      className="px-[1.2vw] py-[0.5vw] bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 text-white rounded-[0.5vw] text-[0.85vw] font-bold cursor-pointer flex items-center justify-center gap-[0.4vw] transition-colors shadow-md shadow-indigo-600/15"
     >
       {isSubmitting ? (
         <Loader2 className="w-[0.85vw] h-[0.85vw] animate-spin" />
@@ -215,7 +215,7 @@ export const AssignVisitModal = ({
     return (
       <div className="border border-indigo-300 rounded-[0.6vw] overflow-hidden bg-white mt-[0.6vw] shadow-sm">
         <div className="bg-slate-50 border-b border-indigo-300 px-[0.8vw] py-[0.5vw] flex justify-between items-center">
-          <span className="text-[0.85vw] font-semibold text-slate-800">
+          <span className="text-[0.9vw] font-semibold text-slate-800">
             Assign {type}
           </span>
         </div>
@@ -235,7 +235,7 @@ export const AssignVisitModal = ({
         className="bg-white w-[38vw] rounded-[1vw] shadow-2xl overflow-hidden border border-slate-400"
       >
         <div className="border-b border-slate-400 px-[1.4vw] py-[1vw] flex justify-between items-center bg-slate-50">
-          <h3 className="text-[1vw] font-bold text-slate-850">Assign {type}</h3>
+          <h3 className="text-[1.05vw] font-bold text-slate-850">Assign {type}</h3>
           <button
             onClick={onClose}
             className="text-slate-550 hover:text-slate-800 p-[0.3vw] hover:bg-slate-100 rounded-full transition-all"
@@ -247,7 +247,7 @@ export const AssignVisitModal = ({
         <div className="px-[1.4vw] py-[0.8vw] border-t border-slate-400 flex justify-end gap-[0.7vw] bg-slate-50">
           <button
             onClick={onClose}
-            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.8vw] font-bold bg-white hover:bg-slate-100 transition-colors shadow-sm"
+            className="px-[1.2vw] py-[0.5vw] border border-slate-400 rounded-[0.5vw] text-[0.85vw] font-bold bg-white hover:bg-slate-100 transition-colors shadow-sm"
           >
             Cancel
           </button>

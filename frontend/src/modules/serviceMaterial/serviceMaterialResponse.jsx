@@ -101,9 +101,9 @@ const Badge = ({ label, color = "gray", size = "sm" }) => {
     purple: "bg-purple-50 text-purple-700 border-purple-200",
   };
   const sizeMap = {
-    xs: "text-[0.58vw] px-[0.35vw] py-[0.08vw]",
-    sm: "text-[0.65vw] px-[0.45vw] py-[0.12vw]",
-    md: "text-[0.72vw] px-[0.55vw] py-[0.15vw]",
+    xs: "text-[0.63vw] px-[0.35vw] py-[0.08vw]",
+    sm: "text-[0.7vw] px-[0.45vw] py-[0.12vw]",
+    md: "text-[0.77vw] px-[0.55vw] py-[0.15vw]",
   };
   return (
     <span
@@ -165,11 +165,11 @@ const RefInput = ({ label, value, icon: Icon, span = 1 }) => (
   <div
     className={`flex flex-col gap-[0.25vw] ${span === 2 ? "col-span-2" : span === 3 ? "col-span-3" : span === 4 ? "col-span-4" : ""}`}
   >
-    <label className="text-[0.75vw] font-semibold text-black flex items-start gap-[0.25vw] text-black">
+    <label className="text-[0.8vw] font-semibold text-black flex items-start gap-[0.25vw] text-black">
       {/* {Icon && <Icon className="w-[0.8vw] h-[0.8vw]" />} */}
       {label}
     </label>
-    <div className="bg-white border-r border-b border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden">
+    <div className="bg-white border-r border-b border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.85vw] text-gray-900 break-words whitespace-normal overflow-hidden">
       {value || "—"}
     </div>
   </div>
@@ -214,7 +214,7 @@ const StatsBar = ({
               key={label}
               type="button"
               onClick={() => onFilterChange(label)}
-              className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+              className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.8vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                 isActive
                   ? "bg-blue-600 text-white shadow-xs font-semibold"
                   : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -225,7 +225,7 @@ const StatsBar = ({
                 {label}
               </span>
               <span
-                className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
                   isActive
                     ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                     : "text-slate-400"
@@ -239,7 +239,7 @@ const StatsBar = ({
       </div>
 
       <div className="flex items-center gap-[1.2vw]">
-        <div className="text-[0.72vw] text-blue-700 font-semibold bg-blue-50 border border-blue-200 px-[0.8vw] py-[0.38vw] rounded-full shadow-sm">
+        <div className="text-[0.77vw] text-blue-700 font-semibold bg-blue-50 border border-blue-200 px-[0.8vw] py-[0.38vw] rounded-full shadow-sm">
           Total Claimed: {totalClaimed}
         </div>
       </div>
@@ -257,10 +257,10 @@ const EmptyState = () => (
     <div className="w-[4vw] h-[4vw] rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-[1vw]">
       <Package className="w-[2vw] h-[2vw] text-gray-800" />
     </div>
-    <h3 className="text-[1vw] font-semibold text-gray-700 mb-[0.3vw]">
+    <h3 className="text-[1.05vw] font-semibold text-gray-700 mb-[0.3vw]">
       No Products Assigned
     </h3>
-    <p className="text-[0.75vw] text-gray-800 text-center max-w-[18vw]">
+    <p className="text-[0.8vw] text-gray-800 text-center max-w-[18vw]">
       You don't have any inward products assigned to you at the moment.
     </p>
   </motion.div>
@@ -269,7 +269,7 @@ const EmptyState = () => (
 const ClaimButton = ({ onClaim }) => (
   <button
     onClick={onClaim}
-    className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.85vw] font-semibold cursor-pointer transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/10 hover:bg-emerald-700 hover:scale-105 active:scale-95"
+    className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.9vw] font-semibold cursor-pointer transition-all bg-emerald-600 text-white shadow-md shadow-emerald-900/10 hover:bg-emerald-700 hover:scale-105 active:scale-95"
   >
     <Plus className="w-[0.75vw] h-[0.75vw]" />
     Claim Item
@@ -1727,7 +1727,7 @@ export default function ServiceMaterialInwardResponse({
       </datalist>
       {/* ── Search & Filter Controls Toolbar ────────────────────────────────────── */}
       <div className="bg-white rounded-full border-[1.5px] border-slate-400 status-pills-track shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] mb-[0.6vw] px-[0.7vw] py-[0.4vw] flex-shrink-0 transition-all">
-        <div className="flex items-center justify-between gap-[0.6vw] flex-nowrap w-full text-[0.7vw]">
+        <div className="flex items-center justify-between gap-[0.6vw] flex-nowrap w-full text-[0.75vw]">
           {/* Left Controls: Search, Serials & More Filters Toggle */}
           <div className="flex items-center gap-[0.5vw] flex-1 min-w-0">
             {/* Search Input */}
@@ -1738,7 +1738,7 @@ export default function ServiceMaterialInwardResponse({
                 placeholder="Search product, customer, ref no…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
               {searchTerm && (
                 <button
@@ -1755,7 +1755,7 @@ export default function ServiceMaterialInwardResponse({
               <button
                 type="button"
                 onClick={openSerialModal}
-                className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
+                className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.38vw] rounded-[0.4vw] border text-[0.77vw] font-semibold cursor-pointer transition-all shadow-sm ${
                   activeSerials.length > 0 || showSerialFilterModal
                     ? "bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100"
                     : "bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50/60 hover:border-indigo-300"
@@ -1765,7 +1765,7 @@ export default function ServiceMaterialInwardResponse({
                 <ListFilter className="w-[0.85vw] h-[0.85vw]" />
                 <span>Filter Serials</span>
                 {activeSerials.length > 0 && (
-                  <span className="px-[0.35vw] py-[0.05vw] rounded-full text-[0.6vw] font-bold bg-white text-indigo-700 shadow-xs">
+                  <span className="px-[0.35vw] py-[0.05vw] rounded-full text-[0.65vw] font-bold bg-white text-indigo-700 shadow-xs">
                     {activeSerials.length}
                   </span>
                 )}
@@ -1781,11 +1781,11 @@ export default function ServiceMaterialInwardResponse({
                 <div className="absolute left-0 top-full mt-[0.4vw] w-[19vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.6vw] animate-in fade-in zoom-in-95 duration-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-[0.3vw]">
-                        <span className="text-[0.72vw] font-bold text-slate-800">
+                        <span className="text-[0.77vw] font-bold text-slate-800">
                           Filter Serial Numbers
                         </span>
                         {tempSerialInput.trim() && (
-                          <span className="text-[0.62vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.35vw] py-[0.05vw] rounded">
+                          <span className="text-[0.67vw] font-semibold text-indigo-600 bg-indigo-50 px-[0.35vw] py-[0.05vw] rounded">
                             {
                               tempSerialInput
                                 .split(/[,\s\n]+/)
@@ -1810,11 +1810,11 @@ export default function ServiceMaterialInwardResponse({
                       value={tempSerialInput}
                       onChange={(e) => setTempSerialInput(e.target.value)}
                       placeholder="Paste serial numbers (one per line, comma or space separated)"
-                      className="w-full p-[0.6vw] border border-slate-300 rounded-[0.4vw] text-[0.72vw] font-mono text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 resize-none shadow-2xs placeholder:font-sans placeholder:text-slate-400"
+                      className="w-full p-[0.6vw] border border-slate-300 rounded-[0.4vw] text-[0.77vw] font-mono text-slate-800 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-100 resize-none shadow-2xs placeholder:font-sans placeholder:text-slate-400"
                       autoFocus
                     />
 
-                    <div className="flex items-center justify-between pt-[0.2vw] text-[0.68vw]">
+                    <div className="flex items-center justify-between pt-[0.2vw] text-[0.73vw]">
                       <button
                         type="button"
                         onClick={() => {
@@ -1853,7 +1853,7 @@ export default function ServiceMaterialInwardResponse({
               <button
                 type="button"
                 onClick={() => setShowFiltersPanel((p) => !p)}
-                className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.38vw] rounded-[0.4vw] border text-[0.72vw] font-semibold cursor-pointer transition-all shadow-sm ${
+                className={`flex items-center gap-[0.4vw] px-[0.7vw] py-[0.38vw] rounded-[0.4vw] border text-[0.77vw] font-semibold cursor-pointer transition-all shadow-sm ${
                   showFiltersPanel || (dateFrom || dateTo || showOnlyUnclaimed || showOnlyUnsaved)
                     ? "bg-blue-50 border-blue-300 text-blue-700 shadow-blue-50"
                     : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
@@ -1882,15 +1882,15 @@ export default function ServiceMaterialInwardResponse({
                   <div className="absolute left-0 top-full mt-[0.4vw] w-[18vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.85vw] flex flex-col gap-[0.7vw] animate-in fade-in zoom-in-95 duration-100">
                     {/* Date Range */}
                     <div>
-                      <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.25vw]">
+                      <label className="block text-[0.75vw] text-slate-700 font-semibold mb-[0.25vw]">
                         Date Range
                       </label>
-                      <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[2vw] px-[0.5vw] text-[0.7vw] hover:border-slate-400 transition-colors">
+                      <div className="flex items-center justify-between bg-white border border-slate-300 rounded-[0.35vw] h-[2vw] px-[0.5vw] text-[0.75vw] hover:border-slate-400 transition-colors">
                         <input
                           type="date"
                           value={dateFrom}
                           onChange={(e) => setDateFrom(e.target.value)}
-                          className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                          className="bg-transparent text-slate-700 font-medium outline-none cursor-pointer flex-1 min-w-0"
                         />
                         <span className="text-slate-400 mx-[0.25vw] shrink-0">—</span>
                         <input
@@ -1898,14 +1898,14 @@ export default function ServiceMaterialInwardResponse({
                           value={dateTo}
                           min={dateFrom}
                           onChange={(e) => setDateTo(e.target.value)}
-                          className="bg-transparent text-slate-700 font-normal outline-none cursor-pointer flex-1 min-w-0"
+                          className="bg-transparent text-slate-700 font-medium outline-none cursor-pointer flex-1 min-w-0"
                         />
                       </div>
                     </div>
 
                     {/* Quick Views */}
                     <div>
-                      <label className="block text-[0.7vw] text-slate-700 font-semibold mb-[0.3vw]">
+                      <label className="block text-[0.75vw] text-slate-700 font-semibold mb-[0.3vw]">
                         Quick Views
                       </label>
                       {filterStatus === "All" ? (
@@ -1916,7 +1916,7 @@ export default function ServiceMaterialInwardResponse({
                               setShowOnlyUnclaimed((prev) => !prev);
                               if (!showOnlyUnclaimed) setShowOnlyUnsaved(false);
                             }}
-                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.72vw] font-semibold cursor-pointer transition-all ${
+                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.77vw] font-semibold cursor-pointer transition-all ${
                               showOnlyUnclaimed
                                 ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                                 : "bg-slate-50/80 border-slate-200 text-slate-700 hover:bg-slate-100"
@@ -1936,7 +1936,7 @@ export default function ServiceMaterialInwardResponse({
                               setShowOnlyUnsaved((prev) => !prev);
                               if (!showOnlyUnsaved) setShowOnlyUnclaimed(false);
                             }}
-                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.72vw] font-semibold cursor-pointer transition-all ${
+                            className={`flex items-center gap-[0.4vw] px-[0.65vw] py-[0.4vw] rounded-[0.35vw] border text-[0.77vw] font-semibold cursor-pointer transition-all ${
                               showOnlyUnsaved
                                 ? "bg-blue-600 border-blue-600 text-white shadow-xs"
                                 : "bg-slate-50/80 border-slate-200 text-slate-700 hover:bg-slate-100"
@@ -1951,7 +1951,7 @@ export default function ServiceMaterialInwardResponse({
                           </button>
                         </div>
                       ) : (
-                        <div className="text-[0.68vw] text-slate-400 italic bg-slate-50 p-[0.4vw] rounded-[0.3vw] border border-slate-200">
+                        <div className="text-[0.73vw] text-slate-400 italic bg-slate-50 p-[0.4vw] rounded-[0.3vw] border border-slate-200">
                           Quick views available on 'All' tab
                         </div>
                       )}
@@ -1968,7 +1968,7 @@ export default function ServiceMaterialInwardResponse({
                             setShowOnlyUnclaimed(false);
                             setShowOnlyUnsaved(false);
                           }}
-                          className="inline-flex items-center gap-[0.25vw] text-[0.7vw] font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer py-[0.1vw]"
+                          className="inline-flex items-center gap-[0.25vw] text-[0.75vw] font-semibold text-rose-600 hover:text-rose-700 transition-colors cursor-pointer py-[0.1vw]"
                         >
                           <X className="w-[0.7vw] h-[0.7vw]" />
                           <span>Reset Filters</span>
@@ -1976,7 +1976,7 @@ export default function ServiceMaterialInwardResponse({
                         <button
                           type="button"
                           onClick={() => setShowFiltersPanel(false)}
-                          className="px-[0.65vw] py-[0.25vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.7vw] rounded-[0.3vw] cursor-pointer shadow-2xs"
+                          className="px-[0.65vw] py-[0.25vw] bg-blue-600 hover:bg-blue-700 text-white font-bold text-[0.75vw] rounded-[0.3vw] cursor-pointer shadow-2xs"
                         >
                           Done
                         </button>
@@ -2014,14 +2014,14 @@ export default function ServiceMaterialInwardResponse({
         <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 overflow-hidden">
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-collapse">
-              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
                 <tr className="bg-[#E9EDF7]">
                   {columns.map((col) => {
                     const isAction = col.key === "action";
                     return (
                       <th
                         key={col.key}
-                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
+                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.79vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
                       >
                         {col.label}
                       </th>
@@ -2034,7 +2034,7 @@ export default function ServiceMaterialInwardResponse({
                   <td colSpan={columns.length} className="text-center py-[6vw]">
                     <div className="flex flex-col items-center gap-[0.7vw]">
                       <Loader2 className="w-[1.8vw] h-[1.8vw] text-blue-600 animate-spin" />
-                      <span className="text-[0.82vw] font-semibold text-gray-500">
+                      <span className="text-[0.87vw] font-semibold text-gray-500">
                         Loading service material data…
                       </span>
                     </div>
@@ -2052,14 +2052,14 @@ export default function ServiceMaterialInwardResponse({
           <div ref={tableContainerRef} className="overflow-auto flex-1 min-h-0">
             <table className="w-full min-w-max border-collapse">
               {/* Table Header */}
-              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+              <thead className="bg-[#E9EDF7] sticky top-0 z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
                 <tr className="bg-[#E9EDF7]">
                   {columns.map((col) => {
                     const isAction = col.key === "action";
                     return (
                       <th
                         key={col.key}
-                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
+                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.79vw] whitespace-nowrap border-r border-slate-300 sticky ${isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"}`}
                       >
                         {col.label}
                       </th>
@@ -2148,7 +2148,7 @@ export default function ServiceMaterialInwardResponse({
                             >
                               <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
                                 <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
-                                <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
+                                <span className="font-semibold text-slate-800 text-[0.87vw] tracking-wide">
                                   {entry.customerName}
                                 </span>
 
@@ -2170,35 +2170,35 @@ export default function ServiceMaterialInwardResponse({
                                   <div className="flex items-center gap-[0.4vw] flex-wrap animate-in fade-in duration-200">
                                     {/* Customer Code */}
                                     {entry.customerCode && (
-                                      <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.3vw]">
+                                      <span className="text-[0.7vw] text-slate-500 font-medium ml-[0.3vw]">
                                         Code: {entry.customerCode}
                                       </span>
                                     )}
 
                                     {/* Ref No (Customer) */}
                                     {entry.refNoCustomer && (
-                                      <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-[0.75vw] font-medium bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                         Cust Ref: {entry.refNoCustomer}
                                       </span>
                                     )}
 
                                     {/* Ref No (Internal) */}
                                     {entry.refNoInternal && (
-                                      <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-[0.75vw] font-medium bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                         Int Ref: {entry.refNoInternal}
                                       </span>
                                     )}
 
                                     {/* Category (Cus Type) */}
                                     {entry.category && (
-                                      <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-[0.75vw] font-medium text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                         Type: {entry.category}
                                       </span>
                                     )}
 
                                     {/* Unit */}
                                     {entry.unit && (
-                                      <span className="text-[0.7vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                      <span className="text-[0.75vw] font-medium text-teal-700 bg-teal-50 border border-teal-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                         Unit: {entry.unit}
                                       </span>
                                     )}
@@ -2217,12 +2217,12 @@ export default function ServiceMaterialInwardResponse({
                               >
                                 <div className="flex items-center gap-[1.2vw] flex-wrap sticky left-0 w-fit px-[1vw] py-[0.55vw] bg-amber-50 z-10">
                                   <div className="flex items-center gap-[0.45vw]">
-                                    <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.74vw] font-semibold shadow-2xs">
+                                    <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.79vw] font-semibold shadow-2xs">
                                       <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
                                       Admin Returned / Declined
                                     </span>
                                     <span
-                                      className={`inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.7vw] font-medium ${
+                                      className={`inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.75vw] font-medium ${
                                         product.finalStatus === "Hold"
                                           ? "bg-rose-100 text-rose-800 border-rose-300"
                                           : product.finalStatus ===
@@ -2243,7 +2243,7 @@ export default function ServiceMaterialInwardResponse({
                                     if (!rawTimestamp) return null;
 
                                     return (
-                                      <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-700 font-medium bg-white border border-amber-200 px-[0.6vw] py-[0.2vw] rounded shadow-2xs">
+                                      <span className="inline-flex items-center gap-[0.35vw] text-[0.79vw] text-slate-700 font-medium bg-white border border-amber-200 px-[0.6vw] py-[0.2vw] rounded shadow-2xs">
                                         <Icon icon="solar:calendar-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
                                         {(() => {
                                           const dt = new Date(rawTimestamp);
@@ -2261,12 +2261,12 @@ export default function ServiceMaterialInwardResponse({
                                     );
                                   })()}
                                   {product.finalStatusRemarks && (
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-800 font-normal bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.79vw] text-slate-800 font-medium bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
                                       <Icon icon="solar:chat-round-dots-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
                                       <span className="font-medium text-slate-900">Admin Reason:</span> {product.finalStatusRemarks}
                                     </span>
                                   )}
-                                  <span className="text-[0.72vw] text-amber-900 font-normal ml-auto">
+                                  <span className="text-[0.77vw] text-amber-900 font-medium ml-auto">
                                     Please edit and click Re-Submit to return to Admin
                                   </span>
                                 </div>
@@ -2283,7 +2283,7 @@ export default function ServiceMaterialInwardResponse({
                         >
                           {/* S.No */}
                           <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
-                            <span className="inline-flex items-center justify-center w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 text-[0.68vw] font-semibold text-gray-600">
+                            <span className="inline-flex items-center justify-center w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 text-[0.73vw] font-semibold text-gray-600">
                               {(currentPage - 1) * itemsPerPage + idx + 1}
                             </span>
                           </td>
@@ -2291,7 +2291,7 @@ export default function ServiceMaterialInwardResponse({
                           {/* Date */}
                           <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
                             <div className="flex items-center gap-[0.3vw]">
-                              <span className="text-[0.78vw] font-medium text-slate-800 whitespace-nowrap">
+                              <span className="text-[0.83vw] font-medium text-slate-800 whitespace-nowrap">
                                 {entry.date ? fmtDate(entry.date) : "—"}
                               </span>
                             </div>
@@ -2299,7 +2299,7 @@ export default function ServiceMaterialInwardResponse({
 
                           {/* Ref No */}
                           <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <span className="text-[0.78vw] font-medium text-black whitespace-nowrap">
+                            <span className="text-[0.83vw] font-medium text-black whitespace-nowrap">
                               {entry.refNoCustomer || entry.refNo || "—"}
                             </span>
                           </td>
@@ -2308,12 +2308,12 @@ export default function ServiceMaterialInwardResponse({
                           <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
                             <div className="min-w-[10vw]">
                               <div
-                                className="text-[0.78vw] font-medium text-black break-words whitespace-normal"
+                                className="text-[0.83vw] font-medium text-black break-words whitespace-normal"
                                 title={product.productDescription}
                               >
                                 {product.productDescription}
                               </div>
-                              <div className="text-[0.66vw] text-slate-700 mt-[.2vw] font-medium">
+                              <div className="text-[0.71vw] text-slate-700 mt-[.2vw] font-medium">
                                 {product.productCode || "—"}
                               </div>
                             </div>
@@ -2321,7 +2321,7 @@ export default function ServiceMaterialInwardResponse({
 
                           {/* Board Type */}
                           <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                            <span className="text-[0.78vw] font-medium text-black whitespace-nowrap">
+                            <span className="text-[0.83vw] font-medium text-black whitespace-nowrap">
                               {product.boardType || "—"}
                             </span>
                           </td>
@@ -2329,7 +2329,7 @@ export default function ServiceMaterialInwardResponse({
                           {/* Serial No */}
                           <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
                             <div className="flex items-center justify-between gap-[0.35vw] whitespace-nowrap group/sn w-full">
-                              <span className="text-[0.78vw] font-medium text-black truncate">
+                              <span className="text-[0.83vw] font-medium text-black truncate">
                                 {product.serialNumber || "—"}
                               </span>
                               {product.serialNumber && (
@@ -2368,11 +2368,11 @@ export default function ServiceMaterialInwardResponse({
                                   options={employees
                                     .filter((emp) => emp.role === "User")
                                     .map((e) => ({ value: e.name, label: e.name }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap">
+                              <span className="text-[0.8vw] whitespace-nowrap">
                                 {product.report?.testedBy || "—"}
                               </span>
                             )}
@@ -2398,11 +2398,11 @@ export default function ServiceMaterialInwardResponse({
                                   options={employees
                                     .filter((emp) => emp.role === "User")
                                     .map((e) => ({ value: e.name, label: e.name }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap">
+                              <span className="text-[0.8vw] whitespace-nowrap">
                                 {product.report?.fqaBy || "—"}
                               </span>
                             )}
@@ -2427,11 +2427,11 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt.name,
                                     label: opt.name,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap font-medium text-slate-800">
+                              <span className="text-[0.8vw] whitespace-nowrap font-medium text-slate-800">
                                 {product.report?.fourMCategory || "—"}
                               </span>
                             )}
@@ -2452,11 +2452,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("errorCode", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="Code..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] whitespace-nowrap font-medium text-slate-800">
+                              <span className="text-[0.8vw] whitespace-nowrap font-medium text-slate-800">
                                 {product.report?.errorCode || "—"}
                               </span>
                             )}
@@ -2477,11 +2477,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("problemDescription", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
                                 placeholder="Problem..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.problemDescription || "—"}
                               </span>
                             )}
@@ -2499,11 +2499,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.pv !== undefined ? draft.pv : (draft.pvCv ? draft.pvCv.split(',')[0]?.trim() : "")}
                                 onChange={(e) => hc("pv", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="PV..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.pv || (product.report?.pvCv ? product.report.pvCv.split(',')[0]?.trim() : "—")}
                               </span>
                             )}
@@ -2521,11 +2521,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.cv !== undefined ? draft.cv : (draft.pvCv ? draft.pvCv.split(',')[1]?.trim() : "")}
                                 onChange={(e) => hc("cv", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[6vw]"
                                 placeholder="CV..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.cv || (product.report?.pvCv ? product.report.pvCv.split(',')[1]?.trim() : "—")}
                               </span>
                             )}
@@ -2545,11 +2545,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("designators", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="Designator..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.designators || "—"}
                               </span>
                             )}
@@ -2569,11 +2569,11 @@ export default function ServiceMaterialInwardResponse({
                                   hc("rootCause", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Root Cause..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.rootCause || "—"}
                               </span>
                             )}
@@ -2591,11 +2591,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.faultParts || ""}
                                 onChange={(e) => hc("faultParts", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[9vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[9vw]"
                                 placeholder="Fault Parts..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.faultParts || "—"}
                               </span>
                             )}
@@ -2615,11 +2615,11 @@ export default function ServiceMaterialInwardResponse({
                                   hc("partsReplacement", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Parts..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.partsReplacement || "—"}
                               </span>
                             )}
@@ -2639,11 +2639,11 @@ export default function ServiceMaterialInwardResponse({
                                   hc("correctiveAction", e.target.value)
                                 }
                                 rows={1}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw] resize-y min-h-[1.5vw]"
                                 placeholder="Action..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.correctiveAction || "—"}
                               </span>
                             )}
@@ -2661,11 +2661,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.timeInHours || ""}
                                 onChange={(e) => hc("timeInHours", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-center min-w-[5vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-center min-w-[5vw]"
                                 placeholder="Hrs e.g. 2.5"
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800 whitespace-nowrap">
+                              <span className="text-[0.8vw] font-medium text-slate-800 whitespace-nowrap">
                                 {product.report?.timeInHours ? `${product.report.timeInHours} hrs` : "—"}
                               </span>
                             )}
@@ -2683,11 +2683,11 @@ export default function ServiceMaterialInwardResponse({
                                 type="text"
                                 value={draft.materialCost || ""}
                                 onChange={(e) => hc("materialCost", e.target.value)}
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-right min-w-[6vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-right min-w-[6vw]"
                                 placeholder="Cost e.g. 1500"
                               />
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800 whitespace-nowrap">
+                              <span className="text-[0.8vw] font-medium text-slate-800 whitespace-nowrap">
                                 {product.report?.materialCost ? `₹${product.report.materialCost}` : "—"}
                               </span>
                             )}
@@ -2696,7 +2696,7 @@ export default function ServiceMaterialInwardResponse({
 
                           {/* Man Power Cost */}
                           <td className="py-[0.65vw] px-[0.7vw] text-right border-r border-b border-slate-300">
-                            <span className="text-[0.75vw] font-medium text-emerald-800 whitespace-nowrap">
+                            <span className="text-[0.8vw] font-medium text-emerald-800 whitespace-nowrap">
                               {draft && draft.manpowerCost != null && draft.manpowerCost !== ""
                                 ? `₹${Number(draft.manpowerCost).toFixed(2)}`
                                 : product.report?.manpowerCost != null
@@ -2723,11 +2723,11 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt,
                                     label: opt,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
                                 />
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] font-medium text-slate-800">
+                              <span className="text-[0.8vw] font-medium text-slate-800">
                                 {product.report?.disposition || "—"}
                               </span>
                             )}
@@ -2752,12 +2752,12 @@ export default function ServiceMaterialInwardResponse({
                                     value: opt,
                                     label: opt,
                                   }))}
-                                  triggerClassName="!h-[1.9vw] !text-[0.74vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
                                 />
                               </div>
                             ) : (
                               <span
-                                className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-full border text-[0.68vw] font-semibold whitespace-nowrap ${statusCfg.bg} ${statusCfg.border} ${statusCfg.text}`}
+                                className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.25vw] rounded-full border text-[0.73vw] font-semibold whitespace-nowrap ${statusCfg.bg} ${statusCfg.border} ${statusCfg.text}`}
                               >
                                 <StatusIcon className="w-[0.8vw] h-[0.8vw]" />
                                 {pStatus}
@@ -2780,17 +2780,17 @@ export default function ServiceMaterialInwardResponse({
                                   onChange={(e) =>
                                     hc("completedDate", e.target.value)
                                   }
-                                  className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                  className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 />
                               ) : (
-                                <span className="text-[0.75vw] whitespace-nowrap font-medium text-slate-800">
+                                <span className="text-[0.8vw] whitespace-nowrap font-medium text-slate-800">
                                   {product.report?.completedDate
                                     ? fmtDate(product.report.completedDate)
                                     : "—"}
                                 </span>
                               )
                             ) : (
-                              <span className="text-slate-400 text-[0.75vw] select-none">—</span>
+                              <span className="text-slate-400 text-[0.8vw] select-none">—</span>
                             )}
                             {renderFillHandle(idx, "completionDate")}
                           </td>
@@ -2808,11 +2808,11 @@ export default function ServiceMaterialInwardResponse({
                                 onChange={(e) =>
                                   hc("currentRemark", e.target.value)
                                 }
-                                className="w-full text-[0.75vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[8vw]"
                                 placeholder="Remark..."
                               />
                             ) : (
-                              <span className="text-[0.75vw] text-slate-800 font-medium">
+                              <span className="text-[0.8vw] text-slate-800 font-medium">
                                 {pRemark}
                               </span>
                             )}
@@ -2870,7 +2870,7 @@ export default function ServiceMaterialInwardResponse({
                                 />
                                 <label
                                   htmlFor={`file-${product._pid}`}
-                                  className={`flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] cursor-pointer transition-all shadow-sm text-[0.7vw] font-medium border ${
+                                  className={`flex items-center gap-[0.3vw] px-[0.6vw] py-[0.35vw] rounded-[0.4vw] cursor-pointer transition-all shadow-sm text-[0.75vw] font-medium border ${
                                     dragOverPid === product._pid
                                       ? "bg-blue-600 text-white border-blue-600 ring-2 ring-blue-300 animate-pulse"
                                       : "bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white"
@@ -2901,7 +2901,7 @@ export default function ServiceMaterialInwardResponse({
                                         title={draft.fileName || "PDF Document"}
                                       >
                                         <FileText className="w-[1.1vw] h-[1.1vw]" />
-                                        <span className="text-[0.45vw] font-normal">PDF</span>
+                                        <span className="text-[0.5vw] font-medium">PDF</span>
                                       </button>
                                     ) : (
                                       <>
@@ -2964,7 +2964,7 @@ export default function ServiceMaterialInwardResponse({
                                     title="View PDF"
                                   >
                                     <FileText className="w-[1.1vw] h-[1.1vw]" />
-                                    <span className="text-[0.45vw] font-normal">PDF</span>
+                                    <span className="text-[0.5vw] font-medium">PDF</span>
                                   </button>
                                 ) : (
                                   <>
@@ -3004,7 +3004,7 @@ export default function ServiceMaterialInwardResponse({
                                 )}
                               </div>
                             ) : (
-                              <span className="text-[0.75vw] text-gray-400">
+                              <span className="text-[0.8vw] text-gray-400">
                                 —
                               </span>
                             )}
@@ -3017,7 +3017,7 @@ export default function ServiceMaterialInwardResponse({
                               onClick={() =>
                                 setInfoSelected({ entry, product })
                               }
-                              className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.7vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
+                              className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.75vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
                               title="View Details"
                             >
                               <Info className="w-[0.75vw] h-[0.75vw] text-slate-500 group-hover:text-blue-600" />
@@ -3033,14 +3033,14 @@ export default function ServiceMaterialInwardResponse({
                                 onClick={() =>
                                   setHistorySelected({ entry, product })
                                 }
-                                className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.7vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
+                                className="inline-flex items-center justify-center gap-[0.25vw] px-[0.65vw] py-[0.22vw] rounded-[0.35vw] text-[0.75vw] font-medium bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 shadow-2xs transition-all cursor-pointer active:scale-95"
                                 title="View History"
                               >
                                 <Clock className="w-[0.75vw] h-[0.75vw] text-slate-500 group-hover:text-blue-600" />
                                 <span>View</span>
                               </button>
                             ) : (
-                              <span className="text-[0.75vw] text-slate-400 select-none">
+                              <span className="text-[0.8vw] text-slate-400 select-none">
                                 —
                               </span>
                             )}
@@ -3078,7 +3078,7 @@ export default function ServiceMaterialInwardResponse({
                                   !draft?.hasChanges ||
                                   savingStates[product._pid]
                                 }
-                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold transition-all ${
                                   savingStates[product._pid]
                                     ? "bg-amber-400 text-white cursor-not-allowed"
                                     : draft?.hasChanges
@@ -3115,7 +3115,7 @@ export default function ServiceMaterialInwardResponse({
                                     !draft?.hasChanges ||
                                     savingStates[product._pid]
                                   }
-                                  className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.75vw] font-semibold transition-all ${
+                                  className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold transition-all ${
                                     savingStates[product._pid]
                                       ? "bg-blue-400 text-white cursor-not-allowed"
                                       : draft?.hasChanges
@@ -3150,7 +3150,7 @@ export default function ServiceMaterialInwardResponse({
                                         return next;
                                       });
                                     }}
-                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all cursor-pointer shadow-2xs"
+                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-[0.35vw] text-[0.77vw] font-semibold transition-all cursor-pointer shadow-2xs"
                                     title="Cancel Edit"
                                   >
                                     <X className="w-[0.65vw] h-[0.65vw]" />
@@ -3169,7 +3169,7 @@ export default function ServiceMaterialInwardResponse({
                                       })
                                     }
                                     disabled={unclaimingStates[product._pid]}
-                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-[0.35vw] text-[0.72vw] font-medium transition-all shadow-sm cursor-pointer"
+                                    className="flex items-center gap-[0.2vw] px-[0.45vw] py-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 hover:border-rose-300 rounded-[0.35vw] text-[0.77vw] font-medium transition-all shadow-sm cursor-pointer"
                                     title="Unclaim item and return to open queue"
                                   >
                                     {unclaimingStates[product._pid] ? (
@@ -3185,7 +3185,7 @@ export default function ServiceMaterialInwardResponse({
                               <div className="flex items-center justify-center gap-[0.4vw]">
                                 {isAdminReturnedProduct ? (
                                   <span
-                                    className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
+                                    className="inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold border bg-rose-100 text-rose-800 border-rose-300 shadow-2xs"
                                     title={`Admin Declined: ${product.finalStatusRemarks || "Needs correction"}`}
                                   >
                                     <AlertTriangle className="w-[0.65vw] h-[0.65vw] text-rose-600" />
@@ -3193,7 +3193,7 @@ export default function ServiceMaterialInwardResponse({
                                   </span>
                                 ) : (
                                   <span
-                                    className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
+                                    className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold border ${statusCfg.badge || "bg-emerald-100 text-emerald-800 border-emerald-300"}`}
                                   >
                                     <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
                                     {pStatus}
@@ -3206,7 +3206,7 @@ export default function ServiceMaterialInwardResponse({
                                       [product._pid]: true,
                                     }));
                                   }}
-                                  className={`flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer ${
+                                  className={`flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] rounded-[0.3vw] text-[0.73vw] font-semibold transition-all shadow-sm cursor-pointer ${
                                     isAdminReturnedProduct
                                       ? "bg-amber-500 hover:bg-amber-600 text-white"
                                       : "bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300"
@@ -3226,7 +3226,7 @@ export default function ServiceMaterialInwardResponse({
                             ) : (
                               <div className="flex items-center justify-center gap-[0.4vw]">
                                 <span
-                                  className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.65vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
+                                  className={`inline-flex items-center gap-[0.3vw] px-[0.5vw] py-[0.18vw] rounded-full text-[0.7vw] font-bold border ${statusCfg.badge || "bg-gray-100 text-gray-700"}`}
                                 >
                                   <StatusIcon className="w-[0.65vw] h-[0.65vw]" />
                                   {pStatus}
@@ -3241,7 +3241,7 @@ export default function ServiceMaterialInwardResponse({
                                       });
                                       setEditReason("");
                                     }}
-                                    className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.68vw] font-semibold transition-all shadow-sm cursor-pointer"
+                                    className="flex items-center gap-[0.2vw] px-[0.5vw] py-[0.25vw] bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.3vw] text-[0.73vw] font-semibold transition-all shadow-sm cursor-pointer"
                                     title="Edit Report"
                                   >
                                     <Edit3 className="w-[0.65vw] h-[0.65vw]" />
@@ -3263,7 +3263,7 @@ export default function ServiceMaterialInwardResponse({
           {/* Table Footer */}
           <div className="bg-gray-50 border-t border-slate-300 px-[1.2vw] py-[0.6vw] flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-[1.5vw]">
-              <span className="text-[0.75vw] text-slate-600 font-medium">
+              <span className="text-[0.8vw] text-slate-600 font-medium">
                 Showing{" "}
                 <span className="font-semibold text-slate-800">
                   {myItems.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}
@@ -3291,13 +3291,13 @@ export default function ServiceMaterialInwardResponse({
                 </button>
 
                 <div className="flex items-center gap-[0.4vw] px-[0.6vw] py-[0.15vw] bg-blue-50 border border-blue-100 rounded-[0.3vw]">
-                  <span className="text-[0.72vw] font-semibold text-blue-700">
+                  <span className="text-[0.77vw] font-semibold text-blue-700">
                     {currentPage}
                   </span>
-                  <span className="text-[0.65vw] font-medium text-blue-300">
+                  <span className="text-[0.7vw] font-medium text-blue-300">
                     /
                   </span>
-                  <span className="text-[0.72vw] font-semibold text-gray-600">
+                  <span className="text-[0.77vw] font-semibold text-gray-600">
                     {totalPages || 1}
                   </span>
                 </div>
@@ -3319,7 +3319,7 @@ export default function ServiceMaterialInwardResponse({
               <button
                 onClick={handleBulkSave}
                 disabled={isBulkSaving || !hasAnyDraftChanges}
-                className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.4vw] rounded-[0.4vw] text-[0.75vw] font-semibold transition-all ml-[1vw] ${
+                className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all ml-[1vw] ${
                   isBulkSaving
                     ? "bg-emerald-400 text-white cursor-not-allowed"
                     : hasAnyDraftChanges
@@ -3337,7 +3337,7 @@ export default function ServiceMaterialInwardResponse({
                     <Send className="w-[0.9vw] h-[0.9vw]" />
                     Bulk Save
                     {hasAnyDraftChanges && (
-                      <span className="ml-[0.2vw] px-[0.35vw] py-[0.05vw] bg-white/20 text-white rounded-full text-[0.65vw] font-bold">
+                      <span className="ml-[0.2vw] px-[0.35vw] py-[0.05vw] bg-white/20 text-white rounded-full text-[0.7vw] font-bold">
                         {
                           Object.values(drafts).filter((d) => d && d.hasChanges)
                             .length
@@ -3388,11 +3388,11 @@ export default function ServiceMaterialInwardResponse({
               {/* Header */}
               <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
+                  <h3 className="text-[1.1vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
                     <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
+                  <p className="text-[0.79vw] text-slate-600 font-medium mt-[0.15vw]">
                     {historySelected.product.productDescription} (
                     <span className="font-mono font-medium text-slate-800">{historySelected.product.serialNumber}</span>)
                   </p>
@@ -3487,7 +3487,7 @@ export default function ServiceMaterialInwardResponse({
                     return (
                       <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-500">
                         <Info className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
-                        <span className="text-[0.82vw] font-semibold text-slate-700">No status history recorded yet.</span>
+                        <span className="text-[0.87vw] font-semibold text-slate-700">No status history recorded yet.</span>
                       </div>
                     );
                   }
@@ -3541,11 +3541,11 @@ export default function ServiceMaterialInwardResponse({
                                 <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
                                   <div className="flex items-center justify-between gap-[0.5vw]">
                                     <span
-                                      className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.7vw] font-medium tracking-normal border ${pillClass}`}
+                                      className={`px-[0.55vw] py-[0.12vw] rounded-full text-[0.75vw] font-medium tracking-normal border ${pillClass}`}
                                     >
                                       {label}
                                     </span>
-                                    <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
+                                    <span className="text-[0.73vw] text-slate-500 font-mono font-medium whitespace-nowrap">
                                       {(() => {
                                         const dt = new Date(item.timestamp);
                                         if (isNaN(dt.getTime())) return item.timestamp || "—";
@@ -3563,7 +3563,7 @@ export default function ServiceMaterialInwardResponse({
                                   </div>
 
                                   {remarkText && (
-                                    <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
+                                    <div className="mt-[0.35vw] text-[0.81vw] text-slate-700 leading-relaxed font-medium">
                                       <span className="font-medium text-slate-500 mr-[0.35vw]">
                                         Remark:
                                       </span>
@@ -3573,13 +3573,13 @@ export default function ServiceMaterialInwardResponse({
 
                                   {item.diffs && item.diffs.length > 0 && (
                                     <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
-                                      <div className="flex items-center justify-between text-[0.72vw]">
+                                      <div className="flex items-center justify-between text-[0.77vw]">
                                         <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
                                           <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
                                           Changed Fields ({item.diffs.length})
                                         </span>
                                         {item.remark && (
-                                          <span className="font-normal text-slate-500 text-[0.68vw]">
+                                          <span className="font-medium text-slate-500 text-[0.73vw]">
                                             Reason: <span className="text-slate-700 font-medium">{item.remark}</span>
                                           </span>
                                         )}
@@ -3589,34 +3589,34 @@ export default function ServiceMaterialInwardResponse({
                                         {item.diffs.map((d, di) => (
                                           <div
                                             key={di}
-                                            className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                            className="text-[0.79vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
                                           >
-                                            <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
+                                            <div className="font-medium text-slate-700 text-[0.75vw] mb-[0.2vw]">
                                               {d.field}
                                             </div>
 
                                             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
                                               {/* Previous Value */}
                                               <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
-                                                <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                                <div className="text-[0.65vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
                                                   Previous
                                                 </div>
-                                                <div className="text-rose-700 font-normal text-[0.72vw] break-words">
+                                                <div className="text-rose-700 font-medium text-[0.77vw] break-words">
                                                   {d.originalValue || "—"}
                                                 </div>
                                               </div>
 
                                               {/* Arrow Indicator */}
-                                              <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                              <div className="text-slate-400 font-medium text-[0.8vw] px-[0.1vw]">
                                                 →
                                               </div>
 
                                               {/* Updated Value */}
                                               <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
-                                                <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                                <div className="text-[0.65vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
                                                   Updated
                                                 </div>
-                                                <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
+                                                <div className="text-emerald-900 font-medium text-[0.77vw] break-words">
                                                   {d.editedValue || "—"}
                                                 </div>
                                               </div>
@@ -3640,7 +3640,7 @@ export default function ServiceMaterialInwardResponse({
                 <button
                   type="button"
                   onClick={() => setHistorySelected(null)}
-                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="px-[1.3vw] h-[2vw] text-[0.79vw] font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   Close
                 </button>
@@ -3662,11 +3662,11 @@ export default function ServiceMaterialInwardResponse({
             >
               <div className="px-[1.5vw] py-[1vw] border-b border-slate-200 bg-white flex items-center justify-between">
                 <div>
-                  <h3 className="text-[1.1vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
+                  <h3 className="text-[1.15vw] font-bold text-slate-900 flex items-center gap-[0.5vw]">
                     <Edit3 className="w-[1.1vw] h-[1.1vw] text-blue-600" />
                     Edit Submitted Report
                   </h3>
-                  <p className="text-[0.74vw] text-slate-700 font-medium">
+                  <p className="text-[0.79vw] text-slate-700 font-medium">
                     {editReportModal.product.productDescription} (<span className="font-mono font-semibold text-slate-900">{editReportModal.product.serialNumber}</span>)
                   </p>
                 </div>
@@ -3681,7 +3681,7 @@ export default function ServiceMaterialInwardResponse({
               <div className="flex-1 overflow-y-auto p-[1.5vw] space-y-[1.2vw] bg-white divide-y divide-slate-200">
                 <div className="grid grid-cols-3 gap-[0.8vw] pb-[1vw]">
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Status</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Status</label>
                     <CustomDropdown
                       size="sm"
                       placeholder="Select Status"
@@ -3691,11 +3691,11 @@ export default function ServiceMaterialInwardResponse({
                         draft: { ...prev.draft, status: val }
                       }))}
                       options={STATUS_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] font-semibold text-slate-800"
+                      triggerClassName="!h-[2vw] !text-[0.8vw] !rounded-[0.3vw] font-semibold text-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Tested By</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Tested By</label>
                     <CustomDropdown
                       size="sm"
                       searchable={true}
@@ -3709,11 +3709,11 @@ export default function ServiceMaterialInwardResponse({
                       options={employees
                         .filter((emp) => emp.role === "User")
                         .map((e) => ({ value: e.name, label: e.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
+                      triggerClassName="!h-[2vw] !text-[0.8vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">FQA By</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">FQA By</label>
                     <CustomDropdown
                       size="sm"
                       searchable={true}
@@ -3727,11 +3727,11 @@ export default function ServiceMaterialInwardResponse({
                       options={employees
                         .filter((emp) => emp.role === "User")
                         .map((e) => ({ value: e.name, label: e.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
+                      triggerClassName="!h-[2vw] !text-[0.8vw] !rounded-[0.3vw] !border-slate-300 !bg-white text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">4M Category</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">4M Category</label>
                     <CustomDropdown
                       size="sm"
                       placeholder="Select 4M Category"
@@ -3741,11 +3741,11 @@ export default function ServiceMaterialInwardResponse({
                         draft: { ...prev.draft, fourMCategory: val }
                       }))}
                       options={(fourMCategories || []).map((opt) => ({ value: opt.name, label: opt.name }))}
-                      triggerClassName="!h-[2vw] !text-[0.75vw] !rounded-[0.3vw] text-slate-800"
+                      triggerClassName="!h-[2vw] !text-[0.8vw] !rounded-[0.3vw] text-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Error Code</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Error Code</label>
                     <input
                       type="text"
                       value={editReportModal.draft.errorCode || ""}
@@ -3753,11 +3753,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, errorCode: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">PV</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">PV</label>
                     <input
                       type="text"
                       value={editReportModal.draft.pv !== undefined ? editReportModal.draft.pv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[0]?.trim() : "")}
@@ -3765,11 +3765,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, pv: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">CV</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">CV</label>
                     <input
                       type="text"
                       value={editReportModal.draft.cv !== undefined ? editReportModal.draft.cv : (editReportModal.draft.pvCv ? editReportModal.draft.pvCv.split(',')[1]?.trim() : "")}
@@ -3777,14 +3777,14 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, cv: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-[0.8vw] pt-[1vw] pb-[1vw]">
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Problem Description</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Problem Description</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.problemDescription || ""}
@@ -3792,11 +3792,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, problemDescription: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Root Cause</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Root Cause</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.rootCause || ""}
@@ -3804,11 +3804,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, rootCause: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Fault Parts</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Fault Parts</label>
                     <input
                       type="text"
                       value={editReportModal.draft.faultParts || ""}
@@ -3816,11 +3816,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, faultParts: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Parts Replaced</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Parts Replaced</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.partsReplacement || ""}
@@ -3828,11 +3828,11 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, partsReplacement: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Corrective Action</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Corrective Action</label>
                     <textarea
                       rows={2}
                       value={editReportModal.draft.correctiveAction || ""}
@@ -3840,14 +3840,14 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, correctiveAction: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-normal"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-[0.8vw] pt-[1vw] pb-[1vw]">
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Time (Hours)</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Time (Hours)</label>
                     <input
                       type="text"
                       value={editReportModal.draft.timeInHours || ""}
@@ -3868,11 +3868,11 @@ export default function ServiceMaterialInwardResponse({
                           }
                         }));
                       }}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Material Cost (₹)</label>
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Material Cost (₹)</label>
                     <input
                       type="text"
                       value={editReportModal.draft.materialCost || ""}
@@ -3880,12 +3880,12 @@ export default function ServiceMaterialInwardResponse({
                         ...prev,
                         draft: { ...prev.draft, materialCost: e.target.value }
                       }))}
-                      className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
+                      className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.35vw] outline-none focus:border-blue-500 text-slate-800 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-[0.74vw] font-bold text-slate-800 mb-[0.2vw] block">Man Power Cost (₹)</label>
-                    <div className="w-full text-[0.75vw] bg-slate-50 border border-slate-300 rounded-[0.3vw] p-[0.35vw] font-bold text-emerald-800">
+                    <label className="text-[0.79vw] font-bold text-slate-800 mb-[0.2vw] block">Man Power Cost (₹)</label>
+                    <div className="w-full text-[0.8vw] bg-slate-50 border border-slate-300 rounded-[0.3vw] p-[0.35vw] font-bold text-emerald-800">
                       ₹{Number(editReportModal.draft.manpowerCost || 0).toFixed(2)}
                     </div>
                   </div>
@@ -3893,7 +3893,7 @@ export default function ServiceMaterialInwardResponse({
 
                 {/* Edit Reason input */}
                 <div className="pt-[1vw]">
-                  <label className="text-[0.75vw] font-bold text-slate-900 mb-[0.25vw] block">
+                  <label className="text-[0.8vw] font-bold text-slate-900 mb-[0.25vw] block">
                     Reason for Editing <span className="text-rose-600">*</span>
                   </label>
                   <input
@@ -3901,7 +3901,7 @@ export default function ServiceMaterialInwardResponse({
                     placeholder="Enter reason for modifying this technical report..."
                     value={editReason}
                     onChange={(e) => setEditReason(e.target.value)}
-                    className="w-full text-[0.75vw] border border-slate-300 rounded-[0.3vw] p-[0.45vw] bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 text-slate-800 font-medium"
+                    className="w-full text-[0.8vw] border border-slate-300 rounded-[0.3vw] p-[0.45vw] bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 text-slate-800 font-medium"
                   />
                 </div>
               </div>
@@ -3910,7 +3910,7 @@ export default function ServiceMaterialInwardResponse({
                 <button
                   type="button"
                   onClick={() => setEditReportModal(null)}
-                  className="px-[1.2vw] py-[0.45vw] bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full font-bold text-[0.75vw] cursor-pointer transition-all border-0"
+                  className="px-[1.2vw] py-[0.45vw] bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full font-bold text-[0.8vw] cursor-pointer transition-all border-0"
                 >
                   Cancel
                 </button>
@@ -3943,7 +3943,7 @@ export default function ServiceMaterialInwardResponse({
                       setIsSubmittingEdit(false);
                     }
                   }}
-                  className="flex items-center gap-[0.4vw] px-[1.5vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-[0.75vw] cursor-pointer transition-all shadow-md border-0"
+                  className="flex items-center gap-[0.4vw] px-[1.5vw] py-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-[0.8vw] cursor-pointer transition-all shadow-md border-0"
                 >
                   {isSubmittingEdit ? (
                     <>
@@ -3994,10 +3994,10 @@ export default function ServiceMaterialInwardResponse({
                     )}
                   </div>
                   <div>
-                    <h3 className="text-[0.95vw] font-bold text-slate-900 leading-tight">
+                    <h3 className="text-[1vw] font-bold text-slate-900 leading-tight">
                       {docPreviewModal.title || (docPreviewModal.isPdf ? "PDF Document Preview" : "Image Preview")}
                     </h3>
-                    <p className="text-[0.7vw] text-slate-500 font-medium">
+                    <p className="text-[0.75vw] text-slate-500 font-medium">
                       {docPreviewModal.isPdf ? "PDF technical document" : "Technical image attachment"}
                     </p>
                   </div>
@@ -4009,7 +4009,7 @@ export default function ServiceMaterialInwardResponse({
                     download
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.74vw] font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-[0.35vw] px-[0.85vw] py-[0.35vw] rounded-full bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer border border-slate-200/80"
+                    className="text-[0.79vw] font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-[0.35vw] px-[0.85vw] py-[0.35vw] rounded-full bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer border border-slate-200/80"
                   >
                     <Download className="w-[0.8vw] h-[0.8vw] text-slate-600" />
                     <span>Download</span>
@@ -4083,10 +4083,10 @@ export default function ServiceMaterialInwardResponse({
                   <AlertCircle className="w-[1.2vw] h-[1.2vw] text-amber-600" />
                 </div>
                 <div className="flex-1 min-w-0 pr-[0.4vw]">
-                  <h3 className="text-[0.95vw] font-semibold text-slate-800 leading-snug">
+                  <h3 className="text-[1vw] font-semibold text-slate-800 leading-snug">
                     Unclaim Product
                   </h3>
-                  <p className="text-[0.74vw] text-slate-500 mt-[0.2vw] leading-relaxed font-normal">
+                  <p className="text-[0.79vw] text-slate-500 mt-[0.2vw] leading-relaxed font-medium">
                     Are you sure you want to unclaim this product? It will be released back to the Open queue.
                   </p>
                 </div>
@@ -4102,12 +4102,12 @@ export default function ServiceMaterialInwardResponse({
 
               {/* Product Info Box */}
               {(unclaimConfirmModal.productDescription || unclaimConfirmModal.serialNumber) && (
-                <div className="mx-[1.2vw] p-[0.6vw] bg-slate-50 rounded-[0.5vw] border border-slate-200 text-[0.72vw]">
+                <div className="mx-[1.2vw] p-[0.6vw] bg-slate-50 rounded-[0.5vw] border border-slate-200 text-[0.77vw]">
                   <div className="text-slate-700 font-medium truncate">
                     {unclaimConfirmModal.productDescription || "Product"}
                   </div>
                   {unclaimConfirmModal.serialNumber && (
-                    <div className="text-slate-500 font-mono text-[0.68vw] mt-[0.1vw]">
+                    <div className="text-slate-500 font-mono text-[0.73vw] mt-[0.1vw]">
                       S/N: {unclaimConfirmModal.serialNumber}
                     </div>
                   )}
@@ -4120,7 +4120,7 @@ export default function ServiceMaterialInwardResponse({
                   type="button"
                   onClick={() => setUnclaimConfirmModal(null)}
                   disabled={unclaimingStates[unclaimConfirmModal.productId]}
-                  className="px-[0.9vw] py-[0.4vw] text-[0.74vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 hover:border-slate-400 rounded-[0.4vw] shadow-2xs transition-all cursor-pointer"
+                  className="px-[0.9vw] py-[0.4vw] text-[0.79vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 hover:border-slate-400 rounded-[0.4vw] shadow-2xs transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -4128,7 +4128,7 @@ export default function ServiceMaterialInwardResponse({
                   type="button"
                   onClick={() => unclaimProduct(unclaimConfirmModal.id, unclaimConfirmModal.productId)}
                   disabled={unclaimingStates[unclaimConfirmModal.productId]}
-                  className="inline-flex items-center gap-[0.35vw] px-[0.95vw] py-[0.4vw] text-[0.74vw] font-medium text-white bg-rose-600 hover:bg-rose-700 border border-rose-600 rounded-[0.4vw] shadow-xs transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+                  className="inline-flex items-center gap-[0.35vw] px-[0.95vw] py-[0.4vw] text-[0.79vw] font-medium text-white bg-rose-600 hover:bg-rose-700 border border-rose-600 rounded-[0.4vw] shadow-xs transition-all cursor-pointer active:scale-98 disabled:opacity-50"
                 >
                   {unclaimingStates[unclaimConfirmModal.productId] ? (
                     <>

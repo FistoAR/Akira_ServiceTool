@@ -24,7 +24,7 @@ const Badge = ({ label, color = "gray" }) => {
     gray:   "bg-slate-50 text-slate-600 border-slate-300",
   };
   return (
-    <span className={`text-[0.68vw] px-[0.5vw] py-[0.15vw] rounded-full border font-bold shadow-sm whitespace-nowrap ${map[color] || map.gray}`}>
+    <span className={`text-[0.73vw] px-[0.5vw] py-[0.15vw] rounded-full border font-bold shadow-sm whitespace-nowrap ${map[color] || map.gray}`}>
       {label}
     </span>
   );
@@ -150,7 +150,7 @@ const TrackingModal = ({ entry, onClose }) => {
             <div className="w-[2vw] h-[2vw] rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1a73e8]">
               <History className="w-[1vw] h-[1vw]" />
             </div>
-            <h3 className="text-[0.95vw] font-semibold text-slate-800 tracking-tight">Escalation History</h3>
+            <h3 className="text-[1vw] font-semibold text-slate-800 tracking-tight">Escalation History</h3>
           </div>
           <button 
             onClick={onClose} 
@@ -163,14 +163,14 @@ const TrackingModal = ({ entry, onClose }) => {
         
         <div className="p-[1.2vw] overflow-y-auto flex-1 bg-white">
            <div className="flex items-center justify-between pb-[0.8vw] mb-[1.1vw] border-b border-slate-100">
-             <div className="flex items-center gap-[0.45vw] text-[0.8vw]">
+             <div className="flex items-center gap-[0.45vw] text-[0.85vw]">
                <span className="font-semibold text-[#1a73e8] font-mono">{entry.callNumber}</span>
                <span className="text-slate-300">•</span>
                <span className="font-medium text-slate-700 truncate max-w-[22vw]" title={entry.customerName}>
                  {entry.customerName}
                </span>
              </div>
-             <span className={`inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.68vw] font-medium border shadow-2xs ${
+             <span className={`inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.73vw] font-medium border shadow-2xs ${
                entry.status === "Critical"
                  ? "bg-rose-50 text-rose-700 border-rose-200"
                  : entry.status === "Resolved" || entry.status === "Closed"
@@ -182,7 +182,7 @@ const TrackingModal = ({ entry, onClose }) => {
            </div>
            
            {events.length === 0 ? (
-             <div className="text-center text-slate-400 font-normal text-[0.76vw] py-[3vw]">No escalation history found for this call.</div>
+             <div className="text-center text-slate-400 font-medium text-[0.81vw] py-[3vw]">No escalation history found for this call.</div>
            ) : (
              <div className="space-y-[0.75vw] pl-[0.4vw]">
                {pastEvents.map((ev, i) => {
@@ -214,7 +214,7 @@ const TrackingModal = ({ entry, onClose }) => {
                      <div className={`flex-1 rounded-[0.5vw] p-[0.65vw] border shadow-2xs transition-colors ${cardClasses}`}>
                        <div className="flex justify-between items-center mb-[0.2vw]">
                          <div className="flex items-center gap-[0.35vw]">
-                           <span className={`text-[0.82vw] font-medium flex items-center gap-[0.35vw] ${titleColor}`}>
+                           <span className={`text-[0.87vw] font-medium flex items-center gap-[0.35vw] ${titleColor}`}>
                              {isCancelled ? (
                                <span className="inline-flex items-center gap-[0.25vw]">
                                  <Ban className="w-[0.85vw] h-[0.85vw] text-amber-600 inline" />
@@ -225,7 +225,7 @@ const TrackingModal = ({ entry, onClose }) => {
                              )}
                            </span>
                            {ev.scope && (
-                             <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-normal border ${
+                             <span className={`px-[0.45vw] py-[0.08vw] rounded-full text-[0.69vw] font-medium border ${
                                isCancelled
                                  ? 'bg-amber-100/70 border-amber-200 text-amber-800'
                                  : isHighlightedEvent 
@@ -236,7 +236,7 @@ const TrackingModal = ({ entry, onClose }) => {
                              </span>
                            )}
                          </div>
-                         <span className="text-[0.7vw] text-slate-400 font-mono font-normal">
+                         <span className="text-[0.75vw] text-slate-400 font-mono font-medium">
                            {new Date(ev.time).toLocaleString('en-US', {
                              month: '2-digit', day: '2-digit', year: 'numeric',
                              hour: '2-digit', minute: '2-digit', hour12: true
@@ -244,12 +244,12 @@ const TrackingModal = ({ entry, onClose }) => {
                          </span>
                        </div>
 
-                       <div className="text-[0.74vw] text-slate-500 font-normal mb-[0.2vw]">
+                       <div className="text-[0.79vw] text-slate-500 font-medium mb-[0.2vw]">
                          {isCancelled ? (
                            <>
                              Assigned to: <span className="font-medium text-slate-700">{ev.person || "N/A"}</span>
                              {ev.cancelledBy && (
-                               <span className="text-amber-700 font-normal ml-[0.4vw]">
+                               <span className="text-amber-700 font-medium ml-[0.4vw]">
                                  (Cancelled by: {ev.cancelledBy})
                                </span>
                              )}
@@ -263,7 +263,7 @@ const TrackingModal = ({ entry, onClose }) => {
                        </div>
                        
                        {ev.deadline && (
-                         <div className="text-[0.72vw] text-slate-500 font-normal mb-[0.2vw] flex items-center gap-[0.25vw]">
+                         <div className="text-[0.77vw] text-slate-500 font-medium mb-[0.2vw] flex items-center gap-[0.25vw]">
                            <Clock className="w-[0.75vw] h-[0.75vw] text-slate-400" />
                            <span>Deadline:</span>
                            <span className="font-medium text-slate-700">
@@ -275,7 +275,7 @@ const TrackingModal = ({ entry, onClose }) => {
                        )}
                        
                        {ev.remarks && (
-                         <div className={`text-[0.74vw] font-normal leading-relaxed border rounded-[0.4vw] p-[0.5vw] px-[0.6vw] mt-[0.35vw] ${
+                         <div className={`text-[0.79vw] font-medium leading-relaxed border rounded-[0.4vw] p-[0.5vw] px-[0.6vw] mt-[0.35vw] ${
                            isCancelled
                              ? 'bg-white/80 text-amber-800/90 border-amber-200/70'
                              : isHighlightedEvent 
@@ -499,7 +499,7 @@ const ServiceCallEscalations = () => {
               placeholder="Search escalations, customer, engineer..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+              className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             {searchTerm && (
               <button
@@ -525,7 +525,7 @@ const ServiceCallEscalations = () => {
                   <button
                     key={label}
                     onClick={() => setStatusFilter(label)}
-                    className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.8vw] rounded-full text-[0.72vw] font-medium cursor-pointer transition-all ${
+                    className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.8vw] rounded-full text-[0.77vw] font-medium cursor-pointer transition-all ${
                       isActive
                         ? (label === "Critical" ? "bg-rose-600 text-white shadow-xs" : "bg-blue-600 text-white shadow-xs")
                         : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
@@ -533,7 +533,7 @@ const ServiceCallEscalations = () => {
                   >
                     
                     <span>{label}</span>
-                    <span className={`text-[0.66vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                    <span className={`text-[0.71vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
                       isActive ? "bg-white/25 text-white" : "bg-slate-200/80 text-slate-700"
                     }`}>
                       {count}
@@ -544,14 +544,14 @@ const ServiceCallEscalations = () => {
             </div>
 
             {/* Unified Date Range Capsule */}
-            <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-              <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+            <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+              <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
               <input
                 ref={fromDateRef}
                 type="date"
                 value={filterFromDate || ""}
                 onChange={(e) => setFilterFromDate(e.target.value)}
-                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
               <button
                 type="button"
@@ -565,15 +565,15 @@ const ServiceCallEscalations = () => {
               >
                 <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0 text-slate-500" />
               </button>
-              <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-              <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+              <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+              <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
               <input
                 ref={toDateRef}
                 type="date"
                 value={filterToDate || ""}
                 min={filterFromDate || undefined}
                 onChange={(e) => setFilterToDate(e.target.value)}
-                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
               <button
                 type="button"
@@ -596,7 +596,7 @@ const ServiceCallEscalations = () => {
                   setFilterFromDate("");
                   setFilterToDate("");
                 }}
-                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                 title="Clear date filter"
               >
                 <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -618,7 +618,7 @@ const ServiceCallEscalations = () => {
                   { value: "Medium", label: "Medium Priority" },
                   { value: "Low", label: "Low Priority" },
                 ]}
-                triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+                triggerClassName="h-[2.2vw] !rounded-full border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.8vw]"
               />
             </div>
           </div>
@@ -628,7 +628,7 @@ const ServiceCallEscalations = () => {
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-gray-200/80 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+            <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
               <tr>
                 <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-300 text-center w-[4%] whitespace-nowrap">
                   S.No
@@ -656,13 +656,13 @@ const ServiceCallEscalations = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-[0.8vw]">
+            <tbody className="text-[0.85vw]">
               {loading || !isWorkerReady ? (
                 <tr>
                   <td colSpan={8} className="py-[12vh] text-center border-b border-slate-300">
                     <div className="flex flex-col items-center justify-center gap-[0.8vw]">
                       <Loader2 className="w-[2.4vw] h-[2.4vw] animate-spin text-[#1a73e8]" />
-                      <span className="text-[0.85vw] font-normal text-slate-700">Loading Escalations Queue...</span>
+                      <span className="text-[0.9vw] font-medium text-slate-700">Loading Escalations Queue...</span>
                     </div>
                   </td>
                 </tr>
@@ -673,8 +673,8 @@ const ServiceCallEscalations = () => {
                       <div className="w-[3.5vw] h-[3.5vw] rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                         <Shield className="w-[1.8vw] h-[1.8vw] text-emerald-600" />
                       </div>
-                      <div className="text-[0.95vw] font-medium text-slate-800">All Clear! No Escalations</div>
-                      <div className="text-[0.74vw] text-slate-400 max-w-[20vw]">
+                      <div className="text-[1vw] font-medium text-slate-800">All Clear! No Escalations</div>
+                      <div className="text-[0.79vw] text-slate-400 max-w-[20vw]">
                         There are no critical or active SLA escalations requiring attention right now.
                       </div>
                     </div>
@@ -705,7 +705,7 @@ const ServiceCallEscalations = () => {
                       {pIdx === 0 && (
                         <>
                           {/* 1. S.No */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-800 font-medium text-[0.76vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle text-slate-800 font-medium text-[0.81vw] border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                           </td>
 
@@ -714,12 +714,12 @@ const ServiceCallEscalations = () => {
                             <div className="flex items-center gap-[0.4vw]">
                               <button
                                 onClick={() => setSelectedInfoCall(call)}
-                                className="font-mono text-left text-[0.82vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
+                                className="font-mono text-left text-[0.87vw] font-medium text-black hover:text-blue-600 block leading-tight cursor-pointer"
                                 title="View Call Details"
                               >
                                 {call.callNumber}
                               </button>
-                              <span className={`inline-flex items-center justify-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.64vw] font-semibold border shadow-2xs whitespace-nowrap ${
+                              <span className={`inline-flex items-center justify-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.69vw] font-semibold border shadow-2xs whitespace-nowrap ${
                                 call.priority === 'Critical'
                                   ? 'bg-rose-50 text-rose-700 border-rose-200'
                                   : call.priority === 'High'
@@ -729,7 +729,7 @@ const ServiceCallEscalations = () => {
                                 {call.priority || 'Normal'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-[0.35vw] text-[0.73vw] text-[#4a2810] font-normal leading-normal mt-[0.2vw]">
+                            <div className="flex items-center gap-[0.35vw] text-[0.78vw] text-[#4a2810] font-medium leading-normal mt-[0.2vw]">
                               {(() => {
                                 try {
                                   const dateVal = escalationStartTime || call.dateTime;
@@ -748,9 +748,9 @@ const ServiceCallEscalations = () => {
                                   });
                                   return (
                                     <>
-                                      <span className="text-[#4a2810] font-normal">{datePart}</span>
-                                      <span className="text-[#8c5835] font-normal">|</span>
-                                      <span className="text-[#5c3317] font-normal">{timePart}</span>
+                                      <span className="text-[#4a2810] font-medium">{datePart}</span>
+                                      <span className="text-[#8c5835] font-medium">|</span>
+                                      <span className="text-[#5c3317] font-medium">{timePart}</span>
                                     </>
                                   );
                                 } catch {
@@ -768,18 +768,18 @@ const ServiceCallEscalations = () => {
                               partyCode={call.partyCode}
                             />
                             {(call.location || call.site) && (
-                              <div className="text-[0.68vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
+                              <div className="text-[0.73vw] text-slate-500 flex items-center gap-[0.2vw] mt-[0.15vw] truncate max-w-[17vw]" title={`${call.site ? call.site + " • " : ""}${call.location || ""}`}>
                                 <MapPin className="w-[0.65vw] h-[0.65vw] text-slate-400 shrink-0" />
-                                <span className="truncate font-normal">{call.site ? `${call.site} • ` : ""}{call.location}</span>
+                                <span className="truncate font-medium">{call.site ? `${call.site} • ` : ""}{call.location}</span>
                               </div>
                             )}
                           </td>
 
                           {/* 4. Customer Type */}
-                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.78vw] font-normal">
+                          <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap text-[0.83vw] font-medium">
                             {call.customerType && call.customerType !== "All" ? (
                               <span
-                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-normal border shadow-2xs whitespace-nowrap ${
+                                className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${
                                   call.customerType === "OEM"
                                     ? "bg-blue-50 text-blue-700 border-blue-200"
                                     : call.customerType === "End Customer"
@@ -794,7 +794,7 @@ const ServiceCallEscalations = () => {
                                 {call.customerType}
                               </span>
                             ) : (
-                              <span className="text-slate-400 font-normal">—</span>
+                              <span className="text-slate-400 font-medium">—</span>
                             )}
                           </td>
                         </>
@@ -807,40 +807,40 @@ const ServiceCallEscalations = () => {
                           className="max-w-full"
                           content={
                             <div className="flex flex-col gap-[0.15vw] text-left py-[0.05vw]">
-                              <div className="font-normal text-slate-200">
+                              <div className="font-medium text-slate-200">
                                 {p.productModel || p.productDescription || p.itemCode || "Equipment"}
                               </div>
                               {p.serialNumber && (
-                                <div className="text-[0.64vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-sky-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   <span className="text-slate-400 font-sans">SN: </span>
                                   <span>{p.serialNumber}</span>
                                 </div>
                               )}
                               {p.productCode && (
-                                <div className="text-[0.64vw] text-slate-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
+                                <div className="text-[0.69vw] text-slate-300 font-mono border-t border-slate-700/80 pt-[0.15vw] mt-[0.05vw]">
                                   <span>Code: {p.productCode}</span>
                                 </div>
                               )}
                             </div>
                           }
                         >
-                          <div className="font-medium text-slate-900 text-[0.8vw] truncate cursor-default">
+                          <div className="font-medium text-slate-900 text-[0.85vw] truncate cursor-default">
                             {p.productModel || p.productDescription || p.itemCode || "Equipment"}
                           </div>
                         </CustomTooltip>
                         <div className="flex items-center gap-[0.3vw] mt-[0.15vw] flex-wrap">
                           {p.productSegment && (
-                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.64vw] font-medium">
+                            <span className="bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-[0.35vw] py-[0.05vw] rounded text-[0.69vw] font-medium">
                               {p.productSegment}
                             </span>
                           )}
                           {p.serialNumber && (
-                            <span className="text-[0.66vw] text-slate-600 font-semibold font-mono">
+                            <span className="text-[0.71vw] text-slate-600 font-semibold font-mono">
                               SN: {p.serialNumber}
                             </span>
                           )}
                           {(p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName) && (
-                            <span className="text-[0.64vw] text-slate-500 font-normal">
+                            <span className="text-[0.69vw] text-slate-500 font-medium">
                               Init: {p._initialEngineerName || p._escalationHistory?.[0]?.engineerName || p._assignedEngineerName}
                             </span>
                           )}
@@ -852,7 +852,7 @@ const ServiceCallEscalations = () => {
                           {/* 6. SLA Status */}
                           <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] text-center align-middle border-r border-b border-slate-300 bg-white whitespace-nowrap">
                             {timer ? (
-                              <div className={`inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.7vw] font-normal border shadow-2xs ${
+                              <div className={`inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.75vw] font-medium border shadow-2xs ${
                                 timer.isExpired
                                   ? "bg-rose-50 text-rose-700 border-rose-200"
                                   : "bg-amber-50 text-amber-800 border-amber-200"
@@ -861,21 +861,21 @@ const ServiceCallEscalations = () => {
                                 <span>{timer.remainingFormatted}</span>
                               </div>
                             ) : (call.status === "Critical_Unresolved" || call.status === "Critical") ? (
-                              <span className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.66vw] font-normal uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                              <span className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.12vw] rounded-full font-mono text-[0.71vw] font-medium uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
                                 <AlertTriangle className="w-[0.65vw] h-[0.65vw] text-rose-600" />
                                 No SLA
                               </span>
                             ) : (
-                              <span className="text-[0.72vw] text-slate-400 font-normal">—</span>
+                              <span className="text-[0.77vw] text-slate-400 font-medium">—</span>
                             )}
                           </td>
 
                           {/* 7. Escalated To */}
                           <td rowSpan={rowCount} className="py-[0.7vw] px-[0.7vw] align-middle border-r border-b border-slate-300 bg-white">
-                            <div className="font-normal text-[0.78vw] text-indigo-700 truncate max-w-[12vw]">
+                            <div className="font-medium text-[0.83vw] text-indigo-700 truncate max-w-[12vw]">
                               {timer?.currentEngineerName || call.currentEngineerName || 'Unassigned'}
                             </div>
-                            <div className="text-slate-400 text-[0.66vw] font-normal truncate mt-[0.05vw]">
+                            <div className="text-slate-400 text-[0.71vw] font-medium truncate mt-[0.05vw]">
                               {timer?.currentDepartment || call.currentDepartment || 'Support Engineers'}
                             </div>
                           </td>
@@ -897,7 +897,7 @@ const ServiceCallEscalations = () => {
                               <button
                                 type="button"
                                 onClick={() => setTrackingEntry(call)}
-                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full text-[0.68vw] font-normal border border-slate-300 hover:bg-slate-50 text-slate-700 transition-all cursor-pointer"
+                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full text-[0.73vw] font-medium border border-slate-300 hover:bg-slate-50 text-slate-700 transition-all cursor-pointer"
                                 title="View Escalation History"
                               >
                                 <History className="w-[0.7vw] h-[0.7vw]" />
@@ -921,7 +921,7 @@ const ServiceCallEscalations = () => {
                                   setCancelReason("");
                                   setNewAssignee("");
                                 }}
-                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-normal text-[0.68vw] transition-all cursor-pointer"
+                                className="inline-flex items-center gap-[0.2vw] px-[0.6vw] py-[0.25vw] rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium text-[0.73vw] transition-all cursor-pointer"
                                 title="Cancel Escalation"
                               >
                                 <Ban className="w-[0.7vw] h-[0.7vw] text-rose-600" />
@@ -941,7 +941,7 @@ const ServiceCallEscalations = () => {
 
         {/* ── PAGINATION CONTROLS ── */}
         <div className="py-[0.6vw] px-[1vw] border-t border-slate-300 bg-white flex items-center justify-between shrink-0">
-          <p className="text-[0.75vw] text-slate-600 font-medium">
+          <p className="text-[0.8vw] text-slate-600 font-medium">
             Showing <span className="font-semibold text-slate-800">{escalatingCalls.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, escalatingCalls.length)}</span> of <span className="font-semibold text-slate-800">{escalatingCalls.length}</span> records
           </p>
           <div className="flex items-center gap-[0.5vw]">
@@ -957,7 +957,7 @@ const ServiceCallEscalations = () => {
                 <button
                   key={p}
                   onClick={() => setCurrentPage(p)}
-                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-medium transition-all cursor-pointer ${
+                  className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-medium transition-all cursor-pointer ${
                     currentPage === p
                       ? "bg-[#1a73e8] text-white shadow-2xs"
                       : "bg-white border border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
@@ -1015,11 +1015,11 @@ const ServiceCallEscalations = () => {
                     <Ban className="w-[1vw] h-[1vw]" />
                   </div>
                   <div>
-                    <h3 className="text-[1vw] font-semibold text-slate-800 leading-tight">
+                    <h3 className="text-[1.05vw] font-semibold text-slate-800 leading-tight">
                       Cancel Escalation & Re-assign
                     </h3>
-                    <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.15vw] flex items-center gap-[0.35vw]">
-                      <span className="font-normal text-[#6e000a] font-mono">{cancelModal.callNumber}</span>
+                    <div className="text-[0.77vw] text-slate-500 font-medium mt-[0.15vw] flex items-center gap-[0.35vw]">
+                      <span className="font-medium text-[#6e000a] font-mono">{cancelModal.callNumber}</span>
                       <span className="text-slate-300">•</span>
                       <span className="truncate max-w-[18vw] text-slate-600">{cancelModal.prod?.productDescription || cancelModal.prod?.productModel || cancelModal.prod?.itemCode || 'Equipment'}</span>
                     </div>
@@ -1046,14 +1046,14 @@ const ServiceCallEscalations = () => {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-[0.68vw] font-medium text-slate-500 uppercase tracking-wider">
+                      <span className="text-[0.73vw] font-medium text-slate-500 uppercase tracking-wider">
                         Current Assignee
                       </span>
-                      <span className="text-[0.72vw] font-medium text-blue-700 bg-blue-50 border border-blue-200/60 px-[0.45vw] py-[0.08vw] rounded-full">
+                      <span className="text-[0.77vw] font-medium text-blue-700 bg-blue-50 border border-blue-200/60 px-[0.45vw] py-[0.08vw] rounded-full">
                         {cancelModal.currentAssignee || "Unassigned"}
                       </span>
                     </div>
-                    <p className="text-[0.72vw] text-slate-500 font-normal leading-relaxed mt-[0.25vw]">
+                    <p className="text-[0.77vw] text-slate-500 font-medium leading-relaxed mt-[0.25vw]">
                       Cancelling stops the SLA countdown timer and returns this call to the <span className="font-medium text-slate-700">Call Assignment</span> queue.
                     </p>
                   </div>
@@ -1061,9 +1061,9 @@ const ServiceCallEscalations = () => {
 
                 {/* Reason Textarea */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
+                  <label className="text-[0.81vw] font-medium text-slate-700 flex items-center justify-between">
                     <span>Reason for Stopping Escalation <span className="text-rose-500">*</span></span>
-                    <span className="text-[0.68vw] text-slate-400 font-normal">Required for audit trail</span>
+                    <span className="text-[0.73vw] text-slate-400 font-medium">Required for audit trail</span>
                   </label>
                   <textarea
                     rows={3}
@@ -1071,21 +1071,21 @@ const ServiceCallEscalations = () => {
                     value={cancelReason}
                     onChange={(e) => setCancelReason(e.target.value)}
                     placeholder="e.g. Wrongly assigned to this engineer, handled directly over phone, customer unavailable..."
-                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 text-slate-800 font-normal resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
+                    className="w-full px-[0.8vw] py-[0.55vw] text-[0.81vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 text-slate-800 font-medium resize-none placeholder:text-slate-400 transition-all bg-white hover:border-slate-300"
                   />
                 </div>
 
                 {/* Re-assign Target Dropdown */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-medium text-slate-700 flex items-center justify-between">
-                    <span>Re-assign To <span className="text-slate-400 font-normal">(Optional)</span></span>
-                    <span className="text-[0.68vw] text-slate-400 font-normal">Choose immediate replacement</span>
+                  <label className="text-[0.81vw] font-medium text-slate-700 flex items-center justify-between">
+                    <span>Re-assign To <span className="text-slate-400 font-medium">(Optional)</span></span>
+                    <span className="text-[0.73vw] text-slate-400 font-medium">Choose immediate replacement</span>
                   </label>
                   <div className="relative">
                     <select
                       value={newAssignee}
                       onChange={(e) => setNewAssignee(e.target.value)}
-                      className="w-full px-[0.85vw] py-[0.55vw] text-[0.76vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 text-slate-700 font-normal bg-white cursor-pointer transition-all hover:border-slate-300 appearance-none pr-[2.2vw]"
+                      className="w-full px-[0.85vw] py-[0.55vw] text-[0.81vw] border border-slate-200 rounded-[0.45vw] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 text-slate-700 font-medium bg-white cursor-pointer transition-all hover:border-slate-300 appearance-none pr-[2.2vw]"
                     >
                       <option value="">-- Return to Call Assignment Page (Unassigned) --</option>
                       {(employees || []).map((emp) => (
@@ -1104,14 +1104,14 @@ const ServiceCallEscalations = () => {
                     type="button"
                     disabled={isSubmittingCancel}
                     onClick={() => setCancelModal(null)}
-                    className="px-[0.95vw] py-[0.45vw] text-[0.75vw] font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-[0.4vw] transition-colors cursor-pointer"
+                    className="px-[0.95vw] py-[0.45vw] text-[0.8vw] font-medium text-slate-600 hover:text-slate-800 bg-slate-100/70 hover:bg-slate-200/70 rounded-[0.4vw] transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmittingCancel || !cancelReason.trim()}
-                    className="px-[1.1vw] py-[0.45vw] text-[0.75vw] font-semibold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-[0_2px_8px_-1px_rgba(225,29,72,0.3)] disabled:opacity-50 active:scale-98"
+                    className="px-[1.1vw] py-[0.45vw] text-[0.8vw] font-semibold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-[0.4vw] transition-all cursor-pointer flex items-center gap-[0.35vw] shadow-[0_2px_8px_-1px_rgba(225,29,72,0.3)] disabled:opacity-50 active:scale-98"
                   >
                     <Ban className="w-[0.8vw] h-[0.8vw]" />
                     <span>{isSubmittingCancel ? "Stopping..." : "Confirm & Stop Escalation"}</span>

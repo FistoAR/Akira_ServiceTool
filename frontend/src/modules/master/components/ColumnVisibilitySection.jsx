@@ -52,26 +52,26 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
       {/* Header */}
       <div className="flex items-center justify-between pb-[0.8vw] mb-[1.2vw] border-b border-gray-100">
         <div>
-          <h3 className="text-[0.9vw] font-bold text-gray-900">Database Column Visibility</h3>
-          <p className="text-[0.74vw] text-gray-500">
+          <h3 className="text-[0.95vw] font-bold text-gray-900">Database Column Visibility</h3>
+          <p className="text-[0.79vw] text-gray-500">
             Control table column presence in Customer Database. Core identifying columns remain pinned.
           </p>
         </div>
         <div className="flex items-center gap-[0.7vw]">
-          <span className="text-[0.72vw] font-semibold text-blue-700 bg-blue-50 px-[0.7vw] py-[0.25vw] rounded-full border border-blue-200">
+          <span className="text-[0.77vw] font-semibold text-blue-700 bg-blue-50 px-[0.7vw] py-[0.25vw] rounded-full border border-blue-200">
             {visibleCount} of {totalCount} columns visible
           </span>
           <button
             type="button"
             onClick={enableAll}
-            className="flex items-center gap-[0.35vw] border border-gray-300 text-gray-700 hover:bg-gray-50 px-[0.85vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.78vw] font-medium transition-all"
+            className="flex items-center gap-[0.35vw] border border-gray-300 text-gray-700 hover:bg-gray-50 px-[0.85vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.83vw] font-medium transition-all"
           >
             <Eye className="w-[0.85vw] h-[0.85vw]" /> Show All
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.82vw] font-semibold transition-all shadow-sm ${
+            className={`flex items-center gap-[0.4vw] px-[1.2vw] py-[0.42vw] rounded-[0.4vw] cursor-pointer text-[0.87vw] font-semibold transition-all shadow-sm ${
               saved ? "bg-emerald-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
             }`}
           >
@@ -104,16 +104,16 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
             >
               <div className="flex flex-col gap-[0.15vw] min-w-0 pr-[0.8vw]">
                 <div className="flex items-center gap-[0.4vw]">
-                  <span className={`text-[0.8vw] font-semibold truncate ${isOn ? "text-gray-900" : "text-gray-400"}`}>
+                  <span className={`text-[0.85vw] font-semibold truncate ${isOn ? "text-gray-900" : "text-gray-400"}`}>
                     {col.label}
                   </span>
                   {isRequired && (
-                    <span className="text-[0.6vw] bg-gray-200 text-gray-700 px-[0.35vw] py-[0.05vw] rounded font-semibold flex-shrink-0">
+                    <span className="text-[0.65vw] bg-gray-200 text-gray-700 px-[0.35vw] py-[0.05vw] rounded font-semibold flex-shrink-0">
                       Required
                     </span>
                   )}
                 </div>
-                <span className="text-[0.68vw] text-gray-400 truncate">
+                <span className="text-[0.73vw] text-gray-400 truncate">
                   {col.description}
                 </span>
               </div>
@@ -139,24 +139,24 @@ const ColumnVisibilitySection = ({ colVis, setColVis }) => {
       {/* Live Table Header Preview */}
       <div className="mt-[1.6vw] bg-gray-50/80 border border-gray-200 rounded-[0.5vw] p-[0.9vw]">
         <div className="flex items-center justify-between mb-[0.5vw]">
-          <span className="text-[0.72vw] font-bold text-gray-700 uppercase tracking-wider">
+          <span className="text-[0.77vw] font-bold text-gray-700 uppercase tracking-wider">
             Live Header Strip Preview
           </span>
-          <span className="text-[0.68vw] text-gray-400">
+          <span className="text-[0.73vw] text-gray-400">
             Preview of customer database columns
           </span>
         </div>
         <div className="flex items-center gap-[0.4vw] flex-wrap">
-          <span className="text-[0.68vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
+          <span className="text-[0.73vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
             ☑
           </span>
-          <span className="text-[0.68vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
+          <span className="text-[0.73vw] bg-gray-200 text-gray-600 px-[0.55vw] py-[0.2vw] rounded font-mono font-medium">
             S.No
           </span>
           {CUSTOMER_DB_COLUMNS.filter((c) => colVis[c.key] ?? true).map((c) => (
             <span
               key={c.key}
-              className="text-[0.68vw] bg-white text-blue-700 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded font-semibold shadow-2xs"
+              className="text-[0.73vw] bg-white text-blue-700 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded font-semibold shadow-2xs"
             >
               {c.label}
             </span>

@@ -220,9 +220,9 @@ const initials = (name = "") =>
 
 const Avatar = ({ name, size = "md" }) => {
   const sz = {
-    sm: "w-[1.4vw] h-[1.4vw] text-[0.52vw]",
-    md: "w-[1.8vw] h-[1.8vw] text-[0.65vw]",
-    lg: "w-[2.4vw] h-[2.4vw] text-[0.82vw]",
+    sm: "w-[1.4vw] h-[1.4vw] text-[0.57vw]",
+    md: "w-[1.8vw] h-[1.8vw] text-[0.7vw]",
+    lg: "w-[2.4vw] h-[2.4vw] text-[0.87vw]",
   };
   return (
     <div
@@ -317,10 +317,10 @@ const BoardTypeMasterModal = ({ onClose }) => {
               <Wrench className="w-[1vw] h-[1vw]" />
             </div>
             <div>
-              <h3 className="text-[0.95vw] font-bold text-slate-900 tracking-tight">
+              <h3 className="text-[1vw] font-bold text-slate-900 tracking-tight">
                 Manage Board Types
               </h3>
-              <p className="text-[0.7vw] text-slate-700">
+              <p className="text-[0.75vw] text-slate-700">
                 Add, edit or delete board types master data
               </p>
             </div>
@@ -338,7 +338,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
         <div className="p-[1.2vw] bg-slate-50/60 border-b border-slate-200">
           <form onSubmit={handleAdd} className="flex gap-[0.7vw] items-end">
             <div className="flex-1 space-y-[0.3vw]">
-              <label className="text-[0.72vw] font-bold text-slate-800">
+              <label className="text-[0.77vw] font-bold text-slate-800">
                 Board Type Name <span className="text-rose-500">*</span>
               </label>
               <input
@@ -348,13 +348,13 @@ const BoardTypeMasterModal = ({ onClose }) => {
                 onChange={(e) =>
                   setNewItem({ ...newItem, name: e.target.value })
                 }
-                className="w-full border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] text-[0.78vw] font-medium text-slate-900 bg-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-500"
+                className="w-full border border-slate-300 rounded-[0.4vw] px-[0.7vw] py-[0.45vw] text-[0.83vw] font-medium text-slate-900 bg-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-500"
                 placeholder="e.g. Main Board"
               />
             </div>
             <button
               type="submit"
-              className="px-[1vw] h-[2.2vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.75vw] font-semibold cursor-pointer transition-all shadow-2xs flex items-center gap-[0.35vw] active:scale-95"
+              className="px-[1vw] h-[2.2vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-full text-[0.8vw] font-semibold cursor-pointer transition-all shadow-2xs flex items-center gap-[0.35vw] active:scale-95"
             >
               <Plus className="w-[0.85vw] h-[0.85vw]" /> Add
             </button>
@@ -364,11 +364,11 @@ const BoardTypeMasterModal = ({ onClose }) => {
         {/* Master Table List */}
         <div className="flex-1 overflow-hidden p-[1.2vw] bg-white flex flex-col min-h-0">
           {loading ? (
-            <div className="text-center text-[0.8vw] text-slate-700 py-[2vw]">
+            <div className="text-center text-[0.85vw] text-slate-700 py-[2vw]">
               Loading...
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center text-[0.8vw] text-slate-700 py-[2vw]">
+            <div className="text-center text-[0.85vw] text-slate-700 py-[2vw]">
               No board types found.
             </div>
           ) : (
@@ -376,10 +376,10 @@ const BoardTypeMasterModal = ({ onClose }) => {
               <table className="w-full border-collapse table-fixed">
                 <thead className="shrink-0 bg-[#E9EDF7]">
                   <tr className="border-b border-slate-300">
-                    <th className="text-left py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-800 uppercase tracking-wider">
+                    <th className="text-left py-[0.55vw] px-[0.8vw] text-[0.77vw] font-bold text-slate-800 uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.72vw] font-bold text-slate-800 uppercase tracking-wider w-[22%]">
+                    <th className="text-right py-[0.55vw] px-[0.8vw] text-[0.77vw] font-bold text-slate-800 uppercase tracking-wider w-[22%]">
                       Actions
                     </th>
                   </tr>
@@ -402,7 +402,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                                 onChange={(e) =>
                                   setEditItem({ ...editItem, name: e.target.value })
                                 }
-                                className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.78vw] font-medium text-slate-900 outline-none focus:ring-1 focus:ring-blue-400"
+                                className="w-full border border-blue-400 rounded-[0.35vw] px-[0.5vw] py-[0.3vw] text-[0.83vw] font-medium text-slate-900 outline-none focus:ring-1 focus:ring-blue-400"
                               />
                             </td>
                             <td className="py-[0.45vw] px-[0.8vw] text-right w-[22%]">
@@ -426,7 +426,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                           </>
                         ) : (
                           <>
-                            <td className="py-[0.55vw] px-[0.8vw] text-[0.78vw] font-medium text-slate-800">
+                            <td className="py-[0.55vw] px-[0.8vw] text-[0.83vw] font-medium text-slate-800">
                               {item.name}
                             </td>
                             <td className="py-[0.55vw] px-[0.8vw] text-right w-[22%]">
@@ -487,10 +487,10 @@ const BoardTypeMasterModal = ({ onClose }) => {
                     <Trash2 className="w-[1vw] h-[1vw] text-rose-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-[0.9vw] font-semibold text-slate-800 leading-snug">
+                    <h4 className="text-[0.95vw] font-semibold text-slate-800 leading-snug">
                       Delete Board Type
                     </h4>
-                    <p className="text-[0.74vw] text-slate-500 mt-[0.2vw] font-normal leading-relaxed">
+                    <p className="text-[0.79vw] text-slate-500 mt-[0.2vw] font-medium leading-relaxed">
                       Are you sure you want to delete <strong className="font-semibold text-slate-700">"{deleteConfirmItem.name}"</strong>?
                     </p>
                   </div>
@@ -509,7 +509,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                     type="button"
                     onClick={() => setDeleteConfirmItem(null)}
                     disabled={isDeleting}
-                    className="px-[0.8vw] py-[0.35vw] text-[0.72vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded-[0.35vw] shadow-2xs transition-all cursor-pointer"
+                    className="px-[0.8vw] py-[0.35vw] text-[0.77vw] font-medium text-slate-600 hover:text-slate-800 bg-white border border-slate-300 rounded-[0.35vw] shadow-2xs transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -517,7 +517,7 @@ const BoardTypeMasterModal = ({ onClose }) => {
                     type="button"
                     onClick={handleDelete}
                     disabled={isDeleting}
-                    className="inline-flex items-center gap-[0.3vw] px-[0.85vw] py-[0.35vw] text-[0.72vw] font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-[0.35vw] shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                    className="inline-flex items-center gap-[0.3vw] px-[0.85vw] py-[0.35vw] text-[0.77vw] font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-[0.35vw] shadow-xs transition-all cursor-pointer disabled:opacity-50"
                   >
                     {isDeleting ? "Deleting..." : "Delete"}
                   </button>
@@ -555,14 +555,14 @@ const ReportsModal = ({ row, onClose }) => {
             </div>
             <div>
               <div className="flex items-center gap-[0.45vw] flex-wrap">
-                <span className="font-medium text-[0.95vw] text-slate-900 tracking-tight">
+                <span className="font-medium text-[1vw] text-slate-900 tracking-tight">
                   Service Technical Reports
                 </span>
-                <span className="inline-flex items-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.66vw] font-normal border bg-blue-50 text-blue-700 border-blue-200">
+                <span className="inline-flex items-center px-[0.45vw] py-[0.08vw] rounded-full text-[0.71vw] font-medium border bg-blue-50 text-blue-700 border-blue-200">
                   {products.length} {products.length === 1 ? "Product" : "Products"}
                 </span>
               </div>
-              <div className="text-[0.72vw] text-slate-500 font-normal mt-[0.1vw] flex items-center gap-[0.3vw] truncate max-w-[32vw]">
+              <div className="text-[0.77vw] text-slate-500 font-medium mt-[0.1vw] flex items-center gap-[0.3vw] truncate max-w-[32vw]">
                 <span className="text-slate-800 font-medium">{row.customerName || "Customer"}</span>
                 <span className="text-slate-300">•</span>
                 <span>Ref: <span className="font-mono text-slate-700">{row.refNoCustomer || row.refNo || "—"}</span></span>
@@ -589,7 +589,7 @@ const ReportsModal = ({ row, onClose }) => {
         {/* Scrollable Products List */}
         <div className="flex-1 overflow-y-auto p-[1.3vw] space-y-[0.85vw] bg-slate-50/50">
           {products.length === 0 ? (
-            <div className="p-[3vw] text-center text-slate-400 text-[0.8vw] italic flex flex-col items-center gap-[0.6vw] bg-white rounded-[0.8vw] border border-slate-200">
+            <div className="p-[3vw] text-center text-slate-400 text-[0.85vw] italic flex flex-col items-center gap-[0.6vw] bg-white rounded-[0.8vw] border border-slate-200">
               <AlertCircle className="w-[1.8vw] h-[1.8vw] text-slate-400" />
               <span>No products attached to this inward entry.</span>
             </div>
@@ -613,14 +613,14 @@ const ReportsModal = ({ row, onClose }) => {
                     }`}
                   >
                     <div className="flex items-center gap-[0.8vw]">
-                      <span className="w-[1.5vw] h-[1.5vw] bg-blue-50 border border-blue-200 text-blue-700 rounded-full flex items-center justify-center text-[0.68vw] font-mono font-medium shrink-0">
+                      <span className="w-[1.5vw] h-[1.5vw] bg-blue-50 border border-blue-200 text-blue-700 rounded-full flex items-center justify-center text-[0.73vw] font-mono font-medium shrink-0">
                         #{idx + 1}
                       </span>
                       <div>
-                        <div className="text-[0.82vw] font-medium text-slate-800 leading-snug">
+                        <div className="text-[0.87vw] font-medium text-slate-800 leading-snug">
                           {prod.productDescription || "Product Item"}
                         </div>
-                        <div className="flex items-center gap-[0.6vw] text-[0.7vw] text-slate-500 font-normal mt-[0.15vw]">
+                        <div className="flex items-center gap-[0.6vw] text-[0.75vw] text-slate-500 font-medium mt-[0.15vw]">
                           <span>SN: <span className="font-mono font-medium text-slate-700">{prod.serialNumber || "—"}</span></span>
                           <span className="text-slate-300">•</span>
                           <span>Board: <span className="text-slate-700 font-medium">{prod.boardType || "—"}</span></span>
@@ -635,7 +635,7 @@ const ReportsModal = ({ row, onClose }) => {
 
                     <div className="flex items-center gap-[0.8vw]">
                       <span
-                        className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.66vw] font-normal border ${
+                        className={`inline-flex items-center gap-[0.25vw] px-[0.5vw] py-[0.1vw] rounded-full text-[0.71vw] font-medium border ${
                           r?.status === "Completed"
                             ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                             : r?.status === "Repair in Progress" || r?.status === "Under Testing"
@@ -679,75 +679,75 @@ const ReportsModal = ({ row, onClose }) => {
                         className="overflow-hidden border-t border-slate-200/80 bg-white"
                       >
                         {!r ? (
-                          <div className="p-[2vw] text-center text-slate-400 text-[0.76vw] italic flex flex-col items-center gap-[0.4vw]">
+                          <div className="p-[2vw] text-center text-slate-400 text-[0.81vw] italic flex flex-col items-center gap-[0.4vw]">
                             <AlertCircle className="w-[1.4vw] h-[1.4vw] text-blue-400" />
                             <span>No technical report submitted yet by the assigned employee.</span>
                           </div>
                         ) : (
                           <div className="p-[1.1vw] space-y-[0.9vw] bg-white divide-y divide-slate-200">
                             {/* Key Metric Row (Clean inline stat strip) */}
-                            <div className="grid grid-cols-4 gap-[0.8vw] pb-[0.8vw] text-[0.76vw]">
+                            <div className="grid grid-cols-4 gap-[0.8vw] pb-[0.8vw] text-[0.81vw]">
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Tested By
                                 </span>
-                                <span className="font-bold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-bold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.testedBy || "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Completed Date
                                 </span>
-                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-semibold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.completedDate ? fmtDate(r.completedDate) : "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   4M Category
                                 </span>
-                                <span className="font-bold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-bold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.fourMCategory || "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Error Code
                                 </span>
-                                <span className="font-mono font-bold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-mono font-bold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.errorCode || "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Material Cost
                                 </span>
-                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-semibold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.materialCost != null && r.materialCost !== "" ? `₹${r.materialCost}` : "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Man Power Cost
                                 </span>
-                                <span className="font-semibold text-emerald-800 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-semibold text-emerald-800 text-[0.83vw] mt-[0.1vw] block">
                                   {r.manpowerCost != null ? `₹${Number(r.manpowerCost).toFixed(2)}` : "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Time (Hours)
                                 </span>
-                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-semibold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.timeInHours ? `${r.timeInHours} hrs` : "—"}
                                 </span>
                               </div>
                               <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
-                                <span className="text-slate-700 block text-[0.66vw] font-bold uppercase tracking-wider">
+                                <span className="text-slate-700 block text-[0.71vw] font-bold uppercase tracking-wider">
                                   Disposition
                                 </span>
-                                <span className="font-semibold text-slate-900 text-[0.78vw] mt-[0.1vw] block">
+                                <span className="font-semibold text-slate-900 text-[0.83vw] mt-[0.1vw] block">
                                   {r.disposition || "—"}
                                 </span>
                               </div>
@@ -756,38 +756,38 @@ const ReportsModal = ({ row, onClose }) => {
                             {/* Details: Problems, Root Cause, Corrective Action */}
                             <div className="pt-[0.8vw] space-y-[0.7vw]">
                               <div>
-                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
+                                <span className="text-[0.75vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                   Problem Description
                                 </span>
-                                <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
+                                <div className="text-[0.81vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
                                   {r.problemDescription ? r.problemDescription : <span className="text-slate-700 italic">No description recorded.</span>}
                                 </div>
                               </div>
 
                               <div>
-                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
+                                <span className="text-[0.75vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                   Root Cause Analysis
                                 </span>
-                                <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
+                                <div className="text-[0.81vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
                                   {r.rootCause ? r.rootCause : <span className="text-slate-700 italic">No root cause recorded.</span>}
                                 </div>
                               </div>
 
                               <div>
-                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
+                                <span className="text-[0.75vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                   Corrective Action Taken
                                 </span>
-                                <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
+                                <div className="text-[0.81vw] text-slate-900 bg-slate-50/90 p-[0.55vw] rounded-[0.35vw] border border-slate-200 font-medium leading-relaxed">
                                   {r.correctiveAction ? r.correctiveAction : <span className="text-slate-700 italic">No corrective action recorded.</span>}
                                 </div>
                               </div>
 
                               {r.designators && (
                                 <div>
-                                  <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
+                                  <span className="text-[0.75vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.2vw]">
                                     Designators
                                   </span>
-                                  <div className="text-[0.76vw] text-slate-900 bg-slate-50/90 p-[0.5vw] rounded-[0.35vw] border border-slate-200 font-mono font-medium">
+                                  <div className="text-[0.81vw] text-slate-900 bg-slate-50/90 p-[0.5vw] rounded-[0.35vw] border border-slate-200 font-mono font-medium">
                                     {r.designators}
                                   </div>
                                 </div>
@@ -795,7 +795,7 @@ const ReportsModal = ({ row, onClose }) => {
 
                               {r.partsReplacement && (
                                 <div>
-                                  <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.3vw]">
+                                  <span className="text-[0.75vw] font-bold text-slate-800 uppercase tracking-wide block mb-[0.3vw]">
                                     Parts Replacement
                                   </span>
                                   <div className="flex flex-wrap gap-[0.35vw]">
@@ -806,7 +806,7 @@ const ReportsModal = ({ row, onClose }) => {
                                       .map((part, i) => (
                                         <span
                                           key={i}
-                                          className="text-[0.72vw] font-bold text-slate-800 bg-slate-100 border border-slate-300 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
+                                          className="text-[0.77vw] font-bold text-slate-800 bg-slate-100 border border-slate-300 px-[0.5vw] py-[0.15vw] rounded-[0.3vw] flex items-center gap-[0.3vw]"
                                         >
                                           <span className="w-[0.3vw] h-[0.3vw] rounded-full bg-blue-600" />
                                           {part}
@@ -820,7 +820,7 @@ const ReportsModal = ({ row, onClose }) => {
                             {/* Attachment / Image */}
                             {r.image && (
                               <div className="pt-[0.8vw] flex flex-col gap-[0.4vw]">
-                                <span className="text-[0.7vw] font-bold text-slate-800 uppercase tracking-wide">
+                                <span className="text-[0.75vw] font-bold text-slate-800 uppercase tracking-wide">
                                   Technical Attachment
                                 </span>
                                 <div className="rounded-[0.4vw] overflow-hidden border border-slate-200 bg-slate-50/60 max-h-[22vh] p-[0.5vw] flex justify-center items-center">
@@ -829,7 +829,7 @@ const ReportsModal = ({ row, onClose }) => {
                                       href={`${API_URL.replace("/api", "")}${r.image}`}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 rounded-[0.35vw] font-bold text-[0.74vw] cursor-pointer transition-colors"
+                                      className="flex items-center gap-[0.4vw] px-[0.9vw] py-[0.5vw] bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 rounded-[0.35vw] font-bold text-[0.79vw] cursor-pointer transition-colors"
                                     >
                                       <FileText className="w-[1vw] h-[1vw] text-rose-600" />
                                       <span>Open Attached PDF Document</span>
@@ -854,7 +854,7 @@ const ReportsModal = ({ row, onClose }) => {
                             {/* Status History Trail */}
                             {r.history && r.history.length > 0 && (
                               <div className="bg-white border border-slate-200 rounded-[0.6vw] p-[0.9vw] shadow-2xs space-y-[0.7vw]">
-                                <h4 className="text-[0.75vw] font-medium text-slate-800 flex items-center gap-[0.4vw] pb-[0.45vw] border-b border-slate-100">
+                                <h4 className="text-[0.8vw] font-medium text-slate-800 flex items-center gap-[0.4vw] pb-[0.45vw] border-b border-slate-100">
                                   <History className="w-[0.8vw] h-[0.8vw] text-blue-600" />
                                   Status History Trail
                                 </h4>
@@ -870,14 +870,14 @@ const ReportsModal = ({ row, onClose }) => {
                                         <div className="absolute -left-[0.45vw] top-[0.1vw] w-[0.7vw] h-[0.7vw] bg-blue-600 rounded-full border-2 border-white shadow-2xs" />
                                         <div className="flex justify-between items-start gap-[1vw]">
                                           <div className="flex-1">
-                                            <span className="text-[0.66vw] font-normal text-blue-700 px-[0.45vw] py-[0.08vw] bg-blue-50 rounded-full border border-blue-200">
+                                            <span className="text-[0.71vw] font-medium text-blue-700 px-[0.45vw] py-[0.08vw] bg-blue-50 rounded-full border border-blue-200">
                                               {h.status}
                                             </span>
-                                            <p className="text-[0.74vw] text-slate-700 mt-[0.25vw] leading-relaxed">
+                                            <p className="text-[0.79vw] text-slate-700 mt-[0.25vw] leading-relaxed">
                                               {h.remark || "No remark provided."}
                                             </p>
                                           </div>
-                                          <div className="text-right flex-shrink-0 text-[0.68vw] text-slate-500 font-normal">
+                                          <div className="text-right flex-shrink-0 text-[0.73vw] text-slate-500 font-medium">
                                             {new Date(h.timestamp).toLocaleDateString("en-GB")}{" "}
                                             {new Date(h.timestamp).toLocaleTimeString([], {
                                               hour: "2-digit",
@@ -907,7 +907,7 @@ const ReportsModal = ({ row, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[0.76vw] rounded-full transition-colors cursor-pointer border-0"
+            className="px-[1.3vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[0.81vw] rounded-full transition-colors cursor-pointer border-0"
           >
             Close Panel
           </button>
@@ -919,10 +919,10 @@ const ReportsModal = ({ row, onClose }) => {
 
 const DetailItem = ({ label, value }) => (
   <div className="bg-slate-50 p-[0.6vw] rounded-[0.4vw] border border-slate-300 shadow-sm">
-    <span className="text-[0.62vw] font-bold text-blue-500 uppercase block leading-none mb-[0.3vw]">
+    <span className="text-[0.67vw] font-bold text-blue-500 uppercase block leading-none mb-[0.3vw]">
       {label}
     </span>
-    <span className="text-[0.85vw] font-semibold text-slate-800">
+    <span className="text-[0.9vw] font-semibold text-slate-800">
       {value || "—"}
     </span>
   </div>
@@ -930,10 +930,10 @@ const DetailItem = ({ label, value }) => (
 
 const DetailSection = ({ label, value }) => (
   <div className="bg-white border border-slate-300 rounded-[0.5vw] p-[0.8vw] shadow-sm hover:border-blue-200 transition-all">
-    <span className="text-[0.62vw] font-bold text-blue-500 uppercase block mb-[0.4vw]">
+    <span className="text-[0.67vw] font-bold text-blue-500 uppercase block mb-[0.4vw]">
       {label}
     </span>
-    <p className="text-[0.82vw] text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">
+    <p className="text-[0.87vw] text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">
       {value || "No information provided."}
     </p>
   </div>
@@ -1001,11 +1001,11 @@ const AssignCell = ({
         <div className="flex items-start justify-center gap-[0.5vw] w-full">
           <Avatar name={prod.assignedToName} size="sm" />
           <div>
-            <span className="text-[0.72vw] text-black font-semibold leading-tight block">
+            <span className="text-[0.77vw] text-black font-semibold leading-tight block">
               {prod.assignedToName}
             </span>
             {prod.productSegment && (
-              <span className="text-[0.6vw] text-blue-500 font-medium">
+              <span className="text-[0.65vw] text-blue-500 font-medium">
                 {prod.productSegment}
               </span>
             )}
@@ -1015,12 +1015,12 @@ const AssignCell = ({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="flex items-center justify-center gap-[0.35vw] px-[0.65vw] py-[0.3vw] border border-dashed border-gray-400 rounded-[0.4vw] text-[0.7vw] text-black hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 cursor-pointer transition-all mx-auto w-max"
+          className="flex items-center justify-center gap-[0.35vw] px-[0.65vw] py-[0.3vw] border border-dashed border-gray-400 rounded-[0.4vw] text-[0.75vw] text-black hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 cursor-pointer transition-all mx-auto w-max"
         >
           <Plus className="w-[0.72vw] h-[0.72vw]" />
           Assign
           {hasGroupCandidates && (
-            <span className="ml-[0.2vw] bg-blue-100 text-blue-600 rounded text-[0.58vw] px-[0.3vw] font-bold">
+            <span className="ml-[0.2vw] bg-blue-100 text-blue-600 rounded text-[0.63vw] px-[0.3vw] font-bold">
               +{sameSegmentProducts.length} seg
             </span>
           )}
@@ -1040,7 +1040,7 @@ const AssignCell = ({
                 <button
                   type="button"
                   onClick={() => setTab("single")}
-                  className={`flex-1 py-[0.45vw] text-[0.7vw] font-semibold transition-colors cursor-pointer ${
+                  className={`flex-1 py-[0.45vw] text-[0.75vw] font-semibold transition-colors cursor-pointer ${
                     tab === "single"
                       ? "border-b-2 border-blue-600 text-blue-600 bg-blue-50"
                       : "text-black/60 hover:bg-gray-50"
@@ -1051,14 +1051,14 @@ const AssignCell = ({
                 <button
                   type="button"
                   onClick={() => setTab("group")}
-                  className={`flex-1 py-[0.45vw] text-[0.7vw] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-[0.3vw] ${
+                  className={`flex-1 py-[0.45vw] text-[0.75vw] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-[0.3vw] ${
                     tab === "group"
                       ? "border-b-2 border-blue-600 text-blue-600 bg-blue-50"
                       : "text-black/60 hover:bg-gray-50"
                   }`}
                 >
                   Assign Segment Group
-                  <span className="bg-blue-100 text-blue-700 text-[0.58vw] px-[0.3vw] rounded font-bold">
+                  <span className="bg-blue-100 text-blue-700 text-[0.63vw] px-[0.3vw] rounded font-bold">
                     {sameSegmentProducts.length + 1}
                   </span>
                 </button>
@@ -1066,7 +1066,7 @@ const AssignCell = ({
             )}
 
             {tab === "group" && hasGroupCandidates && (
-              <div className="px-[0.7vw] py-[0.4vw] bg-blue-50 border-b border-blue-100 text-[0.68vw] text-blue-700 font-medium flex items-center gap-[0.4vw]">
+              <div className="px-[0.7vw] py-[0.4vw] bg-blue-50 border-b border-blue-100 text-[0.73vw] text-blue-700 font-medium flex items-center gap-[0.4vw]">
                 <Shield className="w-[0.8vw] h-[0.8vw]" />
                 Segment: <strong>{prod.productSegment}</strong> — will assign{" "}
                 {sameSegmentProducts.length + 1} products
@@ -1081,7 +1081,7 @@ const AssignCell = ({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search engineer…"
-                  className="w-full pl-[1.8vw] pr-[0.5vw] py-[0.4vw] border border-gray-400 rounded-[0.3vw] text-[0.72vw] outline-none focus:border-blue-400"
+                  className="w-full pl-[1.8vw] pr-[0.5vw] py-[0.4vw] border border-gray-400 rounded-[0.3vw] text-[0.77vw] outline-none focus:border-blue-400"
                 />
               </div>
             </div>
@@ -1123,22 +1123,22 @@ const AssignCell = ({
                   >
                     <Avatar name={eng.name} size="sm" />
                     <div className="flex-1">
-                      <div className="font-medium text-black/90 text-[0.75vw]">
+                      <div className="font-medium text-black/90 text-[0.8vw]">
                         {eng.name}
                       </div>
-                      <div className="text-[0.62vw] text-black/50">
+                      <div className="text-[0.67vw] text-black/50">
                         {eng.department}
                       </div>
                     </div>
                     {tab === "group" && hasGroupCandidates && (
-                      <span className="text-[0.6vw] bg-green-100 text-green-700 px-[0.35vw] py-[0.1vw] rounded font-bold">
+                      <span className="text-[0.65vw] bg-green-100 text-green-700 px-[0.35vw] py-[0.1vw] rounded font-bold">
                         ×{sameSegmentProducts.length + 1}
                       </span>
                     )}
                   </div>
                 ))
               ) : (
-                <div className="p-[1vw] text-center text-[0.72vw] text-black/50">
+                <div className="p-[1vw] text-center text-[0.77vw] text-black/50">
                   No engineers found
                 </div>
               )}
@@ -1162,16 +1162,16 @@ const AssignCell = ({
                   <AlertCircle className="w-[1.1vw] h-[1.1vw] text-orange-600" />
                 </div>
                 <div>
-                  <div className="text-[0.9vw] font-bold text-black">
+                  <div className="text-[0.95vw] font-bold text-black">
                     Expected Delivery Date Required
                   </div>
-                  <div className="text-[0.72vw] text-black/70">
+                  <div className="text-[0.77vw] text-black/70">
                     Please set an expected delivery date before assigning.
                   </div>
                 </div>
               </div>
               <div className="mb-[1.2vw]">
-                <label className="text-[0.72vw] font-semibold text-black/80 block mb-[0.4vw]">
+                <label className="text-[0.77vw] font-semibold text-black/80 block mb-[0.4vw]">
                   Expected Delivery Date
                 </label>
                 <input
@@ -1179,7 +1179,7 @@ const AssignCell = ({
                   value={deliveryDateInput}
                   onChange={(e) => setDeliveryDateInput(e.target.value)}
                   min={todayDateStr()}
-                  className="w-full border border-gray-400 rounded-[0.4vw] px-[0.6vw] py-[0.5vw] text-[0.8vw] outline-none focus:border-blue-400 text-black"
+                  className="w-full border border-gray-400 rounded-[0.4vw] px-[0.6vw] py-[0.5vw] text-[0.85vw] outline-none focus:border-blue-400 text-black"
                 />
               </div>
               <div className="flex gap-[0.6vw] justify-end">
@@ -1189,7 +1189,7 @@ const AssignCell = ({
                     setPendingAssign(null);
                     setDeliveryDateInput("");
                   }}
-                  className="px-[1.2vw] py-[0.55vw] border border-gray-400 rounded-[0.4vw] text-[0.78vw] text-black/80 hover:bg-gray-50 cursor-pointer"
+                  className="px-[1.2vw] py-[0.55vw] border border-gray-400 rounded-[0.4vw] text-[0.83vw] text-black/80 hover:bg-gray-50 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -1216,7 +1216,7 @@ const AssignCell = ({
                     setPendingAssign(null);
                     setDeliveryDateInput("");
                   }}
-                  className="px-[1.4vw] py-[0.55vw] bg-[#1a73e8] hover:bg-[#1557b0] disabled:opacity-50 text-slate-800 rounded-[0.4vw] text-[0.78vw] font-semibold cursor-pointer flex items-center gap-[0.4vw]"
+                  className="px-[1.4vw] py-[0.55vw] bg-[#1a73e8] hover:bg-[#1557b0] disabled:opacity-50 text-slate-800 rounded-[0.4vw] text-[0.83vw] font-semibold cursor-pointer flex items-center gap-[0.4vw]"
                 >
                   <User className="w-[0.85vw] h-[0.85vw]" />
                   Confirm & Assign
@@ -1327,7 +1327,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
       <button
         type="button"
         onClick={handleToggle}
-        className={`text-[0.7vw] px-[0.6vw] py-[0.3vw] rounded-[0.4vw] border font-medium flex items-center justify-between gap-[0.35vw] cursor-pointer ${cls}`}
+        className={`text-[0.75vw] px-[0.6vw] py-[0.3vw] rounded-[0.4vw] border font-medium flex items-center justify-between gap-[0.35vw] cursor-pointer ${cls}`}
       >
         {status === "Pending"
           ? "Review Required"
@@ -1351,14 +1351,14 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
               exit={{ opacity: 0, scale: 0.95 }}
               className="bg-white border border-gray-400 shadow-xl rounded-[0.5vw] w-[17vw] p-[0.8vw]"
             >
-              <div className="text-[0.72vw] font-semibold text-black/80 mb-[0.6vw]">
+              <div className="text-[0.77vw] font-semibold text-black/80 mb-[0.6vw]">
                 Review Decision
               </div>
               <div className="flex gap-[0.5vw] mb-[0.7vw]">
                 <button
                   type="button"
                   onClick={() => setStatus("Completed")}
-                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.72vw] font-medium cursor-pointer transition-all ${
+                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.77vw] font-medium cursor-pointer transition-all ${
                     status === "Completed"
                       ? "bg-emerald-50 text-emerald-700 border-emerald-400 ring-2 ring-emerald-100"
                       : "bg-gray-50 text-slate-600 border-gray-300 hover:bg-gray-100"
@@ -1369,7 +1369,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                 <button
                   type="button"
                   onClick={() => setStatus("Admin Returned")}
-                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.72vw] font-medium cursor-pointer transition-all ${
+                  className={`flex-1 py-[0.4vw] rounded-[0.4vw] border text-[0.77vw] font-medium cursor-pointer transition-all ${
                     status === "Admin Returned"
                       ? "bg-rose-50 text-rose-700 border-rose-400 ring-2 ring-rose-100"
                       : "bg-gray-50 text-slate-600 border-gray-300 hover:bg-gray-100"
@@ -1384,14 +1384,14 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
                 placeholder="Add remarks…"
-                className="w-full border border-gray-400 rounded-[0.3vw] p-[0.4vw] text-[0.72vw] outline-none focus:border-blue-400 resize-none mb-[0.6vw] text-black"
+                className="w-full border border-gray-400 rounded-[0.3vw] p-[0.4vw] text-[0.77vw] outline-none focus:border-blue-400 resize-none mb-[0.6vw] text-black"
               />
 
               <div className="flex justify-end gap-[0.4vw]">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="px-[0.8vw] py-[0.3vw] text-[0.68vw] border border-gray-400 rounded-[0.3vw] text-black/80 hover:bg-gray-50 cursor-pointer font-medium"
+                  className="px-[0.8vw] py-[0.3vw] text-[0.73vw] border border-gray-400 rounded-[0.3vw] text-black/80 hover:bg-gray-50 cursor-pointer font-medium"
                 >
                   Cancel
                 </button>
@@ -1401,7 +1401,7 @@ const FinalStatusCell = ({ row, prod, onUpdateProduct }) => {
                   disabled={
                     status !== "Completed" && status !== "Admin Returned"
                   }
-                  className={`px-[0.8vw] py-[0.3vw] text-[0.68vw] rounded-[0.3vw] font-medium flex items-center gap-[0.3vw] ${
+                  className={`px-[0.8vw] py-[0.3vw] text-[0.73vw] rounded-[0.3vw] font-medium flex items-center gap-[0.3vw] ${
                     status === "Completed" || status === "Admin Returned"
                       ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-sm"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -1429,7 +1429,7 @@ const HistoryCellButton = ({ prod, row }) => {
         type="button"
         onClick={() => setShowHistory(true)}
         title="View History"
-        className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
+        className="px-[0.6vw] py-[0.2vw] text-[0.75vw] font-semibold text-[#1a73e8] hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs active:scale-95"
       >
         View
       </button>
@@ -1447,11 +1447,11 @@ const HistoryCellButton = ({ prod, row }) => {
               {/* Header */}
               <div className="px-[1.4vw] py-[1.1vw] border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
                 <div>
-                  <h3 className="text-[1.05vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
+                  <h3 className="text-[1.1vw] font-semibold text-slate-800 flex items-center gap-[0.45vw]">
                     <Clock className="w-[1.2vw] h-[1.2vw] text-indigo-600" />
                     Status & Edit History
                   </h3>
-                  <p className="text-[0.74vw] text-slate-600 font-normal mt-[0.15vw]">
+                  <p className="text-[0.79vw] text-slate-600 font-medium mt-[0.15vw]">
                     {prod.productDescription || "Product"} (
                     <span className="font-mono font-medium text-slate-800">{prod.serialNumber || "—"}</span>)
                   </p>
@@ -1591,7 +1591,7 @@ const HistoryCellButton = ({ prod, row }) => {
                     return (
                       <div className="flex flex-col items-center justify-center py-[2.5vw] text-slate-700">
                         <Clock className="w-[1.8vw] h-[1.8vw] mb-[0.5vw] text-slate-400" />
-                        <span className="text-[0.82vw] font-semibold text-slate-800">
+                        <span className="text-[0.87vw] font-semibold text-slate-800">
                           Not yet assigned or updated.
                         </span>
                       </div>
@@ -1641,13 +1641,13 @@ const HistoryCellButton = ({ prod, row }) => {
                             <div className="py-[0.5vw] border-b border-slate-200/80 last:border-b-0">
                               <div className="flex items-center justify-between gap-[0.5vw] flex-wrap">
                                 {entry.type === "assigned" ? (
-                                  <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                                  <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-blue-50 text-blue-700 border-blue-200">
                                     Assigned → {entry.name}
                                   </span>
                                 ) : entry.type === "admin" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                      className={`text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                         entry.status.includes("Approved")
                                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : "bg-rose-50 text-rose-700 border-rose-200"
@@ -1656,34 +1656,34 @@ const HistoryCellButton = ({ prod, row }) => {
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-normal">
+                                      <span className="text-[0.73vw] px-[0.4vw] py-[0.05vw] bg-indigo-50 text-indigo-800 rounded border border-indigo-200 font-medium">
                                         Admin: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "adminEdit" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
+                                    <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-indigo-50 text-indigo-700 border-indigo-200">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                      <span className="text-[0.73vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-medium">
                                         By: {entry.adminName}
                                       </span>
                                     )}
                                   </div>
                                 ) : entry.type === "closureEdit" ? (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
-                                    <span className="text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
+                                    <span className="text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border bg-amber-50 text-amber-800 border-amber-300">
                                       {entry.status}
                                     </span>
                                     {entry.adminName && (
-                                      <span className="text-[0.68vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-normal">
+                                      <span className="text-[0.73vw] px-[0.4vw] py-[0.05vw] bg-slate-100 text-slate-700 rounded border border-slate-200 font-medium">
                                         {entry.adminName}
                                       </span>
                                     )}
                                     {entry.occurredAfterCompleted && (
-                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
+                                      <span className="text-[0.67vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
                                         Post-Completion Edit
                                       </span>
                                     )}
@@ -1691,7 +1691,7 @@ const HistoryCellButton = ({ prod, row }) => {
                                 ) : (
                                   <div className="flex items-center gap-[0.3vw] flex-wrap">
                                     <span
-                                      className={`text-[0.72vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
+                                      className={`text-[0.77vw] px-[0.5vw] py-[0.1vw] rounded-full font-medium border ${
                                         entry.status === "Completed"
                                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           : entry.status === "Hold"
@@ -1706,7 +1706,7 @@ const HistoryCellButton = ({ prod, row }) => {
                                       {entry.status}
                                     </span>
                                     {entry.occurredAfterCompleted && (
-                                      <span className="text-[0.62vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
+                                      <span className="text-[0.67vw] px-[0.35vw] py-[0.05vw] bg-rose-50 text-rose-700 rounded border border-rose-200 font-medium uppercase tracking-wider">
                                         Edited After Completed
                                       </span>
                                     )}
@@ -1714,14 +1714,14 @@ const HistoryCellButton = ({ prod, row }) => {
                                 )}
 
                                 {tsLabel && (
-                                  <span className="text-[0.68vw] text-slate-500 font-mono font-normal whitespace-nowrap">
+                                  <span className="text-[0.73vw] text-slate-500 font-mono font-medium whitespace-nowrap">
                                     {tsLabel}
                                   </span>
                                 )}
                               </div>
 
                               {entry.remark && (
-                                <div className="mt-[0.35vw] text-[0.76vw] text-slate-700 leading-relaxed font-normal">
+                                <div className="mt-[0.35vw] text-[0.81vw] text-slate-700 leading-relaxed font-medium">
                                   <span className="text-slate-500 font-medium mr-[0.3vw]">
                                     Remarks / Reason:
                                   </span>
@@ -1732,7 +1732,7 @@ const HistoryCellButton = ({ prod, row }) => {
                               {/* Diffs display for edits */}
                               {entry.diffs && entry.diffs.length > 0 && (
                                 <div className="mt-[0.5vw] bg-purple-50/30 rounded-[0.4vw] border border-purple-200/60 p-[0.45vw] space-y-[0.35vw]">
-                                  <div className="flex items-center justify-between text-[0.72vw]">
+                                  <div className="flex items-center justify-between text-[0.77vw]">
                                     <span className="font-semibold text-purple-800 flex items-center gap-[0.35vw]">
                                       <span className="w-[0.4vw] h-[0.4vw] rounded-full bg-purple-500" />
                                       Changed Fields ({entry.diffs.length})
@@ -1742,28 +1742,28 @@ const HistoryCellButton = ({ prod, row }) => {
                                     {entry.diffs.map((d, di) => (
                                       <div
                                         key={di}
-                                        className="text-[0.74vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
+                                        className="text-[0.79vw] bg-white rounded-[0.3vw] p-[0.4vw] border border-slate-200"
                                       >
-                                        <div className="font-medium text-slate-700 text-[0.7vw] mb-[0.2vw]">
+                                        <div className="font-medium text-slate-700 text-[0.75vw] mb-[0.2vw]">
                                           {d.field}
                                         </div>
                                         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[0.45vw]">
                                           <div className="bg-rose-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-rose-200/80">
-                                            <div className="text-[0.6vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
+                                            <div className="text-[0.65vw] font-semibold text-rose-600 uppercase tracking-wider mb-[0.05vw]">
                                               Previous
                                             </div>
-                                            <div className="text-rose-700 font-normal text-[0.72vw] break-words">
+                                            <div className="text-rose-700 font-medium text-[0.77vw] break-words">
                                               {String(d.originalValue || "—")}
                                             </div>
                                           </div>
-                                          <div className="text-slate-400 font-normal text-[0.75vw] px-[0.1vw]">
+                                          <div className="text-slate-400 font-medium text-[0.8vw] px-[0.1vw]">
                                             →
                                           </div>
                                           <div className="bg-emerald-50/40 rounded-[0.25vw] px-[0.4vw] py-[0.25vw] border border-emerald-200/80">
-                                            <div className="text-[0.6vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
+                                            <div className="text-[0.65vw] font-semibold text-emerald-700 uppercase tracking-wider mb-[0.05vw]">
                                               Updated
                                             </div>
-                                            <div className="text-emerald-900 font-medium text-[0.72vw] break-words">
+                                            <div className="text-emerald-900 font-medium text-[0.77vw] break-words">
                                               {String(d.editedValue || "—")}
                                             </div>
                                           </div>
@@ -1787,7 +1787,7 @@ const HistoryCellButton = ({ prod, row }) => {
                 <button
                   type="button"
                   onClick={() => setShowHistory(false)}
-                  className="px-[1.3vw] h-[2vw] text-[0.74vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="px-[1.3vw] h-[2vw] text-[0.79vw] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   Close
                 </button>
@@ -2049,7 +2049,7 @@ const AdminTableView = ({
       <div className="overflow-auto flex-1 min-h-0 w-full rounded-t-[0.6vw]">
         <table className="w-full text-left border-collapse border-spacing-0">
           {/* ── THEAD ─────────────────────────────────────────────────────── */}
-          <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-xs">
+          <thead className="sticky top-0 z-40 bg-[#E9EDF7] border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider shadow-xs">
             <tr className="bg-[#E9EDF7]">
               {canDelete && !isSupervisor && (
                 <th
@@ -2069,7 +2069,7 @@ const AdminTableView = ({
                       }`}
                     >
                       {isPageSelected && (
-                        <span className="text-[0.75vw] leading-none font-bold text-white">
+                        <span className="text-[0.8vw] leading-none font-bold text-white">
                           ✓
                         </span>
                       )}
@@ -2080,7 +2080,7 @@ const AdminTableView = ({
 
               <th
                 rowSpan={2}
-                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] align-middle w-[3%] sticky top-0 z-40 bg-[#E9EDF7]"
+                className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.79vw] align-middle w-[3%] sticky top-0 z-40 bg-[#E9EDF7]"
               >
                 S. No
               </th>
@@ -2088,7 +2088,7 @@ const AdminTableView = ({
               {/* Products super-header */}
               <th
                 colSpan={productCols.length}
-                className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.74vw] sticky top-0 z-40 bg-[#E9EDF7]"
+                className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.79vw] sticky top-0 z-40 bg-[#E9EDF7]"
               >
                 Products
               </th>
@@ -2105,7 +2105,7 @@ const AdminTableView = ({
                           ? "5vw"
                           : "6.5vw",
                   }}
-                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.74vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 last:border-r-0 whitespace-nowrap text-[0.79vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
@@ -2126,7 +2126,7 @@ const AdminTableView = ({
                             ? "6.5vw"
                             : "8vw",
                   }}
-                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.74vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
+                  className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r border-slate-300 whitespace-nowrap text-[0.79vw] sticky top-[1.8vw] z-40 bg-[#E9EDF7]"
                 >
                   {h}
                 </th>
@@ -2140,7 +2140,7 @@ const AdminTableView = ({
                 <td colSpan={totalCols} className="py-[4vw] text-center">
                   <div className="flex flex-col items-center justify-center gap-[1vw]">
                     <div className="w-[2.5vw] h-[2.5vw] border-[0.3vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-                    <div className="text-blue-600 font-bold text-[0.88vw] uppercase tracking-widest animate-pulse">
+                    <div className="text-blue-600 font-bold text-[0.93vw] uppercase tracking-widest animate-pulse">
                       Loading Service Data...
                     </div>
                   </div>
@@ -2171,7 +2171,7 @@ const AdminTableView = ({
                   >
                     <td
                       colSpan={totalCols}
-                      className="px-[0.7vw] py-[0.35vw] h-[2vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
+                      className="px-[0.7vw] py-[0.55vw] h-[2.4vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
                     >
                       <div className="flex items-center gap-[0.5vw]">
                         {isCustomerCollapsed ? (
@@ -2180,7 +2180,7 @@ const AdminTableView = ({
                           <ChevronDown className="w-[0.9vw] h-[0.9vw] text-slate-500 flex-shrink-0" />
                         )}
 
-                        <span className="font-semibold text-slate-800 text-[0.76vw] tracking-wide">
+                        <span className="font-semibold text-[#0043a9] text-[0.89vw] tracking-wide">
                           {customerName}
                         </span>
 
@@ -2202,42 +2202,42 @@ const AdminTableView = ({
                           <div className="flex items-center gap-[0.35vw] flex-wrap animate-in fade-in duration-200">
                             {/* Customer Code if available on the first row */}
                             {rows[0]?.customerCode && (
-                              <span className="text-[0.62vw] text-slate-500 font-medium ml-[0.2vw]">
+                              <span className="text-[0.75vw] text-slate-500 font-medium ml-[0.2vw]">
                                 Code: {rows[0].customerCode}
                               </span>
                             )}
 
                             {/* Ref No (Customer) */}
                             {rows[0]?.refNoCustomer && (
-                              <span className="text-[0.65vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                              <span className="text-[0.77vw] font-medium bg-purple-50 text-purple-700 border border-purple-200 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                 Cust Ref: {rows[0].refNoCustomer}
                               </span>
                             )}
 
                             {/* Ref No (Internal) */}
                             {rows[0]?.refNoInternal && (
-                              <span className="text-[0.65vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                              <span className="text-[0.77vw] font-medium bg-blue-50 text-blue-700 border border-blue-200 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                 Int Ref: {rows[0].refNoInternal}
                               </span>
                             )}
 
                             {/* Category (Cus Type) */}
                             {rows[0]?.category && (
-                              <span className="text-[0.65vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                              <span className="text-[0.77vw] font-medium text-slate-700 bg-slate-50 border border-slate-300 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                 Type: {rows[0].category}
                               </span>
                             )}
 
                             {/* Unit */}
                             {rows[0]?.unit && (
-                              <span className="text-[0.65vw] font-normal text-teal-700 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                              <span className="text-[0.77vw] font-medium text-teal-800 bg-teal-50 border border-teal-200 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                 Unit: {rows[0].unit}
                               </span>
                             )}
 
                             {/* Site */}
                             {rows[0]?.site && (
-                              <span className="text-[0.65vw] font-normal text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.05vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
+                              <span className="text-[0.77vw] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-[0.45vw] py-[0.08vw] rounded-[0.25vw] whitespace-nowrap ml-[0.2vw]">
                                 Site: {rows[0].site}
                               </span>
                             )}
@@ -2303,7 +2303,7 @@ const AdminTableView = ({
                           // ── ENTRY SUB-HEADER ────────────────────────────
                           <tr
                             key={`entry-hdr-${row.id}`}
-                            className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[5.6vw] z-20 shadow-xs ${
+                            className={`border-t border-b border-slate-300 cursor-pointer select-none transition-colors duration-150 sticky top-[6vw] z-20 shadow-xs ${
                               isSelected
                                 ? "bg-[#e0f2fe]"
                                 : "bg-[#F1F5F9] hover:bg-[#E2E8F0]"
@@ -2311,7 +2311,7 @@ const AdminTableView = ({
                           >
                             {canDelete && !isSupervisor && (
                               <td
-                                className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
+                                className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onToggleSelect(row.id);
@@ -2329,7 +2329,7 @@ const AdminTableView = ({
                                     }`}
                                   >
                                     {isSelected && (
-                                      <span className="text-[0.65vw] leading-none font-bold">
+                                      <span className="text-[0.7vw] leading-none font-bold">
                                         ✓
                                       </span>
                                     )}
@@ -2340,7 +2340,7 @@ const AdminTableView = ({
 
                             {/* S.No */}
                             <td
-                              className={`py-[0.35vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.72vw] font-normal text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
+                              className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.77vw] font-medium text-slate-700 align-middle ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               {globalSn}
@@ -2349,7 +2349,7 @@ const AdminTableView = ({
                             {/* Date + meta + actions — spans remaining cols */}
                             <td
                               colSpan={productCols.length + actionCols.length}
-                              className={`px-[0.6vw] py-[0.3vw] h-[1.9vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
+                              className={`px-[0.6vw] py-[0.5vw] h-[2.3vw] align-middle border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`}
                               onClick={() => toggleEntry(row.id)}
                             >
                               <div className="flex items-center gap-[0.6vw] flex-wrap">
@@ -2368,8 +2368,8 @@ const AdminTableView = ({
 
                                 {/* Date */}
                                 <div className="flex items-center gap-[0.35vw] ml-[0.6vw]">
-                                  <Calendar className="w-[0.8vw] h-[0.8vw] text-slate-500 flex-shrink-0" />
-                                  <span className="text-[0.72vw] font-medium text-slate-700 whitespace-nowrap">
+                                  <Calendar className="w-[0.9vw] h-[0.9vw] text-[#550000] flex-shrink-0" />
+                                  <span className="text-[0.83vw] font-medium text-[#550000] whitespace-nowrap">
                                     {fmtDate(row.date || row.timestamp)}
                                   </span>
                                 </div>
@@ -2402,7 +2402,7 @@ const AdminTableView = ({
                                   const rowBalance = Math.max(0, rowReceived - rowDispatched);
 
                                   return (
-                                    <div className="flex items-center gap-[0.8vw] text-[0.72vw] text-slate-600 font-normal ml-[0.8vw] animate-in fade-in duration-200">
+                                    <div className="flex items-center gap-[0.8vw] text-[0.77vw] text-slate-600 font-medium ml-[0.8vw] animate-in fade-in duration-200">
                                       <span title="Received Qty">
                                         Received: <span className="font-semibold text-slate-800">{rowReceived}</span>
                                       </span>
@@ -2510,7 +2510,7 @@ const AdminTableView = ({
 
                                     {/* S.No sub-number */}
                                     <td className="border-r border-slate-300 text-center align-middle px-[0.3vw] py-[0.45vw]">
-                                      <span className="text-[0.72vw] font-bold text-slate-500">
+                                      <span className="text-[0.77vw] font-bold text-slate-500">
                                         {globalSn}.{pi + 1}
                                       </span>
                                     </td>
@@ -2519,7 +2519,7 @@ const AdminTableView = ({
                                     <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle">
                                       <div className="flex flex-col gap-[0.2vw]">
                                         <div
-                                          className="font-medium text-slate-900 text-[0.78vw] max-w-[15vw] break-words leading-snug"
+                                          className="font-medium text-slate-900 text-[0.83vw] max-w-[15vw] break-words leading-snug"
                                           title={prod.productDescription}
                                         >
                                           {prod.productDescription || "—"}
@@ -2528,7 +2528,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Product Code */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium align-middle text-center">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.81vw] text-slate-800 font-medium align-middle text-center">
                                       {prod.productCode || (
                                         <span className="text-slate-400">
                                           —
@@ -2537,7 +2537,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Segment */}
-                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium align-middle text-center">
+                                    <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-[0.81vw] text-slate-800 font-medium align-middle text-center">
                                       {prod.productSegment || (
                                         <span className="text-slate-400">
                                           —
@@ -2546,7 +2546,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Serial No */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-black font-medium font-mono align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.81vw] text-black font-medium font-mono align-middle text-center">
                                       {prod.serialNumber || (
                                         <span className="text-slate-400">
                                           —
@@ -2555,7 +2555,7 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Board Type */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.81vw] text-slate-800 font-medium align-middle text-center">
                                       {prod.boardType || (
                                         <span className="text-slate-400">
                                           —
@@ -2564,14 +2564,14 @@ const AdminTableView = ({
                                     </td>
 
                                     {/* Exp. Delivery */}
-                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.76vw] text-slate-800 font-medium whitespace-nowrap align-middle text-center">
+                                    <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 text-[0.81vw] text-slate-800 font-medium whitespace-nowrap align-middle text-center">
                                       {fmtDate(prod.expectedDeliveryDate)}
                                     </td>
 
                                     {/* Type badge */}
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <span
-                                        className={`whitespace-nowrap text-[0.7vw] font-bold px-[0.6vw] py-[0.15vw] rounded-full border shadow-2xs ${
+                                        className={`whitespace-nowrap text-[0.75vw] font-bold px-[0.6vw] py-[0.15vw] rounded-full border shadow-2xs ${
                                           prod.type === "W"
                                             ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                                             : "bg-sky-50 text-sky-700 border-sky-200"
@@ -2589,7 +2589,7 @@ const AdminTableView = ({
                                         <button
                                           type="button"
                                           onClick={() => onViewReport({ entry: row, product: prod })}
-                                          className="px-[0.6vw] py-[0.2vw] text-[0.7vw] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs"
+                                          className="px-[0.6vw] py-[0.2vw] text-[0.75vw] font-medium text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-[0.35vw] transition-all cursor-pointer shadow-2xs"
                                         >
                                           View Report
                                         </button>
@@ -2604,7 +2604,7 @@ const AdminTableView = ({
                                     <td className="px-[0.65vw] py-[0.55vw] border-r border-slate-300 align-middle text-center">
                                       <div className="flex flex-col items-center gap-[0.2vw]">
                                         <span
-                                          className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.2vw] rounded-full border text-[0.7vw] font-normal whitespace-nowrap shadow-2xs ${employeeStatusCfg.bg} ${employeeStatusCfg.border} ${employeeStatusCfg.text}`}
+                                          className={`inline-flex items-center gap-[0.3vw] px-[0.6vw] py-[0.2vw] rounded-full border text-[0.75vw] font-medium whitespace-nowrap shadow-2xs ${employeeStatusCfg.bg} ${employeeStatusCfg.border} ${employeeStatusCfg.text}`}
                                         >
                                           <EmployeeStatusIcon className="w-[0.75vw] h-[0.75vw]" />
                                           {employeeStatus === "Completed"
@@ -2613,12 +2613,12 @@ const AdminTableView = ({
                                         </span>
                                         {(prod.assignedToName ||
                                           prod.assignedDepartment) && (
-                                          <div className="text-[0.68vw] text-slate-500 font-medium leading-tight">
+                                          <div className="text-[0.73vw] text-slate-500 font-medium leading-tight">
                                             {prod.assignedToName && (
                                               <div>{prod.assignedToName}</div>
                                             )}
                                             {prod.assignedDepartment && (
-                                              <div className="text-[0.6vw] text-slate-400">
+                                              <div className="text-[0.65vw] text-slate-400">
                                                 ({prod.assignedDepartment})
                                               </div>
                                             )}
@@ -2636,7 +2636,7 @@ const AdminTableView = ({
                                           onUpdateProduct={onUpdateProduct}
                                         />
                                       ) : (
-                                        <span className="text-slate-400 font-medium text-[0.8vw] select-none">
+                                        <span className="text-slate-400 font-medium text-[0.85vw] select-none">
                                           —
                                         </span>
                                       )}
@@ -2649,7 +2649,7 @@ const AdminTableView = ({
 
                                     {/* Delay */}
                                     {activeFilter === "Completed" && (
-                                      <td className="px-[0.65vw] py-[0.55vw] text-[0.8vw] font-bold align-middle text-center text-slate-700">
+                                      <td className="px-[0.65vw] py-[0.55vw] text-[0.85vw] font-bold align-middle text-center text-slate-700">
                                         {getProductDelay(
                                           row,
                                           prod,
@@ -2668,7 +2668,7 @@ const AdminTableView = ({
               <tr>
                 <td
                   colSpan={totalCols}
-                  className="py-[4vw] text-center text-slate-400 text-[0.88vw] font-medium"
+                  className="py-[4vw] text-center text-slate-400 text-[0.93vw] font-medium"
                 >
                   No records found.
                 </td>
@@ -2680,7 +2680,7 @@ const AdminTableView = ({
 
       {/* ── PAGINATION ──────────────────────────────────────────────────── */}
       <div className="border-t border-slate-300 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center rounded-b-[0.7vw]">
-        <div className="text-[0.75vw] text-slate-600 font-medium">
+        <div className="text-[0.8vw] text-slate-600 font-medium">
           Showing{" "}
           <span className="font-semibold text-slate-800">
             {recordsPaginationInfo.startIdx}
@@ -2716,7 +2716,7 @@ const AdminTableView = ({
                   key={pNum}
                   type="button"
                   onClick={() => setCurrentPage(pNum)}
-                  className={`w-[2vw] h-[2vw] flex items-center justify-center rounded-[0.4vw] text-[0.78vw] font-bold cursor-pointer transition-colors ${
+                  className={`w-[2vw] h-[2vw] flex items-center justify-center rounded-[0.4vw] text-[0.83vw] font-bold cursor-pointer transition-colors ${
                     currentPage === pNum
                       ? "bg-[#1a73e8] text-white border border-[#1a73e8]"
                       : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-50"
@@ -3186,7 +3186,7 @@ export default function App() {
   }, [entries]);
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <AnimatePresence>
         {isBoardTypeMasterOpen && (
           <BoardTypeMasterModal
@@ -3247,7 +3247,7 @@ export default function App() {
                   placeholder="Search by ref, customer, product..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
                 {searchTerm && (
                   <button
@@ -3263,14 +3263,14 @@ export default function App() {
               {/* Right cluster: Date Range, Clear, Board Types Master & Add */}
               <div className="flex items-center gap-[0.6vw] flex-shrink-0">
                 {/* Unified Date Range Capsule */}
-                <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-                  <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+                <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+                  <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
                   <input
                     ref={fromDateRef}
                     type="date"
                     value={dateFrom || ""}
                     onChange={(e) => setDateFrom(e.target.value)}
-                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                    className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
                   <button
                     type="button"
@@ -3284,15 +3284,15 @@ export default function App() {
                   >
                     <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
                   </button>
-                  <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-                  <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+                  <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+                  <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
                   <input
                     ref={toDateRef}
                     type="date"
                     value={dateTo || ""}
                     min={dateFrom || undefined}
                     onChange={(e) => setDateTo(e.target.value)}
-                    className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                    className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
                   />
                   <button
                     type="button"
@@ -3316,7 +3316,7 @@ export default function App() {
                       setDateFrom("");
                       setDateTo("");
                     }}
-                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                     title="Clear date filter"
                   >
                     <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -3333,7 +3333,7 @@ export default function App() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={handleBulkDelete}
-                      className="flex items-center gap-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-[0.85vw] h-[2.2vw] rounded-full font-semibold text-[0.74vw] transition-all cursor-pointer shadow-2xs"
+                      className="flex items-center gap-[0.35vw] bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 px-[0.85vw] h-[2.2vw] rounded-full font-semibold text-[0.79vw] transition-all cursor-pointer shadow-2xs"
                     >
                       <Trash2 className="w-[0.8vw] h-[0.8vw]" />
                       Delete ({selectedItems.size})
@@ -3346,7 +3346,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setIsBoardTypeMasterOpen(true)}
-                      className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border-[1.5px] border-slate-400 hover:border-blue-500 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs"
+                      className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border-[1.5px] border-slate-400 hover:border-blue-500 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.79vw] transition-all shadow-2xs"
                     >
                       <Wrench className="w-[0.8vw] h-[0.8vw] text-slate-500" />{" "}
                       Board Types Master
@@ -3354,7 +3354,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={goToForm}
-                      className="cursor-pointer flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-[1vw] h-[2.2vw] rounded-full text-[0.74vw] transition-all shadow-2xs active:scale-95"
+                      className="cursor-pointer flex items-center gap-[0.35vw] bg-[#1a73e8] hover:bg-[#1557b0] text-white font-semibold px-[1vw] h-[2.2vw] rounded-full text-[0.79vw] transition-all shadow-2xs active:scale-95"
                     >
                       <Plus className="w-[0.9vw] h-[0.9vw] text-white" />
                       Add
@@ -3375,7 +3375,7 @@ export default function App() {
                       key={label}
                       type="button"
                       onClick={() => setActiveFilter(label)}
-                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                      className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.8vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                         isActive
                           ? "bg-blue-600 text-white shadow-xs font-semibold"
                           : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -3386,7 +3386,7 @@ export default function App() {
                         {label}
                       </span>
                       <span
-                        className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                        className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
                           isActive
                             ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                             : "text-slate-400"
@@ -3419,7 +3419,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setShowQuantitiesPopover((p) => !p)}
-                      className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.9vw] rounded-full border text-[0.72vw] font-medium transition-all cursor-pointer shadow-2xs ${
+                      className={`flex items-center gap-[0.35vw] px-[0.75vw] h-[1.9vw] rounded-full border text-[0.77vw] font-medium transition-all cursor-pointer shadow-2xs ${
                         quantityFilter !== "all"
                           ? "bg-blue-600 text-white border-blue-600 shadow-xs font-semibold"
                           : showQuantitiesPopover
@@ -3430,7 +3430,7 @@ export default function App() {
                     >
                       <Package className="w-[0.78vw] h-[0.78vw]" />
                       <span>View Total Quantities</span>
-                      <span className={`text-[0.64vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
+                      <span className={`text-[0.69vw] px-[0.35vw] py-[0.02vw] rounded-full font-bold ml-[0.1vw] ${
                         quantityFilter !== "all" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
                       }`}>
                         {totalReceived}
@@ -3446,7 +3446,7 @@ export default function App() {
                         />
                         <div className="absolute right-0 top-full mt-[0.4vw] w-[17vw] bg-white border border-slate-300 rounded-[0.55vw] shadow-xl z-50 p-[0.75vw] flex flex-col gap-[0.4vw] animate-in fade-in zoom-in-95 duration-100">
                           <div className="flex items-center justify-between pb-[0.3vw] border-b border-slate-200">
-                            <span className="text-[0.72vw] font-semibold text-slate-800">
+                            <span className="text-[0.77vw] font-semibold text-slate-800">
                               Total Quantities Breakdown
                             </span>
                             <div className="flex items-center gap-[0.4vw]">
@@ -3457,7 +3457,7 @@ export default function App() {
                                     setQuantityFilter("all");
                                     setCurrentPage(1);
                                   }}
-                                  className="text-[0.66vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                                  className="text-[0.71vw] font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
                                 >
                                   Clear Filter
                                 </button>
@@ -3479,13 +3479,13 @@ export default function App() {
                               setQuantityFilter(quantityFilter === "all" ? "all" : "all");
                               setCurrentPage(1);
                             }}
-                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.77vw] transition-all cursor-pointer border ${
                               quantityFilter === "all"
                                 ? "bg-slate-800 text-white border-slate-900 font-semibold shadow-xs"
                                 : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
                             }`}
                           >
-                            <span className="font-normal">Received Qty (All):</span>
+                            <span className="font-medium">Received Qty (All):</span>
                             <span className="font-semibold">{totalReceived}</span>
                           </button>
 
@@ -3496,13 +3496,13 @@ export default function App() {
                               setQuantityFilter(quantityFilter === "claimed" ? "all" : "claimed");
                               setCurrentPage(1);
                             }}
-                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.77vw] transition-all cursor-pointer border ${
                               quantityFilter === "claimed"
                                 ? "bg-blue-600 text-white border-blue-600 font-semibold shadow-xs"
                                 : "bg-blue-50/70 hover:bg-blue-100/70 border-blue-200 text-blue-700"
                             }`}
                           >
-                            <span className="font-normal">Claimed Qty:</span>
+                            <span className="font-medium">Claimed Qty:</span>
                             <span className="font-semibold">{totalClaimed}</span>
                           </button>
 
@@ -3513,13 +3513,13 @@ export default function App() {
                               setQuantityFilter(quantityFilter === "dispatched" ? "all" : "dispatched");
                               setCurrentPage(1);
                             }}
-                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.77vw] transition-all cursor-pointer border ${
                               quantityFilter === "dispatched"
                                 ? "bg-emerald-600 text-white border-emerald-600 font-semibold shadow-xs"
                                 : "bg-emerald-50/70 hover:bg-emerald-100/70 border-emerald-200 text-emerald-700"
                             }`}
                           >
-                            <span className="font-normal">Dispatched Qty:</span>
+                            <span className="font-medium">Dispatched Qty:</span>
                             <span className="font-semibold">{totalDispatched}</span>
                           </button>
 
@@ -3530,13 +3530,13 @@ export default function App() {
                               setQuantityFilter(quantityFilter === "balance" ? "all" : "balance");
                               setCurrentPage(1);
                             }}
-                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.72vw] transition-all cursor-pointer border ${
+                            className={`flex items-center justify-between px-[0.6vw] py-[0.38vw] rounded-[0.35vw] text-[0.77vw] transition-all cursor-pointer border ${
                               quantityFilter === "balance"
                                 ? "bg-amber-600 text-white border-amber-600 font-semibold shadow-xs"
                                 : "bg-amber-50/70 hover:bg-amber-100/70 border-amber-200 text-amber-900"
                             }`}
                           >
-                            <span className="font-normal">Balance Qty:</span>
+                            <span className="font-medium">Balance Qty:</span>
                             <span className="font-semibold">{totalBalance}</span>
                           </button>
                         </div>

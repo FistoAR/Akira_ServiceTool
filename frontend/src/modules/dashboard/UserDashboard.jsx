@@ -62,16 +62,16 @@ export default function UserDashboard({ stats, navigate }) {
                     flex items-center justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="font-mono text-[0.72vw] font-bold text-indigo-700">
+                    <p className="font-mono text-[0.77vw] font-bold text-indigo-700">
                       {call.callNumber}
                     </p>
-                    <p className="text-[0.68vw] text-slate-700 font-semibold mt-[0.1vw] truncate max-w-[16vw]">
+                    <p className="text-[0.73vw] text-slate-700 font-semibold mt-[0.1vw] truncate max-w-[16vw]">
                       {call.customerName}
                     </p>
                   </div>
                   <div className="flex items-center gap-[0.35vw] flex-shrink-0">
                     <span
-                      className={`text-[0.58vw] px-[0.45vw] py-[0.14vw] rounded-[0.25vw] font-bold uppercase tracking-wide ${
+                      className={`text-[0.63vw] px-[0.45vw] py-[0.14vw] rounded-[0.25vw] font-bold uppercase tracking-wide ${
                         call.priority === "Critical"
                           ? "bg-red-50 text-red-600 ring-1 ring-red-200"
                           : "bg-slate-100 text-slate-600"
@@ -79,7 +79,7 @@ export default function UserDashboard({ stats, navigate }) {
                     >
                       {call.priority}
                     </span>
-                    <span className="text-[0.58vw] px-[0.45vw] py-[0.14vw] rounded-[0.25vw] font-bold uppercase tracking-wide bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200">
+                    <span className="text-[0.63vw] px-[0.45vw] py-[0.14vw] rounded-[0.25vw] font-bold uppercase tracking-wide bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200">
                       {call.status}
                     </span>
                   </div>
@@ -112,14 +112,14 @@ export default function UserDashboard({ stats, navigate }) {
                     flex items-center justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="font-bold text-[0.72vw] text-slate-800 truncate max-w-[16vw]">
+                    <p className="font-bold text-[0.77vw] text-slate-800 truncate max-w-[16vw]">
                       {product.productDescription || "Product Item"}
                     </p>
-                    <p className="text-[0.6vw] text-slate-500 mt-[0.1vw] truncate max-w-[16vw]">
+                    <p className="text-[0.65vw] text-slate-500 mt-[0.1vw] truncate max-w-[16vw]">
                       SN: {product.serialNumber || "N/A"} · {entry.customerName || "N/A"}
                     </p>
                   </div>
-                  <span className="text-[0.58vw] px-[0.45vw] py-[0.14vw] rounded-[0.25vw] font-bold uppercase tracking-wide bg-amber-50 text-amber-700 ring-1 ring-amber-200 flex-shrink-0">
+                  <span className="text-[0.63vw] px-[0.45vw] py-[0.14vw] rounded-[0.25vw] font-bold uppercase tracking-wide bg-amber-50 text-amber-700 ring-1 ring-amber-200 flex-shrink-0">
                     {product.status || "Claimed"}
                   </span>
                 </div>

@@ -120,8 +120,8 @@ const SitesSection = ({ sites = [], setSites }) => {
         <div className="lg:col-span-7 flex flex-col">
           <div className="flex items-center justify-between pb-[0.6vw] mb-[0.6vw] border-b border-gray-100 gap-[1vw]">
             <div>
-              <h3 className="text-[0.88vw] font-bold text-gray-900">Configured Operating Sites</h3>
-              <p className="text-[0.72vw] text-gray-500">Plant and warehouse operational locations</p>
+              <h3 className="text-[0.93vw] font-bold text-gray-900">Configured Operating Sites</h3>
+              <p className="text-[0.77vw] text-gray-500">Plant and warehouse operational locations</p>
             </div>
             <div className="relative">
               <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
@@ -130,7 +130,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                 placeholder="Search sites..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-slate-400 rounded-[0.4vw] text-[0.75vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
+                className="w-[12vw] pl-[1.8vw] pr-[0.6vw] py-[0.3vw] border border-slate-400 rounded-[0.4vw] text-[0.8vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 bg-white text-gray-800 placeholder-gray-400 transition-all"
               />
             </div>
           </div>
@@ -138,7 +138,7 @@ const SitesSection = ({ sites = [], setSites }) => {
           <div className="border border-slate-400 rounded-[0.6vw] bg-white overflow-hidden shadow-2xs flex flex-col">
             <div className="divide-y divide-gray-100 min-h-[18vw]">
               {paginatedSites.length === 0 ? (
-                <div className="p-[3vw] text-center text-gray-400 text-[0.8vw]">
+                <div className="p-[3vw] text-center text-gray-400 text-[0.85vw]">
                   {searchTerm ? "No sites match your search." : "No sites configured yet."}
                 </div>
               ) : (
@@ -168,7 +168,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                               if (e.key === "Enter") handleUpdate();
                               if (e.key === "Escape") setEditingSite(null);
                             }}
-                            className="flex-1 bg-white border border-blue-400 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.82vw] outline-none ring-2 ring-blue-100 font-medium"
+                            className="flex-1 bg-white border border-blue-400 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-[0.87vw] outline-none ring-2 ring-blue-100 font-medium"
                           />
                           <button
                             type="button"
@@ -188,10 +188,10 @@ const SitesSection = ({ sites = [], setSites }) => {
                       ) : (
                         <>
                           <div className="flex items-center gap-[0.65vw]">
-                            <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-blue-50 text-blue-700 flex items-center justify-center text-[0.72vw] font-bold">
+                            <span className="w-[1.6vw] h-[1.6vw] rounded-full bg-blue-50 text-blue-700 flex items-center justify-center text-[0.77vw] font-bold">
                               {globalIdx + 1}
                             </span>
-                            <span className={`text-[0.76vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
+                            <span className={`text-[0.81vw] font-semibold px-[0.6vw] py-[0.2vw] rounded-[0.35vw] border ${badgeClass}`}>
                               {site.name}
                             </span>
                           </div>
@@ -233,7 +233,7 @@ const SitesSection = ({ sites = [], setSites }) => {
             {/* Pagination Controls */}
             {filteredSites.length > 0 && (
               <div className="border-t border-gray-100 px-[1vw] py-[0.55vw] bg-gray-50/50 flex justify-between items-center flex-shrink-0">
-                <div className="text-[0.74vw] text-gray-500 font-medium">
+                <div className="text-[0.79vw] text-gray-500 font-medium">
                   Showing <span className="text-gray-900 font-semibold">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filteredSites.length)}</span> of <span className="text-gray-900 font-semibold">{filteredSites.length}</span> sites
                 </div>
                 <div className="flex items-center gap-[0.5vw]">
@@ -250,7 +250,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                     {[...Array(totalPages)].map((_, i) => {
                       const pNum = i + 1;
                       if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.7vw]">...</span>;
+                        if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
                         return null;
                       }
                       return (
@@ -258,7 +258,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                           key={pNum}
                           type="button"
                           onClick={() => setCurrentPage(pNum)}
-                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold transition-all cursor-pointer ${currentPage === pNum
+                          className={`w-[1.6vw] h-[1.6vw] flex items-center justify-center rounded-[0.35vw] text-[0.79vw] font-semibold transition-all cursor-pointer ${currentPage === pNum
                               ? "bg-blue-600 text-white shadow-2xs"
                               : "bg-white border border-slate-400 text-gray-700 hover:border-blue-400 hover:text-blue-600"
                             }`}
@@ -287,17 +287,17 @@ const SitesSection = ({ sites = [], setSites }) => {
         <div className="lg:col-span-5 bg-gray-50/60 border border-slate-400 rounded-[0.6vw] p-[1.2vw]">
           <div className="space-y-[1vw]">
             <div className="pb-[0.5vw] border-b border-slate-400">
-              <h4 className="text-[0.88vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
+              <h4 className="text-[0.93vw] font-bold text-gray-900 flex items-center gap-[0.4vw]">
                 <Icon icon="solar:map-point-wave-bold-duotone" className="w-[1.05vw] h-[1.05vw] text-blue-600" />
                 Add Plant / Site
               </h4>
-              <p className="text-[0.7vw] text-gray-500">Configure new site or plant facility name</p>
+              <p className="text-[0.75vw] text-gray-500">Configure new site or plant facility name</p>
             </div>
 
             {canWrite ? (
               <div className="space-y-[0.8vw]">
                 <div className="space-y-[0.35vw]">
-                  <label className="text-[0.74vw] font-semibold text-gray-700">Site Name *</label>
+                  <label className="text-[0.79vw] font-semibold text-gray-700">Site Name *</label>
                   <input
                     type="text"
                     value={newSiteName}
@@ -306,7 +306,7 @@ const SitesSection = ({ sites = [], setSites }) => {
                       if (e.key === "Enter") handleAdd();
                     }}
                     placeholder="e.g. Unit 1, Unit 2, Unit 3…"
-                    className="w-full bg-white border border-slate-400 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.82vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
+                    className="w-full bg-white border border-slate-400 rounded-[0.4vw] px-[0.75vw] py-[0.5vw] text-[0.87vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
                   />
                 </div>
 
@@ -314,13 +314,13 @@ const SitesSection = ({ sites = [], setSites }) => {
                   type="button"
                   onClick={handleAdd}
                   disabled={!newSiteName.trim()}
-                  className="w-full flex items-center justify-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer shadow-sm"
+                  className="w-full flex items-center justify-center gap-[0.4vw] bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white py-[0.5vw] rounded-[0.4vw] text-[0.87vw] font-semibold transition-all cursor-pointer shadow-sm"
                 >
                   <Icon icon="solar:add-circle-linear" className="w-[0.9vw] h-[0.9vw]" /> Add Site
                 </button>
               </div>
             ) : (
-              <div className="p-[2vw] text-center text-gray-400 text-[0.78vw] flex flex-col items-center justify-center gap-[0.4vw]">
+              <div className="p-[2vw] text-center text-gray-400 text-[0.83vw] flex flex-col items-center justify-center gap-[0.4vw]">
                 <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[1.8vw] h-[1.8vw] text-gray-300" />
                 <span>Read-only access. You can view existing sites on the left.</span>
               </div>

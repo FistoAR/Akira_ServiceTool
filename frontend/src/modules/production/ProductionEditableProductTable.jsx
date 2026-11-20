@@ -433,29 +433,29 @@ const ProductionEditableProductTable = ({
       ref={tableContainerRef}
       className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
     >
-      <table className="w-full border-collapse text-[0.8vw]">
-        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
+      <table className="w-full border-collapse text-[0.85vw]">
+        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider shadow-sm">
           <tr>
             {!isReadOnly && <th className="w-[3vw] py-[0.7vw] px-[0.4vw] border-b border-r border-slate-300 bg-[#E9EDF7]"></th>}
-            <th className="w-[3.5vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
-            <th className="min-w-[18vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="min-w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
-            <th className="w-[14vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
-            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
-            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
-            <th className="w-[8vw] min-w-[7.5vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
-            <th className="w-[14vw] min-w-[13vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
-            {!isReadOnly && <th className="sticky right-0 w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
+            <th className="w-[3.5vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">#</th>
+            <th className="min-w-[18vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="min-w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
+            <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
+            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
+            <th className="w-[14vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
+            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeatability</th>
+            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
+            <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
+            <th className="w-[8vw] min-w-[7.5vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
+            <th className="w-[14vw] min-w-[13vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
+            {!isReadOnly && <th className="sticky right-0 w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -509,7 +509,7 @@ const ProductionEditableProductTable = ({
                               onKeyDown={(e) => handleDropdownKeyDown(e, prod._pid)}
                               placeholder={customerCode ? "Search or enter description..." : "Select customer first"}
                               disabled={!customerCode || isReadOnly}
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-normal disabled:bg-transparent cursor-text description-input text-[0.8vw]"
+                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-black font-medium disabled:bg-transparent cursor-text description-input text-[0.85vw]"
                             />
                             {!isReadOnly && customerCode && (
                               <Search className="w-[0.8vw] h-[0.8vw] text-gray-700 absolute right-[0.6vw] pointer-events-none group-focus-within:text-blue-500" />
@@ -521,7 +521,7 @@ const ProductionEditableProductTable = ({
                             <DropdownPortal targetRect={activeDropdown.rect}>
                               <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto dropdown-container">
                                 {!customerCode ? (
-                                    <div className="p-[1vw] text-center text-red-500 font-normal text-[0.8vw]">Please select a customer first.</div>
+                                    <div className="p-[1vw] text-center text-red-500 font-medium text-[0.85vw]">Please select a customer first.</div>
                                 ) : filteredProds.length > 0 ? (
                                   filteredProds.map((p, i) => (
                                     <div
@@ -533,12 +533,12 @@ const ProductionEditableProductTable = ({
                                       }}
                                       className={`p-[0.6vw] cursor-pointer border-b border-slate-300 last:border-0 transition-colors ${selectedIndex === i ? "bg-blue-600 text-white" : "hover:bg-blue-100"}`}
                                     >
-                                      <div className={`font-semibold text-[0.8vw] ${selectedIndex === i ? "text-white" : "text-gray-900"}`}>{p.itemDescription || p.productDescription}</div>
-                                      <div className={`text-[0.7vw] ${selectedIndex === i ? "text-blue-100" : "text-gray-500"}`}>{p.itemCode || p.productCode} {p.productSegment ? `· ${p.productSegment}` : ''}</div>
+                                      <div className={`font-semibold text-[0.85vw] ${selectedIndex === i ? "text-white" : "text-gray-900"}`}>{p.itemDescription || p.productDescription}</div>
+                                      <div className={`text-[0.75vw] ${selectedIndex === i ? "text-blue-100" : "text-gray-500"}`}>{p.itemCode || p.productCode} {p.productSegment ? `· ${p.productSegment}` : ''}</div>
                                     </div>
                                   ))
                                 ) : (
-                                  <div className="p-[1vw] text-center text-gray-500 font-normal text-[0.8vw]">No products found for this customer</div>
+                                  <div className="p-[1vw] text-center text-gray-500 font-medium text-[0.85vw]">No products found for this customer</div>
                                 )}
                               </div>
                             </DropdownPortal>
@@ -548,7 +548,7 @@ const ProductionEditableProductTable = ({
                         {/* 1. Code (Read-only, auto applied from DB) */}
                         <td className={`py-[0.6vw] px-[0.8vw] relative transition-all ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
                           <div 
-                            className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-mono font-medium text-[0.78vw] truncate select-text cursor-default" 
+                            className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-mono font-medium text-[0.83vw] truncate select-text cursor-default" 
                             title={prod.productCode || ""}
                           >
                             {prod.productCode || "—"}
@@ -566,7 +566,7 @@ const ProductionEditableProductTable = ({
                               handleUpdate(prod._pid, "productType", e.target.value);
                             }}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.85vw] disabled:bg-transparent"
                             placeholder="Segment..."
                           />
                           {renderFillHandle(index, 2)}
@@ -583,7 +583,7 @@ const ProductionEditableProductTable = ({
                             options={boardTypeOptions}
                             usePortal={true}
                             maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -604,7 +604,7 @@ const ProductionEditableProductTable = ({
                             options={problemTypeDropdownOptions}
                             usePortal={true}
                             maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -625,7 +625,7 @@ const ProductionEditableProductTable = ({
                             options={ncTypeOptions}
                             usePortal={true}
                             maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-semibold text-blue-600"
@@ -647,7 +647,7 @@ const ProductionEditableProductTable = ({
                             }} 
                             placeholder="Problem Description" 
                             disabled={isReadOnly} 
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent" 
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.85vw] disabled:bg-transparent" 
                           />
                           {renderFillHandle(index, 6)}
                         </td>
@@ -655,7 +655,7 @@ const ProductionEditableProductTable = ({
                         {/* 7. Repeatability (Auto-calculated number based on Segment + Board Type + Problem Type + NC Type + Problem Description) */}
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all text-center ${getCellClass(index, 7)}`} onMouseDown={(e) => handleCellMouseDown(index, 7, e)} onMouseEnter={() => handleCellMouseEnter(index, 7)}>
                           <div 
-                            className="text-slate-800 font-medium text-[0.78vw] py-[0.4vw] px-[0.4vw] text-center select-text cursor-default"
+                            className="text-slate-800 font-medium text-[0.83vw] py-[0.4vw] px-[0.4vw] text-center select-text cursor-default"
                             title="Auto-calculated repeatability count for matching Segment, Board Type, Problem Type, NC Type & Description"
                           >
                             <span className={`inline-block px-[0.55vw] py-[0.1vw] rounded-[0.3vw] font-mono ${
@@ -677,7 +677,7 @@ const ProductionEditableProductTable = ({
                             value={prod.delayTime !== undefined ? prod.delayTime : ""}
                             onChange={(e) => handleUpdate(prod._pid, "delayTime", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] text-center disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.85vw] text-center disabled:bg-transparent"
                             placeholder="0"
                           />
                           {renderFillHandle(index, 8)}
@@ -690,7 +690,7 @@ const ProductionEditableProductTable = ({
                             value={prod.designators || ""}
                             onChange={(e) => handleUpdate(prod._pid, "designators", e.target.value)}
                             disabled={isReadOnly}
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] disabled:bg-transparent"
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.2vw] outline-none transition-all text-slate-900 font-medium text-[0.85vw] disabled:bg-transparent"
                             placeholder="Designator..."
                           />
                           {renderFillHandle(index, 9)}
@@ -752,7 +752,7 @@ const ProductionEditableProductTable = ({
                             options={stageDropdownOptions}
                             usePortal={true}
                             maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -779,7 +779,7 @@ const ProductionEditableProductTable = ({
                             searchPlaceholder="Search employee..."
                             usePortal={true}
                             maxHeight="12vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -797,7 +797,7 @@ const ProductionEditableProductTable = ({
                             value={prod.qty} 
                             onChange={(e) => handleUpdate(prod._pid, "qty", e.target.value)} 
                             disabled={isReadOnly} 
-                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.8vw] text-center disabled:bg-transparent" 
+                            className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] outline-none transition-all text-slate-900 font-medium text-[0.85vw] text-center disabled:bg-transparent" 
                           />
                           {renderFillHandle(index, 13)}
                         </td>
@@ -815,7 +815,7 @@ const ProductionEditableProductTable = ({
                               }} 
                               placeholder="Batch / SN" 
                               disabled={isReadOnly} 
-                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-medium text-[0.8vw] disabled:bg-transparent" 
+                              className="w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.6vw] pr-[2.2vw] outline-none transition-all text-black font-medium text-[0.85vw] disabled:bg-transparent" 
                             />
                             {!isReadOnly && (
                               <button type="button" className="absolute right-[0.4vw] p-[0.3vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all">
@@ -837,7 +837,7 @@ const ProductionEditableProductTable = ({
                             options={dispositionDropdownOptions}
                             usePortal={true}
                             maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -864,7 +864,7 @@ const ProductionEditableProductTable = ({
                             searchPlaceholder="Search employee..."
                             usePortal={true}
                             maxHeight="12vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isReadOnly
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -889,7 +889,7 @@ const ProductionEditableProductTable = ({
                 
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={19} className="py-[1vw] text-center text-blue-700 font-bold italic text-[0.8vw] bg-blue-100/50">
+                     <td colSpan={19} className="py-[1vw] text-center text-blue-700 font-bold italic text-[0.85vw] bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>

@@ -173,7 +173,7 @@ function AutocompleteInput({ value, onChange, suggestions, placeholder, classNam
                 setSelectedIndex(-1);
               }}
               onMouseEnter={() => setSelectedIndex(i)}
-              className={`px-[0.8vw] py-[0.5vw] cursor-pointer text-[0.85vw] text-gray-800 border-b border-gray-50 last:border-0 ${
+              className={`px-[0.8vw] py-[0.5vw] cursor-pointer text-[0.9vw] text-gray-800 border-b border-gray-50 last:border-0 ${
                 selectedIndex === i ? "bg-blue-100" : "hover:bg-blue-50"
               }`}
             >
@@ -1120,7 +1120,7 @@ const CustomerDatabase = () => {
   const renderHeaderCell = (col) => (
     <th
       key={col.key}
-      className={`py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-400 whitespace-nowrap ${
+      className={`py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.77vw] border-r border-slate-400 whitespace-nowrap ${
         col.key === "state" ? "min-w-[8vw] w-[8vw]" : ""
       }`}
     >
@@ -1133,13 +1133,13 @@ const CustomerDatabase = () => {
     if (isSpanned && isSameParty) return null;
 
     const spanProps = isSpanned && !isSameParty ? { rowSpan } : {};
-    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-[0.77vw] font-medium text-slate-800 ${isSpanned ? "bg-white align-middle" : ""}`;
+    const baseClass = `py-[0.7vw] px-[0.7vw] border-r border-b border-slate-400 text-[0.82vw] font-medium text-slate-800 ${isSpanned ? "bg-white align-middle" : ""}`;
 
     switch (col.key) {
       case "partyType":
         return (
           <td key={col.key} {...spanProps} className={baseClass + " text-center"}>
-            <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.68vw] font-medium border shadow-2xs whitespace-nowrap ${
+            <span className={`inline-flex items-center justify-center px-[0.55vw] py-[0.12vw] rounded-full text-[0.73vw] font-medium border shadow-2xs whitespace-nowrap ${
               row.partyType === "OEM"
                 ? "bg-blue-50 text-blue-700 border-blue-200"
                 : row.partyType === "End Customer"
@@ -1158,7 +1158,7 @@ const CustomerDatabase = () => {
         return (
           <td key={col.key} className={baseClass}>
             {row.productSegment ? (
-              <span className="inline-block bg-indigo-50 text-indigo-700 px-[0.45vw] py-[0.08vw] rounded text-[0.68vw] border border-indigo-200/80 font-medium">
+              <span className="inline-block bg-indigo-50 text-indigo-700 px-[0.45vw] py-[0.08vw] rounded text-[0.73vw] border border-indigo-200/80 font-medium">
                 {row.productSegment}
               </span>
             ) : "—"}
@@ -1177,10 +1177,10 @@ const CustomerDatabase = () => {
           </td>
         );
       case "itemCode":
-        return <td key={col.key} className={baseClass + " text-slate-800 font-mono text-[0.74vw] font-medium"}>{row.itemCode}</td>;
+        return <td key={col.key} className={baseClass + " text-slate-800 font-mono text-[0.79vw] font-medium"}>{row.itemCode}</td>;
       case "itemDescription":
         return (
-          <td key={col.key} className={baseClass + " text-slate-800 truncate max-w-[16vw] text-[0.74vw] font-medium"} title={row.itemDescription}>
+          <td key={col.key} className={baseClass + " text-slate-800 truncate max-w-[16vw] text-[0.79vw] font-medium"} title={row.itemDescription}>
             {row.itemDescription}
           </td>
         );
@@ -1223,7 +1223,7 @@ const CustomerDatabase = () => {
   };
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-[0.9vw] flex flex-col gap-[0.55vw] min-h-0 overflow-hidden">
       {/* ── Top Bar: Search, Type Dropdown, Add Party, Upload Excel (Matching Service Call Entry page) ── */}
       <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400/90 gap-[0.7vw] shrink-0">
         {/* Soft Pill Search Box */}
@@ -1234,7 +1234,7 @@ const CustomerDatabase = () => {
             placeholder="Search by party code, description or item code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchTerm && (
             <button
@@ -1257,7 +1257,7 @@ const CustomerDatabase = () => {
                 { value: "All", label: "All Types" },
                 ...partyTypes.map((t) => ({ value: t.name, label: t.name })),
               ]}
-              triggerClassName="h-[2.2vw] !rounded-full border-slate-400 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.75vw]"
+              triggerClassName="h-[2.2vw] !rounded-full border-slate-400 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-2xs text-[0.8vw]"
             />
           </div>
 
@@ -1266,7 +1266,7 @@ const CustomerDatabase = () => {
               {canWrite && (
                 <button
                   onClick={openAddModal}
-                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 border border-slate-400 hover:border-slate-400 px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-2xs"
+                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 border border-slate-400 hover:border-slate-400 px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.81vw] transition-all shadow-2xs"
                 >
                   <Plus className="w-[0.85vw] h-[0.85vw] text-slate-600" />
                   <span>Add Party</span>
@@ -1275,7 +1275,7 @@ const CustomerDatabase = () => {
               {canWrite && (
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-[#1a73e8] hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.76vw] transition-all shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(26,115,232,0.5)]"
+                  className="cursor-pointer shrink-0 flex items-center gap-[0.4vw] bg-[#1a73e8] hover:bg-blue-700 active:bg-blue-800 text-white px-[1.1vw] h-[2.2vw] rounded-full font-bold text-[0.81vw] transition-all shadow-[0_2px_8px_-1px_rgba(26,115,232,0.4)] hover:shadow-[0_4px_12px_-1px_rgba(26,115,232,0.5)]"
                 >
                   <UploadCloud className="w-[0.9vw] h-[0.9vw]" />
                   <span>Upload Excel</span>
@@ -1290,14 +1290,14 @@ const CustomerDatabase = () => {
       <div className="flex items-center justify-between shrink-0">
         {/* Left Side: Clean, subtle counter (no loud highlight pill) */}
         <div className="flex items-center gap-[0.4vw]">
-          <span className="text-[0.76vw] font-semibold text-slate-700">
+          <span className="text-[0.81vw] font-semibold text-slate-700">
             {filterType !== "All" || searchTerm.trim() ? "Filtered Customers" : "All Customers"}
           </span>
-          <span className="text-[0.7vw] font-bold text-slate-500 bg-slate-200/80 px-[0.45vw] py-[0.05vw] rounded-full">
+          <span className="text-[0.75vw] font-bold text-slate-500 bg-slate-200/80 px-[0.45vw] py-[0.05vw] rounded-full">
             {filteredPartyCount}
           </span>
           {(filterType !== "All" || searchTerm.trim()) && (
-            <span className="text-[0.68vw] text-slate-400 font-normal">
+            <span className="text-[0.73vw] text-slate-400 font-medium">
               (of {partyStats.total})
             </span>
           )}
@@ -1314,7 +1314,7 @@ const CustomerDatabase = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={handleSelectAllOverall}
-                  className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
+                  className="flex items-center gap-[0.4vw] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.77vw] cursor-pointer"
                 >
                   {filteredData.length > 0 && filteredData.every((i) => selectedItems.has(getRowId(i))) ? (
                     <CheckSquare className="w-[0.85vw] h-[0.85vw]" />
@@ -1328,7 +1328,7 @@ const CustomerDatabase = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={handleBulkDelete}
-                  className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.72vw] cursor-pointer"
+                  className="flex items-center gap-[0.4vw] bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 px-[0.7vw] h-[1.9vw] rounded-[0.4vw] font-semibold text-[0.77vw] cursor-pointer"
                 >
                   <Trash2 className="w-[0.85vw] h-[0.85vw]" /> Delete ({selectedItems.size})
                 </motion.button>
@@ -1341,7 +1341,7 @@ const CustomerDatabase = () => {
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="appearance-none bg-white font-medium text-slate-700 border border-slate-400 hover:border-slate-400 pl-[0.8vw] pr-[2vw] rounded-full outline-none cursor-pointer h-[2vw] text-[0.74vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+              className="appearance-none bg-white font-medium text-slate-700 border border-slate-400 hover:border-slate-400 pl-[0.8vw] pr-[2vw] rounded-full outline-none cursor-pointer h-[2vw] text-[0.79vw] transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
             >
               <option value="latest">Sort by: Latest First</option>
               <option value="oldest">Sort by: Oldest First</option>
@@ -1357,7 +1357,7 @@ const CustomerDatabase = () => {
       <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-400 flex flex-col flex-1 overflow-hidden min-h-0">
         <div className="overflow-x-auto overflow-y-auto flex-1 w-full min-h-0">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-400 text-slate-700 font-bold text-[0.74vw] tracking-wider uppercase">
+            <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-400 text-slate-700 font-bold text-[0.79vw] tracking-wider uppercase">
               <tr className="bg-[#E9EDF7]">
                 {!isSupervisor && (
                   <th className="py-[0.7vw] px-[0.7vw] border-r border-slate-400 w-[3%] text-center bg-[#E9EDF7]">
@@ -1373,12 +1373,12 @@ const CustomerDatabase = () => {
                     </button>
                   </th>
                 )}
-                <th className="py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.72vw] border-r border-slate-400 w-[3.5%] text-center bg-[#E9EDF7]">
+                <th className="py-[0.7vw] px-[0.7vw] font-semibold text-slate-700 uppercase tracking-wider text-[0.77vw] border-r border-slate-400 w-[3.5%] text-center bg-[#E9EDF7]">
                   S.No
                 </th>
                 {visibleCols.map(renderHeaderCell)}
                 {!isSupervisor && (
-                  <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.74vw] border-slate-400 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                  <th className="py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.79vw] border-slate-400 w-[4.5%] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
                     Actions
                   </th>
                 )}
@@ -1390,7 +1390,7 @@ const CustomerDatabase = () => {
                   <td colSpan={totalCols} className="py-[10vw]">
                     <div className="flex flex-col items-center justify-center gap-[1vw] text-gray-500">
                       <Loader2 className="w-[3vw] h-[3vw] animate-spin text-[#1a73e8]" />
-                      <p className="text-[1vw] font-medium text-[#1a73e8]">Loading customer data...</p>
+                      <p className="text-[1.05vw] font-medium text-[#1a73e8]">Loading customer data...</p>
                     </div>
                   </td>
                 </tr>
@@ -1426,7 +1426,7 @@ const CustomerDatabase = () => {
                           </button>
                         </td>
                       )}
-                      <td className="py-[0.7vw] px-[0.7vw] text-slate-800 font-medium border-r border-b border-slate-400 text-center text-[0.76vw]">
+                      <td className="py-[0.7vw] px-[0.7vw] text-slate-800 font-medium border-r border-b border-slate-400 text-center text-[0.81vw]">
                         {serialNumber}
                       </td>
                       {visibleCols.map((col) =>
@@ -1460,7 +1460,7 @@ const CustomerDatabase = () => {
                               )}
                             </div>
                           ) : (
-                            <span className="text-[0.68vw] text-slate-400 italic">View only</span>
+                            <span className="text-[0.73vw] text-slate-400 italic">View only</span>
                           )}
                         </td>
                       ) : null}
@@ -1469,7 +1469,7 @@ const CustomerDatabase = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={totalCols} className="py-[5vw] text-center text-slate-400 font-normal">
+                  <td colSpan={totalCols} className="py-[5vw] text-center text-slate-400 font-medium">
                     No customer data found.
                   </td>
                 </tr>
@@ -1480,7 +1480,7 @@ const CustomerDatabase = () => {
 
         {/* Pagination */}
         <div className="border-t border-slate-400 px-[1vw] py-[0.7vw] bg-white flex justify-between items-center rounded-b-[0.8vw]">
-          <div className="text-[0.74vw] text-slate-500 font-medium">
+          <div className="text-[0.79vw] text-slate-500 font-medium">
             Showing <span className="font-semibold text-slate-800">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="font-semibold text-slate-800">{Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)}</span> of <span className="font-semibold text-slate-800">{filteredData.length}</span> entries
           </div>
           <div className="flex items-center gap-[0.5vw]">
@@ -1500,7 +1500,7 @@ const CustomerDatabase = () => {
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`min-w-[1.6vw] h-[1.6vw] px-[0.35vw] flex items-center justify-center rounded-[0.35vw] text-[0.74vw] font-semibold cursor-pointer transition-all ${
+                    className={`min-w-[1.6vw] h-[1.6vw] px-[0.35vw] flex items-center justify-center rounded-[0.35vw] text-[0.79vw] font-semibold cursor-pointer transition-all ${
                       currentPage === pNum ? "bg-[#1a73e8] text-white shadow-2xs" : "bg-white border border-slate-400 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                     }`}
                   >
@@ -1538,8 +1538,8 @@ const CustomerDatabase = () => {
                     <UserPlus className="w-[1vw] h-[1vw]" />
                   </div>
                   <div>
-                    <h2 className="text-[1.05vw] font-bold text-gray-900 leading-none">Add Customer & Items</h2>
-                    <p className="text-[0.68vw] text-gray-400 font-medium mt-[0.15vw]">Register a new party and catalog item details</p>
+                    <h2 className="text-[1.1vw] font-bold text-gray-900 leading-none">Add Customer & Items</h2>
+                    <p className="text-[0.73vw] text-gray-400 font-medium mt-[0.15vw]">Register a new party and catalog item details</p>
                   </div>
                 </div>
                 <button
@@ -1556,23 +1556,23 @@ const CustomerDatabase = () => {
                 <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-slate-400/80">
                   <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
                     <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
-                    <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
+                    <h3 className="text-[0.87vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
                   </div>
 
                   <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
                       <AutocompleteInput
                         required
                         value={newEntry.partyCode}
                         onChange={handleAddPartyCodeChange}
                         suggestions={uniquePartyCodes}
                         placeholder="e.g. CUS-001"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Type</label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">Party Type</label>
                       <CustomDropdown
                         options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={newEntry.partyType}
@@ -1584,36 +1584,36 @@ const CustomerDatabase = () => {
                   </div>
 
                   <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
-                    <label className="text-[0.74vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
+                    <label className="text-[0.79vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
                     <AutocompleteInput
                       required
                       value={newEntry.partyDescription}
                       onChange={handleAddPartyDescChange}
                       suggestions={uniquePartyDescriptions}
                       placeholder="Company / Customer Name"
-                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-[1vw]">
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">State</label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">State</label>
                       <AutocompleteInput
                         value={newEntry.state}
                         onChange={(val) => setNewEntry({ ...newEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">District / City</label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">District / City</label>
                       <AutocompleteInput
                         value={newEntry.districtCity}
                         onChange={(val) => setNewEntry({ ...newEntry, districtCity: val })}
                         suggestions={addModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
@@ -1624,12 +1624,12 @@ const CustomerDatabase = () => {
                   <div className="flex justify-between items-center mb-[0.6vw]">
                     <div className="flex items-center gap-[0.4vw]">
                       <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
-                      <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
+                      <h3 className="text-[0.87vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
                     </div>
                     <button
                       type="button"
                       onClick={handleAddItemRow}
-                      className="text-blue-600 hover:text-blue-700 text-[0.74vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
+                      className="text-blue-600 hover:text-blue-700 text-[0.79vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
                     >
                       <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
                     </button>
@@ -1645,51 +1645,51 @@ const CustomerDatabase = () => {
                         >
                           {isExisting && (
                             <div className="flex flex-col justify-end shrink-0">
-                              <span className="text-[0.62vw] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Existing</span>
+                              <span className="text-[0.67vw] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Existing</span>
                             </div>
                           )}
                           <div className="flex-1 flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Segment</label>}
+                            {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Segment</label>}
                             <AutocompleteInput
                               required={!isExisting}
                               value={item.productSegment}
                               onChange={(val) => handleItemChange(idx, "productSegment", val)}
                               suggestions={uniqueSegments}
                               placeholder="Segment"
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
                           <div className="flex-1 flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Item Code</label>}
+                            {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Item Code</label>}
                             <input
                               required={!isExisting}
                               value={item.itemCode}
                               readOnly={isExisting}
                               onChange={(e) => handleItemChange(idx, "itemCode", e.target.value)}
-                              className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
+                              className={`w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all ${isExisting ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}`}
                               placeholder="Item Code"
                             />
                           </div>
                           <div className="flex-[2] flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Description</label>}
+                            {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Description</label>}
                             <AutocompleteInput
                               required={!isExisting}
                               value={item.itemDescription}
                               onChange={(val) => handleItemChange(idx, "itemDescription", val)}
                               suggestions={uniqueItemDescriptions}
                               placeholder="Item Description"
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             />
                           </div>
                           <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
-                            {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Warranty (days)</label>}
+                            {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Warranty (days)</label>}
                             <input
                               required={!isExisting}
                               type="number"
                               min="0"
                               value={item.warrantyPeriodDays}
                               onChange={(e) => handleItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                              className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                               placeholder="Days"
                             />
                           </div>
@@ -1715,13 +1715,13 @@ const CustomerDatabase = () => {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
+                    className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.81vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.76vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
+                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.81vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
                   >
                     Save All
                   </button>
@@ -1750,10 +1750,10 @@ const CustomerDatabase = () => {
                     <Edit2 className="w-[1vw] h-[1vw]" />
                   </div>
                   <div>
-                    <h2 className="text-[1.05vw] font-bold text-gray-900 leading-none flex items-center gap-[0.4vw]">
-                      Edit Customer <span className="text-gray-400 font-normal">—</span> <span className="text-blue-600 font-mono font-bold">{editingPartyCode}</span>
+                    <h2 className="text-[1.1vw] font-bold text-gray-900 leading-none flex items-center gap-[0.4vw]">
+                      Edit Customer <span className="text-gray-400 font-medium">—</span> <span className="text-blue-600 font-mono font-bold">{editingPartyCode}</span>
                     </h2>
-                    <p className="text-[0.68vw] text-gray-400 font-medium mt-[0.15vw]">Modify party metadata and catalog line items</p>
+                    <p className="text-[0.73vw] text-gray-400 font-medium mt-[0.15vw]">Modify party metadata and catalog line items</p>
                   </div>
                 </div>
                 <button
@@ -1770,22 +1770,22 @@ const CustomerDatabase = () => {
                 <div className="bg-slate-50/60 p-[1vw] rounded-[0.7vw] border border-slate-400/80">
                   <div className="flex items-center gap-[0.4vw] mb-[0.8vw]">
                     <span className="w-[0.25vw] h-[0.8vw] bg-blue-600 rounded-full inline-block" />
-                    <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
+                    <h3 className="text-[0.87vw] font-bold text-gray-800 uppercase tracking-wider">Party Details</h3>
                   </div>
 
                   <div className="grid grid-cols-2 gap-[1vw] mb-[0.8vw]">
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">Party Code <span className="text-rose-500">*</span></label>
                       <input
                         required
                         value={editEntry.partyCode}
                         onChange={(e) => setEditEntry({ ...editEntry, partyCode: e.target.value })}
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono font-bold transition-all"
                         placeholder="e.g. CUS-001"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">Party Type</label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">Party Type</label>
                       <CustomDropdown
                         options={partyTypes.map((t) => ({ value: t.name, label: t.name }))}
                         value={editEntry.partyType}
@@ -1797,35 +1797,35 @@ const CustomerDatabase = () => {
                   </div>
 
                   <div className="flex flex-col gap-[0.3vw] mb-[0.8vw]">
-                    <label className="text-[0.74vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
+                    <label className="text-[0.79vw] font-semibold text-gray-700">Party Description <span className="text-rose-500">*</span></label>
                     <input
                       required
                       value={editEntry.partyDescription}
                       onChange={(e) => setEditEntry({ ...editEntry, partyDescription: e.target.value })}
-                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
+                      className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-medium transition-all"
                       placeholder="Company Name"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-[1vw]">
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">State</label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">State</label>
                       <AutocompleteInput
                         value={editEntry.state}
                         onChange={(val) => setEditEntry({ ...editEntry, state: val })}
                         suggestions={uniqueStates}
                         placeholder="e.g. Tamil Nadu"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                     <div className="flex flex-col gap-[0.3vw]">
-                      <label className="text-[0.74vw] font-semibold text-gray-700">District / City</label>
+                      <label className="text-[0.79vw] font-semibold text-gray-700">District / City</label>
                       <AutocompleteInput
                         value={editEntry.districtCity}
                         onChange={(val) => setEditEntry({ ...editEntry, districtCity: val })}
                         suggestions={editModalDistricts}
                         placeholder="e.g. Coimbatore"
-                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                        className="w-full h-[2.1vw] px-[0.7vw] rounded-[0.45vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                       />
                     </div>
                   </div>
@@ -1836,12 +1836,12 @@ const CustomerDatabase = () => {
                   <div className="flex justify-between items-center mb-[0.6vw]">
                     <div className="flex items-center gap-[0.4vw]">
                       <span className="w-[0.25vw] h-[0.8vw] bg-indigo-600 rounded-full inline-block" />
-                      <h3 className="text-[0.82vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
+                      <h3 className="text-[0.87vw] font-bold text-gray-800 uppercase tracking-wider">Product Items</h3>
                     </div>
                     <button
                       type="button"
                       onClick={handleEditAddItemRow}
-                      className="text-blue-600 hover:text-blue-700 text-[0.74vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
+                      className="text-blue-600 hover:text-blue-700 text-[0.79vw] font-semibold flex items-center gap-[0.3vw] cursor-pointer hover:underline"
                     >
                       <PlusCircle className="w-[0.85vw] h-[0.85vw]" /> Add Item
                     </button>
@@ -1854,45 +1854,45 @@ const CustomerDatabase = () => {
                         className="flex gap-[0.5vw] items-center border-b border-gray-100 pb-[0.6vw] last:border-0"
                       >
                         <div className="flex-1 flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Item Code</label>}
+                          {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Item Code</label>}
                           <input
                             required
                             value={item.itemCode}
                             onChange={(e) => handleEditItemChange(idx, "itemCode", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 font-mono transition-all"
                             placeholder="Code"
                           />
                         </div>
                         <div className="flex-[2] flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Description</label>}
+                          {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Description</label>}
                           <input
                             required
                             value={item.itemDescription}
                             onChange={(e) => handleEditItemChange(idx, "itemDescription", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                             placeholder="Description"
                           />
                         </div>
                         <div className="flex-[0.8] flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Warranty (days)</label>}
+                          {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Warranty (days)</label>}
                           <input
                             required
                             type="number"
                             min="0"
                             value={item.warrantyPeriodDays}
                             onChange={(e) => handleEditItemChange(idx, "warrantyPeriodDays", e.target.value)}
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all font-semibold"
                             placeholder="Days"
                           />
                         </div>
                         <div className="flex-1 flex flex-col gap-[0.2vw]">
-                          {idx === 0 && <label className="text-[0.68vw] font-semibold text-gray-500">Product Segment</label>}
+                          {idx === 0 && <label className="text-[0.73vw] font-semibold text-gray-500">Product Segment</label>}
                           <AutocompleteInput
                             value={item.productSegment}
                             onChange={(val) => handleEditItemChange(idx, "productSegment", val)}
                             suggestions={uniqueSegments}
                             placeholder="Segment"
-                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.76vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+                            className="w-full h-[2.1vw] px-[0.6vw] rounded-[0.4vw] border border-slate-400 bg-white text-[0.81vw] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
                           />
                         </div>
                         <div className="flex flex-col justify-end">
@@ -1914,13 +1914,13 @@ const CustomerDatabase = () => {
                   <button
                     type="button"
                     onClick={() => { setEditingPartyCode(null); setEditEntry(null); }}
-                    className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.76vw] font-semibold transition-all cursor-pointer"
+                    className="px-[1.2vw] h-[2.2vw] border border-slate-400 rounded-[0.45vw] text-gray-600 hover:bg-gray-50 text-[0.81vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.76vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
+                    className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white rounded-[0.45vw] hover:bg-blue-700 text-[0.81vw] font-semibold shadow-xs flex items-center gap-[0.4vw] transition-all cursor-pointer"
                   >
                     <Save className="w-[0.9vw] h-[0.9vw]" /> Update
                   </button>
@@ -1942,7 +1942,7 @@ const CustomerDatabase = () => {
               className="bg-white w-[55vw] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
             >
               <div className="px-[1vw] py-[0.7vw] border-b border-slate-400 flex justify-between items-center bg-gray-50">
-                <h2 className="text-[1.2vw] font-semibold text-gray-900">Upload client data</h2>
+                <h2 className="text-[1.25vw] font-semibold text-gray-900">Upload client data</h2>
                 <button onClick={resetUpload} className="text-gray-400 hover:text-red-500 cursor-pointer">
                   <X className="w-[1.4vw] h-[1.4vw]" />
                 </button>
@@ -1958,15 +1958,15 @@ const CustomerDatabase = () => {
                   >
                     <input type="file" ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept=".xlsx,.xls" />
                     <UploadCloud className="w-[2.5vw] h-[2.5vw] text-blue-500 mb-[1vw]" />
-                    <p className="text-[1.1vw] font-semibold text-gray-800 mb-[0.4vw]">
+                    <p className="text-[1.15vw] font-semibold text-gray-800 mb-[0.4vw]">
                       {isDragging ? "Drop file here" : "Click to upload or Drag & Drop"}
                     </p>
-                    <p className="text-gray-700 text-[0.9vw] mb-[0.5vw] text-center px-[10%]">
+                    <p className="text-gray-700 text-[0.95vw] mb-[0.5vw] text-center px-[10%]">
                       <span className="font-semibold">Expected Columns: </span>
                       Party Type, Product Segment, Party Code, Party Description, Item Code, Item Description, Warranty Period,{" "}
                       <span className="text-blue-600 font-semibold">State, District/City</span>
                     </p>
-                    <p className="text-blue-600 text-[0.85vw] bg-blue-50 px-[1vw] py-[0.4vw] rounded-[0.3vw] border border-blue-200">
+                    <p className="text-blue-600 text-[0.9vw] bg-blue-50 px-[1vw] py-[0.4vw] rounded-[0.3vw] border border-blue-200">
                       <span className="font-semibold">Note:</span> Multiple items per customer = new row with same Party Code
                     </p>
                   </div>
@@ -2011,7 +2011,7 @@ const CustomerDatabase = () => {
                         {validationResult.issues.length > 0 && (
                           <button 
                             onClick={exportIssues} 
-                            className="flex items-center gap-[0.4vw] text-[0.8vw] text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded cursor-pointer transition-colors"
+                            className="flex items-center gap-[0.4vw] text-[0.85vw] text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-[0.6vw] py-[0.2vw] rounded cursor-pointer transition-colors"
                           >
                             <Download className="w-[0.9vw] h-[0.9vw]"/> Export Issues
                           </button>
@@ -2044,39 +2044,39 @@ const CustomerDatabase = () => {
                 )}
                 {uploadStep === 4 && (
                   <div className="flex flex-col items-center justify-center h-full w-full">
-                    <h3 className="text-[1.6vw] font-bold text-gray-800 mb-[0.5vw]">Import Summary</h3>
-                    <p className="text-[0.9vw] text-gray-500 mb-[2.5vw]">The import process is complete.</p>
+                    <h3 className="text-[1.65vw] font-bold text-gray-800 mb-[0.5vw]">Import Summary</h3>
+                    <p className="text-[0.95vw] text-gray-500 mb-[2.5vw]">The import process is complete.</p>
                     <div className="grid grid-cols-3 gap-[1.5vw] w-full max-w-[35vw] mb-[2vw]">
                       <div className="bg-green-50 border border-green-100 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center">
-                        <span className="text-[1.8vw] font-bold text-green-700">
+                        <span className="text-[1.85vw] font-bold text-green-700">
                           {uploadResult?.insertedCount || 0}
                         </span>
-                        <span className="text-[0.75vw] font-semibold text-green-600 uppercase tracking-wide">New Records</span>
+                        <span className="text-[0.8vw] font-semibold text-green-600 uppercase tracking-wide">New Records</span>
                       </div>
                       <div className="bg-blue-50 border border-blue-100 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center">
-                        <span className="text-[1.8vw] font-bold text-blue-600">
+                        <span className="text-[1.85vw] font-bold text-blue-600">
                           {uploadResult 
                             ? (validationResult.duplicates + (uploadResult.duplicateCount || 0))
                             : validationResult.duplicates
                           }
                         </span>
-                        <span className="text-[0.75vw] font-semibold text-blue-500 uppercase tracking-wide">Already in DB</span>
+                        <span className="text-[0.8vw] font-semibold text-blue-500 uppercase tracking-wide">Already in DB</span>
                       </div>
                       <div className="bg-red-50 border border-red-100 rounded-[0.6vw] p-[1.2vw] flex flex-col items-center">
-                        <span className="text-[1.8vw] font-bold text-red-600">{validationResult.errors}</span>
-                        <span className="text-[0.75vw] font-semibold text-red-500 uppercase tracking-wide">Errors</span>
+                        <span className="text-[1.85vw] font-bold text-red-600">{validationResult.errors}</span>
+                        <span className="text-[0.8vw] font-semibold text-red-500 uppercase tracking-wide">Errors</span>
                       </div>
                     </div>
 
                     {uploadResult?.insertedCount === 0 && (uploadResult?.duplicateCount > 0 || validationResult.duplicates > 0) && (
-                      <p className="text-[0.85vw] text-blue-600 mb-[2vw] bg-blue-50 px-[1.5vw] py-[0.5vw] rounded-full border border-blue-100">
+                      <p className="text-[0.9vw] text-blue-600 mb-[2vw] bg-blue-50 px-[1.5vw] py-[0.5vw] rounded-full border border-blue-100">
                         Notice: All uploaded records already exist in the database.
                       </p>
                     )}
 
                     <button
                       onClick={resetUpload}
-                      className="px-[3vw] py-[0.8vw] text-[0.9vw] font-medium border border-gray-400 rounded-[0.4vw] hover:bg-gray-50 cursor-pointer"
+                      className="px-[3vw] py-[0.8vw] text-[0.95vw] font-medium border border-gray-400 rounded-[0.4vw] hover:bg-gray-50 cursor-pointer"
                     >
                       Exit
                     </button>

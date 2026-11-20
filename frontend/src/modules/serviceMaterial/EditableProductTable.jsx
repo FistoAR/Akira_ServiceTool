@@ -494,18 +494,18 @@ const EditableProductTable = ({
       ref={tableContainerRef}
       className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
     >
-      <table className="w-full border-collapse text-[0.8vw]">
-        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider shadow-sm">
+      <table className="w-full border-collapse text-[0.85vw]">
+        <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider shadow-sm">
           <tr>
             {!isReadOnly && <th className="w-[2.5vw] py-[0.7vw] px-[0.4vw] border-r border-b border-slate-300"></th>}
-            <th className="w-[3vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
-            <th className="min-w-[18vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
-            <th className="w-[9vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[10vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
-            <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
-            <th className="w-[9.5vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
-            {!isReadOnly && <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
+            <th className="w-[3vw] py-[0.7vw] px-[0.4vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">S. No</th>
+            <th className="min-w-[18vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
+            <th className="w-[9vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Code</th>
+            <th className="w-[8vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
+            <th className="w-[10vw] py-[0.7vw] px-[0.6vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Serial Number</th>
+            <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Type</th>
+            <th className="w-[9.5vw] py-[0.7vw] px-[0.5vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Exp. Delivery</th>
+            {!isReadOnly && <th className="w-[6vw] py-[0.7vw] px-[0.5vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Actions</th>}
           </tr>
         </thead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -576,7 +576,7 @@ const EditableProductTable = ({
                             <DropdownPortal targetRect={activeDropdown.rect}>
                               <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto dropdown-container">
                                 {!customerCode ? (
-                                    <div className="p-[1vw] text-center text-red-500 font-semibold text-[0.8vw]">Please select a customer first.</div>
+                                    <div className="p-[1vw] text-center text-red-500 font-semibold text-[0.85vw]">Please select a customer first.</div>
                                 ) : filteredProds.length > 0 ? (
                                   <div className="prod-drop-container">
                                     {filteredProds.map((p, i) => (
@@ -589,8 +589,8 @@ const EditableProductTable = ({
                                         }}
                                         className={`p-[0.6vw] cursor-pointer border-b border-slate-300 last:border-0 ${i === prodActiveIndex ? "bg-blue-100" : "hover:bg-blue-50"}`}
                                       >
-                                        <div className="font-semibold text-gray-900 text-[0.8vw]">{p.itemDescription || p.productDescription}</div>
-                                        <div className="text-[0.7vw] text-gray-700 flex items-center gap-[0.4vw] mt-[0.1vw]">
+                                        <div className="font-semibold text-gray-900 text-[0.85vw]">{p.itemDescription || p.productDescription}</div>
+                                        <div className="text-[0.75vw] text-gray-700 flex items-center gap-[0.4vw] mt-[0.1vw]">
                                           <span className="bg-gray-100 px-[0.3vw] rounded font-mono border-r border-b border-slate-300">{p.itemCode || p.productCode}</span>
                                           {(p.productSegment || p.segment) && <span className="font-medium">· {p.productSegment || p.segment}</span>}
                                         </div>
@@ -606,7 +606,7 @@ const EditableProductTable = ({
                         </td>
 
                         <td className={`py-[0.6vw] px-[0.5vw] relative ${getCellClass(index, 1)}`} onMouseDown={(e) => handleCellMouseDown(index, 1, e)} onMouseEnter={() => handleCellMouseEnter(index, 1)}>
-                          <div className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-medium text-[0.75vw] truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
+                          <div className="text-black px-[0.4vw] py-[0.4vw] rounded-[0.3vw] font-medium text-[0.8vw] truncate" title={prod.productCode || ""}>{prod.productCode || "—"}</div>
                           {renderFillHandle(index, 1)}
                         </td>
 
@@ -620,7 +620,7 @@ const EditableProductTable = ({
                             options={boardTypeOptions}
                             usePortal={true}
                             maxHeight="10.5vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.78vw] ${
+                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
                               isRowDisabled
                                 ? "cursor-not-allowed bg-transparent border-transparent text-slate-500"
                                 : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
@@ -632,7 +632,7 @@ const EditableProductTable = ({
 
                         <td className={`py-[0.6vw] px-[0.5vw] relative transition-all ${getCellClass(index, 3)}`} onMouseDown={(e) => handleCellMouseDown(index, 3, e)} onMouseEnter={() => handleCellMouseEnter(index, 3)}>
                           <div className="relative flex items-center group">
-                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isRowDisabled} className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.4vw] pr-[1.8vw] outline-none transition-all text-slate-900 font-medium disabled:bg-transparent text-[0.78vw] ${isRowDisabled ? "cursor-not-allowed text-slate-500" : ""}`} />
+                            <input type="text" autoComplete="off" value={prod.serialNumber} onChange={(e) => handleUpdate(prod._pid, "serialNumber", e.target.value)} placeholder="SN-XXXX" disabled={isRowDisabled} className={`w-full bg-transparent border-none rounded-[0.3vw] py-[0.4vw] px-[0.4vw] pr-[1.8vw] outline-none transition-all text-slate-900 font-medium disabled:bg-transparent text-[0.83vw] ${isRowDisabled ? "cursor-not-allowed text-slate-500" : ""}`} />
                             {!isReadOnly && !isClaimed && <button type="button" className="absolute right-[0.2vw] p-[0.2vw] text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-all"><ScanBarcode className="w-[0.9vw] h-[0.9vw]" /></button>}
                           </div>
                           {renderFillHandle(index, 3)}
@@ -643,7 +643,7 @@ const EditableProductTable = ({
                             {typeOptions.map(opt => (
                               <span 
                                 key={opt} 
-                                className={`flex-1 py-[0.25vw] text-[0.68vw] font-bold rounded-[0.25vw] text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-400"}`}
+                                className={`flex-1 py-[0.25vw] text-[0.73vw] font-bold rounded-[0.25vw] text-center transition-all ${prod.type === opt ? (opt === 'W' ? "bg-green-600 text-white shadow-none" : "bg-blue-600 text-white shadow-none") : "text-gray-400"}`}
                               >
                                 {opt}
                               </span>
@@ -660,7 +660,7 @@ const EditableProductTable = ({
                               onChange={(e) => handleUpdate(prod._pid, "expectedDeliveryDate", e.target.value)} 
                               disabled={isRowDisabled || !prod.serialNumber} 
                               title={isClaimed ? "Claimed record (read only)" : !prod.serialNumber ? "Enter Serial Number first" : ""}
-                              className="no-native-calendar w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.6vw] outline-none transition-all appearance-none text-slate-800 font-normal disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-400 text-[0.76vw]" 
+                              className="no-native-calendar w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-400 focus:bg-white rounded-[0.3vw] py-[0.35vw] px-[0.3vw] pr-[1.6vw] outline-none transition-all appearance-none text-slate-800 font-medium disabled:bg-slate-50/50 disabled:border-transparent cursor-pointer disabled:cursor-not-allowed disabled:text-slate-400 text-[0.81vw]" 
                             />
                             <button
                               type="button"
@@ -708,7 +708,7 @@ const EditableProductTable = ({
                 {/* RESTORED: Dragging indicator */}
                 {isFilling && selection && selection.endRow >= products.length && (
                    <tr className="bg-blue-50/20 border-b-2 border-blue-400">
-                     <td colSpan={9} className="py-[1vw] text-center text-blue-700 font-semibold italic text-[0.8vw] bg-blue-100/50">
+                     <td colSpan={9} className="py-[1vw] text-center text-blue-700 font-semibold italic text-[0.85vw] bg-blue-100/50">
                         + Release mouse to add {selection.endRow - products.length + 1} new duplicate rows
                      </td>
                    </tr>

@@ -61,7 +61,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-[2vw]">
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-400 w-full max-w-[28vw] overflow-hidden flex flex-col max-h-[80vh]">
         <div className="px-[1.2vw] py-[0.9vw] border-b border-slate-400 flex items-center justify-between bg-slate-50/70">
-          <h3 className="text-[0.92vw] font-bold text-gray-900 flex items-center gap-[0.5vw]">
+          <h3 className="text-[0.97vw] font-bold text-gray-900 flex items-center gap-[0.5vw]">
             <Briefcase className="w-[1vw] h-[1vw] text-blue-600" />
             Manage Departments
           </h3>
@@ -75,7 +75,7 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
               value={newDept}
               onChange={(e) => setNewDept(e.target.value)}
               placeholder="Enter department name..."
-              className="flex-1 border border-slate-400 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw]"
+              className="flex-1 border border-slate-400 p-[0.55vw] rounded-[0.4vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.87vw]"
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             />
             <button onClick={handleAdd} className="bg-blue-600 text-white px-[0.9vw] rounded-[0.4vw] hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center"><Plus className="w-[1vw] h-[1vw]" /></button>
@@ -84,17 +84,17 @@ const DepartmentMasterModal = ({ isOpen, onClose, departments, onSave }) => {
           <div className="flex flex-col gap-[0.4vw]">
             {localDepts.map((dept, idx) => (
               <div key={idx} className="flex items-center justify-between px-[0.7vw] py-[0.5vw] bg-gray-50 border border-slate-400 rounded-[0.4vw] hover:bg-blue-50/40 hover:border-blue-200 transition-colors group">
-                <span className="text-[0.8vw] font-medium text-gray-700">{dept}</span>
+                <span className="text-[0.85vw] font-medium text-gray-700">{dept}</span>
                 <button onClick={() => handleRemove(dept)} className="text-gray-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"><Trash2 className="w-[0.85vw] h-[0.85vw]" /></button>
               </div>
             ))}
-            {localDepts.length === 0 && <p className="text-center text-gray-400 py-[2vw] text-[0.78vw]">No departments defined</p>}
+            {localDepts.length === 0 && <p className="text-center text-gray-400 py-[2vw] text-[0.83vw]">No departments defined</p>}
           </div>
         </div>
 
         <div className="px-[1.2vw] py-[0.8vw] border-t border-slate-400 bg-slate-50/70 flex justify-end gap-[0.6vw]">
-          <button onClick={onClose} className="px-[1vw] py-[0.45vw] text-gray-600 hover:bg-gray-200/60 rounded-[0.4vw] text-[0.8vw] font-semibold transition-colors cursor-pointer">Cancel</button>
-          <button onClick={handleSave} className="bg-blue-600 text-white px-[1.1vw] py-[0.45vw] rounded-[0.4vw] text-[0.8vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer">Save Changes</button>
+          <button onClick={onClose} className="px-[1vw] py-[0.45vw] text-gray-600 hover:bg-gray-200/60 rounded-[0.4vw] text-[0.85vw] font-semibold transition-colors cursor-pointer">Cancel</button>
+          <button onClick={handleSave} className="bg-blue-600 text-white px-[1.1vw] py-[0.45vw] rounded-[0.4vw] text-[0.85vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer">Save Changes</button>
         </div>
       </motion.div>
     </div>
@@ -264,7 +264,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 onClick={() => {
                   setSearchParams({ tab: "role-access", userId: editingEmp.userId });
                 }}
-                className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                className="inline-flex items-center gap-[0.3vw] text-[0.79vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
               >
                 <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
                 Customize permissions in Role Access &rarr;
@@ -304,7 +304,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 onClick={() => {
                   setSearchParams({ tab: "role-access", userId: newUserId });
                 }}
-                className="inline-flex items-center gap-[0.3vw] text-[0.74vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                className="inline-flex items-center gap-[0.3vw] text-[0.79vw] font-bold text-blue-600 hover:text-blue-800 underline cursor-pointer"
               >
                 <Icon icon="solar:shield-user-bold-duotone" className="w-[0.9vw] h-[0.9vw]" />
                 To update role access click here &rarr;
@@ -382,10 +382,10 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           title: "Records Exist for Employee",
           message: (
             <div className="space-y-[0.5vw]">
-              <p className="text-[0.82vw] text-slate-800">
+              <p className="text-[0.87vw] text-slate-800">
                 Records exist for <span className="font-bold">{emp.name}</span> in the system ({res.data.totalRecordCount} total across Service Call, Material, or Production).
               </p>
-              <div className="p-[0.6vw] bg-amber-50 border border-amber-200 rounded-[0.4vw] text-[0.76vw] text-amber-900">
+              <div className="p-[0.6vw] bg-amber-50 border border-amber-200 rounded-[0.4vw] text-[0.81vw] text-amber-900">
                 <span className="font-semibold block mb-[0.2vw]">Cannot permanently delete operational history.</span>
                 Would you like to set their status to <span className="font-bold underline text-amber-950">Inactive</span> instead to disable access while preserving records?
               </div>
@@ -465,7 +465,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           <input
             type="text"
             placeholder="Search employees by name, ID or department..."
-            className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-slate-400 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.82vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
+            className="w-full pl-[2.4vw] pr-[1vw] py-[0.55vw] border border-slate-400 rounded-[0.5vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.87vw] bg-white text-gray-800 placeholder-gray-400 transition-all shadow-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -474,7 +474,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           {canWrite && (
             <button
               onClick={() => setShowDeptModal(true)}
-              className="flex items-center gap-[0.45vw] border border-slate-400 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.8vw] cursor-pointer transition-all shadow-none"
+              className="flex items-center gap-[0.45vw] border border-slate-400 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 px-[1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.85vw] cursor-pointer transition-all shadow-none"
             >
               <Icon icon="solar:case-round-minimalistic-bold-duotone" className="w-[1vw] h-[1vw] text-gray-500" /> Dept Master
             </button>
@@ -482,7 +482,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           {canWrite && (
             <button
               onClick={() => openRegModal()}
-              className="flex items-center gap-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.82vw] cursor-pointer transition-all shadow-xs"
+              className="flex items-center gap-[0.45vw] bg-blue-600 hover:bg-blue-700 text-white px-[1.1vw] py-[0.55vw] rounded-[0.5vw] font-semibold text-[0.87vw] cursor-pointer transition-all shadow-xs"
             >
               <Icon icon="solar:user-plus-bold-duotone" className="w-[1.05vw] h-[1.05vw]" /> Register Employee
             </button>
@@ -495,39 +495,39 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
           <table className="w-full text-left border-collapse">
             <thead className="sticky top-0 z-20 bg-gray-50/90 backdrop-blur-xs">
               <tr className="border-b border-slate-400">
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
-                <th className="px-[1vw] py-[0.65vw] text-[0.72vw] font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">S. No.</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Employee</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">ID</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Department</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Designation</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Role</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                <th className="px-[1vw] py-[0.65vw] text-[0.77vw] font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {paginatedData.map((emp, idx) => (
                 <tr key={emp._id || idx} className="hover:bg-blue-50/20 transition-colors group">
-                  <td className="px-[1vw] py-[0.7vw] text-[0.78vw] text-gray-500 font-medium">
+                  <td className="px-[1vw] py-[0.7vw] text-[0.83vw] text-gray-500 font-medium">
                     {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
                   </td>
                   <td className="px-[1vw] py-[0.7vw]">
                     <div className="flex items-center gap-[0.75vw]">
-                      <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[0.85vw] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
+                      <div className="w-[2.5vw] h-[2.5vw] rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[0.9vw] flex items-center justify-center overflow-hidden flex-shrink-0 shadow-2xs">
                         {emp.profilePicture ? <img src={emp.profilePicture} className="w-full h-full object-cover" /> : emp.name?.charAt(0)?.toUpperCase()}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-[0.82vw] font-bold text-gray-900 truncate">{emp.name}</div>
-                        <div className="text-[0.7vw] text-gray-500 truncate">{emp.email}</div>
+                        <div className="text-[0.87vw] font-bold text-gray-900 truncate">{emp.name}</div>
+                        <div className="text-[0.75vw] text-gray-500 truncate">{emp.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] font-semibold text-gray-700">{emp.userId}</td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700">
+                  <td className="px-[1vw] py-[0.7vw] text-[0.85vw] font-semibold text-gray-700">{emp.userId}</td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.85vw] text-gray-700">
                     {emp.department || "—"}
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.8vw]">
+                  <td className="px-[1vw] py-[0.7vw] text-[0.85vw] text-gray-700 font-medium">{emp.designation || "—"}</td>
+                  <td className="px-[1vw] py-[0.7vw] text-[0.85vw]">
                     <span className={`font-semibold ${emp.role === "Admin"
                         ? "text-purple-700"
                         : emp.role === "Supervisor"
@@ -537,7 +537,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       {emp.role || "User"}
                     </span>
                   </td>
-                  <td className="px-[1vw] py-[0.7vw] text-[0.78vw]">
+                  <td className="px-[1vw] py-[0.7vw] text-[0.83vw]">
                     <span className="inline-flex items-center gap-[0.35vw] font-medium">
                       <span className={`w-[0.4vw] h-[0.4vw] rounded-full ${emp.workingStatus === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
                       <span className={emp.workingStatus === "Active" ? "text-emerald-700" : "text-amber-700"}>
@@ -547,7 +547,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   </td>
                   <td className="px-[1vw] py-[0.7vw] text-right">
                     {((emp.role === "Admin" || emp.department === "Admin") && !isCurrentRequesterAdmin) ? (
-                      <span className="inline-flex items-center gap-[0.2vw] text-[0.68vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
+                      <span className="inline-flex items-center gap-[0.2vw] text-[0.73vw] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-[0.5vw] py-[0.15vw] rounded-full" title="Protected Admin profile">
                         <Icon icon="solar:lock-keyhole-bold-duotone" className="w-[0.75vw] h-[0.75vw]" /> Protected
                       </span>
                     ) : (
@@ -571,7 +571,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           </button>
                         )}
                         {!canUpdate && !canDelete && (
-                          <span className="text-[0.68vw] text-gray-400 italic">View only</span>
+                          <span className="text-[0.73vw] text-gray-400 italic">View only</span>
                         )}
                       </div>
                     )}
@@ -584,13 +584,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
         {paginatedData.length === 0 && (
           <div className="p-[4vw] text-center flex flex-col items-center gap-[1vw]">
             <Users className="w-[3vw] h-[3vw] text-gray-200" />
-            <p className="text-gray-400 text-[0.85vw]">No employees found matching your search</p>
+            <p className="text-gray-400 text-[0.9vw]">No employees found matching your search</p>
           </div>
         )}
 
         {/* Pagination UI */}
         <div className="border-t border-slate-400 px-[1vw] py-[0.6vw] bg-white flex justify-between items-center flex-shrink-0">
-          <div className="text-[0.74vw] text-gray-500 font-medium">
+          <div className="text-[0.79vw] text-gray-500 font-medium">
             Showing <span className="text-gray-900 font-semibold">{paginatedData.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}</span> to <span className="text-gray-900 font-semibold">{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}</span> of <span className="text-gray-900 font-semibold">{filtered.length}</span> employees
           </div>
           <div className="flex items-center gap-[0.6vw]">
@@ -606,14 +606,14 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 const pNum = i + 1;
                 // Basic logic to show only few pages if there are many
                 if (totalPages > 5 && (pNum < currentPage - 1 || pNum > currentPage + 1) && pNum !== 1 && pNum !== totalPages) {
-                  if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.75vw]">...</span>;
+                  if (pNum === currentPage - 2 || pNum === currentPage + 2) return <span key={pNum} className="px-1 text-gray-400 text-[0.8vw]">...</span>;
                   return null;
                 }
                 return (
                   <button
                     key={pNum}
                     onClick={() => setCurrentPage(pNum)}
-                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.75vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-slate-400 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
+                    className={`w-[1.7vw] h-[1.7vw] flex items-center justify-center rounded-[0.4vw] text-[0.8vw] font-bold transition-all cursor-pointer ${currentPage === pNum ? "bg-blue-600 text-white shadow-2xs" : "bg-white border border-slate-400 text-gray-700 hover:border-blue-400 hover:text-blue-600"}`}
                   >
                     {pNum}
                   </button>
@@ -643,10 +643,10 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                     {editingEmp ? <Icon icon="solar:user-bold-duotone" className="w-[1.1vw] h-[1.1vw]" /> : <UserPlus className="w-[1.05vw] h-[1.05vw]" />}
                   </div>
                   <div>
-                    <h3 className="text-[0.95vw] font-bold text-gray-900 leading-tight">
+                    <h3 className="text-[1vw] font-bold text-gray-900 leading-tight">
                       {editingEmp ? "Edit Employee Profile" : "Register New Employee"}
                     </h3>
-                    <p className="text-[0.72vw] text-gray-500">
+                    <p className="text-[0.77vw] text-gray-500">
                       {editingEmp ? `Updating profile details for ${editingEmp.name}` : "Create a new user profile and credentials"}
                     </p>
                   </div>
@@ -674,12 +674,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
                     <User className="w-[0.9vw] h-[0.9vw] text-[#0E4E92]" />
-                    <span className="text-[0.76vw] font-bold text-[#0E4E92] uppercase tracking-wider">Personal Details</span>
+                    <span className="text-[0.81vw] font-bold text-[#0E4E92] uppercase tracking-wider">Personal Details</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Users className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Full Name <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -689,12 +689,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.name}
                         onChange={e => setRegData({ ...regData, name: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="John Doe"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Employee ID <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -705,7 +705,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         value={regData.userId}
                         onChange={e => setRegData({ ...regData, userId: e.target.value })}
                         disabled={!!editingEmp}
-                        className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.78vw] transition-colors ${editingEmp
+                        className={`w-full h-[2.1vw] min-h-[2.1vw] border px-[0.75vw] rounded-[0.35vw] outline-none text-[0.83vw] transition-colors ${editingEmp
                             ? "bg-gray-100 text-gray-500 border-slate-400 cursor-not-allowed"
                             : "border-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
                           }`}
@@ -713,7 +713,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Mail className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Email Address <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -723,12 +723,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="new-email"
                         value={regData.email}
                         onChange={e => setRegData({ ...regData, email: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="john@akira.com"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Phone className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Phone Number
                       </label>
                       <input
@@ -737,12 +737,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.phoneNumber}
                         onChange={e => setRegData({ ...regData, phoneNumber: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="+91 ..."
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Calendar className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Date of Birth <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -751,11 +751,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         autoComplete="off"
                         value={regData.dob}
                         onChange={e => setRegData({ ...regData, dob: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white transition-colors"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Users className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Gender <span className="text-red-500">*</span>
                       </label>
                       <CustomDropdown
@@ -774,12 +774,12 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
                     <Briefcase className="w-[0.9vw] h-[0.9vw] text-[#0E4E92]" />
-                    <span className="text-[0.76vw] font-bold text-[#0E4E92] uppercase tracking-wider">Professional Details</span>
+                    <span className="text-[0.81vw] font-bold text-[#0E4E92] uppercase tracking-wider">Professional Details</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Briefcase className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Department <span className="text-red-500">*</span>
                       </label>
                       <div className="flex items-center gap-[0.4vw]">
@@ -804,7 +804,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       </div>
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Tag className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Designation <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -812,13 +812,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         required
                         value={regData.designation}
                         onChange={e => setRegData({ ...regData, designation: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Senior Engineer"
                       />
                     </div>
 
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <ShieldCheck className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Role <span className="text-red-500">*</span>
                       </label>
                       <CustomDropdown
@@ -831,7 +831,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       />
                       {/* Notice when role is modified in edit mode */}
                       {editingEmp && regData.role !== (editingEmp.role || "User") && (
-                        <div className="text-[0.69vw] text-amber-800 bg-amber-50 border border-amber-200 rounded-[0.35vw] p-[0.45vw] flex items-start gap-[0.3vw] leading-relaxed animate-in fade-in">
+                        <div className="text-[0.74vw] text-amber-800 bg-amber-50 border border-amber-200 rounded-[0.35vw] p-[0.45vw] flex items-start gap-[0.3vw] leading-relaxed animate-in fade-in">
                           <Icon icon="solar:info-circle-bold" className="w-[0.85vw] h-[0.85vw] text-amber-600 flex-shrink-0 mt-[0.08vw]" />
                           <span>
                             It will reset the current permission of the user and overwrite with <strong>{regData.role}</strong> permissions. If you want to update permissions, please use <strong>Role Access</strong> module.
@@ -840,7 +840,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       )}
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <IndianRupee className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> CTC (Monthly)
                       </label>
                       <input
@@ -853,13 +853,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             setRegData({ ...regData, ctc: val });
                           }
                         }}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         placeholder="Enter monthly CTC"
                       />
                     </div>
 
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Calendar className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Date of Joining <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -867,11 +867,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         required
                         value={regData.dateOfJoining}
                         onChange={e => setRegData({ ...regData, dateOfJoining: e.target.value })}
-                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white transition-colors"
+                        className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white transition-colors"
                       />
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Activity className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Working Status <span className="text-red-500">*</span>
                       </label>
                       <CustomDropdown
@@ -919,10 +919,10 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.35vw]">
+                    <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.35vw]">
                       <ImageIcon className="w-[0.9vw] h-[0.9vw] text-[#530000]" /> Profile Picture
                     </label>
-                    <span className="text-[0.68vw] text-gray-400">Optional: Max 2MB</span>
+                    <span className="text-[0.73vw] text-gray-400">Optional: Max 2MB</span>
                   </div>
 
                   <div className="flex items-center gap-[1.2vw]">
@@ -947,11 +947,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           }`}
                       >
                         <div className="flex items-center gap-[0.6vw]">
-                          <span className="py-[0.25vw] px-[0.7vw] rounded-[0.35vw] text-[0.74vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-[0.3vw]">
+                          <span className="py-[0.25vw] px-[0.7vw] rounded-[0.35vw] text-[0.79vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200 inline-flex items-center gap-[0.3vw]">
                             <UploadCloud className="w-[0.85vw] h-[0.85vw]" />
                             Choose File
                           </span>
-                          <span className="text-[0.74vw] text-gray-500">
+                          <span className="text-[0.79vw] text-gray-500">
                             {isDraggingFile ? (
                               <span className="font-semibold text-blue-600">Drop image here...</span>
                             ) : (
@@ -959,7 +959,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                             )}
                           </span>
                         </div>
-                        <span className="text-[0.68vw] text-gray-400 font-medium">PNG, JPG, WebP</span>
+                        <span className="text-[0.73vw] text-gray-400 font-medium">PNG, JPG, WebP</span>
                       </div>
 
                       <input
@@ -980,7 +980,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                         <button
                           type="button"
                           onClick={() => setRegData((prev) => ({ ...prev, profilePicture: null }))}
-                          className="text-[0.68vw] text-rose-500 hover:text-rose-700 font-semibold mt-[0.3vw] flex items-center gap-[0.2vw] transition-colors cursor-pointer"
+                          className="text-[0.73vw] text-rose-500 hover:text-rose-700 font-semibold mt-[0.3vw] flex items-center gap-[0.2vw] transition-colors cursor-pointer"
                         >
                           <X className="w-[0.75vw] h-[0.75vw]" /> Remove Photo
                         </button>
@@ -993,11 +993,11 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                 <div className="space-y-[0.8vw]">
                   <div className="flex items-center gap-[0.4vw] pb-[0.35vw] border-b border-slate-400">
                     <Lock className="w-[0.9vw] h-[0.9vw] text-[#0E4E92]" />
-                    <span className="text-[0.76vw] font-bold text-[#0E4E92] uppercase tracking-wider">Security</span>
+                    <span className="text-[0.81vw] font-bold text-[#0E4E92] uppercase tracking-wider">Security</span>
                   </div>
                   <div className="grid grid-cols-2 gap-x-[1.2vw] gap-y-[0.8vw]">
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Lock className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Password {!editingEmp && <span className="text-red-500">*</span>}
                       </label>
                       <div className="relative">
@@ -1014,7 +1014,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.password}
                           onChange={e => setRegData({ ...regData, password: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Enter password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
                         <button
                           type="button"
@@ -1026,7 +1026,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                       </div>
                     </div>
                     <div className="space-y-[0.35vw]">
-                      <label className="text-[0.76vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
+                      <label className="text-[0.81vw] font-semibold text-[#530000] flex items-center gap-[0.3vw]">
                         <Lock className="w-[0.85vw] h-[0.85vw] text-[#530000]" /> Confirm Password {!editingEmp && <span className="text-red-500">*</span>}
                       </label>
                       <div className="relative">
@@ -1043,7 +1043,7 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                           value={regData.confirmPassword}
                           onChange={e => setRegData({ ...regData, confirmPassword: e.target.value })}
                           placeholder={editingEmp ? "Leave blank to keep existing password" : "Confirm password"}
-                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.78vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
+                          className="w-full h-[2.1vw] min-h-[2.1vw] border border-slate-400 px-[0.75vw] pr-[2.2vw] rounded-[0.35vw] outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-[0.83vw] text-gray-900 bg-white placeholder-gray-400 transition-colors"
                         />
                         <button
                           type="button"
@@ -1062,13 +1062,13 @@ const EmployeeManagementSection = ({ employees, setEmployees, departments, setDe
                   <button
                     type="button"
                     onClick={() => setShowRegModal(false)}
-                    className="px-[1.2vw] py-[0.5vw] text-gray-600 hover:bg-gray-100 rounded-[0.4vw] text-[0.82vw] font-semibold transition-all cursor-pointer"
+                    className="px-[1.2vw] py-[0.5vw] text-gray-600 hover:bg-gray-100 rounded-[0.4vw] text-[0.87vw] font-semibold transition-all cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-[1.6vw] py-[0.5vw] bg-blue-600 text-white rounded-[0.4vw] text-[0.82vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
+                    className="px-[1.6vw] py-[0.5vw] bg-blue-600 text-white rounded-[0.4vw] text-[0.87vw] font-bold shadow-xs hover:bg-blue-700 transition-all cursor-pointer"
                   >
                     {editingEmp ? "Update Profile" : "Complete Registration"}
                   </button>

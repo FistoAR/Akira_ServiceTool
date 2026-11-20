@@ -24,8 +24,8 @@ const fmtDate = (d) => {
  *
  * Requirements:
  * - Modal title can be bold (font-bold)
- * - Inside body: NO font-bold anywhere (all text regular font-normal / font-medium)
- * - Uniform font size used throughout the body (text-[0.74vw])
+ * - Inside body: NO font-bold anywhere (all text regular font-medium / font-medium)
+ * - Uniform font size used throughout the body (text-[0.79vw])
  * - Attachment preview shown with click-to-open in new tab
  */
 const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entry: fallbackEntry, onClose }) => {
@@ -52,10 +52,10 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
               <Package className="w-[0.95vw] h-[0.95vw]" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">
+              <h3 className="text-[1.1vw] font-bold text-slate-800">
                 Service Material Details
               </h3>
-              <p className="text-[0.74vw] text-slate-600 font-normal">
+              <p className="text-[0.79vw] text-slate-600 font-medium">
                 {entry?.customerName || "Customer"} {entry?.customerCode ? `(${entry.customerCode})` : ""}
               </p>
             </div>
@@ -69,43 +69,43 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
           </button>
         </div>
 
-        {/* Modal Body - Regular weight (font-normal / font-medium), uniform font size (text-[0.74vw]) */}
+        {/* Modal Body - Regular weight (font-medium / font-medium), uniform font size (text-[0.79vw]) */}
         <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.1vw] bg-[#f8fafd]">
           {/* Section 1: Inward & Customer Info */}
           {entry && (
             <div className="bg-white rounded-[0.7vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <h4 className="text-[0.74vw] font-medium text-slate-800 mb-[0.7vw] flex items-center gap-[0.4vw]">
+              <h4 className="text-[0.79vw] font-medium text-slate-800 mb-[0.7vw] flex items-center gap-[0.4vw]">
                 <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full" />
                 Inward &amp; Customer Information
               </h4>
-              <div className="grid grid-cols-4 gap-[0.7vw] text-[0.74vw]">
+              <div className="grid grid-cols-4 gap-[0.7vw] text-[0.79vw]">
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Inward Date</span>
-                  <span className="font-normal text-slate-800">{fmtDate(entry.date || entry.timestamp)}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Inward Date</span>
+                  <span className="font-medium text-slate-800">{fmtDate(entry.date || entry.timestamp)}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Customer Ref No</span>
-                  <span className="font-normal text-purple-800">{entry.refNoCustomer || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Customer Ref No</span>
+                  <span className="font-medium text-purple-800">{entry.refNoCustomer || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Internal Ref No</span>
-                  <span className="font-normal text-blue-800">{entry.refNoInternal || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Internal Ref No</span>
+                  <span className="font-medium text-blue-800">{entry.refNoInternal || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Category</span>
-                  <span className="font-normal text-slate-800">{entry.category || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Category</span>
+                  <span className="font-medium text-slate-800">{entry.category || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-2">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Customer Name</span>
-                  <span className="font-normal text-slate-800">{entry.customerName || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Customer Name</span>
+                  <span className="font-medium text-slate-800">{entry.customerName || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Unit</span>
-                  <span className="font-normal text-teal-800">{entry.unit || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Unit</span>
+                  <span className="font-medium text-teal-800">{entry.unit || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Site</span>
-                  <span className="font-normal text-slate-800">{entry.site || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Site</span>
+                  <span className="font-medium text-slate-800">{entry.site || "—"}</span>
                 </div>
               </div>
             </div>
@@ -114,40 +114,40 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
           {/* Section 2: Product & Warranty Details */}
           {product && (
             <div className="bg-white rounded-[0.7vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <h4 className="text-[0.74vw] font-medium text-slate-800 mb-[0.7vw] flex items-center gap-[0.4vw]">
+              <h4 className="text-[0.79vw] font-medium text-slate-800 mb-[0.7vw] flex items-center gap-[0.4vw]">
                 <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full" />
                 Product &amp; Warranty Details
               </h4>
-              <div className="grid grid-cols-4 gap-[0.7vw] text-[0.74vw]">
+              <div className="grid grid-cols-4 gap-[0.7vw] text-[0.79vw]">
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-2">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Product Description</span>
-                  <span className="font-normal text-slate-800">{product.productDescription || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Product Description</span>
+                  <span className="font-medium text-slate-800">{product.productDescription || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Product Code</span>
-                  <span className="font-mono font-normal text-slate-800">{product.productCode || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Product Code</span>
+                  <span className="font-mono font-medium text-slate-800">{product.productCode || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Board Type</span>
-                  <span className="font-normal text-slate-800">{product.boardType || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Board Type</span>
+                  <span className="font-medium text-slate-800">{product.boardType || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Serial Number</span>
-                  <span className="font-mono font-normal text-blue-700">{product.serialNumber || "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Serial Number</span>
+                  <span className="font-mono font-medium text-blue-700">{product.serialNumber || "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Warranty Type</span>
-                  <span className={`inline-block px-[0.5vw] py-[0.1vw] rounded font-normal text-[0.74vw] ${product.type === "W" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Warranty Type</span>
+                  <span className={`inline-block px-[0.5vw] py-[0.1vw] rounded font-medium text-[0.79vw] ${product.type === "W" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}>
                     {product.type === "W" ? "Warranty (W)" : "Paid (PW)"}
                   </span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Expected Delivery</span>
-                  <span className="font-normal text-slate-800">{product.expectedDeliveryDate ? fmtDate(product.expectedDeliveryDate) : "—"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Expected Delivery</span>
+                  <span className="font-medium text-slate-800">{product.expectedDeliveryDate ? fmtDate(product.expectedDeliveryDate) : "—"}</span>
                 </div>
                 <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                  <span className="text-[0.74vw] text-slate-600 block font-medium">Claimed By</span>
-                  <span className="font-normal text-slate-800">{product.assignedToName || "Unassigned"}</span>
+                  <span className="text-[0.79vw] text-slate-600 block font-medium">Claimed By</span>
+                  <span className="font-medium text-slate-800">{product.assignedToName || "Unassigned"}</span>
                 </div>
               </div>
             </div>
@@ -155,65 +155,65 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
 
           {/* Section 3: Technical Service Report */}
           <div className="bg-white rounded-[0.7vw] p-[1vw] border border-slate-200 shadow-2xs">
-            <h4 className="text-[0.74vw] font-medium text-slate-800 mb-[0.7vw] flex items-center gap-[0.4vw]">
+            <h4 className="text-[0.79vw] font-medium text-slate-800 mb-[0.7vw] flex items-center gap-[0.4vw]">
               <span className="w-[0.25vw] h-[0.85vw] bg-indigo-600 rounded-full" />
               Technical Service Report
             </h4>
-            <div className="grid grid-cols-3 gap-[0.7vw] text-[0.74vw]">
+            <div className="grid grid-cols-3 gap-[0.7vw] text-[0.79vw]">
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Tested By</span>
-                <span className="font-normal text-slate-800">{report.testedBy || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Tested By</span>
+                <span className="font-medium text-slate-800">{report.testedBy || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">4M Category</span>
-                <span className="font-normal text-slate-800">{report.fourMCategory || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">4M Category</span>
+                <span className="font-medium text-slate-800">{report.fourMCategory || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Error Code</span>
-                <span className="font-mono font-normal text-slate-800">{report.errorCode || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Error Code</span>
+                <span className="font-mono font-medium text-slate-800">{report.errorCode || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-3">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Problem Description</span>
-                <span className="text-slate-800 leading-relaxed font-normal">{report.problemDescription || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Problem Description</span>
+                <span className="text-slate-800 leading-relaxed font-medium">{report.problemDescription || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-3">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Root Cause</span>
-                <span className="text-slate-800 leading-relaxed font-normal">{report.rootCause || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Root Cause</span>
+                <span className="text-slate-800 leading-relaxed font-medium">{report.rootCause || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80 col-span-3">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Corrective Action</span>
-                <span className="text-slate-800 leading-relaxed font-normal">{report.correctiveAction || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Corrective Action</span>
+                <span className="text-slate-800 leading-relaxed font-medium">{report.correctiveAction || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Time (Hours)</span>
-                <span className="font-normal text-slate-800">{report.timeInHours ? `${report.timeInHours} hrs` : "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Time (Hours)</span>
+                <span className="font-medium text-slate-800">{report.timeInHours ? `${report.timeInHours} hrs` : "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Material Cost</span>
-                <span className="font-normal text-slate-800">{report.materialCost != null && report.materialCost !== "" ? `₹${report.materialCost}` : "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Material Cost</span>
+                <span className="font-medium text-slate-800">{report.materialCost != null && report.materialCost !== "" ? `₹${report.materialCost}` : "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Man Power Cost</span>
-                <span className="font-normal text-emerald-800">{report.manpowerCost != null ? `₹${Number(report.manpowerCost).toFixed(2)}` : "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Man Power Cost</span>
+                <span className="font-medium text-emerald-800">{report.manpowerCost != null ? `₹${Number(report.manpowerCost).toFixed(2)}` : "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Status</span>
-                <span className="font-normal text-slate-800">{report.status || product?.status || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Status</span>
+                <span className="font-medium text-slate-800">{report.status || product?.status || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Parts Replaced</span>
-                <span className="text-slate-800 font-normal">{report.partsReplacement || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Parts Replaced</span>
+                <span className="text-slate-800 font-medium">{report.partsReplacement || "—"}</span>
               </div>
               <div className="bg-slate-50/80 p-[0.55vw] rounded-[0.4vw] border border-slate-200/80">
-                <span className="text-[0.74vw] text-slate-600 block font-medium">Disposition</span>
-                <span className="font-normal text-slate-800">{report.disposition || "—"}</span>
+                <span className="text-[0.79vw] text-slate-600 block font-medium">Disposition</span>
+                <span className="font-medium text-slate-800">{report.disposition || "—"}</span>
               </div>
             </div>
 
             {/* Technical Image / Attachment Preview if any */}
             {report.image && (
               <div className="mt-[0.8vw] pt-[0.8vw] border-t border-slate-200">
-                <span className="text-[0.74vw] text-slate-700 block font-medium mb-[0.4vw]">
+                <span className="text-[0.79vw] text-slate-700 block font-medium mb-[0.4vw]">
                   Attached Technical Document (Image / PDF)
                 </span>
                 {report.image.toLowerCase().endsWith(".pdf") ? (
@@ -225,7 +225,7 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
                         : `${API_URL?.replace(/\/$/, "") || ""}${report.image.startsWith("/") ? "" : "/"}${report.image}`;
                       window.open(url, "_blank");
                     }}
-                    className="inline-flex items-center gap-[0.4vw] px-[0.8vw] py-[0.45vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-[0.4vw] text-[0.74vw] font-medium shadow-2xs transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-[0.4vw] px-[0.8vw] py-[0.45vw] bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-[0.4vw] text-[0.79vw] font-medium shadow-2xs transition-colors cursor-pointer"
                   >
                     <FileText className="w-[1vw] h-[1vw] text-rose-600" />
                     <span>Open Attached PDF Document (New Tab)</span>
@@ -249,7 +249,7 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
                       }}
                       title="Click to open full view in new tab"
                     />
-                    <div className="text-[0.7vw] text-slate-500 font-normal mt-[0.2vw]">
+                    <div className="text-[0.75vw] text-slate-500 font-medium mt-[0.2vw]">
                       Click preview to open in full view
                     </div>
                   </div>
@@ -264,7 +264,7 @@ const ServiceMaterialDetailModal = ({ item, data, product: fallbackProduct, entr
           <button
             type="button"
             onClick={onClose}
-            className="px-[1.4vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-[0.74vw] rounded-full transition-colors cursor-pointer border-0"
+            className="px-[1.4vw] h-[2.1vw] bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-[0.79vw] rounded-full transition-colors cursor-pointer border-0"
           >
             Close
           </button>

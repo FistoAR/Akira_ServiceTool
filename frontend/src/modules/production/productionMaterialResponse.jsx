@@ -35,9 +35,9 @@ const Badge = ({ label, color = "gray", size = "sm" }) => {
     purple: "bg-purple-50 text-purple-700 border-purple-200",
   };
   const sizeMap = {
-    xs: "text-[0.58vw] px-[0.35vw] py-[0.08vw]",
-    sm: "text-[0.65vw] px-[0.45vw] py-[0.12vw]",
-    md: "text-[0.72vw] px-[0.55vw] py-[0.15vw]",
+    xs: "text-[0.63vw] px-[0.35vw] py-[0.08vw]",
+    sm: "text-[0.7vw] px-[0.45vw] py-[0.12vw]",
+    md: "text-[0.77vw] px-[0.55vw] py-[0.15vw]",
   };
   return (
     <span className={`${sizeMap[size]} rounded-full border font-semibold whitespace-nowrap inline-flex items-center ${colorMap[color] || colorMap.gray}`}>
@@ -60,10 +60,10 @@ const STATUS_CONFIG = {
 // ── Read-only Input Field ─────────────────────────────────────────────────────
 const RefInput = ({ label, value, span = 1 }) => (
   <div className={`flex flex-col gap-[0.25vw] ${span === 2 ? "col-span-2" : span === 3 ? "col-span-3" : span === 4 ? "col-span-4" : ""}`}>
-    <label className="text-[0.75vw] font-semibold text-black flex items-start gap-[0.25vw]">
+    <label className="text-[0.8vw] font-semibold text-black flex items-start gap-[0.25vw]">
       {label}
     </label>
-    <div className="bg-white border border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.8vw] text-gray-900 break-words whitespace-normal overflow-hidden min-h-[2.4vw]">
+    <div className="bg-white border border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.85vw] text-gray-900 break-words whitespace-normal overflow-hidden min-h-[2.4vw]">
       {value || "—"}
     </div>
   </div>
@@ -93,14 +93,14 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
 
   return (
     <div className="flex flex-col gap-[0.3vw]" ref={dropdownRef}>
-      <label className="text-[0.8vw] font-semibold text-black">
+      <label className="text-[0.85vw] font-semibold text-black">
         {label} {mandatory && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-full border border-slate-300 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.78vw] text-left flex items-center justify-between transition-all cursor-pointer shadow-sm ${isOpen ? "border-blue-500 ring-1 ring-blue-500" : ""}`}
+          className={`w-full border border-slate-300 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.83vw] text-left flex items-center justify-between transition-all cursor-pointer shadow-sm ${isOpen ? "border-blue-500 ring-1 ring-blue-500" : ""}`}
         >
           <span className={selectedOption ? "text-black font-regular" : "text-gray-400"}>
             {selectedOption ? selectedOption.label : placeholder}
@@ -125,7 +125,7 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search..."
-                    className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.4vw] text-[0.75vw] border border-slate-300 rounded-[0.3vw] outline-none focus:border-blue-400 bg-white"
+                    className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.4vw] text-[0.8vw] border border-slate-300 rounded-[0.3vw] outline-none focus:border-blue-400 bg-white"
                   />
                 </div>
               </div>
@@ -139,14 +139,14 @@ const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Sele
                         setIsOpen(false);
                         setSearchTerm("");
                       }}
-                      className={`px-[0.8vw] py-[0.5vw] text-[0.78vw] cursor-pointer flex items-center justify-between hover:bg-blue-50 transition-colors ${value === opt.value ? "bg-blue-50 text-blue-700 font-bold" : "text-gray-700"}`}
+                      className={`px-[0.8vw] py-[0.5vw] text-[0.83vw] cursor-pointer flex items-center justify-between hover:bg-blue-50 transition-colors ${value === opt.value ? "bg-blue-50 text-blue-700 font-bold" : "text-gray-700"}`}
                     >
                       <span>{opt.label}</span>
                       {value === opt.value && <Check className="w-[0.9vw] h-[0.9vw] text-blue-600" />}
                     </div>
                   ))
                 ) : (
-                  <div className="p-[0.6vw] text-center text-gray-400 text-[0.75vw]">No options found</div>
+                  <div className="p-[0.6vw] text-center text-gray-400 text-[0.8vw]">No options found</div>
                 )}
               </div>
             </motion.div>
@@ -233,8 +233,8 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <FileText className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Production Technical Resolution</h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">{product.productDescription} · <span className="font-mono">{entry.refNoInternal}</span></p>
+              <h3 className="text-[1.1vw] font-bold text-slate-800">Production Technical Resolution</h3>
+              <p className="text-[0.77vw] text-slate-500 font-medium">{product.productDescription} · <span className="font-mono">{entry.refNoInternal}</span></p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
@@ -250,7 +250,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
             <div className="bg-slate-50/80 px-[1vw] py-[0.55vw] border-b border-slate-200 flex items-center gap-[0.45vw] rounded-t-[0.8vw]">
               <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" />
               <Info className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-              <span className="text-[0.75vw] font-bold text-slate-700 uppercase tracking-wider">Inward Details</span>
+              <span className="text-[0.8vw] font-bold text-slate-700 uppercase tracking-wider">Inward Details</span>
             </div>
             <div className="p-[1vw] grid grid-cols-4 gap-[1.2vw]">
               <RefInput label="Registration Date" value={fmtDate(entry.date)} />
@@ -271,7 +271,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <RefInput label="Designators" value={product.designators} />
               {product.boardImage && (
                 <div className="col-span-1 flex flex-col gap-[0.25vw]">
-                  <label className="text-[0.75vw] font-semibold text-slate-700 uppercase">Board Image</label>
+                  <label className="text-[0.8vw] font-semibold text-slate-700 uppercase">Board Image</label>
                   <img 
                     src={`${API_URL}${product.boardImage}`} 
                     alt="Board" 
@@ -288,7 +288,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
             <div className="bg-slate-50/80 px-[1vw] py-[0.55vw] border-b border-slate-200 flex items-center gap-[0.45vw] rounded-t-[0.8vw]">
               <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full inline-block" />
               <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" />
-              <span className="text-[0.75vw] font-bold text-slate-700 uppercase tracking-wider">Resolution Report</span>
+              <span className="text-[0.8vw] font-bold text-slate-700 uppercase tracking-wider">Resolution Report</span>
             </div>
             <div className="p-[1.2vw] space-y-[1vw]">
               
@@ -296,7 +296,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 1. Work done by */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Work done by</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Work done by</label>
                   <CustomDropdown
                     value={formData.workDoneBy}
                     onChange={(val) => {
@@ -309,13 +309,13 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     searchable={true}
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.4vw] text-[0.78vw] font-medium text-slate-800 border-slate-300 bg-white"
+                    triggerClassName="!h-[2.3vw] !rounded-[0.4vw] text-[0.83vw] font-medium text-slate-800 border-slate-300 bg-white"
                   />
                 </div>
 
                 {/* 3. 4M Category */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">4M Category <span className="text-rose-500">*</span></label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">4M Category <span className="text-rose-500">*</span></label>
                   <CustomDropdown
                     value={formData.fourMCategory}
                     onChange={val => sp("fourMCategory", val)}
@@ -323,7 +323,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     placeholder="Select Category"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
                   />
                 </div>
               </div>
@@ -332,25 +332,25 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 2. Root Cause */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Root Cause <span className="text-rose-500">*</span></label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Root Cause <span className="text-rose-500">*</span></label>
                   <textarea 
                     rows="3" 
                     value={formData.rootCause} 
                     onChange={e => sp("rootCause", e.target.value)} 
                     placeholder="Analyze root cause..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all" 
+                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all" 
                   />
                 </div>
 
                 {/* 7. Corrective action details */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Corrective action details <span className="text-rose-500">*</span></label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Corrective action details <span className="text-rose-500">*</span></label>
                   <textarea 
                     rows="3" 
                     value={formData.correctiveActionDetails} 
                     onChange={e => sp("correctiveActionDetails", e.target.value)} 
                     placeholder="Corrective action details taken..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all" 
+                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all" 
                   />
                 </div>
               </div>
@@ -358,13 +358,13 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               {/* Row 3: Material Change Details */}
               {/* 4. Material Change Details */}
               <div className="flex flex-col gap-[0.3vw]">
-                <label className="text-[0.76vw] font-semibold text-slate-700">Material Change Details</label>
+                <label className="text-[0.81vw] font-semibold text-slate-700">Material Change Details</label>
                 <textarea 
                   rows="2" 
                   value={formData.materialChangeDetails} 
                   onChange={e => sp("materialChangeDetails", e.target.value)} 
                   placeholder="Enter details of materials or components changed..." 
-                  className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all w-full" 
+                  className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all w-full" 
                 />
               </div>
 
@@ -372,25 +372,25 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 5. Delay time */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Delay time</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Delay time</label>
                   <input 
                     type="text" 
                     value={formData.delayTime} 
                     onChange={e => sp("delayTime", e.target.value)} 
                     placeholder="Delay time (e.g. in mins or hours)..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all" 
+                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all" 
                   />
                 </div>
 
                 {/* 6. Material Cost */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Material Cost</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Material Cost</label>
                   <input 
                     type="text" 
                     value={formData.materialCost} 
                     onChange={e => sp("materialCost", e.target.value)} 
                     placeholder="Enter material cost..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all" 
+                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all" 
                   />
                 </div>
               </div>
@@ -399,7 +399,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 9. Validation Status */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Validation Status</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Validation Status</label>
                   <CustomDropdown
                     value={formData.validationStatus}
                     onChange={val => sp("validationStatus", val)}
@@ -407,13 +407,13 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     placeholder="Select Validation Status"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
                   />
                 </div>
 
                 {/* 10. Verification Status */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Verification Status</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Verification Status</label>
                   <CustomDropdown
                     value={formData.verificationStatus}
                     onChange={val => sp("verificationStatus", val)}
@@ -421,7 +421,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
                     placeholder="Select Verification Status"
                     size="sm"
                     usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.78vw] font-medium text-slate-800 border-slate-200 bg-white"
+                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
                   />
                 </div>
               </div>
@@ -430,23 +430,23 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
               <div className="grid grid-cols-2 gap-[1vw]">
                 {/* 8. Completed date */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Completed date</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Completed date</label>
                   <input 
                     type="date" 
                     value={formData.completedDate} 
                     onChange={e => sp("completedDate", e.target.value)} 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer" 
+                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer" 
                   />
                 </div>
 
                 {/* 11. Closing Date */}
                 <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.76vw] font-semibold text-slate-700">Closing Date</label>
+                  <label className="text-[0.81vw] font-semibold text-slate-700">Closing Date</label>
                   <input 
                     type="date" 
                     value={formData.closingDate} 
                     onChange={e => sp("closingDate", e.target.value)} 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.78vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer" 
+                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer" 
                   />
                 </div>
               </div>
@@ -458,8 +458,8 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, o
         {/* Footer */}
         <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex justify-end items-center rounded-b-[0.8vw]">
           <div className="flex gap-[0.6vw]">
-            <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-full text-[0.76vw] cursor-pointer transition-all">Cancel</button>
-            <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full text-[0.76vw] font-semibold cursor-pointer shadow-xs flex items-center gap-[0.4vw] transition-all active:scale-95">
+            <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-full text-[0.81vw] cursor-pointer transition-all">Cancel</button>
+            <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full text-[0.81vw] font-semibold cursor-pointer shadow-xs flex items-center gap-[0.4vw] transition-all active:scale-95">
               <Send className="w-[0.85vw] h-[0.85vw]" />
               <span>Submit Report</span>
             </button>
@@ -486,8 +486,8 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
               <Info className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.05vw] font-bold text-slate-800">Technical Record Details</h3>
-              <p className="text-[0.72vw] text-slate-500 font-medium">{entry.refNoInternal} · {entry.jobOrderNo || "No Job Order"}</p>
+              <h3 className="text-[1.1vw] font-bold text-slate-800">Technical Record Details</h3>
+              <p className="text-[0.77vw] text-slate-500 font-medium">{entry.refNoInternal} · {entry.jobOrderNo || "No Job Order"}</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
@@ -498,7 +498,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
         <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
           <div className="grid grid-cols-2 gap-[1.2vw]">
             <div className="space-y-[0.8vw]">
-               <h4 className="text-[0.8vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
+               <h4 className="text-[0.85vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
                  <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" /> Inward Information
                </h4>
                <div className="grid grid-cols-1 gap-[0.6vw]">
@@ -509,7 +509,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
                </div>
             </div>
             <div className="space-y-[0.8vw]">
-               <h4 className="text-[0.8vw] font-bold text-emerald-600 border-b border-emerald-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
+               <h4 className="text-[0.85vw] font-bold text-emerald-600 border-b border-emerald-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
                  <Package className="w-[0.9vw] h-[0.9vw]" /> Product Details
                </h4>
                <div className="grid grid-cols-1 gap-[0.6vw]">
@@ -525,7 +525,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
 
           {product.report && (
             <div className="space-y-[0.8vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-200 shadow-2xs">
-               <h4 className="text-[0.8vw] font-bold text-slate-700 border-b border-slate-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
+               <h4 className="text-[0.85vw] font-bold text-slate-700 border-b border-slate-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
                  <Wrench className="w-[0.9vw] h-[0.9vw] text-slate-500" /> Technical Resolution Report
                </h4>
                <div className="grid grid-cols-2 gap-[0.8vw]">
@@ -547,7 +547,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
           {/* Update History */}
           {product.report?.history && product.report.history.length > 0 && (
             <div className="space-y-[0.6vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-200 shadow-2xs">
-               <h4 className="text-[0.8vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] flex items-center gap-[0.4vw] uppercase tracking-wider">
+               <h4 className="text-[0.85vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] flex items-center gap-[0.4vw] uppercase tracking-wider">
                  <Clock className="w-[0.9vw] h-[0.9vw]" /> Update History Log
                </h4>
                <div className="space-y-[0.5vw] max-h-[14vw] overflow-y-auto pr-[0.4vw] custom-scrollbar">
@@ -555,12 +555,12 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
                    <div key={i} className="flex flex-col gap-[0.2vw] p-[0.6vw] rounded-[0.4vw] bg-slate-50 border border-slate-200 hover:bg-blue-50/30 transition-colors">
                      <div className="flex justify-between items-center">
                        <Badge label={h.status} color={STATUS_CONFIG[h.status]?.color || "gray"} size="xs" />
-                       <span className="text-[0.66vw] text-slate-700 font-medium font-mono">
+                       <span className="text-[0.71vw] text-slate-700 font-medium font-mono">
                          {fmtDate(h.timestamp)} · {new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                        </span>
                      </div>
                      {h.remark && (
-                       <div className="text-[0.72vw] text-slate-600 italic mt-[0.1vw]">
+                       <div className="text-[0.77vw] text-slate-600 italic mt-[0.1vw]">
                          "{h.remark}"
                        </div>
                      )}
@@ -571,7 +571,7 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
           )}
         </div>
         <div className="p-[0.8vw] border-t border-slate-200 bg-white text-right rounded-b-[0.8vw]">
-          <button onClick={onClose} className="px-[1.4vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-semibold text-[0.76vw] cursor-pointer transition-all">Close</button>
+          <button onClick={onClose} className="px-[1.4vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-semibold text-[0.81vw] cursor-pointer transition-all">Close</button>
         </div>
       </motion.div>
     </div>
@@ -809,12 +809,12 @@ export default function ProductionMaterialResponse() {
   if (loading) return (
     <div className="flex flex-col items-center justify-center p-[10vw] gap-[1.5vw]">
       <div className="w-[3vw] h-[3vw] border-[0.35vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-      <div className="text-blue-600 font-bold text-[1vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
+      <div className="text-blue-600 font-bold text-[1.05vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
     </div>
   );
 
   return (
-    <div className="w-full h-full font-sans text-[0.85vw] flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <div className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0">
         {/* ── 1. Top Level Scoping Toolbar: Soft Pill Search, Date Range, Clear & Page navigation ── */}
         <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-[1.5px] border-slate-400 status-pills-track gap-[0.7vw] shrink-0">
@@ -826,7 +826,7 @@ export default function ProductionMaterialResponse() {
               placeholder="Search by customer, code, JO, product..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.76vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+              className="w-full pl-[2.4vw] pr-[2vw] h-[2.2vw] border-0 rounded-full text-[0.81vw] font-medium text-slate-700 placeholder-slate-400 bg-slate-100/70 hover:bg-slate-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
             />
             {searchTerm && (
               <button
@@ -842,14 +842,14 @@ export default function ProductionMaterialResponse() {
           {/* Right cluster: Date Range, Clear, Rows Per Page */}
           <div className="flex items-center gap-[0.6vw] flex-shrink-0">
             {/* Unified Date Range Capsule */}
-            <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.75vw] shadow-2xs hover:border-slate-300 transition-all">
-              <span className="text-slate-500 font-medium text-[0.74vw]">From</span>
+            <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
+              <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
               <input
                 ref={fromDateRef}
                 type="date"
                 value={dateFrom || ""}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
               <button
                 type="button"
@@ -863,15 +863,15 @@ export default function ProductionMaterialResponse() {
               >
                 <Calendar className="w-[0.85vw] h-[0.85vw] shrink-0" />
               </button>
-              <span className="text-slate-400 mx-[0.15vw] text-[0.85vw]">→</span>
-              <span className="text-slate-500 font-medium text-[0.74vw]">To</span>
+              <span className="text-slate-400 mx-[0.15vw] text-[0.9vw]">→</span>
+              <span className="text-slate-500 font-medium text-[0.79vw]">To</span>
               <input
                 ref={toDateRef}
                 type="date"
                 value={dateTo || ""}
                 min={dateFrom || undefined}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="no-native-calendar text-[0.75vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
+                className="no-native-calendar text-[0.8vw] text-slate-700 bg-transparent outline-none font-semibold cursor-pointer"
               />
               <button
                 type="button"
@@ -895,7 +895,7 @@ export default function ProductionMaterialResponse() {
                   setDateFrom("");
                   setDateTo("");
                 }}
-                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.74vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
+                className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
                 title="Clear date filter"
               >
                 <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
@@ -913,8 +913,8 @@ export default function ProductionMaterialResponse() {
                 >
                   <ChevronLeft className="w-[0.8vw] h-[0.8vw]" />
                 </button>
-                <span className="text-[0.74vw] font-semibold text-slate-700 px-[0.2vw]">
-                  {currentPage} <span className="text-slate-400 font-normal">/</span> {totalPages || 1}
+                <span className="text-[0.79vw] font-semibold text-slate-700 px-[0.2vw]">
+                  {currentPage} <span className="text-slate-400 font-medium">/</span> {totalPages || 1}
                 </span>
                 <button 
                   disabled={currentPage >= totalPages}
@@ -941,7 +941,7 @@ export default function ProductionMaterialResponse() {
                     key={label}
                     type="button"
                     onClick={() => setFilterStatus(label)}
-                    className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.75vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+                    className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.8vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                       isActive
                         ? "bg-blue-600 text-white shadow-xs font-semibold"
                         : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -951,7 +951,7 @@ export default function ProductionMaterialResponse() {
                       {label}
                     </span>
                     <span
-                      className={`text-[0.68vw] font-medium ml-[0.1vw] transition-all ${
+                      className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
                         isActive
                           ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
                           : "text-slate-400"
@@ -965,9 +965,9 @@ export default function ProductionMaterialResponse() {
             </div>
 
             {/* Scoped Result Count */}
-            <div className="text-[0.74vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+            <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
               <span>Showing</span>
-              <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.72vw]">
+              <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
                 {allProducts.length}
               </span>
               <span>items</span>
@@ -978,12 +978,12 @@ export default function ProductionMaterialResponse() {
           {allProducts.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center p-[4vw] bg-white">
               <AlertCircle className="w-[2.5vw] h-[2.5vw] text-slate-300 mb-[0.6vw]" />
-              <p className="text-[0.9vw] font-medium text-slate-500">No records found for the selected filter.</p>
+              <p className="text-[0.95vw] font-medium text-slate-500">No records found for the selected filter.</p>
             </div>
           ) : (
             <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
               <table className="w-full text-left border-collapse">
-                <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.74vw] uppercase tracking-wider">
+                <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
                   <tr>
                     <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[3.5vw]">S.No</th>
                     <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[7vw]">Date</th>
@@ -1020,7 +1020,7 @@ export default function ProductionMaterialResponse() {
                               <td colSpan={9} className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[2.2vw] z-20 shadow-2xs">
                                 <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
                                   <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
-                                  <span className="font-semibold text-slate-800 text-[0.82vw] tracking-wide">
+                                  <span className="font-semibold text-slate-800 text-[0.87vw] tracking-wide">
                                     {entry.customerName}
                                   </span>
 
@@ -1041,22 +1041,22 @@ export default function ProductionMaterialResponse() {
                                   {isExpanded && (
                                     <div className="flex items-center gap-[0.4vw] flex-wrap animate-in fade-in duration-200">
                                       {entry.customerCode && (
-                                        <span className="text-[0.65vw] text-slate-500 font-medium ml-[0.3vw]">
+                                        <span className="text-[0.7vw] text-slate-500 font-medium ml-[0.3vw]">
                                           Code: {entry.customerCode}
                                         </span>
                                       )}
                                       {entry.jobOrderNo && (
-                                        <span className="text-[0.7vw] font-normal bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        <span className="text-[0.75vw] font-medium bg-purple-50 text-purple-600 border border-purple-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                           Cust Ref: {entry.jobOrderNo}
                                         </span>
                                       )}
                                       {entry.refNoInternal && (
-                                        <span className="text-[0.7vw] font-normal bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        <span className="text-[0.75vw] font-medium bg-blue-50 text-blue-600 border border-blue-200 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                           Int Ref: {entry.refNoInternal}
                                         </span>
                                       )}
                                       {entry.category && (
-                                        <span className="text-[0.7vw] font-normal text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
+                                        <span className="text-[0.75vw] font-medium text-slate-700 bg-slate-50 border border-slate-300 px-[0.6vw] py-[0.1vw] rounded-[0.3vw] whitespace-nowrap ml-[0.3vw]">
                                           Type: {entry.category}
                                         </span>
                                       )}
@@ -1072,20 +1072,20 @@ export default function ProductionMaterialResponse() {
                             <tr className="bg-amber-50/90 border-t-2 border-b border-amber-300">
                               <td colSpan={9} className="p-0 border-b border-amber-300 bg-amber-50">
                                 <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.45vw] flex-wrap">
-                                  <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.74vw] font-semibold shadow-2xs">
+                                  <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.79vw] font-semibold shadow-2xs">
                                     <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
                                     Admin Returned / Declined
                                   </span>
-                                  <span className="inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.7vw] font-medium bg-amber-50 text-amber-700 border-amber-300">
+                                  <span className="inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.75vw] font-medium bg-amber-50 text-amber-700 border-amber-300">
                                     {product.finalStatus || "Admin Returned"}
                                   </span>
                                   {product.finalStatusRemarks && (
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.74vw] text-slate-800 font-normal bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
+                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.79vw] text-slate-800 font-medium bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
                                       <Icon icon="solar:chat-round-dots-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
                                       <span className="font-medium text-slate-900">Admin Reason:</span> {product.finalStatusRemarks}
                                     </span>
                                   )}
-                                  <span className="text-[0.72vw] text-amber-800 italic ml-[0.3vw]">
+                                  <span className="text-[0.77vw] text-amber-800 italic ml-[0.3vw]">
                                     Please edit and click Update Report to re-submit to Admin
                                   </span>
                                 </div>
@@ -1095,41 +1095,41 @@ export default function ProductionMaterialResponse() {
 
                           <tr className="hover:bg-blue-50/30 transition-colors bg-white">
                             {/* SNo */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 font-bold text-slate-800 text-[0.76vw]">
+                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 font-bold text-slate-800 text-[0.81vw]">
                               {((currentPage - 1) * itemsPerPage) + idx + 1}
                             </td>
 
                             {/* Date */}
-                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-[0.76vw] text-slate-800 whitespace-nowrap font-medium">
+                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-[0.81vw] text-slate-800 whitespace-nowrap font-medium">
                               {fmtDate(entry.date)}
                             </td>
 
                             {/* Registration */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.76vw] font-mono font-medium text-black">{entry.refNoInternal}</div>
-                              <div className="text-[0.68vw] font-medium text-blue-700 mt-[0.05vw]">JO: {entry.jobOrderNo || "—"}</div>
+                              <div className="text-[0.81vw] font-mono font-medium text-black">{entry.refNoInternal}</div>
+                              <div className="text-[0.73vw] font-medium text-blue-700 mt-[0.05vw]">JO: {entry.jobOrderNo || "—"}</div>
                             </td>
 
                             {/* Customer */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.76vw] font-medium text-black truncate max-w-[12vw]">{entry.customerName}</div>
-                              <div className="text-[0.68vw] font-mono text-slate-700 font-medium">{entry.customerCode || "—"}</div>
+                              <div className="text-[0.81vw] font-medium text-black truncate max-w-[12vw]">{entry.customerName}</div>
+                              <div className="text-[0.73vw] font-mono text-slate-700 font-medium">{entry.customerCode || "—"}</div>
                             </td>
 
                             {/* Product */}
                             <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.76vw] font-medium text-black leading-tight">{product.productDescription}</div>
-                              <div className="text-[0.68vw] text-slate-700 mt-[0.1vw] font-mono font-medium">S/N: {product.serialNumber || product.identification || "—"}</div>
+                              <div className="text-[0.81vw] font-medium text-black leading-tight">{product.productDescription}</div>
+                              <div className="text-[0.73vw] text-slate-700 mt-[0.1vw] font-mono font-medium">S/N: {product.serialNumber || product.identification || "—"}</div>
                             </td>
 
                             {/* Qty */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 text-[0.76vw] font-medium text-black">
+                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 text-[0.81vw] font-medium text-black">
                               {product.qty || "1"}
                             </td>
 
                             {/* Status */}
                             <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 whitespace-nowrap">
-                              <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.15vw] rounded-full border text-[0.7vw] font-medium ${cfg.bg} ${cfg.border} ${cfg.text}`}>
+                              <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.15vw] rounded-full border text-[0.75vw] font-medium ${cfg.bg} ${cfg.border} ${cfg.text}`}>
                                 <cfg.icon className="w-[0.75vw] h-[0.75vw]" />
                                 {status}
                               </span>
@@ -1150,7 +1150,7 @@ export default function ProductionMaterialResponse() {
                             <td className="px-[0.7vw] py-[0.6vw] text-center border-b border-slate-300 sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
                               <button
                                 onClick={() => setSelected({ entry, product })}
-                                className="cursor-pointer inline-flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2vw] rounded-full text-[0.72vw] transition-all shadow-2xs active:scale-95"
+                                className="cursor-pointer inline-flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2vw] rounded-full text-[0.77vw] transition-all shadow-2xs active:scale-95"
                               >
                                 <Edit3 className="w-[0.75vw] h-[0.75vw]" />
                                 <span>Update Report</span>
@@ -1170,11 +1170,11 @@ export default function ProductionMaterialResponse() {
           {allProducts.length > 0 && (
             <div className="border-t border-slate-200 px-[1vw] py-[0.55vw] bg-slate-50/70 flex justify-between items-center rounded-b-[0.8vw] shrink-0">
               <div className="flex items-center gap-[1.2vw]">
-                <div className="text-[0.74vw] font-medium text-slate-500">
+                <div className="text-[0.79vw] font-medium text-slate-500">
                   Showing <strong className="text-slate-800">{paginatedProducts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</strong> to <strong className="text-slate-800">{Math.min(currentPage * itemsPerPage, allProducts.length)}</strong> of <strong className="text-slate-800">{allProducts.length}</strong> assigned products
                 </div>
                 <div className="flex items-center gap-[0.4vw]">
-                  <span className="text-[0.72vw] text-slate-500 font-medium">Rows:</span>
+                  <span className="text-[0.77vw] text-slate-500 font-medium">Rows:</span>
                   <div className="w-[5vw]">
                     <CustomDropdown
                       value={itemsPerPage}
@@ -1187,7 +1187,7 @@ export default function ProductionMaterialResponse() {
                       size="sm"
                       usePortal={true}
                       placement="top"
-                      triggerClassName="!h-[1.8vw] !rounded-full !px-[0.5vw] text-[0.72vw] font-semibold text-slate-700 border-slate-200 bg-white shadow-2xs"
+                      triggerClassName="!h-[1.8vw] !rounded-full !px-[0.5vw] text-[0.77vw] font-semibold text-slate-700 border-slate-200 bg-white shadow-2xs"
                     />
                   </div>
                 </div>
@@ -1198,7 +1198,7 @@ export default function ProductionMaterialResponse() {
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(1)}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.7vw]"
+                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.75vw]"
                   title="First Page"
                 >
                   «
@@ -1217,10 +1217,10 @@ export default function ProductionMaterialResponse() {
                       const prev = arr[pIdx - 1];
                       return (
                         <React.Fragment key={pNum}>
-                          {prev && pNum - prev > 1 && <span className="text-[0.7vw] text-slate-400 px-[0.1vw]">...</span>}
+                          {prev && pNum - prev > 1 && <span className="text-[0.75vw] text-slate-400 px-[0.1vw]">...</span>}
                           <button
                             onClick={() => setCurrentPage(pNum)}
-                            className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.74vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+                            className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.79vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
                           >
                             {pNum}
                           </button>
@@ -1238,7 +1238,7 @@ export default function ProductionMaterialResponse() {
                 <button
                   disabled={currentPage === totalPages || totalPages === 0}
                   onClick={() => setCurrentPage(totalPages)}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.7vw]"
+                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.75vw]"
                   title="Last Page"
                 >
                   »

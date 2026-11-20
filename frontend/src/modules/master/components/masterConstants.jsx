@@ -227,7 +227,7 @@ export const HelpTooltip = ({ content, position = "right", width = "16vw" }) => 
           />
           <div className="bg-slate-700 text-white rounded-[0.4vw] shadow-xl px-[0.8vw] py-[0.6vw]">
             {typeof content === "string" ? (
-              <p className="text-[0.7vw] leading-relaxed">{content}</p>
+              <p className="text-[0.75vw] leading-relaxed">{content}</p>
             ) : (
               content
             )}
