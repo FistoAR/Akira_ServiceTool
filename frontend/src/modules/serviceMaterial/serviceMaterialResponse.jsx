@@ -320,11 +320,28 @@ export default function ServiceMaterialInwardResponse({
     setExpandedCustomerDetails((p) => ({ ...p, [name]: !p[name] }));
   };
 
-  const handleCopySerial = (sn) => {
+  const handleCopySerial = async (sn) => {
     if (!sn) return;
-    navigator.clipboard.writeText(sn);
-    setCopiedSerial(sn);
-    setTimeout(() => setCopiedSerial(null), 1500);
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(sn);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = sn;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+      setCopiedSerial(sn);
+      setTimeout(() => setCopiedSerial(null), 1500);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   };
 
   // Parsed array of active serial tokens for badges/filtering
