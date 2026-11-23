@@ -15,6 +15,7 @@ import ProductionEditableProductTable from "./ProductionEditableProductTable";
 import useModulePermissions from "../../components/useModulePermissions";
 import CustomDropdown from "../../components/CustomDropdown";
 import AutocompleteInput from "../../components/AutocompleteInput";
+import ProductionDetailsModal from "./ProductionDetailsModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -35,6 +36,20 @@ const FINAL_STATUS_COLORS = {
   Pending: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100/60",
   Rejected: "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100",
   Completed: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/60",
+};
+
+const VERIFICATION_STATUS_COLORS = {
+  Verified: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Rejected: "bg-rose-50 text-rose-700 border-rose-200",
+  "Re-work": "bg-amber-50 text-amber-700 border-amber-200",
+  Pending: "bg-slate-50 text-slate-600 border-slate-200",
+};
+
+const VALIDATION_STATUS_COLORS = {
+  Validated: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  "Not Validated": "bg-rose-50 text-rose-700 border-rose-200",
+  "Under Testing": "bg-blue-50 text-blue-700 border-blue-200",
+  Pending: "bg-slate-50 text-slate-600 border-slate-200",
 };
 
 // Helpers
@@ -86,272 +101,33 @@ const emptyProduct = () => {
   };
 };
 
-// --- Reports Modal (admin full data view) ---
+// --- Reports Modal ---
 const ReportsModal = ({ row, onClose }) => {
-  const products = row.products || [];
-  const [expanded, setExpanded] = useState(new Set([products[0]?._pid]));
-
-  const toggleExpand = (pid) => {
-    setExpanded(prev => {
-      const next = new Set(prev);
-      if (next.has(pid)) next.delete(pid);
-      else next.add(pid);
-      return next;
-    });
-  };
-
-  const parseParts = (str) => {
-    if (!str) return [];
-    return str.split(',').map(s => s.trim()).filter(s => s.length > 0);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[100] flex items-center justify-center p-[2vw]">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[72vw] max-h-[88vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200">
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center">
-          <div className="flex items-center gap-[0.8vw]">
-            <div className="bg-blue-50 p-[0.5vw] rounded-full text-blue-600 border border-blue-100">
-              <FileText className="w-[1.2vw] h-[1.2vw]" />
-            </div>
-            <div>
-              <h3 className="text-[1.1vw] font-bold text-slate-800">Full Production Report</h3>
-              <p className="text-[0.79vw] text-slate-500 font-medium">{row.refNoInternal} · {row.jobOrderNo || "No Job Order"}</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 cursor-pointer transition-all hover:bg-slate-100 p-[0.35vw] rounded-full">
-            <X className="w-[1.2vw] h-[1.2vw]" />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
-          <div className="grid grid-cols-3 gap-[1vw]">
-            <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.75vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Entry Details</div>
-              <div className="space-y-[0.4vw]">
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Date:</span> {fmtDate(row.date)}</div>
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Job Order:</span> <span className="text-blue-600 font-semibold">{row.jobOrderNo || "—"}</span></div>
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Products:</span> {products.length}</div>
-              </div>
-            </div>
-            <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.75vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Customer</div>
-              <div className="space-y-[0.4vw]">
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Name:</span> <span className="font-medium text-slate-800">{row.customerName || "—"}</span></div>
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Code:</span> <span className="font-mono text-slate-600">{row.customerCode || "—"}</span></div>
-              </div>
-            </div>
-            <div className="bg-white rounded-[0.6vw] p-[1vw] border border-slate-200 shadow-2xs">
-              <div className="text-[0.75vw] uppercase font-medium text-slate-500 tracking-wider mb-[0.6vw]">Audit Details</div>
-              <div className="space-y-[0.4vw]">
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Created By:</span> {row.creatorName || "Admin"}</div>
-                <div className="text-[0.81vw] text-slate-700"><span className="font-semibold text-slate-500">Last updated:</span> {fmtDate(row.updatedAt || row.createdAt)}</div>
-              </div>
-            </div>
-          </div>
-
-          {products.length === 0 ? (
-            <div className="text-center py-[4vw] text-[0.9vw] text-slate-400">No product records available for this entry.</div>
-          ) : products.map((prod, idx) => (
-            <div key={prod._pid} className="border border-slate-200 rounded-[0.6vw] overflow-hidden shadow-2xs bg-white">
-              <div
-                onClick={() => toggleExpand(prod._pid)}
-                className="bg-slate-50/80 px-[1.2vw] py-[0.8vw] flex items-center justify-between gap-[1vw] cursor-pointer hover:bg-slate-100/70 transition-colors border-b border-slate-200/80"
-              >
-                <div>
-                  <div className="text-[0.93vw] font-semibold text-slate-800">{prod.productDescription || "Unnamed Product"}</div>
-                  <div className="text-[0.77vw] text-slate-500 mt-[0.2vw] flex flex-wrap gap-[0.8vw]">
-                    <span>JO: <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span></span>
-                    <span>Code: <span className="font-mono text-slate-700">{prod.productCode || "—"}</span></span>
-                    <span>Qty: <span className="font-medium text-slate-700">{prod.qty || "—"}</span></span>
-                    <span>S/N: <span className="font-mono text-slate-700">{prod.serialNumber || "—"}</span></span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-[0.8vw]">
-                  <span className="text-[0.75vw] px-[0.6vw] py-[0.15vw] rounded-full bg-slate-200/70 text-slate-700 font-semibold">Item {idx + 1}</span>
-                  <ChevronDown className={`w-[1vw] h-[1vw] text-slate-500 transition-transform duration-200 ${expanded.has(prod._pid) ? "rotate-180" : ""}`} />
-                </div>
-              </div>
-
-              <AnimatePresence initial={false}>
-                {expanded.has(prod._pid) && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="border-t border-slate-100">
-                      {/* Registration Info */}
-                      <div className="p-[1.2vw] bg-white border-b border-slate-200/80">
-                        <div className="text-[0.77vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
-                          <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" />
-                          <Target className="w-[0.9vw] h-[0.9vw] text-blue-600" /> Registration Information
-                        </div>
-                        <div className="grid grid-cols-6 gap-[1.2vw] mb-[0.9vw]">
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Stage</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.stage || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Category</div><div className="text-slate-800 font-medium text-[0.83vw]">{row.category || prod.category || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">NC Type</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.ncType || "Internal"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Problem Type</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.problemType || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Inspected By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.inspectedByName || "—"}</div></div>
-                          <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Designators</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.designators || "—"}</div></div>
-                        </div>
-                        <div className="flex gap-[1.2vw] mb-[0.9vw]">
-                          <div className="flex-1">
-                            <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Initial Problem Description</div>
-                            <div className="text-[0.83vw] text-slate-800 leading-relaxed bg-slate-50 p-[0.8vw] rounded-[0.5vw] border border-slate-200">{prod.problem || "No description provided."}</div>
-                          </div>
-                          {prod.boardImage && (
-                            <div className="w-[10vw]">
-                              <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Board Image</div>
-                              <img 
-                                src={`${API_URL}${prod.boardImage}`} 
-                                alt="Board" 
-                                className="w-full h-[6vw] object-cover rounded-[0.5vw] border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(`${API_URL}${prod.boardImage}`, '_blank')}
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-6 gap-[1.2vw]">
-                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Assembled By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report?.assembledByName || prod.assembledByName || "—"}</div></div>
-                           <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Tested By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report?.testedByName || prod.testedByName || "—"}</div></div>
-                        </div>
-                      </div>
-
-                      {/* Technical Resolution Report */}
-                      <div className="p-[1.2vw] bg-slate-50/50">
-                        <div className="text-[0.77vw] font-semibold text-slate-700 uppercase tracking-wider mb-[0.9vw] flex items-center gap-[0.45vw]">
-                          <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full inline-block" />
-                          <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" /> Technical Resolution Report
-                        </div>
-                        {prod.report ? (
-                          <div className="space-y-[1vw]">
-                            <div className="grid grid-cols-4 gap-[1.2vw]">
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Start Date</div><div className="text-slate-800 font-medium text-[0.83vw]">{fmtDate(prod.report.startDate)}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">4M Category</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report.fourMCategory || "—"}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">CAE</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report.cae || "—"}</div></div>
-                              <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Status</div><div className="text-blue-600 font-semibold text-[0.83vw]">{prod.report.status || "—"}</div></div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-[1vw]">
-                              <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Root Cause Analysis</div>
-                                <div className="text-[0.83vw] text-slate-800 leading-relaxed">{prod.report.rootCause || "—"}</div>
-                              </div>
-                              <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.35vw]">Corrective Action Taken</div>
-                                <div className="text-[0.83vw] text-slate-800 leading-relaxed">{prod.report.correctiveAction || "—"}</div>
-                              </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-[1vw]">
-                              <div className="bg-white p-[0.8vw] rounded-[0.5vw] border border-slate-200">
-                                <div className="text-[0.7vw] text-slate-500 font-semibold uppercase mb-[0.5vw]">Parts Replaced</div>
-                                {prod.report && prod.report.partsReplacement && prod.report.partsReplacement.trim() ? (
-                                  <ul className="list-disc list-inside space-y-[0.2vw]">
-                                    {parseParts(prod.report.partsReplacement).map((part, pidx) => (
-                                      <li key={pidx} className="text-[0.81vw] text-slate-800 leading-tight">{part}</li>
-                                    ))}
-                                  </ul>
-                                ) : <div className="text-[0.81vw] text-slate-400 italic">No parts replaced.</div>}
-                              </div>
-                              <div className="grid grid-cols-2 gap-[0.8vw]">
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Closed Date</div><div className="text-slate-800 font-medium text-[0.83vw]">{fmtDate(prod.report.closedDate)}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Verified Date</div><div className="text-slate-800 font-medium text-[0.83vw]">{fmtDate(prod.report.verifiedDate)}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Verified By</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.report.verifiedByName || "—"}</div></div>
-                                <div><div className="text-slate-500 mb-[0.2vw] uppercase text-[0.69vw] font-semibold">Disposition</div><div className="text-slate-800 font-medium text-[0.83vw]">{prod.disposition || "—"}</div></div>
-                              </div>
-                            </div>
-
-                            <div className="grid grid-cols-4 gap-[0.8vw]">
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">Assembler</div><div className="text-[0.8vw] font-medium text-slate-800">{prod.report.assembledByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">Tester</div><div className="text-[0.8vw] font-medium text-slate-800">{prod.report.testedByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">FI By</div><div className="text-[0.8vw] font-medium text-slate-800">{prod.report.fiByName || "—"}</div></div>
-                              <div className="bg-white p-[0.6vw] rounded-[0.4vw] border border-slate-200 text-center"><div className="text-[0.63vw] font-medium text-slate-500 uppercase">Final Status</div><div className="text-[0.8vw] font-semibold text-slate-800 uppercase">{prod.finalStatus || "Pending"}</div></div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="py-[2.5vw] text-center">
-                            <Clock className="w-[1.8vw] h-[1.8vw] text-slate-300 mx-auto mb-[0.6vw]" />
-                            <div className="text-[0.87vw] text-slate-400 font-medium">No technical report submitted yet.</div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </div>
-        <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex justify-end">
-          <button onClick={onClose} className="px-[1.5vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[0.81vw] font-semibold cursor-pointer transition-all">Close</button>
-        </div>
-      </motion.div>
-    </div>
-  );
+  return <ProductionDetailsModal entry={row} onClose={onClose} />;
 };
 
-// --- Verification Modal ---
-const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }) => {
-  const [formData, setFormData] = useState(() => {
-    const user = JSON.parse(sessionStorage.getItem("loggedInUser") || "{}");
-    return {
-      verifiedBy: prod.report?.verifiedBy || user.userId || "",
-      verifiedByName: prod.report?.verifiedByName || user.name || "",
-      verifiedDate: prod.report?.verifiedDate || todayDateStr(),
-      cae: prod.report?.cae || ""
-    };
-  });
-  const [showCaeSuggestions, setShowCaeSuggestions] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
-  const filteredCaeSuggestions = useMemo(() => {
-    const q = formData.cae.toLowerCase();
-    return caeHistory.filter(c => c.toLowerCase().includes(q));
-  }, [formData.cae, caeHistory]);
-
-  useEffect(() => {
-    setSelectedIndex(-1);
-  }, [filteredCaeSuggestions]);
+// --- Verification Remarks Modal ---
+const VerificationRemarksModal = ({ row, prod, onSave, onClose }) => {
+  const [remarks, setRemarks] = useState(
+    prod.verificationRemarks || prod.report?.verificationRemarks || ""
+  );
 
   const handleSave = () => {
-    if (!formData.verifiedBy) return alert("Verified By is mandatory.");
-    if (!formData.verifiedDate) return alert("Verified Date is mandatory.");
-    onSave(formData);
-  };
-
-  const onKeyDown = (e) => {
-    if (!showCaeSuggestions || filteredCaeSuggestions.length === 0) return;
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSelectedIndex(prev => (prev < filteredCaeSuggestions.length - 1 ? prev + 1 : prev));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndex(prev => (prev > 0 ? prev - 1 : 0));
-    } else if (e.key === "Enter") {
-      if (selectedIndex >= 0) {
-        e.preventDefault();
-        setFormData(p => ({ ...p, cae: filteredCaeSuggestions[selectedIndex] }));
-        setShowCaeSuggestions(false);
-      }
-    } else if (e.key === "Escape") {
-      setShowCaeSuggestions(false);
-    }
+    onSave({ verificationRemarks: remarks });
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[200] flex items-center justify-center p-[2vw]">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[35vw] rounded-[0.8vw] flex flex-col border border-slate-200 shadow-2xl overflow-visible">
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center rounded-t-[0.8vw]">
+      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[32vw] max-w-[500px] rounded-[0.8vw] flex flex-col border border-slate-200 shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-white border-b border-slate-200 px-[1.4vw] py-[1vw] flex justify-between items-center">
           <div className="flex items-center gap-[0.7vw]">
-            <div className="bg-emerald-50 p-[0.45vw] rounded-full text-emerald-600 border border-emerald-100">
+            <div className="bg-blue-50 p-[0.45vw] rounded-full text-blue-600 border border-blue-100">
               <CheckCircle className="w-[1.1vw] h-[1.1vw]" />
             </div>
             <div>
-              <h3 className="text-[1.1vw] font-bold text-slate-800">Verify Resolution</h3>
-              <p className="text-[0.77vw] text-slate-500 font-medium">Verify completion & CAE for this product</p>
+              <h3 className="text-[1.05vw] font-bold text-slate-800">Verification</h3>
+              <p className="text-[0.74vw] text-slate-500 font-medium">Add or update verification remarks</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
@@ -359,81 +135,146 @@ const VerificationModal = ({ row, prod, employees, caeHistory, onSave, onClose }
           </button>
         </div>
 
-        <div className="p-[1.4vw] space-y-[1.1vw] bg-white">
-          <div className="bg-slate-50/70 p-[0.9vw] rounded-[0.6vw] border border-slate-200/80">
-            <div className="text-[0.73vw] font-medium text-blue-600 uppercase tracking-wider mb-[0.35vw]">Product Context</div>
-            <div className="text-[0.9vw] font-semibold text-slate-800">{prod.productDescription}</div>
-            <div className="text-[0.77vw] text-slate-500 mt-[0.15vw]">
-              <span className="font-semibold text-slate-600">S/N:</span> <span className="font-mono">{prod.serialNumber || "—"}</span> · <span className="font-semibold text-slate-600">JO:</span> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span>
+        {/* Body */}
+        <div className="p-[1.4vw] space-y-[1vw] bg-white">
+          <div className="bg-slate-50/70 p-[0.85vw] rounded-[0.6vw] border border-slate-200/80">
+            <div className="text-[0.72vw] font-medium text-blue-600 uppercase tracking-wider mb-[0.25vw]">Product Context</div>
+            <div className="text-[0.88vw] font-semibold text-slate-800 truncate" title={prod.productDescription}>{prod.productDescription}</div>
+            <div className="text-[0.74vw] text-slate-500 mt-[0.2vw] flex items-center gap-[0.8vw]">
+              <span><strong className="text-slate-600">S/N:</strong> <span className="font-mono">{prod.serialNumber || "—"}</span></span>
+              <span>·</span>
+              <span><strong className="text-slate-600">JO:</strong> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span></span>
             </div>
           </div>
 
-          <div className="space-y-[0.9vw]">
-            <div className="flex flex-col gap-[0.3vw]">
-              <label className="text-[0.81vw] font-semibold text-slate-700">Verified By <span className="text-rose-500">*</span></label>
-              <CustomDropdown
-                value={formData.verifiedBy}
-                onChange={val => {
-                  const emp = employees.find(emp => (emp.userId || emp._id) === val);
-                  setFormData(p => ({ ...p, verifiedBy: val, verifiedByName: emp?.name || "" }));
-                }}
-                options={employees.map(e => ({ value: e.userId || e._id, label: e.name }))}
-                placeholder="Select Employee"
-                usePortal={true}
-                triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
-              />
-            </div>
-
-            <div className="flex flex-col gap-[0.3vw]">
-              <label className="text-[0.81vw] font-semibold text-slate-700">Verified Date <span className="text-rose-500">*</span></label>
-              <input
-                type="date"
-                value={formData.verifiedDate}
-                onChange={e => setFormData(p => ({ ...p, verifiedDate: e.target.value }))}
-                className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.83vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all cursor-pointer"
-              />
-            </div>
-
-            <div className="flex flex-col gap-[0.3vw] relative">
-              <label className="text-[0.81vw] font-semibold text-slate-700">CAE (Corrective Action Effectiveness)</label>
-              <div className="relative">
-                <input
-                  value={formData.cae}
-                  onChange={e => { setFormData(p => ({ ...p, cae: e.target.value })); setShowCaeSuggestions(true); }}
-                  onFocus={() => setShowCaeSuggestions(true)}
-                  onBlur={() => setTimeout(() => setShowCaeSuggestions(false), 200)}
-                  onKeyDown={onKeyDown}
-                  placeholder="Enter or select CAE..."
-                  className="w-full border border-slate-200 rounded-[0.5vw] py-[0.55vw] px-[0.75vw] text-[0.83vw] font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 bg-white transition-all"
-                />
-                <AnimatePresence>
-                  {showCaeSuggestions && filteredCaeSuggestions.length > 0 && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -5 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      exit={{ opacity: 0, y: -5 }} 
-                      className="absolute z-50 w-full mt-[0.2vw] bg-white border border-slate-200 rounded-[0.5vw] shadow-xl max-h-[12vw] overflow-y-auto overflow-x-hidden custom-scrollbar py-[0.2vw]"
-                    >
-                      {filteredCaeSuggestions.map((opt, i) => (
-                        <div 
-                          key={i} 
-                          onClick={() => { setFormData(p => ({ ...p, cae: opt })); setShowCaeSuggestions(false); }} 
-                          className={`px-[0.9vw] py-[0.45vw] text-[0.83vw] font-medium transition-colors border-b border-slate-100 last:border-0 cursor-pointer ${selectedIndex === i ? "bg-blue-600 text-white" : "text-slate-700 hover:bg-slate-50"}`}
-                        >
-                          {opt}
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+          <div className="flex flex-col gap-[0.35vw]">
+            <label className="text-[0.79vw] font-semibold text-slate-700">Verification Remarks</label>
+            <textarea
+              rows={4}
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Enter verification remarks..."
+              className="w-full border border-slate-300 rounded-[0.5vw] p-[0.7vw] text-[0.81vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all resize-none"
+            />
           </div>
         </div>
 
-        <div className="p-[1vw] border-t border-slate-200 bg-slate-50/70 flex justify-end gap-[0.6vw] rounded-b-[0.8vw]">
-          <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white text-slate-700 font-semibold rounded-full text-[0.81vw] hover:bg-slate-50 cursor-pointer transition-all">Cancel</button>
-          <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 text-white font-semibold rounded-full text-[0.81vw] hover:bg-blue-700 active:scale-95 transition-all shadow-xs">Save Verification</button>
+        {/* Footer */}
+        <div className="p-[0.9vw] border-t border-slate-200 bg-slate-50/70 flex justify-end gap-[0.6vw]">
+          <button onClick={onClose} className="px-[1.2vw] h-[2.1vw] border border-slate-300 bg-white text-slate-700 font-semibold rounded-full text-[0.78vw] hover:bg-slate-50 cursor-pointer transition-all">
+            Cancel
+          </button>
+          <button onClick={handleSave} className="px-[1.4vw] h-[2.1vw] bg-blue-600 text-white font-semibold rounded-full text-[0.78vw] hover:bg-blue-700 active:scale-95 transition-all shadow-xs cursor-pointer">
+            Save Remarks
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+// --- Validation Modal (Accept / Reject & Remarks) ---
+const ValidationModal = ({ row, prod, onSave, onClose }) => {
+  const currentStatus = prod.validationStatus || prod.report?.validationStatus;
+  const initialDecision = currentStatus === "Rejected" ? "Reject" : currentStatus === "Validated" ? "Accept" : "";
+  const [decision, setDecision] = useState(initialDecision);
+  const [remarks, setRemarks] = useState(
+    prod.validationRemarks || prod.report?.validationRemarks || ""
+  );
+
+  const handleSave = () => {
+    if (!decision) {
+      alert("Please select Accept or Reject.");
+      return;
+    }
+    const valStatus = decision === "Accept" ? "Validated" : "Rejected";
+    onSave({
+      validationStatus: valStatus,
+      validationRemarks: remarks,
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[200] flex items-center justify-center p-[2vw]">
+      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white w-[32vw] max-w-[500px] rounded-[0.8vw] flex flex-col border border-slate-200 shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-white border-b border-slate-200 px-[1.4vw] py-[1vw] flex justify-between items-center">
+          <div className="flex items-center gap-[0.7vw]">
+            <div className="bg-indigo-50 p-[0.45vw] rounded-full text-indigo-600 border border-indigo-100">
+              <ClipboardList className="w-[1.1vw] h-[1.1vw]" />
+            </div>
+            <div>
+              <h3 className="text-[1.05vw] font-bold text-slate-800">Validation</h3>
+              <p className="text-[0.74vw] text-slate-500 font-medium">Accept or reject validation with remarks</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
+            <X className="w-[1.1vw] h-[1.1vw]" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-[1.4vw] space-y-[1.1vw] bg-white">
+          <div className="bg-slate-50/70 p-[0.85vw] rounded-[0.6vw] border border-slate-200/80">
+            <div className="text-[0.72vw] font-medium text-indigo-600 uppercase tracking-wider mb-[0.25vw]">Product Context</div>
+            <div className="text-[0.88vw] font-semibold text-slate-800 truncate" title={prod.productDescription}>{prod.productDescription}</div>
+            <div className="text-[0.74vw] text-slate-500 mt-[0.2vw] flex items-center gap-[0.8vw]">
+              <span><strong className="text-slate-600">S/N:</strong> <span className="font-mono">{prod.serialNumber || "—"}</span></span>
+              <span>·</span>
+              <span><strong className="text-slate-600">JO:</strong> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span></span>
+            </div>
+          </div>
+
+          {/* Accept / Reject Selection */}
+          <div className="flex flex-col gap-[0.35vw]">
+            <label className="text-[0.79vw] font-semibold text-slate-700">Validation Decision <span className="text-rose-500">*</span></label>
+            <div className="grid grid-cols-2 gap-[0.8vw]">
+              <button
+                type="button"
+                onClick={() => setDecision("Accept")}
+                className={`py-[0.55vw] px-[1vw] rounded-[0.5vw] text-[0.81vw] font-semibold flex items-center justify-center gap-[0.4vw] border transition-all cursor-pointer ${
+                  decision === "Accept"
+                    ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/70"
+                }`}
+              >
+                <CheckCircle className="w-[0.9vw] h-[0.9vw]" /> Accept
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDecision("Reject")}
+                className={`py-[0.55vw] px-[1vw] rounded-[0.5vw] text-[0.81vw] font-semibold flex items-center justify-center gap-[0.4vw] border transition-all cursor-pointer ${
+                  decision === "Reject"
+                    ? "bg-rose-600 text-white border-rose-600 shadow-sm"
+                    : "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100/70"
+                }`}
+              >
+                <X className="w-[0.9vw] h-[0.9vw]" /> Reject
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-[0.35vw]">
+            <label className="text-[0.79vw] font-semibold text-slate-700">Remarks</label>
+            <textarea
+              rows={3}
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Enter validation remarks..."
+              className="w-full border border-slate-300 rounded-[0.5vw] p-[0.7vw] text-[0.81vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all resize-none"
+            />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="p-[0.9vw] border-t border-slate-200 bg-slate-50/70 flex justify-end gap-[0.6vw]">
+          <button onClick={onClose} className="px-[1.2vw] h-[2.1vw] border border-slate-300 bg-white text-slate-700 font-semibold rounded-full text-[0.78vw] hover:bg-slate-50 cursor-pointer transition-all">
+            Cancel
+          </button>
+          <button onClick={handleSave} className="px-[1.4vw] h-[2.1vw] bg-indigo-600 text-white font-semibold rounded-full text-[0.78vw] hover:bg-indigo-700 active:scale-95 transition-all shadow-xs cursor-pointer">
+            Save Validation
+          </button>
         </div>
       </motion.div>
     </div>
@@ -2391,6 +2232,7 @@ export default function ProductionMaterial() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [showMasterData, setShowMasterData] = useState(false);
   const [showVerify, setShowVerify] = useState(null);
+  const [showValidation, setShowValidation] = useState(null);
   const [stageOptions, setStageOptions] = useState(() => lsLoad(STAGE_MASTER_KEY, DEFAULT_STAGE_OPTIONS));
   const [dispositionOptions, setDispositionOptions] = useState(() => lsLoad(DISPOSITION_MASTER_KEY, DEFAULT_DISPOSITION_OPTIONS));
   const [problemTypeOptions, setProblemTypeOptions] = useState(() => lsLoad(PROBLEM_TYPE_MASTER_KEY, DEFAULT_PROBLEM_TYPE_OPTIONS));
@@ -2563,6 +2405,7 @@ export default function ProductionMaterial() {
       const res = await axios.patch(`${API_URL}/production-material/${rowId}/product/${productId}/final-status`, updates);
       setData(prev => prev.map(d => d.id === rowId ? { ...res.data, id: res.data._id } : d));
       setShowVerify(null);
+      setShowValidation(null);
       toast("Status Updated Successfully", "success");
     } catch (err) {
       toast("Update failed", "error");
@@ -2703,24 +2546,51 @@ export default function ProductionMaterial() {
       </AnimatePresence>
       <AnimatePresence>
         {showVerify && (
-          <VerificationModal
+          <VerificationRemarksModal
             row={showVerify.row}
             prod={showVerify.prod}
-            employees={employees}
-            caeHistory={caeHistory}
             onSave={(verifyData) => {
               const currentReport = showVerify.prod.report || {};
               onUpdateProduct(showVerify.row.id, showVerify.prod._pid, {
+                verificationRemarks: verifyData.verificationRemarks,
                 report: {
                   ...currentReport,
-                  verifiedBy: verifyData.verifiedBy,
-                  verifiedByName: verifyData.verifiedByName,
-                  verifiedDate: verifyData.verifiedDate,
-                  cae: verifyData.cae
+                  verificationRemarks: verifyData.verificationRemarks,
                 }
               });
+              setShowVerify(null);
+      setShowValidation(null);
             }}
             onClose={() => setShowVerify(null)}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showValidation && (
+          <ValidationModal
+            row={showValidation.row}
+            prod={showValidation.prod}
+            onSave={(valData) => {
+              const currentReport = showValidation.prod.report || {};
+              const user = JSON.parse(sessionStorage.getItem("loggedInUser") || "{}");
+              onUpdateProduct(showValidation.row.id, showValidation.prod._pid, {
+                validationStatus: valData.validationStatus,
+                validationRemarks: valData.validationRemarks,
+                validatedBy: user.userId || "",
+                validatedByName: user.name || "",
+                validatedDate: todayDateStr(),
+                report: {
+                  ...currentReport,
+                  validationStatus: valData.validationStatus,
+                  validationRemarks: valData.validationRemarks,
+                  validatedBy: user.userId || "",
+                  validatedByName: user.name || "",
+                  validatedDate: todayDateStr(),
+                }
+              });
+              setShowValidation(null);
+            }}
+            onClose={() => setShowValidation(null)}
           />
         )}
       </AnimatePresence>
@@ -2943,23 +2813,21 @@ export default function ProductionMaterial() {
                       S. No
                     </th>
                     <th
-                      colSpan={8}
+                      colSpan={9}
                       className="px-[0.7vw] py-[0.35vw] h-[1.8vw] font-bold text-slate-700 uppercase tracking-wider border-b border-r border-slate-300 text-center text-[0.79vw] sticky top-0 z-40 bg-[#E9EDF7]"
                     >
                       Product Manifest Details
                     </th>
-                    {["Resolution Verification", "Final Status", "Final Remarks", "History", "Actions"].map((h) => (
+                    {["Verification", "Validation", "History", "Actions"].map((h) => (
                       <th
                         key={h}
                         rowSpan={2}
                         style={{
                           minWidth:
-                            h === "Final Status"
-                              ? "9.5vw"
-                              : h === "Resolution Verification"
-                              ? "11vw"
-                              : h === "Final Remarks"
-                              ? "10vw"
+                            h === "Verification"
+                              ? "9vw"
+                              : h === "Validation"
+                              ? "9vw"
                               : h === "History"
                               ? "5.5vw"
                               : h === "Actions"
@@ -2981,8 +2849,9 @@ export default function ProductionMaterial() {
                       { name: "Segment", minW: "6.5vw" },
                       { name: "NC Type", minW: "6.5vw" },
                       { name: "Stage", minW: "6.5vw" },
+                      { name: "Problem Description", minW: "12vw" },
                       { name: "Qty", minW: "4.5vw" },
-                      { name: "Repeatability", minW: "6.5vw" },
+                      { name: "Repeat", minW: "5.5vw" },
                       { name: "Serial/Batch", minW: "8vw" },
                     ].map(({ name, minW }) => (
                       <th
@@ -3006,7 +2875,7 @@ export default function ProductionMaterial() {
                   ) : groups.length > 0 ? (
                     groups.flatMap(({ customerName, rows }) => {
                       const isCustomerCollapsed = collapsedCustomers[customerName];
-                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 5;
+                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 9 + 4;
 
                       return [
                         // ── STICKY HEADER 1: CUSTOMER HEADER ROW (sticky top-[3.6vw]) ──
@@ -3017,7 +2886,7 @@ export default function ProductionMaterial() {
                         >
                           <td
                             colSpan={totalCols}
-                            className="px-[0.7vw] py-[0.55vw] h-[2.4vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300"
+                            className="px-[0.7vw] py-[0.55vw] h-[2.4vw] border-l-[0.22vw] border-blue-600 bg-[#EEF2F6] border-b border-slate-300 sticky top-[3.6vw] z-30 shadow-xs"
                           >
                             <div className="flex items-center gap-[0.5vw]">
                               {isCustomerCollapsed ? (
@@ -3131,7 +3000,7 @@ export default function ProductionMaterial() {
                                 >
                                   {rowCanDelete && (
                                     <td
-                                      className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${
+                                      className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle sticky top-[6vw] z-20 shadow-xs ${
                                         isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                       }`}
                                       onClick={(e) => {
@@ -3160,12 +3029,12 @@ export default function ProductionMaterial() {
                                     </td>
                                   )}
                                   {!rowCanDelete && canDelete && !isSupervisor && (
-                                    <td className={`border-r border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`} />
+                                    <td className={`border-r border-b border-slate-300 sticky top-[6vw] z-20 shadow-xs ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`} />
                                   )}
 
                                   {/* S.No */}
                                   <td
-                                    className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.77vw] font-medium text-slate-700 align-middle ${
+                                    className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center text-[0.77vw] font-medium text-slate-700 align-middle sticky top-[6vw] z-20 shadow-xs ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
                                     onClick={() => toggleEntry(row.id)}
@@ -3175,8 +3044,8 @@ export default function ProductionMaterial() {
 
                                   {/* Date + Job Order No + Summary Spanning remaining columns */}
                                   <td
-                                    colSpan={8 + 5}
-                                    className={`px-[0.6vw] py-[0.5vw] h-[2.3vw] align-middle border-b border-slate-300 ${
+                                    colSpan={9 + 4}
+                                    className={`px-[0.6vw] py-[0.5vw] h-[2.3vw] align-middle border-b border-slate-300 sticky top-[6vw] z-20 shadow-xs ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
                                     onClick={() => toggleEntry(row.id)}
@@ -3328,6 +3197,34 @@ export default function ProductionMaterial() {
                                         ? "bg-white hover:bg-slate-50/80"
                                         : "bg-slate-50/30 hover:bg-slate-50/80";
 
+                                      const isInternalNC = (prod.ncType || "Internal").trim() === "Internal";
+                                      const isCreatorOrAdmin = isCurrentUserAdmin || isRowRegisteredByMe;
+                                      const isRaisedToPerson = Boolean(
+                                        currentUid && (
+                                          prod.raisedTo === currentUid ||
+                                          prod.assignedTo === currentUid ||
+                                          (currentUname && (prod.raisedToName === currentUname || prod.assignedToName === currentUname))
+                                        )
+                                      );
+
+                                      // Role permissions based on NC Type:
+                                      // Internal NC: Show both verify & validate enabled for the creator/assigned user (or Admin)
+                                      // External / Field Visit / Field Return:
+                                      //   - Verification enabled for the Raised To person (or Admin)
+                                      //   - Validation enabled for the Creator / Registered person (or Admin)
+                                      const canPerformVerify = isInternalNC
+                                        ? (isCreatorOrAdmin || isRaisedToPerson)
+                                        : (isRaisedToPerson || isCurrentUserAdmin);
+
+                                      const canPerformValidate = isInternalNC
+                                        ? (isCreatorOrAdmin || isRaisedToPerson)
+                                        : (isCreatorOrAdmin);
+
+                                      const hasVerifyRemarks = Boolean(prod.verificationRemarks || prod.report?.verificationRemarks);
+                                      const verifyText = prod.verificationRemarks || prod.report?.verificationRemarks || "";
+                                      const valStatus = prod.validationStatus || prod.report?.validationStatus;
+                                      const valRemarks = prod.validationRemarks || prod.report?.validationRemarks || "";
+
                                       return (
                                         <tr
                                           key={`${row.id}-p-${pi}`}
@@ -3389,6 +3286,14 @@ export default function ProductionMaterial() {
                                             {prod.stage || "Assembly"}
                                           </td>
 
+                                          {/* Problem Description */}
+                                          <td
+                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-left font-medium text-slate-700 text-[0.79vw] truncate max-w-[12vw]"
+                                            title={prod.problemDescription || prod.problem || "—"}
+                                          >
+                                            {prod.problemDescription || prod.problem || "—"}
+                                          </td>
+
                                           {/* Qty */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium text-black text-[0.81vw]">
                                             {prod.qty || "1"}
@@ -3410,34 +3315,103 @@ export default function ProductionMaterial() {
                                             {prod.serialNumber || "—"}
                                           </td>
 
-                                          {/* Resolution Verification */}
+                                          {/* Verification */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
-                                            {prod.report?.verifiedByName ? (
-                                              <div className="flex flex-col items-center">
-                                                <span className="text-[0.79vw] font-medium text-emerald-800">{prod.report.verifiedByName}</span>
-                                                <span className="text-[0.71vw] text-slate-700 font-medium">{fmtDate(prod.report.verifiedDate)}</span>
-                                              </div>
+                                            {canPerformVerify ? (
+                                              hasVerifyRemarks ? (
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setShowVerify({ row, prod })}
+                                                  className="px-[0.7vw] py-[0.25vw] bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw] max-w-[9vw] truncate"
+                                                  title={verifyText}
+                                                >
+                                                  <Edit3 className="w-[0.75vw] h-[0.75vw] shrink-0" />
+                                                  <span className="truncate">{verifyText}</span>
+                                                </button>
+                                              ) : (
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setShowVerify({ row, prod })}
+                                                  className="px-[0.7vw] py-[0.25vw] bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw]"
+                                                  title="Add Verification Remarks"
+                                                >
+                                                  <Plus className="w-[0.75vw] h-[0.75vw]" />
+                                                  <span>Verify</span>
+                                                </button>
+                                              )
                                             ) : (
-                                              <span className="text-slate-500 font-medium text-[0.77vw]">—</span>
+                                              /* Read-only status for creator/validator or non-assignee */
+                                              hasVerifyRemarks ? (
+                                                <div
+                                                  className="inline-block px-[0.6vw] py-[0.2vw] bg-blue-50 text-blue-800 border border-blue-200 rounded-[0.35vw] text-[0.72vw] font-medium max-w-[9vw] truncate"
+                                                  title={verifyText}
+                                                >
+                                                  {verifyText}
+                                                </div>
+                                              ) : (
+                                                <span className="text-slate-400 font-medium text-[0.77vw]">—</span>
+                                              )
                                             )}
                                           </td>
 
-                                          {/* Final Status */}
+                                          {/* Validation */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
-                                            <FinalStatusCell
-                                              row={row}
-                                              prod={prod}
-                                              onUpdateProduct={onUpdateProduct}
-                                              isSupervisor={isSupervisor}
-                                            />
-                                          </td>
-
-                                          {/* Final Remarks */}
-                                          <td
-                                            className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium text-slate-600 text-[0.77vw] truncate max-w-[10vw]"
-                                            title={prod.finalStatusRemarks}
-                                          >
-                                            {prod.finalStatusRemarks || "—"}
+                                            {canPerformValidate ? (
+                                              valStatus ? (
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setShowValidation({ row, prod })}
+                                                  className={`px-[0.7vw] py-[0.22vw] rounded-full text-[0.72vw] font-semibold border transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw] ${
+                                                    valStatus === "Validated"
+                                                      ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100/70"
+                                                      : valStatus === "Rejected"
+                                                      ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100/70"
+                                                      : "bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100"
+                                                  }`}
+                                                  title={`Validation: ${valStatus}${valRemarks ? ` (${valRemarks})` : ''}`}
+                                                >
+                                                  {valStatus === "Validated" ? (
+                                                    <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                                  ) : valStatus === "Rejected" ? (
+                                                    <X className="w-[0.75vw] h-[0.75vw]" />
+                                                  ) : null}
+                                                  <span>{valStatus === "Validated" ? "Accepted" : valStatus}</span>
+                                                </button>
+                                              ) : (
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setShowValidation({ row, prod })}
+                                                  className="px-[0.7vw] py-[0.25vw] bg-white hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 border border-slate-300 hover:border-indigo-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw]"
+                                                  title="Validate (Accept/Reject)"
+                                                >
+                                                  <Plus className="w-[0.75vw] h-[0.75vw]" />
+                                                  <span>Validate</span>
+                                                </button>
+                                              )
+                                            ) : (
+                                              /* Read-only status for verifier or non-creator */
+                                              valStatus ? (
+                                                <div
+                                                  className={`inline-flex items-center gap-[0.3vw] px-[0.7vw] py-[0.2vw] rounded-full text-[0.72vw] font-semibold border ${
+                                                    valStatus === "Validated"
+                                                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                      : valStatus === "Rejected"
+                                                      ? "bg-rose-50 text-rose-700 border-rose-200"
+                                                      : "bg-slate-50 text-slate-700 border-slate-200"
+                                                  }`}
+                                                  title={`Validation: ${valStatus}${valRemarks ? ` (${valRemarks})` : ''}`}
+                                                >
+                                                  {valStatus === "Validated" ? (
+                                                    <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                                  ) : valStatus === "Rejected" ? (
+                                                    <X className="w-[0.75vw] h-[0.75vw]" />
+                                                  ) : null}
+                                                  <span>{valStatus === "Validated" ? "Accepted" : valStatus}</span>
+                                                </div>
+                                              ) : (
+                                                <span className="text-slate-400 font-medium text-[0.77vw]">—</span>
+                                              )
+                                            )}
                                           </td>
 
                                           {/* History */}
@@ -3471,19 +3445,6 @@ export default function ProductionMaterial() {
                                                 title="View Report"
                                               >
                                                 <Eye className="w-[0.9vw] h-[0.9vw]" />
-                                              </button>
-
-                                              <button
-                                                type="button"
-                                                onClick={() => setShowVerify({ row, prod })}
-                                                className={`p-[0.35vw] rounded-full transition-all cursor-pointer ${
-                                                  prod.report?.verifiedBy
-                                                    ? "text-emerald-600 hover:bg-emerald-50"
-                                                    : "text-slate-400 hover:text-emerald-600 hover:bg-slate-100"
-                                                }`}
-                                                title={prod.report?.verifiedBy ? "Update Verification" : "Verify Resolution"}
-                                              >
-                                                <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
                                               </button>
 
                                               {rowCanUpdate && (

@@ -3,13 +3,15 @@ import { useLocation } from "react-router-dom";
 import {
   Package, Clock, User, CheckCircle, AlertCircle, X, Eye, Send,
   FileText, Calendar, Hash, Tag, Wrench,
-  AlertTriangle, Info, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Plus, Search, Check, Edit3, RotateCcw
+  AlertTriangle, Info, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Plus, Search, Check, Edit3, RotateCcw,
+  Save, Loader2
 } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import CustomDropdown from "../../components/CustomDropdown";
+import ProductionDetailsModal from "./ProductionDetailsModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -21,619 +23,88 @@ const fmtDate = (d) => {
   return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
 };
 
-const todayDateStr = () => new Date().toISOString().slice(0, 10);
-
-// ── Badge ─────────────────────────────────────────────────────────────────────
-const Badge = ({ label, color = "gray", size = "sm" }) => {
-  const colorMap = {
-    green:  "bg-emerald-50 text-emerald-700 border-emerald-200",
-    blue:   "bg-blue-50 text-blue-700 border-blue-200",
-    slate:  "bg-slate-100 text-slate-600 border-slate-300",
-    gray:   "bg-gray-100 text-gray-600 border-slate-300",
-    black:  "bg-gray-900 text-white border-gray-900",
-    red:    "bg-red-50 text-red-700 border-red-200",
-    orange: "bg-orange-50 text-orange-700 border-orange-200",
-    purple: "bg-purple-50 text-purple-700 border-purple-200",
-  };
-  const sizeMap = {
-    xs: "text-[0.63vw] px-[0.35vw] py-[0.08vw]",
-    sm: "text-[0.7vw] px-[0.45vw] py-[0.12vw]",
-    md: "text-[0.77vw] px-[0.55vw] py-[0.15vw]",
-  };
-  return (
-    <span className={`${sizeMap[size]} rounded-full border font-semibold whitespace-nowrap inline-flex items-center ${colorMap[color] || colorMap.gray}`}>
-      {label}
-    </span>
-  );
+const toInputDate = (d) => {
+  if (!d) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(d))) return String(d);
+  const dmyMatch = String(d).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+  if (dmyMatch) {
+    const [, day, month, year] = dmyMatch;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+  const date = new Date(d);
+  if (isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
 };
 
 // ── Status Configuration ──────────────────────────────────────────────────────
 const STATUS_CONFIG = {
-  "Open":               { color: "gray",   icon: AlertCircle,    bg: "bg-gray-100",   border: "border-slate-300",   text: "text-gray-700" },
-  "Under Testing":      { color: "blue",   icon: Wrench,         bg: "bg-blue-100",   border: "border-blue-300",   text: "text-blue-800" },
-  "Repair in Progress": { color: "orange", icon: Wrench,         bg: "bg-orange-100", border: "border-orange-300", text: "text-orange-800" },
-  "Pending":            { color: "slate",  icon: Clock,          bg: "bg-slate-100",  border: "border-slate-300",  text: "text-slate-800" },
-  "Completed":          { color: "green",  icon: CheckCircle,    bg: "bg-green-100",  border: "border-green-300",  text: "text-green-800" },
-  "Not Repairable":     { color: "red",    icon: AlertTriangle,  bg: "bg-red-100",    border: "border-red-300",    text: "text-red-800" },
-  "Admin Returned":     { color: "purple", icon: AlertTriangle,  bg: "bg-purple-100", border: "border-purple-300", text: "text-purple-800" },
+  Open: { color: "gray", icon: AlertCircle, bg: "bg-gray-100", border: "border-slate-300", text: "text-gray-700" },
+  "Under Testing": { color: "blue", icon: Wrench, bg: "bg-blue-100", border: "border-blue-300", text: "text-blue-800" },
+  "Repair in Progress": { color: "orange", icon: Wrench, bg: "bg-orange-100", border: "border-orange-300", text: "text-orange-800" },
+  Pending: { color: "slate", icon: Clock, bg: "bg-slate-100", border: "border-slate-300", text: "text-slate-800" },
+  Completed: { color: "green", icon: CheckCircle, bg: "bg-green-100", border: "border-green-300", text: "text-green-800" },
+  "Not Repairable": { color: "red", icon: AlertTriangle, bg: "bg-red-100", border: "border-red-300", text: "text-red-800" },
+  "Admin Returned": { color: "purple", icon: AlertTriangle, bg: "bg-purple-100", border: "border-purple-300", text: "text-purple-800" },
 };
 
-// ── Read-only Input Field ─────────────────────────────────────────────────────
-const RefInput = ({ label, value, span = 1 }) => (
-  <div className={`flex flex-col gap-[0.25vw] ${span === 2 ? "col-span-2" : span === 3 ? "col-span-3" : span === 4 ? "col-span-4" : ""}`}>
-    <label className="text-[0.8vw] font-semibold text-black flex items-start gap-[0.25vw]">
-      {label}
-    </label>
-    <div className="bg-white border border-slate-300 rounded-[0.4vw] py-[0.45vw] px-[0.6vw] text-[0.85vw] text-gray-900 break-words whitespace-normal overflow-hidden min-h-[2.4vw]">
-      {value || "—"}
-    </div>
-  </div>
-);
+const STATUS_OPTIONS = [
+  "Under Testing",
+  "Repair in Progress",
+  "Pending",
+  "Completed",
+  "Not Repairable"
+];
 
-// ── Searchable Select Component ────────────────────────────────────────────────
-const SearchableSelect = ({ label, value, options, onSelect, placeholder = "Select...", mandatory = false }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const dropdownRef = useRef(null);
+const VALIDATION_OPTIONS = [
+  "Pending",
+  "Validated",
+  "Not Validated",
+  "Under Testing"
+];
 
-  const selectedOption = options.find(opt => opt.value === value);
+const VERIFICATION_OPTIONS = [
+  "Pending",
+  "Verified",
+  "Rejected",
+  "Re-work"
+];
 
-  const filteredOptions = options.filter(opt => 
-    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const STATUS_CHIPS = [
+  { label: "All" },
+  { label: "Repair in Progress" },
+  { label: "Pending" },
+  { label: "Not Repairable" },
+  { label: "Under Testing" },
+  { label: "Completed" },
+  { label: "Admin Returned" }
+];
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div className="flex flex-col gap-[0.3vw]" ref={dropdownRef}>
-      <label className="text-[0.85vw] font-semibold text-black">
-        {label} {mandatory && <span className="text-red-500">*</span>}
-      </label>
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className={`w-full border border-slate-300 bg-white rounded-[0.4vw] py-[0.5vw] px-[0.6vw] text-[0.83vw] text-left flex items-center justify-between transition-all cursor-pointer shadow-sm ${isOpen ? "border-blue-500 ring-1 ring-blue-500" : ""}`}
-        >
-          <span className={selectedOption ? "text-black font-regular" : "text-gray-400"}>
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
-          <ChevronDown className={`w-[1vw] h-[1vw] text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-        </button>
-
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute z-[100] w-full mt-[0.2vw] bg-white border border-slate-300 rounded-[0.4vw] shadow-xl overflow-hidden flex flex-col"
-            >
-              <div className="p-[0.4vw] border-b border-slate-300 bg-gray-50">
-                <div className="relative">
-                  <Search className="absolute left-[0.6vw] top-1/2 -translate-y-1/2 w-[0.8vw] h-[0.8vw] text-gray-400" />
-                  <input
-                    autoFocus
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search..."
-                    className="w-full pl-[1.8vw] pr-[0.6vw] py-[0.4vw] text-[0.8vw] border border-slate-300 rounded-[0.3vw] outline-none focus:border-blue-400 bg-white"
-                  />
-                </div>
-              </div>
-              <div className="max-h-[10vw] overflow-y-auto">
-                {filteredOptions.length > 0 ? (
-                  filteredOptions.map((opt) => (
-                    <div
-                      key={opt.value}
-                      onClick={() => {
-                        onSelect(opt.value, opt.label);
-                        setIsOpen(false);
-                        setSearchTerm("");
-                      }}
-                      className={`px-[0.8vw] py-[0.5vw] text-[0.83vw] cursor-pointer flex items-center justify-between hover:bg-blue-50 transition-colors ${value === opt.value ? "bg-blue-50 text-blue-700 font-bold" : "text-gray-700"}`}
-                    >
-                      <span>{opt.label}</span>
-                      {value === opt.value && <Check className="w-[0.9vw] h-[0.9vw] text-blue-600" />}
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-[0.6vw] text-center text-gray-400 text-[0.8vw]">No options found</div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-};
-
-// ── Production Response Modal ──────────────────────────────────────────────────
-const ProductionResponseModal = ({ entry, product, employees, fourMCategories, caeHistory, currentUser, onSave, onClose }) => {
-  const [formData, setFormData] = useState({
-    workDoneBy: product.report?.workDoneBy || product.report?.assembledBy || "",
-    workDoneByName: product.report?.workDoneByName || product.report?.assembledByName || "",
-    rootCause: product.report?.rootCause || product.initialRootCause || "",
-    fourMCategory: product.report?.fourMCategory || "",
-    materialChangeDetails: product.report?.materialChangeDetails || product.report?.partsReplacement || "",
-    delayTime: product.report?.delayTime !== undefined ? product.report.delayTime : (product.delayTime || ""),
-    materialCost: product.report?.materialCost || "",
-    correctiveActionDetails: product.report?.correctiveActionDetails || product.report?.correctiveAction || product.correction || "",
-    completedDate: product.report?.completedDate ? product.report.completedDate.split('T')[0] : (product.report?.closedDate ? product.report.closedDate.split('T')[0] : todayDateStr()),
-    validationStatus: product.report?.validationStatus || "Pending",
-    verificationStatus: product.report?.verificationStatus || "Pending",
-    closingDate: product.report?.closingDate ? product.report.closingDate.split('T')[0] : (product.report?.closedDate ? product.report.closedDate.split('T')[0] : "")
-  });
-
-  const VALIDATION_OPTIONS = [
-    { value: "Pending", label: "Pending" },
-    { value: "Validated", label: "Validated" },
-    { value: "Not Validated", label: "Not Validated" },
-    { value: "Under Testing", label: "Under Testing" }
-  ];
-
-  const VERIFICATION_OPTIONS = [
-    { value: "Pending", label: "Pending" },
-    { value: "Verified", label: "Verified" },
-    { value: "Rejected", label: "Rejected" },
-    { value: "Re-work", label: "Re-work" }
-  ];
-  
-  const employeeOptions = useMemo(() => 
-    employees.map(e => ({ value: e.userId || e.id || e._id, label: e.name })), 
-  [employees]);
-
-  const { toast } = useNotification();
-
-  const sp = (k, v) => setFormData(p => ({ ...p, [k]: v }));
-
-    // Verification & Validation permissions based on user requirements:
-    // Internal NC:
-    //   - Raised To is the same register person.
-    //   - Verification & validation can both be done by the register/assigned person.
-    // External & Field Return NC:
-    //   - Verification is done by the Raised To person (station where defect is raised/repaired).
-    //   - Validation is done by the Register person (finder / creator who initiated the NC).
-    const currentUserId = currentUser?.userId || currentUser?.id;
-    const isFinder = Boolean(currentUserId && (
-      product.inspectedBy === currentUserId || 
-      entry.creatorUserId === currentUserId || 
-      (currentUser?.name && product.inspectedByName === currentUser.name)
-    ));
-    const isRaisedTo = Boolean(currentUserId && (
-      product.raisedTo === currentUserId || 
-      product.assignedTo === currentUserId || 
-      (currentUser?.name && (product.raisedToName === currentUser.name || product.assignedToName === currentUser.name))
-    ));
-
-    const isExternalOrFieldReturn = product.ncType === "External" || product.ncType === "Field Return";
-    const canValidate = isExternalOrFieldReturn ? isFinder : (isFinder || isRaisedTo);
-    const canVerify = isExternalOrFieldReturn ? isRaisedTo : (isFinder || isRaisedTo);
-
-  const handleSave = () => {
-    if (!formData.rootCause) return toast("Root Cause is mandatory", "error");
-    if (!formData.fourMCategory) return toast("4M Category is mandatory", "error");
-    if (!formData.correctiveActionDetails) return toast("Corrective action details is mandatory", "error");
-
-    const derivedStatus = formData.verificationStatus === "Verified" ? "Completed" 
-      : formData.verificationStatus === "Rejected" ? "Not Repairable" 
-      : formData.validationStatus === "Validated" ? "Completed" 
-      : "Under Testing";
-
-    const finalReport = {
-      ...formData,
-      correctiveAction: formData.correctiveActionDetails,
-      closedDate: formData.closingDate || formData.completedDate,
-      partsReplacement: formData.materialChangeDetails,
-      status: derivedStatus,
-      lastUpdated: new Date()
-    };
-
-    onSave(finalReport);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[150] flex items-center justify-center p-[2vw]">
-      <motion.div 
-        initial={{ scale: 0.95, opacity: 0, y: 10 }} 
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[58vw] max-h-[92vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200"
-      >
-        {/* Header */}
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center rounded-t-[0.8vw]">
-          <div className="flex items-center gap-[0.7vw]">
-            <div className="bg-blue-50 p-[0.45vw] rounded-full text-blue-600 border border-blue-100">
-              <FileText className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <h3 className="text-[1.1vw] font-bold text-slate-800">Production Technical Resolution</h3>
-              <p className="text-[0.77vw] text-slate-500 font-medium">{product.productDescription} · <span className="font-mono">{entry.refNoInternal}</span></p>
-            </div>
-          </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
-            <X className="w-[1.1vw] h-[1.1vw]" />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
-          
-          {/* Reference Inward Info */}
-          <div className="bg-white rounded-[0.8vw] border border-slate-200 shadow-2xs">
-            <div className="bg-slate-50/80 px-[1vw] py-[0.55vw] border-b border-slate-200 flex items-center gap-[0.45vw] rounded-t-[0.8vw]">
-              <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" />
-              <Info className="w-[0.9vw] h-[0.9vw] text-blue-600" />
-              <span className="text-[0.8vw] font-bold text-slate-700 uppercase tracking-wider">Inward Details</span>
-            </div>
-            <div className="p-[1vw] grid grid-cols-4 gap-[1.2vw]">
-              <RefInput label="Registration Date" value={fmtDate(entry.date)} />
-              <RefInput label="Job Order No" value={entry.jobOrderNo} />
-              <RefInput label="Customer Name" value={entry.customerName} />
-              <RefInput label="Customer Code" value={entry.customerCode} />
-              
-              <RefInput label="Product Description" value={product.productDescription} span={2} />
-              <RefInput label="Product Code" value={product.productCode} />
-              <RefInput label="Product Segment" value={product.productSegment || product.productType} />
-
-              <RefInput label="Detection Stage" value={product.stage} />
-              <RefInput label="NC Type" value={product.ncType} />
-              <RefInput label="Problem Type" value={product.problemType} />
-              <RefInput label="Problem Reported" value={product.problem || product.problemDescription} />
-              <RefInput label="Qty" value={product.qty} />
-              <RefInput label="Inspected By" value={product.inspectedByName} />
-              <RefInput label="Designators" value={product.designators} />
-              {product.boardImage && (
-                <div className="col-span-1 flex flex-col gap-[0.25vw]">
-                  <label className="text-[0.8vw] font-semibold text-slate-700 uppercase">Board Image</label>
-                  <img 
-                    src={`${API_URL}${product.boardImage}`} 
-                    alt="Board" 
-                    className="w-full h-[4.5vw] object-cover rounded-[0.4vw] border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => window.open(`${API_URL}${product.boardImage}`, '_blank')}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Technical Resolution Form (Only the 11 user fields) */}
-          <div className="bg-white rounded-[0.8vw] border border-slate-200 shadow-2xs">
-            <div className="bg-slate-50/80 px-[1vw] py-[0.55vw] border-b border-slate-200 flex items-center gap-[0.45vw] rounded-t-[0.8vw]">
-              <span className="w-[0.25vw] h-[0.85vw] bg-emerald-600 rounded-full inline-block" />
-              <Wrench className="w-[0.9vw] h-[0.9vw] text-emerald-600" />
-              <span className="text-[0.8vw] font-bold text-slate-700 uppercase tracking-wider">Resolution Report</span>
-            </div>
-            <div className="p-[1.2vw] space-y-[1vw]">
-              
-              {/* Row 1: Work done by & 4M Category */}
-              <div className="grid grid-cols-2 gap-[1vw]">
-                {/* 1. Work done by */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Work done by</label>
-                  <CustomDropdown
-                    value={formData.workDoneBy}
-                    onChange={(val) => {
-                      const opt = employeeOptions.find(e => e.value === val);
-                      sp("workDoneBy", val);
-                      sp("workDoneByName", opt?.label || "");
-                    }}
-                    options={employeeOptions}
-                    placeholder="Search employee..."
-                    searchable={true}
-                    size="sm"
-                    usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.4vw] text-[0.83vw] font-medium text-slate-800 border-slate-300 bg-white"
-                  />
-                </div>
-
-                {/* 3. 4M Category */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">4M Category <span className="text-rose-500">*</span></label>
-                  <CustomDropdown
-                    value={formData.fourMCategory}
-                    onChange={val => sp("fourMCategory", val)}
-                    options={(fourMCategories || []).map(c => ({ value: c.name || c._id || c, label: c.name || c }))}
-                    placeholder="Select Category"
-                    size="sm"
-                    usePortal={true}
-                    triggerClassName="!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium text-slate-800 border-slate-200 bg-white"
-                  />
-                </div>
-              </div>
-
-              {/* Row 2: Root Cause & Corrective action details */}
-              <div className="grid grid-cols-2 gap-[1vw]">
-                {/* 2. Root Cause */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Root Cause <span className="text-rose-500">*</span></label>
-                  <textarea 
-                    rows="3" 
-                    value={formData.rootCause} 
-                    onChange={e => sp("rootCause", e.target.value)} 
-                    placeholder="Analyze root cause..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all" 
-                  />
-                </div>
-
-                {/* 7. Corrective action details */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Corrective action details <span className="text-rose-500">*</span></label>
-                  <textarea 
-                    rows="3" 
-                    value={formData.correctiveActionDetails} 
-                    onChange={e => sp("correctiveActionDetails", e.target.value)} 
-                    placeholder="Corrective action details taken..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all" 
-                  />
-                </div>
-              </div>
-
-              {/* Row 3: Material Change Details */}
-              {/* 4. Material Change Details */}
-              <div className="flex flex-col gap-[0.3vw]">
-                <label className="text-[0.81vw] font-semibold text-slate-700">Material Change Details</label>
-                <textarea 
-                  rows="2" 
-                  value={formData.materialChangeDetails} 
-                  onChange={e => sp("materialChangeDetails", e.target.value)} 
-                  placeholder="Enter details of materials or components changed..." 
-                  className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 resize-none transition-all w-full" 
-                />
-              </div>
-
-              {/* Row 4: Delay time & Material Cost */}
-              <div className="grid grid-cols-2 gap-[1vw]">
-                {/* 5. Delay time */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Delay time</label>
-                  <input 
-                    type="text" 
-                    value={formData.delayTime} 
-                    onChange={e => sp("delayTime", e.target.value)} 
-                    placeholder="Delay time (e.g. in mins or hours)..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all" 
-                  />
-                </div>
-
-                {/* 6. Material Cost */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Material Cost</label>
-                  <input 
-                    type="text" 
-                    value={formData.materialCost} 
-                    onChange={e => sp("materialCost", e.target.value)} 
-                    placeholder="Enter material cost..." 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all" 
-                  />
-                </div>
-              </div>
-
-              {/* Row 5: Validation Status & Verification Status */}
-              <div className="grid grid-cols-2 gap-[1vw]">
-                {/* 9. Validation Status */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[0.81vw] font-semibold text-slate-700">Validation Status</label>
-                    {!canValidate && (
-                      <span className="text-[0.68vw] text-amber-700 font-medium bg-amber-50 px-[0.35vw] py-[0.05vw] rounded border border-amber-200">
-                        {isExternalOrFieldReturn ? "Only Register Person can Validate" : "Locked"}
-                      </span>
-                    )}
-                  </div>
-                  <CustomDropdown
-                    value={formData.validationStatus}
-                    onChange={val => sp("validationStatus", val)}
-                    options={VALIDATION_OPTIONS}
-                    disabled={!canValidate}
-                    placeholder="Select Validation Status"
-                    size="sm"
-                    usePortal={true}
-                    triggerClassName={`!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium border-slate-200 ${
-                      !canValidate ? "bg-slate-100 text-slate-400 cursor-not-allowed" : "text-slate-800 bg-white"
-                    }`}
-                  />
-                </div>
-
-                {/* 10. Verification Status */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[0.81vw] font-semibold text-slate-700">Verification Status</label>
-                    {!canVerify && (
-                      <span className="text-[0.68vw] text-amber-700 font-medium bg-amber-50 px-[0.35vw] py-[0.05vw] rounded border border-amber-200">
-                        {isExternalOrFieldReturn ? "Only Raised To Person can Verify" : "Locked"}
-                      </span>
-                    )}
-                  </div>
-                  <CustomDropdown
-                    value={formData.verificationStatus}
-                    onChange={val => sp("verificationStatus", val)}
-                    options={VERIFICATION_OPTIONS}
-                    disabled={!canVerify}
-                    placeholder="Select Verification Status"
-                    size="sm"
-                    usePortal={true}
-                    triggerClassName={`!h-[2.3vw] !rounded-[0.5vw] text-[0.83vw] font-medium border-slate-200 ${
-                      !canVerify ? "bg-slate-100 text-slate-400 cursor-not-allowed" : "text-slate-800 bg-white"
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Row 6: Completed date & Closing Date */}
-              <div className="grid grid-cols-2 gap-[1vw]">
-                {/* 8. Completed date */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Completed date</label>
-                  <input 
-                    type="date" 
-                    value={formData.completedDate} 
-                    onChange={e => sp("completedDate", e.target.value)} 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer" 
-                  />
-                </div>
-
-                {/* 11. Closing Date */}
-                <div className="flex flex-col gap-[0.3vw]">
-                  <label className="text-[0.81vw] font-semibold text-slate-700">Closing Date</label>
-                  <input 
-                    type="date" 
-                    value={formData.closingDate} 
-                    onChange={e => sp("closingDate", e.target.value)} 
-                    className="bg-white border border-slate-200 rounded-[0.5vw] py-[0.5vw] px-[0.7vw] text-[0.83vw] outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer" 
-                  />
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-[1.5vw] py-[0.8vw] border-t border-slate-200 bg-white flex justify-end items-center rounded-b-[0.8vw]">
-          <div className="flex gap-[0.6vw]">
-            <button onClick={onClose} className="px-[1.2vw] h-[2.2vw] border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-full text-[0.81vw] cursor-pointer transition-all">Cancel</button>
-            <button onClick={handleSave} className="px-[1.4vw] h-[2.2vw] bg-blue-600 hover:bg-blue-700 text-white rounded-full text-[0.81vw] font-semibold cursor-pointer shadow-xs flex items-center gap-[0.4vw] transition-all active:scale-95">
-              <Send className="w-[0.85vw] h-[0.85vw]" />
-              <span>Submit Report</span>
-            </button>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
-// ── Production Info Modal (Read-only) ───────────────────────────────────────────
-const ProductionInfoModal = ({ entry, product, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[200] flex items-center justify-center p-[2vw]">
-      <motion.div 
-        initial={{ scale: 0.95, opacity: 0 }} 
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white w-[50vw] max-h-[88vh] rounded-[0.8vw] shadow-2xl overflow-hidden flex flex-col border border-slate-200"
-      >
-        <div className="bg-white border-b border-slate-200 px-[1.5vw] py-[1vw] flex justify-between items-center rounded-t-[0.8vw]">
-          <div className="flex items-center gap-[0.7vw]">
-            <div className="bg-blue-50 p-[0.45vw] rounded-full text-blue-600 border border-blue-100">
-              <Info className="w-[1.1vw] h-[1.1vw]" />
-            </div>
-            <div>
-              <h3 className="text-[1.1vw] font-bold text-slate-800">Technical Record Details</h3>
-              <p className="text-[0.77vw] text-slate-500 font-medium">{entry.refNoInternal} · {entry.jobOrderNo || "No Job Order"}</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-[0.35vw] rounded-full transition-all cursor-pointer">
-            <X className="w-[1.1vw] h-[1.1vw]" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-[1.4vw] space-y-[1.2vw] bg-slate-50/40">
-          <div className="grid grid-cols-2 gap-[1.2vw]">
-            <div className="space-y-[0.8vw]">
-               <h4 className="text-[0.85vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
-                 <span className="w-[0.25vw] h-[0.85vw] bg-blue-600 rounded-full inline-block" /> Inward Information
-               </h4>
-               <div className="grid grid-cols-1 gap-[0.6vw]">
-                 <RefInput label="Registration Date" value={fmtDate(entry.date)} />
-                 <RefInput label="Job Order No" value={entry.jobOrderNo} />
-                 <RefInput label="Reference No" value={entry.refNoInternal} />
-                 <RefInput label="Customer" value={entry.customerName} />
-               </div>
-            </div>
-            <div className="space-y-[0.8vw]">
-               <h4 className="text-[0.85vw] font-bold text-emerald-600 border-b border-emerald-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
-                 <Package className="w-[0.9vw] h-[0.9vw]" /> Product Details
-               </h4>
-               <div className="grid grid-cols-1 gap-[0.6vw]">
-                 <RefInput label="Description" value={product.productDescription} />
-                 <RefInput label="Code" value={product.productCode} />
-                 <RefInput label="NC Type" value={product.ncType || "Internal"} />
-                 <RefInput label="Qty" value={product.qty || "1"} />
-                 <RefInput label="Serial Number" value={product.serialNumber || product.identification} />
-                 <RefInput label="Current Status" value={product.report?.status || "Open"} />
-               </div>
-            </div>
-          </div>
-
-          {product.report && (
-            <div className="space-y-[0.8vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-200 shadow-2xs">
-               <h4 className="text-[0.85vw] font-bold text-slate-700 border-b border-slate-100 pb-[0.3vw] uppercase tracking-wider flex items-center gap-[0.4vw]">
-                 <Wrench className="w-[0.9vw] h-[0.9vw] text-slate-500" /> Technical Resolution Report
-               </h4>
-               <div className="grid grid-cols-2 gap-[0.8vw]">
-                 <RefInput label="Work done by" value={product.report.workDoneByName || product.report.workDoneBy} />
-                 <RefInput label="4M Category" value={product.report.fourMCategory} />
-                 <RefInput label="Root Cause" value={product.report.rootCause} span={2} />
-                 <RefInput label="Corrective action details" value={product.report.correctiveActionDetails || product.report.correctiveAction} span={2} />
-                 <RefInput label="Material Change Details" value={product.report.materialChangeDetails || product.report.partsReplacement} span={2} />
-                 <RefInput label="Delay time" value={product.report.delayTime} />
-                 <RefInput label="Material Cost" value={product.report.materialCost} />
-                 <RefInput label="Validation Status" value={product.report.validationStatus} />
-                 <RefInput label="Verification Status" value={product.report.verificationStatus} />
-                 <RefInput label="Completed date" value={fmtDate(product.report.completedDate)} />
-                 <RefInput label="Closing Date" value={fmtDate(product.report.closingDate || product.report.closedDate)} />
-               </div>
-            </div>
-          )}
-
-          {/* Update History */}
-          {product.report?.history && product.report.history.length > 0 && (
-            <div className="space-y-[0.6vw] p-[1vw] bg-white rounded-[0.6vw] border border-slate-200 shadow-2xs">
-               <h4 className="text-[0.85vw] font-bold text-blue-600 border-b border-blue-100 pb-[0.3vw] flex items-center gap-[0.4vw] uppercase tracking-wider">
-                 <Clock className="w-[0.9vw] h-[0.9vw]" /> Update History Log
-               </h4>
-               <div className="space-y-[0.5vw] max-h-[14vw] overflow-y-auto pr-[0.4vw] custom-scrollbar">
-                 {product.report.history.slice().reverse().map((h, i) => (
-                   <div key={i} className="flex flex-col gap-[0.2vw] p-[0.6vw] rounded-[0.4vw] bg-slate-50 border border-slate-200 hover:bg-blue-50/30 transition-colors">
-                     <div className="flex justify-between items-center">
-                       <Badge label={h.status} color={STATUS_CONFIG[h.status]?.color || "gray"} size="xs" />
-                       <span className="text-[0.71vw] text-slate-700 font-medium font-mono">
-                         {fmtDate(h.timestamp)} · {new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
-                       </span>
-                     </div>
-                     {h.remark && (
-                       <div className="text-[0.77vw] text-slate-600 italic mt-[0.1vw]">
-                         "{h.remark}"
-                       </div>
-                     )}
-                   </div>
-                 ))}
-               </div>
-            </div>
-          )}
-        </div>
-        <div className="p-[0.8vw] border-t border-slate-200 bg-white text-right rounded-b-[0.8vw]">
-          <button onClick={onClose} className="px-[1.4vw] h-[2.2vw] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full font-semibold text-[0.81vw] cursor-pointer transition-all">Close</button>
-        </div>
-      </motion.div>
-    </div>
-  );
+// Editable column fields mapping
+const EDITABLE_COL_FIELDS = {
+  workDoneBy: "workDoneBy",
+  fourMCategory: "fourMCategory",
+  rootCause: "rootCause",
+  correctiveAction: "correctiveActionDetails",
+  materialChange: "materialChangeDetails",
+  delayTime: "delayTime",
+  materialCost: "materialCost",
+  status: "status",
+  completedDate: "completedDate",
+  validationStatus: "validationStatus",
+  verificationStatus: "verificationStatus",
+  closingDate: "closingDate",
 };
 
 export default function ProductionMaterialResponse() {
   const { toast } = useNotification();
   const location = useLocation();
 
-  // If navigated from Production NC with a target filter:
   const navFilter = location.state?.filterTerm || "";
 
   const [entries, setEntries] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [fourMCategories, setFourMCategories] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [selected, setSelected] = useState(null);
   const [infoSelected, setInfoSelected] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
   const [searchTerm, setSearchTerm] = useState(navFilter);
@@ -646,6 +117,15 @@ export default function ProductionMaterialResponse() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [expandedCustomerDetails, setExpandedCustomerDetails] = useState({});
 
+  // Inline Drafts and Drag-Fill States
+  const [drafts, setDrafts] = useState({});
+  const [savingStates, setSavingStates] = useState({});
+  const [isBulkSaving, setIsBulkSaving] = useState(false);
+  const [selection, setSelection] = useState(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [isFilling, setIsFilling] = useState(false);
+  const tableContainerRef = useRef(null);
+
   const toggleCustomerDetails = (custName, e) => {
     if (e) e.stopPropagation();
     setExpandedCustomerDetails(prev => ({
@@ -654,7 +134,6 @@ export default function ProductionMaterialResponse() {
     }));
   };
 
-  // Sync if navigation state changes
   useEffect(() => {
     if (location.state?.filterTerm !== undefined) {
       setSearchTerm(location.state.filterTerm || "");
@@ -663,13 +142,7 @@ export default function ProductionMaterialResponse() {
 
   // Load User
   useEffect(() => {
-    const KEYS = [
-      "loggedInUser",
-      "currentUser",
-      "user",
-      "akira_user",
-      "auth_user",
-    ];
+    const KEYS = ["loggedInUser", "currentUser", "user", "akira_user", "auth_user"];
     for (const k of KEYS) {
       const raw = sessionStorage.getItem(k) || localStorage.getItem(k);
       if (raw) {
@@ -684,11 +157,21 @@ export default function ProductionMaterialResponse() {
     }
   }, []);
 
+  const employeeOptions = useMemo(() => 
+    (employees || []).map(e => ({ value: e.userId || e.id || e._id, label: e.name })), 
+  [employees]);
+
+  const fourMOptions = useMemo(() => 
+    (fourMCategories || []).map(c => ({ value: c.name || c._id || c, label: c.name || c })),
+  [fourMCategories]);
+
+  // Fetch Data
   const fetchData = async () => {
     try {
       const rawUser = sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}";
-      const u = JSON.parse(rawUser);
-      const uid = u.userId || u._id || "";
+      let u = {};
+      try { u = JSON.parse(rawUser); } catch {}
+      const uid = u.userId || u.id || u._id || "";
       const uRole = u.role || "";
       const uDept = u.department || "";
 
@@ -718,38 +201,9 @@ export default function ProductionMaterialResponse() {
     return () => clearInterval(interval);
   }, []);
 
-  const claimProduct = async (id, productId) => {
-    if (!currentUser) return toast("Login required", "error");
-    try {
-      const res = await axios.patch(`${API_URL}/production-material/${id}/claim-product`, {
-        productId,
-        userId: currentUser.userId || currentUser.id,
-        userName: currentUser.name
-      });
-      setEntries(prev => prev.map(e => e.id === id ? { ...res.data, id: res.data._id } : e));
-      toast("Product claimed successfully", "success");
-    } catch (err) {
-      toast(err.response?.data?.message || "Claim failed", "error");
-    }
-  };
-
-  const handleSaveReport = async (report) => {
-    try {
-      const res = await axios.patch(`${API_URL}/production-material/${selected.entry.id}/product/${selected.product._pid}/report`, {
-        report
-      });
-      setEntries(prev => prev.map(e => e.id === selected.entry.id ? { ...res.data, id: res.data._id } : e));
-      setSelected(null);
-      toast("Technical report updated", "success");
-    } catch (err) {
-      toast("Update failed", "error");
-    }
-  };
-
+  // Filtered Products
   const myProducts = useMemo(() => {
     const list = [];
-    // Since backend already enforces Detection Stage mapping, department boundaries,
-    // and overarching admin access, entries returned by backend are valid for this user.
     entries.forEach(entry => {
       entry.products?.forEach(product => {
         list.push({ entry, product });
@@ -786,16 +240,6 @@ export default function ProductionMaterialResponse() {
     });
     return c;
   }, [myProducts]);
-
-  const STATUS_CHIPS = [
-    { label: "All" },
-    { label: "Repair in Progress" },
-    { label: "Pending" },
-    { label: "Not Repairable" },
-    { label: "Under Testing" },
-    { label: "Completed" },
-    { label: "Admin Returned" }
-  ];
 
   const allProducts = useMemo(() => {
     let filtered = myProducts;
@@ -847,7 +291,9 @@ export default function ProductionMaterialResponse() {
         (p.entry._id || "").toLowerCase().includes(s) ||
         (p.product.productDescription || "").toLowerCase().includes(s) ||
         (p.product.productCode || "").toLowerCase().includes(s) ||
-        (p.product.serialNumber || "").toLowerCase().includes(s)
+        (p.product.serialNumber || "").toLowerCase().includes(s) ||
+        (p.product.stage || "").toLowerCase().includes(s) ||
+        (p.product.ncType || "").toLowerCase().includes(s)
       );
     }
     return filtered.sort((a, b) => (a.entry.customerName || "").localeCompare(b.entry.customerName || ""));
@@ -860,18 +306,306 @@ export default function ProductionMaterialResponse() {
 
   const totalPages = Math.ceil(allProducts.length / itemsPerPage);
 
-  const caeHistory = useMemo(() => {
-    const set = new Set();
-    entries.forEach(e => e.products?.forEach(p => p.report?.cae && set.add(p.report.cae)));
-    return Array.from(set);
-  }, [entries]);
+  // ── Draft Helpers ────────────────────────────────────────────────────────────
+  const getDraft = (productId, product) => {
+    if (drafts[productId]) return drafts[productId];
+    const r = product.report || {};
+    return {
+      workDoneBy: r.workDoneBy || product.assignedTo || "",
+      workDoneByName: r.workDoneByName || product.assignedToName || "",
+      fourMCategory: r.fourMCategory || "",
+      rootCause: r.rootCause || "",
+      correctiveActionDetails: r.correctiveActionDetails || r.correctiveAction || product.correction || "",
+      materialChangeDetails: r.materialChangeDetails || r.partsReplacement || "",
+      delayTime: r.delayTime !== undefined ? r.delayTime : (product.delayTime || ""),
+      materialCost: r.materialCost || "",
+      status: r.status && r.status !== "Open" ? r.status : "Pending",
+      completedDate: toInputDate(r.completedDate),
+      validationStatus: r.validationStatus || "Pending",
+      verificationStatus: r.verificationStatus || "Pending",
+      closingDate: toInputDate(r.closingDate || r.closedDate),
+      hasChanges: false
+    };
+  };
+
+  const handleDraftChange = (productId, product, field, value) => {
+    setDrafts(prev => {
+      const existing = prev[productId] || getDraft(productId, product);
+      const updated = { ...existing, [field]: value, hasChanges: true };
+      return { ...prev, [productId]: updated };
+    });
+  };
+
+  // Permissions per record
+  const getRecordPermissions = (entry, product) => {
+    const currentUserId = currentUser?.userId || currentUser?.id;
+    const isFinder = Boolean(currentUserId && (
+      product.inspectedBy === currentUserId || 
+      entry.creatorUserId === currentUserId || 
+      (currentUser?.name && product.inspectedByName === currentUser.name)
+    ));
+    const isRaisedTo = Boolean(currentUserId && (
+      product.raisedTo === currentUserId || 
+      product.assignedTo === currentUserId || 
+      (currentUser?.name && (product.raisedToName === currentUser.name || product.assignedToName === currentUser.name))
+    ));
+    const isExternalOrFieldReturn = product.ncType === "External" || product.ncType === "Field Return";
+    const canValidate = isExternalOrFieldReturn ? isFinder : (isFinder || isRaisedTo);
+    const canVerify = isExternalOrFieldReturn ? isRaisedTo : (isFinder || isRaisedTo);
+    const canEditGeneral = true;
+
+    return { canValidate, canVerify, canEditGeneral };
+  };
+
+  const isCellEditable = (item, colKey) => {
+    if (!item) return false;
+    const { entry, product } = item;
+    const perms = getRecordPermissions(entry, product);
+    if (colKey === "validationStatus") return perms.canValidate;
+    if (colKey === "verificationStatus") return perms.canVerify;
+    if (colKey === "completionDate") {
+      const d = drafts[product._pid] || getDraft(product._pid, product);
+      return d.status === "Completed";
+    }
+    return perms.canEditGeneral;
+  };
+
+  // ── Drag to Fill Handlers ──────────────────────────────────────────────────
+  const handleCellMouseDown = (rowIndex, colKey, e) => {
+    if (!EDITABLE_COL_FIELDS[colKey]) return;
+    const targetItem = paginatedProducts[rowIndex];
+    if (!isCellEditable(targetItem, colKey)) return;
+    setSelection({
+      startRow: rowIndex,
+      endRow: rowIndex,
+      colKey,
+    });
+    setIsSelecting(true);
+  };
+
+  const handleFillHandleMouseDown = (e, rowIndex, colKey) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const targetItem = paginatedProducts[rowIndex];
+    if (!isCellEditable(targetItem, colKey)) return;
+    setSelection({
+      startRow: rowIndex,
+      endRow: rowIndex,
+      colKey,
+    });
+    setIsFilling(true);
+  };
+
+  const handleCellMouseEnter = (rowIndex, colKey) => {
+    if (isFilling && selection && selection.colKey === colKey) {
+      setSelection(prev => ({
+        ...prev,
+        endRow: rowIndex,
+      }));
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isFilling && selection) {
+      const { startRow, endRow, colKey } = selection;
+      const field = EDITABLE_COL_FIELDS[colKey];
+      if (field) {
+        const sourceItem = paginatedProducts[startRow];
+        if (sourceItem && isCellEditable(sourceItem, colKey)) {
+          const sourceDraft = drafts[sourceItem.product._pid] || getDraft(sourceItem.product._pid, sourceItem.product);
+          const sourceValue = sourceDraft[field];
+
+          const minR = Math.min(startRow, endRow);
+          const maxR = Math.max(startRow, endRow);
+
+          let filledCount = 0;
+          for (let r = minR; r <= maxR; r++) {
+            if (r === startRow) continue;
+            const targetItem = paginatedProducts[r];
+            if (targetItem && isCellEditable(targetItem, colKey)) {
+              const pid = targetItem.product._pid;
+              handleDraftChange(pid, targetItem.product, field, sourceValue);
+              filledCount++;
+            }
+          }
+          if (filledCount > 0) {
+            toast(`Filled ${field} down across ${filledCount} row(s)`);
+          }
+        }
+      }
+    }
+    setIsSelecting(false);
+    setIsFilling(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, [isFilling, selection, paginatedProducts, drafts]);
+
+  const getCellClass = (rowIndex, colKey) => {
+    let cls = "py-[0.55vw] px-[0.6vw] border-r border-b border-slate-300 relative align-middle ";
+    if (!selection || selection.colKey !== colKey) return cls;
+    const { startRow, endRow } = selection;
+    const minR = Math.min(startRow, endRow);
+    const maxR = Math.max(startRow, endRow);
+    if (rowIndex >= minR && rowIndex <= maxR) {
+      cls += " bg-blue-50/40 z-10 before:content-[''] before:pointer-events-none before:absolute before:inset-0 ";
+      if (rowIndex === minR && rowIndex === maxR) {
+        cls += " before:border-2 before:border-blue-600";
+      } else if (rowIndex === minR) {
+        cls += " before:border-t-2 before:border-l-2 before:border-r-2 before:border-blue-600";
+      } else if (rowIndex === maxR) {
+        cls += " before:border-b-2 before:border-l-2 before:border-r-2 before:border-blue-600";
+      } else {
+        cls += " before:border-l-2 before:border-r-2 before:border-blue-600";
+      }
+    }
+    return cls;
+  };
+
+  const renderFillHandle = (rowIndex, colKey) => {
+    if (!selection || selection.colKey !== colKey) return null;
+    const { startRow, endRow } = selection;
+    const maxR = Math.max(startRow, endRow);
+    const item = paginatedProducts[rowIndex];
+    if (rowIndex === maxR && isCellEditable(item, colKey)) {
+      return (
+        <div
+          data-fill-handle="true"
+          onMouseDown={(e) => handleFillHandleMouseDown(e, startRow, colKey)}
+          className="absolute bottom-[-3px] right-[-3px] w-[8px] h-[8px] bg-blue-600 border border-white cursor-crosshair z-[60] shadow-sm rounded-sm hover:scale-125 transition-transform"
+          title="Drag down to fill value in column"
+        />
+      );
+    }
+    return null;
+  };
+
+  // ── Save Logic ───────────────────────────────────────────────────────────────
+  const saveRow = async (entry, product, draft, showToastMsg = true) => {
+    if (!draft || !draft.hasChanges) return true;
+
+    if (!draft.rootCause?.trim()) {
+      toast(`Root Cause is mandatory for ${product.productDescription}`, "error");
+      return false;
+    }
+    if (!draft.fourMCategory?.trim()) {
+      toast(`4M Category is mandatory for ${product.productDescription}`, "error");
+      return false;
+    }
+    if (!draft.correctiveActionDetails?.trim()) {
+      toast(`Corrective action details is mandatory for ${product.productDescription}`, "error");
+      return false;
+    }
+
+    const derivedStatus = draft.verificationStatus === "Verified" ? "Completed" 
+      : draft.verificationStatus === "Rejected" ? "Not Repairable" 
+      : draft.validationStatus === "Validated" ? "Completed" 
+      : (draft.status || "Under Testing");
+
+    const finalReport = {
+      ...draft,
+      correctiveAction: draft.correctiveActionDetails,
+      closedDate: draft.closingDate || draft.completedDate,
+      partsReplacement: draft.materialChangeDetails,
+      status: derivedStatus,
+      lastUpdated: new Date()
+    };
+
+    setSavingStates(prev => ({ ...prev, [product._pid]: true }));
+    try {
+      const res = await axios.patch(`${API_URL}/production-material/${entry.id}/product/${product._pid}/report`, {
+        report: finalReport
+      });
+      const updatedRow = { ...res.data, id: res.data._id };
+      setEntries(prev => prev.map(e => e.id === entry.id ? updatedRow : e));
+
+      setDrafts(prev => {
+        const next = { ...prev };
+        if (next[product._pid]) {
+          next[product._pid] = { ...next[product._pid], hasChanges: false };
+        }
+        return next;
+      });
+
+      if (showToastMsg) toast("Report saved successfully!", "success");
+      return true;
+    } catch (err) {
+      if (showToastMsg) toast(err.response?.data?.message || "Failed to save report.", "error");
+      return false;
+    } finally {
+      setSavingStates(prev => ({ ...prev, [product._pid]: false }));
+    }
+  };
+
+  const handleBulkSave = async () => {
+    const productsToSave = [];
+    for (const item of allProducts) {
+      const { entry, product } = item;
+      const draft = drafts[product._pid];
+      if (draft && draft.hasChanges) {
+        productsToSave.push({ entry, product, draft });
+      }
+    }
+
+    if (productsToSave.length === 0) {
+      return toast("No changes to save.", "warning");
+    }
+
+    setIsBulkSaving(true);
+    try {
+      const results = [];
+      for (const item of productsToSave) {
+        const res = await saveRow(item.entry, item.product, item.draft, false);
+        results.push(res);
+      }
+      const allSuccess = results.every(res => res);
+      if (allSuccess) {
+        toast(`Bulk save completed! ${productsToSave.length} items updated.`, "success");
+      } else {
+        toast("Some items failed validation or saving.", "error");
+      }
+    } catch (err) {
+      toast("An error occurred during bulk save.", "error");
+    } finally {
+      setIsBulkSaving(false);
+    }
+  };
+
+  const hasAnyDraftChanges = useMemo(() => {
+    return Object.values(drafts).some(d => d && d.hasChanges);
+  }, [drafts]);
+
+  // Columns definition for the Spreadsheet Table
+  const columns = [
+    { key: "sno", label: "S. No", align: "text-center", width: "w-[3.5vw]" },
+    { key: "date", label: "Date", align: "text-left", minW: "min-w-[7vw]" },
+    { key: "registration", label: "Registration", align: "text-left", minW: "min-w-[9.5vw]" },
+    { key: "customer", label: "Customer", align: "text-left", minW: "min-w-[12vw]" },
+    { key: "product", label: "Product Manifest", align: "text-left", minW: "min-w-[14vw]" },
+    { key: "workDoneBy", label: "Work Done By", align: "text-left", minW: "min-w-[10vw]" },
+    { key: "fourMCategory", label: "4M Category *", align: "text-left", minW: "min-w-[10vw]" },
+    { key: "rootCause", label: "Root Cause *", align: "text-left", minW: "min-w-[12vw]" },
+    { key: "correctiveAction", label: "Corrective Action *", align: "text-left", minW: "min-w-[12vw]" },
+    { key: "materialChange", label: "Material Change", align: "text-left", minW: "min-w-[11vw]" },
+    { key: "delayTime", label: "Delay Time", align: "text-center", minW: "min-w-[7vw]" },
+    { key: "materialCost", label: "Material Cost", align: "text-right", minW: "min-w-[8vw]" },
+    { key: "status", label: "Status *", align: "text-center", minW: "min-w-[9.5vw]" },
+    { key: "completedDate", label: "Completed Date", align: "text-left", minW: "min-w-[9vw]" },
+    { key: "validationStatus", label: "Validation", align: "text-center", minW: "min-w-[9.5vw]" },
+    { key: "verificationStatus", label: "Verification", align: "text-center", minW: "min-w-[9.5vw]" },
+    { key: "closingDate", label: "Closing Date", align: "text-left", minW: "min-w-[9vw]" },
+    { key: "info", label: "Info", align: "text-center", width: "w-[4vw]" },
+    { key: "action", label: "Action", align: "text-center", minW: "min-w-[7.5vw]" },
+  ];
 
   return (
     <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
       <div className="flex flex-col gap-[0.55vw] h-full flex-1 min-h-0">
-        {/* ── 1. Top Level Scoping Toolbar: Soft Pill Search, Date Range, Clear & Page navigation ── */}
+        
+        {/* ── 1. Top Level Scoping Toolbar: Search & Date Range ── */}
         <div className="flex items-center justify-between bg-white px-[0.7vw] py-[0.4vw] rounded-full shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border-[1.5px] border-slate-400 status-pills-track gap-[0.7vw] shrink-0">
-          {/* Soft Pill Search Box */}
           <div className="relative w-[20vw]">
             <Search className="absolute left-[0.9vw] top-1/2 -translate-y-1/2 text-slate-400 w-[0.9vw] h-[0.9vw]" />
             <input
@@ -892,9 +626,7 @@ export default function ProductionMaterialResponse() {
             )}
           </div>
 
-          {/* Right cluster: Date Range, Clear, Rows Per Page */}
           <div className="flex items-center gap-[0.6vw] flex-shrink-0">
-            {/* Unified Date Range Capsule */}
             <div className="flex items-center gap-[0.35vw] date-range-capsule border border-slate-300 rounded-full h-[2.2vw] px-[0.85vw] bg-white text-[0.8vw] shadow-2xs hover:border-slate-300 transition-all">
               <span className="text-slate-500 font-medium text-[0.79vw]">From</span>
               <input
@@ -940,51 +672,22 @@ export default function ProductionMaterialResponse() {
               </button>
             </div>
 
-            {/* Reset / Clear Button */}
             {(dateFrom || dateTo) && (
               <button
                 type="button"
-                onClick={() => {
-                  setDateFrom("");
-                  setDateTo("");
-                }}
+                onClick={() => { setDateFrom(""); setDateTo(""); }}
                 className="flex items-center gap-[0.3vw] h-[2.2vw] px-[0.8vw] rounded-full text-[0.79vw] font-semibold text-rose-600 bg-rose-50/80 hover:bg-rose-100 hover:text-rose-700 border-[1.5px] border-rose-400 transition-all cursor-pointer shadow-2xs"
-                title="Clear date filter"
               >
                 <RotateCcw className="w-[0.75vw] h-[0.75vw]" />
-                <span>Clear</span>
+                <span>Reset</span>
               </button>
-            )}
-
-            {/* Quick Pagination Pill */}
-            {allProducts.length > 0 && (
-              <div className="flex items-center gap-[0.4vw] bg-slate-100/70 border-[1.5px] border-slate-400 status-pills-track h-[2.2vw] px-[0.6vw] rounded-full">
-                <button 
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className="w-[1.4vw] h-[1.4vw] flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-                >
-                  <ChevronLeft className="w-[0.8vw] h-[0.8vw]" />
-                </button>
-                <span className="text-[0.79vw] font-semibold text-slate-700 px-[0.2vw]">
-                  {currentPage} <span className="text-slate-400 font-medium">/</span> {totalPages || 1}
-                </span>
-                <button 
-                  disabled={currentPage >= totalPages}
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className="w-[1.4vw] h-[1.4vw] flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-                >
-                  <ChevronRight className="w-[0.8vw] h-[0.8vw]" />
-                </button>
-              </div>
             )}
           </div>
         </div>
 
-        {/* ── Table Card with Integrated Header Bar & Filter Tabs ── */}
-        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
-          {/* Integrated Header: Segment Track on left, Result count on right */}
-          <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+        {/* ── 2. Table Card with Integrated Header Bar & Filter Tabs ── */}
+        <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+          <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
             <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
               {STATUS_CHIPS.map(({ label }) => {
                 const isActive = filterStatus === label;
@@ -1000,16 +703,10 @@ export default function ProductionMaterialResponse() {
                         : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
                     }`}
                   >
-                    <span className={isActive ? "text-white" : "text-slate-700"}>
-                      {label}
-                    </span>
-                    <span
-                      className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
-                        isActive
-                          ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
-                          : "text-slate-400"
-                      }`}
-                    >
+                    <span className={isActive ? "text-white" : "text-slate-700"}>{label}</span>
+                    <span className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
+                      isActive ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full" : "text-slate-400"
+                    }`}>
                       {count}
                     </span>
                   </button>
@@ -1017,7 +714,6 @@ export default function ProductionMaterialResponse() {
               })}
             </div>
 
-            {/* Scoped Result Count */}
             <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
               <span>Showing</span>
               <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
@@ -1027,33 +723,37 @@ export default function ProductionMaterialResponse() {
             </div>
           </div>
 
-          {/* Main Table */}
-          <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
-            <table className="w-full text-left border-collapse">
-              <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
+          {/* Main Spreadsheet Table */}
+          <div ref={tableContainerRef} className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+            <table className="w-full text-left border-collapse min-w-max">
+              <thead className="sticky top-0 bg-[#E9EDF7] z-30 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
                 <tr>
-                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[3.5vw]">S.No</th>
-                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[7vw]">Date</th>
-                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[10vw]">Registration</th>
-                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[12vw]">Customer</th>
-                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[14vw]">Product</th>
-                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[4vw]">Qty</th>
-                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[9vw]">Status</th>
-                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[4.5vw]">Info</th>
-                  <th className="px-[0.7vw] py-[0.6vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[8vw]">Action</th>
+                  {columns.map((col) => {
+                    const isAction = col.key === "action";
+                    return (
+                      <th
+                        key={col.key}
+                        className={`${col.width || col.minW || ""} ${col.align} py-[0.7vw] px-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-[0.79vw] whitespace-nowrap border-r border-slate-300 sticky ${
+                          isAction ? "right-0 z-40 bg-[#E9EDF7] shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]" : "top-0 z-30 bg-[#E9EDF7]"
+                        }`}
+                      >
+                        {col.label}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="py-[6vw] text-center text-slate-500">
+                    <td colSpan={columns.length} className="py-[6vw] text-center text-slate-500">
                       <div className="w-[2.2vw] h-[2.2vw] border-[0.25vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin mx-auto mb-[0.6vw]" />
                       <span className="font-semibold text-[0.85vw] text-slate-600">Loading response items...</span>
                     </td>
                   </tr>
                 ) : allProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="py-[6vw] text-center text-slate-400">
+                    <td colSpan={columns.length} className="py-[6vw] text-center text-slate-400">
                       <AlertCircle className="w-[2.2vw] h-[2.2vw] text-slate-300 mx-auto mb-[0.5vw]" />
                       <span className="font-medium text-[0.85vw] text-slate-500">No records found for the selected filter.</span>
                     </td>
@@ -1074,19 +774,22 @@ export default function ProductionMaterialResponse() {
                       const status = isAdminReturned ? "Admin Returned" : rawStatus;
                       const cfg = STATUS_CONFIG[status] || STATUS_CONFIG["Open"];
                       const isExpanded = !!expandedCustomerDetails[entry.customerName];
-                      
+                      const draft = getDraft(product._pid, product);
+                      const hc = (field, val) => handleDraftChange(product._pid, product, field, val);
+                      const perms = getRecordPermissions(entry, product);
+
                       return (
                         <React.Fragment key={`${entry.id}-${product._pid}`}>
+                          {/* Customer Separator Header Row */}
                           {isNewCustomer && (
                             <tr className="bg-slate-50/80 border-y border-slate-300">
-                              <td colSpan={9} className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[2.2vw] z-20 shadow-2xs">
+                              <td colSpan={columns.length} className="p-0 border-b border-slate-300 bg-slate-50/90 sticky top-[2.4vw] z-20 shadow-2xs">
                                 <div className="flex items-center gap-[0.6vw] sticky left-0 w-fit px-[1vw] py-[0.5vw] bg-slate-50 z-10">
                                   <div className="w-[0.35vw] h-[1.1vw] bg-slate-400 rounded-full" />
                                   <span className="font-semibold text-slate-800 text-[0.87vw] tracking-wide">
                                     {entry.customerName}
                                   </span>
 
-                                  {/* Toggle button to reveal / hide customer details */}
                                   <button
                                     type="button"
                                     onClick={(e) => toggleCustomerDetails(entry.customerName, e)}
@@ -1099,7 +802,6 @@ export default function ProductionMaterialResponse() {
                                     />
                                   </button>
 
-                                  {/* Customer metadata badges: hidden by default, revealed on clicking chevron */}
                                   {isExpanded && (
                                     <div className="flex items-center gap-[0.4vw] flex-wrap animate-in fade-in duration-200">
                                       {entry.customerCode && (
@@ -1129,10 +831,10 @@ export default function ProductionMaterialResponse() {
                             </tr>
                           )}
 
-                          {/* Admin Returned Banner Row if returned */}
+                          {/* Admin Returned Notification Banner */}
                           {isAdminReturned && (
                             <tr className="bg-amber-50/90 border-t-2 border-b border-amber-300">
-                              <td colSpan={9} className="p-0 border-b border-amber-300 bg-amber-50">
+                              <td colSpan={columns.length} className="p-0 border-b border-amber-300 bg-amber-50">
                                 <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.45vw] flex-wrap">
                                   <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.79vw] font-semibold shadow-2xs">
                                     <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
@@ -1148,57 +850,286 @@ export default function ProductionMaterialResponse() {
                                     </span>
                                   )}
                                   <span className="text-[0.77vw] text-amber-800 italic ml-[0.3vw]">
-                                    Please edit and click Update Report to re-submit to Admin
+                                    Please edit cells and click Save to re-submit to Admin
                                   </span>
                                 </div>
                               </td>
                             </tr>
                           )}
 
+                          {/* Data Row */}
                           <tr className="hover:bg-blue-50/30 transition-colors bg-white">
-                            {/* SNo */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 font-bold text-slate-800 text-[0.81vw]">
-                              {((currentPage - 1) * itemsPerPage) + idx + 1}
+                            {/* 1. S.No */}
+                            <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300 bg-white sticky left-0 z-10 shadow-[4px_0_6px_-1px_rgba(0,0,0,0.05)]">
+                              <span className="inline-flex items-center justify-center w-[1.5vw] h-[1.5vw] rounded-full bg-gray-100 text-[0.73vw] font-semibold text-gray-600">
+                                {((currentPage - 1) * itemsPerPage) + idx + 1}
+                              </span>
                             </td>
 
-                            {/* Date */}
-                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300 text-[0.81vw] text-slate-800 whitespace-nowrap font-medium">
-                              {fmtDate(entry.date)}
+                            {/* 2. Date */}
+                            <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
+                              <span className="text-[0.83vw] font-medium text-slate-800 whitespace-nowrap">
+                                {fmtDate(entry.date)}
+                              </span>
                             </td>
 
-                            {/* Registration */}
-                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.81vw] font-mono font-medium text-black">{entry.refNoInternal}</div>
-                              <div className="text-[0.73vw] font-medium text-blue-700 mt-[0.05vw]">JO: {entry.jobOrderNo || "—"}</div>
+                            {/* 3. Registration */}
+                            <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
+                              <div className="text-[0.81vw] font-mono font-medium text-black whitespace-nowrap">{entry.refNoInternal}</div>
+                              <div className="text-[0.73vw] font-medium text-blue-700 mt-[0.05vw] whitespace-nowrap">JO: {entry.jobOrderNo || "—"}</div>
                             </td>
 
-                            {/* Customer */}
-                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
+                            {/* 4. Customer */}
+                            <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
                               <div className="text-[0.81vw] font-medium text-black truncate max-w-[12vw]">{entry.customerName}</div>
                               <div className="text-[0.73vw] font-mono text-slate-700 font-medium">{entry.customerCode || "—"}</div>
                             </td>
 
-                            {/* Product */}
-                            <td className="px-[0.7vw] py-[0.6vw] border-r border-b border-slate-300">
-                              <div className="text-[0.81vw] font-medium text-black leading-tight">{product.productDescription}</div>
-                              <div className="text-[0.73vw] text-slate-700 mt-[0.1vw] font-mono font-medium">S/N: {product.serialNumber || product.identification || "—"}</div>
+                            {/* 5. Product Manifest */}
+                            <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
+                              <div className="text-[0.81vw] font-medium text-black leading-tight max-w-[14vw] break-words">{product.productDescription}</div>
+                              <div className="text-[0.71vw] text-slate-700 mt-[0.1vw] font-mono flex items-center gap-[0.3vw] flex-wrap">
+                                <span>SN: <strong className="text-slate-900">{product.serialNumber || product.identification || "—"}</strong></span>
+                                <span>•</span>
+                                <span>Stage: <strong className="text-slate-900">{product.stage || "—"}</strong></span>
+                                <span>•</span>
+                                <span>NC: <strong className="text-slate-900">{product.ncType || "—"}</strong></span>
+                              </div>
                             </td>
 
-                            {/* Qty */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 text-[0.81vw] font-medium text-black">
-                              {product.qty || "1"}
+                            {/* 6. Work Done By */}
+                            <td
+                              className={getCellClass(idx, "workDoneBy")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "workDoneBy", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "workDoneBy")}
+                            >
+                              <div className="min-w-[9.5vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  usePortal={true}
+                                  placeholder="Select employee"
+                                  searchable={true}
+                                  value={draft.workDoneBy}
+                                  onChange={(val) => {
+                                    const opt = employeeOptions.find(e => e.value === val);
+                                    hc("workDoneBy", val);
+                                    hc("workDoneByName", opt?.label || "");
+                                  }}
+                                  options={employeeOptions}
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                />
+                              </div>
+                              {renderFillHandle(idx, "workDoneBy")}
                             </td>
 
-                            {/* Status */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300 whitespace-nowrap">
-                              <span className={`inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.15vw] rounded-full border text-[0.75vw] font-medium ${cfg.bg} ${cfg.border} ${cfg.text}`}>
-                                <cfg.icon className="w-[0.75vw] h-[0.75vw]" />
-                                {status}
-                              </span>
+                            {/* 7. 4M Category */}
+                            <td
+                              className={getCellClass(idx, "fourMCategory")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "fourMCategory", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "fourMCategory")}
+                            >
+                              <div className="min-w-[9vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  usePortal={true}
+                                  placeholder="Select"
+                                  value={draft.fourMCategory}
+                                  onChange={(val) => hc("fourMCategory", val)}
+                                  options={fourMOptions}
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-medium text-slate-800"
+                                />
+                              </div>
+                              {renderFillHandle(idx, "fourMCategory")}
                             </td>
 
-                            {/* Info */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-r border-b border-slate-300">
+                            {/* 8. Root Cause */}
+                            <td
+                              className={getCellClass(idx, "rootCause")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "rootCause", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "rootCause")}
+                            >
+                              <input
+                                type="text"
+                                value={draft.rootCause}
+                                onChange={(e) => hc("rootCause", e.target.value)}
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[11vw]"
+                                placeholder="Root Cause..."
+                              />
+                              {renderFillHandle(idx, "rootCause")}
+                            </td>
+
+                            {/* 9. Corrective Action */}
+                            <td
+                              className={getCellClass(idx, "correctiveAction")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "correctiveAction", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "correctiveAction")}
+                            >
+                              <input
+                                type="text"
+                                value={draft.correctiveActionDetails}
+                                onChange={(e) => hc("correctiveActionDetails", e.target.value)}
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[11vw]"
+                                placeholder="Corrective Action..."
+                              />
+                              {renderFillHandle(idx, "correctiveAction")}
+                            </td>
+
+                            {/* 10. Material Change */}
+                            <td
+                              className={getCellClass(idx, "materialChange")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "materialChange", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "materialChange")}
+                            >
+                              <input
+                                type="text"
+                                value={draft.materialChangeDetails}
+                                onChange={(e) => hc("materialChangeDetails", e.target.value)}
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs min-w-[10vw]"
+                                placeholder="Material Changes..."
+                              />
+                              {renderFillHandle(idx, "materialChange")}
+                            </td>
+
+                            {/* 11. Delay Time */}
+                            <td
+                              className={getCellClass(idx, "delayTime")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "delayTime", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "delayTime")}
+                            >
+                              <input
+                                type="text"
+                                value={draft.delayTime}
+                                onChange={(e) => hc("delayTime", e.target.value)}
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-center min-w-[6vw]"
+                                placeholder="e.g. 15 mins"
+                              />
+                              {renderFillHandle(idx, "delayTime")}
+                            </td>
+
+                            {/* 12. Material Cost */}
+                            <td
+                              className={getCellClass(idx, "materialCost")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "materialCost", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "materialCost")}
+                            >
+                              <input
+                                type="text"
+                                value={draft.materialCost}
+                                onChange={(e) => hc("materialCost", e.target.value)}
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium placeholder:text-slate-400 shadow-2xs text-right min-w-[7vw]"
+                                placeholder="Cost..."
+                              />
+                              {renderFillHandle(idx, "materialCost")}
+                            </td>
+
+                            {/* 13. Status */}
+                            <td
+                              className={getCellClass(idx, "status")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "status", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "status")}
+                            >
+                              <div className="min-w-[9vw]">
+                                <CustomDropdown
+                                  size="sm"
+                                  usePortal={true}
+                                  placeholder="Select"
+                                  value={draft.status}
+                                  onChange={(val) => hc("status", val)}
+                                  options={STATUS_OPTIONS.map(opt => ({ value: opt, label: opt }))}
+                                  triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
+                                />
+                              </div>
+                              {renderFillHandle(idx, "status")}
+                            </td>
+
+                            {/* 14. Completed Date */}
+                            <td
+                              className={getCellClass(idx, "completedDate")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "completedDate", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "completedDate")}
+                            >
+                              {draft.status === "Completed" ? (
+                                <input
+                                  type="date"
+                                  value={toInputDate(draft.completedDate)}
+                                  onChange={(e) => hc("completedDate", e.target.value)}
+                                  className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium shadow-2xs min-w-[8vw]"
+                                />
+                              ) : (
+                                <span className="text-slate-400 text-[0.8vw] select-none text-center block">—</span>
+                              )}
+                              {renderFillHandle(idx, "completedDate")}
+                            </td>
+
+                            {/* 15. Validation Status */}
+                            <td
+                              className={getCellClass(idx, "validationStatus")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "validationStatus", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "validationStatus")}
+                            >
+                              {perms.canValidate ? (
+                                <div className="min-w-[9vw]">
+                                  <CustomDropdown
+                                    size="sm"
+                                    usePortal={true}
+                                    placeholder="Validation"
+                                    value={draft.validationStatus}
+                                    onChange={(val) => hc("validationStatus", val)}
+                                    options={VALIDATION_OPTIONS.map(opt => ({ value: opt, label: opt }))}
+                                    triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
+                                  />
+                                </div>
+                              ) : (
+                                <span className="text-[0.77vw] font-medium text-slate-600 bg-slate-100 px-[0.5vw] py-[0.15vw] rounded border border-slate-200">
+                                  {draft.validationStatus || "Pending"}
+                                </span>
+                              )}
+                              {renderFillHandle(idx, "validationStatus")}
+                            </td>
+
+                            {/* 16. Verification Status */}
+                            <td
+                              className={getCellClass(idx, "verificationStatus")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "verificationStatus", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "verificationStatus")}
+                            >
+                              {perms.canVerify ? (
+                                <div className="min-w-[9vw]">
+                                  <CustomDropdown
+                                    size="sm"
+                                    usePortal={true}
+                                    placeholder="Verification"
+                                    value={draft.verificationStatus}
+                                    onChange={(val) => hc("verificationStatus", val)}
+                                    options={VERIFICATION_OPTIONS.map(opt => ({ value: opt, label: opt }))}
+                                    triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
+                                  />
+                                </div>
+                              ) : (
+                                <span className="text-[0.77vw] font-medium text-slate-600 bg-slate-100 px-[0.5vw] py-[0.15vw] rounded border border-slate-200">
+                                  {draft.verificationStatus || "Pending"}
+                                </span>
+                              )}
+                              {renderFillHandle(idx, "verificationStatus")}
+                            </td>
+
+                            {/* 17. Closing Date */}
+                            <td
+                              className={getCellClass(idx, "closingDate")}
+                              onMouseDown={(e) => handleCellMouseDown(idx, "closingDate", e)}
+                              onMouseEnter={() => handleCellMouseEnter(idx, "closingDate")}
+                            >
+                              <input
+                                type="date"
+                                value={toInputDate(draft.closingDate)}
+                                onChange={(e) => hc("closingDate", e.target.value)}
+                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium shadow-2xs min-w-[8vw]"
+                              />
+                              {renderFillHandle(idx, "closingDate")}
+                            </td>
+
+                            {/* 18. Info View Button */}
+                            <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
                               <button 
                                 onClick={() => setInfoSelected({ entry, product })}
                                 className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer inline-flex items-center justify-center"
@@ -1208,14 +1139,30 @@ export default function ProductionMaterialResponse() {
                               </button>
                             </td>
 
-                            {/* Action */}
-                            <td className="px-[0.7vw] py-[0.6vw] text-center border-b border-slate-300 sticky right-0 bg-white z-10 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)]">
+                            {/* 19. Action Save Button */}
+                            <td className="py-[0.65vw] px-[0.7vw] text-center border-b border-slate-300 sticky right-0 bg-white z-20 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                               <button
-                                onClick={() => setSelected({ entry, product })}
-                                className="cursor-pointer inline-flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2vw] rounded-full text-[0.77vw] transition-all shadow-2xs active:scale-95"
+                                onClick={() => saveRow(entry, product, draft)}
+                                disabled={!draft?.hasChanges || savingStates[product._pid]}
+                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold transition-all ${
+                                  savingStates[product._pid]
+                                    ? "bg-blue-400 text-white cursor-not-allowed"
+                                    : draft?.hasChanges
+                                      ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
+                                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                }`}
                               >
-                                <Edit3 className="w-[0.75vw] h-[0.75vw]" />
-                                <span>Update Report</span>
+                                {savingStates[product._pid] ? (
+                                  <>
+                                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                    <span>Saving...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Save className="w-[0.75vw] h-[0.75vw]" />
+                                    <span>Save</span>
+                                  </>
+                                )}
                               </button>
                             </td>
                           </tr>
@@ -1225,12 +1172,12 @@ export default function ProductionMaterialResponse() {
                   })()
                 )}
               </tbody>
-              </table>
-            </div>
+            </table>
+          </div>
 
-          {/* Table Pagination Footer */}
+          {/* Table Pagination & Bulk Save Footer */}
           {allProducts.length > 0 && (
-            <div className="border-t border-slate-200 px-[1vw] py-[0.55vw] bg-slate-50/70 flex justify-between items-center rounded-b-[0.8vw] shrink-0">
+            <div className="border-t border-slate-300 px-[1vw] py-[0.55vw] bg-slate-50/70 flex justify-between items-center rounded-b-[0.8vw] shrink-0">
               <div className="flex items-center gap-[1.2vw]">
                 <div className="text-[0.79vw] font-medium text-slate-500">
                   Showing <strong className="text-slate-800">{paginatedProducts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</strong> to <strong className="text-slate-800">{Math.min(currentPage * itemsPerPage, allProducts.length)}</strong> of <strong className="text-slate-800">{allProducts.length}</strong> assigned products
@@ -1249,94 +1196,77 @@ export default function ProductionMaterialResponse() {
                       size="sm"
                       usePortal={true}
                       placement="top"
-                      triggerClassName="!h-[1.8vw] !rounded-full !px-[0.5vw] text-[0.77vw] font-semibold text-slate-700 border-slate-200 bg-white shadow-2xs"
+                      triggerClassName="!h-[1.8vw] !rounded-full !px-[0.5vw] text-[0.77vw] font-semibold text-slate-700 border-slate-300 bg-white shadow-2xs"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Pagination Controls */}
-              <div className="flex items-center gap-[0.35vw]">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(1)}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.75vw]"
-                  title="First Page"
-                >
-                  «
-                </button>
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
-                >
-                  <ChevronDown className="w-[0.85vw] h-[0.85vw] rotate-90" />
-                </button>
-                <div className="flex items-center gap-[0.2vw] px-[0.3vw]">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter(pNum => pNum === 1 || pNum === totalPages || Math.abs(pNum - currentPage) <= 1)
-                    .map((pNum, pIdx, arr) => {
-                      const prev = arr[pIdx - 1];
-                      return (
-                        <React.Fragment key={pNum}>
-                          {prev && pNum - prev > 1 && <span className="text-[0.75vw] text-slate-400 px-[0.1vw]">...</span>}
-                          <button
-                            onClick={() => setCurrentPage(pNum)}
-                            className={`w-[1.8vw] h-[1.8vw] flex items-center justify-center rounded-full text-[0.79vw] font-semibold cursor-pointer transition-all ${currentPage === pNum ? "bg-blue-600 text-white shadow-xs" : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"}`}
-                          >
-                            {pNum}
-                          </button>
-                        </React.Fragment>
-                      );
-                    })}
+              <div className="flex items-center gap-[1vw]">
+                <div className="flex items-center gap-[0.4vw]">
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    className="w-[1.8vw] h-[1.8vw] rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer bg-white"
+                  >
+                    <ChevronLeft className="w-[0.9vw] h-[0.9vw]" />
+                  </button>
+                  <span className="text-[0.77vw] font-medium text-slate-600 px-[0.4vw]">
+                    Page {currentPage} of {totalPages || 1}
+                  </span>
+                  <button
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className="w-[1.8vw] h-[1.8vw] rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer bg-white"
+                  >
+                    <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+                  </button>
                 </div>
+
+                {/* Bulk Save Button */}
                 <button
-                  disabled={currentPage === totalPages || totalPages === 0}
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all"
+                  type="button"
+                  onClick={handleBulkSave}
+                  disabled={isBulkSaving || !hasAnyDraftChanges}
+                  className={`flex items-center gap-[0.5vw] px-[1vw] py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold transition-all ${
+                    isBulkSaving
+                      ? "bg-emerald-400 text-white cursor-not-allowed"
+                      : hasAnyDraftChanges
+                        ? "bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-md shadow-emerald-900/20"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                  }`}
                 >
-                  <ChevronUp className="w-[0.85vw] h-[0.85vw] rotate-90" />
-                </button>
-                <button
-                  disabled={currentPage === totalPages || totalPages === 0}
-                  onClick={() => setCurrentPage(totalPages)}
-                  className="w-[1.8vw] h-[1.8vw] flex items-center justify-center border border-slate-200 rounded-full hover:bg-white disabled:opacity-40 bg-white shadow-2xs cursor-pointer text-slate-600 transition-all font-bold text-[0.75vw]"
-                  title="Last Page"
-                >
-                  »
+                  {isBulkSaving ? (
+                    <>
+                      <Loader2 className="w-[0.9vw] h-[0.9vw] animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-[0.9vw] h-[0.9vw]" />
+                      <span>Bulk Save</span>
+                      {hasAnyDraftChanges && (
+                        <span className="ml-[0.2vw] px-[0.35vw] py-[0.05vw] bg-white/20 text-white rounded-full text-[0.7vw] font-bold">
+                          {Object.values(drafts).filter(d => d && d.hasChanges).length}
+                        </span>
+                      )}
+                    </>
+                  )}
                 </button>
               </div>
             </div>
           )}
         </div>
-
-        {/* Modal: Update Technical Report */}
-        <AnimatePresence>
-          {selected && (
-            <ProductionResponseModal
-              entry={selected.entry}
-              product={selected.product}
-              employees={employees}
-              fourMCategories={fourMCategories}
-              caeHistory={caeHistory}
-              currentUser={currentUser}
-              onSave={handleSaveReport}
-              onClose={() => setSelected(null)}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* Modal: View Details */}
-        <AnimatePresence>
-          {infoSelected && (
-            <ProductionInfoModal
-              entry={infoSelected.entry}
-              product={infoSelected.product}
-              onClose={() => setInfoSelected(null)}
-            />
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Production Details Modal (Audit timeline, products, manifest) */}
+      {infoSelected && (
+        <ProductionDetailsModal
+          entry={infoSelected.entry}
+          product={infoSelected.product}
+          onClose={() => setInfoSelected(null)}
+        />
+      )}
     </div>
   );
 }

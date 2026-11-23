@@ -154,18 +154,21 @@ exports.getAllInwards = async (req, res) => {
     const inwards = await ProductionMaterial.find(filter).lean().sort({ createdAt: -1 });
 
     // Prune products according to the exact business rules:
-    // 1. Internal: Show only if registered/created by this user (inw.creatorUserId === uid || p.inspectedBy === uid).
-    // 2. External:
-    //    - If registered by user: show with full view (creatorUserId === uid)
-    //    - If raised to user: show (p.raisedTo === uid)
-    // 3. Field Return / Field Visit:
-    //    - If registered by user: show (creatorUserId === uid)
-    //    - If raised to user: show (p.raisedTo === uid)
-    // In addition, if user is assigned to a stage and not specifically raised/registered, they only see items matching their stage if not restricted by NC type rules.
+    // 1. A user can ONLY ever see products whose detection stage matches their assigned Detection Stage (assignedStage).
+    //    If a user belongs to stage "WS", they must NEVER see data from stage "SMD" (and vice versa).
+    // 2. Within their assigned stage:
+    //    - Internal: Show only if created/registered by this user (inw.creatorUserId === uid || p.inspectedBy === uid).
+    //    - External / Field Return / Field Visit:
+    //      Show only if created/registered by this user (isCreator) OR if raised/assigned to this user (isRaisedToMe).
     const prunedInwards = inwards.map(inw => {
       const isCreator = uid && (inw.creatorUserId === uid || inw.creatorName === req.query.userName);
 
       const matchingProds = (inw.products || []).filter(p => {
+        // Enforce stage isolation: user cannot see products from another detection stage
+        if (assignedStage && p.stage && p.stage !== assignedStage) {
+          return false;
+        }
+
         const nc = (p.ncType || 'Internal').trim();
         const isRaisedToMe = uid && (p.raisedTo === uid || p.assignedTo === uid);
         const isInspectedByMe = uid && (p.inspectedBy === uid);
@@ -176,11 +179,11 @@ exports.getAllInwards = async (req, res) => {
         } else if (nc === 'External' || nc === 'Field Return' || nc === 'Field Visit') {
           // External or Field Return/Visit:
           // Show if registered by user OR raised to user
-          return isCreator || isRaisedToMe || isInspectedByMe;
+          return isCreator || isRaisedToMe;
         }
 
         // Fallback for any other custom types:
-        return isCreator || isRaisedToMe || (assignedStage && p.stage === assignedStage);
+        return isCreator || isRaisedToMe;
       });
 
       return {
@@ -404,7 +407,19 @@ exports.updateProductReport = async (req, res) => {
 exports.updateFinalStatus = async (req, res) => {
   try {
     const { id, productId } = req.params;
-    const { finalStatus, finalStatusRemarks, finalStatusDate, finalStatusHistory, report } = req.body;
+    const {
+      finalStatus,
+      finalStatusRemarks,
+      finalStatusDate,
+      finalStatusHistory,
+      report,
+      verificationRemarks,
+      validationStatus,
+      validationRemarks,
+      validatedBy,
+      validatedByName,
+      validatedDate
+    } = req.body;
 
     const inward = await ProductionMaterial.findById(id);
     if (!inward) return res.status(404).json({ message: 'Inward not found' });
@@ -417,6 +432,12 @@ exports.updateFinalStatus = async (req, res) => {
     if (finalStatusDate !== undefined) product.finalStatusDate = finalStatusDate;
     if (finalStatusHistory !== undefined) product.finalStatusHistory = finalStatusHistory;
     if (report !== undefined) product.report = report;
+    if (verificationRemarks !== undefined) product.verificationRemarks = verificationRemarks;
+    if (validationStatus !== undefined) product.validationStatus = validationStatus;
+    if (validationRemarks !== undefined) product.validationRemarks = validationRemarks;
+    if (validatedBy !== undefined) product.validatedBy = validatedBy;
+    if (validatedByName !== undefined) product.validatedByName = validatedByName;
+    if (validatedDate !== undefined) product.validatedDate = validatedDate;
 
     inward.markModified('products');
     await inward.save();
