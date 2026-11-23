@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Package, Clock, User, CheckCircle, AlertCircle, X, Eye, Send,
   FileText, Calendar, Hash, Tag, Wrench,
@@ -196,24 +197,28 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, c
 
   const sp = (k, v) => setFormData(p => ({ ...p, [k]: v }));
 
-  // Verification & Validation permissions based on user requirements
-  // Internal NC: verification & validation both done by same person (creator/finder)
-  // External NC: verification done by raisedTo/preceding person; validation done by creator/finder
-  // Field Return: allocated by Quality/Inspection
-  const currentUserId = currentUser?.userId || currentUser?.id;
-  const isFinder = currentUserId && (
-    product.inspectedBy === currentUserId || 
-    entry.creatorUserId === currentUserId || 
-    (currentUser?.name && product.inspectedByName === currentUser.name)
-  );
-  const isRaisedTo = currentUserId && (
-    product.raisedTo === currentUserId || 
-    product.assignedTo === currentUserId || 
-    (currentUser?.name && (product.raisedToName === currentUser.name || product.assignedToName === currentUser.name))
-  );
+    // Verification & Validation permissions based on user requirements:
+    // Internal NC:
+    //   - Raised To is the same register person.
+    //   - Verification & validation can both be done by the register/assigned person.
+    // External & Field Return NC:
+    //   - Verification is done by the Raised To person (station where defect is raised/repaired).
+    //   - Validation is done by the Register person (finder / creator who initiated the NC).
+    const currentUserId = currentUser?.userId || currentUser?.id;
+    const isFinder = Boolean(currentUserId && (
+      product.inspectedBy === currentUserId || 
+      entry.creatorUserId === currentUserId || 
+      (currentUser?.name && product.inspectedByName === currentUser.name)
+    ));
+    const isRaisedTo = Boolean(currentUserId && (
+      product.raisedTo === currentUserId || 
+      product.assignedTo === currentUserId || 
+      (currentUser?.name && (product.raisedToName === currentUser.name || product.assignedToName === currentUser.name))
+    ));
 
-  const canValidate = product.ncType === "Internal" ? isFinder || isRaisedTo : isFinder;
-  const canVerify = product.ncType === "Internal" ? isFinder || isRaisedTo : isRaisedTo;
+    const isExternalOrFieldReturn = product.ncType === "External" || product.ncType === "Field Return";
+    const canValidate = isExternalOrFieldReturn ? isFinder : (isFinder || isRaisedTo);
+    const canVerify = isExternalOrFieldReturn ? isRaisedTo : (isFinder || isRaisedTo);
 
   const handleSave = () => {
     if (!formData.rootCause) return toast("Root Cause is mandatory", "error");
@@ -422,7 +427,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, c
                     <label className="text-[0.81vw] font-semibold text-slate-700">Validation Status</label>
                     {!canValidate && (
                       <span className="text-[0.68vw] text-amber-700 font-medium bg-amber-50 px-[0.35vw] py-[0.05vw] rounded border border-amber-200">
-                        {product.ncType === "External" ? "Only Finder can Validate" : "Locked"}
+                        {isExternalOrFieldReturn ? "Only Register Person can Validate" : "Locked"}
                       </span>
                     )}
                   </div>
@@ -446,7 +451,7 @@ const ProductionResponseModal = ({ entry, product, employees, fourMCategories, c
                     <label className="text-[0.81vw] font-semibold text-slate-700">Verification Status</label>
                     {!canVerify && (
                       <span className="text-[0.68vw] text-amber-700 font-medium bg-amber-50 px-[0.35vw] py-[0.05vw] rounded border border-amber-200">
-                        {product.ncType === "External" ? "Only Preceding Station can Verify" : "Locked"}
+                        {isExternalOrFieldReturn ? "Only Raised To Person can Verify" : "Locked"}
                       </span>
                     )}
                   </div>
@@ -619,6 +624,12 @@ const ProductionInfoModal = ({ entry, product, onClose }) => {
 
 export default function ProductionMaterialResponse() {
   const { toast } = useNotification();
+  const location = useLocation();
+
+  // Navigation state filters (e.g. from row chevron click)
+  const navState = location.state || {};
+  const initialFilterId = navState.filterProductId || navState.filterRefNo || navState.filterJobOrderNo || navState.filterSerialNumber || "";
+
   const [entries, setEntries] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [fourMCategories, setFourMCategories] = useState([]);
@@ -626,7 +637,7 @@ export default function ProductionMaterialResponse() {
   const [selected, setSelected] = useState(null);
   const [infoSelected, setInfoSelected] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(initialFilterId);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const fromDateRef = useRef(null);
@@ -644,10 +655,15 @@ export default function ProductionMaterialResponse() {
     }));
   };
 
-  // Reset pagination when filter changes
+  // Sync state if navigation state changes
   useEffect(() => {
-    setCurrentPage(1);
-  }, [filterStatus]);
+    if (location.state) {
+      const target = location.state.filterProductId || location.state.filterRefNo || location.state.filterJobOrderNo || location.state.filterSerialNumber || "";
+      if (target) {
+        setSearchTerm(target);
+      }
+    }
+  }, [location.state]);
 
   // Load User
   useEffect(() => {
@@ -674,8 +690,19 @@ export default function ProductionMaterialResponse() {
 
   const fetchData = async () => {
     try {
+      const rawUser = sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}";
+      const u = JSON.parse(rawUser);
+      const uid = u.userId || u._id || "";
+      const uRole = u.role || "";
+      const uDept = u.department || "";
+
+      const queryParams = new URLSearchParams();
+      if (uid) queryParams.append("userId", uid);
+      if (uRole) queryParams.append("role", uRole);
+      if (uDept) queryParams.append("department", uDept);
+
       const [matRes, empRes, catRes] = await Promise.all([
-        axios.get(`${API_URL}/production-material`),
+        axios.get(`${API_URL}/production-material?${queryParams.toString()}`),
         axios.get(`${API_URL}/auth/employees`),
         axios.get(`${API_URL}/master/four-m-categories`)
       ]);
@@ -725,33 +752,15 @@ export default function ProductionMaterialResponse() {
 
   const myProducts = useMemo(() => {
     const list = [];
-    const myId = currentUser?.userId || currentUser?.id;
-    const userRole = (currentUser?.role || "").toLowerCase();
-    const isQualityOrAdmin = userRole === "admin" || (currentUser?.department || "").toLowerCase().includes("quality");
-
+    // Since backend already enforces Detection Stage mapping, department boundaries,
+    // and overarching admin access, entries returned by backend are valid for this user.
     entries.forEach(entry => {
       entry.products?.forEach(product => {
-        // Quality / Admin see all products; other floor operators see items assigned, raised to them, or created by them
-        const isRelevant = isQualityOrAdmin || (
-          myId && (
-            product.assignedTo === myId ||
-            product.raisedTo === myId ||
-            product.inspectedBy === myId ||
-            entry.creatorUserId === myId ||
-            (currentUser?.name && (
-              product.assignedToName === currentUser.name ||
-              product.raisedToName === currentUser.name ||
-              product.inspectedByName === currentUser.name
-            ))
-          )
-        );
-        if (isRelevant) {
-          list.push({ entry, product });
-        }
+        list.push({ entry, product });
       });
     });
     return list;
-  }, [entries, currentUser]);
+  }, [entries]);
 
   const counts = useMemo(() => {
     const c = { 
@@ -837,6 +846,9 @@ export default function ProductionMaterialResponse() {
         (p.entry.customerCode || "").toLowerCase().includes(s) ||
         (p.entry.refNoInternal || "").toLowerCase().includes(s) ||
         (p.entry.jobOrderNo || "").toLowerCase().includes(s) ||
+        (p.product._pid || "").toLowerCase().includes(s) ||
+        (p.product._id || "").toLowerCase().includes(s) ||
+        (p.entry._id || "").toLowerCase().includes(s) ||
         (p.product.productDescription || "").toLowerCase().includes(s) ||
         (p.product.productCode || "").toLowerCase().includes(s) ||
         (p.product.serialNumber || "").toLowerCase().includes(s)
@@ -857,13 +869,6 @@ export default function ProductionMaterialResponse() {
     entries.forEach(e => e.products?.forEach(p => p.report?.cae && set.add(p.report.cae)));
     return Array.from(set);
   }, [entries]);
-
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center p-[10vw] gap-[1.5vw]">
-      <div className="w-[3vw] h-[3vw] border-[0.35vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-      <div className="text-blue-600 font-bold text-[1.05vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
-    </div>
-  );
 
   return (
     <div className="w-full h-full font-sans text-[0.9vw] flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -1027,29 +1032,38 @@ export default function ProductionMaterialResponse() {
           </div>
 
           {/* Main Table */}
-          {allProducts.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center p-[4vw] bg-white">
-              <AlertCircle className="w-[2.5vw] h-[2.5vw] text-slate-300 mb-[0.6vw]" />
-              <p className="text-[0.95vw] font-medium text-slate-500">No records found for the selected filter.</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
-              <table className="w-full text-left border-collapse">
-                <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
+          <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0 w-full">
+            <table className="w-full text-left border-collapse">
+              <thead className="sticky top-0 bg-[#E9EDF7] z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider">
+                <tr>
+                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[3.5vw]">S.No</th>
+                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[7vw]">Date</th>
+                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[10vw]">Registration</th>
+                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[12vw]">Customer</th>
+                  <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[14vw]">Product</th>
+                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[4vw]">Qty</th>
+                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[9vw]">Status</th>
+                  <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[4.5vw]">Info</th>
+                  <th className="px-[0.7vw] py-[0.6vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[8vw]">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {loading ? (
                   <tr>
-                    <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[3.5vw]">S.No</th>
-                    <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[7vw]">Date</th>
-                    <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[10vw]">Registration</th>
-                    <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[12vw]">Customer</th>
-                    <th className="px-[0.7vw] py-[0.6vw] border-r border-slate-300 whitespace-nowrap min-w-[14vw]">Product</th>
-                    <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[4vw]">Qty</th>
-                    <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap min-w-[9vw]">Status</th>
-                    <th className="px-[0.7vw] py-[0.6vw] text-center border-r border-slate-300 whitespace-nowrap w-[4.5vw]">Info</th>
-                    <th className="px-[0.7vw] py-[0.6vw] text-center sticky top-0 right-0 bg-[#E9EDF7] z-30 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.08)] whitespace-nowrap min-w-[8vw]">Action</th>
+                    <td colSpan={9} className="py-[6vw] text-center text-slate-500">
+                      <div className="w-[2.2vw] h-[2.2vw] border-[0.25vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin mx-auto mb-[0.6vw]" />
+                      <span className="font-semibold text-[0.85vw] text-slate-600">Loading response items...</span>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {(() => {
+                ) : allProducts.length === 0 ? (
+                  <tr>
+                    <td colSpan={9} className="py-[6vw] text-center text-slate-400">
+                      <AlertCircle className="w-[2.2vw] h-[2.2vw] text-slate-300 mx-auto mb-[0.5vw]" />
+                      <span className="font-medium text-[0.85vw] text-slate-500">No records found for the selected filter.</span>
+                    </td>
+                  </tr>
+                ) : (
+                  (() => {
                     let lastCustomer = null;
                     return paginatedProducts.map(({ entry, product }, idx) => {
                       const isNewCustomer = entry.customerName !== lastCustomer;
@@ -1212,11 +1226,11 @@ export default function ProductionMaterialResponse() {
                         </React.Fragment>
                       );
                     });
-                  })()}
-                </tbody>
+                  })()
+                )}
+              </tbody>
               </table>
             </div>
-          )}
 
           {/* Table Pagination Footer */}
           {allProducts.length > 0 && (

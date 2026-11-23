@@ -3,6 +3,12 @@ const router = express.Router();
 const productionMaterialController = require('./productionMaterial.controller');
 const upload = require('../../middlewares/upload.middleware');
 
+// Production Stage Mappings (Production Master)
+router.get('/stage-mappings', productionMaterialController.getStageMappings);
+router.post('/stage-mappings', productionMaterialController.saveStageMapping);
+router.delete('/stage-mappings/:id', productionMaterialController.deleteStageMapping);
+router.get('/my-stage', productionMaterialController.getMyStageMapping);
+
 router.get('/', productionMaterialController.getAllInwards);
 router.get('/:id', productionMaterialController.getInwardById);
 router.post('/', upload.any(), productionMaterialController.createInward);
@@ -14,3 +20,4 @@ router.patch('/:id/product/:productId/report', productionMaterialController.upda
 router.patch('/:id/product/:productId/final-status', productionMaterialController.updateFinalStatus);
 
 module.exports = router;
+

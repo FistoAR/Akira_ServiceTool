@@ -432,7 +432,7 @@ const ProductionEditableProductTable = ({
   return (
     <div 
       ref={tableContainerRef}
-      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] custom-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
+      className={`w-full overflow-x-auto overflow-y-auto max-h-[52vh] table-scrollbar border border-slate-300 rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] bg-white mb-[1vw] relative ${isFilling ? "select-none" : ""}`}
     >
       <table className="w-full border-collapse text-[0.85vw]">
         <thead className="bg-[#E9EDF7] sticky top-0 z-20 border-b border-slate-300 text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider shadow-sm">
@@ -520,7 +520,7 @@ const ProductionEditableProductTable = ({
                           
                           {activeDropdown?.id === prod._pid && (
                             <DropdownPortal targetRect={activeDropdown.rect}>
-                              <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto dropdown-container">
+                              <div className="bg-white border-2 border-blue-500 shadow-2xl rounded-[0.4vw] max-h-[15vw] overflow-y-auto table-scrollbar dropdown-container">
                                 {!customerCode ? (
                                     <div className="p-[1vw] text-center text-red-500 font-medium text-[0.85vw]">Please select a customer first.</div>
                                 ) : filteredProds.length > 0 ? (

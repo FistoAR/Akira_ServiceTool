@@ -329,6 +329,7 @@ exports.getModules = async (req, res) => {
     // ── Production Material ──
     // Admin Pages
     { id: "prodNC", label: "Production NC", group: "production-material", subGroup: "admin", desc: "File production non-conformance reports" },
+    { id: "productionMaster", label: "Production Master", group: "production-material", subGroup: "admin", desc: "Manage Detection Stages and employee stage assignments" },
     { id: "prodReports", label: "NC Reports", group: "production-material", subGroup: "admin", desc: "NC analytics and logs" },
     // User Pages
     { id: "productionMaterialResponse", label: "Production Response Workspace", group: "production-material", subGroup: "user", desc: "Production floor rework and unit verification" },

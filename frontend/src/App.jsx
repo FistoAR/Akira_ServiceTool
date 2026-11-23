@@ -15,6 +15,7 @@ import ServiceCall from "./modules/serviceCall/ServiceCall.jsx";
 import ServiceMaterial from "./modules/serviceMaterial/ServiceMaterial.jsx";
 import ProductionMaterial from "./modules/production/ProductionMaterial.jsx";
 import ProductionMaterialResponse from "./modules/production/productionMaterialResponse.jsx";
+import ProductionMaster from "./modules/production/ProductionMaster.jsx";
 import ServiceMaterialResponse from "./modules/serviceMaterial/serviceMaterialResponse.jsx";
 import Troubleshoot from "./modules/troubleshoot";
 import ServiceCallResponse from "./modules/serviceCall/serviceCallResponse";
@@ -177,6 +178,18 @@ function MainLayout() {
                 fallbackToResponse="/productionMaterialResponse"
               >
                 <ProductionMaterial />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="productionMaterial/master"
+            element={
+              <ProtectedRoute
+                requiredModules={["productionMaster", "prodNC"]}
+                requireManagement={true}
+                fallbackToResponse="/productionMaterialResponse"
+              >
+                <ProductionMaster />
               </ProtectedRoute>
             }
           />

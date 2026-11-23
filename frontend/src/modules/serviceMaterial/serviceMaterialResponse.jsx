@@ -204,7 +204,7 @@ const StatsBar = ({
   return (
     <div className="flex items-center justify-between gap-[1vw] w-full flex-wrap">
       {/* Sleek Connected Segmented Track for Status Tabs */}
-      <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto">
+      <div className="inline-flex items-center p-[0.2vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.15vw] max-w-full overflow-x-auto">
         {STATUS_CHIPS.map(({ label, dot }) => {
           const isActive = activeFilter === label;
           const count = counts[label] ?? 0;
@@ -214,7 +214,7 @@ const StatsBar = ({
               key={label}
               type="button"
               onClick={() => onFilterChange(label)}
-              className={`flex items-center gap-[0.45vw] px-[0.85vw] py-[0.32vw] rounded-full text-[0.8vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
+              className={`flex items-center gap-[0.35vw] px-[0.65vw] py-[0.25vw] rounded-full text-[0.78vw] font-medium cursor-pointer transition-all whitespace-nowrap ${
                 isActive
                   ? "bg-blue-600 text-white shadow-xs font-semibold"
                   : "text-slate-700 hover:text-slate-900 hover:bg-white/80"
@@ -225,9 +225,9 @@ const StatsBar = ({
                 {label}
               </span>
               <span
-                className={`text-[0.73vw] font-medium ml-[0.1vw] transition-all ${
+                className={`text-[0.72vw] font-medium ml-[0.1vw] transition-all ${
                   isActive
-                    ? "bg-white/20 text-white px-[0.38vw] py-[0.02vw] rounded-full"
+                    ? "bg-white/20 text-white px-[0.35vw] py-[0.02vw] rounded-full"
                     : "text-slate-400"
                 }`}
               >

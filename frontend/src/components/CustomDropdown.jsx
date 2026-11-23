@@ -513,7 +513,7 @@ const CustomDropdown = ({
           {/* Options List */}
           <div
             ref={optionsListRef}
-            className="overflow-y-auto space-y-[0.1vw] px-[0.3vw]"
+            className="overflow-y-auto table-scrollbar space-y-[0.1vw] px-[0.3vw]"
             style={{ maxHeight }}
           >
             {filteredOptions.length > 0 ? (

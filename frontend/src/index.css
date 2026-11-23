@@ -100,7 +100,8 @@ html {
 
 /* Custom scrollbar for sidebar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 3px;
+  width: 4px;
+  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -108,17 +109,47 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+/* Highly visible custom scrollbar for data tables and form grids */
+.table-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-scrollbar::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+  border: 1.5px solid #f1f5f9;
+}
+
+.table-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.table-scrollbar::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+.table-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: #94a3b8 #f1f5f9;
 }
 
 /* Tab Running Border Animation based on user request */

@@ -16,6 +16,7 @@ export function usePageTitle() {
     "/serviceMaterialResponse": "Service Material Response",
     "/serviceMaterial/reports": "Service Material Reports",
     "/productionMaterial": "Production Material",
+    "/productionMaterial/master": "Production Master",
     "/productionMaterialResponse": "Production Material Response",
     "/productionMaterial/reports": "Production Material Reports",
     "/masterPage": "Master Access",

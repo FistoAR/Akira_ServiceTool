@@ -1,10 +1,11 @@
 // @ts-nocheck
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   Search, X, Trash2, Save, ArrowLeft, Plus, User, Package, ChevronDown,
   ChevronUp, Eye, Target, ClipboardList, Edit3, Clock, History, FileText, AlertCircle, CheckCircle, Wrench,
-  Calendar, RotateCcw, UserPlus, PlusCircle, MinusCircle
+  Calendar, RotateCcw, UserPlus, PlusCircle, MinusCircle, ChevronRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
@@ -1999,7 +2000,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 </div>
                 <AnimatePresence>
                   {showCustDrop && filteredCustomers.length > 0 && (
-                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute z-[100] w-[25vw] left-0 top-full mt-[0.3vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-2xl max-h-[15vw] overflow-y-auto py-[0.3vw]">
+                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute z-[100] w-[25vw] left-0 top-full mt-[0.3vw] bg-white border border-slate-200 rounded-[0.6vw] shadow-2xl max-h-[15vw] overflow-y-auto table-scrollbar py-[0.3vw]">
                       {filteredCustomers.map((c, i) => (
                         <div 
                           key={c.code} 
@@ -2421,8 +2422,19 @@ export default function ProductionMaterial() {
 
   const fetchData = async () => {
     try {
+      const rawUser = sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}";
+      const u = JSON.parse(rawUser);
+      const uid = u.userId || u._id || "";
+      const uRole = u.role || "";
+      const uDept = u.department || "";
+
+      const queryParams = new URLSearchParams();
+      if (uid) queryParams.append("userId", uid);
+      if (uRole) queryParams.append("role", uRole);
+      if (uDept) queryParams.append("department", uDept);
+
       const [matRes, empRes, settingsRes] = await Promise.all([
-        axios.get(`${API_URL}/production-material`),
+        axios.get(`${API_URL}/production-material?${queryParams.toString()}`),
         axios.get(`${API_URL}/auth/employees`),
         axios.get(`${API_URL}/master/settings/production_master_data`).catch(() => ({ data: null }))
       ]);
@@ -2643,13 +2655,6 @@ export default function ProductionMaterial() {
     });
     return c;
   }, [data]);
-
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center p-[10vw] gap-[1.5vw]">
-      <div className="w-[3vw] h-[3vw] border-[0.35vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
-      <div className="text-blue-600 font-bold text-[1.05vw] uppercase tracking-widest animate-pulse">Loading Production Data...</div>
-    </div>
-  );
 
   if (view === "form") return (
     <InwardForm
@@ -2943,10 +2948,12 @@ export default function ProductionMaterial() {
                               : h === "History"
                               ? "5.5vw"
                               : h === "Actions"
-                              ? "6.5vw"
+                              ? "7.5vw"
                               : "8vw",
                         }}
-                        className="px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-[0.79vw] align-middle sticky top-0 z-40 bg-[#E9EDF7]"
+                        className={`px-[0.7vw] py-[0.7vw] font-bold text-slate-700 uppercase tracking-wider text-center border-b border-r last:border-r-0 border-slate-300 whitespace-nowrap text-[0.79vw] align-middle sticky top-0 bg-[#E9EDF7] ${
+                          h === "Actions" ? "right-0 z-50 shadow-[-4px_0_10px_-2px_rgba(0,0,0,0.08)]" : "z-40"
+                        }`}
                       >
                         {h}
                       </th>
@@ -2974,7 +2981,14 @@ export default function ProductionMaterial() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {groups.length > 0 ? (
+                  {loading ? (
+                    <tr>
+                      <td colSpan={20} className="py-[6vw] text-center text-slate-500">
+                        <div className="w-[2.2vw] h-[2.2vw] border-[0.25vw] border-blue-600/20 border-t-blue-600 rounded-full animate-spin mx-auto mb-[0.6vw]" />
+                        <span className="font-semibold text-[0.85vw] text-slate-600">Loading production records...</span>
+                      </td>
+                    </tr>
+                  ) : groups.length > 0 ? (
                     groups.flatMap(({ customerName, rows }) => {
                       const isCustomerCollapsed = collapsedCustomers[customerName];
                       const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 6;
@@ -3185,6 +3199,22 @@ export default function ProductionMaterial() {
                                         className="ml-auto flex items-center gap-[0.4vw]"
                                         onClick={(e) => e.stopPropagation()}
                                       >
+                                        {/* Navigate to Production Response filtered for this Job Order */}
+                                        <button
+                                          type="button"
+                                          onClick={() => navigate("/productionMaterialResponse", {
+                                            state: {
+                                              filterRefNo: row.refNoInternal || "",
+                                              filterJobOrderNo: row.jobOrderNo || "",
+                                              filterInwardId: row.id || row._id || ""
+                                            }
+                                          })}
+                                          title="Open in Production Response"
+                                          className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 rounded-full shadow-2xs cursor-pointer transition-all"
+                                        >
+                                          <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+                                        </button>
+
                                         <button
                                           type="button"
                                           onClick={() => setReportsRow(row)}
@@ -3385,11 +3415,29 @@ export default function ProductionMaterial() {
 
                                           {/* Actions */}
                                           <td
-                                            className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-b border-slate-300 ${
-                                              isSelected ? "bg-blue-50/70" : "bg-white"
+                                            className={`px-[0.7vw] py-[0.6vw] text-center align-middle border-b border-slate-300 sticky right-0 z-20 shadow-[-4px_0_10px_-2px_rgba(0,0,0,0.06)] ${
+                                              isSelected ? "bg-[#e0f2fe]" : "bg-white"
                                             }`}
                                           >
                                             <div className="flex items-center justify-center gap-[0.4vw]">
+                                              {/* Navigate to Production Response filtered for this specific Product / Item */}
+                                              <button
+                                                type="button"
+                                                onClick={() => navigate("/productionMaterialResponse", {
+                                                  state: {
+                                                    filterProductId: prod._pid || prod._id || "",
+                                                    filterSerialNumber: prod.serialNumber || "",
+                                                    filterRefNo: row.refNoInternal || "",
+                                                    filterJobOrderNo: row.jobOrderNo || "",
+                                                    filterInwardId: row.id || row._id || ""
+                                                  }
+                                                })}
+                                                className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
+                                                title="Open in Production Response"
+                                              >
+                                                <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
+                                              </button>
+
                                               <button
                                                 type="button"
                                                 onClick={() => setReportsRow(row)}

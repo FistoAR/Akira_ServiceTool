@@ -149,7 +149,7 @@ export default function Sidebar() {
 
   const canManageServiceCall = ["callReg", "callAssign", "callEscalation", "callReports", "serviceCallResponse"].some(hasAccess);
   const canManageServiceMaterial = ["matInward", "matReports", "serviceMaterialResponse"].some(hasAccess);
-  const canManageProductionMaterial = ["prodNC", "prodReports", "productionMaterialResponse"].some(hasAccess);
+  const canManageProductionMaterial = ["prodNC", "productionMaster", "prodReports", "productionMaterialResponse"].some(hasAccess);
   const canManageCustomers = hasAccess("customers");
 
   console.log("loggedInUser in SidePannel:", loggedInUser);
@@ -216,6 +216,7 @@ export default function Sidebar() {
       icon: ProductionIcon,
       show: canManageProductionMaterial,
       subItems: [
+        { path: "/productionMaterial/master", label: "Production Master", show: hasAccess("productionMaster") || hasAccess("prodNC") },
         { path: "/productionMaterial", label: "Production NC", show: hasAccess("prodNC") },
         { path: "/productionMaterialResponse", label: "Production Response", show: hasAccess("productionMaterialResponse") },
         { path: "/productionMaterial/reports", label: "Reports", show: hasAccess("prodReports") },
