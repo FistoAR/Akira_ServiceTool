@@ -62,6 +62,7 @@ const ProductionEditableProductTable = ({
   employees = [],
   stageOptions = [],
   dispositionOptions = [],
+  stageMappings = [],
   isReadOnly,
   allowPartialEdit,
   onDuplicate,
@@ -875,7 +876,20 @@ const ProductionEditableProductTable = ({
                             disabled={isReadOnly || prod.ncType === "Internal"}
                             placeholder={prod.ncType === "Internal" ? "Auto (Same Person)" : "Select Employee"}
                             size="sm"
-                            options={employeeDropdownOptions}
+                            options={(() => {
+                              // Filter employees strictly belonging to the product's detection stage
+                              const currentStage = (prod.stage || "").trim();
+                              if (currentStage && Array.isArray(stageMappings) && stageMappings.length > 0) {
+                                const stageUsers = stageMappings.filter(m => (m.stage || "").trim() === currentStage);
+                                const allowedUserIds = new Set(stageUsers.map(m => String(m.userId).trim()));
+                                const stageEmployees = (employees || []).filter(e => {
+                                  const eid = String(e.userId || e._id).trim();
+                                  return allowedUserIds.has(eid);
+                                });
+                                return stageEmployees.map(e => ({ value: e.userId || e._id, label: e.name || e.userId }));
+                              }
+                              return employeeDropdownOptions;
+                            })()}
                             searchable={true}
                             searchPlaceholder="Search employee..."
                             usePortal={true}

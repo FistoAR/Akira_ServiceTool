@@ -115,7 +115,8 @@ exports.getAllInwards = async (req, res) => {
       return res.json(inwards);
     }
 
-    // Check if user has an assigned Detection Stage in ProductionStageMapping
+    // Non-overarching users:
+    // Determine user's assigned Detection Stage from ProductionStageMapping
     let assignedStage = null;
     if (queryUserId) {
       const mapping = await ProductionStageMapping.findOne({ userId: String(queryUserId).trim() }).lean();
@@ -124,53 +125,71 @@ exports.getAllInwards = async (req, res) => {
       }
     }
 
+    // Filter in DB:
+    // Find documents where user is creator, or raisedTo/inspectedBy/assignedTo on products,
+    // or (if user has an assigned stage) products in that stage.
+    const uid = queryUserId ? String(queryUserId).trim() : null;
     let filter = {};
-    if (assignedStage && queryUserId) {
-      // User has assigned Detection Stage:
-      // Show products of their stage OR products where they are the raisedTo / creator / inspectedBy / assignedTo
+    if (uid && assignedStage) {
       filter = {
         $or: [
-          { 'products.stage': assignedStage },
-          { 'products.raisedTo': String(queryUserId).trim() },
-          { 'products.assignedTo': String(queryUserId).trim() },
-          { creatorUserId: String(queryUserId).trim() },
-          { 'products.inspectedBy': String(queryUserId).trim() }
+          { creatorUserId: uid },
+          { 'products.raisedTo': uid },
+          { 'products.assignedTo': uid },
+          { 'products.inspectedBy': uid },
+          { 'products.stage': assignedStage }
         ]
       };
-    } else if (queryUserId) {
+    } else if (uid) {
       filter = {
         $or: [
-          { creatorUserId: String(queryUserId).trim() },
-          { 'products.inspectedBy': String(queryUserId).trim() },
-          { 'products.raisedTo': String(queryUserId).trim() },
-          { 'products.assignedTo': String(queryUserId).trim() },
-          { 'products.report.workDoneBy': String(queryUserId).trim() }
+          { creatorUserId: uid },
+          { 'products.raisedTo': uid },
+          { 'products.assignedTo': uid },
+          { 'products.inspectedBy': uid }
         ]
       };
     }
 
     const inwards = await ProductionMaterial.find(filter).lean().sort({ createdAt: -1 });
 
-    // If stage-restricted and not overarching, prune products inside inward to only show matched products
-    if (assignedStage) {
-      const prunedInwards = inwards.map(inw => {
-        const matchingProds = (inw.products || []).filter(p => 
-          p.stage === assignedStage ||
-          p.raisedTo === String(queryUserId).trim() ||
-          p.assignedTo === String(queryUserId).trim() ||
-          p.inspectedBy === String(queryUserId).trim() ||
-          inw.creatorUserId === String(queryUserId).trim()
-        );
-        return {
-          ...inw,
-          products: matchingProds
-        };
-      }).filter(inw => inw.products && inw.products.length > 0);
+    // Prune products according to the exact business rules:
+    // 1. Internal: Show only if registered/created by this user (inw.creatorUserId === uid || p.inspectedBy === uid).
+    // 2. External:
+    //    - If registered by user: show with full view (creatorUserId === uid)
+    //    - If raised to user: show (p.raisedTo === uid)
+    // 3. Field Return / Field Visit:
+    //    - If registered by user: show (creatorUserId === uid)
+    //    - If raised to user: show (p.raisedTo === uid)
+    // In addition, if user is assigned to a stage and not specifically raised/registered, they only see items matching their stage if not restricted by NC type rules.
+    const prunedInwards = inwards.map(inw => {
+      const isCreator = uid && (inw.creatorUserId === uid || inw.creatorName === req.query.userName);
 
-      return res.json(prunedInwards);
-    }
+      const matchingProds = (inw.products || []).filter(p => {
+        const nc = (p.ncType || 'Internal').trim();
+        const isRaisedToMe = uid && (p.raisedTo === uid || p.assignedTo === uid);
+        const isInspectedByMe = uid && (p.inspectedBy === uid);
 
-    res.json(inwards);
+        if (nc === 'Internal') {
+          // Internal: only show if created/registered by this user
+          return isCreator || isInspectedByMe;
+        } else if (nc === 'External' || nc === 'Field Return' || nc === 'Field Visit') {
+          // External or Field Return/Visit:
+          // Show if registered by user OR raised to user
+          return isCreator || isRaisedToMe || isInspectedByMe;
+        }
+
+        // Fallback for any other custom types:
+        return isCreator || isRaisedToMe || (assignedStage && p.stage === assignedStage);
+      });
+
+      return {
+        ...inw,
+        products: matchingProds
+      };
+    }).filter(inw => inw.products && inw.products.length > 0);
+
+    res.json(prunedInwards);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

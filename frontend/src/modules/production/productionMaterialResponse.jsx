@@ -626,9 +626,8 @@ export default function ProductionMaterialResponse() {
   const { toast } = useNotification();
   const location = useLocation();
 
-  // Navigation state filters (e.g. from row chevron click)
-  const navState = location.state || {};
-  const initialFilterId = navState.filterProductId || navState.filterRefNo || navState.filterJobOrderNo || navState.filterSerialNumber || "";
+  // If navigated from Production NC with a target filter:
+  const navFilter = location.state?.filterTerm || "";
 
   const [entries, setEntries] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -637,7 +636,7 @@ export default function ProductionMaterialResponse() {
   const [selected, setSelected] = useState(null);
   const [infoSelected, setInfoSelected] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
-  const [searchTerm, setSearchTerm] = useState(initialFilterId);
+  const [searchTerm, setSearchTerm] = useState(navFilter);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const fromDateRef = useRef(null);
@@ -655,13 +654,10 @@ export default function ProductionMaterialResponse() {
     }));
   };
 
-  // Sync state if navigation state changes
+  // Sync if navigation state changes
   useEffect(() => {
-    if (location.state) {
-      const target = location.state.filterProductId || location.state.filterRefNo || location.state.filterJobOrderNo || location.state.filterSerialNumber || "";
-      if (target) {
-        setSearchTerm(target);
-      }
+    if (location.state?.filterTerm !== undefined) {
+      setSearchTerm(location.state.filterTerm || "");
     }
   }, [location.state]);
 

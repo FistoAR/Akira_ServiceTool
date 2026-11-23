@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
-  Search, X, Trash2, Save, ArrowLeft, Plus, User, Package, ChevronDown,
+  Search, X, Trash2, Save, ArrowLeft, ArrowRight, Plus, User, Package, ChevronDown,
   ChevronUp, Eye, Target, ClipboardList, Edit3, Clock, History, FileText, AlertCircle, CheckCircle, Wrench,
   Calendar, RotateCcw, UserPlus, PlusCircle, MinusCircle, ChevronRight
 } from "lucide-react";
@@ -1470,16 +1470,22 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
     ],
   });
 
+  const [stageMappings, setStageMappings] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [custRes, boardRes, ptRes] = await Promise.all([
+        const [custRes, boardRes, ptRes, stageMapRes] = await Promise.all([
           axios.get(`${API_URL}/master/customers`),
           axios.get(`${API_URL}/master/board-types`),
-          axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] }))
+          axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/production-material/stage-mappings`).catch(() => ({ data: [] }))
         ]);
         setCustomerDb(custRes.data);
         setBoardTypes(boardRes.data);
+        if (stageMapRes?.data) {
+          setStageMappings(stageMapRes.data);
+        }
         if (ptRes?.data?.length > 0) {
           setPartyTypes(ptRes.data);
           setNewCustomer(prev => ({ ...prev, partyType: ptRes.data[0].name || "OEM" }));
@@ -2074,6 +2080,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
               employees={employeesList}
               stageOptions={stageOptions}
               dispositionOptions={dispositionOptions}
+              stageMappings={stageMappings}
               isReadOnly={isReadOnly}
               onDuplicate={handleDuplicate}
               onRemove={removeProduct}
@@ -2417,6 +2424,13 @@ export default function ProductionMaterial() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSupervisor, setIsSupervisor] = useState(false);
+  const [currentLoggedUser, setCurrentLoggedUser] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}");
+    } catch {
+      return {};
+    }
+  });
   const { canWrite, canUpdate, canDelete } = useModulePermissions("prodNC");
   const ITEMS_PER_PAGE = 10;
 
@@ -2468,8 +2482,9 @@ export default function ProductionMaterial() {
 
   useEffect(() => {
     fetchData();
-    const user = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    const user = JSON.parse(sessionStorage.getItem("loggedInUser") || "{}");
     if (user?.role === "Supervisor") setIsSupervisor(true);
+    setCurrentLoggedUser(user);
     const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -2933,7 +2948,7 @@ export default function ProductionMaterial() {
                     >
                       Product Manifest Details
                     </th>
-                    {["Assigned To", "Resolution Verification", "Final Status", "Final Remarks", "History", "Actions"].map((h) => (
+                    {["Resolution Verification", "Final Status", "Final Remarks", "History", "Actions"].map((h) => (
                       <th
                         key={h}
                         rowSpan={2}
@@ -2991,7 +3006,7 @@ export default function ProductionMaterial() {
                   ) : groups.length > 0 ? (
                     groups.flatMap(({ customerName, rows }) => {
                       const isCustomerCollapsed = collapsedCustomers[customerName];
-                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 6;
+                      const totalCols = (canDelete && !isSupervisor ? 1 : 0) + 1 + 8 + 5;
 
                       return [
                         // ── STICKY HEADER 1: CUSTOMER HEADER ROW (sticky top-[3.6vw]) ──
@@ -3070,6 +3085,42 @@ export default function ProductionMaterial() {
                                 return (p.finalStatus || "Pending") === activeFilter;
                               });
 
+                              // Row-level permissions:
+                              // If current user is registered/creator: can edit and delete (if permission allows)
+                              // If current user is only raisedTo (e.g. for External/Field Return): view only (no edit, no delete)
+                              const currentUid = currentLoggedUser?.userId || currentLoggedUser?._id || "";
+                              const currentUname = currentLoggedUser?.name || "";
+                              const isCurrentUserAdmin = (currentLoggedUser?.role || "").toLowerCase().includes("admin") ||
+                                (currentLoggedUser?.department || "").toLowerCase().includes("quality") ||
+                                (currentLoggedUser?.department || "").toLowerCase().includes("admin");
+                              const isRowRegisteredByMe = isCurrentUserAdmin || (
+                                currentUid && (
+                                  row.creatorUserId === currentUid ||
+                                  (row.creatorName && row.creatorName === currentUname)
+                                )
+                              );
+                              const rowCanUpdate = canUpdate && !isSupervisor && isRowRegisteredByMe;
+                              const rowCanDelete = canDelete && !isSupervisor && isRowRegisteredByMe;
+
+                              // Check if a product is "report putable" by the current user:
+                              // 1. If Internal: current user is the register/creator (isRowRegisteredByMe)
+                              // 2. If External or Field Return: current user is the raisedTo person
+                              const isProdReportPutable = (p) => {
+                                const nc = (p.ncType || "Internal").trim();
+                                if (isCurrentUserAdmin) return true;
+                                if (nc === "Internal") {
+                                  return isRowRegisteredByMe;
+                                }
+                                if (nc === "External" || nc === "Field Return" || nc === "Field Visit") {
+                                  return currentUid && (p.raisedTo === currentUid || p.assignedTo === currentUid);
+                                }
+                                return false;
+                              };
+
+                              // The main right arrow on the entry/date header row should only show
+                              // if ALL inside products in this entry are report putable by the current user
+                              const allProductsReportPutable = prods.length > 0 && prods.every(isProdReportPutable);
+
                               return [
                                 // ── STICKY HEADER 2: JOB ORDER / REGISTRATION ROW (sticky top-[6vw]) ──
                                 <tr
@@ -3078,7 +3129,7 @@ export default function ProductionMaterial() {
                                     isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9] hover:bg-[#E2E8F0]"
                                   }`}
                                 >
-                                  {canDelete && !isSupervisor && (
+                                  {rowCanDelete && (
                                     <td
                                       className={`py-[0.5vw] px-[0.4vw] border-r border-b border-slate-300 text-center align-middle ${
                                         isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
@@ -3108,6 +3159,9 @@ export default function ProductionMaterial() {
                                       </button>
                                     </td>
                                   )}
+                                  {!rowCanDelete && canDelete && !isSupervisor && (
+                                    <td className={`border-r border-b border-slate-300 ${isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"}`} />
+                                  )}
 
                                   {/* S.No */}
                                   <td
@@ -3121,7 +3175,7 @@ export default function ProductionMaterial() {
 
                                   {/* Date + Job Order No + Summary Spanning remaining columns */}
                                   <td
-                                    colSpan={8 + 6}
+                                    colSpan={8 + 5}
                                     className={`px-[0.6vw] py-[0.5vw] h-[2.3vw] align-middle border-b border-slate-300 ${
                                       isSelected ? "bg-[#e0f2fe]" : "bg-[#F1F5F9]"
                                     }`}
@@ -3199,21 +3253,17 @@ export default function ProductionMaterial() {
                                         className="ml-auto flex items-center gap-[0.4vw]"
                                         onClick={(e) => e.stopPropagation()}
                                       >
-                                        {/* Navigate to Production Response filtered for this Job Order */}
-                                        <button
-                                          type="button"
-                                          onClick={() => navigate("/productionMaterialResponse", {
-                                            state: {
-                                              filterRefNo: row.refNoInternal || "",
-                                              filterJobOrderNo: row.jobOrderNo || "",
-                                              filterInwardId: row.id || row._id || ""
-                                            }
-                                          })}
-                                          title="Open in Production Response"
-                                          className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 rounded-full shadow-2xs cursor-pointer transition-all"
-                                        >
-                                          <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
-                                        </button>
+                                        {/* Navigate to Production Response — only if all inside products are report putable */}
+                                        {allProductsReportPutable && (
+                                          <button
+                                            type="button"
+                                            onClick={() => navigate("/productionMaterialResponse", { state: { filterTerm: row.refNoInternal || row.jobOrderNo || "" } })}
+                                            title="Open Production Response"
+                                            className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 rounded-full shadow-2xs cursor-pointer transition-all"
+                                          >
+                                            <ArrowRight className="w-[0.9vw] h-[0.9vw]" />
+                                          </button>
+                                        )}
 
                                         <button
                                           type="button"
@@ -3224,7 +3274,7 @@ export default function ProductionMaterial() {
                                           <Eye className="w-[0.8vw] h-[0.8vw]" />
                                         </button>
 
-                                        {canUpdate && !isSupervisor && (
+                                        {rowCanUpdate && (
                                           <button
                                             type="button"
                                             onClick={() => {
@@ -3238,7 +3288,7 @@ export default function ProductionMaterial() {
                                           </button>
                                         )}
 
-                                        {canDelete && !isSupervisor && (
+                                        {rowCanDelete && (
                                           <button
                                             type="button"
                                             onClick={async () => {
@@ -3360,24 +3410,6 @@ export default function ProductionMaterial() {
                                             {prod.serialNumber || "—"}
                                           </td>
 
-                                          {/* Assigned To */}
-                                          <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium text-slate-700 text-[0.81vw]">
-                                            {canUpdate && !isSupervisor ? (
-                                              <EmpSelectCell
-                                                val={prod.assignedTo}
-                                                employees={employees}
-                                                onSelect={(emp) => {
-                                                  onUpdateProduct(row.id, prod._pid, {
-                                                    assignedTo: emp ? emp.userId : "",
-                                                    assignedToName: emp ? emp.name : "",
-                                                  });
-                                                }}
-                                              />
-                                            ) : (
-                                              prod.assignedToName || "Unassigned"
-                                            )}
-                                          </td>
-
                                           {/* Resolution Verification */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
                                             {prod.report?.verifiedByName ? (
@@ -3420,23 +3452,17 @@ export default function ProductionMaterial() {
                                             }`}
                                           >
                                             <div className="flex items-center justify-center gap-[0.4vw]">
-                                              {/* Navigate to Production Response filtered for this specific Product / Item */}
-                                              <button
-                                                type="button"
-                                                onClick={() => navigate("/productionMaterialResponse", {
-                                                  state: {
-                                                    filterProductId: prod._pid || prod._id || "",
-                                                    filterSerialNumber: prod.serialNumber || "",
-                                                    filterRefNo: row.refNoInternal || "",
-                                                    filterJobOrderNo: row.jobOrderNo || "",
-                                                    filterInwardId: row.id || row._id || ""
-                                                  }
-                                                })}
-                                                className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
-                                                title="Open in Production Response"
-                                              >
-                                                <ChevronRight className="w-[0.9vw] h-[0.9vw]" />
-                                              </button>
+                                              {/* Navigate to Production Response — only if report putable */}
+                                              {isProdReportPutable(prod) && (
+                                                <button
+                                                  type="button"
+                                                  onClick={() => navigate("/productionMaterialResponse", { state: { filterTerm: prod.serialNumber || prod._pid || row.refNoInternal || "" } })}
+                                                  className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
+                                                  title="Open Production Response"
+                                                >
+                                                  <ArrowRight className="w-[0.9vw] h-[0.9vw]" />
+                                                </button>
+                                              )}
 
                                               <button
                                                 type="button"
@@ -3460,7 +3486,7 @@ export default function ProductionMaterial() {
                                                 <CheckCircle className="w-[0.9vw] h-[0.9vw]" />
                                               </button>
 
-                                              {canUpdate && !isSupervisor && (
+                                              {rowCanUpdate && (
                                                 <button
                                                   type="button"
                                                   onClick={() => {
