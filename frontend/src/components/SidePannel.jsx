@@ -306,7 +306,7 @@ export default function Sidebar() {
         flex flex-col bg-white relative
         transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         border-r border-slate-300 shadow-[4px_0_24px_-8px_rgba(0,0,0,0.08)]
-        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[17.5vw] max-w-[17.5vw]"}
+        ${isCollapsed ? "min-w-[4vw] max-w-[4vw]" : "min-w-[15.75vw] max-w-[15.75vw]"}
       `}
       style={{ height: "100vh" }}
     >

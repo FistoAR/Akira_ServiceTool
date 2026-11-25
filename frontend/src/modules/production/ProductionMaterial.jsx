@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Search, X, Trash2, Save, ArrowLeft, ArrowRight, Plus, User, Package, ChevronDown,
   ChevronUp, Eye, Target, ClipboardList, Edit3, Clock, History, FileText, AlertCircle, CheckCircle, Wrench,
-  Calendar, RotateCcw, UserPlus, PlusCircle, MinusCircle, ChevronRight
+  Calendar, RotateCcw, UserPlus, PlusCircle, MinusCircle, ChevronRight, Info
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
@@ -1910,14 +1910,29 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
                 </h3>
               </div>
               {!isReadOnly && (
-                <button
-                  type="button"
-                  onClick={addProduct}
-                  className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.83vw] transition-all shadow-2xs active:scale-95"
-                >
-                  <Plus className="w-[0.85vw] h-[0.85vw]" />
-                  <span>Add Item Row</span>
-                </button>
+                <div className="flex items-center gap-[0.4vw]">
+                  <input
+                    type="number"
+                    min="1"
+                    max="50"
+                    defaultValue="1"
+                    id="production-add-rows-count"
+                    className="w-[3.4vw] h-[2.1vw] text-center border border-slate-300 rounded-[0.45vw] text-[0.83vw] font-semibold text-slate-800 outline-none focus:border-blue-500"
+                    title="Number of rows to add"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById("production-add-rows-count");
+                      const count = Math.max(1, Math.min(50, parseInt(el?.value, 10) || 1));
+                      for (let i = 0; i < count; i++) addProduct();
+                    }}
+                    className="cursor-pointer flex items-center gap-[0.35vw] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-[0.9vw] h-[2.1vw] rounded-[0.5vw] text-[0.83vw] transition-all shadow-2xs active:scale-95"
+                  >
+                    <Plus className="w-[0.85vw] h-[0.85vw]" />
+                    <span>Add Item Row</span>
+                  </button>
+                </div>
               )}
             </div>
             <ProductionEditableProductTable
@@ -2860,7 +2875,7 @@ export default function ProductionMaterial() {
                       { name: "Description", minW: "14vw" },
                       { name: "Segment", minW: "6.5vw" },
                       { name: "NC Type", minW: "6.5vw" },
-                      { name: "Stage", minW: "6.5vw" },
+                      { name: "Detection Stage", minW: "6.5vw" },
                       { name: "Problem Description", minW: "12vw" },
                       { name: "Qty", minW: "4.5vw" },
                       { name: "Repeat", minW: "5.5vw" },
@@ -3256,7 +3271,7 @@ export default function ProductionMaterial() {
 
                                           {/* Product Code */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
-                                            {showReadyHighlight && (
+                                            {showReadyHighlight && (!isInternalNC || ((prod.verificationStatus || prod.report?.verificationStatus) === "Verified" && valStatus === "Validated")) && (
                                               <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
                                                 <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
                                                 <span className="text-[0.65vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
@@ -3329,7 +3344,28 @@ export default function ProductionMaterial() {
 
                                           {/* Verification */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
-                                            {canPerformVerify ? (
+                                            {isInternalNC ? (
+                                              <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                                <span className={`inline-block px-[0.55vw] py-[0.15vw] rounded-full text-[0.72vw] font-semibold border ${
+                                                  (prod.verificationStatus || prod.report?.verificationStatus) === "Verified"
+                                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                    : (prod.verificationStatus || prod.report?.verificationStatus) === "Rejected"
+                                                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                                                    : "bg-slate-100 text-slate-600 border-slate-200"
+                                                }`}>
+                                                  {prod.verificationStatus || prod.report?.verificationStatus || "Pending"}
+                                                </span>
+                                                <span className="relative group/vtip inline-flex items-center shrink-0">
+                                                  <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
+                                                  <span className="pointer-events-none opacity-0 invisible group-hover/vtip:opacity-100 group-hover/vtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                                    <div><span className="text-slate-400">Verification Date:</span> {prod.closingDate ? fmtDate(prod.closingDate) : "—"}</div>
+                                                    <div><span className="text-slate-400">Status:</span> {prod.verificationStatus || prod.report?.verificationStatus || "Pending"}</div>
+                                                    <div><span className="text-slate-400">Remarks:</span> {verifyText || prod.finalStatusRemarks || "—"}</div>
+                                                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                                                  </span>
+                                                </span>
+                                              </div>
+                                            ) : canPerformVerify ? (
                                               hasVerifyRemarks ? (
                                                 <button
                                                   type="button"
@@ -3368,7 +3404,28 @@ export default function ProductionMaterial() {
 
                                           {/* Validation */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
-                                            {canPerformValidate ? (
+                                            {isInternalNC ? (
+                                              <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                                <span className={`inline-block px-[0.55vw] py-[0.15vw] rounded-full text-[0.72vw] font-semibold border ${
+                                                  valStatus === "Validated"
+                                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                    : valStatus === "Rejected"
+                                                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                                                    : "bg-slate-100 text-slate-600 border-slate-200"
+                                                }`}>
+                                                  {valStatus === "Validated" ? "Accepted" : valStatus || "Pending"}
+                                                </span>
+                                                <span className="relative group/valtip inline-flex items-center shrink-0">
+                                                  <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
+                                                  <span className="pointer-events-none opacity-0 invisible group-hover/valtip:opacity-100 group-hover/valtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                                    <div><span className="text-slate-400">Validation Date:</span> {prod.closingDate ? fmtDate(prod.closingDate) : "—"}</div>
+                                                    <div><span className="text-slate-400">Status:</span> {valStatus === "Validated" ? "Accepted" : valStatus || "Pending"}</div>
+                                                    <div><span className="text-slate-400">Remarks:</span> {valRemarks || prod.finalStatusRemarks || "—"}</div>
+                                                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                                                  </span>
+                                                </span>
+                                              </div>
+                                            ) : canPerformValidate ? (
                                               valStatus ? (
                                                 <button
                                                   type="button"

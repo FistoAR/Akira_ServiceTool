@@ -1693,7 +1693,7 @@ const buildEscalationHistoryString = (call, prod) => {
               setCurrentPage(1);
             }}
             disabled={!!selectedEmployee}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
               selectedEmployee
                 ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
                 : activeMainView === "registered"
@@ -1723,7 +1723,7 @@ const buildEscalationHistoryString = (call, prod) => {
               setCurrentPage(1);
             }}
             disabled={!!selectedEmployee}
-            className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
               selectedEmployee
                 ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
                 : activeMainView === "escalations"
@@ -1754,7 +1754,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 setCurrentPage(1);
               }}
               disabled={!!selectedEmployee}
-              className={`flex items-center gap-[0.45vw] px-[1vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-[0.35vw] px-[0.75vw] py-[0.38vw] rounded-full text-[0.81vw] font-medium transition-all whitespace-nowrap ${
                 selectedEmployee
                   ? "opacity-50 cursor-not-allowed text-slate-500 bg-slate-100"
                   : activeMainView === "assignments"
@@ -1996,7 +1996,7 @@ const buildEscalationHistoryString = (call, prod) => {
                 }`}
               >
                 <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
-                <span>Columns</span>
+                <span>Templates</span>
               </button>
             </CustomTooltip>
 

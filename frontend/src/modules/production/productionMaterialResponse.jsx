@@ -115,12 +115,14 @@ export default function ProductionMaterialResponse() {
   const toDateRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(7);
   const [expandedCustomerDetails, setExpandedCustomerDetails] = useState({});
 
   // Inline Drafts and Drag-Fill States
   const [drafts, setDrafts] = useState({});
   const [savingStates, setSavingStates] = useState({});
+  const [editingRows, setEditingRows] = useState({});
+  const [vvModal, setVvModal] = useState(null);
   const [isBulkSaving, setIsBulkSaving] = useState(false);
   const [selection, setSelection] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
@@ -499,6 +501,10 @@ export default function ProductionMaterialResponse() {
       toast(`Corrective action details is mandatory for ${product.productDescription}`, "error");
       return false;
     }
+    if ((draft.status === "Completed") && !draft.completedDate) {
+      toast(`Completed Date is mandatory when Status is Completed for ${product.productDescription}`, "error");
+      return false;
+    }
 
     const derivedStatus = draft.verificationStatus === "Verified" ? "Completed" 
       : draft.verificationStatus === "Rejected" ? "Not Repairable" 
@@ -585,6 +591,8 @@ export default function ProductionMaterialResponse() {
     { key: "registration", label: "Registration", align: "text-left", minW: "min-w-[9.5vw]" },
     { key: "customer", label: "Customer", align: "text-left", minW: "min-w-[12vw]" },
     { key: "product", label: "Product Manifest", align: "text-left", minW: "min-w-[14vw]" },
+    { key: "zone", label: "Zone", align: "text-center", minW: "min-w-[8vw]" },
+    { key: "ncType", label: "NC Type", align: "text-center", minW: "min-w-[6vw]" },
     { key: "workDoneBy", label: "Work Done By", align: "text-left", minW: "min-w-[10vw]" },
     { key: "fourMCategory", label: "4M Category *", align: "text-left", minW: "min-w-[10vw]" },
     { key: "rootCause", label: "Root Cause *", align: "text-left", minW: "min-w-[12vw]" },
@@ -594,8 +602,8 @@ export default function ProductionMaterialResponse() {
     { key: "materialCost", label: "Material Cost", align: "text-right", minW: "min-w-[8vw]" },
     { key: "status", label: "Status *", align: "text-center", minW: "min-w-[9.5vw]" },
     { key: "completedDate", label: "Completed Date", align: "text-left", minW: "min-w-[9vw]" },
-    { key: "validationStatus", label: "Validation", align: "text-center", minW: "min-w-[9.5vw]" },
     { key: "verificationStatus", label: "Verification", align: "text-center", minW: "min-w-[9.5vw]" },
+    { key: "validationStatus", label: "Validation", align: "text-center", minW: "min-w-[9.5vw]" },
     { key: "closingDate", label: "Closing Date", align: "text-left", minW: "min-w-[9vw]" },
     { key: "info", label: "Info", align: "text-center", width: "w-[4vw]" },
     { key: "action", label: "Action", align: "text-center", minW: "min-w-[7.5vw]" },
@@ -834,25 +842,18 @@ export default function ProductionMaterialResponse() {
 
                           {/* Admin Returned Notification Banner */}
                           {isAdminReturned && (
-                            <tr className="bg-amber-50/90 border-t-2 border-b border-amber-300">
+                            <tr className="bg-amber-50/90 border-t border-b border-amber-300">
                               <td colSpan={columns.length} className="p-0 border-b border-amber-300 bg-amber-50">
-                                <div className="flex items-center gap-[0.8vw] px-[1.2vw] py-[0.45vw] flex-wrap">
-                                  <span className="inline-flex items-center gap-[0.35vw] px-[0.65vw] py-[0.2vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.79vw] font-semibold shadow-2xs">
-                                    <Icon icon="solar:danger-triangle-linear" className="w-[0.9vw] h-[0.9vw] text-amber-700" />
-                                    Admin Returned / Declined
-                                  </span>
-                                  <span className="inline-flex items-center px-[0.55vw] py-[0.18vw] rounded-full border text-[0.75vw] font-medium bg-amber-50 text-amber-700 border-amber-300">
-                                    {product.finalStatus || "Admin Returned"}
+                                <div className="flex items-center gap-[0.6vw] px-[1.2vw] py-[0.35vw]">
+                                  <span className="inline-flex items-center gap-[0.3vw] px-[0.55vw] py-[0.15vw] rounded-full bg-amber-100 border border-amber-400 text-amber-800 text-[0.75vw] font-semibold">
+                                    <Icon icon="solar:danger-triangle-linear" className="w-[0.85vw] h-[0.85vw] text-amber-700" />
+                                    Returned
                                   </span>
                                   {product.finalStatusRemarks && (
-                                    <span className="inline-flex items-center gap-[0.35vw] text-[0.79vw] text-slate-800 font-medium bg-white border border-amber-200 px-[0.65vw] py-[0.2vw] rounded-[0.3vw] shadow-2xs">
-                                      <Icon icon="solar:chat-round-dots-linear" className="w-[0.9vw] h-[0.9vw] text-slate-600" />
-                                      <span className="font-medium text-slate-900">Admin Reason:</span> {product.finalStatusRemarks}
+                                    <span className="text-[0.77vw] text-slate-800 font-medium">
+                                      {product.finalStatusRemarks}
                                     </span>
                                   )}
-                                  <span className="text-[0.77vw] text-amber-800 italic ml-[0.3vw]">
-                                    Please edit cells and click Save to re-submit to Admin
-                                  </span>
                                 </div>
                               </td>
                             </tr>
@@ -876,14 +877,29 @@ export default function ProductionMaterialResponse() {
 
                             {/* 3. Registration */}
                             <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                              <div className="text-[0.81vw] font-mono font-medium text-black whitespace-nowrap">{entry.refNoInternal}</div>
-                              <div className="text-[0.73vw] font-medium text-blue-700 mt-[0.05vw] whitespace-nowrap">JO: {entry.jobOrderNo || "—"}</div>
+                              <div className="text-[0.81vw] font-medium text-blue-700 whitespace-nowrap">JO: {entry.jobOrderNo || "—"}</div>
                             </td>
 
                             {/* 4. Customer */}
                             <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300">
-                              <div className="text-[0.81vw] font-medium text-black truncate max-w-[12vw]">{entry.customerName}</div>
-                              <div className="text-[0.73vw] font-mono text-slate-700 font-medium">{entry.customerCode || "—"}</div>
+                              <div className="flex items-center gap-[0.35vw]">
+                                <span className="text-[0.81vw] font-medium text-black truncate max-w-[12vw]">
+                                  {entry.customerName}
+                                </span>
+                                {entry.customerCode && (
+                                  <span className="relative group/tip inline-flex items-center shrink-0">
+                                    <Icon
+                                      icon="solar:info-circle-linear"
+                                      className="w-[0.9vw] h-[0.9vw] text-slate-400 hover:text-blue-600 transition-colors"
+                                    />
+                                    <span className="pointer-events-none opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                      <div><span className="text-slate-400">Customer name:</span> {entry.customerName}</div>
+                                      <div><span className="text-slate-400">Party code:</span> <span className="font-mono">{entry.customerCode}</span></div>
+                                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                                    </span>
+                                  </span>
+                                )}
+                              </div>
                             </td>
 
                             {/* 5. Product Manifest */}
@@ -891,24 +907,38 @@ export default function ProductionMaterialResponse() {
                               <div className="text-[0.81vw] font-medium text-black leading-tight max-w-[14vw] break-words">{product.productDescription}</div>
                               <div className="text-[0.71vw] text-slate-700 mt-[0.1vw] font-mono flex items-center gap-[0.3vw] flex-wrap">
                                 <span>SN: <strong className="text-slate-900">{product.serialNumber || product.identification || "—"}</strong></span>
-                                <span>•</span>
-                                <span>Zone: <strong className="text-blue-700 font-semibold">{product.zone || product.stage || "—"}</strong></span>
-                                {product.targetZone && (
-                                  <>
-                                    <span>→</span>
-                                    <span className="bg-blue-50 text-blue-700 px-[0.3vw] py-[0.05vw] rounded font-semibold border border-blue-200">
-                                      {product.targetZone}
-                                    </span>
-                                  </>
-                                )}
-                                <span>•</span>
-                                <span>NC: <strong className="text-slate-900">{product.ncType || "—"}</strong></span>
                                 {product.reworkCycleCount > 0 && (
                                   <span className="bg-rose-50 text-rose-700 px-[0.35vw] py-[0.05vw] rounded font-bold border border-rose-200">
                                     Cycle {product.reworkCycleCount + 1}
                                   </span>
                                 )}
                               </div>
+                            </td>
+
+                            {/* 5a. Zone (View Only) */}
+                            <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 text-center">
+                              <div className="inline-flex items-center gap-[0.25vw] text-[0.75vw] font-semibold">
+                                <span className="text-blue-700">{product.zone || product.stage || "—"}</span>
+                                {product.targetZone && (
+                                  <>
+                                    <span className="text-slate-400">→</span>
+                                    <span className="bg-blue-50 text-blue-700 px-[0.35vw] py-[0.05vw] rounded border border-blue-200">
+                                      {product.targetZone}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* 5b. NC Type (View Only) */}
+                            <td className="py-[0.65vw] px-[0.7vw] border-r border-b border-slate-300 text-center">
+                              <span className={`inline-block px-[0.5vw] py-[0.12vw] rounded text-[0.75vw] font-semibold ${
+                                product.ncType === "External"
+                                  ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                  : "bg-slate-100 text-slate-700 border border-slate-200"
+                              }`}>
+                                {product.ncType || "—"}
+                              </span>
                             </td>
 
                             {/* 6. Work Done By */}
@@ -1075,56 +1105,158 @@ export default function ProductionMaterialResponse() {
                               {renderFillHandle(idx, "completedDate")}
                             </td>
 
-                            {/* 15. Validation Status */}
-                            <td
-                              className={getCellClass(idx, "validationStatus")}
-                              onMouseDown={(e) => handleCellMouseDown(idx, "validationStatus", e)}
-                              onMouseEnter={() => handleCellMouseEnter(idx, "validationStatus")}
-                            >
-                              {perms.canValidate ? (
-                                <div className="min-w-[9vw]">
-                                  <CustomDropdown
-                                    size="sm"
-                                    usePortal={true}
-                                    placeholder="Validation"
-                                    value={draft.validationStatus}
-                                    onChange={(val) => hc("validationStatus", val)}
-                                    options={VALIDATION_OPTIONS.map(opt => ({ value: opt, label: opt }))}
-                                    triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
-                                  />
-                                </div>
-                              ) : (
-                                <span className="text-[0.77vw] font-medium text-slate-600 bg-slate-100 px-[0.5vw] py-[0.15vw] rounded border border-slate-200">
-                                  {draft.validationStatus || "Pending"}
-                                </span>
+                            {/* 16. Verification Status */}
+                            <td className={getCellClass(idx, "verificationStatus")}>
+                              {(product.status === "Completed" || draft.status === "Completed") ? (() => {
+                                const bothAccepted = draft.validationStatus === "Validated" && draft.verificationStatus === "Verified";
+                                const isDecided = draft.verificationStatus === "Verified" || draft.verificationStatus === "Rejected";
+                                if (!perms.canVerify || isDecided) {
+                                  return (
+                                    <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                      <span className={`text-[0.75vw] font-semibold px-[0.5vw] py-[0.15vw] rounded border ${
+                                        draft.verificationStatus === "Verified"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          : draft.verificationStatus === "Rejected"
+                                          ? "bg-rose-50 text-rose-700 border-rose-200"
+                                          : "bg-slate-100 text-slate-600 border-slate-200"
+                                      }`}>
+                                        {draft.verificationStatus === "Verified" ? "Accepted" : (draft.verificationStatus || "Pending")}
+                                      </span>
+                                      {perms.canVerify && isDecided && !bothAccepted && (
+                                        <button
+                                          type="button"
+                                          onClick={() => setVvModal({
+                                            type: "verification",
+                                            action: draft.verificationStatus === "Verified" ? "Accepted" : "Rejected",
+                                            entry,
+                                            product,
+                                            draft,
+                                            date: toInputDate(draft.closingDate) || new Date().toISOString().split("T")[0],
+                                            remarks: draft.finalStatusRemarks || ""
+                                          })}
+                                          className="p-[0.2vw] text-slate-400 hover:text-blue-600 cursor-pointer"
+                                          title="Edit Verification"
+                                        >
+                                          <Icon icon="solar:pen-linear" className="w-[0.85vw] h-[0.85vw]" />
+                                        </button>
+                                      )}
+                                    </div>
+                                  );
+                                }
+                                return (
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                    <button
+                                      type="button"
+                                      onClick={() => setVvModal({
+                                        type: "verification",
+                                        action: "Accepted",
+                                        entry,
+                                        product,
+                                        draft,
+                                        date: new Date().toISOString().split("T")[0],
+                                        remarks: ""
+                                      })}
+                                      className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
+                                    >
+                                      Accept
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setVvModal({
+                                        type: "verification",
+                                        action: "Rejected",
+                                        entry,
+                                        product,
+                                        draft,
+                                        date: new Date().toISOString().split("T")[0],
+                                        remarks: ""
+                                      })}
+                                      className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100"
+                                    >
+                                      Decline
+                                    </button>
+                                  </div>
+                                );
+                              })() : (
+                                <span className="text-[0.77vw] text-slate-400">—</span>
                               )}
-                              {renderFillHandle(idx, "validationStatus")}
                             </td>
 
-                            {/* 16. Verification Status */}
-                            <td
-                              className={getCellClass(idx, "verificationStatus")}
-                              onMouseDown={(e) => handleCellMouseDown(idx, "verificationStatus", e)}
-                              onMouseEnter={() => handleCellMouseEnter(idx, "verificationStatus")}
-                            >
-                              {perms.canVerify ? (
-                                <div className="min-w-[9vw]">
-                                  <CustomDropdown
-                                    size="sm"
-                                    usePortal={true}
-                                    placeholder="Verification"
-                                    value={draft.verificationStatus}
-                                    onChange={(val) => hc("verificationStatus", val)}
-                                    options={VERIFICATION_OPTIONS.map(opt => ({ value: opt, label: opt }))}
-                                    triggerClassName="!h-[1.9vw] !text-[0.79vw] !py-[0.18vw] !px-[0.5vw] !rounded-[0.3vw] !border !border-slate-300 focus:!border-blue-500 !bg-white shadow-2xs font-semibold"
-                                  />
-                                </div>
-                              ) : (
-                                <span className="text-[0.77vw] font-medium text-slate-600 bg-slate-100 px-[0.5vw] py-[0.15vw] rounded border border-slate-200">
-                                  {draft.verificationStatus || "Pending"}
-                                </span>
+                            {/* 15. Validation Status */}
+                            <td className={getCellClass(idx, "validationStatus")}>
+                              {(product.status === "Completed" || draft.status === "Completed") ? (() => {
+                                const bothAccepted = draft.validationStatus === "Validated" && draft.verificationStatus === "Verified";
+                                const isDecided = draft.validationStatus === "Validated" || draft.validationStatus === "Rejected";
+                                if (!perms.canValidate || isDecided) {
+                                  return (
+                                    <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                      <span className={`text-[0.75vw] font-semibold px-[0.5vw] py-[0.15vw] rounded border ${
+                                        draft.validationStatus === "Validated"
+                                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          : draft.validationStatus === "Rejected"
+                                          ? "bg-rose-50 text-rose-700 border-rose-200"
+                                          : "bg-slate-100 text-slate-600 border-slate-200"
+                                      }`}>
+                                        {draft.validationStatus === "Validated" ? "Accepted" : (draft.validationStatus || "Pending")}
+                                      </span>
+                                      {perms.canValidate && isDecided && !bothAccepted && (
+                                        <button
+                                          type="button"
+                                          onClick={() => setVvModal({
+                                            type: "validation",
+                                            action: draft.validationStatus === "Validated" ? "Accepted" : "Rejected",
+                                            entry,
+                                            product,
+                                            draft,
+                                            date: toInputDate(draft.closingDate) || new Date().toISOString().split("T")[0],
+                                            remarks: draft.finalStatusRemarks || ""
+                                          })}
+                                          className="p-[0.2vw] text-slate-400 hover:text-blue-600 cursor-pointer"
+                                          title="Edit Validation"
+                                        >
+                                          <Icon icon="solar:pen-linear" className="w-[0.85vw] h-[0.85vw]" />
+                                        </button>
+                                      )}
+                                    </div>
+                                  );
+                                }
+                                return (
+                                  <div className="flex items-center justify-center gap-[0.3vw]">
+                                    <button
+                                      type="button"
+                                      onClick={() => setVvModal({
+                                        type: "validation",
+                                        action: "Accepted",
+                                        entry,
+                                        product,
+                                        draft,
+                                        date: new Date().toISOString().split("T")[0],
+                                        remarks: ""
+                                      })}
+                                      className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
+                                    >
+                                      Accept
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setVvModal({
+                                        type: "validation",
+                                        action: "Rejected",
+                                        entry,
+                                        product,
+                                        draft,
+                                        date: new Date().toISOString().split("T")[0],
+                                        remarks: ""
+                                      })}
+                                      className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100"
+                                    >
+                                      Decline
+                                    </button>
+                                  </div>
+                                );
+                              })() : (
+                                <span className="text-[0.77vw] text-slate-400">—</span>
                               )}
-                              {renderFillHandle(idx, "verificationStatus")}
                             </td>
 
                             {/* 17. Closing Date */}
@@ -1142,42 +1274,71 @@ export default function ProductionMaterialResponse() {
                               {renderFillHandle(idx, "closingDate")}
                             </td>
 
-                            {/* 18. Info View Button */}
+                            {/* 18. Info & History View Buttons */}
                             <td className="py-[0.65vw] px-[0.7vw] text-center border-r border-b border-slate-300">
-                              <button 
-                                onClick={() => setInfoSelected({ entry, product })}
-                                className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer inline-flex items-center justify-center"
-                                title="View Details"
-                              >
-                                <Eye className="w-[0.9vw] h-[0.9vw]" />
-                              </button>
+                              <div className="inline-flex items-center justify-center gap-[0.25vw]">
+                                <button 
+                                  onClick={() => setInfoSelected({ entry, product })}
+                                  className="p-[0.35vw] text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-all cursor-pointer inline-flex items-center justify-center"
+                                  title="View Details"
+                                >
+                                  <Eye className="w-[0.9vw] h-[0.9vw]" />
+                                </button>
+                                {((product.report?.history?.length > 0) || (product.finalStatusHistory?.length > 0)) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setInfoSelected({ entry, product })}
+                                    className="p-[0.35vw] text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-full transition-all cursor-pointer inline-flex items-center justify-center"
+                                    title="Edited History"
+                                  >
+                                    <Icon icon="solar:history-linear" className="w-[0.9vw] h-[0.9vw]" />
+                                  </button>
+                                )}
+                              </div>
                             </td>
 
-                            {/* 19. Action Save Button */}
+                            {/* 19. Action Save / Edit Button */}
                             <td className="py-[0.65vw] px-[0.7vw] text-center border-b border-slate-300 sticky right-0 bg-white z-20 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
-                              <button
-                                onClick={() => saveRow(entry, product, draft)}
-                                disabled={!draft?.hasChanges || savingStates[product._pid]}
-                                className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold transition-all ${
-                                  savingStates[product._pid]
-                                    ? "bg-blue-400 text-white cursor-not-allowed"
-                                    : draft?.hasChanges
-                                      ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
-                                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                }`}
-                              >
-                                {savingStates[product._pid] ? (
-                                  <>
-                                    <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
-                                    <span>Saving...</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Save className="w-[0.75vw] h-[0.75vw]" />
-                                    <span>Save</span>
-                                  </>
-                                )}
-                              </button>
+                              {(draft.validationStatus === "Validated" && draft.verificationStatus === "Verified") ? (
+                                <span className="text-[0.73vw] font-semibold text-emerald-700 bg-emerald-50 px-[0.5vw] py-[0.2vw] rounded border border-emerald-200">
+                                  Locked
+                                </span>
+                              ) : product.status === "Completed" && !editingRows[product._pid] ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingRows(prev => ({ ...prev, [product._pid]: true }))}
+                                  className="inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold bg-amber-50 text-amber-700 border border-amber-300 hover:bg-amber-100 cursor-pointer transition-all"
+                                >
+                                  <span>Edit</span>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={async () => {
+                                    await saveRow(entry, product, draft);
+                                    setEditingRows(prev => ({ ...prev, [product._pid]: false }));
+                                  }}
+                                  disabled={!draft?.hasChanges || savingStates[product._pid]}
+                                  className={`inline-flex items-center gap-[0.25vw] px-[0.7vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold transition-all ${
+                                    savingStates[product._pid]
+                                      ? "bg-blue-400 text-white cursor-not-allowed"
+                                      : draft?.hasChanges
+                                        ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer shadow-md"
+                                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                  }`}
+                                >
+                                  {savingStates[product._pid] ? (
+                                    <>
+                                      <Loader2 className="w-[0.75vw] h-[0.75vw] animate-spin" />
+                                      <span>Saving...</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Save className="w-[0.75vw] h-[0.75vw]" />
+                                      <span>Save</span>
+                                    </>
+                                  )}
+                                </button>
+                              )}
                             </td>
                           </tr>
                         </React.Fragment>
@@ -1195,24 +1356,6 @@ export default function ProductionMaterialResponse() {
               <div className="flex items-center gap-[1.2vw]">
                 <div className="text-[0.79vw] font-medium text-slate-500">
                   Showing <strong className="text-slate-800">{paginatedProducts.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</strong> to <strong className="text-slate-800">{Math.min(currentPage * itemsPerPage, allProducts.length)}</strong> of <strong className="text-slate-800">{allProducts.length}</strong> assigned products
-                </div>
-                <div className="flex items-center gap-[0.4vw]">
-                  <span className="text-[0.77vw] text-slate-500 font-medium">Rows:</span>
-                  <div className="w-[5vw]">
-                    <CustomDropdown
-                      value={itemsPerPage}
-                      onChange={val => { setItemsPerPage(Number(val)); setCurrentPage(1); }}
-                      options={[
-                        { value: 10, label: "10" },
-                        { value: 20, label: "20" },
-                        { value: 50, label: "50" }
-                      ]}
-                      size="sm"
-                      usePortal={true}
-                      placement="top"
-                      triggerClassName="!h-[1.8vw] !rounded-full !px-[0.5vw] text-[0.77vw] font-semibold text-slate-700 border-slate-300 bg-white shadow-2xs"
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -1280,6 +1423,108 @@ export default function ProductionMaterialResponse() {
           product={infoSelected.product}
           onClose={() => setInfoSelected(null)}
         />
+      )}
+
+      {/* Verification / Validation Accept-Decline Popup */}
+      {vvModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+          <div className="bg-white rounded-[0.6vw] shadow-xl border border-slate-200 w-[24vw] p-[1.2vw] space-y-[0.9vw]">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-[0.5vw]">
+              <h3 className="text-[0.95vw] font-bold text-slate-800 capitalize">
+                {vvModal.type}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setVvModal(null)}
+                className="text-slate-400 hover:text-slate-600 text-[1vw] font-bold cursor-pointer"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-[0.7vw] text-[0.82vw]">
+              <div>
+                <label className="block text-[0.75vw] font-semibold text-slate-600 mb-[0.2vw]">
+                  {vvModal.type === "verification" ? "Verified Date" : "Validated Date"}
+                </label>
+                <input
+                  type="date"
+                  value={vvModal.date}
+                  onChange={(e) => setVvModal(prev => ({ ...prev, date: e.target.value }))}
+                  className="w-full border border-slate-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-slate-800 outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[0.75vw] font-semibold text-slate-600 mb-[0.2vw]">
+                  Status
+                </label>
+                <select
+                  value={vvModal.action}
+                  onChange={(e) => setVvModal(prev => ({ ...prev, action: e.target.value }))}
+                  className="w-full border border-slate-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-slate-800 font-semibold outline-none focus:border-blue-500 bg-white"
+                >
+                  <option value="Accepted">Accepted</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[0.75vw] font-semibold text-slate-600 mb-[0.2vw]">
+                  Remarks (optional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={vvModal.remarks}
+                  onChange={(e) => setVvModal(prev => ({ ...prev, remarks: e.target.value }))}
+                  placeholder="Enter remarks..."
+                  className="w-full border border-slate-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-slate-800 outline-none focus:border-blue-500 resize-none"
+                />
+              </div>
+
+              {vvModal.type === "validation" && vvModal.action === "Accepted" && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] text-[0.74vw] font-medium">
+                  Once validation is accepted, you cannot edit these values further.
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-[0.5vw] pt-[0.3vw]">
+              <button
+                type="button"
+                onClick={() => setVvModal(null)}
+                className="px-[0.8vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const { type, action, entry, product, draft, date, remarks } = vvModal;
+                  const nextStatus = type === "verification"
+                    ? (action === "Accepted" ? "Verified" : "Rejected")
+                    : (action === "Accepted" ? "Validated" : "Rejected");
+                  const updatedDraft = {
+                    ...draft,
+                    [type === "verification" ? "verificationStatus" : "validationStatus"]: nextStatus,
+                    closingDate: date || draft.closingDate,
+                    finalStatusRemarks: remarks || draft.finalStatusRemarks,
+                    hasChanges: true
+                  };
+                  setVvModal(null);
+                  await saveRow(entry, product, updatedDraft);
+                }}
+                className={`px-[0.9vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold text-white cursor-pointer ${
+                  vvModal.action === "Accepted"
+                    ? "bg-emerald-600 hover:bg-emerald-700"
+                    : "bg-rose-600 hover:bg-rose-700"
+                }`}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

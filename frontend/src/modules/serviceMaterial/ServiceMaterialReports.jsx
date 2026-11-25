@@ -1958,7 +1958,7 @@ export default function ServiceMaterialReports({ currentUser: propUser }) {
                 }`}
               >
                 <Columns className="w-[0.85vw] h-[0.85vw] text-slate-500" />
-                <span>Columns</span>
+                <span>Templates</span>
               </button>
             </CustomTooltip>
 

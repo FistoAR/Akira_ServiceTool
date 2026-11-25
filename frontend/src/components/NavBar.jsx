@@ -82,7 +82,14 @@ const NavBar = ({ type }) => {
               Service Call Entry
             </h1>
           ) : (
-            <h1 className="text-[1.35vw] font-semibold text-black">{type}</h1>
+            <div className="flex items-center gap-[0.6vw]">
+              <h1 className="text-[1.35vw] font-semibold text-black">{type}</h1>
+              {["Production Material", "Production Material Response", "Production Material Reports"].includes(type) && loggedInUser?.zone && (
+                <span className="inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                  Zone: {loggedInUser.zone}
+                </span>
+              )}
+            </div>
           )}
 
           <div className={`flex gap-[0.8vw] items-center`}>

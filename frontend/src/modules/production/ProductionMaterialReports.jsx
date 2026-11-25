@@ -681,7 +681,7 @@ const AnalysisReport = ({ entries, fromDate, setFromDate, toDate, setToDate }) =
               <Th cls="min-w-[12vw]">Customer</Th>
               <Th cls="min-w-[8vw]">Job Order</Th>
               <Th cls="min-w-[15vw]">Product Details</Th>
-              <Th>Stage</Th>
+              <Th>Detection Stage</Th>
               <Th cls="min-w-[9vw]">Problem Type</Th>
               <Th>NC Type</Th>
               <Th>Disposition</Th>

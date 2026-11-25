@@ -765,18 +765,15 @@ const ProductionEditableProductTable = ({
                            {renderFillHandle(index, 10)}
                         </td>
 
-                        {/* 11. Zone */}
+                        {/* 11. Detection Stage */}
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 11)}`} onMouseDown={(e) => handleCellMouseDown(index, 11, e)} onMouseEnter={() => handleCellMouseEnter(index, 11)}>
                           <CustomDropdown
-                            value={prod.zone || prod.stage || ""}
-                            onChange={(val) => {
-                              handleUpdate(prod._pid, "zone", val);
-                              handleUpdate(prod._pid, "stage", val);
-                            }}
+                            value={prod.stage || ""}
+                            onChange={(val) => handleUpdate(prod._pid, "stage", val)}
                             disabled={isReadOnly}
-                            placeholder="Select Zone"
+                            placeholder="Select Stage"
                             size="sm"
-                            options={zoneOptions.length > 0 ? zoneOptions : [{ value: "Default Zone", label: "Default Zone" }]}
+                            options={stageOptions.map(s => ({ value: s, label: s }))}
                             usePortal={true}
                             maxHeight="10.5vw"
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
@@ -878,43 +875,42 @@ const ProductionEditableProductTable = ({
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 16)}`} onMouseDown={(e) => handleCellMouseDown(index, 16, e)} onMouseEnter={() => handleCellMouseEnter(index, 16)}>
                           {prod.ncType === "Internal" ? (
                             <div className="px-[0.6vw] py-[0.3vw] bg-slate-100 text-slate-500 rounded-[0.3vw] text-[0.78vw] font-medium text-center">
-                              Auto (Same Person)
+                              Same Person
                             </div>
                           ) : (
-                            <div className="flex flex-col gap-[0.3vw]">
-                              {/* Dual-Mode Selector for External NC */}
+                            <div className="flex flex-col gap-[0.25vw]">
+                              {/* Compact Mode Toggle for External NC */}
                               {!isReadOnly && (
-                                <div className="flex items-center gap-[0.4vw] text-[0.7vw] font-semibold text-slate-600 bg-slate-50 p-[0.2vw] rounded border border-slate-200">
-                                  <label className="flex items-center gap-[0.2vw] cursor-pointer">
-                                    <input
-                                      type="radio"
-                                      name={`routing_${prod._pid}`}
-                                      value="Zone"
-                                      checked={(prod.externalRoutingType || "Zone") === "Zone"}
-                                      onChange={() => {
-                                        handleUpdate(prod._pid, "externalRoutingType", "Zone");
-                                        handleUpdate(prod._pid, "raisedTo", "");
-                                        handleUpdate(prod._pid, "raisedToName", "");
-                                      }}
-                                      className="w-[0.7vw] h-[0.7vw]"
-                                    />
-                                    <span>Target Zone</span>
-                                  </label>
-                                  <span className="text-slate-300">|</span>
-                                  <label className="flex items-center gap-[0.2vw] cursor-pointer">
-                                    <input
-                                      type="radio"
-                                      name={`routing_${prod._pid}`}
-                                      value="Employee"
-                                      checked={prod.externalRoutingType === "Employee"}
-                                      onChange={() => {
-                                        handleUpdate(prod._pid, "externalRoutingType", "Employee");
-                                        handleUpdate(prod._pid, "targetZone", "");
-                                      }}
-                                      className="w-[0.7vw] h-[0.7vw]"
-                                    />
-                                    <span>Same-Zone Staff</span>
-                                  </label>
+                                <div className="inline-flex bg-slate-100 p-[0.15vw] rounded-[0.3vw] border border-slate-200 w-full">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      handleUpdate(prod._pid, "externalRoutingType", "Zone");
+                                      handleUpdate(prod._pid, "raisedTo", "");
+                                      handleUpdate(prod._pid, "raisedToName", "");
+                                    }}
+                                    className={`flex-1 py-[0.15vw] text-[0.7vw] font-semibold rounded-[0.2vw] transition-all ${
+                                      (prod.externalRoutingType || "Zone") === "Zone"
+                                        ? "bg-white text-blue-700 shadow-2xs"
+                                        : "text-slate-500 hover:text-slate-700"
+                                    }`}
+                                  >
+                                    Zone
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      handleUpdate(prod._pid, "externalRoutingType", "Employee");
+                                      handleUpdate(prod._pid, "targetZone", "");
+                                    }}
+                                    className={`flex-1 py-[0.15vw] text-[0.7vw] font-semibold rounded-[0.2vw] transition-all ${
+                                      prod.externalRoutingType === "Employee"
+                                        ? "bg-white text-blue-700 shadow-2xs"
+                                        : "text-slate-500 hover:text-slate-700"
+                                    }`}
+                                  >
+                                    Staff
+                                  </button>
                                 </div>
                               )}
 

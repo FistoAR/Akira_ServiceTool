@@ -539,13 +539,7 @@ const ProductionMaster = () => {
           <div>
             <h1 className="text-[1.15vw] font-bold text-slate-800 tracking-tight flex items-center gap-[0.5vw]">
               Production Master
-              <span className="text-[0.72vw] font-semibold bg-blue-100 text-blue-700 px-[0.5vw] py-[0.1vw] rounded-full">
-                Custom Zone Roles
-              </span>
             </h1>
-            <p className="text-[0.77vw] text-slate-500 font-medium">
-              Create zones, customize station roles individually per zone, and assign employees.
-            </p>
           </div>
         </div>
 
@@ -824,16 +818,11 @@ const ProductionMaster = () => {
 
               {/* Info Card */}
               {activeZoneObjForRoles && (
-                <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.8vw] space-y-[0.4vw]">
-                  <div className="flex items-center justify-between text-[0.78vw]">
-                    <span className="font-semibold text-slate-600">Current Default Intake Role:</span>
-                    <span className="font-bold text-emerald-700 bg-emerald-50 px-[0.5vw] py-[0.1vw] rounded border border-emerald-200">
-                      {activeZoneObjForRoles.defaultReceiverRole || "Manual Testing"}
-                    </span>
-                  </div>
-                  <p className="text-[0.72vw] text-slate-500 leading-relaxed">
-                    Incoming external NCs routed to <strong>{activeZoneObjForRoles.name}</strong> land directly at this designated intake station. Click the star ★ next to any role to make it the default.
-                  </p>
+                <div className="bg-slate-50 border border-slate-200 rounded-[0.5vw] p-[0.65vw] flex items-center justify-between text-[0.78vw]">
+                  <span className="font-semibold text-slate-600">Default Intake:</span>
+                  <span className="font-bold text-emerald-700 bg-emerald-50 px-[0.5vw] py-[0.1vw] rounded border border-emerald-200">
+                    {activeZoneObjForRoles.defaultReceiverRole || "Manual Testing"}
+                  </span>
                 </div>
               )}
             </div>
@@ -1097,16 +1086,11 @@ const ProductionMaster = () => {
                   </div>
 
                   {/* Selected Info Card */}
-                  <div className="bg-blue-50/70 border border-blue-200 rounded-[0.5vw] p-[0.8vw] space-y-[0.4vw]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[0.78vw] font-semibold text-blue-900">Selected for Assignment:</span>
-                      <span className="text-[0.9vw] font-bold text-blue-700 bg-white px-[0.6vw] py-[0.1vw] rounded-full border border-blue-200">
-                        {selectedUserIds.length} person(s)
-                      </span>
-                    </div>
-                    <p className="text-[0.72vw] text-blue-800/80 leading-relaxed">
-                      Assigns to <strong>{selectedZone}</strong> as <strong>{selectedRoleInZone}</strong>.
-                    </p>
+                  <div className="bg-blue-50/70 border border-blue-200 rounded-[0.5vw] p-[0.65vw] flex items-center justify-between">
+                    <span className="text-[0.78vw] font-semibold text-blue-900">Selected:</span>
+                    <span className="text-[0.85vw] font-bold text-blue-700 bg-white px-[0.55vw] py-[0.1vw] rounded-full border border-blue-200">
+                      {selectedUserIds.length}
+                    </span>
                   </div>
 
                   {/* Selected Chips */}
