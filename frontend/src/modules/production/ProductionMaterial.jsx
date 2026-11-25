@@ -174,10 +174,15 @@ const VerificationRemarksModal = ({ row, prod, onSave, onClose }) => {
 };
 
 // --- Validation Modal (Accept / Reject & Remarks) ---
-const ValidationModal = ({ row, prod, onSave, onClose }) => {
-  const currentStatus = prod.validationStatus || prod.report?.validationStatus;
+const ValidationModal = ({ row, prod, initialStatus, onSave, onClose }) => {
+  const currentStatus = initialStatus || prod.validationStatus || prod.report?.validationStatus;
   const initialDecision = currentStatus === "Rejected" ? "Reject" : currentStatus === "Validated" ? "Accept" : "";
   const [decision, setDecision] = useState(initialDecision);
+  const [validationDate, setValidationDate] = useState(
+    (prod.closingDate || prod.closedDate || prod.report?.closingDate || prod.report?.closedDate)
+      ? new Date(prod.closingDate || prod.closedDate || prod.report?.closingDate || prod.report?.closedDate).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0]
+  );
   const [remarks, setRemarks] = useState(
     prod.validationRemarks || prod.report?.validationRemarks || ""
   );
@@ -191,6 +196,7 @@ const ValidationModal = ({ row, prod, onSave, onClose }) => {
     onSave({
       validationStatus: valStatus,
       validationRemarks: remarks,
+      closingDate: validationDate,
     });
   };
 
@@ -1698,7 +1704,33 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
   };
 
   const handleDuplicate = (prod) => {
-    setProducts(prev => [...prev, { ...prod, _pid: `p-${Date.now()}-${Math.random().toString(36).slice(2, 7)}` }]);
+    const {
+      _id,
+      report,
+      status,
+      verificationStatus,
+      validationStatus,
+      verificationRemarks,
+      validationRemarks,
+      finalStatus,
+      finalStatusRemarks,
+      finalStatusHistory,
+      closingDate,
+      closedDate,
+      reworkCycleCount,
+      reworkHistory,
+      ...cleanProd
+    } = prod;
+    setProducts(prev => [
+      ...prev,
+      {
+        ...cleanProd,
+        _pid: `p-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        status: "Pending",
+        verificationStatus: "Pending",
+        validationStatus: "Pending",
+      }
+    ]);
   };
 
   const removeProduct = (pid) => {
@@ -3243,9 +3275,10 @@ export default function ProductionMaterial() {
                                         ? (isCreatorOrAdmin || isRaisedToPerson)
                                         : (isRaisedToPerson || isCurrentUserAdmin);
 
+                                      const isVerifiedAccepted = (prod.verificationStatus || prod.report?.verificationStatus) === "Verified";
                                       const canPerformValidate = isInternalNC
                                         ? (isCreatorOrAdmin || isRaisedToPerson)
-                                        : (isCreatorOrAdmin);
+                                        : (isCreatorOrAdmin && isVerifiedAccepted);
 
                                       const hasVerifyRemarks = Boolean(prod.verificationRemarks || prod.report?.verificationRemarks);
                                       const verifyText = prod.verificationRemarks || prod.report?.verificationRemarks || "";
@@ -3271,12 +3304,29 @@ export default function ProductionMaterial() {
 
                                           {/* Product Code */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
-                                            {showReadyHighlight && (!isInternalNC || ((prod.verificationStatus || prod.report?.verificationStatus) === "Verified" && valStatus === "Validated")) && (
-                                              <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
-                                                <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
-                                                <span className="text-[0.65vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
-                                              </div>
-                                            )}
+                                            {showReadyHighlight && (() => {
+                                              const verDone = (prod.verificationStatus || prod.report?.verificationStatus) === "Verified";
+                                              const valDone = valStatus === "Validated";
+                                              if (verDone && valDone) {
+                                                return (
+                                                  <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
+                                                    <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-emerald-500 shadow-xs" />
+                                                    <span className="text-[0.65vw] font-semibold text-emerald-700 whitespace-nowrap">Completed</span>
+                                                  </div>
+                                                );
+                                              }
+                                              if (!isInternalNC) {
+                                                return (
+                                                  <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
+                                                    <div className="h-[0.4vw] w-[0.4vw] rounded-full bg-amber-500 shadow-xs" />
+                                                    <span className="text-[0.65vw] font-semibold text-amber-700 whitespace-nowrap">
+                                                      {!verDone ? "Verification Pending" : "Validation Pending"}
+                                                    </span>
+                                                  </div>
+                                                );
+                                              }
+                                              return null;
+                                            })()}
                                             <div className="font-mono text-slate-800 text-[0.77vw] font-medium">
                                               {prod.productCode || "—"}
                                             </div>
@@ -3342,64 +3392,28 @@ export default function ProductionMaterial() {
                                             {prod.serialNumber || "—"}
                                           </td>
 
-                                          {/* Verification */}
+                                          {/* Verification (Always view-only from Response) */}
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 align-middle text-center font-medium">
-                                            {isInternalNC ? (
-                                              <div className="inline-flex items-center justify-center gap-[0.3vw]">
-                                                <span className={`inline-block px-[0.55vw] py-[0.15vw] rounded-full text-[0.72vw] font-semibold border ${
-                                                  (prod.verificationStatus || prod.report?.verificationStatus) === "Verified"
-                                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                                    : (prod.verificationStatus || prod.report?.verificationStatus) === "Rejected"
-                                                    ? "bg-rose-50 text-rose-700 border-rose-200"
-                                                    : "bg-slate-100 text-slate-600 border-slate-200"
-                                                }`}>
-                                                  {prod.verificationStatus || prod.report?.verificationStatus || "Pending"}
+                                            <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                              <span className={`inline-block px-[0.55vw] py-[0.15vw] rounded-full text-[0.72vw] font-semibold border ${
+                                                (prod.verificationStatus || prod.report?.verificationStatus) === "Verified"
+                                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                  : (prod.verificationStatus || prod.report?.verificationStatus) === "Rejected"
+                                                  ? "bg-rose-50 text-rose-700 border-rose-200"
+                                                  : "bg-slate-100 text-slate-600 border-slate-200"
+                                              }`}>
+                                                {prod.verificationStatus || prod.report?.verificationStatus || "Pending"}
+                                              </span>
+                                              <span className="relative group/vtip inline-flex items-center shrink-0">
+                                                <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
+                                                <span className="pointer-events-none opacity-0 invisible group-hover/vtip:opacity-100 group-hover/vtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                                  <div><span className="text-slate-400">Verification Date:</span> {(prod.closingDate || prod.closedDate || prod.report?.closingDate || prod.report?.closedDate) ? fmtDate(prod.closingDate || prod.closedDate || prod.report?.closingDate || prod.report?.closedDate) : "—"}</div>
+                                                  <div><span className="text-slate-400">Status:</span> {prod.verificationStatus || prod.report?.verificationStatus || "Pending"}</div>
+                                                  <div><span className="text-slate-400">Remarks:</span> {verifyText || prod.finalStatusRemarks || prod.report?.finalStatusRemarks || "—"}</div>
+                                                  <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
                                                 </span>
-                                                <span className="relative group/vtip inline-flex items-center shrink-0">
-                                                  <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
-                                                  <span className="pointer-events-none opacity-0 invisible group-hover/vtip:opacity-100 group-hover/vtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
-                                                    <div><span className="text-slate-400">Verification Date:</span> {prod.closingDate ? fmtDate(prod.closingDate) : "—"}</div>
-                                                    <div><span className="text-slate-400">Status:</span> {prod.verificationStatus || prod.report?.verificationStatus || "Pending"}</div>
-                                                    <div><span className="text-slate-400">Remarks:</span> {verifyText || prod.finalStatusRemarks || "—"}</div>
-                                                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
-                                                  </span>
-                                                </span>
-                                              </div>
-                                            ) : canPerformVerify ? (
-                                              hasVerifyRemarks ? (
-                                                <button
-                                                  type="button"
-                                                  onClick={() => setShowVerify({ row, prod })}
-                                                  className="px-[0.7vw] py-[0.25vw] bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 hover:border-blue-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw] max-w-[9vw] truncate"
-                                                  title={verifyText}
-                                                >
-                                                  <Edit3 className="w-[0.75vw] h-[0.75vw] shrink-0" />
-                                                  <span className="truncate">{verifyText}</span>
-                                                </button>
-                                              ) : (
-                                                <button
-                                                  type="button"
-                                                  onClick={() => setShowVerify({ row, prod })}
-                                                  className="px-[0.7vw] py-[0.25vw] bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-700 border border-slate-300 hover:border-blue-300 rounded-[0.35vw] text-[0.72vw] font-semibold transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw]"
-                                                  title="Add Verification Remarks"
-                                                >
-                                                  <Plus className="w-[0.75vw] h-[0.75vw]" />
-                                                  <span>Verify</span>
-                                                </button>
-                                              )
-                                            ) : (
-                                              /* Read-only status for creator/validator or non-assignee */
-                                              hasVerifyRemarks ? (
-                                                <div
-                                                  className="inline-block px-[0.6vw] py-[0.2vw] bg-blue-50 text-blue-800 border border-blue-200 rounded-[0.35vw] text-[0.72vw] font-medium max-w-[9vw] truncate"
-                                                  title={verifyText}
-                                                >
-                                                  {verifyText}
-                                                </div>
-                                              ) : (
-                                                <span className="text-slate-400 font-medium text-[0.77vw]">—</span>
-                                              )
-                                            )}
+                                              </span>
+                                            </div>
                                           </td>
 
                                           {/* Validation */}
@@ -3418,15 +3432,15 @@ export default function ProductionMaterial() {
                                                 <span className="relative group/valtip inline-flex items-center shrink-0">
                                                   <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
                                                   <span className="pointer-events-none opacity-0 invisible group-hover/valtip:opacity-100 group-hover/valtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
-                                                    <div><span className="text-slate-400">Validation Date:</span> {prod.closingDate ? fmtDate(prod.closingDate) : "—"}</div>
+                                                    <div><span className="text-slate-400">Validation Date:</span> {(prod.closingDate || prod.closedDate || prod.report?.closingDate || prod.report?.closedDate) ? fmtDate(prod.closingDate || prod.closedDate || prod.report?.closingDate || prod.report?.closedDate) : "—"}</div>
                                                     <div><span className="text-slate-400">Status:</span> {valStatus === "Validated" ? "Accepted" : valStatus || "Pending"}</div>
-                                                    <div><span className="text-slate-400">Remarks:</span> {valRemarks || prod.finalStatusRemarks || "—"}</div>
+                                                    <div><span className="text-slate-400">Remarks:</span> {valRemarks || prod.finalStatusRemarks || prod.report?.finalStatusRemarks || "—"}</div>
                                                     <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
                                                   </span>
                                                 </span>
                                               </div>
                                             ) : canPerformValidate ? (
-                                              valStatus ? (
+                                              valStatus && valStatus !== "Pending" ? (
                                                 <button
                                                   type="button"
                                                   onClick={() => setShowValidation({ row, prod })}

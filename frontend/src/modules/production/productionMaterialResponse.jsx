@@ -1301,7 +1301,7 @@ export default function ProductionMaterialResponse() {
                             <td className="py-[0.65vw] px-[0.7vw] text-center border-b border-slate-300 sticky right-0 bg-white z-20 shadow-[-4px_0_6px_-1px_rgba(0,0,0,0.05)]">
                               {(draft.validationStatus === "Validated" && draft.verificationStatus === "Verified") ? (
                                 <span className="text-[0.73vw] font-semibold text-emerald-700 bg-emerald-50 px-[0.5vw] py-[0.2vw] rounded border border-emerald-200">
-                                  Locked
+                                  Completed
                                 </span>
                               ) : product.status === "Completed" && !editingRows[product._pid] ? (
                                 <button
@@ -1507,10 +1507,15 @@ export default function ProductionMaterialResponse() {
                   const updatedDraft = {
                     ...draft,
                     [type === "verification" ? "verificationStatus" : "validationStatus"]: nextStatus,
+                    [type === "verification" ? "verificationRemarks" : "validationRemarks"]: remarks || "",
                     closingDate: date || draft.closingDate,
                     finalStatusRemarks: remarks || draft.finalStatusRemarks,
                     hasChanges: true
                   };
+                  setDrafts(prev => ({
+                    ...prev,
+                    [product._pid]: { ...updatedDraft, hasChanges: false }
+                  }));
                   setVvModal(null);
                   await saveRow(entry, product, updatedDraft);
                 }}
