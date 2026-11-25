@@ -55,6 +55,10 @@ const productSchema = new mongoose.Schema({
   stage: String,
   department: String,
   zone: String,
+  targetZone: String,
+  externalRoutingType: { type: String, default: 'Zone' }, // 'Zone' or 'Employee'
+  reworkCycleCount: { type: Number, default: 0 },
+  reworkHistory: [mongoose.Schema.Types.Mixed],
   inspectedBy: String,
   inspectedByName: String,
   qty: { type: Number, default: 1 },

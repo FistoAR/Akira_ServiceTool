@@ -22,6 +22,18 @@ router.post('/sites', masterController.addSite);
 router.put('/sites/:id', masterController.updateSite);
 router.delete('/sites/:id', masterController.deleteSite);
 
+// Zones
+router.get('/zones', masterController.getZones);
+router.post('/zones', masterController.addZone);
+router.put('/zones/:id', masterController.updateZone);
+router.delete('/zones/:id', masterController.deleteZone);
+
+// Zone Roles (Stations / Roles inside Zone)
+router.get('/zone-roles', masterController.getZoneRoles);
+router.post('/zone-roles', masterController.addZoneRole);
+router.put('/zone-roles/:id', masterController.updateZoneRole);
+router.delete('/zone-roles/:id', masterController.deleteZoneRole);
+
 // Units
 router.get('/units', masterController.getUnits);
 router.post('/units', masterController.addUnit);

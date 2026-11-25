@@ -1,5 +1,7 @@
 const Unit = require('./models/unit.model');
 const Site = require('./models/site.model');
+const Zone = require('./models/zone.model');
+const ZoneRole = require('./models/zoneRole.model');
 const PartyType = require('./models/partyType.model');
 const WarrantyRule = require('./models/warrantyRule.model');
 const ProductSegment = require('./models/productSegment.model');
@@ -24,6 +26,109 @@ exports.updateSite = async (req, res) => {
 };
 exports.deleteSite = async (req, res) => {
   try { await Site.findByIdAndDelete(req.params.id); res.json({ message: 'Deleted' }); } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+// --- Zones ---
+exports.getZones = async (req, res) => {
+  try { res.json(await Zone.find().sort({ name: 1 }).lean()); } catch (err) { res.status(500).json({ message: err.message }); }
+};
+exports.addZone = async (req, res) => {
+  try { 
+    const { name, description, roles, defaultReceiverRole, defaultReceiverUserId, defaultReceiverUserName } = req.body;
+    if (!name || !name.trim()) return res.status(400).json({ message: 'Zone name is required' });
+    const existing = await Zone.findOne({ name: name.trim() });
+    if (existing) return res.status(400).json({ message: 'Zone already exists' });
+    const zone = await Zone.create({ 
+      name: name.trim(), 
+      description: (description || '').trim(),
+      roles: Array.isArray(roles) && roles.length > 0 ? roles : undefined,
+      defaultReceiverRole: defaultReceiverRole || 'Manual Testing',
+      defaultReceiverUserId: defaultReceiverUserId || '',
+      defaultReceiverUserName: defaultReceiverUserName || ''
+    });
+    res.json(zone);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+exports.updateZone = async (req, res) => {
+  try { 
+    const { name, description, roles, defaultReceiverRole, defaultReceiverUserId, defaultReceiverUserName } = req.body;
+    const update = {};
+    if (name) update.name = name.trim();
+    if (description !== undefined) update.description = description.trim();
+    if (roles !== undefined) update.roles = roles;
+    if (defaultReceiverRole !== undefined) update.defaultReceiverRole = defaultReceiverRole;
+    if (defaultReceiverUserId !== undefined) update.defaultReceiverUserId = defaultReceiverUserId;
+    if (defaultReceiverUserName !== undefined) update.defaultReceiverUserName = defaultReceiverUserName;
+
+    const zone = await Zone.findByIdAndUpdate(req.params.id, update, { new: true });
+    res.json(zone);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+exports.deleteZone = async (req, res) => {
+  try { 
+    await Zone.findByIdAndDelete(req.params.id); 
+    res.json({ message: 'Deleted' }); 
+  } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+// --- Zone Roles (Stations / Roles inside Zone) ---
+const INITIAL_ZONE_ROLES = [
+  "Manufacturing",
+  "Assembly 1",
+  "Assembly 2",
+  "Machine Testing",
+  "Manual Testing",
+  "Quality Inspection"
+];
+
+exports.getZoneRoles = async (req, res) => {
+  try {
+    let roles = await ZoneRole.find().sort({ createdAt: 1 }).lean();
+    if (roles.length === 0) {
+      // Seed default initial roles if none exist
+      const seeded = await ZoneRole.insertMany(INITIAL_ZONE_ROLES.map(r => ({ name: r })));
+      roles = seeded.map(doc => doc.toObject ? doc.toObject() : doc);
+    }
+    res.json(roles);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.addZoneRole = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    if (!name || !name.trim()) return res.status(400).json({ message: 'Role name is required' });
+    const trimmed = name.trim();
+    const existing = await ZoneRole.findOne({ name: { $regex: new RegExp(`^${trimmed}$`, 'i') } });
+    if (existing) return res.status(400).json({ message: 'Role already exists' });
+    const newRole = await ZoneRole.create({ name: trimmed, description: (description || '').trim() });
+    res.json(newRole);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateZoneRole = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const update = {};
+    if (name) update.name = name.trim();
+    if (description !== undefined) update.description = description.trim();
+    const updated = await ZoneRole.findByIdAndUpdate(req.params.id, update, { new: true });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.deleteZoneRole = async (req, res) => {
+  try {
+    await ZoneRole.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Role deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // --- Units ---
@@ -329,7 +434,7 @@ exports.getModules = async (req, res) => {
     // ── Production Material ──
     // Admin Pages
     { id: "prodNC", label: "Production NC", group: "production-material", subGroup: "admin", desc: "File production non-conformance reports" },
-    { id: "productionMaster", label: "Production Master", group: "production-material", subGroup: "admin", desc: "Manage Detection Stages and employee stage assignments" },
+    { id: "productionMaster", label: "Production Master", group: "production-material", subGroup: "admin", desc: "Manage Zones and employee zone assignments" },
     { id: "prodReports", label: "NC Reports", group: "production-material", subGroup: "admin", desc: "NC analytics and logs" },
     // User Pages
     { id: "productionMaterialResponse", label: "Production Response Workspace", group: "production-material", subGroup: "user", desc: "Production floor rework and unit verification" },

@@ -58,6 +58,7 @@ const STATUS_OPTIONS = [
 const VALIDATION_OPTIONS = [
   "Pending",
   "Validated",
+  "Failed",
   "Not Validated",
   "Under Testing"
 ];
@@ -891,9 +892,22 @@ export default function ProductionMaterialResponse() {
                               <div className="text-[0.71vw] text-slate-700 mt-[0.1vw] font-mono flex items-center gap-[0.3vw] flex-wrap">
                                 <span>SN: <strong className="text-slate-900">{product.serialNumber || product.identification || "—"}</strong></span>
                                 <span>•</span>
-                                <span>Stage: <strong className="text-slate-900">{product.stage || "—"}</strong></span>
+                                <span>Zone: <strong className="text-blue-700 font-semibold">{product.zone || product.stage || "—"}</strong></span>
+                                {product.targetZone && (
+                                  <>
+                                    <span>→</span>
+                                    <span className="bg-blue-50 text-blue-700 px-[0.3vw] py-[0.05vw] rounded font-semibold border border-blue-200">
+                                      {product.targetZone}
+                                    </span>
+                                  </>
+                                )}
                                 <span>•</span>
                                 <span>NC: <strong className="text-slate-900">{product.ncType || "—"}</strong></span>
+                                {product.reworkCycleCount > 0 && (
+                                  <span className="bg-rose-50 text-rose-700 px-[0.35vw] py-[0.05vw] rounded font-bold border border-rose-200">
+                                    Cycle {product.reworkCycleCount + 1}
+                                  </span>
+                                )}
                               </div>
                             </td>
 

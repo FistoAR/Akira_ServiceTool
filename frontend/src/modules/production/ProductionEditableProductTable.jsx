@@ -63,6 +63,8 @@ const ProductionEditableProductTable = ({
   stageOptions = [],
   dispositionOptions = [],
   stageMappings = [],
+  zoneMappings = [],
+  zonesList = [],
   isReadOnly,
   allowPartialEdit,
   onDuplicate,
@@ -418,9 +420,14 @@ const ProductionEditableProductTable = ({
     { value: "Yes", label: "Yes" }
   ], []);
 
-  const stageDropdownOptions = useMemo(() => 
-    stageOptions.map(s => ({ value: s, label: s })), 
-  [stageOptions]);
+  const zoneOptions = useMemo(() => {
+    if (Array.isArray(zonesList) && zonesList.length > 0) {
+      return zonesList.map(z => ({ value: z.name, label: z.name }));
+    }
+    const zoneSet = new Set();
+    zoneMappings.forEach(zm => { if (zm.zone) zoneSet.add(zm.zone); });
+    return Array.from(zoneSet).map(z => ({ value: z, label: z }));
+  }, [zonesList, zoneMappings]);
 
   const dispositionDropdownOptions = useMemo(() => 
     dispositionOptions.map(opt => ({ value: opt, label: opt })), 
@@ -451,12 +458,12 @@ const ProductionEditableProductTable = ({
             <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
             <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Zone</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
             <th className="w-[8vw] min-w-[7.5vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
             <th className="w-[14vw] min-w-[13vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Disposition</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Raised To</th>
+            <th className="w-[16vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Route / Raised To</th>
             {!isReadOnly && <th className="sticky right-0 w-[6vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap bg-[#E9EDF7] z-30 border-l border-b border-slate-300 shadow-[-4px_0_6px_-2px_rgba(0,0,0,0.05)]">Actions</th>}
           </tr>
         </thead>
@@ -758,15 +765,18 @@ const ProductionEditableProductTable = ({
                            {renderFillHandle(index, 10)}
                         </td>
 
-                        {/* 11. Detection Stage */}
+                        {/* 11. Zone */}
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 11)}`} onMouseDown={(e) => handleCellMouseDown(index, 11, e)} onMouseEnter={() => handleCellMouseEnter(index, 11)}>
                           <CustomDropdown
-                            value={prod.stage || ""}
-                            onChange={(val) => handleUpdate(prod._pid, "stage", val)}
+                            value={prod.zone || prod.stage || ""}
+                            onChange={(val) => {
+                              handleUpdate(prod._pid, "zone", val);
+                              handleUpdate(prod._pid, "stage", val);
+                            }}
                             disabled={isReadOnly}
-                            placeholder="Select"
+                            placeholder="Select Zone"
                             size="sm"
-                            options={stageDropdownOptions}
+                            options={zoneOptions.length > 0 ? zoneOptions : [{ value: "Default Zone", label: "Default Zone" }]}
                             usePortal={true}
                             maxHeight="10.5vw"
                             triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
@@ -864,43 +874,110 @@ const ProductionEditableProductTable = ({
                           {renderFillHandle(index, 15)}
                         </td>
 
-                        {/* 16. Raised To */}
+                        {/* 16. Route / Raised To */}
                         <td className={`py-[0.6vw] px-[0.4vw] relative transition-all ${getCellClass(index, 16)}`} onMouseDown={(e) => handleCellMouseDown(index, 16, e)} onMouseEnter={() => handleCellMouseEnter(index, 16)}>
-                          <CustomDropdown
-                            value={prod.raisedTo || ""}
-                            onChange={(val) => {
-                              const emp = employees.find(emp => (emp.userId || emp._id) === val);
-                              handleUpdate(prod._pid, "raisedTo", val);
-                              handleUpdate(prod._pid, "raisedToName", emp?.name || val);
-                            }}
-                            disabled={isReadOnly || prod.ncType === "Internal"}
-                            placeholder={prod.ncType === "Internal" ? "Auto (Same Person)" : "Select Employee"}
-                            size="sm"
-                            options={(() => {
-                              // Filter employees strictly belonging to the product's detection stage
-                              const currentStage = (prod.stage || "").trim();
-                              if (currentStage && Array.isArray(stageMappings) && stageMappings.length > 0) {
-                                const stageUsers = stageMappings.filter(m => (m.stage || "").trim() === currentStage);
-                                const allowedUserIds = new Set(stageUsers.map(m => String(m.userId).trim()));
-                                const stageEmployees = (employees || []).filter(e => {
-                                  const eid = String(e.userId || e._id).trim();
-                                  return allowedUserIds.has(eid);
-                                });
-                                return stageEmployees.map(e => ({ value: e.userId || e._id, label: e.name || e.userId }));
-                              }
-                              return employeeDropdownOptions;
-                            })()}
-                            searchable={true}
-                            searchPlaceholder="Search employee..."
-                            usePortal={true}
-                            maxHeight="12vw"
-                            triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.83vw] ${
-                              isReadOnly || prod.ncType === "Internal"
-                                ? "cursor-not-allowed bg-slate-50 border-transparent text-slate-600 font-semibold"
-                                : "bg-transparent border-transparent hover:border-slate-300 font-medium text-slate-900"
-                            }`}
-                            className="w-full"
-                          />
+                          {prod.ncType === "Internal" ? (
+                            <div className="px-[0.6vw] py-[0.3vw] bg-slate-100 text-slate-500 rounded-[0.3vw] text-[0.78vw] font-medium text-center">
+                              Auto (Same Person)
+                            </div>
+                          ) : (
+                            <div className="flex flex-col gap-[0.3vw]">
+                              {/* Dual-Mode Selector for External NC */}
+                              {!isReadOnly && (
+                                <div className="flex items-center gap-[0.4vw] text-[0.7vw] font-semibold text-slate-600 bg-slate-50 p-[0.2vw] rounded border border-slate-200">
+                                  <label className="flex items-center gap-[0.2vw] cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`routing_${prod._pid}`}
+                                      value="Zone"
+                                      checked={(prod.externalRoutingType || "Zone") === "Zone"}
+                                      onChange={() => {
+                                        handleUpdate(prod._pid, "externalRoutingType", "Zone");
+                                        handleUpdate(prod._pid, "raisedTo", "");
+                                        handleUpdate(prod._pid, "raisedToName", "");
+                                      }}
+                                      className="w-[0.7vw] h-[0.7vw]"
+                                    />
+                                    <span>Target Zone</span>
+                                  </label>
+                                  <span className="text-slate-300">|</span>
+                                  <label className="flex items-center gap-[0.2vw] cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`routing_${prod._pid}`}
+                                      value="Employee"
+                                      checked={prod.externalRoutingType === "Employee"}
+                                      onChange={() => {
+                                        handleUpdate(prod._pid, "externalRoutingType", "Employee");
+                                        handleUpdate(prod._pid, "targetZone", "");
+                                      }}
+                                      className="w-[0.7vw] h-[0.7vw]"
+                                    />
+                                    <span>Same-Zone Staff</span>
+                                  </label>
+                                </div>
+                              )}
+
+                              {/* Route Mode A: Target Zone Dropdown */}
+                              {(prod.externalRoutingType || "Zone") === "Zone" ? (
+                                <CustomDropdown
+                                  value={prod.targetZone || ""}
+                                  onChange={(val) => {
+                                    handleUpdate(prod._pid, "targetZone", val);
+                                    // Auto-link default receiver if known
+                                    const zTargetMembers = (zoneMappings || []).filter(zm => zm.zone === val);
+                                    const defaultContact = zTargetMembers.find(m => m.isDefaultReceiver || m.roleInZone === "Manual Testing") || zTargetMembers[0];
+                                    if (defaultContact) {
+                                      handleUpdate(prod._pid, "raisedTo", defaultContact.userId);
+                                      handleUpdate(prod._pid, "raisedToName", `${defaultContact.userName} (${defaultContact.roleInZone || 'Lead'})`);
+                                    } else {
+                                      handleUpdate(prod._pid, "raisedTo", "");
+                                      handleUpdate(prod._pid, "raisedToName", `Zone: ${val}`);
+                                    }
+                                  }}
+                                  disabled={isReadOnly}
+                                  placeholder="Select Target Zone..."
+                                  size="sm"
+                                  options={zoneOptions.filter(z => z.value !== (prod.zone || prod.stage))}
+                                  usePortal={true}
+                                  maxHeight="12vw"
+                                  triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.8vw] font-semibold text-blue-700 bg-blue-50/50 border-blue-200`}
+                                  className="w-full"
+                                />
+                              ) : (
+                                /* Route Mode B: Same-Zone Staff Dropdown */
+                                <CustomDropdown
+                                  value={prod.raisedTo || ""}
+                                  onChange={(val) => {
+                                    const emp = employees.find(emp => (emp.userId || emp._id) === val);
+                                    handleUpdate(prod._pid, "raisedTo", val);
+                                    handleUpdate(prod._pid, "raisedToName", emp?.name || val);
+                                  }}
+                                  disabled={isReadOnly}
+                                  placeholder="Select Same-Zone Staff..."
+                                  size="sm"
+                                  options={(() => {
+                                    const currentZone = (prod.zone || prod.stage || "").trim();
+                                    if (currentZone && Array.isArray(zoneMappings) && zoneMappings.length > 0) {
+                                      const zoneUsers = zoneMappings.filter(m => (m.zone || "").trim() === currentZone);
+                                      const allowedUserIds = new Set(zoneUsers.map(m => String(m.userId).trim()));
+                                      const zoneEmployees = (employees || []).filter(e => allowedUserIds.has(String(e.userId || e._id).trim()));
+                                      if (zoneEmployees.length > 0) {
+                                        return zoneEmployees.map(e => ({ value: e.userId || e._id, label: e.name || e.userId }));
+                                      }
+                                    }
+                                    return employeeDropdownOptions;
+                                  })()}
+                                  searchable={true}
+                                  searchPlaceholder="Search staff..."
+                                  usePortal={true}
+                                  maxHeight="12vw"
+                                  triggerClassName={`!py-[0.25vw] !h-[1.9vw] !rounded-[0.3vw] text-[0.8vw]`}
+                                  className="w-full"
+                                />
+                              )}
+                            </div>
+                          )}
                           {renderFillHandle(index, 16)}
                         </td>
 

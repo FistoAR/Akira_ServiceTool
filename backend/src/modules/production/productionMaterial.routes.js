@@ -3,11 +3,17 @@ const router = express.Router();
 const productionMaterialController = require('./productionMaterial.controller');
 const upload = require('../../middlewares/upload.middleware');
 
-// Production Stage Mappings (Production Master)
+// Production Stage Mappings (Legacy / Production Master)
 router.get('/stage-mappings', productionMaterialController.getStageMappings);
 router.post('/stage-mappings', productionMaterialController.saveStageMapping);
 router.delete('/stage-mappings/:id', productionMaterialController.deleteStageMapping);
 router.get('/my-stage', productionMaterialController.getMyStageMapping);
+
+// Production Zone Mappings (Production Master)
+router.get('/zone-mappings', productionMaterialController.getZoneMappings);
+router.post('/zone-mappings', productionMaterialController.saveZoneMapping);
+router.delete('/zone-mappings/:id', productionMaterialController.deleteZoneMapping);
+router.get('/my-zone', productionMaterialController.getMyZoneMapping);
 
 router.get('/', productionMaterialController.getAllInwards);
 router.get('/:id', productionMaterialController.getInwardById);

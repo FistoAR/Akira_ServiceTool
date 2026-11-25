@@ -1312,20 +1312,30 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
   });
 
   const [stageMappings, setStageMappings] = useState([]);
+  const [zoneMappings, setZoneMappings] = useState([]);
+  const [allZones, setAllZones] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [custRes, boardRes, ptRes, stageMapRes] = await Promise.all([
+        const [custRes, boardRes, ptRes, stageMapRes, zoneMapRes, zonesRes] = await Promise.all([
           axios.get(`${API_URL}/master/customers`),
           axios.get(`${API_URL}/master/board-types`),
           axios.get(`${API_URL}/master/party-types`).catch(() => ({ data: [] })),
-          axios.get(`${API_URL}/production-material/stage-mappings`).catch(() => ({ data: [] }))
+          axios.get(`${API_URL}/production-material/stage-mappings`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/production-material/zone-mappings`).catch(() => ({ data: [] })),
+          axios.get(`${API_URL}/master/zones`).catch(() => ({ data: [] }))
         ]);
         setCustomerDb(custRes.data);
         setBoardTypes(boardRes.data);
         if (stageMapRes?.data) {
           setStageMappings(stageMapRes.data);
+        }
+        if (zoneMapRes?.data) {
+          setZoneMappings(zoneMapRes.data);
+        }
+        if (zonesRes?.data) {
+          setAllZones(zonesRes.data);
         }
         if (ptRes?.data?.length > 0) {
           setPartyTypes(ptRes.data);
@@ -1922,6 +1932,8 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
               stageOptions={stageOptions}
               dispositionOptions={dispositionOptions}
               stageMappings={stageMappings}
+              zoneMappings={zoneMappings}
+              zonesList={allZones}
               isReadOnly={isReadOnly}
               onDuplicate={handleDuplicate}
               onRemove={removeProduct}
