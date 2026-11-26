@@ -48,11 +48,8 @@ const STATUS_CONFIG = {
 };
 
 const STATUS_OPTIONS = [
-  "Under Testing",
-  "Repair in Progress",
   "Pending",
-  "Completed",
-  "Not Repairable"
+  "Completed"
 ];
 
 const VALIDATION_OPTIONS = [
@@ -108,6 +105,7 @@ export default function ProductionMaterialResponse() {
   const [currentUser, setCurrentUser] = useState(null);
   const [infoSelected, setInfoSelected] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
+  const [zoneScope, setZoneScope] = useState(location.state?.zoneScope || "same");
   const [searchTerm, setSearchTerm] = useState(navFilter);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -212,20 +210,51 @@ export default function ProductionMaterialResponse() {
         list.push({ entry, product });
       });
     });
-    return list;
+    let _u = {};
+    try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+    const myId = String(_u?.userId || _u?._id || "");
+    return list.filter(({ product }) => {
+      const targetId = String(product.raisedTo || product.assignedTo || "");
+      return myId && targetId === myId;
+    });
   }, [entries]);
 
   const counts = useMemo(() => {
+    let _u = {};
+    try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+    const _uid = String(_u?.userId || _u?._id || "");
+    const _myZone = (_u?.zone || "").trim();
+
+    const q = searchTerm.trim().toLowerCase();
+    const scoped = myProducts.filter(({ entry, product }) => {
+      if (dateFrom && (entry.date || "").slice(0, 10) < dateFrom) return false;
+      if (dateTo && (entry.date || "").slice(0, 10) > dateTo) return false;
+      if (q) {
+        const matches =
+          (entry.customerName || "").toLowerCase().includes(q) ||
+          (entry.customerCode || "").toLowerCase().includes(q) ||
+          (entry.jobOrderNo || "").toLowerCase().includes(q) ||
+          (entry.refNoInternal || "").toLowerCase().includes(q) ||
+          (product.productDescription || "").toLowerCase().includes(q) ||
+          (product.productCode || "").toLowerCase().includes(q) ||
+          (product.serialNumber || "").toLowerCase().includes(q) ||
+          (product.ncType || "").toLowerCase().includes(q);
+        if (!matches) return false;
+      }
+      if (zoneScope === "same") return !product.targetZone;
+      const isRowCreator = _uid && (String(entry.creatorUserId || "") === _uid || entry.creatorName === _u?.name);
+      if (zoneScope === "sent") {
+        return Boolean(product.targetZone) && (isRowCreator || (product.targetZone !== _myZone && String(product.raisedTo || "") !== _uid));
+      }
+      return Boolean(product.targetZone) && !isRowCreator && (product.targetZone === _myZone || String(product.raisedTo || "") === _uid);
+    });
+
     const c = { 
-      All: myProducts.length,
-      "Repair in Progress": 0,
+      All: scoped.length,
       Pending: 0,
-      "Not Repairable": 0,
-      "Under Testing": 0,
       Completed: 0,
-      "Admin Returned": 0
     };
-    myProducts.forEach(({ product }) => {
+    scoped.forEach(({ product }) => {
       const rawStatus = product.report?.status || "Open";
       const isAdminReturned =
         rawStatus === "Completed" &&
@@ -242,10 +271,22 @@ export default function ProductionMaterialResponse() {
       }
     });
     return c;
-  }, [myProducts]);
+  }, [myProducts, zoneScope, dateFrom, dateTo, searchTerm]);
 
   const allProducts = useMemo(() => {
-    let filtered = myProducts;
+    let _u = {};
+    try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+    const _uid = String(_u?.userId || _u?._id || "");
+    const _myZone = (_u?.zone || "").trim();
+
+    let filtered = myProducts.filter(({ entry, product }) => {
+      if (zoneScope === "same") return !product.targetZone;
+      const isRowCreator = _uid && (String(entry.creatorUserId || "") === _uid || entry.creatorName === _u?.name);
+      if (zoneScope === "sent") {
+        return Boolean(product.targetZone) && (isRowCreator || (product.targetZone !== _myZone && String(product.raisedTo || "") !== _uid));
+      }
+      return Boolean(product.targetZone) && !isRowCreator && (product.targetZone === _myZone || String(product.raisedTo || "") === _uid);
+    });
     if (filterStatus !== "All") {
       if (filterStatus === "Admin Returned") {
         filtered = filtered.filter(({ product }) => {
@@ -300,7 +341,7 @@ export default function ProductionMaterialResponse() {
       );
     }
     return filtered.sort((a, b) => (a.entry.customerName || "").localeCompare(b.entry.customerName || ""));
-  }, [myProducts, filterStatus, dateFrom, dateTo, searchTerm]);
+  }, [myProducts, zoneScope, filterStatus, dateFrom, dateTo, searchTerm]);
 
   const paginatedProducts = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -697,8 +738,65 @@ export default function ProductionMaterialResponse() {
         {/* ── 2. Table Card with Integrated Header Bar & Filter Tabs ── */}
         <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-300 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
           <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-300 bg-slate-50/50 shrink-0">
+            <div className="inline-flex bg-slate-100 p-[0.2vw] rounded-full border border-slate-300">
+              {(() => {
+                let _u = {};
+                try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+                const _uid = String(_u?.userId || _u?._id || "");
+                const _myZone = (_u?.zone || "").trim();
+                const isPending = (p) => !(p.finalStatus === "Completed" || ((p.verificationStatus || p.report?.verificationStatus) === "Verified" && (p.validationStatus || p.report?.validationStatus) === "Validated"));
+                const q = searchTerm.trim().toLowerCase();
+                const filteredMyProducts = myProducts.filter(({ entry, product }) => {
+                  if (dateFrom && (entry.date || "").slice(0, 10) < dateFrom) return false;
+                  if (dateTo && (entry.date || "").slice(0, 10) > dateTo) return false;
+                  if (q) {
+                    const matches =
+                      (entry.customerName || "").toLowerCase().includes(q) ||
+                      (entry.customerCode || "").toLowerCase().includes(q) ||
+                      (entry.jobOrderNo || "").toLowerCase().includes(q) ||
+                      (entry.refNoInternal || "").toLowerCase().includes(q) ||
+                      (product.productDescription || "").toLowerCase().includes(q) ||
+                      (product.productCode || "").toLowerCase().includes(q) ||
+                      (product.serialNumber || "").toLowerCase().includes(q) ||
+                      (product.ncType || "").toLowerCase().includes(q);
+                    if (!matches) return false;
+                  }
+                  return true;
+                });
+                const sameCount = filteredMyProducts.filter(({ product }) => !product.targetZone && isPending(product)).length;
+                const sentCount = filteredMyProducts.filter(({ entry, product }) => {
+                  const isRowCreator = _uid && (String(entry.creatorUserId || "") === _uid || entry.creatorName === _u?.name);
+                  return Boolean(product.targetZone) && isPending(product) && (isRowCreator || (product.targetZone !== _myZone && String(product.raisedTo || "") !== _uid));
+                }).length;
+                const receivedCount = filteredMyProducts.filter(({ entry, product }) => {
+                  const isRowCreator = _uid && (String(entry.creatorUserId || "") === _uid || entry.creatorName === _u?.name);
+                  return Boolean(product.targetZone) && isPending(product) && !isRowCreator && (product.targetZone === _myZone || String(product.raisedTo || "") === _uid);
+                }).length;
+                return [
+                  { id: "same", label: "Same Zone", count: sameCount },
+                  { id: "sent", label: "Zone Sent", count: sentCount },
+                  { id: "received", label: "Zone Received", count: receivedCount },
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => { setZoneScope(tab.id); setCurrentPage(1); }}
+                    className={`px-[0.75vw] py-[0.25vw] rounded-full text-[0.77vw] font-semibold transition-all cursor-pointer inline-flex items-center gap-[0.35vw] ${
+                      zoneScope === tab.id ? "bg-[#1E4B94] text-white shadow-2xs" : "text-slate-600 hover:text-slate-800"
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <span className={`px-[0.35vw] py-[0.02vw] rounded-full text-[0.68vw] font-bold ${
+                      zoneScope === tab.id ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
+                    }`}>
+                      {tab.count}
+                    </span>
+                  </button>
+                ));
+              })()}
+            </div>
             <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
-              {STATUS_CHIPS.map(({ label }) => {
+              {STATUS_CHIPS.filter(({ label }) => ["All", "Pending", "Completed"].includes(label)).map(({ label }) => {
                 const isActive = filterStatus === label;
                 const count = counts[label] ?? 0;
                 return (
@@ -723,12 +821,14 @@ export default function ProductionMaterialResponse() {
               })}
             </div>
 
-            <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
+            <div className="flex items-center gap-[0.6vw]">
+            <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.3vw] flex items-center gap-[0.3vw]">
               <span>Showing</span>
               <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
                 {allProducts.length}
               </span>
               <span>items</span>
+            </div>
             </div>
           </div>
 
@@ -762,9 +862,11 @@ export default function ProductionMaterialResponse() {
                   </tr>
                 ) : allProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={columns.length} className="py-[6vw] text-center text-slate-400">
-                      <AlertCircle className="w-[2.2vw] h-[2.2vw] text-slate-300 mx-auto mb-[0.5vw]" />
-                      <span className="font-medium text-[0.85vw] text-slate-500">No records found for the selected filter.</span>
+                    <td colSpan={columns.length} className="py-[6vw] text-slate-400">
+                      <div className="sticky left-0 w-[78vw] flex flex-col items-center justify-center">
+                        <AlertCircle className="w-[2.2vw] h-[2.2vw] text-slate-300 mb-[0.5vw]" />
+                        <span className="font-medium text-[0.85vw] text-slate-500">No records found for the selected filter.</span>
+                      </div>
                     </td>
                   </tr>
                 ) : (
@@ -892,7 +994,7 @@ export default function ProductionMaterialResponse() {
                                       icon="solar:info-circle-linear"
                                       className="w-[0.9vw] h-[0.9vw] text-slate-400 hover:text-blue-600 transition-colors"
                                     />
-                                    <span className="pointer-events-none opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                    <span className="pointer-events-none opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.75vw] py-[0.45vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug flex flex-col gap-[0.2vw]">
                                       <div><span className="text-slate-400">Customer name:</span> {entry.customerName}</div>
                                       <div><span className="text-slate-400">Party code:</span> <span className="font-mono">{entry.customerCode}</span></div>
                                       <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
@@ -1173,7 +1275,7 @@ export default function ProductionMaterialResponse() {
                                       })}
                                       className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100"
                                     >
-                                      Decline
+                                      Reject
                                     </button>
                                   </div>
                                 );
@@ -1250,7 +1352,7 @@ export default function ProductionMaterialResponse() {
                                       })}
                                       className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100"
                                     >
-                                      Decline
+                                      Reject
                                     </button>
                                   </div>
                                 );
@@ -1265,12 +1367,16 @@ export default function ProductionMaterialResponse() {
                               onMouseDown={(e) => handleCellMouseDown(idx, "closingDate", e)}
                               onMouseEnter={() => handleCellMouseEnter(idx, "closingDate")}
                             >
-                              <input
-                                type="date"
-                                value={toInputDate(draft.closingDate)}
-                                onChange={(e) => hc("closingDate", e.target.value)}
-                                className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium shadow-2xs min-w-[8vw]"
-                              />
+                              {(product.status === "Completed" || draft.status === "Completed") ? (
+                                <input
+                                  type="date"
+                                  value={toInputDate(draft.closingDate)}
+                                  onChange={(e) => hc("closingDate", e.target.value)}
+                                  className="w-full text-[0.8vw] bg-white border border-slate-300 rounded-[0.3vw] px-[0.5vw] py-[0.25vw] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-400/20 text-slate-800 font-medium shadow-2xs min-w-[8vw]"
+                                />
+                              ) : (
+                                <span className="text-[0.77vw] text-slate-400">—</span>
+                              )}
                               {renderFillHandle(idx, "closingDate")}
                             </td>
 
@@ -1427,73 +1533,112 @@ export default function ProductionMaterialResponse() {
 
       {/* Verification / Validation Accept-Decline Popup */}
       {vvModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
-          <div className="bg-white rounded-[0.6vw] shadow-xl border border-slate-200 w-[24vw] p-[1.2vw] space-y-[0.9vw]">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-[0.5vw]">
-              <h3 className="text-[0.95vw] font-bold text-slate-800 capitalize">
-                {vvModal.type}
-              </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-[2vw]">
+          <div className="bg-white rounded-[0.8vw] shadow-2xl border border-slate-200 w-[30vw] max-w-[480px] overflow-hidden">
+            {/* Header */}
+            <div className="bg-white border-b border-slate-200 px-[1.3vw] py-[0.9vw] flex justify-between items-center">
+              <div className="flex items-center gap-[0.65vw]">
+                <div className="bg-indigo-50 p-[0.45vw] rounded-full text-indigo-600 border border-indigo-100">
+                  <Icon icon="solar:clipboard-check-linear" className="w-[1.1vw] h-[1.1vw]" />
+                </div>
+                <div>
+                  <h3 className="text-[1vw] font-bold text-slate-800 capitalize">{vvModal.type}</h3>
+                  <p className="text-[0.72vw] text-slate-500 font-medium">Accept or reject {vvModal.type} with remarks</p>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => setVvModal(null)}
-                className="text-slate-400 hover:text-slate-600 text-[1vw] font-bold cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 text-[1.1vw] font-bold cursor-pointer"
               >
                 ×
               </button>
             </div>
 
-            <div className="space-y-[0.7vw] text-[0.82vw]">
+            <div className="p-[1.3vw] space-y-[0.85vw] text-[0.82vw]">
+              {/* Product Context */}
+              <div className="bg-slate-50/70 border border-slate-200/80 rounded-[0.5vw] p-[0.75vw] grid grid-cols-[auto_auto_1fr] gap-x-[0.6vw] gap-y-[0.28vw] items-baseline text-[0.79vw]">
+                <span className="text-[#530000] font-semibold">Product</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="font-semibold text-slate-900 truncate" title={vvModal.product.productDescription}>{vvModal.product.productDescription || vvModal.product.productCode || "Product"}</span>
+                <span className="text-[#530000] font-semibold">S/N</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="font-mono text-slate-800">{vvModal.product.serialNumber || vvModal.product.identification || "—"}</span>
+                <span className="text-[#530000] font-semibold">Job Order</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="text-blue-700 font-semibold">{vvModal.entry.jobOrderNo || "—"}</span>
+              </div>
+
+              {/* Date */}
               <div>
-                <label className="block text-[0.75vw] font-semibold text-slate-600 mb-[0.2vw]">
+                <label className="block text-[0.75vw] font-semibold text-slate-700 mb-[0.25vw]">
                   {vvModal.type === "verification" ? "Verified Date" : "Validated Date"}
                 </label>
                 <input
                   type="date"
                   value={vvModal.date}
                   onChange={(e) => setVvModal(prev => ({ ...prev, date: e.target.value }))}
-                  className="w-full border border-slate-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-slate-800 outline-none focus:border-blue-500"
+                  className="w-full border border-slate-300 rounded-[0.4vw] px-[0.6vw] py-[0.35vw] text-slate-800 outline-none focus:border-indigo-500"
                 />
               </div>
 
+              {/* Decision Buttons */}
               <div>
-                <label className="block text-[0.75vw] font-semibold text-slate-600 mb-[0.2vw]">
-                  Status
+                <label className="block text-[0.75vw] font-semibold text-slate-700 mb-[0.25vw]">
+                  Decision <span className="text-rose-500">*</span>
                 </label>
-                <select
-                  value={vvModal.action}
-                  onChange={(e) => setVvModal(prev => ({ ...prev, action: e.target.value }))}
-                  className="w-full border border-slate-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-slate-800 font-semibold outline-none focus:border-blue-500 bg-white"
-                >
-                  <option value="Accepted">Accepted</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
+                <div className="grid grid-cols-2 gap-[0.5vw]">
+                  <button
+                    type="button"
+                    onClick={() => setVvModal(prev => ({ ...prev, action: "Accepted" }))}
+                    className={`py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold border transition-all cursor-pointer flex items-center justify-center gap-[0.3vw] ${
+                      vvModal.action === "Accepted"
+                        ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                        : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                    }`}
+                  >
+                    ✓ Accept
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVvModal(prev => ({ ...prev, action: "Rejected" }))}
+                    className={`py-[0.4vw] rounded-[0.4vw] text-[0.8vw] font-semibold border transition-all cursor-pointer flex items-center justify-center gap-[0.3vw] ${
+                      vvModal.action === "Rejected"
+                        ? "bg-rose-600 text-white border-rose-600 shadow-xs"
+                        : "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100"
+                    }`}
+                  >
+                    ✕ Reject
+                  </button>
+                </div>
               </div>
 
+              {/* Remarks */}
               <div>
-                <label className="block text-[0.75vw] font-semibold text-slate-600 mb-[0.2vw]">
+                <label className="block text-[0.75vw] font-semibold text-slate-700 mb-[0.25vw]">
                   Remarks (optional)
                 </label>
                 <textarea
                   rows={2}
                   value={vvModal.remarks}
                   onChange={(e) => setVvModal(prev => ({ ...prev, remarks: e.target.value }))}
-                  placeholder="Enter remarks..."
-                  className="w-full border border-slate-300 rounded-[0.35vw] px-[0.6vw] py-[0.35vw] text-slate-800 outline-none focus:border-blue-500 resize-none"
+                  placeholder={`Enter ${vvModal.type} remarks...`}
+                  className="w-full border border-slate-300 rounded-[0.4vw] px-[0.6vw] py-[0.35vw] text-slate-800 outline-none focus:border-indigo-500 resize-none"
                 />
               </div>
 
               {vvModal.type === "validation" && vvModal.action === "Accepted" && (
-                <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] text-[0.74vw] font-medium">
+                <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-[0.4vw] px-[0.6vw] py-[0.4vw] text-[0.74vw] font-medium">
                   Once validation is accepted, you cannot edit these values further.
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-[0.5vw] pt-[0.3vw]">
+            <div className="bg-slate-50 border-t border-slate-200 px-[1.3vw] py-[0.75vw] flex items-center justify-end gap-[0.5vw]">
               <button
                 type="button"
                 onClick={() => setVvModal(null)}
-                className="px-[0.8vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 cursor-pointer"
+                className="px-[0.9vw] py-[0.38vw] rounded-full text-[0.8vw] font-semibold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 cursor-pointer"
               >
                 Cancel
               </button>
@@ -1519,13 +1664,9 @@ export default function ProductionMaterialResponse() {
                   setVvModal(null);
                   await saveRow(entry, product, updatedDraft);
                 }}
-                className={`px-[0.9vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold text-white cursor-pointer ${
-                  vvModal.action === "Accepted"
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "bg-rose-600 hover:bg-rose-700"
-                }`}
+                className="px-[1vw] py-[0.38vw] rounded-full text-[0.8vw] font-semibold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer shadow-xs"
               >
-                Submit
+                Save {vvModal.type === "verification" ? "Verification" : "Validation"}
               </button>
             </div>
           </div>

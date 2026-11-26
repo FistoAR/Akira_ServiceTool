@@ -6,6 +6,7 @@ import { useSidebar } from "./SidePannel";
 const NavBar = ({ type }) => {
   const [showProfile, setShowProfile] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [isZoneLead, setIsZoneLead] = useState(false);
   const profileRef = useRef(null);
   const { isFullScreen, toggleFullScreen } = useSidebar();
 
@@ -14,6 +15,19 @@ const NavBar = ({ type }) => {
     const user = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser"));
     if (user) {
       setLoggedInUser(user);
+      const uid = user.userId || user._id;
+      if (uid) {
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+        fetch(`${apiUrl}/production-material/zone-mappings`)
+          .then(r => r.ok ? r.json() : [])
+          .then(list => {
+            if (Array.isArray(list)) {
+              const mine = list.find(m => String(m.userId) === String(uid));
+              if (mine?.isDefaultReceiver) setIsZoneLead(true);
+            }
+          })
+          .catch(() => {});
+      }
     }
   }, []);
 
@@ -85,9 +99,16 @@ const NavBar = ({ type }) => {
             <div className="flex items-center gap-[0.6vw]">
               <h1 className="text-[1.35vw] font-semibold text-black">{type}</h1>
               {["Production NC", "Production NC Response", "Production Material Reports"].includes(type) && loggedInUser?.zone && (
-                <span className="inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                  Zone: {loggedInUser.zone}
-                </span>
+                <div className="inline-flex items-center gap-[0.35vw]">
+                  <span className="inline-flex items-center px-[0.6vw] py-[0.15vw] rounded-full text-[0.78vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                    Zone: {loggedInUser.zone}
+                  </span>
+                  {isZoneLead && (
+                    <span className="inline-flex items-center px-[0.55vw] py-[0.15vw] rounded-full text-[0.74vw] font-bold bg-amber-50 text-amber-800 border border-amber-300">
+                      ★ Zone Lead
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           )}

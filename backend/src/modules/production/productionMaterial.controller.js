@@ -273,13 +273,17 @@ exports.getAllInwards = async (req, res) => {
 
     // Determine user's assigned Zone from ProductionZoneMapping
     let assignedZone = null;
+    let isZoneDefaultReceiver = false;
     let assignedStage = null;
     if (queryUserId) {
       const [zMapping, sMapping] = await Promise.all([
         ProductionZoneMapping.findOne({ userId: String(queryUserId).trim() }).lean(),
         ProductionStageMapping.findOne({ userId: String(queryUserId).trim() }).lean()
       ]);
-      if (zMapping) assignedZone = zMapping.zone;
+      if (zMapping) {
+        assignedZone = zMapping.zone;
+        isZoneDefaultReceiver = Boolean(zMapping.isDefaultReceiver);
+      }
       if (sMapping) assignedStage = sMapping.stage;
     }
 
@@ -335,12 +339,16 @@ exports.getAllInwards = async (req, res) => {
         const isRaisedToMe = uid && (p.raisedTo === uid || p.assignedTo === uid);
         const isInspectedByMe = uid && (p.inspectedBy === uid);
 
+        // Internal NC: only visible to creator, inspectedBy, or raisedTo person (not other staff in same zone)
+        if (nc === 'Internal') {
+          return isCreator || isInspectedByMe || isRaisedToMe;
+        }
+
         // If user has an assigned zone:
         if (assignedZone) {
-          const isMyZoneSource = pZone === assignedZone;
-          const isMyZoneTarget = pTargetZone === assignedZone;
+          const isMyZoneTarget = isZoneDefaultReceiver && pTargetZone && pTargetZone === assignedZone;
 
-          if (isMyZoneSource || isMyZoneTarget || isRaisedToMe || isInspectedByMe || isCreator) {
+          if (isMyZoneTarget || isRaisedToMe || isInspectedByMe || isCreator) {
             return true;
           }
           return false;
@@ -419,7 +427,9 @@ exports.createInward = async (req, res) => {
             await notifyUser({
               recipient: prod.raisedTo,
               title: "New Production NC Assigned",
-              message: `NC Ticket for product "${prod.productDescription || prod.productCode || 'Item'}" has been assigned to you by ${inward.creatorName || 'Team'}.`,
+              message: prod.targetZone
+                ? `NC Ticket for product "${prod.productDescription || prod.productCode || 'Item'}" has been received from ${prod.zone || 'another zone'} (assigned by ${inward.creatorName || 'Team'}).`
+                : `NC Ticket for product "${prod.productDescription || prod.productCode || 'Item'}" has been assigned to you by ${inward.creatorName || 'Team'}.`,
               type: "Production NC",
               priority: "High",
               data: { inwardId: inward._id, productId: prod._pid, refNo: inward.refNoInternal }
@@ -626,7 +636,12 @@ exports.updateFinalStatus = async (req, res) => {
       validationRemarks,
       validatedBy,
       validatedByName,
-      validatedDate
+      validatedDate,
+      zoneValidationStatus,
+      zoneValidationRemarks,
+      zoneValidatedBy,
+      zoneValidatedByName,
+      zoneValidationDate
     } = req.body;
 
     const inward = await ProductionMaterial.findById(id);
@@ -646,6 +661,11 @@ exports.updateFinalStatus = async (req, res) => {
     if (validatedBy !== undefined) product.validatedBy = validatedBy;
     if (validatedByName !== undefined) product.validatedByName = validatedByName;
     if (validatedDate !== undefined) product.validatedDate = validatedDate;
+    if (zoneValidationStatus !== undefined) product.zoneValidationStatus = zoneValidationStatus;
+    if (zoneValidationRemarks !== undefined) product.zoneValidationRemarks = zoneValidationRemarks;
+    if (zoneValidatedBy !== undefined) product.zoneValidatedBy = zoneValidatedBy;
+    if (zoneValidatedByName !== undefined) product.zoneValidatedByName = zoneValidatedByName;
+    if (zoneValidationDate !== undefined) product.zoneValidationDate = zoneValidationDate;
 
     // Handle Closed-Loop Validation Failure or Success notifications
     if (validationStatus === 'Failed' || validationStatus === 'Rejected') {

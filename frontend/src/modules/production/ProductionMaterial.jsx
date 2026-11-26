@@ -221,14 +221,27 @@ const ValidationModal = ({ row, prod, initialStatus, onSave, onClose }) => {
 
         {/* Body */}
         <div className="p-[1.4vw] space-y-[1.1vw] bg-white">
-          <div className="bg-slate-50/70 p-[0.85vw] rounded-[0.6vw] border border-slate-200/80">
-            <div className="text-[0.72vw] font-medium text-indigo-600 uppercase tracking-wider mb-[0.25vw]">Product Context</div>
-            <div className="text-[0.88vw] font-semibold text-slate-800 truncate" title={prod.productDescription}>{prod.productDescription}</div>
-            <div className="text-[0.74vw] text-slate-500 mt-[0.2vw] flex items-center gap-[0.8vw]">
-              <span><strong className="text-slate-600">S/N:</strong> <span className="font-mono">{prod.serialNumber || "—"}</span></span>
-              <span>·</span>
-              <span><strong className="text-slate-600">JO:</strong> <span className="text-blue-600 font-medium">{row.jobOrderNo || "—"}</span></span>
-            </div>
+          <div className="bg-slate-50/70 p-[0.85vw] rounded-[0.6vw] border border-slate-200/80 grid grid-cols-[auto_auto_1fr] gap-x-[0.6vw] gap-y-[0.3vw] items-baseline text-[0.79vw]">
+            <span className="text-[#530000] font-semibold">Product</span>
+            <span className="text-[#530000] font-semibold">:</span>
+            <span className="font-semibold text-slate-900 truncate" title={prod.productDescription}>{prod.productDescription || "—"}</span>
+            <span className="text-[#530000] font-semibold">S/N</span>
+            <span className="text-[#530000] font-semibold">:</span>
+            <span className="font-mono text-slate-800">{prod.serialNumber || prod.identification || "—"}</span>
+            <span className="text-[#530000] font-semibold">Job Order</span>
+            <span className="text-[#530000] font-semibold">:</span>
+            <span className="text-blue-700 font-semibold">{row.jobOrderNo || "—"}</span>
+          </div>
+
+          {/* Validated Date */}
+          <div className="flex flex-col gap-[0.35vw]">
+            <label className="text-[0.79vw] font-semibold text-slate-700">Validated Date</label>
+            <input
+              type="date"
+              value={validationDate}
+              onChange={(e) => setValidationDate(e.target.value)}
+              className="w-full border border-slate-300 rounded-[0.5vw] px-[0.75vw] py-[0.5vw] text-[0.81vw] text-slate-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 transition-all"
+            />
           </div>
 
           {/* Accept / Reject Selection */}
@@ -1745,6 +1758,7 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
     if (!base.jobOrderNo) { toast("Job Order Number is mandatory", "error"); return; }
     if (!base.customerName || !base.customerCode) { toast("Customer Name is mandatory. Please select a customer.", "error"); return; }
     if (products.length === 0) { toast("At least one product is required", "warning"); return; }
+    if (products.some(p => !p.stage || !String(p.stage).trim())) { toast("Detection Stage is mandatory for all items", "error"); return; }
     if (products.some(p => !p.productDescription)) { toast("All products must have a description", "error"); return; }
     if (products.some(p => !p.problemType)) { toast("All products must have a Problem Type", "error"); return; }
     onSave({ ...base, products });
@@ -2477,10 +2491,45 @@ export default function ProductionMaterial() {
     return Array.from(set);
   }, [data]);
 
+  const [zoneScope, setZoneScope] = useState("same");
+  const [allocateModal, setAllocateModal] = useState(null);
+  const [zoneMappings, setZoneMappings] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${API_URL}/production-material/zone-mappings`).then(r => {
+      if (Array.isArray(r.data)) setZoneMappings(r.data);
+    }).catch(() => {});
+  }, []);
+
+  const getEffectiveStatus = (p) => {
+    if (p.finalStatus === "Completed" || ((p.verificationStatus || p.report?.verificationStatus) === "Verified" && (p.validationStatus || p.report?.validationStatus) === "Validated")) {
+      return "Completed";
+    }
+    if (p.finalStatus === "Rejected" || (p.verificationStatus || p.report?.verificationStatus) === "Rejected" || (p.validationStatus || p.report?.validationStatus) === "Rejected") {
+      return "Rejected";
+    }
+    return "Pending";
+  };
+
   const filteredData = useMemo(() => {
-    let filtered = data;
+    let _u = {};
+    try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+    const _uid = String(_u?.userId || _u?._id || "");
+    const _myZone = (_u?.zone || "").trim();
+
+    let filtered = data
+      .map(row => {
+        const isRowCreator = _uid && (String(row.creatorUserId || "") === _uid || row.creatorName === _u?.name);
+        const matchingProds = (row.products || []).filter(p => {
+          if (zoneScope === "same") return !p.targetZone;
+          if (zoneScope === "sent") return Boolean(p.targetZone) && isRowCreator;
+          return Boolean(p.targetZone) && !isRowCreator && (p.targetZone === _myZone || String(p.raisedTo || "") === _uid);
+        });
+        return { ...row, products: matchingProds };
+      })
+      .filter(row => row.products.length > 0);
     if (activeFilter !== "All") {
-      filtered = filtered.filter(row => (row.products || []).some(p => (p.finalStatus || "Pending") === activeFilter));
+      filtered = filtered.filter(row => (row.products || []).some(p => getEffectiveStatus(p) === activeFilter));
     }
     if (employeeFilter !== "All") {
       filtered = filtered.filter(row => row.creatorUserId === employeeFilter);
@@ -2508,7 +2557,7 @@ export default function ProductionMaterial() {
       );
     }
     return filtered;
-  }, [data, searchTerm, activeFilter, employeeFilter, dateFrom, dateTo]);
+  }, [data, zoneScope, searchTerm, activeFilter, employeeFilter, dateFrom, dateTo]);
 
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE) || 1;
   const paginatedData = filteredData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -2566,12 +2615,48 @@ export default function ProductionMaterial() {
   };
 
   const counts = useMemo(() => {
-    const c = { All: data.length };
+    let _u = {};
+    try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+    const _uid = String(_u?.userId || _u?._id || "");
+    const _myZone = (_u?.zone || "").trim();
+
+    const q = searchTerm.trim().toLowerCase();
+    const baseFiltered = data.filter(row => {
+      if (dateFrom && (row.date || "").slice(0, 10) < dateFrom) return false;
+      if (dateTo && (row.date || "").slice(0, 10) > dateTo) return false;
+      if (q) {
+        const matches =
+          (row.customerName || "").toLowerCase().includes(q) ||
+          (row.customerCode || "").toLowerCase().includes(q) ||
+          (row.jobOrderNo || "").toLowerCase().includes(q) ||
+          (row.refNoInternal || "").toLowerCase().includes(q) ||
+          (row.products || []).some(p =>
+            (p.productDescription || "").toLowerCase().includes(q) ||
+            (p.productCode || "").toLowerCase().includes(q) ||
+            (p.serialNumber || "").toLowerCase().includes(q) ||
+            (p.ncType || "").toLowerCase().includes(q)
+          );
+        if (!matches) return false;
+      }
+      return true;
+    });
+
+    const scoped = baseFiltered.filter(row => {
+      const prods = row.products || [];
+      if (zoneScope === "same") return prods.some(p => !p.targetZone);
+      const isRowCreator = _uid && (String(row.creatorUserId || "") === _uid || row.creatorName === _u?.name);
+      if (zoneScope === "sent") {
+        return prods.some(p => Boolean(p.targetZone) && isRowCreator);
+      }
+      return prods.some(p => Boolean(p.targetZone) && !isRowCreator && (p.targetZone === _myZone || String(p.raisedTo || "") === _uid));
+    });
+
+    const c = { All: scoped.length };
     FINAL_STATUS_OPTIONS.forEach(s => {
-      c[s] = data.filter(row => (row.products || []).some(p => (p.finalStatus || "Pending") === s)).length;
+      c[s] = scoped.filter(row => (row.products || []).some(p => getEffectiveStatus(p) === s)).length;
     });
     return c;
-  }, [data]);
+  }, [data, zoneScope, dateFrom, dateTo, searchTerm]);
 
   if (view === "form") return (
     <InwardForm
@@ -2629,24 +2714,47 @@ export default function ProductionMaterial() {
           <ValidationModal
             row={showValidation.row}
             prod={showValidation.prod}
+            initialStatus={showValidation.initialStatus}
             onSave={(valData) => {
               const currentReport = showValidation.prod.report || {};
               const user = JSON.parse(sessionStorage.getItem("loggedInUser") || "{}");
-              onUpdateProduct(showValidation.row.id, showValidation.prod._pid, {
-                validationStatus: valData.validationStatus,
-                validationRemarks: valData.validationRemarks,
-                validatedBy: user.userId || "",
-                validatedByName: user.name || "",
-                validatedDate: todayDateStr(),
-                report: {
-                  ...currentReport,
+              const vDate = valData.closingDate || todayDateStr();
+              if (showValidation.isZoneLevel1) {
+                onUpdateProduct(showValidation.row.id, showValidation.prod._pid, {
+                  zoneValidationStatus: valData.validationStatus,
+                  zoneValidationRemarks: valData.validationRemarks,
+                  zoneValidatedBy: user.userId || "",
+                  zoneValidatedByName: user.name || "",
+                  zoneValidationDate: vDate,
+                  ...(valData.validationStatus === "Rejected" ? {
+                    validationStatus: "Rejected",
+                    validationRemarks: valData.validationRemarks,
+                    validatedDate: vDate,
+                    report: {
+                      ...currentReport,
+                      validationStatus: "Rejected",
+                      validationRemarks: valData.validationRemarks,
+                      validatedDate: vDate,
+                    }
+                  } : {})
+                });
+              } else {
+                onUpdateProduct(showValidation.row.id, showValidation.prod._pid, {
                   validationStatus: valData.validationStatus,
                   validationRemarks: valData.validationRemarks,
                   validatedBy: user.userId || "",
                   validatedByName: user.name || "",
-                  validatedDate: todayDateStr(),
-                }
-              });
+                  validatedDate: vDate,
+                  report: {
+                    ...currentReport,
+                    validationStatus: valData.validationStatus,
+                    validationRemarks: valData.validationRemarks,
+                    validatedBy: user.userId || "",
+                    validatedByName: user.name || "",
+                    validatedDate: vDate,
+                  }
+                });
+              }
               setShowValidation(null);
             }}
             onClose={() => setShowValidation(null)}
@@ -2765,7 +2873,7 @@ export default function ProductionMaterial() {
                   <button
                     type="button"
                     onClick={() => setShowMasterData(true)}
-                    className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.79vw] transition-all shadow-2xs"
+                    className="cursor-pointer flex items-center gap-[0.4vw] bg-white hover:bg-slate-50 text-slate-700 hover:text-blue-600 border-[1.5px] border-slate-400 hover:border-blue-400 font-semibold px-[0.9vw] h-[2.2vw] rounded-full text-[0.79vw] transition-all shadow-2xs"
                   >
                     <ClipboardList className="w-[0.8vw] h-[0.8vw] text-slate-500" />
                     <span>Master Data</span>
@@ -2787,6 +2895,65 @@ export default function ProductionMaterial() {
           <div className="bg-white rounded-[0.8vw] shadow-[0_2px_12px_-3px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col flex-1 min-h-0 w-full overflow-hidden">
             {/* Integrated Header: Segment Track on left, Result count on right */}
             <div className="flex items-center justify-between px-[0.8vw] py-[0.45vw] border-b border-slate-200 bg-slate-50/50 shrink-0">
+                <div className="inline-flex bg-slate-100 p-[0.2vw] rounded-full border border-slate-300">
+                  {(() => {
+                    let _u = {};
+                    try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+                    const _uid = String(_u?.userId || _u?._id || "");
+                    const _myZone = (_u?.zone || "").trim();
+                    const isPending = (p) => !(p.finalStatus === "Completed" || ((p.verificationStatus || p.report?.verificationStatus) === "Verified" && (p.validationStatus || p.report?.validationStatus) === "Validated"));
+                    const q = searchTerm.trim().toLowerCase();
+                    const dateFiltered = data.filter(row => {
+                      if (dateFrom && (row.date || "").slice(0, 10) < dateFrom) return false;
+                      if (dateTo && (row.date || "").slice(0, 10) > dateTo) return false;
+                      if (q) {
+                        const matches =
+                          (row.customerName || "").toLowerCase().includes(q) ||
+                          (row.customerCode || "").toLowerCase().includes(q) ||
+                          (row.jobOrderNo || "").toLowerCase().includes(q) ||
+                          (row.refNoInternal || "").toLowerCase().includes(q) ||
+                          (row.products || []).some(p =>
+                            (p.productDescription || "").toLowerCase().includes(q) ||
+                            (p.productCode || "").toLowerCase().includes(q) ||
+                            (p.serialNumber || "").toLowerCase().includes(q) ||
+                            (p.ncType || "").toLowerCase().includes(q)
+                          );
+                        if (!matches) return false;
+                      }
+                      return true;
+                    });
+                    const sameCount = dateFiltered.filter(row => (row.products || []).some(p => !p.targetZone && isPending(p))).length;
+                    const sentCount = dateFiltered.filter(row => {
+                      const isRowCreator = _uid && (String(row.creatorUserId || "") === _uid || row.creatorName === _u?.name);
+                      return (row.products || []).some(p => Boolean(p.targetZone) && isPending(p) && isRowCreator);
+                    }).length;
+                    const receivedCount = dateFiltered.filter(row => {
+                      const isRowCreator = _uid && (String(row.creatorUserId || "") === _uid || row.creatorName === _u?.name);
+                      return (row.products || []).some(p => Boolean(p.targetZone) && isPending(p) && !isRowCreator && (p.targetZone === _myZone || String(p.raisedTo || "") === _uid));
+                    }).length;
+                    return [
+                      { id: "same", label: "Same Zone", count: sameCount },
+                      { id: "sent", label: "Zone Sent", count: sentCount },
+                      { id: "received", label: "Zone Received", count: receivedCount },
+                    ].map(tab => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => { setZoneScope(tab.id); setCurrentPage(1); }}
+                        className={`px-[0.75vw] py-[0.25vw] rounded-full text-[0.77vw] font-semibold transition-all cursor-pointer inline-flex items-center gap-[0.35vw] ${
+                          zoneScope === tab.id ? "bg-[#1E4B94] text-white shadow-2xs" : "text-slate-600 hover:text-slate-800"
+                        }`}
+                      >
+                        <span>{tab.label}</span>
+                        <span className={`px-[0.35vw] py-[0.02vw] rounded-full text-[0.68vw] font-bold ${
+                          zoneScope === tab.id ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
+                        }`}>
+                          {tab.count}
+                        </span>
+                      </button>
+                    ));
+                  })()}
+                </div>
               <div className="inline-flex items-center p-[0.25vw] bg-slate-100 rounded-full border-[1.5px] border-slate-400 status-pills-track gap-[0.4vw] max-w-full overflow-x-auto min-w-0">
                 {[
                   { label: "All" },
@@ -2824,13 +2991,15 @@ export default function ProductionMaterial() {
                 })}
               </div>
 
-              {/* Scoped Result Count */}
-              <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.5vw] flex items-center gap-[0.3vw]">
-                <span>Showing</span>
-                <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
-                  {filteredData.length}
-                </span>
-                <span>entries</span>
+              {/* Scoped Result Count & Zone Scope Toggle */}
+              <div className="flex items-center gap-[0.6vw]">
+                <div className="text-[0.79vw] text-slate-500 font-medium whitespace-nowrap pl-[0.3vw] flex items-center gap-[0.3vw]">
+                  <span>Showing</span>
+                  <span className="font-bold text-slate-800 bg-slate-100 px-[0.4vw] py-[0.08vw] rounded text-[0.77vw]">
+                    {filteredData.length}
+                  </span>
+                  <span>entries</span>
+                </div>
               </div>
             </div>
 
@@ -3181,11 +3350,23 @@ export default function ProductionMaterial() {
                                         className="ml-auto flex items-center gap-[0.4vw]"
                                         onClick={(e) => e.stopPropagation()}
                                       >
-                                        {/* Navigate to Production Response — only if all inside products are report putable */}
-                                        {allProductsReportPutable && (
+                                        {/* Navigate to Production Response — only if raised to current user/zone (or admin) */}
+                                        {allProductsReportPutable && (() => {
+                                          let _u = {};
+                                          try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+                                          const _uid = String(_u?.userId || _u?._id || "");
+                                          const _isRowCreator = _uid && (String(row.creatorUserId || "") === _uid || row.creatorName === _u?.name);
+                                          return row.products.some(p => {
+                                            const _isExt = (p.ncType || "Internal") !== "Internal";
+                                            if (_isExt) {
+                                              return Boolean(p.raisedTo && String(p.raisedTo) === _uid);
+                                            }
+                                            return (p.raisedTo && String(p.raisedTo) === _uid) || _isRowCreator;
+                                          });
+                                        })() && (
                                           <button
                                             type="button"
-                                            onClick={() => navigate("/productionMaterialResponse", { state: { filterTerm: row.refNoInternal || row.jobOrderNo || "" } })}
+                                            onClick={() => navigate("/productionMaterialResponse", { state: { filterTerm: row.refNoInternal || row.jobOrderNo || "", zoneScope } })}
                                             title="Open Production Response"
                                             className="w-[1.7vw] h-[1.7vw] flex items-center justify-center bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 rounded-full shadow-2xs cursor-pointer transition-all"
                                           >
@@ -3276,9 +3457,21 @@ export default function ProductionMaterial() {
                                         : (isRaisedToPerson || isCurrentUserAdmin);
 
                                       const isVerifiedAccepted = (prod.verificationStatus || prod.report?.verificationStatus) === "Verified";
+                                      const isZoneLevel1Done = !prod.targetZone || prod.zoneValidationStatus === "Validated" || prod.zoneValidationStatus === "Rejected";
+                                      let _uVal = {};
+                                      try { _uVal = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _uVal = {}; }
+                                      const _uidVal = String(_uVal?.userId || _uVal?._id || "");
+                                      const isZoneLeadForTarget = Boolean(
+                                        prod.targetZone &&
+                                        (
+                                          (prod.zoneAllocatedBy && String(prod.zoneAllocatedBy) === _uidVal) ||
+                                          zoneMappings.some(m => String(m.userId) === _uidVal && m.isDefaultReceiver && (m.zone || "").trim() === prod.targetZone.trim())
+                                        )
+                                      );
+                                      const canPerformZoneLevel1 = !isInternalNC && Boolean(prod.targetZone) && isVerifiedAccepted && !isZoneLevel1Done && (isZoneLeadForTarget || isCurrentUserAdmin);
                                       const canPerformValidate = isInternalNC
                                         ? (isCreatorOrAdmin || isRaisedToPerson)
-                                        : (isCreatorOrAdmin && isVerifiedAccepted);
+                                        : (isCreatorOrAdmin && isVerifiedAccepted && isZoneLevel1Done);
 
                                       const hasVerifyRemarks = Boolean(prod.verificationRemarks || prod.report?.verificationRemarks);
                                       const verifyText = prod.verificationRemarks || prod.report?.verificationRemarks || "";
@@ -3306,7 +3499,9 @@ export default function ProductionMaterial() {
                                           <td className="px-[0.7vw] py-[0.55vw] border-r border-slate-300 text-center align-middle font-medium">
                                             {showReadyHighlight && (() => {
                                               const verDone = (prod.verificationStatus || prod.report?.verificationStatus) === "Verified";
-                                              const valDone = valStatus === "Validated";
+                                              const valDone = (isZoneLeadForTarget && !isCreatorOrAdmin)
+                                                ? prod.zoneValidationStatus === "Validated"
+                                                : valStatus === "Validated";
                                               if (verDone && valDone) {
                                                 return (
                                                   <div className="flex items-center justify-center gap-[0.3vw] mb-[0.2vw]">
@@ -3439,27 +3634,54 @@ export default function ProductionMaterial() {
                                                   </span>
                                                 </span>
                                               </div>
-                                            ) : canPerformValidate ? (
-                                              valStatus && valStatus !== "Pending" ? (
+                                            ) : canPerformZoneLevel1 ? (
+                                              <div className="flex items-center justify-center gap-[0.3vw]">
                                                 <button
                                                   type="button"
-                                                  onClick={() => setShowValidation({ row, prod })}
-                                                  className={`px-[0.7vw] py-[0.22vw] rounded-full text-[0.72vw] font-semibold border transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw] ${
-                                                    valStatus === "Validated"
-                                                      ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100/70"
-                                                      : valStatus === "Rejected"
-                                                      ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100/70"
-                                                      : "bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100"
-                                                  }`}
-                                                  title={`Validation: ${valStatus}${valRemarks ? ` (${valRemarks})` : ''}`}
+                                                  onClick={() => setShowValidation({ row, prod, initialStatus: "Validated", isZoneLevel1: true })}
+                                                  className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
                                                 >
-                                                  {valStatus === "Validated" ? (
-                                                    <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
-                                                  ) : valStatus === "Rejected" ? (
-                                                    <X className="w-[0.75vw] h-[0.75vw]" />
-                                                  ) : null}
-                                                  <span>{valStatus === "Validated" ? "Accepted" : valStatus}</span>
+                                                  Accept
                                                 </button>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => setShowValidation({ row, prod, initialStatus: "Rejected", isZoneLevel1: true })}
+                                                  className="px-[0.45vw] py-[0.18vw] rounded text-[0.72vw] font-semibold border transition-all cursor-pointer bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100"
+                                                >
+                                                  Reject
+                                                </button>
+                                              </div>
+                                            ) : canPerformValidate ? (
+                                              valStatus && valStatus !== "Pending" ? (
+                                                <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => setShowValidation({ row, prod })}
+                                                    className={`px-[0.7vw] py-[0.22vw] rounded-full text-[0.72vw] font-semibold border transition-all shadow-2xs cursor-pointer inline-flex items-center gap-[0.3vw] ${
+                                                      valStatus === "Validated"
+                                                        ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100/70"
+                                                        : valStatus === "Rejected"
+                                                        ? "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100/70"
+                                                        : "bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100"
+                                                    }`}
+                                                  >
+                                                    {valStatus === "Validated" ? (
+                                                      <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                                    ) : valStatus === "Rejected" ? (
+                                                      <X className="w-[0.75vw] h-[0.75vw]" />
+                                                    ) : null}
+                                                    <span>{valStatus === "Validated" ? "Accepted" : valStatus}</span>
+                                                  </button>
+                                                  <span className="relative group/valtip inline-flex items-center shrink-0">
+                                                    <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
+                                                    <span className="pointer-events-none opacity-0 invisible group-hover/valtip:opacity-100 group-hover/valtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                                      <div><span className="text-slate-400">Validation Date:</span> {(prod.validatedDate || prod.report?.validatedDate) ? fmtDate(prod.validatedDate || prod.report?.validatedDate) : "—"}</div>
+                                                      <div><span className="text-slate-400">Status:</span> {valStatus === "Validated" ? "Accepted" : valStatus || "Pending"}</div>
+                                                      <div><span className="text-slate-400">Remarks:</span> {valRemarks || "—"}</div>
+                                                      <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                                                    </span>
+                                                  </span>
+                                                </div>
                                               ) : (
                                                 <button
                                                   type="button"
@@ -3471,6 +3693,41 @@ export default function ProductionMaterial() {
                                                   <span>Validate</span>
                                                 </button>
                                               )
+                                            ) : (!isInternalNC && Boolean(prod.targetZone) && (isZoneLeadForTarget || isCurrentUserAdmin) && prod.zoneValidationStatus) ? (
+                                              <div className="inline-flex items-center justify-center gap-[0.3vw]">
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    if (valStatus !== "Validated") {
+                                                      setShowValidation({ row, prod, initialStatus: prod.zoneValidationStatus, isZoneLevel1: true });
+                                                    }
+                                                  }}
+                                                  disabled={valStatus === "Validated"}
+                                                  className={`px-[0.7vw] py-[0.22vw] rounded-full text-[0.72vw] font-semibold border transition-all shadow-2xs inline-flex items-center gap-[0.3vw] ${
+                                                    valStatus === "Validated" ? "cursor-default" : "cursor-pointer"
+                                                  } ${
+                                                    prod.zoneValidationStatus === "Validated"
+                                                      ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100/70"
+                                                      : "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100/70"
+                                                  }`}
+                                                >
+                                                  {prod.zoneValidationStatus === "Validated" ? (
+                                                    <CheckCircle className="w-[0.75vw] h-[0.75vw]" />
+                                                  ) : (
+                                                    <X className="w-[0.75vw] h-[0.75vw]" />
+                                                  )}
+                                                  <span>{prod.zoneValidationStatus === "Validated" ? "Accepted" : "Rejected"}</span>
+                                                </button>
+                                                <span className="relative group/valtip inline-flex items-center shrink-0">
+                                                  <Info className="w-[0.85vw] h-[0.85vw] text-slate-400 hover:text-blue-600 transition-colors" />
+                                                  <span className="pointer-events-none opacity-0 invisible group-hover/valtip:opacity-100 group-hover/valtip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.65vw] py-[0.35vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.72vw] whitespace-nowrap shadow-md z-50 text-left leading-snug">
+                                                    <div><span className="text-slate-400">Zone Validation Date:</span> {(prod.zoneValidationDate || prod.zoneValidatedDate) ? fmtDate(prod.zoneValidationDate || prod.zoneValidatedDate) : "—"}</div>
+                                                    <div><span className="text-slate-400">Status:</span> {prod.zoneValidationStatus === "Validated" ? "Accepted" : "Rejected"}</div>
+                                                    <div><span className="text-slate-400">Remarks:</span> {prod.zoneValidationRemarks || "—"}</div>
+                                                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                                                  </span>
+                                                </span>
+                                              </div>
                                             ) : (
                                               /* Read-only status for verifier or non-creator */
                                               valStatus ? (
@@ -3509,11 +3766,41 @@ export default function ProductionMaterial() {
                                             }`}
                                           >
                                             <div className="flex items-center justify-center gap-[0.4vw]">
-                                              {/* Navigate to Production Response — only if report putable */}
-                                              {isProdReportPutable(prod) && (
+                                              {/* Zone Incharge: Allocate to responsible person in target zone (hidden once completed) */}
+                                              {zoneScope === "received" && prod.targetZone && prod.report?.status !== "Completed" && (() => {
+                                                let _u = {};
+                                                try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+                                                if ((_u?.zone || "").trim() !== prod.targetZone.trim()) return null;
+                                                const _uidAlloc = String(_u?.userId || _u?._id || "");
+                                                const isMyZoneLead = zoneMappings.some(m => String(m.userId) === _uidAlloc && m.isDefaultReceiver);
+                                                if (!isMyZoneLead && !isCurrentUserAdmin) return null;
+                                                const zoneStaff = (employees || []).filter(e => (e.zone || "").trim() === prod.targetZone.trim());
+                                                return (
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => setAllocateModal({ row, prod, zoneStaff, selectedUid: prod.raisedTo || "", allocatorId: _u?.userId || _u?._id || "" })}
+                                                    className="inline-flex items-center gap-[0.25vw] px-[0.55vw] py-[0.18vw] rounded-[0.3vw] text-[0.72vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 cursor-pointer transition-all"
+                                                    title="Allocate to Zone Staff"
+                                                  >
+                                                    <UserPlus className="w-[0.75vw] h-[0.75vw]" />
+                                                    <span>{prod.raisedToName ? prod.raisedToName.split(" (")[0] : "Allocate"}</span>
+                                                  </button>
+                                                );
+                                              })()}
+                                              {/* Navigate to Production Response — only if raised to current user/zone (or admin) */}
+                                              {isProdReportPutable(prod) && (() => {
+                                                let _u = {};
+                                                try { _u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}"); } catch { _u = {}; }
+                                                const _uid = String(_u?.userId || _u?._id || "");
+                                                const _isRowCreator = _uid && (String(row.creatorUserId || "") === _uid || row.creatorName === _u?.name);
+                                                if (isInternalNC) {
+                                                  return Boolean((prod.raisedTo && String(prod.raisedTo) === _uid) || _isRowCreator);
+                                                }
+                                                return Boolean(prod.raisedTo && String(prod.raisedTo) === _uid);
+                                              })() && (
                                                 <button
                                                   type="button"
-                                                  onClick={() => navigate("/productionMaterialResponse", { state: { filterTerm: prod.serialNumber || prod._pid || row.refNoInternal || "" } })}
+                                                  onClick={() => navigate("/productionMaterialResponse", { state: { filterTerm: prod.serialNumber || prod._pid || row.refNoInternal || "", zoneScope } })}
                                                   className="p-[0.35vw] text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-full transition-all cursor-pointer"
                                                   title="Open Production Response"
                                                 >
@@ -3601,6 +3888,98 @@ export default function ProductionMaterial() {
           </div>
         </motion.div>
       </div>
+
+      {allocateModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[200] flex items-center justify-center p-[2vw]">
+          <div className="bg-white w-[26vw] rounded-[0.7vw] border border-slate-200 shadow-2xl p-[1.2vw] space-y-[0.9vw]">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-[0.5vw]">
+              <h3 className="text-[0.95vw] font-bold text-slate-800">Allocate to Zone Staff</h3>
+              <button type="button" onClick={() => setAllocateModal(null)} className="text-slate-400 hover:text-slate-600 text-[1vw] font-bold cursor-pointer">×</button>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-[0.45vw] p-[0.75vw] space-y-[0.3vw] text-[0.78vw]">
+              <div className="flex items-start gap-[0.4vw]">
+                <span className="text-[#530000] font-semibold w-[5.5vw] shrink-0">Product</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="text-slate-800 font-normal">{allocateModal.prod.productDescription || allocateModal.prod.productCode || "—"}</span>
+              </div>
+              <div className="flex items-center gap-[0.4vw]">
+                <span className="text-[#530000] font-semibold w-[5.5vw] shrink-0">S/N</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="font-mono text-slate-800 font-normal">{allocateModal.prod.serialNumber || "—"}</span>
+              </div>
+              <div className="flex items-center gap-[0.4vw]">
+                <span className="text-[#530000] font-semibold w-[5.5vw] shrink-0">Job Order</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="font-mono text-blue-700 font-normal">{allocateModal.row.jobOrderNo || "—"}</span>
+              </div>
+              <div className="flex items-center gap-[0.4vw]">
+                <span className="text-[#530000] font-semibold w-[5.5vw] shrink-0">Customer</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="text-slate-800 font-normal truncate">{allocateModal.row.customerName || "—"}</span>
+              </div>
+              <div className="flex items-center gap-[0.4vw]">
+                <span className="text-[#530000] font-semibold w-[5.5vw] shrink-0">From Zone</span>
+                <span className="text-[#530000] font-semibold">:</span>
+                <span className="text-slate-800 font-normal">{allocateModal.prod.zone || allocateModal.prod.stage || "—"}</span>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[0.78vw] font-semibold text-slate-600 mb-[0.3vw]">
+                Select Staff ({allocateModal.prod.targetZone})
+              </label>
+              <CustomDropdown
+                value={allocateModal.selectedUid}
+                onChange={(val) => setAllocateModal(prev => ({ ...prev, selectedUid: val }))}
+                options={allocateModal.zoneStaff.map(emp => ({ value: String(emp.userId || emp._id), label: emp.name }))}
+                placeholder="Select staff..."
+                searchable={true}
+                usePortal={true}
+                size="md"
+              />
+              {allocateModal.prod.raisedTo &&
+                allocateModal.selectedUid &&
+                allocateModal.selectedUid !== allocateModal.prod.raisedTo &&
+                (allocateModal.prod.report?.rootCause ||
+                  allocateModal.prod.report?.correctiveActionDetails ||
+                  allocateModal.prod.report?.fourMCategory ||
+                  (allocateModal.prod.report?.history?.length > 0)) && (
+                  <div className="mt-[0.5vw] bg-amber-50 border border-amber-200 text-amber-800 rounded-[0.35vw] px-[0.6vw] py-[0.4vw] text-[0.74vw] font-medium">
+                    Note: {allocateModal.prod.raisedToName || "The previous employee"} already entered report details for this NC item.
+                  </div>
+                )}
+            </div>
+            <div className="flex items-center justify-end gap-[0.5vw] pt-[0.2vw]">
+              <button type="button" onClick={() => setAllocateModal(null)} className="px-[0.8vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 cursor-pointer">
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={!allocateModal.selectedUid}
+                onClick={async () => {
+                  const { row, prod, zoneStaff, selectedUid, allocatorId } = allocateModal;
+                  const emp = zoneStaff.find(x => String(x.userId || x._id) === selectedUid);
+                  const updatedProducts = (row.products || []).map(p =>
+                    p._pid === prod._pid
+                      ? { ...p, raisedTo: selectedUid, raisedToName: emp?.name || selectedUid, zoneAllocatedBy: allocatorId }
+                      : p
+                  );
+                  try {
+                    await axios.put(`${API_URL}/production-material/${row.id}`, { products: updatedProducts });
+                    toast(`Allocated to ${emp?.name || selectedUid}`, "success");
+                    setAllocateModal(null);
+                    fetchData();
+                  } catch {
+                    toast("Failed to allocate staff", "error");
+                  }
+                }}
+                className="px-[0.9vw] py-[0.35vw] rounded-[0.35vw] text-[0.8vw] font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 cursor-pointer"
+              >
+                Allocate
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -581,18 +581,6 @@ const ProductionMaster = () => {
               <Users className="w-[0.9vw] h-[0.9vw]" />
               Assign Employees ({zoneMappings.length})
             </button>
-
-            <button
-              onClick={() => setActiveTab("master")}
-              className={`flex items-center gap-[0.4vw] px-[0.9vw] py-[0.4vw] rounded-[0.4vw] text-[0.81vw] font-semibold transition-all cursor-pointer ${
-                activeTab === "master"
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
-              }`}
-            >
-              <Database className="w-[0.9vw] h-[0.9vw]" />
-              Inside Master
-            </button>
           </div>
 
           <div className="h-[1.8vw] w-[1px] bg-slate-200" />
@@ -655,7 +643,7 @@ const ProductionMaster = () => {
                   <tr className="bg-[#E9EDF7] border-b border-slate-300 sticky top-0 z-10">
                     <th className="py-[0.6vw] px-[1vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[4vw] text-center border-r border-slate-300">#</th>
                     <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[16vw] border-r border-slate-300">Zone Name</th>
-                    <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider border-r border-slate-300">Description</th>
+                    <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider border-r border-slate-300">Allocated Employees</th>
                     <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[15vw] border-r border-slate-300">Custom Stations / Roles</th>
                     <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[14vw] border-r border-slate-300">Default Intake Role</th>
                     <th className="py-[0.6vw] px-[1vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[10vw] text-center">Actions</th>
@@ -685,15 +673,35 @@ const ProductionMaster = () => {
                             {idx + 1}
                           </td>
                           <td className="py-[0.65vw] px-[1.2vw] border-r border-slate-200">
-                            <div className="flex items-center gap-[0.5vw]">
-                              <div className="w-[1.8vw] h-[1.8vw] rounded-[0.4vw] bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-[0.8vw] border border-blue-200">
-                                <MapPin className="w-[0.9vw] h-[0.9vw]" />
-                              </div>
+                            <div className="flex items-center gap-[0.4vw]">
                               <span className="text-[0.85vw] font-bold text-slate-800">{zone.name}</span>
+                              <span className="relative group/ztip inline-flex items-center shrink-0">
+                                <AlertCircle className="w-[0.9vw] h-[0.9vw] text-slate-400 hover:text-blue-600 transition-colors" />
+                                <span className="pointer-events-none opacity-0 invisible group-hover/ztip:opacity-100 group-hover/ztip:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-[0.35vw] px-[0.6vw] py-[0.3vw] rounded-[0.35vw] bg-slate-900 text-white text-[0.74vw] whitespace-nowrap shadow-md z-50">
+                                  {zone.description || "No description"}
+                                  <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                                </span>
+                              </span>
                             </div>
                           </td>
-                          <td className="py-[0.65vw] px-[1.2vw] text-[0.81vw] text-slate-600 border-r border-slate-200">
-                            {zone.description || <span className="text-slate-400 italic">No description</span>}
+                          <td className="py-[0.65vw] px-[1.2vw] border-r border-slate-200">
+                            {(() => {
+                              const empCount = zoneMappings.filter(m => m.zone === zone.name).length;
+                              return (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setAssignedZoneFilter(zone.name);
+                                    setAssignSubTab("view");
+                                    setActiveTab("assign");
+                                  }}
+                                  className="inline-flex items-center gap-[0.35vw] text-[0.76vw] font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-[0.6vw] py-[0.15vw] rounded border border-indigo-200 transition-colors cursor-pointer"
+                                >
+                                  <span>{empCount} {empCount === 1 ? "Employee" : "Employees"}</span>
+                                  <ChevronRight className="w-[0.7vw] h-[0.7vw]" />
+                                </button>
+                              );
+                            })()}
                           </td>
                           <td className="py-[0.65vw] px-[1.2vw] border-r border-slate-200">
                             <button
@@ -1209,55 +1217,69 @@ const ProductionMaster = () => {
                       No employees found matching filter
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 divide-x divide-y divide-slate-100">
-                      {assignableEmployees.map(emp => {
-                        const uid = emp.userId || emp._id;
-                        const isSelected = selectedUserIds.includes(uid);
-                        const existingMapping = zoneMappings.find(m => m.userId === uid);
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-slate-50 sticky top-0 z-10 border-b border-slate-300 text-[0.82vw] font-bold text-slate-600 uppercase tracking-wider">
+                        <tr>
+                          <th className="py-[0.65vw] px-[0.8vw] w-[2.8vw] border-r border-slate-200"></th>
+                          <th className="py-[0.65vw] px-[0.9vw] border-r border-slate-200">Employee</th>
+                          <th className="py-[0.65vw] px-[0.9vw] border-r border-slate-200">ID</th>
+                          <th className="py-[0.65vw] px-[0.9vw] border-r border-slate-200">Department</th>
+                          <th className="py-[0.65vw] px-[0.9vw] border-r border-slate-200">Zone</th>
+                          <th className="py-[0.65vw] px-[0.9vw]">Station Role</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200 text-[0.88vw]">
+                        {assignableEmployees.map(emp => {
+                          const uid = emp.userId || emp._id;
+                          const isSelected = selectedUserIds.includes(uid);
+                          const existingMapping = zoneMappings.find(m => m.userId === uid);
 
-                        return (
-                          <div
-                            key={uid}
-                            onClick={() => toggleEmployeeSelect(uid)}
-                            className={`p-[0.8vw] flex items-center justify-between cursor-pointer transition-colors ${
-                              isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/80"
-                            }`}
-                          >
-                            <div className="flex items-center gap-[0.7vw]">
-                              <div className={`w-[1.2vw] h-[1.2vw] rounded-[0.25vw] border flex items-center justify-center transition-all ${
-                                isSelected ? "bg-blue-600 border-blue-600 text-white" : "border-slate-300 bg-white"
-                              }`}>
-                                {isSelected && <Check className="w-[0.8vw] h-[0.8vw] stroke-[3]" />}
-                              </div>
-                              <div>
-                                <div className="text-[0.83vw] font-bold text-slate-800">{emp.name}</div>
-                                <div className="text-[0.72vw] text-slate-500 font-mono">
-                                  ID: {uid} {emp.department ? `· ${emp.department}` : ""}
+                          return (
+                            <tr
+                              key={uid}
+                              onClick={() => toggleEmployeeSelect(uid)}
+                              className={`cursor-pointer transition-colors ${
+                                isSelected ? "bg-blue-50/70" : "hover:bg-slate-50/80"
+                              }`}
+                            >
+                              <td className="py-[0.6vw] px-[0.8vw] border-r border-slate-200">
+                                <div className={`w-[1.15vw] h-[1.15vw] rounded-[0.25vw] border flex items-center justify-center transition-all ${
+                                  isSelected ? "bg-blue-600 border-blue-600 text-white" : "border-slate-300 bg-white"
+                                }`}>
+                                  {isSelected && <Check className="w-[0.8vw] h-[0.8vw] stroke-[3]" />}
                                 </div>
-                              </div>
-                            </div>
-
-                            {existingMapping ? (
-                              <div className="flex items-center gap-[0.3vw]">
-                                <span className="text-[0.7vw] font-semibold px-[0.5vw] py-[0.1vw] rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                                  {existingMapping.zone}
-                                </span>
-                                <span className="text-[0.7vw] font-medium px-[0.45vw] py-[0.1vw] rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                                  {existingMapping.roleInZone || "Manual Testing"}
-                                </span>
-                                {existingMapping.isDefaultReceiver && (
-                                  <span title="Designated Intake Lead" className="text-[0.7vw] text-amber-600 font-bold">★</span>
+                              </td>
+                              <td className="py-[0.6vw] px-[0.9vw] font-semibold text-slate-800 border-r border-slate-200">{emp.name}</td>
+                              <td className="py-[0.6vw] px-[0.9vw] font-mono text-[0.84vw] text-slate-600 border-r border-slate-200">{uid}</td>
+                              <td className="py-[0.6vw] px-[0.9vw] text-[0.84vw] text-slate-600 border-r border-slate-200">{emp.department || "—"}</td>
+                              <td className="py-[0.6vw] px-[0.9vw] border-r border-slate-200">
+                                {existingMapping ? (
+                                  <span className="text-[0.78vw] font-semibold px-[0.55vw] py-[0.12vw] rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                                    {existingMapping.zone}
+                                  </span>
+                                ) : (
+                                  <span className="text-[0.78vw] text-slate-400">Unassigned</span>
                                 )}
-                              </div>
-                            ) : (
-                              <span className="text-[0.7vw] font-medium px-[0.45vw] py-[0.1vw] rounded-full bg-slate-100 text-slate-400 border border-slate-200">
-                                Unassigned
-                              </span>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                              </td>
+                              <td className="py-[0.6vw] px-[0.9vw]">
+                                {existingMapping ? (
+                                  <div className="inline-flex items-center gap-[0.3vw]">
+                                    <span className="text-[0.78vw] font-medium px-[0.5vw] py-[0.12vw] rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                                      {existingMapping.roleInZone || "Manual Testing"}
+                                    </span>
+                                    {existingMapping.isDefaultReceiver && (
+                                      <span title="Designated Intake Lead" className="text-[0.8vw] text-amber-600 font-bold">★</span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <span className="text-[0.78vw] text-slate-400">—</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   )}
                 </div>
 
@@ -1338,12 +1360,11 @@ const ProductionMaster = () => {
                 <div className="flex-1 overflow-auto">
                   <table className="w-full border-collapse text-left">
                     <thead>
-                      <tr className="bg-[#E9EDF7] border-b border-slate-300 sticky top-0 z-10">
+                      <tr className="bg-[#E9EDF7] border-b border-slate-300 sticky top-0 z-20">
                         <th className="py-[0.6vw] px-[1vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[4vw] text-center border-r border-slate-300">#</th>
                         <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[18vw] border-r border-slate-300">Employee</th>
                         <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[9vw] border-r border-slate-300">Employee ID</th>
                         <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[11vw] border-r border-slate-300">Department</th>
-                        <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[13vw] border-r border-slate-300">Assigned Zone</th>
                         <th className="py-[0.6vw] px-[1.2vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[14vw] border-r border-slate-300">Station / Role</th>
                         <th className="py-[0.6vw] px-[1vw] text-[0.78vw] font-bold text-slate-700 uppercase tracking-wider w-[8vw] text-center">Actions</th>
                       </tr>
@@ -1364,7 +1385,29 @@ const ProductionMaster = () => {
                           </td>
                         </tr>
                       ) : (
-                        filteredAssignedMappings.map((m, idx) => (
+                        Object.entries(
+                          filteredAssignedMappings.reduce((acc, m) => {
+                            const z = m.zone || "Unassigned";
+                            if (!acc[z]) acc[z] = [];
+                            acc[z].push(m);
+                            return acc;
+                          }, {})
+                        ).map(([zoneName, zoneStaff]) => (
+                          <React.Fragment key={zoneName}>
+                            <tr className="bg-blue-50/95 border-y border-blue-200 sticky top-[2.3vw] z-10 shadow-2xs">
+                              <td colSpan={6} className="py-[0.45vw] px-[1.2vw]">
+                                <div className="flex items-center justify-between">
+                                  <span className="inline-flex items-center gap-[0.35vw] text-[0.82vw] font-bold text-blue-800">
+                                    <MapPin className="w-[0.85vw] h-[0.85vw] text-blue-600" />
+                                    {zoneName}
+                                  </span>
+                                  <span className="text-[0.72vw] font-semibold text-blue-700 bg-white px-[0.5vw] py-[0.05vw] rounded-full border border-blue-200">
+                                    {zoneStaff.length} staff
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            {zoneStaff.map((m, idx) => (
                           <tr key={m._id} className="hover:bg-blue-50/40 transition-colors group">
                             <td className="py-[0.6vw] px-[1vw] text-center text-[0.81vw] font-medium text-slate-500 border-r border-slate-200">
                               {idx + 1}
@@ -1392,12 +1435,6 @@ const ProductionMaster = () => {
                             </td>
                             <td className="py-[0.6vw] px-[1.2vw] text-[0.81vw] text-slate-600 border-r border-slate-200">
                               {m.department || "—"}
-                            </td>
-                            <td className="py-[0.6vw] px-[1.2vw] border-r border-slate-200">
-                              <span className="inline-flex items-center gap-[0.3vw] px-[0.65vw] py-[0.15vw] rounded-full text-[0.78vw] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                                <MapPin className="w-[0.7vw] h-[0.7vw]" />
-                                {m.zone}
-                              </span>
                             </td>
                             <td className="py-[0.6vw] px-[1.2vw] border-r border-slate-200">
                               <span className="inline-flex items-center gap-[0.3vw] px-[0.65vw] py-[0.15vw] rounded-full text-[0.78vw] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -1429,6 +1466,8 @@ const ProductionMaster = () => {
                               </div>
                             </td>
                           </tr>
+                        ))}
+                          </React.Fragment>
                         ))
                       )}
                     </tbody>

@@ -438,11 +438,13 @@ export const ProductionDetailsModal = ({ entry, product, onClose }) => {
                               {p.productDescription || p.productCode || "Product Item"}
                             </div>
                             <div className="text-[0.73vw] text-slate-700 font-mono mt-[0.05vw] flex items-center gap-[0.35vw]">
-                              <span><strong className="font-semibold text-slate-800">SN:</strong> <span className="text-slate-900 font-medium">{p.serialNumber || "—"}</span></span>
+                              <span><strong className="font-semibold text-slate-800">SN:</strong> <span className="text-slate-900 font-medium">{p.serialNumber || p.identification || "—"}</span></span>
                               <span className="text-slate-400">•</span>
                               <span><strong className="font-semibold text-slate-800">Stage:</strong> <span className="text-slate-900 font-medium">{p.stage || "—"}</span></span>
                               <span className="text-slate-400">•</span>
                               <span><strong className="font-semibold text-slate-800">NC:</strong> <span className="text-slate-900 font-medium">{p.ncType || "Internal"}</span></span>
+                              <span className="text-slate-400">•</span>
+                              <span><strong className="font-semibold text-slate-800">Raised To:</strong> <span className="text-blue-700 font-semibold">{p.raisedToName || p.raisedTo || p.targetZone || "—"}</span></span>
                             </div>
                           </div>
                         </div>
@@ -529,7 +531,7 @@ export const ProductionDetailsModal = ({ entry, product, onClose }) => {
                                 </div>
                                 <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
                                   <span className="text-[#530000] block text-[0.71vw] font-semibold uppercase">Serial / Batch No</span>
-                                  <span className="font-mono font-bold text-slate-900 text-[0.83vw] mt-[0.1vw] block">{p.serialNumber || "—"}</span>
+                                  <span className="font-mono font-bold text-slate-900 text-[0.83vw] mt-[0.1vw] block">{p.serialNumber || p.identification || "—"}</span>
                                 </div>
                                 <div className="border border-slate-200 rounded-[0.35vw] p-[0.55vw] bg-slate-50/70">
                                   <span className="text-[#530000] block text-[0.71vw] font-semibold uppercase">Quantity</span>

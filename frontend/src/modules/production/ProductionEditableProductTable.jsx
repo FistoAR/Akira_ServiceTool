@@ -458,7 +458,7 @@ const ProductionEditableProductTable = ({
             <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>
             <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Image</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Detection Stage <span className="text-rose-500">*</span></th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Inspected By</th>
             <th className="w-[8vw] min-w-[7.5vw] py-[0.7vw] px-[0.7vw] text-center text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Qty</th>
             <th className="w-[14vw] min-w-[13vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Batch / SN</th>
@@ -885,37 +885,37 @@ const ProductionEditableProductTable = ({
                                   <button
                                     type="button"
                                     onClick={() => {
-                                      handleUpdate(prod._pid, "externalRoutingType", "Zone");
-                                      handleUpdate(prod._pid, "raisedTo", "");
-                                      handleUpdate(prod._pid, "raisedToName", "");
-                                    }}
-                                    className={`flex-1 py-[0.15vw] text-[0.7vw] font-semibold rounded-[0.2vw] transition-all ${
-                                      (prod.externalRoutingType || "Zone") === "Zone"
-                                        ? "bg-white text-blue-700 shadow-2xs"
-                                        : "text-slate-500 hover:text-slate-700"
-                                    }`}
-                                  >
-                                    Zone
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
                                       handleUpdate(prod._pid, "externalRoutingType", "Employee");
                                       handleUpdate(prod._pid, "targetZone", "");
                                     }}
                                     className={`flex-1 py-[0.15vw] text-[0.7vw] font-semibold rounded-[0.2vw] transition-all ${
-                                      prod.externalRoutingType === "Employee"
+                                      (prod.externalRoutingType || "Employee") === "Employee"
                                         ? "bg-white text-blue-700 shadow-2xs"
                                         : "text-slate-500 hover:text-slate-700"
                                     }`}
                                   >
                                     Staff
                                   </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      handleUpdate(prod._pid, "externalRoutingType", "Zone");
+                                      handleUpdate(prod._pid, "raisedTo", "");
+                                      handleUpdate(prod._pid, "raisedToName", "");
+                                    }}
+                                    className={`flex-1 py-[0.15vw] text-[0.7vw] font-semibold rounded-[0.2vw] transition-all ${
+                                      prod.externalRoutingType === "Zone"
+                                        ? "bg-white text-blue-700 shadow-2xs"
+                                        : "text-slate-500 hover:text-slate-700"
+                                    }`}
+                                  >
+                                    Zone
+                                  </button>
                                 </div>
                               )}
 
                               {/* Route Mode A: Target Zone Dropdown */}
-                              {(prod.externalRoutingType || "Zone") === "Zone" ? (
+                              {prod.externalRoutingType === "Zone" ? (
                                 <CustomDropdown
                                   value={prod.targetZone || ""}
                                   onChange={(val) => {

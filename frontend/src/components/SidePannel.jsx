@@ -152,8 +152,6 @@ export default function Sidebar() {
   const canManageProductionMaterial = ["prodNC", "productionMaster", "prodReports", "productionMaterialResponse"].some(hasAccess);
   const canManageCustomers = hasAccess("customers");
 
-  console.log("loggedInUser in SidePannel:", loggedInUser);
-
   const navItems = [
     {
       path: "/dashboard",
