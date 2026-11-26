@@ -12,6 +12,7 @@ import axios from "axios";
 import { useNotification } from "../../components/NotificationContext";
 import CustomDropdown from "../../components/CustomDropdown";
 import ProductionDetailsModal from "./ProductionDetailsModal";
+import { ProductionHelpButton } from "./ProductionHelpModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -732,6 +733,7 @@ export default function ProductionMaterialResponse() {
                 <span>Reset</span>
               </button>
             )}
+            <ProductionHelpButton defaultTab="response" className="h-[2.2vw]" />
           </div>
         </div>
 

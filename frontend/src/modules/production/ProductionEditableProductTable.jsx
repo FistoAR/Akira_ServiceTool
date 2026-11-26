@@ -433,9 +433,17 @@ const ProductionEditableProductTable = ({
     dispositionOptions.map(opt => ({ value: opt, label: opt })), 
   [dispositionOptions]);
 
-  const employeeDropdownOptions = useMemo(() => 
-    (employees || []).map(e => ({ value: e.userId || e._id, label: e.name || e.userId })), 
-  [employees]);
+  const employeeDropdownOptions = useMemo(() => {
+    let myZone = "";
+    try {
+      const u = JSON.parse(sessionStorage.getItem("loggedInUser") || localStorage.getItem("loggedInUser") || "{}");
+      myZone = (u?.zone || "").trim();
+    } catch { myZone = ""; }
+    const filtered = myZone
+      ? (employees || []).filter(e => (e.zone || "").trim() === myZone)
+      : (employees || []);
+    return filtered.map(e => ({ value: e.userId || e._id, label: e.name || e.userId }));
+  }, [employees]);
 
   return (
     <div 
@@ -450,10 +458,10 @@ const ProductionEditableProductTable = ({
             <th className="min-w-[18vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Description</th>
             <th className="min-w-[12vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Code</th>
             <th className="w-[10vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Product Segment</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type</th>
-            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type</th>
-            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type</th>
-            <th className="w-[14vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description</th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Board Type <span className="text-rose-500">*</span></th>
+            <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Type <span className="text-rose-500">*</span></th>
+            <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">NC Type <span className="text-rose-500">*</span></th>
+            <th className="w-[14vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Problem Description <span className="text-rose-500">*</span></th>
             <th className="w-[8vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Repeat</th>
             <th className="w-[9vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Delay Time(in mins)</th>
             <th className="w-[11vw] py-[0.7vw] px-[0.7vw] text-left text-slate-700 font-bold text-[0.79vw] uppercase tracking-wider whitespace-nowrap border-r border-b border-slate-300 bg-[#E9EDF7]">Designators</th>

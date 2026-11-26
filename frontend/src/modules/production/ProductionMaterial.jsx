@@ -16,6 +16,7 @@ import useModulePermissions from "../../components/useModulePermissions";
 import CustomDropdown from "../../components/CustomDropdown";
 import AutocompleteInput from "../../components/AutocompleteInput";
 import ProductionDetailsModal from "./ProductionDetailsModal";
+import { ProductionHelpButton } from "./ProductionHelpModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -1760,7 +1761,10 @@ const InwardForm = ({ initialData, employees, onSave, onBack, stageOptions, disp
     if (products.length === 0) { toast("At least one product is required", "warning"); return; }
     if (products.some(p => !p.stage || !String(p.stage).trim())) { toast("Detection Stage is mandatory for all items", "error"); return; }
     if (products.some(p => !p.productDescription)) { toast("All products must have a description", "error"); return; }
-    if (products.some(p => !p.problemType)) { toast("All products must have a Problem Type", "error"); return; }
+    if (products.some(p => !p.boardType || !String(p.boardType).trim())) { toast("Board Type is mandatory for all items", "error"); return; }
+    if (products.some(p => !p.problemType || !String(p.problemType).trim())) { toast("Problem Type is mandatory for all items", "error"); return; }
+    if (products.some(p => !p.ncType || !String(p.ncType).trim())) { toast("NC Type is mandatory for all items", "error"); return; }
+    if (products.some(p => !p.problemDescription || !String(p.problemDescription).trim())) { toast("Problem Description is mandatory for all items", "error"); return; }
     onSave({ ...base, products });
   };
 
@@ -2888,6 +2892,7 @@ export default function ProductionMaterial() {
                   </button>
                 </>
               )}
+              <ProductionHelpButton defaultTab="nc" className="h-[2.2vw]" />
             </div>
           </div>
 
@@ -3179,7 +3184,7 @@ export default function ProductionMaterial() {
                               const isEntryCollapsed = collapsedEntries[row.id];
                               const prods = (row.products || []).filter((p) => {
                                 if (activeFilter === "All") return true;
-                                return (p.finalStatus || "Pending") === activeFilter;
+                                return getEffectiveStatus(p) === activeFilter;
                               });
 
                               // Row-level permissions:

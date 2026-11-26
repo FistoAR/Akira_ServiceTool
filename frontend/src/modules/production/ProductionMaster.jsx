@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { ProductionHelpButton } from "./ProductionHelpModal";
 import { 
   Plus, 
   Trash2, 
@@ -544,6 +545,7 @@ const ProductionMaster = () => {
         </div>
 
         <div className="flex items-center gap-[0.8vw]">
+          <ProductionHelpButton defaultTab="master" />
           {/* Main Navigation Tabs */}
           <div className="flex items-center bg-slate-100 p-[0.25vw] rounded-[0.5vw] border border-slate-200 shadow-inner">
             <button
